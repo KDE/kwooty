@@ -23,7 +23,7 @@
 
 #include <QStandardItem>
 #include "utility.h"
-//#include "data/segmentdata.h"
+#include "data/segmentdata.h"
 using namespace UtilityNamespace;
 
 class CentralWidget;
