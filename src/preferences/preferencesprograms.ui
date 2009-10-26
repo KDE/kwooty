@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PreferencesPrograms</class>
+ <widget class="QWidget" name="PreferencesPrograms">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>412</width>
+    <height>281</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_6">
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tabProgramsSearch">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="programsTab">
+      <attribute name="title">
+       <string>Programs</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3">
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="groupBoxprogramsFound">
+         <property name="title">
+          <string>Programs found</string>
+         </property>
+         <widget class="QWidget" name="layoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>9</x>
+            <y>32</y>
+            <width>363</width>
+            <height>17</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLabel" name="par2LabelIcon">
+             <property name="text">
+              <string>Ic</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="par2LabelText">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>298</width>
+               <height>14</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="layoutWidget_2">
+          <property name="geometry">
+           <rect>
+            <x>9</x>
+            <y>53</y>
+            <width>363</width>
+            <height>17</height>
+           </rect>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="unrarLabelIcon">
+             <property name="text">
+              <string>Ic</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="unrarLabelText">
+             <property name="text">
+              <string>TextLabel</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>298</width>
+               <height>13</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="kcfg_groupBoxAutoRepair">
+         <property name="title">
+          <string>Verify/Repair downloaded files</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="kcfg_removeParFiles">
+            <property name="toolTip">
+             <string>Suppress par2 files if verify/repair succeed</string>
+            </property>
+            <property name="text">
+             <string>Suppress par2 files if repairing succeed</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QGroupBox" name="kcfg_groupBoxAutoDecompress">
+         <property name="title">
+          <string>Extract downloaded files</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="kcfg_removeArchiveFiles">
+            <property name="toolTip">
+             <string>Suppress archive files if extract succeed</string>
+            </property>
+            <property name="text">
+             <string>Suppress archive files if extract succeed</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="kcfg_overwriteExtractedFiles">
+            <property name="toolTip">
+             <string>Overwrite extracted file if it already exists, otherwise the file to extract will be renamed</string>
+            </property>
+            <property name="text">
+             <string>Overwrite extracted file if it already exists</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="searchTab">
+      <attribute name="title">
+       <string>Search path</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="KEditListBox" name="kcfg_searchPathList">
+         <property name="title">
+          <string>Search Path</string>
+         </property>
+         <property name="flat">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KEditListBox</class>
+   <extends>QGroupBox</extends>
+   <header>keditlistbox.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

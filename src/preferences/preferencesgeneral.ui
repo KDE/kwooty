@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PreferencesGeneral</class>
+ <widget class="QWidget" name="PreferencesGeneral">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>409</width>
+    <height>278</height>
+   </rect>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QGroupBox" name="groupBoxFolder">
+     <property name="title">
+      <string>Folders</string>
+     </property>
+     <layout class="QGridLayout">
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelTempFolder">
+        <property name="text">
+         <string>Temporary folder: </string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="KUrlRequester" name="kcfg_temporaryFolder">
+        <property name="toolTip">
+         <string>Set temporary folder</string>
+        </property>
+        <property name="filter">
+         <string notr="true"/>
+        </property>
+        <property name="clickMessage">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelComplFolder">
+        <property name="text">
+         <string>Download folder: </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="KUrlRequester" name="kcfg_completedFolder">
+        <property name="toolTip">
+         <string>Set download folder</string>
+        </property>
+        <property name="filter">
+         <string notr="true"/>
+        </property>
+        <property name="clickMessage">
+         <string notr="true"/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBoxMisc">
+     <property name="title">
+      <string>Miscellaneous</string>
+     </property>
+     <layout class="QVBoxLayout">
+      <item>
+       <widget class="QCheckBox" name="kcfg_animateTreeView">
+        <property name="toolTip">
+         <string>Expand and collapse treeview with animation</string>
+        </property>
+        <property name="text">
+         <string>Animate row expandsion/collasping</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_alternateColors">
+        <property name="toolTip">
+         <string>Alternate background color for each row</string>
+        </property>
+        <property name="text">
+         <string>Use alternate row colors</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_confirmClear">
+        <property name="toolTip">
+         <string>Display dialog box when Clear button has been pushed</string>
+        </property>
+        <property name="text">
+         <string>Display confirm message when clearing rows</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_confirmRemove">
+        <property name="toolTip">
+         <string>Display dialog box when Remove button has been pushed</string>
+        </property>
+        <property name="text">
+         <string>Display confirm message when removing selected rows</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <spacer name="spacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>382</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KUrlRequester</class>
+   <extends>QFrame</extends>
+   <header>kurlrequester.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

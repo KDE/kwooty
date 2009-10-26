@@ -1,0 +1,78 @@
+Requirements to build the project:
+==================================
+Kwooty requires KDE >= 4.2.
+
+- cmake
+- gcc
+- KDE core libraries
+- KDE development files for the core libraries
+- uudeview library
+- uudeview development files
+=> Look at ANNEX at the bottom of the page for packages to install on several distributions.
+
+Kwooty use 'par2' program for automatic archive verification/repairing and 
+'unrar' program for automatic rar extraction.
+
+The folowing packages should additionally be installed :
+- par2
+- unrar
+
+Build and install the project:
+==============================
+1. untar the archive
+    > tar xvfz kwooty.tgz
+
+2. build and install:
+    > cd kwooty
+    > cd build
+    > cmake ..
+    > sudo make install OR > su -c 'make install'
+    
+Note: Kwooty will be installed in the applications directory of Kde 4.X by default (probably located in /usr). 
+If you wish to install Kwooty in the directory of your choice (for ex. /home/userName/test), use:
+    > cmake .. -DCMAKE_INSTALL_PREFIX=/path/of/you/choice
+
+3. uninstall :
+  > sudo make uninstall OR > su -c 'make uninstall'
+
+
+ANNEX: Packages required to build kwooty on several distributions:
+******************************************************************
+Names of packages could be different according to the distribution used, 
+you could find below the list of packages to install in order to build Kwooty on
+several distributions :
+
+1. OpenSuse 11.1 (make sure your KDE version is >=4.2, visit http://en.opensuse.org/KDE/Repositories if you wish to upgrade KDE in order to compile kwooty):
+cmake (>=2.6)
+gcc
+gcc-c++
+libkde4-devel
+uudeview
+par2
+unrar
+
+2. Mandriva 2009 :
+make
+cmake
+gcc
+gcc-++
+kdelibs4-devel
+libuu-static-devel
+parchive2
+unrar
+
+3. Ubuntu 9.04 : 
+cmake
+g++
+kdelibs5-dev
+kdebase-workspace-bin
+libuu-dev
+par2
+unrar (non-free version)
+ 
+ 
+ 
+ 
+ 
+  
+ 

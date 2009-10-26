@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gui name="Kwooty"
+        version="1"
+        xmlns="http://www.kde.org/standards/kxmlgui/1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0
+        http://www.kde.org/standards/kxmlgui/1.0/kxmlgui.xsd" >
+<MenuBar>
+    <Menu name="file" >
+	<Action name="clear" />
+    </Menu>
+    <Menu name="download" ><text>Download</text>
+	<Action name="start" />
+	<Action name="pause" />
+	<Separator/>
+	<Action name="remove" />
+	<Separator/>
+	<Action name="moveBottom" />
+	<Action name="moveTop" />
+    </Menu>   
+</MenuBar>
+
+  <ToolBar name="mainToolBar" > <text>Main Toolbar</text>
+	<Action name="clear" />
+	<Separator/>
+	<Action name="start" />
+	<Action name="pause" />
+	<Separator/>
+	<Action name="remove" />
+	<Separator/>
+	<Action name="moveBottom" />
+	<Action name="moveTop" />
+    </ToolBar>
+</gui>
