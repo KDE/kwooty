@@ -23,13 +23,12 @@
 
 #include <QStandardItem>
 #include <QModelIndex>
-
+#include "data/nzbfiledata.h"
 #include "itemabstractupdater.h"
 
 class StandardItemModel;
 class ItemStatusData;
 class SegmentData;
-class NzbFileData;
 
 
 class ItemDownloadUpdater : public ItemAbstractUpdater
