@@ -4,5 +4,9 @@ GenericName=Nzb usenet client
 Icon=kwooty
 Exec=kwooty
 Type=Application
-Categories=Qt;KDE;Network;Internet;News
+Categories=Qt;KDE;Application;Network;Internet;
 Terminal=false
+
+
+
+ 
