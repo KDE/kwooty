@@ -22,6 +22,7 @@
 
 #include <KAboutData>
 #include <KDebug>
+
 #include <QStyleOptionViewItemV4>
 
 #include "data/itemstatusdata.h"
@@ -137,4 +138,6 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
 
     
 }
+
+
 

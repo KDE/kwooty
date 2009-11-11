@@ -21,6 +21,7 @@
 #include "itemdownloadupdater.h"
 
 #include <KDebug>
+
 #include "centralwidget.h"
 #include "itemparentupdater.h"
 #include "itemabstractupdater.h"
@@ -63,7 +64,7 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
     ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
 
     // get current item status :
-    int currentStatus = itemStatusData.getStatus();
+    UtilityNamespace::ItemStatus previousStatus = itemStatusData.getStatus();
     //itemStatusData.init();
 
 
@@ -99,11 +100,14 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
     this->downloadModel->storeStatusDataToItem(stateItem, itemStatusData);
 
     // if item status has been updated :
-    if (currentStatus != itemStatusData.getStatus()) {
+    if (previousStatus != itemStatusData.getStatus()) {
         // send signal to central widget to update enbled/disabled buttons :
         emit statusItemUpdatedSignal();
+
     }
 
+    //TEST
+    this->setIconToFileNameItem(parentModelIndex, itemStatusData.getStatus());
 
 }
 

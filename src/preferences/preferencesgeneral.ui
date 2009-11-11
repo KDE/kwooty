@@ -10,7 +10,10 @@
     <height>278</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <property name="toolTip">
+   <string>Expand treeview automatically when a .nzb file is open</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBoxFolder">
      <property name="title">
@@ -65,8 +68,18 @@
      <property name="title">
       <string>Miscellaneous</string>
      </property>
-     <layout class="QVBoxLayout">
-      <item>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="kcfg_expandTreeView">
+        <property name="toolTip">
+         <string>Expand treeview automatically when a .nzb file is open</string>
+        </property>
+        <property name="text">
+         <string>Expand tree when opening nzb file</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
        <widget class="QCheckBox" name="kcfg_animateTreeView">
         <property name="toolTip">
          <string>Expand and collapse treeview with animation</string>
@@ -76,7 +89,7 @@
         </property>
        </widget>
       </item>
-      <item>
+      <item row="2" column="0">
        <widget class="QCheckBox" name="kcfg_alternateColors">
         <property name="toolTip">
          <string>Alternate background color for each row</string>
@@ -86,7 +99,7 @@
         </property>
        </widget>
       </item>
-      <item>
+      <item row="3" column="0">
        <widget class="QCheckBox" name="kcfg_confirmClear">
         <property name="toolTip">
          <string>Display dialog box when Clear button has been pushed</string>
@@ -96,7 +109,7 @@
         </property>
        </widget>
       </item>
-      <item>
+      <item row="4" column="0">
        <widget class="QCheckBox" name="kcfg_confirmRemove">
         <property name="toolTip">
          <string>Display dialog box when Remove button has been pushed</string>

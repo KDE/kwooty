@@ -140,7 +140,7 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
 
     // if item status has been updated :
     if (previousStatus != nzbItemStatusData.getStatus()) {
-        // send signal to central widget to update enbled/disabled buttons :
+        // send signal to central widget to update enabled/disabled buttons :
         emit statusItemUpdatedSignal();
     }
 
@@ -355,6 +355,7 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
         emit repairDecompressSignal(nzbFileDataList);
 
     }
+
 
     return nzbItemStatusData;
 }

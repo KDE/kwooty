@@ -21,27 +21,35 @@
 #include <KUniqueApplication>
 #include <KAboutData>
 #include <KCmdLineArgs>
+#include <KUrl>
 #include <KIcon>
 #include <KDebug>
 
+#include "uniqueapp.h"
 #include "mainwindow.h"
 
 
-int main (int argc, char *argv[])
+int main (int argc, char** argv)
 {
     KAboutData aboutData("kwooty",
-                         "kwooty",
+                         "",
                          ki18n("Kwooty"), "0.1.2",
                          ki18n("Kwooty is a friendly nzb usenet binary client.\n It also supports automatic file repairing and archive extraction."),
                          KAboutData::License_GPL,
-                         ki18n("Copyright (c) 2009 Xavier Lefage"));
+                         ki18n("Copyright (c) 2009 Xavier Lefage"),
+                         KLocalizedString(),
+                         "http://sourceforge.net/projects/kwooty");
+    aboutData.addAuthor(ki18n("Xavier Lefage"),ki18n("Maintainer and Lead Developer"), "xavier.kwooty@gmail.com");
+    aboutData.setBugAddress("http://sourceforge.net/projects/kwooty");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
 
-    KUniqueApplication app;
-    app.setWindowIcon(KIcon("kwooty"));
-    MainWindow* window = new MainWindow();
-    window->show();
+    KCmdLineOptions options;
+    options.add("+[Url]", ki18n("Document to open"));
+    //options.add("silent", ki18n("Silently open nzb given on URL"));
+    KCmdLineArgs::addCmdLineOptions(options);
 
+
+    UniqueApp app;
     return app.exec();
 }

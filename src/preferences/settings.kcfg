@@ -53,6 +53,10 @@
             <label>Expand and collapse treeview with animation</label>
             <default>true</default>
         </entry>
+	<entry name="expandTreeView" type="Bool">
+            <label>Expand treeview automatically when a .nzb file is open</label>
+            <default>false</default>
+        </entry>
         <entry name="alternateColors" type="Bool">
             <label>Alternate background color for each row</label>
             <default>false</default>

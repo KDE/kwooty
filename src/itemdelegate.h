@@ -27,7 +27,6 @@
 #include <QPainter>
 #include <QHash>
 
-
 class ItemDelegate : public QStyledItemDelegate
 {
 

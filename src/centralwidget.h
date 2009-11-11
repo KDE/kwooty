@@ -25,6 +25,8 @@
 #include <QFile>
 #include <QStandardItem>
 #include <QTreeView>
+#include "utility.h"
+using namespace UtilityNamespace;
 
 class ClientManagerConn;
 class MyStatusBar;
@@ -47,7 +49,7 @@ class CentralWidget : public QWidget
 public:
     CentralWidget(QWidget* parent = 0, MyStatusBar* parentStatuBar = 0);
     ~CentralWidget();
-    void handleNzbFile(QFile& file);    
+    void handleNzbFile(QFile& file);
     SegmentManager* getSegmentManager() const;
     StandardItemModel* getDownloadModel() const;
     MyStatusBar* getStatusBar() const;

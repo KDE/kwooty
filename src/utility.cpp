@@ -216,3 +216,5 @@ QString Utility::searchExternalPrograms(const QString& programToSearch, bool& pr
 
     return programPath;
 }
+
+

@@ -25,10 +25,12 @@
 #include <QStandardItem>
 #include <QModelIndex>
 
+#include "utility.h"
+using namespace UtilityNamespace;
 
 class ItemParentUpdater;
 class StandardItemModel;
-
+class ItemStatusData;
 
 class ItemAbstractUpdater : public QObject
 {
@@ -59,8 +61,11 @@ protected:
     int articleNotFoundNumber;
     int articleFoundNumber;
 
+    QHash<int, QString> statusIconStrMap;
+
     void clear();
     void countItemStatus(const int);
+    void setIconToFileNameItem(const QModelIndex&, UtilityNamespace::ItemStatus);
 
 
 };

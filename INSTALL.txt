@@ -55,7 +55,7 @@ unrar
 make
 cmake
 gcc
-gcc-++
+gcc-c++
 kdelibs4-devel
 libuu-static-devel
 parchive2

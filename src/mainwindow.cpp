@@ -32,7 +32,6 @@
 #include <KMessageBox>
 #include <KIO/NetAccess>
 #include <KSaveFile>
-#include <KDE/KUrl>
 #include <KDebug>
 
 #include <QTextStream>
@@ -44,6 +43,7 @@
 #include "preferences/preferencesserver.h"
 #include "preferences/preferencesgeneral.h"
 #include "preferences/preferencesprograms.h"
+
 
 
 MainWindow::MainWindow(QWidget *parent): KXmlGuiWindow(parent), fileName(QString())
@@ -207,54 +207,96 @@ void MainWindow::showSettings(){
 //============================================================================================================//
 
 
-void MainWindow::openFile()
-{
-    bool isWrongUrl = false;
-    QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(KUrl(), "*.nzb|" + i18n("nzb files"), this);
+void MainWindow::openFile() {
 
+    bool isWrongUrl = false;
+
+    QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(KUrl(), "*.nzb|" + i18n("nzb files"), this);
 
     // process selected file(s) :
     for (int i = 0; i < fileNameFromDialogList.size(); i++) {
 
         QString fileNameFromDialog = fileNameFromDialogList.at(i);
-        QString tmpFile;
 
         if (!fileNameFromDialog.isNull() || !fileNameFromDialog.isEmpty()) {
 
-            // open the file and handle it :
-            if(KIO::NetAccess::download(fileNameFromDialog, tmpFile, this)){
+            this->openUrl(KUrl(fileNameFromDialog), isWrongUrl, UtilityNamespace::NotSilent);
 
-                QFile file(tmpFile);
+        } // end of iteration loop
 
-                // Open the nzb file :
-                if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-                    KMessageBox::error(this, KIO::NetAccess::lastErrorString());
-                }
 
-                // add nzbFile data to the view :
-                centralWidget->handleNzbFile(file);
-
-                fileName = fileNameFromDialog;
-                KIO::NetAccess::removeTempFile(tmpFile);
-                file.close();
-            }
-            // the url can not be opened
-            else {
-                isWrongUrl = true;
-            }
-
+        // If url cannot be reached open an error message box
+        if (isWrongUrl){
+            KMessageBox::error(this, KIO::NetAccess::lastErrorString());
         }
-    } // end of iteration loop
 
+
+
+    }
+
+}
+
+
+void MainWindow::openFileSilently(KUrl url) {
+
+    bool isWrongUrl = false;
+
+    this->openUrl(url, isWrongUrl, UtilityNamespace::Silent);
 
     // If url cannot be reached open an error message box
     if (isWrongUrl){
         KMessageBox::error(this, KIO::NetAccess::lastErrorString());
     }
 
+}
 
+
+
+void MainWindow::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenFileMode openFileMode) {
+
+    QString downloadFile;
+
+    if(KIO::NetAccess::download(url, downloadFile, this)){
+
+        QFile file(downloadFile);
+
+        // Open the nzb file :
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+            KMessageBox::error(this, KIO::NetAccess::lastErrorString());
+        }
+
+        // add nzbFile data to the view :
+        centralWidget->handleNzbFile(file);
+
+        file.close();        
+
+        // copy nzb file in its associated download folder if file has been open silently :
+        if (openFileMode == UtilityNamespace::Silent) {
+
+            //remove .nzb extension to file name :
+            QString nzbBaseName = url.fileName();
+            nzbBaseName.chop(4);
+
+            // create download folder :
+            QString downloadFolderPath = Settings::completedFolder().path() + '/' + nzbBaseName;
+            Utility::createFolder(downloadFolderPath);
+
+            // copy nzb file in created download folder :
+            file.copy(downloadFolderPath + '/' + url.fileName());
+
+        }
+
+        // remove temporary downloaded file :
+        KIO::NetAccess::removeTempFile(downloadFile);
+
+    }
+    // the url can not be opened
+    else {
+        isWrongUrl = true;
+    }
 
 }
+
 
 
 

@@ -3,6 +3,7 @@ add_subdirectory(icons)
 
 set(Kwooty_SRCS 
   main.cpp
+  uniqueapp.cpp
   mainwindow.cpp
   centralwidget.cpp
   nzbfilehandler.cpp

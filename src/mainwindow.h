@@ -22,6 +22,9 @@
 #define MAINWINDOW_H
 
 #include <KXmlGuiWindow>
+#include <KUrl>
+#include "utility.h"
+using namespace UtilityNamespace;
 
 class MyStatusBar;
 class CentralWidget;
@@ -34,6 +37,7 @@ class MainWindow : public KXmlGuiWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void openFileSilently(KUrl url);
 
 
 private:
@@ -42,6 +46,7 @@ private:
     MyStatusBar* statusBar;
 
     void setupActions();
+    void openUrl(KUrl, bool&, UtilityNamespace::OpenFileMode);
 
 signals:
     void aboutToShowSettingsSignal();

@@ -94,7 +94,8 @@ CentralWidget::CentralWidget(QWidget *parent, MyStatusBar* parentStatusBar) : QW
     saveErrorButtonCode = 0;
     
     this->setupConnections();
-    
+
+
 }
 
 CentralWidget::~CentralWidget()
@@ -121,8 +122,7 @@ void CentralWidget::handleNzbFile(QFile& file){
     
     //remove .nzb extension to file name:
     QFileInfo fileInfo(file.fileName());
-    QString nzbName = fileInfo.fileName();
-    nzbName.chop(4);
+    QString nzbName = fileInfo.completeBaseName();
     
     // parse the xml file and add elements to the model :
     NzbFileHandler nzbFileHandler;
@@ -139,13 +139,11 @@ void CentralWidget::handleNzbFile(QFile& file){
         if (treeView->columnWidth(FILE_NAME_COLUMN) < widthInPixel) {
             treeView->setColumnWidth(FILE_NAME_COLUMN, widthInPixel);
         }
-        
-        treeView->setAlternatingRowColors(Settings::alternateColors());
-        
+
         // notify nntp clients that data has arrived :
         emit dataHasArrivedSignal();
     }
-    
+
 }
 
 
@@ -154,7 +152,6 @@ void CentralWidget::setDataToModel(const QList<NzbFileData>& nzbFilesList, const
 
     QStandardItem* nzbNameItem = new QStandardItem(nzbName);
     nzbNameItem->setIcon(KIcon("arrow-right"));
-    
     
     quint64  nzbFilesSize = 0;
     foreach (NzbFileData currentNzbFileData, nzbFilesList) {
@@ -186,6 +183,11 @@ void CentralWidget::setDataToModel(const QList<NzbFileData>& nzbFilesList, const
     downloadModel->setItem(nzbNameItemRow, STATE_COLUMN, nzbStateItem);
     downloadModel->setItem(nzbNameItemRow, PROGRESS_COLUMN, new QStandardItem());
 
+    // expand treeView :
+    treeView->setExpanded(nzbNameItem->index(), Settings::expandTreeView());
+    // alternate row color :
+    treeView->setAlternatingRowColors(Settings::alternateColors());
+
 }
 
 
@@ -204,11 +206,12 @@ void CentralWidget::addParentItem (QStandardItem* nzbNameItem, const NzbFileData
     variant.setValue(currentNzbFileData);
     fileNameItem->setData(variant, NzbFileDataRole);
     
-    SegmentData segmentData = currentNzbFileData.getSegmentList().at(0);
     // set unique identifier :
-    fileNameItem->setData(segmentData.getParentUniqueIdentifier(), IdentifierRole);
+    fileNameItem->setData(currentNzbFileData.getUniqueIdentifier(), IdentifierRole);
     // set tool tip :
     fileNameItem->setToolTip(fileName);
+    //TODO :test
+    fileNameItem->setIcon(KIcon("view-pim-news"));
     nzbNameItem->setChild(nzbNameItemNextRow, FILE_NAME_COLUMN, fileNameItem);
     
     
@@ -226,7 +229,7 @@ void CentralWidget::addParentItem (QStandardItem* nzbNameItem, const NzbFileData
     QStandardItem* parentProgressItem = new QStandardItem();
     parentProgressItem->setData(qVariantFromValue(PROGRESS_INIT), ProgressRole);
     nzbNameItem->setChild(nzbNameItemNextRow, PROGRESS_COLUMN, parentProgressItem);
-    
+
 }
 
 
