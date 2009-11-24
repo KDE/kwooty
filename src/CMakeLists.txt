@@ -23,12 +23,15 @@ set(Kwooty_SRCS
   repairdecompressthread.cpp
   repair.cpp
   extract.cpp
+  datarestorer.cpp
   preferences/preferencesserver.cpp
   preferences/preferencesgeneral.cpp
   preferences/preferencesprograms.cpp
+  preferences/preferencesdisplay.cpp
   data/segmentdata.cpp
   data/nzbfiledata.cpp
   data/itemstatusdata.cpp
+  data/globalfiledata.cpp 
 
 )
 
@@ -36,6 +39,7 @@ kde4_add_ui_files(  Kwooty_SRCS
 		    preferences/preferencesserver.ui
 		    preferences/preferencesgeneral.ui
 		    preferences/preferencesprograms.ui
+		    preferences/preferencesdisplay.ui
 		 )
 kde4_add_kcfg_files(Kwooty_SRCS preferences/settings.kcfgc)
  
