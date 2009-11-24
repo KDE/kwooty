@@ -184,7 +184,6 @@ void Repair::verifyUpdate(const QString& repairProcessOutput) {
 
         // if "duplicate" pattern has been found it means that current item has already been verified, don't send notification :
         if (duplicateName.isEmpty()) {
-            //kDebug() << "file " << fileNameStr << "; progress " << statusEnumMap.value(statusStr);
             this->sendVerifyNotification(fileNameStr, originalFileNameStr, statusEnumMap.value(statusStr));
         }
     }
@@ -272,7 +271,6 @@ UtilityNamespace::ItemTarget Repair::getItemTarget(const NzbFileData& nzbFileDat
         itemTarget = ChildItemTarget;
     }
 
-    // kDebug() << "child or parent : " << itemTarget;
     return itemTarget;
 }
 
