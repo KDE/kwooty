@@ -40,6 +40,8 @@ ItemPostDownloadUpdater::ItemPostDownloadUpdater(ItemParentUpdater* itemParentUp
 
 void ItemPostDownloadUpdater::updateItems(const QModelIndex& parentModelIndex, const int progression, const UtilityNamespace::ItemStatus status, UtilityNamespace::ItemTarget itemTarget) {
 
+    // set status icon :
+    this->setIconToFileNameItem(parentModelIndex, status);
 
     // if status comes from *decode* process :
     if (status <= ScanStatus) {
@@ -56,9 +58,6 @@ void ItemPostDownloadUpdater::updateItems(const QModelIndex& parentModelIndex, c
 
 
 void ItemPostDownloadUpdater::updateDecodeItems(const QModelIndex& parentModelIndex, const int progression, const UtilityNamespace::ItemStatus status) {
-
-    //TEST :
-    this->setIconToFileNameItem(parentModelIndex, status);
 
     // set progress to item :
     this->downloadModel->updateProgressItem(parentModelIndex, progression);
@@ -93,9 +92,6 @@ void ItemPostDownloadUpdater::updateRepairExtractItems(const QModelIndex& parent
     // update child and parent items :
     if (itemTarget == UtilityNamespace::BothItemsTarget) {
 
-        //TEST :
-        this->setIconToFileNameItem(parentModelIndex, status);
-
         // update item status :
         this->downloadModel->updateSateItem(stateItem, status);
         // set progress to item :
@@ -106,9 +102,6 @@ void ItemPostDownloadUpdater::updateRepairExtractItems(const QModelIndex& parent
     }
     // update only child item :
     else if (itemTarget == UtilityNamespace::ChildItemTarget) {
-
-        //TEST :
-        this->setIconToFileNameItem(parentModelIndex, status);
 
         // update item status :
         this->downloadModel->updateSateItem(stateItem, status);
