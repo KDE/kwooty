@@ -37,7 +37,7 @@ class SegmentData;
 class SegmentManager : public QObject
 {
 
-Q_OBJECT
+    Q_OBJECT
 
 public:
     SegmentManager(CentralWidget* parent = 0);

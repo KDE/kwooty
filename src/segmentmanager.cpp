@@ -75,6 +75,9 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
 
             itemParentUpdater->getItemDownloadUpdater()->updateItems(fileNameItem->index(), nzbFileData);
 
+            // set parent idenfier to segment before downloading it  :
+            segmentData.setParentUniqueIdentifier(nzbFileData.getUniqueIdentifier());
+
             // send the next part to the dedicated client :
             currentClientManagerConn->processNextSegment(segmentData);
 
@@ -326,6 +329,9 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData){
 
         NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
         QList<SegmentData> segmentList = nzbFileData.getSegmentList();
+
+        // segment has been processed, parent identifier can now be removed :
+        segmentData.setParentUniqueIdentifier(QString());
 
         // update the segmentData list :
         segmentList.replace(segmentData.getElementInList(), segmentData);
