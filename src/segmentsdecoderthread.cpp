@@ -64,9 +64,6 @@ void SegmentsDecoderThread::run() {
     // start timer :
     decoderTimer->start(100);
 
-    // suppress remaining incomplete file segments from a previous app instance :
-    this->suppressOldOrphanedSegments();
-
     this->exec();
 }
 
@@ -140,7 +137,7 @@ void SegmentsDecoderThread::decodeSegmentsSlot(NzbFileData nzbFileData) {
 
 
 
-void SegmentsDecoderThread::suppressOldOrphanedSegments() {
+void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
 
     // get temporary path :
     QString tempPathStr = Settings::temporaryFolder().path();

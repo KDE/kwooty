@@ -52,7 +52,6 @@ private:
 
     void run();
     void setupConnections();
-    void suppressOldOrphanedSegments();
 
 
 signals:
@@ -61,6 +60,7 @@ signals:
 
 public slots:
     void decodeSegmentsSlot(NzbFileData);
+    void suppressOldOrphanedSegmentsSlot();
 
 private slots:
     void startDecodingSlot();
