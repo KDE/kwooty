@@ -43,7 +43,7 @@ NntpClient::NntpClient(ClientManagerConn* parent) : QObject (parent)
 
     // set a timer to disconnect from host after idle activity :
     idleTimeOutTimer = new QTimer(this);
-    idleTimeOutTimer->setInterval(Settings::disconnectTimeout() * MINUTES_TO_MILLISECONDS);
+    idleTimeOutTimer->setInterval(Settings::disconnectTimeout() * UtilityNamespace::MINUTES_TO_MILLISECONDS);
 
     // set a timer to check that stream communication is not stuck,
     // disconnect from host after 20 seconds with no answer from host :
@@ -112,7 +112,7 @@ void NntpClient::connectToHost() {
 
     //kDebug() << "client ID : " << parent->getClientId() << "disconnectTimeout : " << Settings::disconnectTimeout();
     idleTimeOutTimer->stop();
-    idleTimeOutTimer->setInterval(Settings::disconnectTimeout() * MINUTES_TO_MILLISECONDS);
+    idleTimeOutTimer->setInterval(Settings::disconnectTimeout() * UtilityNamespace::MINUTES_TO_MILLISECONDS);
 
     QString hostName = Settings::hostName();
     int port = Settings::port();
@@ -289,7 +289,8 @@ void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePres
         this->segmentByteArray.replace("\r\n..", "\r\n.");
 
         // save segment :
-        isSaved = Utility::saveData(currentSegmentData.getFileSavePath(), currentSegmentData.getPart(), this->segmentByteArray);
+        QString temporaryFolder = Settings::temporaryFolder().path() + '/';
+        isSaved = Utility::saveData(temporaryFolder, currentSegmentData.getPart(), this->segmentByteArray);
 
         // if file can not be saved, inform the user and stop downloads :
         if (!isSaved) {

@@ -65,7 +65,6 @@ public:
     void setConnectedClientStatus(const NntpClient::NntpClientStatus);
 
 private:
-    static const int MINUTES_TO_MILLISECONDS = 60000;
 
     ClientManagerConn* parent;
     SegmentData currentSegmentData;
