@@ -74,7 +74,6 @@ void ClientManagerConn::initSlot()
              this,
              SLOT(settingsChangedSlot()));
 
-
     // ask to segment manager to send a new segment to download :
     connect (nntpClient,
              SIGNAL(getNextSegmentSignal(ClientManagerConn*)),
