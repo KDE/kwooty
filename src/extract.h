@@ -32,22 +32,22 @@ class NzbFileData;
 class Extract : public QObject
 {
 
- Q_OBJECT
- Q_ENUMS(InternalExtractStatus)
+    Q_OBJECT
+    Q_ENUMS(InternalExtractStatus)
 
- public:
+    public:
 
     enum InternalExtractStatus{ IdleExtract,
                                 ExtractQuestion,
                                 Extracting,
                                 ExtractingNotPossible,
                                 ExtractComplete
-                              };
+                               };
 
-    enum ArchivePasswordStatus {ArchiveCheckIfPassworded,
-                                ArchiveIsPassworded,
-                                ArchiveIsNotPassworded,
-                                ArchivePasswordCheckEnded,
+    enum ArchivePasswordStatus { ArchiveCheckIfPassworded,
+                                 ArchiveIsPassworded,
+                                 ArchiveIsNotPassworded,
+                                 ArchivePasswordCheckEnded,
                                };
 
 
