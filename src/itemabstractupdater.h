@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QStandardItem>
 #include <QModelIndex>
+#include <QHash>
 
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -45,6 +46,7 @@ public:
 protected:
     StandardItemModel* downloadModel;
     ItemParentUpdater* itemParentUpdater;
+    QHash<int, QString> statusIconStrMap;
     int downloadItemNumber;
     int progressNumber;
     int downloadFinishItemNumber;
@@ -61,12 +63,9 @@ protected:
     int articleNotFoundNumber;
     int articleFoundNumber;
 
-    QHash<int, QString> statusIconStrMap;
-
     void clear();
     void countItemStatus(const int);
     void setIconToFileNameItem(const QModelIndex&, UtilityNamespace::ItemStatus);
-
 
 };
 

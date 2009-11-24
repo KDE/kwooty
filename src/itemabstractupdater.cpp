@@ -24,6 +24,7 @@
 #include <KIcon>
 #include "itemparentupdater.h"
 #include "standarditemmodel.h"
+#include "settings.h"
 #include "data/itemstatusdata.h"
 #include "data/nzbfiledata.h"
 
@@ -31,52 +32,33 @@
 
 ItemAbstractUpdater::ItemAbstractUpdater(QObject* parent) : QObject (parent)
 {
-    // associate text to display according to item status :
-    //    statusIconStrMap.insert(DownloadStatus,            "mail-receive");
-    //    statusIconStrMap.insert(DownloadFinishStatus,      "dialog-ok-apply");
-    //    statusIconStrMap.insert(IdleStatus,                "mail-mark-unread");
-    //    statusIconStrMap.insert(PauseStatus,               "document-open-recent");
-    //    statusIconStrMap.insert(PausingStatus,             "document-open-recent");
-    //    statusIconStrMap.insert(ScanStatus,                "run-build");
-    //    statusIconStrMap.insert(DecodeStatus,              "run-build");
-    //    statusIconStrMap.insert(DecodeFinishStatus,        "mail-mark-read");
-    //    statusIconStrMap.insert(DecodeErrorStatus,         "edit-delete");
-    //    statusIconStrMap.insert(VerifyStatus,              "document-preview");
-    //    statusIconStrMap.insert(VerifyFoundStatus,         "dialog-ok");
-    //    statusIconStrMap.insert(VerifyMatchStatus,         "dialog-ok");
-    //    statusIconStrMap.insert(VerifyMissingStatus,       "mail-mark-important");
-    //    statusIconStrMap.insert(VerifyDamagedStatus,       "mail-mark-important");
-    //    statusIconStrMap.insert(RepairStatus,              "document-preview");
-    //    statusIconStrMap.insert(RepairNotPossibleStatus,   "edit-delete");
-    //    statusIconStrMap.insert(RepairFailedStatus,        "edit-delete");
-    //    statusIconStrMap.insert(ExtractStatus,             "archive-extract");
-    //    statusIconStrMap.insert(ExtractBadCrcStatus,       "archive-remove");
-    //    statusIconStrMap.insert(ExtractSuccessStatus,      "archive-remove");
-    //    statusIconStrMap.insert(ExtractFailedStatus,       "archive-remove");
+    // build map in order to display status icon near to file name item :
 
     statusIconStrMap.insert(DownloadStatus,            "mail-receive");
-    statusIconStrMap.insert(DownloadFinishStatus,      "view-pim-news");
-    statusIconStrMap.insert(IdleStatus,                "view-pim-news");
-    statusIconStrMap.insert(PauseStatus,               "view-pim-news");
-    statusIconStrMap.insert(PausingStatus,             "view-pim-news");
-    statusIconStrMap.insert(ScanStatus,                "view-pim-news");
-    statusIconStrMap.insert(DecodeStatus,              "view-pim-news");
-    statusIconStrMap.insert(DecodeFinishStatus,        "news-subscribe");
-    statusIconStrMap.insert(DecodeErrorStatus,         "news-unsubscribe");
-    statusIconStrMap.insert(VerifyStatus,              "view-pim-news");
-    statusIconStrMap.insert(VerifyFoundStatus,         "news-subscribe");
-    statusIconStrMap.insert(VerifyMatchStatus,         "news-subscribe");
-    statusIconStrMap.insert(VerifyMissingStatus,       "news-unsubscribe");
-    statusIconStrMap.insert(VerifyDamagedStatus,       "news-unsubscribe");
-    statusIconStrMap.insert(RepairStatus,              "view-pim-news");
-    statusIconStrMap.insert(RepairNotPossibleStatus,   "news-unsubscribe");
-    statusIconStrMap.insert(RepairFailedStatus,        "news-unsubscribe");
-    statusIconStrMap.insert(ExtractStatus,             "news-subscribe");
-    statusIconStrMap.insert(ExtractBadCrcStatus,       "news-unsubscribe");
-    statusIconStrMap.insert(ExtractSuccessStatus,      "news-subscribe");
-    statusIconStrMap.insert(ExtractFailedStatus,       "news-unsubscribe");
+    statusIconStrMap.insert(DownloadFinishStatus,      "mail-mark-unread");
+    statusIconStrMap.insert(IdleStatus,                "mail-mark-unread");
+    statusIconStrMap.insert(PauseStatus,               "mail-mark-unread");
+    statusIconStrMap.insert(PausingStatus,             "mail-mark-unread");
+    statusIconStrMap.insert(ScanStatus,                "mail-mark-unread");
+    statusIconStrMap.insert(DecodeStatus,              "mail-mark-unread");
+    statusIconStrMap.insert(DecodeFinishStatus,        "mail-mark-read");
+    statusIconStrMap.insert(DecodeErrorStatus,         "edit-delete");
+    statusIconStrMap.insert(VerifyStatus,              "mail-mark-read");
+    statusIconStrMap.insert(VerifyFoundStatus,         "dialog-ok");
+    statusIconStrMap.insert(VerifyMatchStatus,         "dialog-ok");
+    statusIconStrMap.insert(VerifyMissingStatus,       "edit-delete");
+    statusIconStrMap.insert(VerifyDamagedStatus,       "edit-delete");
+    statusIconStrMap.insert(RepairStatus,              "mail-mark-read");
+    statusIconStrMap.insert(RepairNotPossibleStatus,   "edit-delete");
+    statusIconStrMap.insert(RepairFailedStatus,        "edit-delete");
+    statusIconStrMap.insert(ExtractStatus,             "dialog-ok");
+    statusIconStrMap.insert(ExtractBadCrcStatus,       "edit-delete");
+    statusIconStrMap.insert(ExtractSuccessStatus,      "dialog-ok");
+    statusIconStrMap.insert(ExtractFailedStatus,       "edit-delete");
+
 
 }
+
 
 ItemAbstractUpdater::ItemAbstractUpdater()
 {
@@ -152,21 +134,42 @@ void ItemAbstractUpdater::countItemStatus(const int status) {
 
 void ItemAbstractUpdater::setIconToFileNameItem(const QModelIndex& index, UtilityNamespace::ItemStatus status) {
 
-    QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(index);
-    ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
+    if (!this->downloadModel->isNzbItem(this->downloadModel->itemFromIndex(index))) {
 
-    if (statusIconStrMap.contains(status)) {
+        // if icons have to be displayed :
+        if (Settings::displayIcons()) {
 
-        if (status == DownloadFinishStatus) {
+            // get final status :
+            QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(index);
+            ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
 
-            if (itemStatusData.getDataStatus() == NoData) {
-                status = DecodeErrorStatus;
+            if (statusIconStrMap.contains(status)) {
+
+                if (status == DownloadFinishStatus) {
+
+                    if (itemStatusData.getDataStatus() == NoData) {
+                        // in this case the status is set to DecodeErrorStatus only to display the proper icon :
+                        status = DecodeErrorStatus;
+                    }
+
+                }
+
+                // get fileName item and set corresponding icon :
+                QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
+                fileNameItem->setIcon(KIcon(this->statusIconStrMap.value(status)));
+
+            }
+        }
+        // if icon does not have to be displayed :
+        else {
+            QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
+            if (!fileNameItem->icon().isNull()) {
+                // remove icon :
+                fileNameItem->setIcon(QIcon());
+
             }
 
         }
-
-        QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
-        fileNameItem->setIcon(KIcon(this->statusIconStrMap.value(status)));
 
     }
 
