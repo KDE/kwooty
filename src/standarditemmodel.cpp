@@ -75,10 +75,13 @@ QStandardItem* StandardItemModel::getColumnItem(const QModelIndex& index, const 
 
 
 void StandardItemModel::updateSateItem(QStandardItem* stateItem, const UtilityNamespace::ItemStatus status) {
+
     // get itemstatusdata from stateItem :
     ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
+
     // set status :
     itemStatusData.setStatus(status);
+
     // reinject itemstatusdata in stateItem :
     this->storeStatusDataToItem(stateItem, itemStatusData);
 }
@@ -117,6 +120,29 @@ UtilityNamespace::ItemStatus StandardItemModel::getStatusFromStateItem(QStandard
     return itemStatusData.getStatus();
 }
 
+
+ItemStatusData StandardItemModel::getStatusDataFromIndex(const QModelIndex& index) {
+
+    QStandardItem* stateItem = this->getStateItemFromIndex(index);
+    ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
+    return itemStatusData;
+}
+
+
+NzbFileData StandardItemModel::getNzbFileDataFromIndex(const QModelIndex& index) {
+
+    QStandardItem* fileNameItem = this->getFileNameItemFromIndex(index);
+    NzbFileData currentNzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
+    return currentNzbFileData;
+}
+
+
+int StandardItemModel::getProgressValueFromIndex(const QModelIndex& index) {
+
+    QStandardItem* progressItem = this->getProgressItemFromIndex(index);
+    int currentDownloadProgress = progressItem->data(ProgressRole).toInt();
+    return currentDownloadProgress;
+}
 
 
 QStandardItem* StandardItemModel::getStateItemFromIndex(const QModelIndex& index) {

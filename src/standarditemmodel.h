@@ -43,13 +43,15 @@ public:
     QStandardItem* getFileNameItemFromIndex(const QModelIndex&);
     QStandardItem* getProgressItemFromIndex(const QModelIndex&);
     QStandardItem* getSizeItemFromIndex(const QModelIndex&);
+    ItemStatusData getStatusDataFromIndex(const QModelIndex&);
+    NzbFileData getNzbFileDataFromIndex(const QModelIndex&);
+    int getProgressValueFromIndex(const QModelIndex&);
     UtilityNamespace::ItemStatus getStatusFromStateItem(QStandardItem*) const;
     void updateSateItem(QStandardItem*, const UtilityNamespace::ItemStatus);
     void updateProgressItem(const QModelIndex&, const int);
     void storeStatusDataToItem(QStandardItem*, const ItemStatusData&);
     bool isNzbItem(QStandardItem*);
     void updateNzbFileDataToItem(QStandardItem*, const NzbFileData&);
-
 
 
 private:
