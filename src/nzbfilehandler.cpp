@@ -27,6 +27,7 @@
 #include <QUuid>
 
 #include "data/nzbfiledata.h"
+#include "data/globalfiledata.h"
 #include "centralwidget.h"
 #include "settings.h"
 #include "utility.h"
@@ -38,12 +39,12 @@ NzbFileHandler::NzbFileHandler()
 }
 
 
-QList<NzbFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFile& file, const QString& nzbName) {
+QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFile& file, const QString& nzbName) {
 
     
     // variables definition :
     QMap<int, SegmentData> segmentMap;
-    QMap<QString, NzbFileData> nzbFileDataFileNameMap;
+    QMap<QString, GlobalFileData> globalFileDataNameMap;
 
     NzbFileData nzbFileData;
     QVariant parentVariantId;
@@ -56,8 +57,7 @@ QList<NzbFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFile& 
 
     while (!stream.atEnd()) {
 
-        // define the data that holds data for a sinlge file to be downloaded :
-
+        // define the data that holds data for a single file to be downloaded :
         QXmlStreamReader::TokenType tokenType = stream.readNext();
 
         if (tokenType == QXmlStreamReader::StartElement) {
@@ -95,9 +95,8 @@ QList<NzbFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFile& 
                 // retrieve temporary folder :
                 QString fileSavePath = Settings::temporaryFolder().path() + "/";
 
-                SegmentData segmentData(bytes, number, part, UtilityNamespace::IdleStatus, fileSavePath);
+                SegmentData segmentData(bytes, number, part, UtilityNamespace::IdleStatus);
                 segmentData.setProgress(PROGRESS_INIT);
-                segmentData.setParentUniqueIdentifier(parentVariantId);
                 segmentData.setElementInList(elementInList++);
 
 
@@ -132,7 +131,7 @@ QList<NzbFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFile& 
                 nzbFileData.setFileSavePath(Settings::completedFolder().path() + "/" + nzbFileData.getNzbName() + "/");
 
                 // add the nzbFileData to the data map :
-                nzbFileDataFileNameMap.insert(nzbFileData.getFileName(), nzbFileData);
+                globalFileDataNameMap.insert(nzbFileData.getFileName(), GlobalFileData(nzbFileData));
 
                 // clear variables :    
                 NzbFileData nzbFileDataTemp;
@@ -162,8 +161,8 @@ QList<NzbFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFile& 
         this->displayMessageBox(parent, file.fileName());
     }
 
-    QList<NzbFileData> NzbFileDataOrderedList = nzbFileDataFileNameMap.values();
-    return NzbFileDataOrderedList;
+    QList<GlobalFileData> globalFileDataOrderedList = globalFileDataNameMap.values();
+    return globalFileDataOrderedList;
 
 }
 

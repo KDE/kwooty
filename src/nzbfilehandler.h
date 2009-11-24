@@ -24,17 +24,18 @@
 #include <QFile>
 #include <QFileInfo>
 
-class NzbFileData;
+
+class GlobalFileData;
 class CentralWidget;
 
 class NzbFileHandler
 {
 public:
 
-    QList<NzbFileData> processNzbFile(CentralWidget*, QFile&, const QString&);
+    QList<GlobalFileData> processNzbFile(CentralWidget*, QFile&, const QString&);
     NzbFileHandler();
 
- private:
+private:
     void displayMessageBox(CentralWidget*, const QString&);
     
 };
