@@ -164,7 +164,8 @@ void SegmentDecoder::scanSegmentFiles(){
         // add item to the current list only if it has been downloaded :
         if (currentSegment.getArticlePresenceOnServer() == Present) {
 
-            QString pathNameFile = currentSegment.getFileSavePath() + currentSegment.getPart();
+            QString temporaryFolder = Settings::temporaryFolder().path() + '/';
+            QString pathNameFile = temporaryFolder + currentSegment.getPart();
 
             //scan current segment and add it to item list :
             int returnVal = UULoadFile(pathNameFile.toAscii().data(), NULL, 0);
@@ -246,7 +247,7 @@ QString SegmentDecoder::getErrorMessage(const int returnVal){
         // to user except for segments not found :
         if (errnoVal != ENOENT) {
             errorMessage = strerror (errnoVal);
-            //kDebug() << "ERROR MESSAGE" << errorMessage << "ERRNO" << errno;
+            kDebug() << "Decoding error message :" << errorMessage << " errno :" << errnoVal;
             // send save error signal to open a message box :
             emit saveFileErrorSignal(DuringDecode);
         }
