@@ -106,7 +106,7 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
 
     }
 
-    //TEST
+    // set status icon :
     this->setIconToFileNameItem(parentModelIndex, itemStatusData.getStatus());
 
 }
@@ -210,8 +210,6 @@ ItemStatusData ItemDownloadUpdater::postDownloadProcessing(const QModelIndex& in
     return itemStatusData;
 
 }
-
-
 
 
 
