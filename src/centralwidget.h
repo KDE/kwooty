@@ -25,8 +25,10 @@
 #include <QFile>
 #include <QStandardItem>
 #include <QTreeView>
+#include "data/globalfiledata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
+
 
 class ClientManagerConn;
 class MyStatusBar;
@@ -35,13 +37,15 @@ class StandardItemModel;
 class RepairDecompressThread;
 class SegmentsDecoderThread;
 class SegmentManager;
+class DataRestorer;
 class NzbFileData;
 class ItemStatusData;
 
-Q_DECLARE_METATYPE (QStandardItem*)
-Q_DECLARE_METATYPE (ItemStatusData*)
 
-class CentralWidget : public QWidget
+Q_DECLARE_METATYPE (QStandardItem*)
+        Q_DECLARE_METATYPE (ItemStatusData*)
+
+        class CentralWidget : public QWidget
         
 {
     Q_OBJECT
@@ -49,7 +53,10 @@ class CentralWidget : public QWidget
 public:
     CentralWidget(QWidget* parent = 0, MyStatusBar* parentStatuBar = 0);
     ~CentralWidget();
-    void handleNzbFile(QFile& file);
+    void handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
+    void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
+    void savePendingDownloads();
+
     SegmentManager* getSegmentManager() const;
     StandardItemModel* getDownloadModel() const;
     MyStatusBar* getStatusBar() const;
@@ -60,14 +67,15 @@ private:
     MyStatusBar* statusBar;
     QList<ClientManagerConn*> clientManagerConnList;
     SegmentManager* segmentManager;
+    DataRestorer* dataRestorer;
     SegmentsDecoderThread* segmentsDecoderThread;
     RepairDecompressThread* repairDecompressThread;
     ItemParentUpdater* itemParentUpdater;
     StandardItemModel* downloadModel;
     int saveErrorButtonCode;
 
-    void setDataToModel(const QList<NzbFileData>&, const QString&);
-    void addParentItem (QStandardItem*, const NzbFileData&);
+    void setDataToModel(const QList<GlobalFileData>&, const QString&);
+    void addParentItem (QStandardItem*, const GlobalFileData&);
     void setHeaderLabels();
     void createNntpClients();
     void setupConnections();
@@ -77,7 +85,6 @@ private:
     void statusBarFileSizeUpdate();
     void initFoldersSettings();
     
-    
 signals:
     void dataHasArrivedSignal();
     void setMoveButtonEnabledSignal(bool);
@@ -86,8 +93,9 @@ signals:
     void setRemoveButtonEnabledSignal(bool);
     void recalculateNzbSizeSignal(const QModelIndex);
     void settingsChangedSignal();
+    void setIconToFileNameItemSignal(const QModelIndex);
 
-    
+
 public slots:
     void removeRowSlot();
     void clearSlot();
