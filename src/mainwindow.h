@@ -37,7 +37,7 @@ class MainWindow : public KXmlGuiWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void openFileSilently(KUrl url);
+    void openFileByExternalApp(KUrl url);
 
 
 private:
@@ -47,15 +47,18 @@ private:
 
     void setupActions();
     void openUrl(KUrl, bool&, UtilityNamespace::OpenFileMode);
+    bool queryClose() ;
 
 signals:
     void aboutToShowSettingsSignal();
+    void savePendingDownloadsSignal();
 
 public slots:
 
 private slots:
     void openFile();
     void showSettings();
+    void quit();
 
 };
 

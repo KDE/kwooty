@@ -43,6 +43,7 @@
 #include "preferences/preferencesserver.h"
 #include "preferences/preferencesgeneral.h"
 #include "preferences/preferencesprograms.h"
+#include "preferences/preferencesdisplay.h"
 
 
 
@@ -58,6 +59,7 @@ MainWindow::MainWindow(QWidget *parent): KXmlGuiWindow(parent), fileName(QString
     centralWidget = new CentralWidget(widget, statusBar);
 
     this->setCentralWidget(widget);
+
     this->setupActions();
 
 }
@@ -79,7 +81,7 @@ void MainWindow::setupActions()
     KAction* clearAction = new KAction(this);
     clearAction->setText(i18n("Clear"));
     clearAction->setIcon(KIcon("edit-clear-list"));
-    clearAction->setToolTip("Remove all rows");
+    clearAction->setToolTip(i18n("Remove all rows"));
     clearAction->setShortcut(Qt::CTRL + Qt::Key_W);
     actionCollection()->addAction("clear", clearAction);
     connect(clearAction, SIGNAL(triggered(bool)), centralWidget, SLOT(clearSlot()));
@@ -88,7 +90,7 @@ void MainWindow::setupActions()
     KAction* startDownloadAction = new KAction(this);
     startDownloadAction->setText(i18n("Start"));
     startDownloadAction->setIcon(KIcon("media-playback-start"));
-    startDownloadAction->setToolTip("Start download of selected rows");
+    startDownloadAction->setToolTip(i18n("Start download of selected rows"));
     startDownloadAction->setShortcut(Qt::CTRL + Qt::Key_S);
     startDownloadAction->setEnabled(false);
     actionCollection()->addAction("start", startDownloadAction);
@@ -99,7 +101,7 @@ void MainWindow::setupActions()
     KAction* pauseDownloadAction = new KAction(this);
     pauseDownloadAction->setText(i18n("Pause"));
     pauseDownloadAction->setIcon(KIcon("media-playback-pause"));
-    pauseDownloadAction->setToolTip("Pause download of selected rows");
+    pauseDownloadAction->setToolTip(i18n("Pause download of selected rows"));
     pauseDownloadAction->setShortcut(Qt::CTRL + Qt::Key_P);
     pauseDownloadAction->setEnabled(false);
     actionCollection()->addAction("pause", pauseDownloadAction);
@@ -110,7 +112,7 @@ void MainWindow::setupActions()
     KAction* removeItemAction = new KAction(this);
     removeItemAction->setText(i18n("Remove"));
     removeItemAction->setIcon(KIcon("list-remove"));
-    removeItemAction->setToolTip("Remove all selected rows");
+    removeItemAction->setToolTip(i18n("Remove all selected rows"));
     removeItemAction->setShortcut(Qt::Key_Delete);
     removeItemAction->setEnabled(false);
     actionCollection()->addAction("remove", removeItemAction);
@@ -118,12 +120,11 @@ void MainWindow::setupActions()
     connect(centralWidget, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
     connect(centralWidget, SIGNAL(setRemoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
 
-
     //moveToTopAction
     KAction* moveToTopAction = new KAction(this);
     moveToTopAction->setText(i18n("Top"));
     moveToTopAction->setIcon(KIcon("go-top"));
-    moveToTopAction->setToolTip("Move all selected rows to the top of the list");
+    moveToTopAction->setToolTip(i18n("Move all selected rows to the top of the list"));
     moveToTopAction->setShortcut(Qt::CTRL + Qt::Key_Up);
     moveToTopAction->setEnabled(false);
     actionCollection()->addAction("moveTop", moveToTopAction);
@@ -134,7 +135,7 @@ void MainWindow::setupActions()
     KAction* moveToBottomAction = new KAction(this);
     moveToBottomAction->setText(i18n("Bottom"));
     moveToBottomAction->setIcon(KIcon("go-bottom"));
-    moveToBottomAction->setToolTip("Move all selected rows to the bottom of the list");
+    moveToBottomAction->setToolTip(i18n("Move all selected rows to the bottom of the list"));
     moveToBottomAction->setShortcut(Qt::CTRL + Qt::Key_Down);
     moveToBottomAction->setEnabled(false);
     actionCollection()->addAction("moveBottom", moveToBottomAction);
@@ -147,7 +148,7 @@ void MainWindow::setupActions()
     //-------------------
 
     // quitAction
-    KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
+    KStandardAction::quit(this, SLOT(quit()), actionCollection()); 
 
     // closeAction
     //KStandardAction::close(kapp, SLOT(close()), actionCollection());
@@ -158,11 +159,7 @@ void MainWindow::setupActions()
     // SettingsAction
     KStandardAction::preferences(this, SLOT(showSettings()), actionCollection());
 
-    //connect(kapp, SIGNAL(lastWindowClosed), kapp, SLOT(quit()));
-
-
     setupGUI();
-
 
 }
 
@@ -184,10 +181,15 @@ void MainWindow::showSettings(){
 
         PreferencesGeneral* preferencesGeneral = new PreferencesGeneral();
         dialog->addPage( preferencesGeneral, i18n("General"), "preferences-system", i18n("General Setup"));
+
         PreferencesServer* preferencesServer = new PreferencesServer();
         dialog->addPage( preferencesServer, i18n("Connection"), "network-workgroup", i18n("Setup Server Connection"));
+
         PreferencesPrograms* preferencesPrograms = new PreferencesPrograms();
         dialog->addPage( preferencesPrograms, i18n("Programs"), "system-run", i18n("Setup External Programs"));
+
+        PreferencesDisplay* preferencesDisplay = new PreferencesDisplay();
+        dialog->addPage( preferencesDisplay, i18n("Display modes"), "view-choose", i18n("Setup display modes"));
 
         connect( dialog, SIGNAL(settingsChanged(const QString&)), centralWidget, SLOT(updateSettingsSlot()) );
         connect( dialog, SIGNAL(settingsChanged(const QString&)), preferencesPrograms, SLOT(aboutToShowSettingsSlot()) );
@@ -220,7 +222,7 @@ void MainWindow::openFile() {
 
         if (!fileNameFromDialog.isNull() || !fileNameFromDialog.isEmpty()) {
 
-            this->openUrl(KUrl(fileNameFromDialog), isWrongUrl, UtilityNamespace::NotSilent);
+            this->openUrl(KUrl(fileNameFromDialog), isWrongUrl, UtilityNamespace::OpenNormal);
 
         } // end of iteration loop
 
@@ -231,17 +233,17 @@ void MainWindow::openFile() {
         }
 
 
-
     }
 
 }
 
 
-void MainWindow::openFileSilently(KUrl url) {
+void MainWindow::openFileByExternalApp(KUrl url) {
 
     bool isWrongUrl = false;
 
-    this->openUrl(url, isWrongUrl, UtilityNamespace::Silent);
+    // if file is opened by file or internet browser :
+    this->openUrl(url, isWrongUrl, UtilityNamespace::OpenWith);
 
     // If url cannot be reached open an error message box
     if (isWrongUrl){
@@ -270,12 +272,13 @@ void MainWindow::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenFileM
 
         file.close();        
 
-        // copy nzb file in its associated download folder if file has been open silently :
-        if (openFileMode == UtilityNamespace::Silent) {
+        // copy nzb file in its associated download folder if file has been open has been triggered by another app  :
+        if (Settings::openWith() &&
+            (openFileMode == UtilityNamespace::OpenWith)) {
 
             //remove .nzb extension to file name :
-            QString nzbBaseName = url.fileName();
-            nzbBaseName.chop(4);
+            QFileInfo fileInfo(file.fileName());
+            QString nzbBaseName = fileInfo.completeBaseName();
 
             // create download folder :
             QString downloadFolderPath = Settings::completedFolder().path() + '/' + nzbBaseName;
@@ -299,5 +302,17 @@ void MainWindow::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenFileM
 
 
 
+void MainWindow::quit() {
+    // ask to save pending downloads when quitting action performed :
+    centralWidget->savePendingDownloads();
+    kapp->quit();
+}
+
+
+bool MainWindow::queryClose() {
+    // ask to save pending downloads when closing action performed :
+    centralWidget->savePendingDownloads();
+    return true;
+}
 
 
