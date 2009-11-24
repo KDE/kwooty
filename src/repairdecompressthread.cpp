@@ -136,6 +136,8 @@ void RepairDecompressThread::setupConnections() {
              SIGNAL(passwordEnteredByUserSignal(bool, QString)),
              extract,
              SLOT(passwordEnteredByUserSlot(bool, QString)));
+
+
 }
 
 
@@ -287,6 +289,8 @@ bool RepairDecompressThread::isListContainsdifferentGroups(const QList<NzbFileDa
 
     }
 
+    // The sets will contain all different base names founds for the nzb group
+    // if sets are equal to one notify that files belonging to nzb group are not mixed with other files :
     if ( (baseNamePar2Set.size() == 1) &&
          (baseNameRarSet.size() == 1) ) {
 
@@ -380,10 +384,8 @@ QString RepairDecompressThread::getBaseNameFromRar(const NzbFileData& nzbFileDat
     fileInfo.setFile(fileBaseName);
     QString fileSuffix = fileInfo.suffix();
 
-    //kDebug() << "file suffix : " << fileSuffix;
     if (fileSuffix.contains(QRegExp("part\\d+", Qt::CaseInsensitive))) {
         // remove .part*** extension :
-        //kDebug() << "remove .part*** extension";
         fileBaseName = fileInfo.completeBaseName();
 
     }
@@ -446,8 +448,12 @@ void RepairDecompressThread::groupVolumeNamesTogether(const QStringList& fileBas
                     }
                 }
 
-                //if (nzbFileData.getBaseName() == fileBaseName){
-                if (nzbFileData.getDecodedFileName().contains(fileBaseName)){
+
+                // trying to get the most generic discriminant according to rar file base names and
+                // par2 file base names that could not exactly match :
+                if ( (!nzbFileData.isPar2File() && nzbFileData.getDecodedFileName().contains(fileBaseName) ) ||
+                     (nzbFileData.isPar2File() && (nzbFileData.getBaseName() == fileBaseName)) ) {
+                    //if (nzbFileData.getDecodedFileName().contains(fileBaseName)){
 
                     // group nzbFileData with the same baseName :
                     groupedFileList.append(nzbFileData);
