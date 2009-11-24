@@ -55,7 +55,10 @@ namespace UtilityNamespace
     
     // segment file identifier :
     static const QString applicationFileOwner = "Kwooty_87b022df-17b9-409f-a423-3cc626831adc\r\n";
+    static const QString remainingDownloadsFile = "kwootyInQueueDownloads.dat";
     
+    static const int MINUTES_TO_MILLISECONDS = 60000;
+
     // custom roles used for storing data in items :
     enum MyRoles{
         StatusRole  = Qt::UserRole + 1,
@@ -146,10 +149,10 @@ namespace UtilityNamespace
     };
     
 
-    // indicate if file is open silenty or not :
+    // indicate if file is open by another app or directly by this app :
     enum OpenFileMode {
-        Silent,
-        NotSilent
+        OpenNormal,
+        OpenWith
     };
 
 }
@@ -167,8 +170,10 @@ public:
     static bool isReadyToDownload(const UtilityNamespace::ItemStatus);
     static bool isPaused(const UtilityNamespace::ItemStatus);
     static bool isPausing(const UtilityNamespace::ItemStatus);
+    static bool isDownloadOrPausing(const UtilityNamespace::ItemStatus);
     static bool isDownloadFinish(const UtilityNamespace::ItemStatus);
     static bool isDecoding(const UtilityNamespace::ItemStatus);
+    static bool isWaitingForDecode(const UtilityNamespace::ItemStatus, const UtilityNamespace::Data);
     static bool saveData(const QString&, const QString&, const QByteArray&);
     static bool createFolder(const QString&);
     static bool isFolderExists(const QString&);

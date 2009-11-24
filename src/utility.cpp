@@ -78,6 +78,18 @@ bool Utility::isReadyToDownload(const UtilityNamespace::ItemStatus statusItem){
     return status;
 }
 
+bool Utility::isDownloadOrPausing(const UtilityNamespace::ItemStatus statusItem){
+    bool status = false;
+
+    if ( statusItem == DownloadStatus ||
+         isPausing(statusItem) ) {
+
+        status = true;
+    }
+    return status;
+}
+
+
 
 bool Utility::isPaused(const UtilityNamespace::ItemStatus statusItem){
     bool status = false;
@@ -104,6 +116,19 @@ bool Utility::isDecoding(const UtilityNamespace::ItemStatus statusItem){
     bool status = false;
 
     if ( (statusItem == DecodeStatus) || (statusItem == ScanStatus)){
+        status = true;
+    }
+
+    return status;
+}
+
+
+bool Utility::isWaitingForDecode(const UtilityNamespace::ItemStatus statusItem, const UtilityNamespace::Data data){
+    bool status = false;
+
+    if ( (statusItem == DownloadFinishStatus) &&
+         (data != NoData) ) {
+
         status = true;
     }
 
