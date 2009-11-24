@@ -83,7 +83,7 @@ void PreferencesPrograms::displayProgramInfo(const bool isProgramFound, const QS
 
 void PreferencesPrograms::enableGroupBox(bool isEnabled, const QString& program) {
 
-     // enable/disable auto repair settings if par2 program found/not found :
+    // enable/disable auto repair settings if par2 program found/not found :
     if (program == UtilityNamespace::repairProgram) {
         kcfg_groupBoxAutoRepair->setEnabled(isEnabled);
     }

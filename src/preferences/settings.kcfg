@@ -5,6 +5,7 @@
                           http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <kcfgfile/>
   <include>kglobalsettings.h</include>
+
     <group name="server">
         <entry name="hostName" type="String">
             <label>Defines the server host name</label>
@@ -42,6 +43,7 @@
             <max>100</max>
         </entry>
     </group>
+
     <group name="general">
         <entry name="completedFolder" type="Url">
             <label>completed folder</label>
@@ -49,27 +51,24 @@
         <entry name="temporaryFolder" type="Url">
             <label>temporary folder</label>
         </entry>
-        <entry name="animateTreeView" type="Bool">
-            <label>Expand and collapse treeview with animation</label>
+	<entry name="restoreDownloads" type="Bool">
+            <label>Restore pending downloads from previous session at startup</label>
             <default>true</default>
         </entry>
-	<entry name="expandTreeView" type="Bool">
-            <label>Expand treeview automatically when a .nzb file is open</label>
-            <default>false</default>
-        </entry>
-        <entry name="alternateColors" type="Bool">
-            <label>Alternate background color for each row</label>
-            <default>false</default>
-        </entry>
 	<entry name="confirmClear" type="Bool">
-            <label>Display dialog box when clear button has been pushed</label>
+            <label>Display dialog box when Clear button has been pushed</label>
             <default>true</default>
         </entry>
 	<entry name="confirmRemove" type="Bool">
             <label>Display dialog box when Remove button has been pushed</label>
             <default>false</default>
         </entry>
+        <entry name="openWith" type="Bool">
+            <label>Copy nzb file in destination folder when added from another application by "open with..." action</label>
+            <default>true</default>
+        </entry>
     </group>
+
     <group name="programs">
         <entry name="groupBoxAutoRepair" type="Bool">
             <label>Automatically verif and repair downloaded files</label>
@@ -94,6 +93,24 @@
         <entry name="searchPathList" type="StringList">
             <label>Path to search external programs</label>
             <default>/usr/bin/</default>
+        </entry>
+    </group>
+    <group name="display">
+        <entry name="animateTreeView" type="Bool">
+            <label>Expand and collapse treeview with animation</label>
+            <default>true</default>
+        </entry>
+	<entry name="expandTreeView" type="Bool">
+            <label>Expand treeview automatically when a .nzb file is open</label>
+            <default>false</default>
+        </entry>
+        <entry name="alternateColors" type="Bool">
+            <label>Alternate background color for each row</label>
+            <default>false</default>
+        </entry>
+	<entry name="displayIcons" type="Bool">
+            <label>Display status icon next to archive names</label>
+            <default>true</default>
         </entry>
     </group>
 </kcfg>

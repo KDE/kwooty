@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>409</width>
-    <height>278</height>
+    <width>410</width>
+    <height>310</height>
    </rect>
   </property>
   <property name="toolTip">
    <string>Expand treeview automatically when a .nzb file is open</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
+  <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBoxFolder">
      <property name="title">
       <string>Folders</string>
      </property>
-     <layout class="QGridLayout">
+     <layout class="QGridLayout" name="gridLayout_2">
       <item row="1" column="0">
        <widget class="QLabel" name="labelTempFolder">
         <property name="text">
@@ -70,52 +70,42 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QCheckBox" name="kcfg_expandTreeView">
+       <widget class="QCheckBox" name="kcfg_restoreDownloads">
         <property name="toolTip">
-         <string>Expand treeview automatically when a .nzb file is open</string>
+         <string>Restore pending downloads from previous session at startup</string>
         </property>
         <property name="text">
-         <string>Expand tree when opening nzb file</string>
+         <string>Restore downloads from previous session at startup</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="kcfg_animateTreeView">
+       <widget class="QCheckBox" name="kcfg_openWith">
         <property name="toolTip">
-         <string>Expand and collapse treeview with animation</string>
+         <string>Copy nzb file in destination folder when added from another application by &quot;open with...&quot; action</string>
         </property>
         <property name="text">
-         <string>Animate row expandsion/collasping</string>
+         <string>Copy nzb file in destination folder when added from &quot;open with...&quot;</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QCheckBox" name="kcfg_alternateColors">
-        <property name="toolTip">
-         <string>Alternate background color for each row</string>
-        </property>
-        <property name="text">
-         <string>Use alternate row colors</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
        <widget class="QCheckBox" name="kcfg_confirmClear">
         <property name="toolTip">
          <string>Display dialog box when Clear button has been pushed</string>
         </property>
         <property name="text">
-         <string>Display confirm message when clearing rows</string>
+         <string>Show confirm message when clearing rows</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="3" column="0">
        <widget class="QCheckBox" name="kcfg_confirmRemove">
         <property name="toolTip">
          <string>Display dialog box when Remove button has been pushed</string>
         </property>
         <property name="text">
-         <string>Display confirm message when removing selected rows</string>
+         <string>Show confirm message when removing selected rows</string>
         </property>
        </widget>
       </item>

@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 #include "preferencesgeneral.h"
-
 #include "settings.h"
 
 PreferencesGeneral::PreferencesGeneral()
