@@ -33,20 +33,19 @@ int main (int argc, char** argv)
 {
     KAboutData aboutData("kwooty",
                          "",
-                         ki18n("Kwooty"), "0.1.2",
-                         ki18n("Kwooty is a friendly nzb usenet binary client.\n It also supports automatic file repairing and archive extraction."),
+                         ki18n("Kwooty"), "0.2.0-RC1",
+                         ki18n("Kwooty is a friendly nzb usenet binary downloader.\n It also supports automatic file repairing and archive extraction."),
                          KAboutData::License_GPL,
                          ki18n("Copyright (c) 2009 Xavier Lefage"),
                          KLocalizedString(),
-                         "http://sourceforge.net/projects/kwooty");
-    aboutData.addAuthor(ki18n("Xavier Lefage"),ki18n("Maintainer and Lead Developer"), "xavier.kwooty@gmail.com");
+                         "http://kwooty.sourceforge.net/");
+    aboutData.addAuthor(ki18n("Xavier Lefage"),ki18n("Maintainer, Lead Developer"), "xavier.kwooty@gmail.com");
     aboutData.setBugAddress("http://sourceforge.net/projects/kwooty");
 
     KCmdLineArgs::init(argc, argv, &aboutData);
 
     KCmdLineOptions options;
     options.add("+[Url]", ki18n("Document to open"));
-    //options.add("silent", ki18n("Silently open nzb given on URL"));
     KCmdLineArgs::addCmdLineOptions(options);
 
 
