@@ -54,6 +54,7 @@ private:
     ItemPostDownloadUpdater* itemPostDownloadUpdater;
     ItemDownloadUpdater* itemDownloadUpdater;
     bool isItemUpdated;
+    bool displayIcons;
 
     ItemStatusData updateItemsDownload(ItemStatusData&, const int, const QModelIndex&, const quint64);
     ItemStatusData updateStatusItemDownload(ItemStatusData&, const int);
@@ -71,6 +72,8 @@ signals:
 
 public slots:
     void recalculateNzbSizeSlot(const QModelIndex);
+    void setIconToFileNameItemSlot(const QModelIndex);
+    void settingsChangedSlot();
 
 private slots:
 

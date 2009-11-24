@@ -27,6 +27,7 @@
 #include "standarditemmodel.h"
 #include "itemdownloadupdater.h"
 #include "itempostdownloadupdater.h"
+#include "settings.h"
 #include "data/itemstatusdata.h"
 
 
@@ -36,9 +37,14 @@ ItemParentUpdater::ItemParentUpdater(CentralWidget* parent) : ItemAbstractUpdate
     this->parent = parent;
     this->downloadModel = parent->getDownloadModel();
     
+    // instanciate item updater classes :
     this->itemPostDownloadUpdater = new ItemPostDownloadUpdater(this);
     this->itemDownloadUpdater = new ItemDownloadUpdater(this);
 
+    // set displayIcons setting value :
+    this->displayIcons = Settings::displayIcons();
+
+    // setup connections :
     this->setupConnections();
 
 }
@@ -74,10 +80,25 @@ void ItemParentUpdater::setupConnections() {
              parent->getStatusBar(),
              SLOT(decrementSlot(const quint64, const int)));
 
+    // recalcultate full nzb size when children may have been removed :
     connect (parent,
              SIGNAL(recalculateNzbSizeSignal(const QModelIndex)),
              this,
              SLOT(recalculateNzbSizeSlot(const QModelIndex)));
+
+    // set Icon near file name item :
+    connect (parent,
+             SIGNAL(setIconToFileNameItemSignal(const QModelIndex)),
+             this,
+             SLOT(setIconToFileNameItemSlot(const QModelIndex)));
+
+
+    // parent notify that settings have been changed :
+    connect (parent,
+             SIGNAL(settingsChangedSignal()),
+             this,
+             SLOT(settingsChangedSlot()));
+
 
 }
 
@@ -89,6 +110,51 @@ void ItemParentUpdater::recalculateNzbSizeSlot(const QModelIndex index) {
 
 }
 
+
+
+void ItemParentUpdater::setIconToFileNameItemSlot(const QModelIndex index) {
+
+    // for a parent, get each children items in order to update their status icon :
+    QStandardItem* parentItem = this->downloadModel->itemFromIndex(index);
+
+    for (int i = 0; i < parentItem->rowCount(); i++) {
+
+        // get corresponding file name index :
+        QModelIndex fileNameIndex = index.child(i, FILE_NAME_COLUMN);
+
+        // get current item status :
+        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(fileNameIndex);
+        ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
+        UtilityNamespace::ItemStatus status = itemStatusData.getStatus();
+
+        // set icon :
+        this->setIconToFileNameItem(fileNameIndex, status);
+
+    }
+
+}
+
+
+
+void ItemParentUpdater::settingsChangedSlot() {
+
+    // settings have been changed, set or unset icons :
+    if (this->displayIcons != Settings::displayIcons()) {
+
+        // get the root model :
+        QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+
+        // for each parent item, update it children :
+        for (int i = 0; i < rootItem->rowCount(); i++) {
+
+            QStandardItem* parentItem = rootItem->child(i, FILE_NAME_COLUMN);
+            this->setIconToFileNameItemSlot(parentItem->index());
+        }
+
+        // update displayIcons :
+        this->displayIcons = Settings::displayIcons();
+    }
+}
 
 
 
