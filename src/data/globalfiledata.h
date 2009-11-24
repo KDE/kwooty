@@ -18,40 +18,47 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-#ifndef ITEMSTATUSDATA_H
-#define ITEMSTATUSDATA_H
+#ifndef GLOBALFILEDATA_H
+#define GLOBALFILEDATA_H
 
-#include <QStandardItem>
+
+#include "nzbfiledata.h"
+#include "itemstatusdata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
-class ItemStatusData
+
+class GlobalFileData
 {
+
 public:
-    ItemStatusData();
-    ~ItemStatusData();
-    void init();
-    void setStatus(const UtilityNamespace::ItemStatus);
-    UtilityNamespace::ItemStatus getStatus() const;
-    void setDataStatus(const UtilityNamespace::Data);
-    UtilityNamespace::Data getDataStatus() const;
-    bool isDownloadFinish() const;
-    void setDownloadFinish(const bool);
-    bool isDecodeFinish() const;
-    void setDecodeFinish(const bool);
+
+    GlobalFileData(const NzbFileData&, const ItemStatusData& itemStatusData = ItemStatusData(), const int& progressValue = 0);
+    GlobalFileData();
+    ~GlobalFileData();
+
+    NzbFileData getNzbFileData() const;
+    void setNzbFileData(const NzbFileData&);
+
+    ItemStatusData getItemStatusData() const;
+    void setItemStatusData(const ItemStatusData&);
+
+    int getProgressValue() const;
+    void setProgressValue(const int&);
+
 
 private:
-    UtilityNamespace::ItemStatus status;
-    UtilityNamespace::Data data;
-    bool downloadFinish;
-    bool decodeFinish;
+    NzbFileData nzbFileData;
+    ItemStatusData itemStatusData;
+    int progressValue;
+
 
 };
 
-QDataStream& operator<<(QDataStream&, const ItemStatusData&);
-QDataStream& operator>>(QDataStream&, ItemStatusData&);
 
-Q_DECLARE_METATYPE(ItemStatusData);
+QDataStream& operator<<(QDataStream&, const GlobalFileData&);
+QDataStream& operator>>(QDataStream&, GlobalFileData&);
 
-#endif // ITEMSTATUSDATA_H
+Q_DECLARE_METATYPE(GlobalFileData);
 
+#endif // GLOBALFILEDATA_H

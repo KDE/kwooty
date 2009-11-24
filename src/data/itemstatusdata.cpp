@@ -76,3 +76,36 @@ void ItemStatusData::setStatus(const UtilityNamespace::ItemStatus status){
 UtilityNamespace::ItemStatus ItemStatusData::getStatus() const{
     return this->status;
 }
+
+
+QDataStream& operator<<(QDataStream& out, const ItemStatusData& itemStatusData) {
+
+    out << (qint16)itemStatusData.getStatus()
+        << (qint16)itemStatusData.getDataStatus()
+        << itemStatusData.isDownloadFinish()
+        << itemStatusData.isDecodeFinish();
+
+    return out;
+}
+
+
+
+QDataStream& operator>>(QDataStream& in, ItemStatusData& itemStatusData)
+{
+    qint16 status;
+    qint16 data;
+    bool downloadFinish;
+    bool decodeFinish;
+
+    in >> status
+       >> data
+       >> downloadFinish
+       >> decodeFinish;
+
+    itemStatusData.setStatus((UtilityNamespace::ItemStatus)status);
+    itemStatusData.setDataStatus((UtilityNamespace::Data)data);
+    itemStatusData.setDownloadFinish(downloadFinish);
+    itemStatusData.setDecodeFinish(decodeFinish);
+
+    return in;
+}

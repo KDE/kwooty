@@ -63,7 +63,6 @@ public:
     UtilityNamespace::ItemStatus getExtractProgressionStep() const;
     bool operator==(const NzbFileData&);
 
-
 private:
     QString fileName;
     QString decodedFileName;
@@ -82,6 +81,9 @@ private:
     bool rarFile;
 
 };
+
+QDataStream& operator<<(QDataStream&, const NzbFileData&);
+QDataStream& operator>>(QDataStream&, NzbFileData&);
 
 Q_DECLARE_METATYPE(NzbFileData);
 

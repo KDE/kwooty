@@ -27,7 +27,7 @@ class SegmentData
 {
 
 public:
-    SegmentData(const QString&, const QString&, const QString&, const int, const QString&);
+    SegmentData(const QString&, const QString&, const QString&, const int);
     SegmentData();
 
 
@@ -46,9 +46,6 @@ public:
     int getProgress() const;
     void setProgress(const int);
 
-    void setFileSavePath(const QString&);
-    QString getFileSavePath() const;
-
     void setElementInList(const quint32);
     quint32 getElementInList() const;
 
@@ -63,7 +60,6 @@ private:
     QString bytes;
     QString number;
     QString part;
-    QString fileSavePath;
     QVariant parentUniqueIdentifier;
     quint32 elementInList;
     int status;
@@ -71,6 +67,9 @@ private:
     int articlePresence;
 
 };
+
+QDataStream& operator<<(QDataStream&, const SegmentData&);
+QDataStream& operator>>(QDataStream&, SegmentData&);
 
 
 Q_DECLARE_METATYPE(SegmentData);

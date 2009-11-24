@@ -29,13 +29,12 @@ SegmentData::SegmentData()
 }
 
 
-SegmentData::SegmentData(const QString& bytes, const QString& number, const QString& part, const int status, const QString& fileSavePath)
+SegmentData::SegmentData(const QString& bytes, const QString& number, const QString& part, const int status)
 {
     this->bytes = bytes;
     this->number = number;
     this->part = part;
     this->status = status;
-    this->fileSavePath = fileSavePath;
     this->articlePresence = Unknown;
 }
 
@@ -82,14 +81,6 @@ void SegmentData::setProgress(const int progress){
     this->progress = progress;
 }
 
-QString SegmentData::getFileSavePath() const{
-    return this->fileSavePath;
-}
-
-void SegmentData::setFileSavePath(const QString& fileSavePath){
-    this->fileSavePath = fileSavePath;
-}
-
 void SegmentData::setElementInList(const quint32 elementInList){
     this->elementInList = elementInList;
 }
@@ -115,4 +106,49 @@ void SegmentData::setArticlePresenceOnServer(const int articlePresence){
 }
 
 
+QDataStream& operator<<(QDataStream& out, const SegmentData& segmentData) {
+
+    out << segmentData.getBytes()
+        << segmentData.getNumber()
+        << segmentData.getPart()
+        << segmentData.getElementInList()
+        << segmentData.getStatus()
+        << segmentData.getProgress()
+        << segmentData.getArticlePresenceOnServer();
+
+    return out;
+}
+
+
+QDataStream& operator>>(QDataStream& in, SegmentData& segmentData) {
+
+    QString bytes;
+    QString number;
+    QString part;
+    QString fileSavePath;
+    QVariant parentUniqueIdentifier;
+    quint32 elementInList;
+    int status;
+    int progress;
+    int articlePresenceOnServer;
+
+    in >> bytes
+       >> number
+       >> part
+       >> elementInList
+       >> status
+       >> progress
+       >> articlePresenceOnServer;
+
+
+    segmentData.setBytes(bytes);
+    segmentData.setNumber(number);
+    segmentData.setPart(part);
+    segmentData.setElementInList(elementInList);
+    segmentData.setStatus(status);
+    segmentData.setProgress(progress);
+    segmentData.setArticlePresenceOnServer(articlePresenceOnServer);
+
+    return in;
+}
 

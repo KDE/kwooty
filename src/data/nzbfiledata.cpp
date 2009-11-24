@@ -60,7 +60,7 @@ void NzbFileData::setDecodedFileName(const QString& decodedFileName) {
     this->decodedFileName = decodedFileName;
 
     // add decoded fileName to list of candidate file names
-    // (this fileName will always be the first element of the list) :
+    // (this fileName shall always be the first element of the list) :
     if (!this->possibleFileNameList.contains(decodedFileName)) {
         this->possibleFileNameList.append(decodedFileName);
     }
@@ -73,6 +73,7 @@ bool NzbFileData::match(const QString& fileNameStr, const QString& originalFileN
              this->possibleFileNameList.contains(originalFileNameStr) );
 
 }
+
 
 void NzbFileData::setRenamedFileName(const QString& fileNameStr, const QString& originalFileNameStr)  {
 
@@ -184,5 +185,77 @@ QVariant NzbFileData::getUniqueIdentifier() const {
 }
 
 bool NzbFileData::operator==(const NzbFileData& nzbFileDataToCompare) {
-      return (this->getUniqueIdentifier() == nzbFileDataToCompare.getUniqueIdentifier());
+    return (this->getUniqueIdentifier() == nzbFileDataToCompare.getUniqueIdentifier());
 }
+
+
+
+
+QDataStream& operator<<(QDataStream& out, const NzbFileData& nzbFileData) {
+
+    out << nzbFileData.getFileName()
+            << nzbFileData.getDecodedFileName()
+            << nzbFileData.getBaseName()
+            << nzbFileData.getNzbName()
+            << nzbFileData.getFileSavePath()
+            << nzbFileData.getGroupList()
+            << nzbFileData.getSegmentList()
+            << nzbFileData.getUniqueIdentifier()
+            << nzbFileData.getSize()
+            << nzbFileData.isPar2File()
+            << nzbFileData.isRarFile();
+
+    return out;
+}
+
+
+
+QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData)
+{
+    QString fileName;
+    QString decodedFileName;
+    QString baseName;
+    QString nzbName;
+    QString fileSavePath;
+    QStringList groupList;
+    QList<SegmentData> segmentList;
+    QVariant uniqueIdentifier;
+    quint64 size;
+    bool par2File;
+    bool rarFile;
+
+    in >> fileName
+            >> decodedFileName
+            >> baseName
+            >> nzbName
+            >> fileSavePath
+            >> groupList
+            >> segmentList
+            >> uniqueIdentifier
+            >> size
+            >> par2File
+            >> rarFile;
+
+
+    nzbFileData.setFileName(fileName);
+    nzbFileData.setBaseName(baseName);
+    nzbFileData.setNzbName(nzbName);
+    nzbFileData.setFileSavePath(fileSavePath);
+    nzbFileData.setGroupList(groupList);
+    nzbFileData.setSegmentList(segmentList);
+    nzbFileData.setUniqueIdentifier(uniqueIdentifier);
+    nzbFileData.setSize(size);
+    nzbFileData.setPar2File(par2File);
+    nzbFileData.setRarFile(rarFile);
+
+    // do not set decoded file name if it is empty as it will also
+    // be apended to possibleFileNameList and will cause issues during extract process :
+    if (!decodedFileName.isEmpty()) {
+        nzbFileData.setDecodedFileName(decodedFileName);
+    }
+
+    return in;
+}
+
+
+
