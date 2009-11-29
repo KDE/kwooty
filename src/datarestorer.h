@@ -44,9 +44,6 @@ class DataRestorer : public QObject
 
 public:
 
-    static const quint32 MAGIC_NUMBER = 0xC82F1D37;
-    static const quint32 APPLICATION_VERSION_1 = 001;
-
     DataRestorer(CentralWidget* parent = 0);
     DataRestorer();
     void saveQueueData();
@@ -56,7 +53,9 @@ private:
     CentralWidget* parent;
     StandardItemModel* downloadModel;
     QTimer* dataSaverTimer;
-    QHash<quint32, QDataStream::Version> versionStreamMap;
+    QHash<quint32, int> versionStreamMap;
+    quint32 magicNumber;
+    quint32 applicationVersion1;
 
     void setupConnections();
     void resetDataForDecodingFile(NzbFileData&, ItemStatusData&, int&);

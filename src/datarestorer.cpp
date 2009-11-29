@@ -40,14 +40,17 @@ DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent)
     dataSaverTimer = new QTimer(this);
     dataSaverTimer->start(5 * UtilityNamespace::MINUTES_TO_MILLISECONDS);
 
+
+    magicNumber = 0xC82F1D37;
+    applicationVersion1 = 001;
     // map kwooty serialization version and its corresponding dataStream version
-    versionStreamMap.insert(APPLICATION_VERSION_1, QDataStream::Qt_4_4);
+    versionStreamMap.insert(applicationVersion1, QDataStream::Qt_4_4);
     
     this->setupConnections();
 
     // read data from previous sessions if exists :
     if (Settings::restoreDownloads()) {
-        QTimer::singleShot(200, this, SLOT(readDataFromDiskSlot()));
+        QTimer::singleShot(150, this, SLOT(readDataFromDiskSlot()));
     }
 
 }
@@ -111,9 +114,9 @@ void DataRestorer::writeDataToDisk() {
     QDataStream dataStreamOut(&file);
 
     // Write a header with a "magic number" and a version
-    dataStreamOut << (quint32)MAGIC_NUMBER;
-    dataStreamOut << (quint32)APPLICATION_VERSION_1;
-    dataStreamOut.setVersion(versionStreamMap.value(APPLICATION_VERSION_1));
+    dataStreamOut << (quint32)magicNumber;
+    dataStreamOut << (quint32)applicationVersion1;
+    dataStreamOut.setVersion(versionStreamMap.value(applicationVersion1));
 
 
     // get nzb items whose download is not complete :
@@ -179,18 +182,18 @@ bool DataRestorer::isHeaderOk(QDataStream& dataStreamIn) {
     // get saved magic and number;
     dataStreamIn >> magic >> appVersion;
 
-    if (magic != MAGIC_NUMBER) {
+    if (magic != magicNumber) {
         kDebug() << "file does not belong to this application";
         headerOk = false;
     }
 
 
-    if (appVersion != APPLICATION_VERSION_1) {
+    if (appVersion != applicationVersion1) {
         kDebug() << "version can not be processed";
         headerOk = false;
     }
     else {
-        dataStreamIn.setVersion(versionStreamMap.value(APPLICATION_VERSION_1));
+        dataStreamIn.setVersion(versionStreamMap.value(applicationVersion1));
     }
 
 
