@@ -201,8 +201,7 @@ void CentralWidget::restoreDataFromPreviousSession(const QList<GlobalFileData>& 
 void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataList, const QString& nzbName){
 
     QStandardItem* nzbNameItem = new QStandardItem(nzbName);
-    //nzbNameItem->setIcon(KIcon("go-next-view"));
-    nzbNameItem->setIcon(KIcon("arrow-right"));
+    nzbNameItem->setIcon(KIcon("go-next-view"));
 
     quint64  nzbFilesSize = 0;
     foreach (GlobalFileData currentGlobalFileData, globalFileDataList) {
@@ -335,6 +334,13 @@ void CentralWidget::setupConnections() {
              SIGNAL(updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
              segmentManager,
              SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
+
+
+#if QT_VERSION == 0x040503
+    // fixes #QTBUG-5201
+    connect(downloadModel, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(dataChangedSlot(QStandardItem*)));
+#endif
+
 
 }
 
@@ -819,5 +825,22 @@ void CentralWidget::updateSettingsSlot() {
 }
 
 
+
+
+#if QT_VERSION == 0x040503
+void CentralWidget::dataChangedSlot(QStandardItem* item){
+    // items at row 0 are not updated in qt 4.5.3,
+    // this fixes update issue :
+    QModelIndex index = item->index();
+    if (index.isValid()) {       
+        if (downloadModel->isNzbItem(item) && (item->row() == 0) ) {
+            const QRect rect = treeView->visualRect(index);
+            if (treeView->viewport()->rect().intersects(rect)){
+                treeView->viewport()->update(rect);
+            }
+        }
+    }
+}
+#endif
 
 
