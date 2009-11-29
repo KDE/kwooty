@@ -43,9 +43,9 @@ class ItemStatusData;
 
 
 Q_DECLARE_METATYPE (QStandardItem*)
-        Q_DECLARE_METATYPE (ItemStatusData*)
+Q_DECLARE_METATYPE (ItemStatusData*)
 
-        class CentralWidget : public QWidget
+class CentralWidget : public QWidget
         
 {
     Q_OBJECT
@@ -106,6 +106,11 @@ public slots:
     void pauseDownloadSlot();
     void saveFileErrorSlot(int);
     void updateSettingsSlot();
+
+    // #QTBUG-5201
+    #if QT_VERSION == 0x040503
+    void dataChangedSlot(QStandardItem*);
+    #endif
 
     
 private slots:
