@@ -85,7 +85,7 @@
          <string>Copy nzb file in destination folder when added from another application by &quot;open with...&quot; action</string>
         </property>
         <property name="text">
-         <string>Copy nzb file in destination folder when added from &quot;open with...&quot;</string>
+         <string>Copy nzb file added from external application in destination folder</string>
         </property>
        </widget>
       </item>
