@@ -44,16 +44,16 @@ ItemAbstractUpdater::ItemAbstractUpdater(QObject* parent) : QObject (parent)
     statusIconStrMap.insert(DecodeFinishStatus,        "mail-mark-read");
     statusIconStrMap.insert(DecodeErrorStatus,         "edit-delete");
     statusIconStrMap.insert(VerifyStatus,              "mail-mark-read");
-    statusIconStrMap.insert(VerifyFoundStatus,         "dialog-ok");
-    statusIconStrMap.insert(VerifyMatchStatus,         "dialog-ok");
+    statusIconStrMap.insert(VerifyFoundStatus,         "dialog-ok-apply");
+    statusIconStrMap.insert(VerifyMatchStatus,         "dialog-ok-apply");
     statusIconStrMap.insert(VerifyMissingStatus,       "edit-delete");
     statusIconStrMap.insert(VerifyDamagedStatus,       "edit-delete");
     statusIconStrMap.insert(RepairStatus,              "mail-mark-read");
     statusIconStrMap.insert(RepairNotPossibleStatus,   "edit-delete");
     statusIconStrMap.insert(RepairFailedStatus,        "edit-delete");
-    statusIconStrMap.insert(ExtractStatus,             "dialog-ok");
+    statusIconStrMap.insert(ExtractStatus,             "dialog-ok-apply");
     statusIconStrMap.insert(ExtractBadCrcStatus,       "edit-delete");
-    statusIconStrMap.insert(ExtractSuccessStatus,      "dialog-ok");
+    statusIconStrMap.insert(ExtractSuccessStatus,      "dialog-ok-apply");
     statusIconStrMap.insert(ExtractFailedStatus,       "edit-delete");
 
 
