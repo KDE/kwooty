@@ -98,7 +98,7 @@ void Repair::launchProcess(const QList<NzbFileData>& nzbFileDataList, const QStr
             }
             // try to decompress files directly :
             else {
-                kDebug() << "No Par2 files found!";
+                //kDebug() << "No Par2 files found!";
                 emit repairProcessEndedSignal(this->nzbFileDataList, RepairFinishedStatus);
                 // clear global variables :
                 this->resetVariables();
@@ -218,6 +218,7 @@ void Repair::repairUpdate(const QString& repairProcessOutput) {
 
             }
 
+
             this->repairProgressValueOld = repairProgressValue;
         }
     }
@@ -258,6 +259,7 @@ void Repair::removePar2Files(){
         }
     }
 }
+
 
 
 UtilityNamespace::ItemTarget Repair::getItemTarget(const NzbFileData& nzbFileData){
@@ -371,7 +373,6 @@ void Repair::repairReadyReadSlot(){
 
 void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus exitStatus){
 
-    //kDebug() << "par2repair FINISHED:" << "par2repair exit code - exit status : " << exitCode << " " << exitStatus;
 
     // notify nzb parent item that verification has ended :
     for (int i = 0; i < this->nzbFileDataList.size(); i++) {
@@ -435,6 +436,17 @@ void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus e
         emit repairProcessEndedSignal(this->nzbFileDataList, RepairFailedStatus);
     }
 
+
+    // 3. Under certain circumstances, frequently when a group of files have not been found
+    // on server and are mixed with another group of files which have been found on server,
+    // it can occur that files remains in "verifying" status althought repairing is over, set them to VerifyMissingStatus :
+//    foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+//        if (nzbFileData.getVerifyProgressionStep() == VerifyStatus) {
+//            emit updateRepairSignal(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, VerifyMissingStatus, ChildItemTarget);
+//        }
+//    }
+
+
     this->resetVariables();
 
 }
@@ -461,6 +473,7 @@ void Repair::sendPar2ProgramNotFoundNotification() {
 
 
 void Repair::sendVerifyingFilesNotification() {
+
     // for each file name found in .par2 file, set status as VerifyStatus :
     QFile par2File(this->par2FilesOrderedList.at(0));
     par2File.open(QIODevice::ReadOnly);
@@ -470,8 +483,8 @@ void Repair::sendVerifyingFilesNotification() {
         NzbFileData nzbFileData = this->nzbFileDataList.at(i);
 
         // notify that items are verifying (nzbFileData.isPar2File() allows to notify parent item) :
-        if ((par2ByteArray.contains(nzbFileData.getDecodedFileName().toAscii())) ||
-            nzbFileData.isPar2File() ) {
+        if ( par2ByteArray.contains(nzbFileData.getDecodedFileName().toAscii())  ||
+             nzbFileData.isPar2File() ) {
             // update list :
             this->updateNzbFileDataInList(nzbFileData, VerifyStatus, i);
 
@@ -505,6 +518,7 @@ void Repair::sendVerifyNotification(const QString& fileNameStr, const QString& o
 
     // search corresponding file into the list :
     for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+
         NzbFileData nzbFileData = this->nzbFileDataList.at(i);
 
         if (nzbFileData.match(fileNameStr, originalFileNameStr)) {
