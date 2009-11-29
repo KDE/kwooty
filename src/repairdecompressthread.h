@@ -51,16 +51,19 @@ private:
     QTimer* repairDecompressTimer;
     QMutex mutex;
     QList< QList<NzbFileData> > filesToExtractList;
+    QList< QList<NzbFileData> > filesToProcessList;
     bool waitForNextProcess;
 
     void run();
     void setupConnections();
-    void groupVolumeNamesTogether(const QStringList&, const QList<NzbFileData>&);
+    void processRarFilesFromDifferentGroups(const QStringList&, const QList<NzbFileData>&);
+    void processRarFilesFromSameGroup(const QList<NzbFileData>&);
     bool isListContainsdifferentGroups(const QList<NzbFileData>&);
-    QString tryToGuessDecodedFileName(NzbFileData&, const QList<NzbFileData>&, const QString&);
+    NzbFileData tryToGuessDecodedFileName(NzbFileData&, const QList<NzbFileData>&, const QString&);
     QStringList listDifferentFileBaseName(QList<NzbFileData>&);
     QString getBaseNameFromPar2(const NzbFileData&);
     QString getBaseNameFromRar(const NzbFileData&);
+
 
 signals:
     void updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
@@ -76,6 +79,7 @@ public slots:
 private slots:
     void startRepairSlot();
     void startExtractSlot();
+    void processPendingFilesSlot();
 
 
 };
