@@ -33,7 +33,7 @@ int main (int argc, char** argv)
 {
     KAboutData aboutData("kwooty",
                          "",
-                         ki18n("Kwooty"), "0.2.0-RC1",
+                         ki18n("Kwooty"), "0.2.0",
                          ki18n("Kwooty is a friendly nzb usenet binary downloader.\n It also supports automatic file repairing and archive extraction."),
                          KAboutData::License_GPL,
                          ki18n("Copyright (c) 2009 Xavier Lefage"),
