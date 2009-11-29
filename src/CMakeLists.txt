@@ -42,18 +42,11 @@ kde4_add_ui_files(  Kwooty_SRCS
 		    preferences/preferencesdisplay.ui
 		 )
 kde4_add_kcfg_files(Kwooty_SRCS preferences/settings.kcfgc)
- 
-
 
 kde4_add_executable(kwooty ${Kwooty_SRCS})
-target_link_libraries(kwooty ${KDE4_KDEUI_LIBS}
-			     ${KDE4_KDECORE_LIBS}
-		     	     ${KDE4_KIO_LIBS}
-			     ${UUDEVIEW_LIBRARY}
-		      )
- 
+
+target_link_libraries(kwooty ${KDE4_KDEUI_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${UUDEVIEW_LIBRARY})
 install(TARGETS kwooty DESTINATION ${BIN_INSTALL_DIR})
-install(FILES kwootyui.rc 
-        DESTINATION  ${DATA_INSTALL_DIR}/kwooty)
+install(FILES kwootyui.rc DESTINATION  ${DATA_INSTALL_DIR}/kwooty)
 install(FILES preferences/settings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
-install(FILES kwooty.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(FILES kwooty.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
