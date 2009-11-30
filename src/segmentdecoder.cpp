@@ -242,12 +242,12 @@ QString SegmentDecoder::getErrorMessage(const int returnVal){
 
         int errnoVal = UUGetOption (UUOPT_ERRNO, NULL, NULL, 0);
 
+        errorMessage = strerror (errnoVal);
+        kDebug() << "Decoding error message :" << errorMessage << " errno :" << errnoVal;
 
         // some segment files may have not been found on server, notify IO errors
         // to user except for segments not found :
-        if (errnoVal != ENOENT) {
-            errorMessage = strerror (errnoVal);
-            kDebug() << "Decoding error message :" << errorMessage << " errno :" << errnoVal;
+        if (errnoVal == ENOSPC) {
             // send save error signal to open a message box :
             emit saveFileErrorSignal(DuringDecode);
         }
