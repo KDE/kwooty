@@ -1,4 +1,4 @@
-Kwooty is a friendly newsgroup binary client that uses .nzb files as entry files.
+Kwooty is a friendly newsgroup binary downloader that uses .nzb files as entry files.
 
 Version 0.2.0:
 --------------
