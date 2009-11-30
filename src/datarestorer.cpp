@@ -22,6 +22,7 @@
 
 #include <KMessageBox>
 #include <KDebug>
+
 #include "centralwidget.h"
 #include "data/segmentdata.h"
 #include "data/nzbfiledata.h"

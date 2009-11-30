@@ -121,7 +121,7 @@
              <string>Suppress par2 files if verify/repair succeed</string>
             </property>
             <property name="text">
-             <string>Suppress par2 files if repairing succeed</string>
+             <string>Suppress par2 files if repairing successful</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -146,7 +146,7 @@
              <string>Suppress archive files if extract succeed</string>
             </property>
             <property name="text">
-             <string>Suppress archive files if extract succeed</string>
+             <string>Suppress archive files if extract successful</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -197,6 +197,7 @@
    <class>KEditListBox</class>
    <extends>QGroupBox</extends>
    <header>keditlistbox.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
