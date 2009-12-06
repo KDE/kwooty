@@ -20,244 +20,330 @@
 
 #include "segmentdecoder.h"
 
-#define PROTOTYPES //required for uudeview.h to prototype function args.
-
 #include <KDebug>
 #include <QDir>
-
-#include "uudeview.h"
-#include "errno.h"
 #include "settings.h"
 #include "data/segmentdata.h"
 #include "segmentsdecoderthread.h"
 
 
-SegmentDecoder::SegmentDecoder()
-{
+SegmentDecoder::SegmentDecoder() {
     isDecodingStatus = false;
 }
 
 SegmentDecoder::~SegmentDecoder() { }
 
 
-int decodingProgressionNotification (void* opaque, uuprogress* progressionStructure) {
-
-    if (progressionStructure->action == UUACT_DECODING){
-        int currentPartNumber = progressionStructure->partno;
-        int processedCurrentPartPercent = progressionStructure->percent;
-        int maximumPartNumber = progressionStructure->numparts;
-
-        int progression = (100 * currentPartNumber - processedCurrentPartPercent) / maximumPartNumber;
-
-        SegmentDecoder* instance = (SegmentDecoder*) opaque;
-        instance->decodeProgression(progression, DecodeStatus);
-
-    }
-
-
-    if (progressionStructure->action == UUACT_SCANNING){
-        // kDebug() << "scanning";
-    }
-
-    return 0;
-}
-
-
-
 
 
 void SegmentDecoder::decodeProgression(const int progression, const UtilityNamespace::ItemStatus status, const QString& decodedFileName){
-
-    // update segmentData :
     emit updateDecodeSignal(this->parentIdentifer, progression, status, decodedFileName);
-
 }
 
 
 
 void SegmentDecoder::decodeSegments(NzbFileData currentNzbFileData){
 
-    isDecodingStatus = true;
-
-    QString fileSavePath = currentNzbFileData.getFileSavePath();
+    // init variables :
+    this->isDecodingStatus = true;
     this->parentIdentifer = currentNzbFileData.getUniqueIdentifier();
+    this->segmentDataList = currentNzbFileData.getSegmentList();
 
-    if (Utility::createFolder(fileSavePath)) {
+    // scan segment files in order to get the file name of the corresponding file :
+    QString fileNameStr = this->scanSegmentFiles();
 
-        // initialisation :
-        UUInitialize();
-        this->segmentDataList = currentNzbFileData.getSegmentList();
+    if (!fileNameStr.isEmpty()) {
 
-        // setup options :
-        this->setupOptions(fileSavePath);
+        QString fileSavePath = currentNzbFileData.getFileSavePath();
+        if (Utility::createFolder(fileSavePath)) {
 
-        // setup hook functions for process notification :
-        UUSetBusyCallback (this, decodingProgressionNotification, 100);
+            QFile targetFile(fileSavePath + '/' + fileNameStr);
+            // open target file into write mode :
+            if (targetFile.open(QIODevice::WriteOnly)) {
 
-        // scan segments :
-        this->scanSegmentFiles();
+                // decode all segments and write them into the file :
+                bool encodedDataFound = this->decodeSegmentFiles(targetFile);
 
-        // decode segments :
-        this->decodeSegmentFiles();
+                if (encodedDataFound) {
+                    // decoding is over, also send name of decoded file :
+                    this->decodeProgression(PROGRESS_COMPLETE, DecodeFinishStatus, fileNameStr);
+                }
+                // no data found in any segments, notify user about issue :
+                else {
+                    this->decodeProgression(PROGRESS_COMPLETE, DecodeErrorStatus);
+                }
 
-        // clean memory :
-        UUCleanUp ();
-        this->segmentDataList.clear();
+
+                // close the file :
+                targetFile.close();
+            }
+            // can not create the file :
+            else {
+                this->decodeProgression(PROGRESS_COMPLETE, DecodeErrorStatus);
+                kDebug() << "can not create " << fileSavePath + '/' + fileNameStr;
+            }
+
+        }
+        // notify user of the issue :
+        else {
+            emit saveFileErrorSignal(DuringDecode);
+        }
+
     }
-    // notify user of the issue :
     else {
-        emit saveFileErrorSignal(DuringDecode);
-
+        // file name has not been found is all segments, send a decodeErrorStatus :
+        this->decodeProgression(PROGRESS_COMPLETE, DecodeErrorStatus);
     }
 
-    isDecodingStatus = false;
+
+    // clear variables :
+    this->parentIdentifer.clear();
+    this->segmentDataList.clear();
+    this->isDecodingStatus = false;
 
 }
 
 
 
 
-bool SegmentDecoder::isDecoding(){
 
+bool SegmentDecoder::decodeSegmentFiles(QFile& targetFile){
+
+    bool encodedDataFound = false;
+    bool writeError = false;
+
+    // decoding is starting :
+    this->decodeProgression(PROGRESS_INIT, DecodeStatus);
+
+    // scan every files to decode :
+    foreach (SegmentData currentSegment, this->segmentDataList) {
+
+        // if segment has been downloaded :
+        if (currentSegment.getArticlePresenceOnServer() == Present) {
+
+            QString temporaryFolder = Settings::temporaryFolder().path() + '/';
+            QString pathNameFile = temporaryFolder + currentSegment.getPart();
+            QFile segmentFile(pathNameFile);
+
+            segmentFile.open(QIODevice::ReadOnly);
+
+            // read the whole file :
+            QByteArray segmentByteArray = segmentFile.readAll();
+
+            int yDataBeginPos = 0;
+            // get first line of the segment :
+            QByteArray yBeginArray = this->getLineByteArray("=ybegin", segmentByteArray, yDataBeginPos);
+            //kDebug() << beginArray;
+
+            // if it is a multi part, get the next line :
+            if (yBeginArray.contains("part=")) {
+                QByteArray yPartArray = this->getLineByteArray("=ypart", segmentByteArray, yDataBeginPos);
+                //kDebug() << yPartArray;
+            }
+
+            // get the last line :
+            int endPos = 0;
+            QByteArray yEndArray = this->getLineByteArray("=yend", segmentByteArray, endPos);
+
+            // by default take the whole byteArray to decode in case '=yend' line not present
+            // (could occur if data has been corrupted on server) :
+            int yDataEndPos = segmentByteArray.length();
+
+            // if '=yend' pattern has been found, get the proper data end position :
+            if (!yEndArray.isEmpty()) {
+                yDataEndPos = segmentByteArray.indexOf("\n=yend") - 1;
+            }
+
+            bool ok;
+            QString crcPattern = "crc32=";
+            int crcValuePos = yEndArray.indexOf(crcPattern) + crcPattern.size();
+            quint32 crcStr = yEndArray.mid(crcValuePos, yEndArray.size() - crcValuePos).trimmed().toLongLong(&ok, 16);
+            //kDebug() << "crcStr" << crcStr;
+
+
+            // get the yy encoded data :
+            QByteArray captureArray = segmentByteArray.mid(yDataBeginPos , yDataEndPos - yDataBeginPos);
+
+            if (!captureArray.isEmpty()) {
+                // decode encoded data and check crc :
+                writeError = this->decodeYenc(captureArray, targetFile, currentSegment.getElementInList());
+
+                // encoded data in at least one file has been found :
+                encodedDataFound = true;
+            }
+
+            // close the segment file :
+            segmentFile.close();
+            // then remove it :
+            segmentFile.remove();
+
+
+        }
+
+
+    }
+
+    // end of decoding management :
+    if (writeError) {
+
+        this->decodeProgression(PROGRESS_COMPLETE, DecodeErrorStatus);
+
+        emit saveFileErrorSignal(DuringDecode);
+    }
+
+    return encodedDataFound;
+
+}
+
+
+QByteArray SegmentDecoder::getLineByteArray(const QString& lineBeginPattern, const QByteArray& segmentByteArray, int& yDataBeginPos){
+
+    int beginLinePos = segmentByteArray.indexOf(lineBeginPattern);
+    int endLinePos = segmentByteArray.indexOf("\n", beginLinePos) + 1;
+
+    // indicate the position of the next line :
+    yDataBeginPos = endLinePos;
+
+    return segmentByteArray.mid(beginLinePos, endLinePos - beginLinePos);
+
+}
+
+
+
+
+
+bool SegmentDecoder::decodeYenc(QByteArray& captureArray, QFile& targetFile, const int& elementInList){
+
+    bool writeError = false;
+
+    // used for crc32 computation :
+    quint32 hash = 0xffffffff;
+
+    QByteArray decodeArray;
+    bool specialCharacter = false;
+
+
+    foreach (char encodedCharacter, captureArray) {      
+
+        // decode char :
+        if (encodedCharacter != '\r' && encodedCharacter != '\n') {
+
+            bool decoded = false;
+            char decodedCharacter;
+
+            if (specialCharacter) {
+
+                decodedCharacter = (encodedCharacter - 106) % 256;
+                decoded = true;
+                specialCharacter = false;
+            }
+            else {
+                if (encodedCharacter == '=') {
+                    specialCharacter = true;
+                }
+                else {
+
+                    decodedCharacter = (encodedCharacter - 42) % 256;
+                    decoded = true;
+                }
+            }
+
+            if (decoded) {
+                //  append decoded character :
+                decodeArray.append(decodedCharacter);
+
+                // compute crc32 part for this char :
+                hash = this->computeCrc32Part(hash, decodedCharacter);
+            }
+
+        }
+
+    }
+
+    // write decoded array in the target file :
+    if (targetFile.write(decodeArray) == -1) {
+        writeError = true;
+    }
+
+
+    // finish crc 32 computation of encoded segment data :
+    hash ^= 0xffffffff;
+    //kDebug() << "hash" << hash;
+
+    // send decoding progression :
+    this->decodeProgression(qRound((elementInList * 100 / this->segmentDataList.size()) ), DecodeStatus);
+
+    return writeError;
+
+}
+
+
+
+
+quint32 SegmentDecoder::computeCrc32Part(quint32& hash, unsigned char data) {
+    return crc::crcArray[(hash^data) & 0xff]^(hash >> 8);
+}
+
+
+
+bool SegmentDecoder::isDecoding(){
     return isDecodingStatus;
 }
 
 
 
 
-void SegmentDecoder::setupOptions(const QString& fileSavePath){
+QString SegmentDecoder::scanSegmentFiles() {
 
-    UUSetOption(UUOPT_FAST, 1, NULL);
-    UUSetOption(UUOPT_DUMBNESS, 1, NULL);
-    UUSetOption(UUOPT_DESPERATE, 1, NULL);
-
-    UUSetOption(UUOPT_SAVEPATH, 0, fileSavePath.toAscii().data());
-    UUSetOption(UUOPT_REMOVE, 1, NULL);
-    // UUSetOption(UUOPT_DEBUG, 1, NULL);
-
-
-}
-
-
-
-void SegmentDecoder::scanSegmentFiles(){
+    QString fileName;
 
     //notify item that list of files is being scanned :
     if (!this->segmentDataList.isEmpty()) {
-        this->decodeProgression(0, ScanStatus);
+        this->decodeProgression(PROGRESS_INIT, ScanStatus);
     }
-
-    // it seems there is a bug if a file is composed of only one segment => file is not decoded
-    // duplicating the segment seems to solve the issue :
-    if (this->segmentDataList.size() == 1) {
-        this->segmentDataList.append(this->segmentDataList.at(0));
-    }
-
-
 
     // scan every files to be decoded :
     foreach (SegmentData currentSegment, this->segmentDataList) {
 
-        // set current segment to Deocode status :
-        currentSegment.setStatus(DecodeStatus);
+        QString temporaryFolder = Settings::temporaryFolder().path() + '/';
 
-        // add item to the current list only if it has been downloaded :
+        // if segment has been downloaded :
         if (currentSegment.getArticlePresenceOnServer() == Present) {
 
-            QString temporaryFolder = Settings::temporaryFolder().path() + '/';
             QString pathNameFile = temporaryFolder + currentSegment.getPart();
+            QFile segmentFile(pathNameFile);
 
-            //scan current segment and add it to item list :
-            int returnVal = UULoadFile(pathNameFile.toAscii().data(), NULL, 0);
+            // open the current segment file :
+            segmentFile.open(QIODevice::ReadOnly);
 
+            // look for file name :
+            while (fileName.isEmpty() && !segmentFile.atEnd()) {
 
-            // manage errors :
-            if (returnVal != UURET_OK) {
+                QByteArray namePattern = "name=";
+                QByteArray lineArray = segmentFile.readLine();
 
-                QString errorMessage = this->getErrorMessage(returnVal);
-            }
-        }
-    }
+                // if 'name=' pattern has been found, retrieve the file name :
+                if (lineArray.contains(namePattern)) {
 
-}
-
-
-
-
-void SegmentDecoder::decodeSegmentFiles(){
-
-    // decoding will begin :
-    this->decodeProgression(PROGRESS_INIT, DecodeStatus);
-
-    // decode scanned files :
-    int elementInList = 0;
-
-    // decode each segment from list :
-    uulist* item;
-
-    while ((item = UUGetFileListItem(elementInList)) != NULL) {
-
-        QString fileName;
-
-        // decode segment :
-        int returnVal = UUDecodeFile (item, NULL);
-
-        // manage errors :
-        if (returnVal == UURET_OK) {
-
-            // decoding is over :
-            this->decodeProgression(PROGRESS_COMPLETE, DecodeFinishStatus, item->filename);
-
-        }
-        else {
-            if (item->filename != NULL) {
-                fileName = item->filename;
+                    int nameValuePos = lineArray.indexOf(namePattern) + namePattern.size();
+                    fileName = lineArray.mid(nameValuePos, lineArray.size() - nameValuePos).trimmed();
+                    break;
+                }
             }
 
-            QString errorMessage = this->getErrorMessage(returnVal);
-
-            this->decodeProgression(PROGRESS_COMPLETE, DecodeErrorStatus);
-            //  kDebug() << "error decoding " << fileName << " : " << errorMessage;
+            // close the current segment file :
+            segmentFile.close();
 
         }
 
-        elementInList++;
-
-    }
-
-    // no files has been decoded, notify it :
-    if (elementInList == 0) {
-        kDebug() << "No file to decode !";
-        this->decodeProgression(PROGRESS_INIT, DecodeErrorStatus);
-    }
-
-}
-
-
-
-QString SegmentDecoder::getErrorMessage(const int returnVal){
-
-    QString errorMessage;
-    if (returnVal == UURET_IOERR) {
-
-        int errnoVal = UUGetOption (UUOPT_ERRNO, NULL, NULL, 0);
-
-        errorMessage = strerror (errnoVal);
-        //kDebug() << "Decoding error message :" << errorMessage << " errno :" << errnoVal;
-
-        // some segment files may have not been found on server, notify IO errors
-        // to user except for segments not found :
-        if (errnoVal == ENOSPC) {
-            // send save error signal to open a message box :
-            emit saveFileErrorSignal(DuringDecode);
+        // file name has been found, stop scanning files :
+        if (!fileName.isEmpty()) {
+            break;
         }
 
-    }
-    else {
-        errorMessage = UUstrerror(returnVal);
-    }
+    } // end of loop
 
-    return errorMessage;
+    return fileName;
 
 }
 
