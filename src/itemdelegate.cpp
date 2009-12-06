@@ -36,7 +36,7 @@ ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent)
     // associate text to display according to item status :
     statusTextMap.insert(DownloadStatus,            i18n("Downloading"));
     statusTextMap.insert(DownloadFinishStatus,      i18n("Finished"));
-    statusTextMap.insert(IdleStatus,                i18n("In Queue"));
+    statusTextMap.insert(IdleStatus,                i18n("In queue"));
     statusTextMap.insert(PauseStatus,               i18n("Pause"));
     statusTextMap.insert(PausingStatus,             i18n("Pausing"));
     statusTextMap.insert(ScanStatus,                i18n("Scanning..."));
