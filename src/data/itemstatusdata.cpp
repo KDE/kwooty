@@ -38,6 +38,7 @@ void ItemStatusData::init(){
     this->status = IdleStatus;
     this->downloadFinish = false;
     this->decodeFinish = false;
+    this->crc32Match = crcOk;
     this->data = DataComplete;
 
 }
@@ -68,6 +69,14 @@ void ItemStatusData::setDecodeFinish(const bool decodeFinish){
     this->decodeFinish = decodeFinish;
 }
 
+UtilityNamespace::CrcNotify ItemStatusData::getCrc32Match() const {
+    return this->crc32Match;
+}
+
+void ItemStatusData::setCrc32Match(const UtilityNamespace::CrcNotify crc32Match) {
+    this->crc32Match = crc32Match;
+}
+
 
 void ItemStatusData::setStatus(const UtilityNamespace::ItemStatus status){
     this->status = status;
@@ -83,7 +92,8 @@ QDataStream& operator<<(QDataStream& out, const ItemStatusData& itemStatusData) 
     out << (qint16)itemStatusData.getStatus()
         << (qint16)itemStatusData.getDataStatus()
         << itemStatusData.isDownloadFinish()
-        << itemStatusData.isDecodeFinish();
+        << itemStatusData.isDecodeFinish()
+        << (qint16)itemStatusData.getCrc32Match();
 
     return out;
 }
@@ -96,16 +106,19 @@ QDataStream& operator>>(QDataStream& in, ItemStatusData& itemStatusData)
     qint16 data;
     bool downloadFinish;
     bool decodeFinish;
+    qint16 crc32Match;
 
     in >> status
        >> data
        >> downloadFinish
-       >> decodeFinish;
+       >> decodeFinish
+       >> crc32Match;
 
     itemStatusData.setStatus((UtilityNamespace::ItemStatus)status);
     itemStatusData.setDataStatus((UtilityNamespace::Data)data);
     itemStatusData.setDownloadFinish(downloadFinish);
     itemStatusData.setDecodeFinish(decodeFinish);
+    itemStatusData.setCrc32Match((UtilityNamespace::CrcNotify)crc32Match);
 
     return in;
 }

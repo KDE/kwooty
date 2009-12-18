@@ -39,12 +39,15 @@ public:
     void setDownloadFinish(const bool);
     bool isDecodeFinish() const;
     void setDecodeFinish(const bool);
+    UtilityNamespace::CrcNotify getCrc32Match() const;
+    void setCrc32Match(const UtilityNamespace::CrcNotify);
 
 private:
     UtilityNamespace::ItemStatus status;
     UtilityNamespace::Data data;
     bool downloadFinish;
     bool decodeFinish;
+    UtilityNamespace::CrcNotify crc32Match;
 
 };
 
