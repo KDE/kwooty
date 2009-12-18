@@ -60,8 +60,7 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
     quint32 totalProgress = 0;
 
     // get itemStatusData :
-    QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(parentModelIndex);
-    ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
+    ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(parentModelIndex);
 
     // get current item status :
     UtilityNamespace::ItemStatus previousStatus = itemStatusData.getStatus();
@@ -97,7 +96,7 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
     itemStatusData = this->postDownloadProcessing(parentModelIndex, nzbFileData, itemStatusData);
 
     // update itemStatusData in state item :
-    this->downloadModel->storeStatusDataToItem(stateItem, itemStatusData);
+    this->downloadModel->updateStatusDataFromIndex(parentModelIndex, itemStatusData);
 
     // if item status has been updated :
     if (previousStatus != itemStatusData.getStatus()) {
@@ -201,7 +200,7 @@ ItemStatusData ItemDownloadUpdater::postDownloadProcessing(const QModelIndex& in
 
         // before decoding check that at least one segment have been downloaded :
         if (itemStatusData.getDataStatus() != NoData) {
-            // decode downloaded segments with uudeview lib:
+            // decode downloaded segments :
             emit decodeSegmentsSignal(nzbFileData);
         }
 
