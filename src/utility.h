@@ -77,6 +77,7 @@ namespace UtilityNamespace
         DownloadFinishStatus,
         PauseStatus,
         PausingStatus,
+        WaitForPar2IdleStatus,
         // -- from here decoding related enums :
         DecodeStatus,
         DecodeErrorStatus,
@@ -153,6 +154,13 @@ namespace UtilityNamespace
     enum OpenFileMode {
         OpenNormal,
         OpenWith
+    };
+
+
+    enum CrcNotify {
+        crcOk,
+        crcKo,
+        crcKoNotified
     };
 
 }
