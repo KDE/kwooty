@@ -90,9 +90,9 @@ void SegmentsDecoderThread::setupConnections() {
     qRegisterMetaType<QVariant>("QVariant");
     qRegisterMetaType<UtilityNamespace::ItemStatus>("UtilityNamespace::ItemStatus");
     connect (segmentDecoder ,
-             SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString)),
+             SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)),
              this,
-             SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString)));
+             SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)));
 
 
     connect (segmentDecoder,

@@ -56,7 +56,7 @@ private:
 
 signals:
     void updateDecodeSegmentSignal(SegmentData, int, int);
-    void updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString);
+    void updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool);
 
 public slots:
     void decodeSegmentsSlot(NzbFileData);
