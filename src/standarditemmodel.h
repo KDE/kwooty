@@ -52,6 +52,7 @@ public:
     void storeStatusDataToItem(QStandardItem*, const ItemStatusData&);
     bool isNzbItem(QStandardItem*);
     void updateNzbFileDataToItem(QStandardItem*, const NzbFileData&);
+    void updateStatusDataFromIndex(const QModelIndex&, const ItemStatusData&);
 
 
 private:

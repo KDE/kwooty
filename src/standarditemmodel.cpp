@@ -96,6 +96,13 @@ void StandardItemModel::updateProgressItem(const QModelIndex& index, const int p
 
 
 
+void StandardItemModel::updateStatusDataFromIndex(const QModelIndex& index, const ItemStatusData& itemStatusData) {
+
+    QStandardItem* stateItem = this->getStateItemFromIndex(index);
+    this->storeStatusDataToItem(stateItem, itemStatusData);
+
+}
+
 
 
 void StandardItemModel::storeStatusDataToItem(QStandardItem* stateItem, const ItemStatusData& itemStatusData) {
