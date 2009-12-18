@@ -107,7 +107,7 @@ void NntpClient::setupConnections() {
 
 void NntpClient::connectToHost() {
 
-    // set nntpError do noError by default before connection process :
+    // set nntpError to noError by default before connection process :
     this->nntpError = NoError;
 
     //kDebug() << "client ID : " << parent->getClientId() << "disconnectTimeout : " << Settings::disconnectTimeout();
@@ -139,7 +139,10 @@ void NntpClient::getAnswerFromServer() {
     switch (answer) {
 
     case ServerIsReadyPosting: case ServerIsReadyNoPosting: {
-            this->setConnectedClientStatus(ClientIdle);
+
+            if (this->clientStatus != ClientSegmentRequest) {
+                this->setConnectedClientStatus(ClientIdle);
+            }
             break;
         }
 
@@ -150,7 +153,7 @@ void NntpClient::getAnswerFromServer() {
                 this->sendUserCommandToServer();
             }
             else{
-                // group box is uncheked but authentication needed, inform the user :
+                // group box is unchecked but authentication needed, inform the user :
                 this->sendQuitCommandToServer();
                 nntpError = AuthenticationNeeded;
             }
@@ -247,8 +250,6 @@ void NntpClient::downloadSegmentFromServer(){
     // answer received before time-out : OK
     serverAnswerTimer->stop();
 
-    //kDebug() << "bytes available : " << tcpSocket->bytesAvailable();
-
     // read available data:
     QByteArray chunckData = tcpSocket->readAll();
     this->segmentByteArray.append(chunckData);
@@ -272,8 +273,6 @@ void NntpClient::downloadSegmentFromServer(){
 
 
 void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePresence){
-
-    //kDebug();
 
     if (serverAnswerTimer->isActive()) {
         serverAnswerTimer->stop();
@@ -427,8 +426,9 @@ void NntpClient::dataHasArrivedSlot() {
     if ( (this->clientStatus == ClientIdle) &&
          (tcpSocket->state() == QAbstractSocket::ConnectedState) ) {
 
-        emit getNextSegmentSignal(parent);
         this->setConnectedClientStatus(ClientSegmentRequest);
+        emit getNextSegmentSignal(parent);
+
     }
 
 }
@@ -531,7 +531,6 @@ void NntpClient::answerTimeOutSlot(){
     this->sendQuitCommandToServer();
     tcpSocket->abort();
 
-    //tcpSocket->abort();
     this->segmentDataRollBack();
     this->dataHasArrivedSlot();
 }
