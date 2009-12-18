@@ -39,6 +39,7 @@ ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent)
     statusTextMap.insert(IdleStatus,                i18n("In queue"));
     statusTextMap.insert(PauseStatus,               i18n("Pause"));
     statusTextMap.insert(PausingStatus,             i18n("Pausing"));
+    statusTextMap.insert(WaitForPar2IdleStatus,     i18n("Smart queue"));
     statusTextMap.insert(ScanStatus,                i18n("Scanning..."));
     statusTextMap.insert(DecodeStatus,              i18n("Decoding"));
     statusTextMap.insert(DecodeFinishStatus,        i18n("Decoded"));
