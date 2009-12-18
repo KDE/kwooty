@@ -13,7 +13,7 @@
   <property name="toolTip">
    <string>Expand treeview automatically when a .nzb file is open</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
+  <layout class="QGridLayout" name="gridLayout_4">
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBoxFolder">
      <property name="title">
@@ -32,10 +32,10 @@
         <property name="toolTip">
          <string>Set temporary folder</string>
         </property>
-        <property name="filter">
+        <property name="filter" stdset="0">
          <string notr="true"/>
         </property>
-        <property name="clickMessage">
+        <property name="clickMessage" stdset="0">
          <string notr="true"/>
         </property>
        </widget>
@@ -52,10 +52,10 @@
         <property name="toolTip">
          <string>Set download folder</string>
         </property>
-        <property name="filter">
+        <property name="filter" stdset="0">
          <string notr="true"/>
         </property>
-        <property name="clickMessage">
+        <property name="clickMessage" stdset="0">
          <string notr="true"/>
         </property>
        </widget>
@@ -66,7 +66,7 @@
    <item row="1" column="0">
     <widget class="QGroupBox" name="groupBoxMisc">
      <property name="title">
-      <string>Miscellaneous</string>
+      <string>Extra features</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
@@ -79,7 +79,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QCheckBox" name="kcfg_openWith">
         <property name="toolTip">
          <string>Copy nzb file in destination folder when added from another application by &quot;open with...&quot; action</string>
@@ -89,7 +89,26 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="1" column="0">
+       <widget class="QCheckBox" name="kcfg_smartPar2Download">
+        <property name="toolTip">
+         <string>Do not download .par2 files if files archive do not need to be repaired</string>
+        </property>
+        <property name="text">
+         <string>Download Par2 files only if repairing is required</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Confirmation dialogs</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="0" column="0">
        <widget class="QCheckBox" name="kcfg_confirmClear">
         <property name="toolTip">
          <string>Display dialog box when Clear button has been pushed</string>
@@ -99,7 +118,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="1" column="0">
        <widget class="QCheckBox" name="kcfg_confirmRemove">
         <property name="toolTip">
          <string>Display dialog box when Remove button has been pushed</string>
@@ -112,7 +131,7 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="3" column="0">
     <spacer name="spacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>

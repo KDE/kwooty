@@ -67,6 +67,10 @@
             <label>Copy nzb file in destination folder when added from another application by "open with..." action</label>
             <default>true</default>
         </entry>
+        <entry name="smartPar2Download" type="Bool">
+            <label>Do not download .par2 files if files archive do not need to be repaired</label>
+            <default>true</default>
+        </entry>
     </group>
 
     <group name="programs">
