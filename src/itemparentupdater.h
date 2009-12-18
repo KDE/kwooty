@@ -34,6 +34,7 @@ class ItemDownloadUpdater;
 class ItemStatusData;
 class StandardItemModel;
 class ItemDownloadUpdater;
+class ItemChildrenManager;
 
 class ItemParentUpdater : public ItemAbstractUpdater {
 
@@ -53,8 +54,9 @@ private:
     CentralWidget* parent;
     ItemPostDownloadUpdater* itemPostDownloadUpdater;
     ItemDownloadUpdater* itemDownloadUpdater;
+    ItemChildrenManager* itemChildrenManager;
     bool isItemUpdated;
-    bool displayIcons;
+
 
     ItemStatusData updateItemsDownload(ItemStatusData&, const int, const QModelIndex&, const quint64);
     ItemStatusData updateStatusItemDownload(ItemStatusData&, const int);
@@ -65,15 +67,16 @@ private:
     quint64 calculateDownloadProgress(const QModelIndex&, const ItemStatusData&, const int);
     void countGlobalItemStatus(const ItemStatusData&);
     void setupConnections();
+    bool updatePar2ItemsIfCrcFailed(ItemStatusData&, const int rowNumber, const QModelIndex&);
 
 signals:
     void repairDecompressSignal(QList<NzbFileData>);
     void statusItemUpdatedSignal();
+    void downloadWaitingPar2Signal();
 
 public slots:
     void recalculateNzbSizeSlot(const QModelIndex);
-    void setIconToFileNameItemSlot(const QModelIndex);
-    void settingsChangedSlot();
+
 
 private slots:
 

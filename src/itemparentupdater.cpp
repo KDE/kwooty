@@ -27,6 +27,7 @@
 #include "standarditemmodel.h"
 #include "itemdownloadupdater.h"
 #include "itempostdownloadupdater.h"
+#include "itemchildrenmanager.h"
 #include "settings.h"
 #include "data/itemstatusdata.h"
 
@@ -40,9 +41,7 @@ ItemParentUpdater::ItemParentUpdater(CentralWidget* parent) : ItemAbstractUpdate
     // instanciate item updater classes :
     this->itemPostDownloadUpdater = new ItemPostDownloadUpdater(this);
     this->itemDownloadUpdater = new ItemDownloadUpdater(this);
-
-    // set displayIcons setting value :
-    this->displayIcons = Settings::displayIcons();
+    this->itemChildrenManager = new ItemChildrenManager(parent, this);
 
     // setup connections :
     this->setupConnections();
@@ -74,7 +73,6 @@ void ItemParentUpdater::setupConnections() {
              parent,
              SLOT(selectedItemSlot()));
 
-
     connect (itemDownloadUpdater,
              SIGNAL(statusBarDecrementSignal(const quint64, const int)),
              parent->getStatusBar(),
@@ -86,74 +84,13 @@ void ItemParentUpdater::setupConnections() {
              this,
              SLOT(recalculateNzbSizeSlot(const QModelIndex)));
 
-    // set Icon near file name item :
-    connect (parent,
-             SIGNAL(setIconToFileNameItemSignal(const QModelIndex)),
-             this,
-             SLOT(setIconToFileNameItemSlot(const QModelIndex)));
+    // download par2 files if crc check failed during archive download :
+    connect (this,
+             SIGNAL(downloadWaitingPar2Signal()),
+             parent,
+             SLOT(downloadWaitingPar2Slot()));
 
 
-    // parent notify that settings have been changed :
-    connect (parent,
-             SIGNAL(settingsChangedSignal()),
-             this,
-             SLOT(settingsChangedSlot()));
-
-
-}
-
-
-void ItemParentUpdater::recalculateNzbSizeSlot(const QModelIndex index) {
-
-    this->recalculateNzbSize(index);
-    this->updateNzbItems(index);
-
-}
-
-
-
-void ItemParentUpdater::setIconToFileNameItemSlot(const QModelIndex index) {
-
-    // for a parent, get each children items in order to update their status icon :
-    QStandardItem* parentItem = this->downloadModel->itemFromIndex(index);
-
-    for (int i = 0; i < parentItem->rowCount(); i++) {
-
-        // get corresponding file name index :
-        QModelIndex fileNameIndex = index.child(i, FILE_NAME_COLUMN);
-
-        // get current item status :
-        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(fileNameIndex);
-        ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
-        UtilityNamespace::ItemStatus status = itemStatusData.getStatus();
-
-        // set icon :
-        this->setIconToFileNameItem(fileNameIndex, status);
-
-    }
-
-}
-
-
-
-void ItemParentUpdater::settingsChangedSlot() {
-
-    // settings have been changed, set or unset icons :
-    if (this->displayIcons != Settings::displayIcons()) {
-
-        // get the root model :
-        QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
-
-        // for each parent item, update it children :
-        for (int i = 0; i < rootItem->rowCount(); i++) {
-
-            QStandardItem* parentItem = rootItem->child(i, FILE_NAME_COLUMN);
-            this->setIconToFileNameItemSlot(parentItem->index());
-        }
-
-        // update displayIcons :
-        this->displayIcons = Settings::displayIcons();
-    }
 }
 
 
@@ -163,19 +100,21 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
 
     // variable initialisation
     this->clear();
-    quint64 totalProgress = 0;
+    quint64 totalProgress  = 0;
     this->isItemUpdated = false;
 
 
     // get itemStatusData :
-    QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(nzbIndex);
-    ItemStatusData nzbItemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
-    
+    ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex);
+
     // get current item status :
     int previousStatus = nzbItemStatusData.getStatus();
 
     // get number of rows :
     int rowNumber = this->downloadModel->itemFromIndex(nzbIndex)->rowCount();
+
+    // smart par2 download, set them to Idle only if a file crc has failed :
+    bool par2FilesUpdated = this->updatePar2ItemsIfCrcFailed(nzbItemStatusData, rowNumber, nzbIndex);
 
     for (int i = 0; i < rowNumber; i++) {
 
@@ -189,7 +128,7 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
 
     }
 
-    
+
     // 1. try to set status item as "DECODE"
     nzbItemStatusData = this->updateItemsDecode(nzbItemStatusData, rowNumber);
 
@@ -202,12 +141,17 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
     nzbItemStatusData = this->postProcessing(nzbItemStatusData, rowNumber, nzbIndex);
 
     // store statusData :
-    this->downloadModel->storeStatusDataToItem(stateItem, nzbItemStatusData);
+    this->downloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
+
 
     // if item status has been updated :
     if (previousStatus != nzbItemStatusData.getStatus()) {
         // send signal to central widget to update enabled/disabled buttons :
         emit statusItemUpdatedSignal();
+    }
+
+    if (par2FilesUpdated) {
+        emit downloadWaitingPar2Signal();
     }
 
 
@@ -222,15 +166,11 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
 
 void ItemParentUpdater::updateNzbItemsPostDecode(const QModelIndex& nzbIndex, const int progression, UtilityNamespace::ItemStatus status){
 
-    // get itemStatusData :
-    QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(nzbIndex);
-    ItemStatusData nzbItemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
-
     // if child are being verified / repaired or extracted :
-    nzbItemStatusData.setStatus(status);
+    QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(nzbIndex);
+    this->downloadModel->updateSateItem(stateItem, status);
 
-    // store statusData :
-    this->downloadModel->storeStatusDataToItem(stateItem, nzbItemStatusData);
+    // update progression :
     this->downloadModel->updateProgressItem(nzbIndex, progression);
 }
 
@@ -260,7 +200,9 @@ ItemStatusData ItemParentUpdater::updateStatusItemDecode(ItemStatusData& nzbItem
             this->isItemUpdated = true;
         }
         else if ( (this->decodeFinishItemNumber > 0) &&
-                  (rowNumber == (this->decodeErrorItemNumber + this->articleNotFoundNumber + this->decodeFinishItemNumber))) {
+                  (rowNumber == (this->decodeErrorItemNumber +
+                                 this->articleNotFoundNumber +
+                                 this->decodeFinishItemNumber)) ) {
 
             nzbItemStatusData.setStatus(DecodeFinishStatus);
             this->isItemUpdated = true;
@@ -341,8 +283,6 @@ ItemStatusData ItemParentUpdater::updateStatusItemDownload(ItemStatusData& nzbIt
 
 
 
-
-
 ItemStatusData ItemParentUpdater::updateDataStatus(ItemStatusData& nzbItemStatusData) {
 
     // determine if current file has segments that are not present on server :
@@ -387,12 +327,9 @@ quint64 ItemParentUpdater::calculateDownloadProgress(const QModelIndex& nzbIndex
         totalProgress += fileProgress * fileSize;
     }
 
-    //kDebug()<<totalProgress;
     return totalProgress;
 
 }
-
-
 
 
 
@@ -429,7 +366,6 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
 
 
 
-
 void ItemParentUpdater::recalculateNzbSize(const QModelIndex& nzbIndex){
 
     // variable initialisation
@@ -442,8 +378,16 @@ void ItemParentUpdater::recalculateNzbSize(const QModelIndex& nzbIndex){
     int rowNumber = this->downloadModel->itemFromIndex(nzbIndex)->rowCount();
 
     for (int i = 0; i < rowNumber; i++) {
-        // recalculate size :
-        size += nzbIndex.child(i, SIZE_COLUMN).data(SizeRole).toULongLong();
+
+        // get itemStatusData :
+        ItemStatusData childItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex.child(i, SIZE_COLUMN));
+
+        // do not count size of par2 files with WaitForPar2IdleStatus as status :
+        if (childItemStatusData.getStatus() != WaitForPar2IdleStatus) {
+            // recalculate size :
+            size += nzbIndex.child(i, SIZE_COLUMN).data(SizeRole).toULongLong();
+        }
+
     }
 
     // set size value to item :
@@ -465,6 +409,57 @@ void ItemParentUpdater::countGlobalItemStatus(const ItemStatusData& itemStatusDa
 
     // count items status :
     this->countItemStatus(itemStatusData.getStatus());
+
+}
+
+
+bool ItemParentUpdater::updatePar2ItemsIfCrcFailed(ItemStatusData& nzbItemStatusData, const int rowNumber, const QModelIndex& nzbIndex) {
+
+    bool par2FilesUpdated = false;
+
+    if (Settings::smartPar2Download()) {
+
+        // search for children with a bad crc :
+        if (nzbItemStatusData.getCrc32Match() == crcOk) {
+
+            for (int i = 0; i < rowNumber; i++) {
+
+                ItemStatusData itemStatusData = nzbIndex.child(i, STATE_COLUMN).data(StatusRole).value<ItemStatusData>();
+
+                // if a children has an incorrect crc, set the crc of the parent as incorrect :
+                if ( (itemStatusData.getCrc32Match() == crcKo) ||
+                     (itemStatusData.getDataStatus() == NoData) ){
+
+                    nzbItemStatusData.setCrc32Match(crcKo);
+                    break;
+                }
+            }
+        }
+
+        // if parent crc has been set to incorrect par2 files are required, set them to IdleStatus :
+        if (nzbItemStatusData.getCrc32Match() == crcKo) {
+
+            itemChildrenManager->changePar2FilesStatusSlot(nzbIndex, IdleStatus);
+
+            nzbItemStatusData.setCrc32Match(crcKoNotified);
+            par2FilesUpdated = true;
+
+        }
+    }
+
+    return par2FilesUpdated;
+}
+
+
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
+
+
+void ItemParentUpdater::recalculateNzbSizeSlot(const QModelIndex index) {
+
+    this->recalculateNzbSize(index);
+    this->updateNzbItems(index);
 
 }
 
