@@ -230,46 +230,6 @@ QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const
 
 
 
-void SegmentManager::addFileTypeInfo(QStandardItem* fileNameItem, const QString& decodedFileName) {
-
-    NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
-    // set the name of the decoded file :
-    if (!decodedFileName.isEmpty()) {
-        nzbFileData.setDecodedFileName(decodedFileName);
-
-        // add info about type of file (par2 or rar file) :
-        if (!nzbFileData.isPar2File() &&
-            !nzbFileData.isRarFile()) {
-
-            QFile decodedFile(nzbFileData.getFileSavePath() + nzbFileData.getDecodedFileName());
-            if (decodedFile.exists()) {
-
-                decodedFile.open(QIODevice::ReadOnly);
-
-                // rar headers could be corrupted because repair process has not been proceeded yet at this stage
-                // but assume that at least one rar file will have a correct header to launch decompress process later :
-                if (decodedFile.peek(rarFilePattern.size()) == rarFilePattern) {
-                    nzbFileData.setRarFile(true);
-                }
-                // check if it is a par2 file :
-                else if ( (decodedFile.peek(par2FilePattern.size()) == par2FilePattern) ||
-                          decodedFileName.endsWith(par2FileExt, Qt::CaseInsensitive)) {
-
-                    nzbFileData.setPar2File(true);
-                }
-
-                decodedFile.close();
-            }
-        }
-
-    }
-
-    // update the nzbFileData of current fileNameItem and its corresponding items :
-    this->downloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
-
-}
-
-
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
@@ -351,7 +311,7 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData){
 
 
 
-void SegmentManager::updateDecodeSegmentSlot(QVariant parentIdentifer, int progression, UtilityNamespace::ItemStatus status, QString decodedFileName) {
+void SegmentManager::updateDecodeSegmentSlot(QVariant parentIdentifer, int progression, UtilityNamespace::ItemStatus status, QString decodedFileName, bool crc32Match) {
 
     // search index in current downloading nzb :
     QStandardItem* fileNameItem = this->searchItem(parentIdentifer, DecodeStatus);
@@ -365,7 +325,7 @@ void SegmentManager::updateDecodeSegmentSlot(QVariant parentIdentifer, int progr
     if (fileNameItem != NULL){
 
         // add info about decoded file type (par2 file or rar file) ;
-        this->addFileTypeInfo(fileNameItem, decodedFileName);
+        itemParentUpdater->getItemPostDownloadUpdater()->addFileTypeInfo(fileNameItem, decodedFileName, crc32Match);
 
         // update items :
         itemParentUpdater->getItemPostDownloadUpdater()->updateItems(fileNameItem->index(), progression, status);

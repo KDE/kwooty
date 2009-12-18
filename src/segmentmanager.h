@@ -50,7 +50,6 @@ private:
     ItemParentUpdater* itemParentUpdater;
 
     bool sendNextIdleSegment(QStandardItem*, ClientManagerConn*);
-    void addFileTypeInfo(QStandardItem*, const QString&);
 
 
 signals:
@@ -58,7 +57,7 @@ signals:
 public slots:
     void updateDownloadSegmentSlot(SegmentData);
     void getNextSegmentSlot(ClientManagerConn*);
-    void updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString);
+    void updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool);
     void updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
 
 private slots:
