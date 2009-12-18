@@ -39,6 +39,7 @@ ItemAbstractUpdater::ItemAbstractUpdater(QObject* parent) : QObject (parent)
     statusIconStrMap.insert(IdleStatus,                "mail-mark-unread");
     statusIconStrMap.insert(PauseStatus,               "mail-mark-unread");
     statusIconStrMap.insert(PausingStatus,             "mail-mark-unread");
+    statusIconStrMap.insert(WaitForPar2IdleStatus,     "mail-mark-unread-new");
     statusIconStrMap.insert(ScanStatus,                "mail-mark-unread");
     statusIconStrMap.insert(DecodeStatus,              "mail-mark-unread");
     statusIconStrMap.insert(DecodeFinishStatus,        "mail-mark-read");
@@ -124,6 +125,10 @@ void ItemAbstractUpdater::countItemStatus(const int status) {
         };
     case ScanStatus: {
             this->scanItemNumber++;
+            break;
+        };
+   case WaitForPar2IdleStatus: {
+            this->decodeFinishItemNumber++;
             break;
         };
 
