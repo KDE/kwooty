@@ -37,17 +37,20 @@ SegmentDecoder::~SegmentDecoder() { }
 
 
 void SegmentDecoder::decodeProgression(const int progression, const UtilityNamespace::ItemStatus status, const QString& decodedFileName){
-    emit updateDecodeSignal(this->parentIdentifer, progression, status, decodedFileName);
+    emit updateDecodeSignal(this->parentIdentifer, progression, status, decodedFileName, this->crc32Match);
 }
 
 
 
 void SegmentDecoder::decodeSegments(NzbFileData currentNzbFileData){
 
-    // init variables :
+    // decoding begin :
     this->isDecodingStatus = true;
+
+    // init variables :
     this->parentIdentifer = currentNzbFileData.getUniqueIdentifier();
     this->segmentDataList = currentNzbFileData.getSegmentList();
+    this->crc32Match = false;
 
     // scan segment files in order to get the file name of the corresponding file :
     QString fileNameStr = this->scanSegmentFiles();
@@ -99,6 +102,8 @@ void SegmentDecoder::decodeSegments(NzbFileData currentNzbFileData){
     // clear variables :
     this->parentIdentifer.clear();
     this->segmentDataList.clear();
+
+    // decoding is over :
     this->isDecodingStatus = false;
 
 }
@@ -114,6 +119,9 @@ bool SegmentDecoder::decodeSegmentFiles(QFile& targetFile){
 
     // decoding is starting :
     this->decodeProgression(PROGRESS_INIT, DecodeStatus);
+
+    // count the number of segments with matchingCrc :
+    int segmentCrc32MatchNumber = 0;
 
     // scan every files to decode :
     foreach (SegmentData currentSegment, this->segmentDataList) {
@@ -133,12 +141,10 @@ bool SegmentDecoder::decodeSegmentFiles(QFile& targetFile){
             int yDataBeginPos = 0;
             // get first line of the segment :
             QByteArray yBeginArray = this->getLineByteArray("=ybegin", segmentByteArray, yDataBeginPos);
-            //kDebug() << beginArray;
 
             // if it is a multi part, get the next line :
             if (yBeginArray.contains("part=")) {
                 QByteArray yPartArray = this->getLineByteArray("=ypart", segmentByteArray, yDataBeginPos);
-                //kDebug() << yPartArray;
             }
 
             // get the last line :
@@ -154,39 +160,55 @@ bool SegmentDecoder::decodeSegmentFiles(QFile& targetFile){
                 yDataEndPos = segmentByteArray.indexOf("\n=yend") - 1;
             }
 
+            // retrieve crc32 value :
             bool ok;
             QString crcPattern = "crc32=";
             int crcValuePos = yEndArray.indexOf(crcPattern) + crcPattern.size();
-            quint32 crcStr = yEndArray.mid(crcValuePos, yEndArray.size() - crcValuePos).trimmed().toLongLong(&ok, 16);
-            //kDebug() << "crcStr" << crcStr;
+            quint32 crc32FromFile = yEndArray.mid(crcValuePos, yEndArray.size() - crcValuePos).trimmed().toLongLong(&ok, 16);
 
 
             // get the yy encoded data :
             QByteArray captureArray = segmentByteArray.mid(yDataBeginPos , yDataEndPos - yDataBeginPos);
 
             if (!captureArray.isEmpty()) {
+
+                // at this stage set crc32 value at true by default :
+                this->crc32Match = true;
+
                 // decode encoded data and check crc :
-                writeError = this->decodeYenc(captureArray, targetFile, currentSegment.getElementInList());
+                writeError = this->decodeYenc(captureArray, targetFile, currentSegment.getElementInList(), crc32FromFile, segmentCrc32MatchNumber);
 
                 // encoded data in at least one file has been found :
                 encodedDataFound = true;
             }
+
 
             // close the segment file :
             segmentFile.close();
             // then remove it :
             segmentFile.remove();
 
-
+        }
+        // if the segment was not present on the server :
+        else {
+            // file shall be repaired, set crc32Match to false :
+            this->crc32Match = false;
         }
 
-
     }
+
+
+    // if all segments have a correct crc32 :
+    if (segmentDataList.size() != segmentCrc32MatchNumber) {
+        this->crc32Match = false;
+    }
+
 
     // end of decoding management :
     if (writeError) {
 
-        this->decodeProgression(PROGRESS_COMPLETE, DecodeErrorStatus);
+        encodedDataFound = false;
+        this->crc32Match = false;
 
         emit saveFileErrorSignal(DuringDecode);
     }
@@ -212,12 +234,12 @@ QByteArray SegmentDecoder::getLineByteArray(const QString& lineBeginPattern, con
 
 
 
-bool SegmentDecoder::decodeYenc(QByteArray& captureArray, QFile& targetFile, const int& elementInList){
+bool SegmentDecoder::decodeYenc(QByteArray& captureArray, QFile& targetFile, const int& elementInList, const quint32& crc32FromFile, int& segmentCrc32MatchNumber){
 
     bool writeError = false;
 
     // used for crc32 computation :
-    quint32 hash = 0xffffffff;
+    quint32 crc32Computed = 0xffffffff;
 
     QByteArray decodeArray;
     bool specialCharacter = false;
@@ -253,7 +275,7 @@ bool SegmentDecoder::decodeYenc(QByteArray& captureArray, QFile& targetFile, con
                 decodeArray.append(decodedCharacter);
 
                 // compute crc32 part for this char :
-                hash = this->computeCrc32Part(hash, decodedCharacter);
+                crc32Computed = this->computeCrc32Part(crc32Computed, decodedCharacter);
             }
 
         }
@@ -267,8 +289,16 @@ bool SegmentDecoder::decodeYenc(QByteArray& captureArray, QFile& targetFile, con
 
 
     // finish crc 32 computation of encoded segment data :
-    hash ^= 0xffffffff;
-    //kDebug() << "hash" << hash;
+    crc32Computed ^= 0xffffffff;
+    //kDebug() << "crcComputed" << crcComputed;
+
+    //check crc32 values :
+    if (crc32FromFile == crc32Computed) {
+        segmentCrc32MatchNumber++;
+    }
+
+
+
 
     // send decoding progression :
     this->decodeProgression(qRound((elementInList * 100 / this->segmentDataList.size()) ), DecodeStatus);

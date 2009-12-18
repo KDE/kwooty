@@ -48,14 +48,15 @@ private:
     QList<SegmentData> segmentDataList;
     QVariant parentIdentifer;
     bool isDecodingStatus;
+    bool crc32Match;
     QString scanSegmentFiles();
     bool decodeSegmentFiles(QFile&);
-    bool decodeYenc(QByteArray&, QFile&, const int&);
+    bool decodeYenc(QByteArray&, QFile&, const int&, const quint32&, int&);
     quint32 computeCrc32Part(quint32&, unsigned char);
     QByteArray getLineByteArray(const QString&, const QByteArray&, int&);
 
 signals:
-    void updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString);
+    void updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool);
     void saveFileErrorSignal(int);
 
 public slots:
