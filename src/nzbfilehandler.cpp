@@ -33,6 +33,8 @@
 #include "utility.h"
 
 
+
+
 NzbFileHandler::NzbFileHandler()
 {
 
@@ -52,7 +54,13 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
     quint64 fileSize = 0;
     bool fileSucessfulyProcessed = true;
 
-    
+    // workaround for xml files with encoding not supported by Qt like 'us-ascii'
+    // skip xml encoding line if it exists :
+    QString firstLine = file.readLine();
+    if (!firstLine.contains(QRegExp("<\\?xml.*\\?>"))) {
+        file.reset();
+    }
+
     QXmlStreamReader stream (&file);
 
     while (!stream.atEnd()) {
@@ -69,6 +77,11 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
 
                 QString fileName = attributes.value("subject").toString();
                 nzbFileData.setFileName(fileName);
+
+                // identify right now par2 files from others :
+                if (fileName.contains(QRegExp("\\.par2.*(yenc)?.*", Qt::CaseInsensitive))) {
+                    nzbFileData.setPar2File(true);
+                }
 
                 // set name of the nzb :
                 nzbFileData.setNzbName(nzbName);
