@@ -94,6 +94,7 @@ signals:
     void recalculateNzbSizeSignal(const QModelIndex);
     void settingsChangedSignal();
     void setIconToFileNameItemSignal(const QModelIndex);
+    void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);
 
 
 public slots:
@@ -106,6 +107,7 @@ public slots:
     void pauseDownloadSlot();
     void saveFileErrorSlot(int);
     void updateSettingsSlot();
+    void downloadWaitingPar2Slot();
 
     // #QTBUG-5201
     #if QT_VERSION == 0x040503

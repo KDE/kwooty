@@ -236,6 +236,12 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
     // alternate row color :
     treeView->setAlternatingRowColors(Settings::alternateColors());
 
+    // enable / disable smart par2 download :
+    if (Settings::smartPar2Download()) {
+        emit changePar2FilesStatusSignal(nzbNameItem->index(), WaitForPar2IdleStatus);
+    }
+
+
     // set status Icon near archive file name :
     emit setIconToFileNameItemSignal(nzbNameItem->index());
 
@@ -312,9 +318,9 @@ void CentralWidget::setupConnections() {
 
     // update info about decoding process :
     connect (segmentsDecoderThread,
-             SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString)),
+             SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)),
              segmentManager,
-             SLOT(updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString)));
+             SLOT(updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)));
 
     // suppress old segments if user have to chosen to not reload data from previous session :
     connect (dataRestorer,
@@ -526,6 +532,7 @@ ItemParentUpdater* CentralWidget::getItemParentUpdater() const{
 }
 
 
+
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
@@ -656,6 +663,9 @@ void CentralWidget::removeRowSlot()
                     if (nzbItem->rowCount() > 0) {
                         // set nzb parent row up to date :
                         emit recalculateNzbSizeSignal(nzbItem->index());
+
+                        // item has been removed extract could fail, download Par2 files :
+                        emit changePar2FilesStatusSignal(nzbItem->index(), IdleStatus);
                     }
                     // if the nzb item has no more child, remove it :
                     else{
@@ -733,6 +743,14 @@ void CentralWidget::moveToTopSlot(){
 
 void CentralWidget::moveToBottomSlot(){
     this->moveRow(false);
+}
+
+
+void CentralWidget::downloadWaitingPar2Slot(){
+
+    this->statusBarFileSizeUpdate();
+    emit dataHasArrivedSignal();
+
 }
 
 
