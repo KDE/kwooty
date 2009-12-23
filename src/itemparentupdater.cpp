@@ -65,12 +65,12 @@ void ItemParentUpdater::setupConnections() {
     // update buttons enable / disable after item status has been updated :
     connect (itemDownloadUpdater,
              SIGNAL(statusItemUpdatedSignal()),
-             parent,
+             parent->getTreeView(),
              SLOT(selectedItemSlot()));
 
     connect (this,
              SIGNAL(statusItemUpdatedSignal()),
-             parent,
+             parent->getTreeView(),
              SLOT(selectedItemSlot()));
 
     connect (itemDownloadUpdater,
@@ -78,7 +78,7 @@ void ItemParentUpdater::setupConnections() {
              parent->getStatusBar(),
              SLOT(decrementSlot(const quint64, const int)));
 
-    // recalcultate full nzb size when children may have been removed :
+    // recalculate full nzb size when children may have been removed :
     connect (parent,
              SIGNAL(recalculateNzbSizeSignal(const QModelIndex)),
              this,
@@ -89,7 +89,6 @@ void ItemParentUpdater::setupConnections() {
              SIGNAL(downloadWaitingPar2Signal()),
              parent,
              SLOT(downloadWaitingPar2Slot()));
-
 
 }
 
@@ -172,6 +171,10 @@ void ItemParentUpdater::updateNzbItemsPostDecode(const QModelIndex& nzbIndex, co
 
     // update progression :
     this->downloadModel->updateProgressItem(nzbIndex, progression);
+
+    // if extract failed, download par2 files if there were considered as not required :
+    this->updateItemsIfDirectExtractFailed(nzbIndex, stateItem, status);
+
 }
 
 
@@ -209,8 +212,8 @@ ItemStatusData ItemParentUpdater::updateStatusItemDecode(ItemStatusData& nzbItem
 
         }
     }
-    return nzbItemStatusData;
 
+    return nzbItemStatusData;
 }
 
 
@@ -359,7 +362,6 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
 
     }
 
-
     return nzbItemStatusData;
 }
 
@@ -448,6 +450,31 @@ bool ItemParentUpdater::updatePar2ItemsIfCrcFailed(ItemStatusData& nzbItemStatus
     }
 
     return par2FilesUpdated;
+}
+
+
+void ItemParentUpdater::updateItemsIfDirectExtractFailed(const QModelIndex nzbIndex, QStandardItem* stateItem, UtilityNamespace::ItemStatus status) {
+
+    if ( (status == ExtractFinishedStatus) &&
+         Settings::smartPar2Download() ) {
+
+        bool par2NotDownloaded = this->itemChildrenManager->resetItemStatusIfExtractFail(nzbIndex);
+
+        if (par2NotDownloaded) {
+
+            // set nzbItem to IdleStatus in order to enable par2 file downloads :
+            this->downloadModel->updateSateItem(stateItem, IdleStatus);
+
+            // set decodeFinish to false in order to allow post download process another time
+            // and store statusData :
+            ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex);
+            nzbItemStatusData.setDecodeFinish(false);
+            this->downloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
+
+            emit downloadWaitingPar2Signal();
+
+        }
+    }
 }
 
 
