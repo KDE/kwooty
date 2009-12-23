@@ -128,6 +128,19 @@ UtilityNamespace::ItemStatus StandardItemModel::getStatusFromStateItem(QStandard
 }
 
 
+UtilityNamespace::ItemStatus StandardItemModel::getChildStatusFromNzbIndex(const QModelIndex& index, int i) {
+
+    // get corresponding file name index :
+    QModelIndex fileNameIndex = index.child(i, FILE_NAME_COLUMN);
+
+    // get current item status :
+    QStandardItem* stateItem = this->getStateItemFromIndex(fileNameIndex);
+
+    return this->getStatusFromStateItem(stateItem);
+
+}
+
+
 ItemStatusData StandardItemModel::getStatusDataFromIndex(const QModelIndex& index) {
 
     QStandardItem* stateItem = this->getStateItemFromIndex(index);
