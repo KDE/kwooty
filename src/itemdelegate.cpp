@@ -22,7 +22,8 @@
 
 #include <KAboutData>
 #include <KDebug>
-
+#include <KApplication>
+#include <KGlobal>
 #include <QStyleOptionViewItemV4>
 
 #include "data/itemstatusdata.h"
@@ -79,8 +80,7 @@ ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent)
 }
 
 
-void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
-{
+void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 
     QStyleOptionViewItemV4 opt = option;
     int status = -1;
@@ -114,7 +114,16 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
         }
 
     case PROGRESS_COLUMN:{
-            opt.text = QString::number(index.data(ProgressRole).toInt()) + " %";
+
+            if (index.parent() == QModelIndex()){
+                this->drawProgressBar(painter, option, index);
+                return;
+            }
+            else {
+                opt.text = QString::number(index.data(ProgressRole).toInt()) + " %";
+
+            }
+
             break;
         }
 
@@ -141,4 +150,20 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
 }
 
 
+void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+
+    QStyleOptionProgressBar progressBarOpt;
+    progressBarOpt.rect = option.rect;
+    progressBarOpt.minimum = 0;
+    progressBarOpt.maximum = 100;
+    progressBarOpt.textVisible = true;
+
+    // set progress value and text :
+    int progress = index.data(ProgressRole).toInt();
+    progressBarOpt.progress = progress;
+    progressBarOpt.text = QString::number(progress) + " %";
+
+    // draw progress bar :
+    KApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOpt, painter);
+}
 

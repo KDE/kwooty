@@ -32,7 +32,8 @@ class ItemDelegate : public QStyledItemDelegate
 
 public:
     ItemDelegate(QWidget*);
-    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+    void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
+    void drawProgressBar(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
 
 private:
     QHash<int, QString> statusTextMap;
