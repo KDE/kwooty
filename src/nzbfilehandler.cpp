@@ -57,7 +57,7 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
     // workaround for xml files with encoding not supported by Qt like 'us-ascii'
     // skip xml encoding line if it exists :
     QString firstLine = file.readLine();
-    if (!firstLine.contains(QRegExp("<\\?xml.*\\?>"))) {
+    if (!firstLine.contains(QRegExp("<\\?xml.*us-ascii.*\\?>"))) {
         file.reset();
     }
 
