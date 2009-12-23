@@ -39,6 +39,7 @@
 
 #include "settings.h"
 #include "mystatusbar.h"
+#include "mytreeview.h"
 #include "centralwidget.h"
 #include "preferences/preferencesserver.h"
 #include "preferences/preferencesgeneral.h"
@@ -51,12 +52,15 @@ MainWindow::MainWindow(QWidget *parent): KXmlGuiWindow(parent), fileName(QString
 {
 
     //setup statusBar :
-    statusBar = new MyStatusBar(this);
-    this->setStatusBar(statusBar);
+    this->statusBar = new MyStatusBar(this);
+    this->setStatusBar(this->statusBar);
 
     // create the user interface :
     QWidget* widget = new QWidget(this);
-    centralWidget = new CentralWidget(widget, statusBar);
+    this->centralWidget = new CentralWidget(widget, this->statusBar);
+
+    // get treeview instance :
+    treeView = centralWidget->getTreeView();
 
     this->setCentralWidget(widget);
 
@@ -84,7 +88,7 @@ void MainWindow::setupActions()
     clearAction->setToolTip(i18n("Remove all rows"));
     clearAction->setShortcut(Qt::CTRL + Qt::Key_W);
     actionCollection()->addAction("clear", clearAction);
-    connect(clearAction, SIGNAL(triggered(bool)), centralWidget, SLOT(clearSlot()));
+    connect(clearAction, SIGNAL(triggered(bool)), treeView, SLOT(clearSlot()));
 
     //startDownloadAction
     KAction* startDownloadAction = new KAction(this);
@@ -95,7 +99,7 @@ void MainWindow::setupActions()
     startDownloadAction->setEnabled(false);
     actionCollection()->addAction("start", startDownloadAction);
     connect(startDownloadAction, SIGNAL(triggered(bool)), centralWidget, SLOT(startDownloadSlot()));
-    connect(centralWidget, SIGNAL(setStartButtonEnabledSignal(bool)), startDownloadAction, SLOT(setEnabled(bool)) );
+    connect(treeView, SIGNAL(setStartButtonEnabledSignal(bool)), startDownloadAction, SLOT(setEnabled(bool)) );
 
     //pauseDownloadAction
     KAction* pauseDownloadAction = new KAction(this);
@@ -106,7 +110,7 @@ void MainWindow::setupActions()
     pauseDownloadAction->setEnabled(false);
     actionCollection()->addAction("pause", pauseDownloadAction);
     connect(pauseDownloadAction, SIGNAL(triggered(bool)), centralWidget, SLOT(pauseDownloadSlot()));
-    connect(centralWidget, SIGNAL(setPauseButtonEnabledSignal(bool)), pauseDownloadAction, SLOT(setEnabled(bool)) );
+    connect(treeView, SIGNAL(setPauseButtonEnabledSignal(bool)), pauseDownloadAction, SLOT(setEnabled(bool)) );
 
     //removeItemAction
     KAction* removeItemAction = new KAction(this);
@@ -116,9 +120,9 @@ void MainWindow::setupActions()
     removeItemAction->setShortcut(Qt::Key_Delete);
     removeItemAction->setEnabled(false);
     actionCollection()->addAction("remove", removeItemAction);
-    connect(removeItemAction, SIGNAL(triggered(bool)), centralWidget, SLOT(removeRowSlot()));
-    connect(centralWidget, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
-    connect(centralWidget, SIGNAL(setRemoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
+    connect(removeItemAction, SIGNAL(triggered(bool)), treeView, SLOT(removeRowSlot()));
+    connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
+    connect(treeView, SIGNAL(setRemoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
 
     //moveToTopAction
     KAction* moveToTopAction = new KAction(this);
@@ -128,8 +132,8 @@ void MainWindow::setupActions()
     moveToTopAction->setShortcut(Qt::CTRL + Qt::Key_Up);
     moveToTopAction->setEnabled(false);
     actionCollection()->addAction("moveTop", moveToTopAction);
-    connect(moveToTopAction, SIGNAL(triggered(bool)), centralWidget, SLOT(moveToTopSlot()));
-    connect(centralWidget, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToTopAction, SLOT(setEnabled(bool)) );
+    connect(moveToTopAction, SIGNAL(triggered(bool)), treeView, SLOT(moveToTopSlot()));
+    connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToTopAction, SLOT(setEnabled(bool)) );
 
     //moveToTopBottom
     KAction* moveToBottomAction = new KAction(this);
@@ -139,8 +143,8 @@ void MainWindow::setupActions()
     moveToBottomAction->setShortcut(Qt::CTRL + Qt::Key_Down);
     moveToBottomAction->setEnabled(false);
     actionCollection()->addAction("moveBottom", moveToBottomAction);
-    connect(moveToBottomAction, SIGNAL(triggered(bool)), centralWidget, SLOT(moveToBottomSlot()));
-    connect(centralWidget, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToBottomAction, SLOT(setEnabled(bool)) );
+    connect(moveToBottomAction, SIGNAL(triggered(bool)),treeView, SLOT(moveToBottomSlot()));
+    connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToBottomAction, SLOT(setEnabled(bool)) );
 
 
     //-------------------
@@ -158,6 +162,9 @@ void MainWindow::setupActions()
 
     // SettingsAction
     KStandardAction::preferences(this, SLOT(showSettings()), actionCollection());
+
+
+    connect(treeView, SIGNAL(openFileByDragAndDropSignal(KUrl)), this, SLOT(openFileByDragAndDropSlot(KUrl)) );
 
     setupGUI();
 
@@ -252,6 +259,20 @@ void MainWindow::openFileByExternalApp(KUrl url) {
 
 }
 
+void MainWindow::openFileByDragAndDropSlot(KUrl nzbUrl) {
+
+    bool isWrongUrl = false;
+
+    // if file is opened by file or internet browser :
+    this->openUrl(nzbUrl, isWrongUrl, UtilityNamespace::OpenNormal);
+
+    // If url cannot be reached open an error message box
+    if (isWrongUrl){
+        KMessageBox::error(this, KIO::NetAccess::lastErrorString());
+    }
+
+}
+
 
 
 void MainWindow::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenFileMode openFileMode) {
@@ -286,6 +307,7 @@ void MainWindow::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenFileM
 
             // copy nzb file in created download folder :
             file.copy(downloadFolderPath + '/' + url.fileName());
+            QFile::setPermissions(downloadFolderPath + '/' + url.fileName(), QFile::ReadOwner | QFile::WriteOwner);
 
         }
 

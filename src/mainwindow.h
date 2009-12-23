@@ -27,6 +27,7 @@
 using namespace UtilityNamespace;
 
 class MyStatusBar;
+class MyTreeView;
 class CentralWidget;
 
 class MainWindow : public KXmlGuiWindow
@@ -44,6 +45,7 @@ private:
     QString fileName;
     CentralWidget* centralWidget;
     MyStatusBar* statusBar;
+    MyTreeView* treeView;
 
     void setupActions();
     void openUrl(KUrl, bool&, UtilityNamespace::OpenFileMode);
@@ -54,6 +56,7 @@ signals:
     void savePendingDownloadsSignal();
 
 public slots:
+    void openFileByDragAndDropSlot(KUrl);
 
 private slots:
     void openFile();
