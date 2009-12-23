@@ -157,10 +157,17 @@ namespace UtilityNamespace
     };
 
 
+    // indicate the crc status of each downloaded file :
     enum CrcNotify {
         crcOk,
         crcKo,
         crcKoNotified
+    };
+
+    // type of status bar file size update :
+    enum StatusBarUpdateType {
+        Incremental,
+        Reset
     };
 
 }
