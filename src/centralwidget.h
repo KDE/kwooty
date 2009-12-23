@@ -24,7 +24,7 @@
 #include <KAboutData>
 #include <QFile>
 #include <QStandardItem>
-#include <QTreeView>
+#include "mytreeview.h"
 #include "data/globalfiledata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -32,6 +32,7 @@ using namespace UtilityNamespace;
 
 class ClientManagerConn;
 class MyStatusBar;
+class MyTreeView;
 class ItemParentUpdater;
 class StandardItemModel;
 class RepairDecompressThread;
@@ -61,9 +62,11 @@ public:
     StandardItemModel* getDownloadModel() const;
     MyStatusBar* getStatusBar() const;
     ItemParentUpdater* getItemParentUpdater() const;
+    MyTreeView* getTreeView() const;
+
 
 private:
-    QTreeView* treeView;
+    MyTreeView* treeView;
     MyStatusBar* statusBar;
     QList<ClientManagerConn*> clientManagerConnList;
     SegmentManager* segmentManager;
@@ -76,18 +79,15 @@ private:
 
     void setDataToModel(const QList<GlobalFileData>&, const QString&);
     void addParentItem (QStandardItem*, const GlobalFileData&);
-    void setHeaderLabels();
     void createNntpClients();
     void setupConnections();
     void updateItemsInView(QModelIndex, QModelIndex);
-    void moveRow(bool);
     void setStartPauseDownload(int, const QList<QModelIndex>&);
     void statusBarFileSizeUpdate();
     void initFoldersSettings();
     
 signals:
     void dataHasArrivedSignal();
-    void setMoveButtonEnabledSignal(bool);
     void setPauseButtonEnabledSignal(bool);
     void setStartButtonEnabledSignal(bool);
     void setRemoveButtonEnabledSignal(bool);
@@ -98,21 +98,12 @@ signals:
 
 
 public slots:
-    void removeRowSlot();
-    void clearSlot();
-    void moveToTopSlot();
-    void moveToBottomSlot();
-    void selectedItemSlot();
     void startDownloadSlot();
     void pauseDownloadSlot();
     void saveFileErrorSlot(int);
     void updateSettingsSlot();
     void downloadWaitingPar2Slot();
-
-    // #QTBUG-5201
-    #if QT_VERSION == 0x040503
-    void dataChangedSlot(QStandardItem*);
-    #endif
+    void statusBarFileSizeUpdateSlot(StatusBarUpdateType);
 
     
 private slots:
