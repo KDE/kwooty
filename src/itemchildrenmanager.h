@@ -16,6 +16,7 @@ class ItemChildrenManager : public ItemAbstractUpdater {
 
 public:
     ItemChildrenManager(CentralWidget*, ItemParentUpdater*);
+    bool resetItemStatusIfExtractFail(const QModelIndex);
 
 private:
     CentralWidget* parent;

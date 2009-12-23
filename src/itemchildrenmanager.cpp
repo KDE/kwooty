@@ -58,6 +58,66 @@ void ItemChildrenManager::setupConnections() {
 
 
 
+bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex index) {
+
+    bool par2NotDownloaded = false;
+    bool extractFail = false;
+    // check if some par2 files have not been downloaded :
+    QStandardItem* parentItem = this->downloadModel->itemFromIndex(index);
+
+    for (int i = 0; i < parentItem->rowCount(); i++) {
+
+        // get current item status :
+        UtilityNamespace::ItemStatus childItemStatus = this->downloadModel->getChildStatusFromNzbIndex(index, i);
+
+        if (childItemStatus == WaitForPar2IdleStatus) {
+            par2NotDownloaded = true;
+        }
+
+        if ( (childItemStatus == ExtractFailedStatus) ||
+             (childItemStatus == ExtractBadCrcStatus) ) {
+
+            extractFail = true;
+        }
+
+
+    }
+
+    bool par2Required = extractFail && par2NotDownloaded;
+    kDebug() << "par2Required : "  <<  par2Required << "extractFail :" << extractFail <<  "par2NotDownloaded " << par2NotDownloaded;
+
+    // if par2 are not downloaded, change items status :
+    if (par2Required) {
+
+        // reset rar files to decodeFinish status :
+        for (int i = 0; i < parentItem->rowCount(); i++) {
+
+            QModelIndex childIndex = index.child(i, FILE_NAME_COLUMN);
+
+            // get current item status :
+            QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(childIndex);
+            UtilityNamespace::ItemStatus childItemStatus = this->downloadModel->getStatusFromStateItem(stateItem);
+
+            // reset item whose extracting failed to DecodeStatus
+            // in order to verify them when par2 download is complete :
+            if ( (childItemStatus == ExtractFailedStatus) ||
+                 (childItemStatus == ExtractBadCrcStatus) ) {
+
+                this->downloadModel->updateSateItem(stateItem, DecodeFinishStatus);
+
+            }
+        }
+
+        // set par2 files from WaitForPar2IdleStatus to IdleStatus :
+        this->changePar2FilesStatusSlot(index, IdleStatus);
+
+    }
+
+    return par2Required;
+
+}
+
+
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
