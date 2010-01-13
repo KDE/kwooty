@@ -436,17 +436,6 @@ void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus e
         emit repairProcessEndedSignal(this->nzbFileDataList, RepairFailedStatus);
     }
 
-
-    // 3. Under certain circumstances, frequently when a group of files have not been found
-    // on server and are mixed with another group of files which have been found on server,
-    // it can occur that files remains in "verifying" status althought repairing is over, set them to VerifyMissingStatus :
-//    foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
-//        if (nzbFileData.getVerifyProgressionStep() == VerifyStatus) {
-//            emit updateRepairSignal(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, VerifyMissingStatus, ChildItemTarget);
-//        }
-//    }
-
-
     this->resetVariables();
 
 }
