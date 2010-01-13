@@ -1,3 +1,23 @@
+/***************************************************************************
+ *   Copyright (C) 2010 by Xavier Lefage                                   *
+ *   xavier.kwooty@gmail.com                                               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #include "mytreeview.h"
 
 #include <KMessageBox>
@@ -52,11 +72,13 @@ void MyTreeView::setupConnections() {
              centralWidget,
              SLOT(statusBarFileSizeUpdateSlot(StatusBarUpdateType)) );
 
+    // propagate signal to centralwidget to finally reach itemparentupdater's slot :
     connect( this,
              SIGNAL(recalculateNzbSizeSignal(const QModelIndex)),
              centralWidget,
              SIGNAL(recalculateNzbSizeSignal(const QModelIndex)) );
 
+    // propagate signal to centralwidget to finally reach itemparentupdater's slot :
     connect( this,
              SIGNAL(changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus)),
              centralWidget,
@@ -89,14 +111,20 @@ void MyTreeView::dragMoveEvent(QDragMoveEvent* event) {
 
 void MyTreeView::dropEvent(QDropEvent* event) {
 
+    // add drag and drop support :
     const QMimeData *mimeData = event->mimeData();
 
     if (mimeData->hasUrls()) {
+
+        // get urls of dropped files :
         QList<QUrl> urlList = mimeData->urls();
         
         foreach (KUrl nzbUrl, urlList) {
 
+            // filter by .nzb extension :
             if (nzbUrl.url().endsWith(".nzb", Qt::CaseInsensitive)) {
+
+                // handle nzb file from drag and drop event :
                 emit openFileByDragAndDropSignal(nzbUrl);
             }
 
@@ -105,6 +133,7 @@ void MyTreeView::dropEvent(QDropEvent* event) {
     }
     event->acceptProposedAction();
 }
+
 
 
 void MyTreeView::moveRow(bool isMovedToTop) {
@@ -262,7 +291,9 @@ void MyTreeView::selectedItemSlot() {
             }
 
             // disable remove button when download has been accomplished :
-            if (!downloadModel->isNzbItem(stateItem) && !Utility::isInDownloadProcess(currentStatus)) {
+            if (!downloadModel->isNzbItem(stateItem) &&
+                !Utility::isInDownloadProcess(currentStatus) &&
+                currentStatus != UtilityNamespace::WaitForPar2IdleStatus) {
                 emit setRemoveButtonEnabledSignal(false);
             }
 
@@ -337,6 +368,7 @@ void MyTreeView::removeRowSlot() {
                     // if the nzb item has no more child, remove it :
                     else {
                         downloadModel->invisibleRootItem()->removeRow(nzbItem->row());
+
                     }
 
                 }
@@ -345,8 +377,16 @@ void MyTreeView::removeRowSlot() {
 
     }
 
+
+    // disable shutdown if all rows have been removed by the user :
+    if (this->downloadModel->invisibleRootItem()->rowCount() == 0) {
+        // disable shutdown scheduler :
+        emit allRowRemovedSignal();
+    }
+
     // update the status bar :
     emit statusBarFileSizeUpdateSignal(Incremental);
+
 
 }
 
@@ -379,10 +419,52 @@ void MyTreeView::clearSlot() {
         // reset the status bar :
         emit statusBarFileSizeUpdateSignal(Reset);
 
+        // disable shutdown scheduler :
+        emit allRowRemovedSignal();
+
     }
 
 
 }
+
+
+bool MyTreeView::areJobsFinished() {
+
+    bool jobFinished = true;
+
+    // get the root model :
+    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+
+    // for each parent item, get its current status :
+    for (int i = 0; i < rootItem->rowCount(); i++) {
+
+        QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
+        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
+
+        // check parent status activity :
+        if ( Utility::isReadyToDownload(currentStatus)       ||
+             Utility::isPausing(currentStatus)               ||
+             Utility::isDecoding(currentStatus)              ||
+             Utility::isPostDownloadProcessing(currentStatus) ) {
+
+            jobFinished = false;
+            break;
+        }
+
+        // if do not shutdown system if paused items found :
+        if ( Settings::pausedShutdown() && Utility::isPaused(currentStatus) ) {
+
+            jobFinished = false;
+            break;
+        }
+
+    }
+
+    return jobFinished;
+}
+
+
+
 
 
 void MyTreeView::settingsChangedSlot() {
@@ -408,6 +490,7 @@ void MyTreeView::dataChangedSlot(QStandardItem* item){
             }
         }
     }
+
 }
 #endif
 
