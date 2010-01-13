@@ -47,6 +47,7 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
     // variables definition :
     QMap<int, SegmentData> segmentMap;
     QMap<QString, GlobalFileData> globalFileDataNameMap;
+    QMap<QString, GlobalFileData> globalPar2DataNameMap;
 
     NzbFileData nzbFileData;
     QVariant parentVariantId;
@@ -143,8 +144,14 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
                 // set download folder :
                 nzbFileData.setFileSavePath(Settings::completedFolder().path() + "/" + nzbFileData.getNzbName() + "/");
 
-                // add the nzbFileData to the data map :
-                globalFileDataNameMap.insert(nzbFileData.getFileName(), GlobalFileData(nzbFileData));
+                // add the nzbFileData to the data map execpted par2 files :
+                if (!nzbFileData.isPar2File()) {
+                    globalFileDataNameMap.insert(nzbFileData.getFileName(), GlobalFileData(nzbFileData));
+                }
+                // add par2 files only in another map :
+                else {
+                    globalPar2DataNameMap.insert(nzbFileData.getFileName(), GlobalFileData(nzbFileData));
+                }
 
                 // clear variables :    
                 NzbFileData nzbFileDataTemp;
@@ -174,7 +181,9 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
         this->displayMessageBox(parent, file.fileName());
     }
 
-    QList<GlobalFileData> globalFileDataOrderedList = globalFileDataNameMap.values();
+    QList<GlobalFileData> globalFileDataOrderedList = globalFileDataNameMap.values() +
+                                                      globalPar2DataNameMap.values();
+
     return globalFileDataOrderedList;
 
 }
