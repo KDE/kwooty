@@ -37,8 +37,8 @@
 #include "standarditemmodel.h"
 #include "itemparentupdater.h"
 #include "datarestorer.h"
+#include "shutdownmanager.h"
 #include "data/itemstatusdata.h"
-
 
 using namespace UtilityNamespace;
 
@@ -79,6 +79,9 @@ CentralWidget::CentralWidget(QWidget* parent, MyStatusBar* parentStatusBar) : QW
     // save and restore pending downloads from previous session :
     dataRestorer = new DataRestorer(this);
 
+    // setup shutdown manager :
+    shutdownManager = new ShutdownManager(this);
+
     this->setupConnections();
 
 }
@@ -94,7 +97,7 @@ CentralWidget::~CentralWidget()
 
 void CentralWidget::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList){
     
-    //remove .nzb extension to file name:
+    // remove .nzb extension to file name:
     QFileInfo fileInfo(file.fileName());
     QString nzbName = fileInfo.completeBaseName();
     
@@ -141,14 +144,15 @@ void CentralWidget::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGl
 
 
 
-void CentralWidget::savePendingDownloads() {
-    dataRestorer->saveQueueData();
+void CentralWidget::savePendingDownloads(bool saveFromScheduledShutdown) {
+
+    dataRestorer->saveQueueData(saveFromScheduledShutdown);
 }
 
 
 void CentralWidget::restoreDataFromPreviousSession(const QList<GlobalFileData>& globalFileDataList) {
 
-    // create a file to only get the name of the nzb needed by handleNzbFile();
+    // instanciate a QFile to only get the name of the nzb needed by handleNzbFile();
     NzbFileData nzbFileData = globalFileDataList.at(0).getNzbFileData();
     QFile nzbFile(nzbFileData.getNzbName());
 
@@ -422,6 +426,9 @@ ItemParentUpdater* CentralWidget::getItemParentUpdater() const{
     return this->itemParentUpdater;
 }
 
+ShutdownManager* CentralWidget::getShutdownManager() const{
+    return this->shutdownManager;
+}
 
 
 //============================================================================================================//

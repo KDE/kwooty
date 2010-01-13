@@ -39,6 +39,7 @@ class RepairDecompressThread;
 class SegmentsDecoderThread;
 class SegmentManager;
 class DataRestorer;
+class ShutdownManager;
 class NzbFileData;
 class ItemStatusData;
 
@@ -56,13 +57,14 @@ public:
     ~CentralWidget();
     void handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
     void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
-    void savePendingDownloads();
+    void savePendingDownloads(bool saveFromScheduledShutdown = false);
 
     SegmentManager* getSegmentManager() const;
     StandardItemModel* getDownloadModel() const;
     MyStatusBar* getStatusBar() const;
     ItemParentUpdater* getItemParentUpdater() const;
     MyTreeView* getTreeView() const;
+    ShutdownManager* getShutdownManager() const;
 
 
 private:
@@ -71,6 +73,7 @@ private:
     QList<ClientManagerConn*> clientManagerConnList;
     SegmentManager* segmentManager;
     DataRestorer* dataRestorer;
+    ShutdownManager* shutdownManager;
     SegmentsDecoderThread* segmentsDecoderThread;
     RepairDecompressThread* repairDecompressThread;
     ItemParentUpdater* itemParentUpdater;
