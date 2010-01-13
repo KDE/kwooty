@@ -1,4 +1,30 @@
-Kwooty is a friendly newsgroup binary downloader that uses .nzb files as entry files.
+Kwooty is a friendly newsgroup binary downloader that uses .nzb as entry files.
+
+Version 0.3.0:
+--------------
+- libuu decoding library has been dropped.
+
+- An internal decoder for yEnc file format has been written for replacement :
+        advantages : - internal yenc decoding is much more quicker than before
+                     - crc integrity of downloaded files is now checked (allowing to enable next feature)
+        drawbacks : other usenet coding formats as uuencoded, base64 data are not handled
+               
+- Par2 files are downloaded only if they are needed to recover broken files (configurable in settings).
+        This feature is enabled by default and should be safe :
+        if integrity of all downloaded rar files are OK, par2 files are not downloaded but if extracting process (for wathever reason) fails,
+        then par2 files will be downloaded and classical archive verifying, repairing, extracting steps will occur.
+
+- System shutdown feature added : it is now possible to schedule system shutdown (halt, standby, suspend, hibernate)
+ either when jobs are finished or at a given precise time.
+ 
+- A status progress bar has been added.  
+ 
+- It is now possible to drag and drop .nzb file(s) from file manager to kwooty. As usual download will start immediatly.
+   
+- Nzb content sorting improvement : all par2 files are now placed at the bottom of the list when nzb files are added.
+
+- workaround for correctly handling  .nzb files encoded with us-ascii format. 
+
 
 Version 0.2.0:
 --------------
@@ -19,9 +45,11 @@ Version 0.1.2:
 --------------
 Fix other forward compilation issue with Karmic Koala.
 
+
 Version 0.1.1:
 --------------
 Fix compilation issue with Kubuntu Jaunty.
+
 
 Version 0.1.0 (first public release):
 -------------------------------------
