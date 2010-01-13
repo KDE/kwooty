@@ -38,7 +38,7 @@ void ItemStatusData::init(){
     this->status = IdleStatus;
     this->downloadFinish = false;
     this->decodeFinish = false;
-    this->crc32Match = crcOk;
+    this->crc32Match = CrcOk;
     this->data = DataComplete;
 
 }
