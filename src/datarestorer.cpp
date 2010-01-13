@@ -37,13 +37,16 @@ DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent)
     this->parent = parent;
     this->downloadModel = parent->getDownloadModel();
 
+    // open save confirmation dialog except if saving is requested by scheduled shutdown :
+    this->saveFromScheduledShutdownDone = false;
+
     // set a timer to save pending data to be downloaded every 5 minutes :
     dataSaverTimer = new QTimer(this);
     dataSaverTimer->start(5 * UtilityNamespace::MINUTES_TO_MILLISECONDS);
 
 
     magicNumber = 0xC82F1D37;
-    applicationVersion1 = 001;
+    applicationVersion1 = 002;
     // map kwooty serialization version and its corresponding dataStream version
     versionStreamMap.insert(applicationVersion1, QDataStream::Qt_4_4);
     
@@ -65,14 +68,14 @@ void DataRestorer::setupConnections() {
 
 
 
-void DataRestorer::saveQueueData() {
+void DataRestorer::saveQueueData(bool scheduledShutdownRequest) {
 
-    if (Settings::restoreDownloads()) {
+    if (Settings::restoreDownloads() && !this->saveFromScheduledShutdownDone)  {
 
         if (this->isDataToSaveExist()) {
 
             // ask question if previous pending downloads have to be restored :
-            int answer = this->displaySaveMessageBox();
+            int answer = this->displaySaveMessageBox(scheduledShutdownRequest);
 
             // pendings downloads have to be saved :
             if (answer == KMessageBox::Yes) {
@@ -90,6 +93,13 @@ void DataRestorer::saveQueueData() {
         }
 
     }
+
+    // save before shutdown has been procedeed,
+    // do not display next confirmation dialog which will accur when application closing :
+    if (scheduledShutdownRequest) {
+        this->saveFromScheduledShutdownDone = true;
+    }
+
 }
 
 
@@ -190,7 +200,7 @@ bool DataRestorer::isHeaderOk(QDataStream& dataStreamIn) {
 
 
     if (appVersion != applicationVersion1) {
-        kDebug() << "version can not be processed";
+        kDebug() << "temporary file can not be processed (version changed)";
         headerOk = false;
     }
     else {
@@ -373,7 +383,7 @@ void DataRestorer::readDataFromDiskSlot() {
             // ask question if previous pending downloads have to be restored :
             int answer = this->displayRestoreMessageBox();
 
-            // if selected rows has not been canceled :
+            // if data have to be restored :
             if (answer == KMessageBox::Yes) {
 
                 // retrieve saved data :
@@ -437,14 +447,21 @@ int DataRestorer::displayRestoreMessageBox() {
     return KMessageBox::messageBox(parent,
                                    KMessageBox::QuestionYesNo,
                                    i18n("Reload pending downloads from previous session ?"));
+
 }
 
 
-int DataRestorer::displaySaveMessageBox() {
+int DataRestorer::displaySaveMessageBox(bool scheduledShutdownRequest) {
 
-    // ask question :
-    return KMessageBox::messageBox(parent,
-                                   KMessageBox::QuestionYesNo,
-                                   i18n("Save pending downloads from current session ?"));
+    if (scheduledShutdownRequest) {
+        return KMessageBox::Yes;
+    }
+    else {
+        // ask question :
+        return KMessageBox::messageBox(parent,
+                                       KMessageBox::QuestionYesNo,
+                                       i18n("Save pending downloads from current session ?"));
+
+    }
 }
 
