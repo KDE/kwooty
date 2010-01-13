@@ -1,4 +1,4 @@
-include_directories( ${KDE4_INCLUDES}  ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories( ${KDE4_INCLUDES} ${KWORKSPACE_INCLUDE_DIR}  ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 add_subdirectory(icons)
 
 set(Kwooty_SRCS 
@@ -26,10 +26,12 @@ set(Kwooty_SRCS
   repair.cpp
   extract.cpp
   datarestorer.cpp
+  shutdownmanager.cpp
   preferences/preferencesserver.cpp
   preferences/preferencesgeneral.cpp
   preferences/preferencesprograms.cpp
   preferences/preferencesdisplay.cpp
+  preferences/preferencesshutdown.cpp
   data/segmentdata.cpp
   data/nzbfiledata.cpp
   data/itemstatusdata.cpp
@@ -42,12 +44,19 @@ kde4_add_ui_files(  Kwooty_SRCS
 		    preferences/preferencesgeneral.ui
 		    preferences/preferencesprograms.ui
 		    preferences/preferencesdisplay.ui
+		    preferences/preferencesshutdown.ui
 		 )
 kde4_add_kcfg_files(Kwooty_SRCS preferences/settings.kcfgc)
 
 kde4_add_executable(kwooty ${Kwooty_SRCS})
 
-target_link_libraries(kwooty ${KDE4_KDEUI_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS})
+target_link_libraries(kwooty ${KDE4_KDEUI_LIBS}
+			     ${KDE4_KDECORE_LIBS}
+			     ${KDE4_KIO_LIBS}
+			     ${KDE4WORKSPACE_KWORKSPACE_LIBS}
+			     ${KDE4WORKSPACE_SOLIDCONTROL_LIBS})
+
+
 install(TARGETS kwooty DESTINATION ${BIN_INSTALL_DIR})
 install(FILES kwootyui.rc DESTINATION  ${DATA_INSTALL_DIR}/kwooty)
 install(FILES preferences/settings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
