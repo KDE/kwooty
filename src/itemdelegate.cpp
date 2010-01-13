@@ -115,6 +115,7 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
 
     case PROGRESS_COLUMN:{
 
+            // draw progress bar for parent :
             if (index.parent() == QModelIndex()){
                 this->drawProgressBar(painter, option, index);
                 return;
