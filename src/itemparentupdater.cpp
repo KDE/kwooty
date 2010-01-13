@@ -149,6 +149,7 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
         emit statusItemUpdatedSignal();
     }
 
+    // if crc fail, emit a signal in order to download par2 files :
     if (par2FilesUpdated) {
         emit downloadWaitingPar2Signal();
     }
@@ -422,28 +423,28 @@ bool ItemParentUpdater::updatePar2ItemsIfCrcFailed(ItemStatusData& nzbItemStatus
     if (Settings::smartPar2Download()) {
 
         // search for children with a bad crc :
-        if (nzbItemStatusData.getCrc32Match() == crcOk) {
+        if (nzbItemStatusData.getCrc32Match() == CrcOk) {
 
             for (int i = 0; i < rowNumber; i++) {
 
                 ItemStatusData itemStatusData = nzbIndex.child(i, STATE_COLUMN).data(StatusRole).value<ItemStatusData>();
 
                 // if a children has an incorrect crc, set the crc of the parent as incorrect :
-                if ( (itemStatusData.getCrc32Match() == crcKo) ||
+                if ( (itemStatusData.getCrc32Match() == CrcKo) ||
                      (itemStatusData.getDataStatus() == NoData) ){
 
-                    nzbItemStatusData.setCrc32Match(crcKo);
+                    nzbItemStatusData.setCrc32Match(CrcKo);
                     break;
                 }
             }
         }
 
         // if parent crc has been set to incorrect par2 files are required, set them to IdleStatus :
-        if (nzbItemStatusData.getCrc32Match() == crcKo) {
+        if (nzbItemStatusData.getCrc32Match() == CrcKo) {
 
             itemChildrenManager->changePar2FilesStatusSlot(nzbIndex, IdleStatus);
 
-            nzbItemStatusData.setCrc32Match(crcKoNotified);
+            nzbItemStatusData.setCrc32Match(CrcKoNotified);
             par2FilesUpdated = true;
 
         }
