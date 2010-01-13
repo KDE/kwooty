@@ -117,5 +117,29 @@
             <default>true</default>
         </entry>
     </group>
+  
+    <group name="shutdown">
+        <entry name="shutdownMethods" type="Int">
+            <label>Select system shutdown method</label>
+	    <default>0</default>
+        </entry>
+	<entry name="jobsRadioButton" type="Bool">
+            <label>Shutdown will occur when all pensding jobs are finished</label>
+            <default>true</default>
+        </entry>
+	<entry name="timerRadioButton" type="Bool">
+            <label>Shutdown will occur at a precise time</label>
+            <default>false</default>
+        </entry>
+	<entry name="scheduleDateTime" type="DateTime">
+            <label>Schedule system shutdown in HH:mm from now</label>
+        </entry>
+	<entry name="pausedShutdown" type="Bool">
+	    <label>Do not shutdown system if jobs are finished but paused files remain</label>
+            <default>true</default>
+        </entry>
+    </group>
+
+
 </kcfg>
 
