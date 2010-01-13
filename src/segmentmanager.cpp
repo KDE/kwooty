@@ -303,7 +303,7 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData){
         itemParentUpdater->getItemDownloadUpdater()->updateItems(fileNameItem->index(), nzbFileData);
 
     } else {
-        //kDebug() <<  "ITEM NOT FOUND - status : " << segmentData.getStatus();
+        //kDebug() <<  "Item not found - status : " << segmentData.getStatus();
     }
 
 }
