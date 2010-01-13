@@ -33,7 +33,6 @@
 ItemAbstractUpdater::ItemAbstractUpdater(QObject* parent) : QObject (parent)
 {
     // build map in order to display status icon near to file name item :
-
     statusIconStrMap.insert(DownloadStatus,            "mail-receive");
     statusIconStrMap.insert(DownloadFinishStatus,      "mail-mark-unread");
     statusIconStrMap.insert(IdleStatus,                "mail-mark-unread");
