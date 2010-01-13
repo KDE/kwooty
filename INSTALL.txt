@@ -6,8 +6,7 @@ Kwooty requires KDE >= 4.2.
 - gcc
 - KDE core libraries
 - KDE development files for the core libraries
-- uudeview library
-- uudeview development files
+- KDE development files for the workspace libraries
 => Look at ANNEX at the bottom of the page for packages to install on several distributions.
 
 Kwooty use 'par2' program for automatic archive verification/repairing and 
@@ -47,7 +46,7 @@ cmake (>=2.6)
 gcc
 gcc-c++
 libkde4-devel
-uudeview
+kdebase4-workspace-devel
 par2
 unrar
 
@@ -56,8 +55,7 @@ make
 cmake
 gcc
 gcc-c++
-kdelibs4-devel
-libuu-static-devel
+kdebase4-workspace-devel
 parchive2
 unrar
 
@@ -66,7 +64,7 @@ cmake
 g++
 kdelibs5-dev
 kdebase-workspace-bin
-libuu-dev
+kdebase-workspace-dev
 par2
 unrar (non-free version)
  
