@@ -41,10 +41,12 @@
 #include "mystatusbar.h"
 #include "mytreeview.h"
 #include "centralwidget.h"
+#include "shutdownmanager.h"
 #include "preferences/preferencesserver.h"
 #include "preferences/preferencesgeneral.h"
 #include "preferences/preferencesprograms.h"
 #include "preferences/preferencesdisplay.h"
+#include "preferences/preferencesshutdown.h"
 
 
 
@@ -135,7 +137,7 @@ void MainWindow::setupActions()
     connect(moveToTopAction, SIGNAL(triggered(bool)), treeView, SLOT(moveToTopSlot()));
     connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToTopAction, SLOT(setEnabled(bool)) );
 
-    //moveToTopBottom
+    //moveToBottomAction
     KAction* moveToBottomAction = new KAction(this);
     moveToBottomAction->setText(i18n("Bottom"));
     moveToBottomAction->setIcon(KIcon("go-bottom"));
@@ -145,6 +147,19 @@ void MainWindow::setupActions()
     actionCollection()->addAction("moveBottom", moveToBottomAction);
     connect(moveToBottomAction, SIGNAL(triggered(bool)),treeView, SLOT(moveToBottomSlot()));
     connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToBottomAction, SLOT(setEnabled(bool)) );
+
+    //shutdownAction
+    KAction* shutdownAction = new KAction(this);
+    shutdownAction->setText(i18n("Shutdown"));
+    shutdownAction->setIcon(KIcon("system-shutdown"));
+    shutdownAction->setToolTip(i18n("Schedule system shutdown"));
+    shutdownAction->setShortcut(Qt::CTRL + Qt::Key_T);
+    shutdownAction->setEnabled(false);
+    shutdownAction->setCheckable(true);
+    actionCollection()->addAction("shutdown", shutdownAction);
+    connect(shutdownAction, SIGNAL(triggered(bool)), centralWidget->getShutdownManager(), SLOT(enableSystemShutdownSlot(bool)));
+    connect(centralWidget->getShutdownManager(), SIGNAL(setShutdownButtonCheckedSignal(bool)), shutdownAction, SLOT(setChecked(bool)));
+    connect(centralWidget->getShutdownManager(), SIGNAL(setShutdownButtonEnabledSignal(bool)), shutdownAction, SLOT(setEnabled(bool)) );
 
 
     //-------------------
@@ -184,19 +199,22 @@ void MainWindow::showSettings(){
     else {
 
         // dialog instance is not et created, create it :
-        KConfigDialog *dialog = new KConfigDialog(this, "settings", Settings::self());
+        KConfigDialog* dialog = new KConfigDialog(this, "settings", Settings::self());
 
         PreferencesGeneral* preferencesGeneral = new PreferencesGeneral();
-        dialog->addPage( preferencesGeneral, i18n("General"), "preferences-system", i18n("General Setup"));
+        dialog->addPage(preferencesGeneral, i18n("General"), "preferences-system", i18n("General Setup"));
 
         PreferencesServer* preferencesServer = new PreferencesServer();
-        dialog->addPage( preferencesServer, i18n("Connection"), "network-workgroup", i18n("Setup Server Connection"));
+        dialog->addPage(preferencesServer, i18n("Connection"), "network-workgroup", i18n("Setup Server Connection"));
 
         PreferencesPrograms* preferencesPrograms = new PreferencesPrograms();
-        dialog->addPage( preferencesPrograms, i18n("Programs"), "system-run", i18n("Setup External Programs"));
+        dialog->addPage(preferencesPrograms, i18n("Programs"), "system-run", i18n("Setup External Programs"));
 
         PreferencesDisplay* preferencesDisplay = new PreferencesDisplay();
-        dialog->addPage( preferencesDisplay, i18n("Display modes"), "view-choose", i18n("Setup display modes"));
+        dialog->addPage(preferencesDisplay, i18n("Display modes"), "view-choose", i18n("Setup Display Modes"));
+
+        PreferencesShutdown* preferencesShutdown = new PreferencesShutdown(this->centralWidget);
+        dialog->addPage(preferencesShutdown, i18n("Shutdown"), "system-shutdown", i18n("Setup System Shutdown"));
 
         connect( dialog, SIGNAL(settingsChanged(const QString&)), centralWidget, SLOT(updateSettingsSlot()) );
         connect( dialog, SIGNAL(settingsChanged(const QString&)), preferencesPrograms, SLOT(aboutToShowSettingsSlot()) );
