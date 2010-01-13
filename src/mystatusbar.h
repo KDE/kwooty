@@ -50,7 +50,9 @@ private:
 
     KIconLoader* iconLoader;
     QLabel* connIconLabel;
+    QLabel* shutdownIconLabel;
     QLabel* connTextLabel;
+    QLabel* shutdownTextLabel;
     QLabel* filesLabel;
     QLabel* sizeLabel;
     QTimer* downloadSpeedTimer;
@@ -66,8 +68,9 @@ private:
     void updateFileText();
     void resetVariables();
     void setConnectionWidget();
+    void setShutdownWidget();
     void setConnectionActive();
-
+    void addWidgetToLayout(QLabel*, QLabel*);
 
 
 signals:
@@ -79,6 +82,7 @@ public slots:
     void nntpErrorSlot(const int);
     void speedSlot(const int);
     void updateDownloadSpeedSlot();
+    void statusBarShutdownInfoSlot(QString, QString);
 
 private slots:
 

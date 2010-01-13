@@ -23,17 +23,22 @@
 #include <KAboutData>
 #include <KIcon>
 #include <KDebug>
+
 #include <QHBoxLayout>
 
 
 MyStatusBar::MyStatusBar(QWidget* parent) : KStatusBar(parent)
 {
 
-    iconLoader = new KIconLoader();
+    iconLoader = KIconLoader::global() ;
 
     this->resetVariables();
+
     // create connection widget at bottom left of status bar :
     this->setConnectionWidget();
+
+    // create shutdown widget at bottom left of status bar :
+    this->setShutdownWidget();
 
     // add file counter item :
     this->insertPermanentItem("", FILES_NUMBER_ID);
@@ -58,7 +63,6 @@ MyStatusBar::MyStatusBar()
 
 MyStatusBar::~MyStatusBar()
 {
-    delete iconLoader;
 }
 
 
@@ -81,9 +85,27 @@ void MyStatusBar::setConnectionWidget(){
     // set connection not active by default :
     this->setConnectionActive();
 
-    QHBoxLayout *layout = new QHBoxLayout();
-    layout->addWidget(this->connIconLabel);
-    layout->addWidget(this->connTextLabel);
+    this->addWidgetToLayout(this->connIconLabel, this->connTextLabel);
+
+
+}
+
+
+void MyStatusBar::setShutdownWidget(){
+
+    this->shutdownIconLabel = new QLabel(this);
+    this->shutdownTextLabel = new QLabel(this);
+
+    this->addWidgetToLayout(this->shutdownIconLabel, this->shutdownTextLabel);
+
+}
+
+
+void MyStatusBar::addWidgetToLayout(QLabel* iconLabel, QLabel* textLabel){
+
+    QHBoxLayout* layout = new QHBoxLayout();
+    layout->addWidget(iconLabel);
+    layout->addWidget(textLabel);
     layout->setMargin(0);
     layout->setSpacing(2);
 
@@ -94,7 +116,6 @@ void MyStatusBar::setConnectionWidget(){
     this->addWidget(globalWidget);
 
 }
-
 
 
 void MyStatusBar::setConnectionActive(){
@@ -249,8 +270,6 @@ void MyStatusBar::encryptionStatusSlot(const bool sslActive, const QString encry
 
 
 
-
-
 void MyStatusBar::speedSlot(const int bytesDownloaded){
 
     totalBytesDownloaded += bytesDownloaded;
@@ -270,7 +289,20 @@ void MyStatusBar::updateDownloadSpeedSlot(){
 
 
 
+void MyStatusBar::statusBarShutdownInfoSlot(QString iconStr, QString text) {
 
+    QPixmap connectionPixmap;
+
+    if (!iconStr.isEmpty()) {
+        // initialize icon loader
+        iconLoader->newIconLoader();
+        connectionPixmap = iconLoader->loadIcon(iconStr, KIconLoader::Small);
+    }
+
+    this->shutdownIconLabel->setPixmap(connectionPixmap);
+    this->shutdownTextLabel->setText(text);
+
+}
 
 
 
