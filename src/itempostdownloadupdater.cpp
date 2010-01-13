@@ -171,7 +171,7 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
 
         // inidicate if crc32 of the archive is ok :
         if (!crc32Match) {
-            itemStatusData.setCrc32Match(crcKo);
+            itemStatusData.setCrc32Match(CrcKo);
         }
 
         QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(fileNameItem->index());
