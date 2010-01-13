@@ -58,6 +58,7 @@ namespace UtilityNamespace
     static const QString remainingDownloadsFile = "kwootyInQueueDownloads.dat";
     
     static const int MINUTES_TO_MILLISECONDS = 60000;
+    static const int HOURS_TO_MILLISECONDS = 3600000;
 
     // custom roles used for storing data in items :
     enum MyRoles{
@@ -159,9 +160,9 @@ namespace UtilityNamespace
 
     // indicate the crc status of each downloaded file :
     enum CrcNotify {
-        crcOk,
-        crcKo,
-        crcKoNotified
+        CrcOk,
+        CrcKo,
+        CrcKoNotified
     };
 
     // type of status bar file size update :
@@ -169,6 +170,16 @@ namespace UtilityNamespace
         Incremental,
         Reset
     };
+
+    // type of system shudown :
+    enum SystemShutdownType {
+        Shutdown,
+        Standby,
+        Suspend,
+        Hibernate,
+        ShutdownMethodUnknown
+    };
+
 
 }
 
@@ -189,6 +200,7 @@ public:
     static bool isDownloadFinish(const UtilityNamespace::ItemStatus);
     static bool isDecoding(const UtilityNamespace::ItemStatus);
     static bool isWaitingForDecode(const UtilityNamespace::ItemStatus, const UtilityNamespace::Data);
+    static bool isPostDownloadProcessing(const UtilityNamespace::ItemStatus);
     static bool saveData(const QString&, const QString&, const QByteArray&);
     static bool createFolder(const QString&);
     static bool isFolderExists(const QString&);

@@ -71,7 +71,7 @@ bool Utility::isInDownloadProcess(const UtilityNamespace::ItemStatus statusItem)
 bool Utility::isReadyToDownload(const UtilityNamespace::ItemStatus statusItem){
     bool status = false;
 
-    if ( (statusItem == IdleStatus) || (statusItem == DownloadStatus) ){
+    if ( (statusItem == IdleStatus) || (statusItem == DownloadStatus)){
         status = true;
     }
 
@@ -141,6 +141,19 @@ bool Utility::isDownloadFinish(const UtilityNamespace::ItemStatus statusItem){
     bool status = false;
 
     if ( statusItem == DownloadFinishStatus){
+        status = true;
+    }
+
+    return status;
+}
+
+bool Utility::isPostDownloadProcessing(const UtilityNamespace::ItemStatus statusItem){
+    bool status = false;
+
+    if ( (statusItem == VerifyStatus)  ||
+         (statusItem == RepairStatus)  ||
+         (statusItem == ExtractStatus) ) {
+
         status = true;
     }
 
