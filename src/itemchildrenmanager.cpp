@@ -1,3 +1,23 @@
+/***************************************************************************
+ *   Copyright (C) 2010 by Xavier Lefage                                   *
+ *   xavier.kwooty@gmail.com                                               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #include "itemchildrenmanager.h"
 
 #include <KDebug>
@@ -62,6 +82,7 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex index) 
 
     bool par2NotDownloaded = false;
     bool extractFail = false;
+
     // check if some par2 files have not been downloaded :
     QStandardItem* parentItem = this->downloadModel->itemFromIndex(index);
 
@@ -83,8 +104,13 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex index) 
 
     }
 
-    bool par2Required = extractFail && par2NotDownloaded;
-    kDebug() << "par2Required : "  <<  par2Required << "extractFail :" << extractFail <<  "par2NotDownloaded " << par2NotDownloaded;
+    bool par2Required = false;
+
+    if (extractFail && par2NotDownloaded) {
+        par2Required = true;
+    }
+
+    //kDebug() << "par2Required : "  <<  par2Required << "extractFail :" << extractFail <<  "par2NotDownloaded " << par2NotDownloaded;
 
     // if par2 are not downloaded, change items status :
     if (par2Required) {
@@ -126,7 +152,7 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex index) 
 
 void ItemChildrenManager::setIconToFileNameItemSlot(const QModelIndex index) {
 
-    // for a parent, get each children items in order to update their status icon :
+    // for a given parent, get each children items in order to update their status icon :
     QStandardItem* parentItem = this->downloadModel->itemFromIndex(index);
 
     for (int i = 0; i < parentItem->rowCount(); i++) {
@@ -153,7 +179,7 @@ void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex index, Uti
     ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(index);
 
     // if crc fail status has not already been set :
-    if (nzbItemStatusData.getCrc32Match() != crcKoNotified) {
+    if (nzbItemStatusData.getCrc32Match() != CrcKoNotified) {
 
         bool par2StatusChanged = false;
 
