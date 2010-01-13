@@ -164,7 +164,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Disconnect from server when idle after (min):</string>
+           <string>Disconnect from server when idle after (minutes):</string>
           </property>
          </widget>
         </item>
