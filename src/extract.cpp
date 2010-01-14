@@ -230,7 +230,8 @@ NzbFileData Extract::getFirstRarFileFromList() const {
     NzbFileData currentNzbFileData;
     foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
 
-        if (nzbFileData.isRarFile()) {
+        if ( nzbFileData.isRarFile() &&
+             QFile::exists(nzbFileData.getFileSavePath() + nzbFileData.getDecodedFileName()) ) {
             //return the first achive file from list :
             currentNzbFileData = nzbFileData;
             break;
