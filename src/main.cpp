@@ -36,7 +36,7 @@ int main (int argc, char** argv)
                          ki18n("Kwooty"), "0.3.0",
                          ki18n("Kwooty is a friendly nzb usenet binary downloader.\n It also supports automatic file repairing and archive extraction."),
                          KAboutData::License_GPL,
-                         ki18n("Copyright (c) 2009 Xavier Lefage"),
+                         ki18n("Copyright (c) 2010 Xavier Lefage"),
                          KLocalizedString(),
                          "http://kwooty.sourceforge.net/");
     aboutData.addAuthor(ki18n("Xavier Lefage"),ki18n("Maintainer, Lead Developer"), "xavier.kwooty@gmail.com");
