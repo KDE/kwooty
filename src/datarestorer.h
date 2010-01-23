@@ -79,6 +79,7 @@ public slots:
 private slots:
     void readDataFromDiskSlot();
     void saveQueueDataSilentlySlot();
+    void setActiveSlot();
 
 
 };

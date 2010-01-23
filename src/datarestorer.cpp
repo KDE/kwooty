@@ -64,6 +64,9 @@ void DataRestorer::setupConnections() {
 
     connect(dataSaverTimer, SIGNAL(timeout()), this, SLOT(saveQueueDataSilentlySlot()));
 
+    // when a new session is raised and kwooty is still running, reenable data saving :
+    connect(this->parent, SIGNAL(dataHasArrivedSignal()), this, SLOT(setActiveSlot()));
+
 }
 
 
@@ -465,3 +468,7 @@ int DataRestorer::displaySaveMessageBox(const bool saveSilently) const {
     }
 }
 
+
+void DataRestorer::setActiveSlot() {
+    this->setActive(true);
+}
