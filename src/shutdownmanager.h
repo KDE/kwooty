@@ -66,7 +66,6 @@ private:
     bool timerRadioButton;
     bool pausedShutdown;
 
-
     UtilityNamespace::SystemShutdownType getChosenShutdownType();
     ShutdownManager::SessionType retrieveSessionType();
     QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods();
@@ -79,7 +78,6 @@ private:
     void displayShutdownErrorMessageBox(const QString&);
     void updateStatusBar();
     void setupConnections();
-
 
 
 signals:

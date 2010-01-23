@@ -411,7 +411,7 @@ void ShutdownManager::settingsChangedSlot() {
 
     if ( this->jobsRadioButton != Settings::jobsRadioButton()   ||
          this->timerRadioButton != Settings::timerRadioButton() ||
-         this->pausedShutdown != Settings::pausedShutdown()   ||
+         this->pausedShutdown != Settings::pausedShutdown()     ||
          this->scheduleDateTimeStr != Settings::scheduleDateTime().time().toString("hh:mm") ) {
 
         // update settings :
