@@ -37,8 +37,8 @@ DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent)
     this->parent = parent;
     this->downloadModel = parent->getDownloadModel();
 
-    // open save confirmation dialog except if saving is requested by scheduled shutdown :
-    this->saveFromScheduledShutdownDone = false;
+    // enable data restorer :
+    this->setActive(true);
 
     // set a timer to save pending data to be downloaded every 5 minutes :
     dataSaverTimer = new QTimer(this);
@@ -68,14 +68,15 @@ void DataRestorer::setupConnections() {
 
 
 
-void DataRestorer::saveQueueData(bool scheduledShutdownRequest) {
+void DataRestorer::saveQueueData(const bool saveSilently) {
 
-    if (Settings::restoreDownloads() && !this->saveFromScheduledShutdownDone)  {
+    // if option is enabled in settings and is datarestored has not been disabled by shutdown feature :
+    if (Settings::restoreDownloads() && this->active)  {
 
         if (this->isDataToSaveExist()) {
 
             // ask question if previous pending downloads have to be restored :
-            int answer = this->displaySaveMessageBox(scheduledShutdownRequest);
+            int answer = this->displaySaveMessageBox(saveSilently);
 
             // pendings downloads have to be saved :
             if (answer == KMessageBox::Yes) {
@@ -94,11 +95,6 @@ void DataRestorer::saveQueueData(bool scheduledShutdownRequest) {
 
     }
 
-    // save before shutdown has been procedeed,
-    // do not display next confirmation dialog which will accur when application closing :
-    if (scheduledShutdownRequest) {
-        this->saveFromScheduledShutdownDone = true;
-    }
 
 }
 
@@ -183,7 +179,7 @@ void DataRestorer::writeDataToDisk() {
 
 
 
-bool DataRestorer::isHeaderOk(QDataStream& dataStreamIn) {
+bool DataRestorer::isHeaderOk(QDataStream& dataStreamIn) const {
 
     bool headerOk = true;
 
@@ -276,7 +272,7 @@ void DataRestorer::resetDataForDownloadingFile(NzbFileData& currentNzbFileData, 
 
 
 
-void DataRestorer::preprocessAndHandleData(QList< QList<GlobalFileData> > nzbFileList) {
+void DataRestorer::preprocessAndHandleData(const QList< QList<GlobalFileData> >& nzbFileList) {
 
     // get nzb items whose download is not complete :
     for (int i = 0; i < nzbFileList.size(); i++) {
@@ -334,7 +330,7 @@ void DataRestorer::preprocessAndHandleData(QList< QList<GlobalFileData> > nzbFil
 
 
 
-bool DataRestorer::isDataToSaveExist() {
+bool DataRestorer::isDataToSaveExist() const {
 
     bool dataToSaveExist = false;
 
@@ -360,6 +356,10 @@ bool DataRestorer::isDataToSaveExist() {
     return dataToSaveExist;
 }
 
+
+void DataRestorer::setActive(const bool active) {
+    this->active = active;
+}
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
@@ -441,7 +441,7 @@ void DataRestorer::saveQueueDataSilentlySlot() {
 
 
 
-int DataRestorer::displayRestoreMessageBox() {
+int DataRestorer::displayRestoreMessageBox() const {
 
     // ask question :
     return KMessageBox::messageBox(parent,
@@ -451,9 +451,9 @@ int DataRestorer::displayRestoreMessageBox() {
 }
 
 
-int DataRestorer::displaySaveMessageBox(bool scheduledShutdownRequest) {
+int DataRestorer::displaySaveMessageBox(const bool saveSilently) const {
 
-    if (scheduledShutdownRequest) {
+    if (saveSilently) {
         return KMessageBox::Yes;
     }
     else {

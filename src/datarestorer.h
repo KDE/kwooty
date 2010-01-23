@@ -46,8 +46,8 @@ public:
 
     DataRestorer(CentralWidget* parent = 0);
     DataRestorer();
-    void saveQueueData(bool);
-
+    void saveQueueData(const bool);
+    void setActive(const bool);
 
 private:
     CentralWidget* parent;
@@ -56,17 +56,17 @@ private:
     QHash<quint32, int> versionStreamMap;
     quint32 magicNumber;
     quint32 applicationVersion1;
-    bool saveFromScheduledShutdownDone;
+    bool active;
 
     void setupConnections();
     void resetDataForDecodingFile(NzbFileData&, ItemStatusData&, int&);
     void resetDataForDownloadingFile(NzbFileData&, ItemStatusData&);
-    void preprocessAndHandleData(QList< QList<GlobalFileData> >);
+    void preprocessAndHandleData(const QList< QList<GlobalFileData> >&);
     void writeDataToDisk();
-    int displayRestoreMessageBox();
-    int displaySaveMessageBox(bool);
-    bool isDataToSaveExist();
-    bool isHeaderOk(QDataStream&);
+    int displayRestoreMessageBox() const;
+    int displaySaveMessageBox(const bool) const;
+    bool isDataToSaveExist() const;
+    bool isHeaderOk(QDataStream&) const;
 
 
 signals:
