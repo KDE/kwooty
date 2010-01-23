@@ -63,7 +63,6 @@ private:
     QTimer* processWaitAnswerTimer;
     Extract::ArchivePasswordStatus  archivePasswordStatus;
     QString unrarProgramPath;
-    QString fileSavePath;
     QString fileNameToExtract;
     QString stdOutputLines;
     int extractProgressValue;

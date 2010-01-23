@@ -68,7 +68,7 @@ void Extract::launchProcess(const QList<NzbFileData>& nzbFileDataList, Extract::
         NzbFileData currentNzbFileData = this->getFirstRarFileFromList();
 
         // get archive saved path :
-        this->fileSavePath = currentNzbFileData.getFileSavePath();
+        QString fileSavePath = currentNzbFileData.getFileSavePath();
 
         // case archives have been renamed, get original file name :
         if (!currentNzbFileData.getRenamedFileName().isEmpty()) {
@@ -84,7 +84,7 @@ void Extract::launchProcess(const QList<NzbFileData>& nzbFileDataList, Extract::
         if (this->archivePasswordStatus == Extract::ArchiveCheckIfPassworded) {
             args.append("l");
             args.append("-p-");
-            args.append(this->fileSavePath + archiveName);
+            args.append(fileSavePath + archiveName);
         }
         // second pass : extract archive with or without a password :
         else {
@@ -114,8 +114,8 @@ void Extract::launchProcess(const QList<NzbFileData>& nzbFileDataList, Extract::
                 }
             }
 
-            args.append(this->fileSavePath + archiveName);
-            args.append(this->fileSavePath);
+            args.append(fileSavePath + archiveName);
+            args.append(fileSavePath);
 
         }
 
@@ -128,7 +128,7 @@ void Extract::launchProcess(const QList<NzbFileData>& nzbFileDataList, Extract::
         this->extractProcess->start();
 
         // if path contains "*" add "\\" in order to avoid issues with QRegExp pattern search :
-        this->fileSavePath.replace("*", "\\*");
+        //this->fileSavePath.replace("*", "\\*");
 
     }
     // unrar program has not been found, notify user :
@@ -172,26 +172,26 @@ void Extract::extractUpdate(const QString& line) {
     // get files with crc errors :
     else if (line.contains("CRC failed")) {
 
-        QRegExp regExp(".*" + this->fileSavePath + "(.*)?");
+        QRegExp regExp(".*(/.*/)+(.*)?");
 
         // if file with bad crc found :
         if (regExp.exactMatch(line)) {
 
-            QString fileNameStr = regExp.cap(1);
+            QString fileNameStr = regExp.cap(2);
             // search corresponding file into the list :
             this->findItemAndNotifyUser(fileNameStr, ExtractBadCrcStatus, ChildItemTarget);
         }
     }
 
     // search current processed archive :
-    else {
+    else if (line.contains("Extracting from")) {
 
-        QRegExp regExp("Extracting from " + this->fileSavePath + "(.*)?");
+        QRegExp regExp(".*(/.*/)+(.*)?");
 
         // if current extracted file has been found :
         if (regExp.exactMatch(line)) {
 
-            QString fileNameStr = regExp.cap(1);
+            QString fileNameStr = regExp.cap(2);
             // search corresponding file into the list :
             this->findItemAndNotifyUser(fileNameStr, ExtractStatus, BothItemsTarget);
         }
@@ -230,8 +230,7 @@ NzbFileData Extract::getFirstRarFileFromList() const {
     NzbFileData currentNzbFileData;
     foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
 
-        if ( nzbFileData.isRarFile() &&
-             QFile::exists(nzbFileData.getFileSavePath() + nzbFileData.getDecodedFileName()) ) {
+        if (nzbFileData.isRarFile()) {
             //return the first achive file from list :
             currentNzbFileData = nzbFileData;
             break;
@@ -253,7 +252,6 @@ void Extract::updateNzbFileDataInList(NzbFileData& currentNzbFileData, const Uti
 
 void Extract::resetVariables(){
     this->isUnrarProgramFound = false;
-    this->fileSavePath.clear();
     this->fileNameToExtract.clear();
     this->nzbFileDataList.clear();
     this->stdOutputLines.clear();
