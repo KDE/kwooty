@@ -21,9 +21,13 @@
 #ifndef SHUTDOWNMANAGER_H
 #define SHUTDOWNMANAGER_H
 
+#include <solid/control/powermanager.h>
+#include <KDialog>
+
 #include <QObject>
 #include <QTimer>
-#include <solid/control/powermanager.h>
+#include <QPointer>
+
 
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -50,6 +54,7 @@ public:
 private:
 
     CentralWidget* parent;
+    QPointer<KDialog> aboutToShutdownDialog;
     QTimer* activityMonitorTimer;
     QTimer* launchShutdownTimer;
     QString scheduleDateTimeStr;
@@ -61,17 +66,20 @@ private:
     bool timerRadioButton;
     bool pausedShutdown;
 
-    void systemAboutToShutdown();
-    QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods();
+
     UtilityNamespace::SystemShutdownType getChosenShutdownType();
-    QString getShutdownMethodText(UtilityNamespace::SystemShutdownType);
+    ShutdownManager::SessionType retrieveSessionType();
+    QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods();
+    QString getShutdownMethodText(UtilityNamespace::SystemShutdownType) const;
+    int displayAboutToShutdownMessageBox(const QString&);
+    void systemAboutToShutdown();
     void requestSuspend(Solid::Control::PowerManager::SuspendMethod);
     void requestShutdown();
     void storeSettings();
-    ShutdownManager::SessionType retrieveSessionType();
     void displayShutdownErrorMessageBox(const QString&);
     void updateStatusBar();
     void setupConnections();
+
 
 
 signals:

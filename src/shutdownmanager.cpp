@@ -101,19 +101,12 @@ void ShutdownManager::systemAboutToShutdown() {
     UtilityNamespace::SystemShutdownType systemShutdownType = this->getChosenShutdownType();
     QString shutdownMethodText = this->getShutdownMethodText(systemShutdownType);
 
-    // get button item in order to set text :
-    KGuiItem continueGuiItem = KStandardGuiItem::cont();
-    continueGuiItem.setText(shutdownMethodText);
-
     // finally display shutdown confirmation dialog :
-    QString status = QString(i18n("Kwooty is about to %1 system. Continue?")).arg(shutdownMethodText.toLower());
-    int answer = KMessageBox::warningContinueCancel(this->parent,
-                                                    status,
-                                                    i18n("Warning"),
-                                                    continueGuiItem);
+    int answer = this->displayAboutToShutdownMessageBox(shutdownMethodText);
 
     // user has confirmed shutdown, launch shutdown right now :
-    if (answer == KMessageBox::Continue) {
+    if (answer == KDialog::Yes) {
+
         this->launchSystemShutdownSlot();
     }
     // shutdown cancelled :
@@ -215,15 +208,8 @@ void ShutdownManager::requestShutdown() {
 void ShutdownManager::requestSuspend(Solid::Control::PowerManager::SuspendMethod suspendMethod) {
 
     // requests a suspend of the system :
-    bool success = Solid::Control::PowerManager::suspend(suspendMethod)->exec();
+    Solid::Control::PowerManager::suspend(suspendMethod)->start();
 
-    if (success) {
-        kapp->quit();
-    }
-    else {
-        kDebug() << "shutdown job failed !";
-    }
-    
 }
 
 
@@ -345,29 +331,28 @@ QMap<QString, QString> ShutdownManager::retrieveIconAvailableShutdownMap() {
 
 
 
-QString ShutdownManager::getShutdownMethodText(UtilityNamespace::SystemShutdownType systemShutdownType) {
+QString ShutdownManager::getShutdownMethodText(UtilityNamespace::SystemShutdownType systemShutdownType) const {
 
     QString shutdownText;
 
     // shutdown :
     if (systemShutdownType == UtilityNamespace::Shutdown) {
         shutdownText = i18n("Shutdown");
-
     }
+
     // standby :
     else if (systemShutdownType == UtilityNamespace::Standby) {
         shutdownText = i18n("Standby");
-
     }
+
     // suspend :
     else if (systemShutdownType == UtilityNamespace::Suspend) {
         shutdownText = i18n("Suspend to RAM");
-
     }
+
     // hibernate :
     else if (systemShutdownType == UtilityNamespace::Hibernate) {
         shutdownText = i18n("Suspend to disk");
-
     }
 
     return shutdownText;
@@ -385,6 +370,37 @@ void ShutdownManager::displayShutdownErrorMessageBox(const QString& message) {
     this->shutdownCancelledSlot();
 
 }
+
+
+int ShutdownManager::displayAboutToShutdownMessageBox(const QString& shutdownMethodText) {
+
+    // create kdialog :
+    this->aboutToShutdownDialog = new KDialog(parent, Qt::Dialog);
+    this->aboutToShutdownDialog->setCaption(i18n("Warning"));
+    this->aboutToShutdownDialog->setButtons(KDialog::Yes | KDialog::No);
+    this->aboutToShutdownDialog->setModal(true);
+
+    // display text for continue button
+    KGuiItem buttonContinue = KStandardGuiItem::cont();
+    buttonContinue.setText(shutdownMethodText);
+    this->aboutToShutdownDialog->setButtonGuiItem(KDialog::Yes, buttonContinue);
+
+    // set cancel button :
+    this->aboutToShutdownDialog->setButtonGuiItem(KDialog::No, KStandardGuiItem::cancel());
+
+    // display kmessagebox :
+    QString status = QString(i18n("Kwooty is about to %1 system. Continue?")).arg(shutdownMethodText.toLower());
+    return KMessageBox::createKMessageBox(this->aboutToShutdownDialog,
+                                          QMessageBox::Warning,
+                                          status,
+                                          QStringList(),
+                                          QString(),
+                                          false,
+                                          KMessageBox::Notify);
+
+}
+
+
 
 
 //============================================================================================================//
@@ -535,8 +551,16 @@ void ShutdownManager::launchSystemShutdownSlot() {
 
     this->launchShutdownTimer->stop();
 
+    // close dialog if shutdown has been automatically launched :
+    if (this->aboutToShutdownDialog) {
+        this->aboutToShutdownDialog->reject();
+    }
+
     // save potential pending data for future session restoring :
-    parent->savePendingDownloads(true);
+    parent->savePendingDownloads(true, this->getChosenShutdownType());
+
+    // shutdown is launched, set system button as "not checked" :
+    emit setShutdownButtonCheckedSignal(false);
 
     // get type of system shutdown :
     switch (this->getChosenShutdownType()) {
