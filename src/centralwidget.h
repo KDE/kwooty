@@ -57,7 +57,7 @@ public:
     ~CentralWidget();
     void handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
     void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
-    void savePendingDownloads(bool saveFromScheduledShutdown = false);
+    void savePendingDownloads(bool saveSilently = false, UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown);
 
     SegmentManager* getSegmentManager() const;
     StandardItemModel* getDownloadModel() const;
@@ -85,7 +85,8 @@ private:
     void createNntpClients();
     void setupConnections();
     void updateItemsInView(QModelIndex, QModelIndex);
-    void setStartPauseDownload(int, const QList<QModelIndex>&);
+    void setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus);
+    void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QList<QModelIndex>&);
     void statusBarFileSizeUpdate();
     void initFoldersSettings();
     

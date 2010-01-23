@@ -144,9 +144,16 @@ void CentralWidget::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGl
 
 
 
-void CentralWidget::savePendingDownloads(bool saveFromScheduledShutdown) {
+void CentralWidget::savePendingDownloads(bool saveSilently, UtilityNamespace::SystemShutdownType systemShutdownType) {
 
-    dataRestorer->saveQueueData(saveFromScheduledShutdown);
+    dataRestorer->saveQueueData(saveSilently);
+
+    // disable dataRestorer when shutdown is requested because the app will be closed automatically
+    // data saving will be triggered and then data saving dialog box could prevent system shutdown :
+    if (systemShutdownType == UtilityNamespace::Shutdown) {
+        dataRestorer->setActive(false);
+    }
+
 }
 
 
@@ -361,7 +368,7 @@ void CentralWidget::statusBarFileSizeUpdate() {
 
 
 
-void CentralWidget::setStartPauseDownload(int targetStatus, const QList<QModelIndex>& indexesList){
+void CentralWidget::setStartPauseDownload(const UtilityNamespace::ItemStatus targetStatus, const QList<QModelIndex>& indexesList){
 
 
     foreach (QModelIndex currentModelIndex, indexesList){
@@ -388,6 +395,31 @@ void CentralWidget::setStartPauseDownload(int targetStatus, const QList<QModelIn
     
     //reset default buttons :
     treeView->selectedItemSlot();
+}
+
+
+
+void CentralWidget::setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus targetStatus){
+
+    // select all rows in order to set them to paused or Idle :
+    QList<QModelIndex> indexesList;
+    int rowNumber = downloadModel->rowCount();
+
+    for (int i = 0; i < rowNumber; i++) {
+
+        QModelIndex currentIndex = downloadModel->item(i)->index();
+        QStandardItem* stateItem = downloadModel->getStateItemFromIndex(currentIndex);
+
+        UtilityNamespace::ItemStatus currentStatus = downloadModel->getStatusFromStateItem(stateItem);
+
+        if (Utility::isReadyToDownload(currentStatus)) {
+            indexesList.append(currentIndex);
+        }
+    }
+
+    this->setStartPauseDownload(targetStatus, indexesList);
+
+
 }
 
 
@@ -475,25 +507,8 @@ void CentralWidget::downloadWaitingPar2Slot(){
 void CentralWidget::saveFileErrorSlot(int fromProcessing){
     
     // 1. set all Idle items to pause before notify the user :
-    QList<QModelIndex> indexesList;
-    
-    int rowNumber = downloadModel->rowCount();
-    
-    for (int i = 0; i < rowNumber; i++) {
-        
-        QModelIndex currentIndex = downloadModel->item(i)->index();
-        QStandardItem* stateItem = downloadModel->getStateItemFromIndex(currentIndex);
-        
-        UtilityNamespace::ItemStatus currentStatus = downloadModel->getStatusFromStateItem(stateItem);
-        
-        if (Utility::isReadyToDownload(currentStatus)) {
-            indexesList.append(currentIndex);
-        }
-    }
-    
-    this->setStartPauseDownload(PauseStatus, indexesList);
-    
-    
+    this->setStartPauseDownloadAllItems(UtilityNamespace::PauseStatus);
+
     
     // 2. notify user with a message box (and avoid multiple message box instances):
     if (this->saveErrorButtonCode == 0) {
@@ -508,8 +523,7 @@ void CentralWidget::saveFileErrorSlot(int fromProcessing){
         }
         
         
-        this->saveErrorButtonCode = KMessageBox::Cancel;
-        
+        this->saveErrorButtonCode = KMessageBox::Cancel;      
         this->saveErrorButtonCode = KMessageBox::messageBox(this,
                                                             KMessageBox::Sorry,
                                                             i18n("Write error in <b>%1</b>: disk drive may be full.<br>Downloads have been suspended.",
