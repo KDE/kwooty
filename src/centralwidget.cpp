@@ -184,6 +184,8 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
     nzbNameItem->setIcon(KIcon("go-next-view"));
 
     quint64  nzbFilesSize = 0;
+    int  par2FileNumber = 0;
+
     foreach (GlobalFileData currentGlobalFileData, globalFileDataList) {
 
         // populate children :
@@ -191,6 +193,11 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
         
         // compute size of all files contained in the nzb :
         nzbFilesSize += currentGlobalFileData.getNzbFileData().getSize();
+
+        // count number of par2 Files :
+        if (currentGlobalFileData.getNzbFileData().isPar2File()) {
+            par2FileNumber++;
+        }
         
     }
 
@@ -217,7 +224,7 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
     treeView->setAlternatingRowColors(Settings::alternateColors());
 
     // enable / disable smart par2 download :
-    if (Settings::smartPar2Download()) {
+    if ( Settings::smartPar2Download() && (par2FileNumber < globalFileDataList.size()) ) {
         emit changePar2FilesStatusSignal(nzbNameItem->index(), WaitForPar2IdleStatus);
     }
 
