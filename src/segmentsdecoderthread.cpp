@@ -23,7 +23,8 @@
 #include <KDebug>
 #include <QDir>
 #include "centralwidget.h"
-#include "segmentdecoder.h"
+#include "segmentdecoderyenc.h"
+#include "segmentdecoderuuenc.h"
 #include "itemdownloadupdater.h"
 #include "data/segmentdata.h"
 #include "itemparentupdater.h"
@@ -46,14 +47,28 @@ SegmentsDecoderThread::SegmentsDecoderThread(CentralWidget* inParent) : QThread(
 SegmentsDecoderThread::~SegmentsDecoderThread() {
     quit();
     wait();
-    delete segmentDecoder;
+
+    // delete decoders :
+    while (this->segmentDecoderList.size() != 0) {
+        delete this->segmentDecoderList.takeLast();
+    }
+
 }
 
 
 void SegmentsDecoderThread::run() {
 
-    // create decoder instance :
-    segmentDecoder = new SegmentDecoder();
+    // create Yenc decoder instance :
+    this->segmentDecoderList.append(new SegmentDecoderYEnc());
+
+    // create UU decoder instance :
+    this->segmentDecoderList.append(new SegmentDecoderUUEnc());
+
+    // init encoder instance :
+    this->currentDecoderElement = 0;
+
+    // no decoding at startup :
+    this->currentlyDecoding = false;
 
     // create incoming data monitoring timer :
     decoderTimer = new QTimer();
@@ -89,18 +104,25 @@ void SegmentsDecoderThread::setupConnections() {
     // update user interface about current decoding status :
     qRegisterMetaType<QVariant>("QVariant");
     qRegisterMetaType<UtilityNamespace::ItemStatus>("UtilityNamespace::ItemStatus");
-    connect (segmentDecoder ,
-             SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)),
-             this,
-             SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)));
 
 
-    connect (segmentDecoder,
-             SIGNAL(saveFileErrorSignal(int)),
-             parent,
-             SLOT(saveFileErrorSlot(int)),
-             Qt::QueuedConnection);
 
+    // for each decoders connect update signals :
+    foreach (SegmentDecoderBase* currentSegmentDecoder, this->segmentDecoderList) {
+
+        connect (currentSegmentDecoder ,
+                 SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)),
+                 this,
+                 SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)));
+
+
+        connect (currentSegmentDecoder,
+                 SIGNAL(saveFileErrorSignal(int)),
+                 parent,
+                 SLOT(saveFileErrorSlot(int)),
+                 Qt::QueuedConnection);
+
+    }
 
 
 }
@@ -109,8 +131,11 @@ void SegmentsDecoderThread::setupConnections() {
 
 void SegmentsDecoderThread::startDecodingSlot() {
 
-    // if no data is currently being decoded :
-    if (!segmentDecoder->isDecoding() && !nzbFileDataList.isEmpty()) {
+    // if pending segments are present and check if decoding is currently processed :
+    if (!this->currentlyDecoding && !nzbFileDataList.isEmpty()) {
+
+        // decoding begins :
+        this->currentlyDecoding = true;
 
         // get nzbfiledata to decode from list
         mutex.lock();
@@ -118,7 +143,34 @@ void SegmentsDecoderThread::startDecodingSlot() {
         mutex.unlock();
 
         // decode data :
-        segmentDecoder->decodeSegments(currentFileDataToDecode);
+        int decoderNumber = 0;
+        QString fileNameStr;
+
+        // apply a round robin in order to select the proper decoder (YDec or UUDec) :
+        while ( fileNameStr.isEmpty() && (decoderNumber++ < this->segmentDecoderList.size()) ) {
+
+            // scan segments with the current decoder :
+            fileNameStr = this->segmentDecoderList.at(this->currentDecoderElement)->scanSegmentFiles(currentFileDataToDecode);
+
+            // if fileName is not empty, decode segments with the current decoder :
+            if (!fileNameStr.isEmpty()) {
+                this->segmentDecoderList.at(this->currentDecoderElement)->decodeSegments(currentFileDataToDecode, fileNameStr);
+            }
+            // else scan segments with other decoder(s) at next iteration :
+            else {
+                this->currentDecoderElement = (this->currentDecoderElement + 1) % this->segmentDecoderList.size();
+            }
+
+        }
+
+        // if fileName is empty after trying all decoders, decoding failed :
+        if (fileNameStr.isEmpty()) {
+            emit updateDecodeSignal(currentFileDataToDecode.getUniqueIdentifier(), PROGRESS_COMPLETE, DecodeErrorStatus, QString(), false);
+        }
+
+
+        // decoding is over :
+        this->currentlyDecoding = false;
 
     }
 

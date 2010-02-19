@@ -29,7 +29,7 @@
 using namespace UtilityNamespace;
 
 class CentralWidget;
-class SegmentDecoder;
+class SegmentDecoderBase;
 class SegmentData;
 
 
@@ -44,11 +44,13 @@ public:
 
 private:
     CentralWidget* parent;
-    SegmentDecoder* segmentDecoder;
+    QList<SegmentDecoderBase*> segmentDecoderList;
     QList<SegmentData> segmentDataList;
     QList<NzbFileData> nzbFileDataList;
     QTimer* decoderTimer;
     QMutex mutex;
+    int currentDecoderElement;
+    bool currentlyDecoding;
 
     void run();
     void setupConnections();
