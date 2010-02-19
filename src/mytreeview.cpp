@@ -40,6 +40,10 @@ MyTreeView::MyTreeView(QWidget* parent, CentralWidget* centralWidget) : QTreeVie
     QVBoxLayout* vBoxLayout = new QVBoxLayout(parent);
     vBoxLayout->addWidget(this);
 
+    // remove spacing, margin :
+    vBoxLayout->setMargin(0);
+    vBoxLayout->setSpacing(0);
+
     this->setModel(downloadModel);
 
     // delegate for item rendering / displaying :
