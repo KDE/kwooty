@@ -49,7 +49,8 @@ public:
                         IdleTimeout = 400,
                         AuthenticationRequired = 480,
                         AuthenticationRejected = 482,
-                        NoSuchArticle = 430
+                        NoSuchArticleMessageId = 430,
+                        NoSuchArticleNumber = 423
                        };
 
     enum NntpClientStatus { ClientIdle,
@@ -76,6 +77,7 @@ private:
     NntpClient::NntpClientStatus clientStatus;
     int nntpError;
     bool authenticationDenied;
+    bool certificateVerified;
 
     void connectToHost();
     void setupConnections();
@@ -94,7 +96,7 @@ signals:
     void getNextSegmentSignal(ClientManagerConn*);
     void updateDownloadSegmentSignal(SegmentData);
     void connectionStatusSignal(int);
-    void encryptionStatusSignal(const bool, const QString = QString());
+    void encryptionStatusSignal(const bool, const QString = QString(), const bool = false, const QString = QString());
     void speedSignal(int);
     void saveFileErrorSignal(int);
     void nntpErrorSignal(const int);
@@ -111,6 +113,7 @@ private slots:
     void disconnectedSlot();
     void tryToReconnectSlot();
     void socketEncryptedSlot();
+    void peerVerifyErrorSlot(const QSslError&);
 
 
 };
