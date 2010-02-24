@@ -25,6 +25,7 @@
 #include <KDebug>
 
 #include <QHBoxLayout>
+#include "settings.h"
 
 
 MyStatusBar::MyStatusBar(QWidget* parent) : KStatusBar(parent)
@@ -53,6 +54,7 @@ MyStatusBar::MyStatusBar(QWidget* parent) : KStatusBar(parent)
     // set timer to compute download speed every each SPEED_AVERAGE_SECONDS :
     downloadSpeedTimer = new QTimer(this);
     downloadSpeedTimer->start(SPEED_AVERAGE_SECONDS * 1000);
+
     connect(downloadSpeedTimer, SIGNAL(timeout()), this, SLOT(updateDownloadSpeedSlot()));
 
 }
@@ -82,10 +84,10 @@ void MyStatusBar::setConnectionWidget(){
     this->connIconLabel = new QLabel(this);
     this->connTextLabel = new QLabel(this);
 
+    this->connWidget = this->addWidgetToLayout(this->connIconLabel, this->connTextLabel);
+
     // set connection not active by default :
     this->setConnectionActive();
-
-    this->addWidgetToLayout(this->connIconLabel, this->connTextLabel);
 
 
 }
@@ -101,7 +103,7 @@ void MyStatusBar::setShutdownWidget(){
 }
 
 
-void MyStatusBar::addWidgetToLayout(QLabel* iconLabel, QLabel* textLabel){
+QWidget* MyStatusBar::addWidgetToLayout(QLabel* iconLabel, QLabel* textLabel){
 
     QHBoxLayout* layout = new QHBoxLayout();
     layout->addWidget(iconLabel);
@@ -115,6 +117,8 @@ void MyStatusBar::addWidgetToLayout(QLabel* iconLabel, QLabel* textLabel){
     // add aggregated widget to the status bar :
     this->addWidget(globalWidget);
 
+    return globalWidget;
+
 }
 
 
@@ -126,7 +130,7 @@ void MyStatusBar::setConnectionActive(){
     // iinitialize icon loader
     iconLoader->newIconLoader();
 
-    if (totalConnections == 0) {
+    if (this->totalConnections == 0) {
         connectionPixmap = iconLoader->loadIcon("weather-clear-night", KIconLoader::Small);
         connection = i18n(" Disconnected");
 
@@ -161,7 +165,7 @@ void MyStatusBar::setConnectionActive(){
     else{
         // set connection icon :
         connectionPixmap = iconLoader->loadIcon("applications-internet", KIconLoader::Small);
-        connection = i18n(" Connected: ") + QString::number(totalConnections);
+        connection = i18n(" Connected: ") + QString::number(this->totalConnections);
 
         if (this->sslActive) {
 
@@ -181,6 +185,56 @@ void MyStatusBar::setConnectionActive(){
     connIconLabel->setPixmap(connectionPixmap);
     connTextLabel->setText(connection);
 
+
+    // set tooltip to connection widget :
+    this->buildConnWidgetToolTip(connection);
+
+
+
+}
+
+
+void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
+
+    QString toolTipStr;
+
+    // if totalConnections == 0, client is disconnected :
+    if (this->totalConnections == 0) {
+        toolTipStr.append(connection);
+    }
+
+    else {
+        // set host name info :
+        toolTipStr.append(i18n("Connected to ") + Settings::hostName() + "<br>");
+
+        // set SSL connection info :
+        if (this->sslActive) {
+
+            toolTipStr.append(i18n("Connection is SSL encrypted"));
+
+            if (!encryptionMethod.isEmpty()) {
+                toolTipStr.append(": " + this->encryptionMethod);
+            }
+
+            toolTipStr.append("<br>");
+
+            if (this->certificateVerified) {
+                toolTipStr.append(i18n("Certificate <b>verified</b> by ") + this->issuerOrgranisation);
+            }
+            else {
+                toolTipStr.append(i18n("Certificate <b>can not be verified</b>"));
+            }
+
+        }
+        else {
+
+            toolTipStr.append("Connection is not encrypted");
+        }
+
+    }
+
+    // set tooltip :
+    this->connWidget->setToolTip(toolTipStr);
 }
 
 
@@ -257,12 +311,15 @@ void MyStatusBar::nntpErrorSlot(const int nttpErrorStatus){
 
 }
 
-void MyStatusBar::encryptionStatusSlot(const bool sslActive, const QString encryptionMethod){
+void MyStatusBar::encryptionStatusSlot(const bool sslActive, const QString encryptionMethod, const bool certificateVerified, const QString issuerOrgranisation){
 
     //kDebug() << "sslActive : " << sslActive << "encryptionMethod" << encryptionMethod;
 
     this->encryptionMethod = encryptionMethod;
     this->sslActive = sslActive;
+    this->certificateVerified = certificateVerified;
+    this->issuerOrgranisation = issuerOrgranisation;
+
     this->setConnectionActive();
 
 }

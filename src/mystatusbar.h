@@ -49,6 +49,7 @@ private:
     static const int SPEED_ID = 3;
 
     KIconLoader* iconLoader;
+    QWidget* connWidget;
     QLabel* connIconLabel;
     QLabel* shutdownIconLabel;
     QLabel* connTextLabel;
@@ -57,20 +58,25 @@ private:
     QLabel* sizeLabel;
     QTimer* downloadSpeedTimer;
     QString encryptionMethod;
+    QString issuerOrgranisation;
     quint64 totalFiles;
     quint64 totalSize;
     quint64 totalBytesDownloaded;
     int totalConnections;
     int nttpErrorStatus;
     bool sslActive;
+    bool certificateVerified;
 
+
+    QWidget* addWidgetToLayout(QLabel*, QLabel*);
     void updateSizeText();
     void updateFileText();
     void resetVariables();
     void setConnectionWidget();
     void setShutdownWidget();
     void setConnectionActive();
-    void addWidgetToLayout(QLabel*, QLabel*);
+    void buildConnWidgetToolTip(const QString&);
+
 
 
 signals:
@@ -78,7 +84,7 @@ signals:
 public slots:
     void decrementSlot(const quint64, const int);
     void connectionStatusSlot(const int);
-    void encryptionStatusSlot(const bool, const QString);
+    void encryptionStatusSlot(const bool, const QString, const bool, const QString);
     void nntpErrorSlot(const int);
     void speedSlot(const int);
     void updateDownloadSpeedSlot();
