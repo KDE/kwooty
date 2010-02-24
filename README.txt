@@ -5,7 +5,7 @@ Version 0.3.1:
 This is a bugs fix release.
 
 * SSL connection was not established when certificate could not be verified by authority instance. (bug #2942759)
-+ SSL connection is not established even if certificate can not been verified (certificate expired, self-signed certificate, etc...). Detail about certificate verifying has been added in "connection" related tooltip at the bottom-left of the status bar.
++ SSL connection is now established even if certificate can not been verified (certificate expired, self-signed certificate, etc...). Detail about certificate verifying has been added in "connection" related tooltip at the bottom-left of the status bar.
 
 * kwooty now handles server response 423 (no such article number) which could be responsible of bug #2955501.
 
