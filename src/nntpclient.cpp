@@ -96,6 +96,7 @@ void NntpClient::setupConnections() {
     connect (tcpSocket, SIGNAL(disconnected()), this, SLOT(disconnectedSlot()));
     connect (tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorSlot(QAbstractSocket::SocketError)));
     connect (tcpSocket, SIGNAL(encrypted()), this, SLOT(socketEncryptedSlot()));
+    connect (tcpSocket, SIGNAL(peerVerifyError(const QSslError&)), this, SLOT(peerVerifyErrorSlot(const QSslError&)));
 
     // timer connections :
     connect(tryToReconnectTimer, SIGNAL(timeout()), this, SLOT(tryToReconnectSlot()));
@@ -118,6 +119,12 @@ void NntpClient::connectToHost() {
     int port = Settings::port();
 
     if (Settings::enableSSL()) {
+
+        // by default, consider that certificate has been verified.
+        // It could be set to false if peerVerifyErrorSlot() is raised
+        tcpSocket->setPeerVerifyMode(QSslSocket::AutoVerifyPeer);
+        this->certificateVerified = true;
+
         tcpSocket->connectToHostEncrypted(hostName, port);
     }
     else {
@@ -226,8 +233,8 @@ void NntpClient::getAnswerFromServer() {
             break;
         }
 
-    case NoSuchArticle: {
-            //kDebug() << "NO SUCH ARTICLE" << "client ID : " << parent->getClientId();
+    case NoSuchArticleMessageId: case NoSuchArticleNumber:{
+            //kDebug() << "No such article" << "client ID : " << parent->getClientId();
             this->postDownloadProcess(NotPresent);
             break;
         }
@@ -549,11 +556,41 @@ void NntpClient::tryToReconnectSlot(){
 
 
 void NntpClient::socketEncryptedSlot(){
+
+    QString issuerOrgranisation = "Unknwown";
+
+    // retrieve peer certificate :
+    QSslCertificate sslCertificate = tcpSocket->peerCertificate();
+
+    // get issuer organistation in order to display it as tooltip in status bar :
+    if (!sslCertificate.isNull()) {
+        issuerOrgranisation = sslCertificate.issuerInfo(QSslCertificate::Organization);
+    }
+
     // SSL connection is active, send also encryption method used by host :
-    emit encryptionStatusSignal(true, tcpSocket->sessionCipher().encryptionMethod());
+    emit encryptionStatusSignal(true, tcpSocket->sessionCipher().encryptionMethod(), this->certificateVerified, issuerOrgranisation);
+
 }
 
 
+
+void NntpClient::peerVerifyErrorSlot(const QSslError& sslError) {
+
+    // error occured during certificate verifying, set verify mode to QueryPeer in order to establish connection
+    // but inform the user that certificate is not verified by tooltip in status bar :
+
+    tcpSocket->setPeerVerifyMode(QSslSocket::QueryPeer);
+
+    if ( (sslError.error() != QSslError::CertificateNotYetValid) &&
+         (sslError.error() != QSslError::CertificateExpired) ) {
+
+        this->certificateVerified = false;
+
+    }
+
+
+
+}
 
 
 
