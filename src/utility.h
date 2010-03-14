@@ -44,14 +44,19 @@ namespace UtilityNamespace
     // percentage progression values :
     static const int PROGRESS_COMPLETE = 100;
     static const int PROGRESS_INIT = 0;
+    static const int PROGRESS_UNKNOWN = -1;
     
     // file patterns :
-    static const QString rarFilePattern = "Rar";
-    static const QString par2FilePattern = "PAR2";
+    static const QString rarFileMagicNumber = "Rar";
+    static const QString zipFileMagicNumber = "PK";
+    static const QString sevenZipFileMagicNumber = "7z";
+    static const QString par2FileMagicNumber = "PAR2";
+
     static const QString par2FileExt = ".par2";
     
     static const QString repairProgram = "par2";
-    static const QString extractProgram = "unrar";
+    static const QString rarExtractProgram = "unrar";
+    static const QString sevenZipExtractProgram = "7z;7za;7zr";
     
     // segment file identifier :
     static const QString applicationFileOwner = "Kwooty_87b022df-17b9-409f-a423-3cc626831adc\r\n";
@@ -102,7 +107,8 @@ namespace UtilityNamespace
         ExtractSuccessStatus,
         ExtractFinishedStatus,
         ExtractFailedStatus,
-        UnrarProgramMissing
+        UnrarProgramMissing,
+        SevenZipProgramMissing
     };
     
     // connection status list used by statusbar :
@@ -178,6 +184,15 @@ namespace UtilityNamespace
         Suspend,
         Hibernate,
         ShutdownMethodUnknown
+    };
+
+
+    // type of archive :
+    enum ArchiveFormat {
+        RarFormat,
+        ZipFormat,
+        SevenZipFormat,
+        UnknownArchiveFormat
     };
 
 

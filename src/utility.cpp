@@ -233,26 +233,40 @@ bool Utility::removeData(const QString& fileName){
 
 QString Utility::searchExternalPrograms(const QString& programToSearch, bool& programFound){
 
-    QString programPath;
+    QString programPathName;
     QStringList searchPathList = Settings::searchPathList();
 
-    foreach (QString searchPath, searchPathList) {
+    QStringList programsWithDifferentNames = programToSearch.split(";");
 
-        // search program :
-        if (searchPath.endsWith("/")) {
-            searchPath.chop(1);
+    foreach (QString currentProgramName, programsWithDifferentNames) {
+
+        foreach (QString searchPath, searchPathList) {
+
+            // search program :
+            if (searchPath.endsWith("/")) {
+                searchPath.chop(1);
+            }
+
+            QFile ProgramFile(searchPath + "/" + currentProgramName);
+
+            if (ProgramFile.exists()) {
+
+                programPathName = searchPath + "/" + currentProgramName;
+
+                programFound = true;
+
+            }
+
         }
 
-        QFile ProgramFile(searchPath + "/" + programToSearch);
-        if (ProgramFile.exists()) {
-
-            programPath = searchPath + "/" + programToSearch;
-            programFound = true;
+        if (programFound) {
+            break;
         }
 
     }
 
-    return programPath;
+
+    return programPathName;
 }
 
 
