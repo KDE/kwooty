@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gui name="Kwooty"
-        version="2"
+        version="3"
         xmlns="http://www.kde.org/standards/kxmlgui/1.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0
@@ -15,9 +15,12 @@
 	   <Separator/>
 	   <Action name="remove"/>
 	   <Separator/>
+	   <Action name="moveUp"/>
+	   <Action name="moveDown"/>
+	   <Separator/>
+	   <Action name="moveTop"/>   
 	   <Action name="moveBottom"/>
-	   <Action name="moveTop"/>
-        <Separator/>
+	   <Separator/>
 	   <Action name="shutdown"/>
     </Menu>   
 </MenuBar>
@@ -30,8 +33,10 @@
 	<Separator/>
 	<Action name="remove"/>
 	<Separator/>
-	<Action name="moveBottom"/>
-	<Action name="moveTop"/>
+	<Action name="moveUp"/>
+	<Action name="moveDown"/>
+	<Separator/>
+	<Action name="downloadFolder"/>
 	<Separator/>
 	<Action name="shutdown"/>
 </ToolBar>
