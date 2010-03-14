@@ -36,7 +36,6 @@
 
 #include <QTextStream>
 #include <QtGui>
-
 #include "settings.h"
 #include "mystatusbar.h"
 #include "mytreeview.h"
@@ -47,7 +46,6 @@
 #include "preferences/preferencesprograms.h"
 #include "preferences/preferencesdisplay.h"
 #include "preferences/preferencesshutdown.h"
-
 
 
 MainWindow::MainWindow(QWidget *parent): KXmlGuiWindow(parent), fileName(QString())
@@ -67,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent): KXmlGuiWindow(parent), fileName(QString
     this->setCentralWidget(widget);
 
     this->setupActions();
+
 
 }
 
@@ -126,27 +125,62 @@ void MainWindow::setupActions()
     connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
     connect(treeView, SIGNAL(setRemoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
 
+    //moveUpAction
+    KAction* moveUpAction = new KAction(this);
+    moveUpAction->setText(i18n("Up"));
+    moveUpAction->setIcon(KIcon("go-up"));
+    moveUpAction->setToolTip(i18n("Go up all selected rows"));
+    moveUpAction->setShortcut(Qt::CTRL + Qt::Key_Up);
+    moveUpAction->setEnabled(false);
+    actionCollection()->addAction("moveUp", moveUpAction);
+    connect(moveUpAction, SIGNAL(triggered(bool)), treeView, SLOT(moveUpSlot()));
+    connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveUpAction, SLOT(setEnabled(bool)) );
+
     //moveToTopAction
     KAction* moveToTopAction = new KAction(this);
     moveToTopAction->setText(i18n("Top"));
     moveToTopAction->setIcon(KIcon("go-top"));
     moveToTopAction->setToolTip(i18n("Move all selected rows to the top of the list"));
-    moveToTopAction->setShortcut(Qt::CTRL + Qt::Key_Up);
+    moveToTopAction->setShortcut(Qt::CTRL + Qt::Key_PageUp);
     moveToTopAction->setEnabled(false);
     actionCollection()->addAction("moveTop", moveToTopAction);
     connect(moveToTopAction, SIGNAL(triggered(bool)), treeView, SLOT(moveToTopSlot()));
     connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToTopAction, SLOT(setEnabled(bool)) );
+
+    //moveDownAction
+    KAction* moveDownAction = new KAction(this);
+    moveDownAction->setText(i18n("Down"));
+    moveDownAction->setIcon(KIcon("go-down"));
+    moveDownAction->setToolTip(i18n("Go down all selected rows"));
+    moveDownAction->setShortcut(Qt::CTRL + Qt::Key_Down);
+    moveDownAction->setEnabled(false);
+    actionCollection()->addAction("moveDown", moveDownAction);
+    connect(moveDownAction, SIGNAL(triggered(bool)), treeView, SLOT(moveDownSlot()));
+    connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveDownAction, SLOT(setEnabled(bool)) );
+
 
     //moveToBottomAction
     KAction* moveToBottomAction = new KAction(this);
     moveToBottomAction->setText(i18n("Bottom"));
     moveToBottomAction->setIcon(KIcon("go-bottom"));
     moveToBottomAction->setToolTip(i18n("Move all selected rows to the bottom of the list"));
-    moveToBottomAction->setShortcut(Qt::CTRL + Qt::Key_Down);
+    moveToBottomAction->setShortcut(Qt::CTRL + Qt::Key_PageDown);
     moveToBottomAction->setEnabled(false);
     actionCollection()->addAction("moveBottom", moveToBottomAction);
-    connect(moveToBottomAction, SIGNAL(triggered(bool)),treeView, SLOT(moveToBottomSlot()));
+    connect(moveToBottomAction, SIGNAL(triggered(bool)), treeView, SLOT(moveToBottomSlot()));
     connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToBottomAction, SLOT(setEnabled(bool)) );
+
+
+    //openFolderAction
+    KAction* openFolderAction = new KAction(this);
+    openFolderAction->setText(i18n("Downloads"));
+    openFolderAction->setIcon(KIcon("folder-downloads"));
+    //openFolderAction->setIcon(KIcon("mail-folder-sent"));
+    openFolderAction->setToolTip(i18n("Open current download folder"));
+    openFolderAction->setShortcut(Qt::CTRL + Qt::Key_D);
+    openFolderAction->setEnabled(true);
+    actionCollection()->addAction("downloadFolder", openFolderAction);
+    connect(openFolderAction, SIGNAL(triggered(bool)), treeView, SLOT(openFolderSlot()));
 
     //shutdownAction
     KAction* shutdownAction = new KAction(this);
@@ -167,7 +201,7 @@ void MainWindow::setupActions()
     //-------------------
 
     // quitAction
-    KStandardAction::quit(this, SLOT(quit()), actionCollection()); 
+    KStandardAction::quit(this, SLOT(quit()), actionCollection());
 
     // closeAction
     //KStandardAction::close(kapp, SLOT(close()), actionCollection());
@@ -309,7 +343,7 @@ void MainWindow::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenFileM
         // add nzbFile data to the view :
         centralWidget->handleNzbFile(file);
 
-        file.close();        
+        file.close();
 
         // copy nzb file in its associated download folder if file has been open has been triggered by another app  :
         if (Settings::openWith() &&
