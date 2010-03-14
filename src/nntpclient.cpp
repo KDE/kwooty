@@ -36,6 +36,7 @@ NntpClient::NntpClient(ClientManagerConn* parent) : QObject (parent)
 
     // instantiate socket :
     tcpSocket = new QSslSocket(parent);
+    tcpSocket->setPeerVerifyMode(QSslSocket::QueryPeer);
 
     // set a timer to reconnect to host after 10 seconds if disconnection occurs :
     tryToReconnectTimer = new QTimer(this);
@@ -233,7 +234,8 @@ void NntpClient::getAnswerFromServer() {
             break;
         }
 
-    case NoSuchArticleMessageId: case NoSuchArticleNumber:{
+    case NoSuchArticleMessageId: case NoSuchArticleNumber: {
+
             //kDebug() << "No such article" << "client ID : " << parent->getClientId();
             this->postDownloadProcess(NotPresent);
             break;
