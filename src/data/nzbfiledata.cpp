@@ -26,7 +26,8 @@ NzbFileData::NzbFileData()
 {
 
     this->par2File = false;
-    this->rarFile = false;
+    this->archiveFile = false;
+    this->archiveFormat = UnknownArchiveFormat;
 
 }
 
@@ -36,7 +37,8 @@ NzbFileData::NzbFileData(const QString& fileName, const QStringList& groupList, 
     this->setGroupList(groupList);
     this->setSegmentList(segmentList);
     this->par2File = false;
-    this->rarFile = false;
+    this->archiveFile = false;
+    this->archiveFormat = UnknownArchiveFormat;
 }
 
 NzbFileData::~NzbFileData(){ }
@@ -113,12 +115,26 @@ void NzbFileData::setPar2File(const bool par2File) {
     this->par2File = par2File;
 }
 
-bool NzbFileData::isRarFile() const {
-    return this->rarFile;
+bool NzbFileData::isArchiveFile() const {
+    return this->archiveFile;
 }
 
-void NzbFileData::setRarFile(const bool rarFile) {
-    this->rarFile = rarFile;
+void NzbFileData::setArchiveFile(const bool archiveFile) {
+    this->archiveFile = archiveFile;
+}
+
+UtilityNamespace::ArchiveFormat NzbFileData::getArchiveFormat() const {
+    return this->archiveFormat;
+}
+
+void NzbFileData::setArchiveFormat(const UtilityNamespace::ArchiveFormat archiveFormat) {
+
+    // archive is a known format handled for extracting :
+    if (archiveFormat != UnknownArchiveFormat) {
+        this->setArchiveFile(true);
+    }
+
+    this->archiveFormat = archiveFormat;
 }
 
 void NzbFileData::setVerifyProgressionStep(const UtilityNamespace::ItemStatus verifyProgressionStep) {
@@ -204,7 +220,8 @@ QDataStream& operator<<(QDataStream& out, const NzbFileData& nzbFileData) {
             << nzbFileData.getUniqueIdentifier()
             << nzbFileData.getSize()
             << nzbFileData.isPar2File()
-            << nzbFileData.isRarFile();
+            << nzbFileData.isArchiveFile()
+            << (qint16)nzbFileData.getArchiveFormat();
 
     return out;
 }
@@ -223,7 +240,8 @@ QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData)
     QVariant uniqueIdentifier;
     quint64 size;
     bool par2File;
-    bool rarFile;
+    bool archiveFile;
+    qint16 archiveFormat;
 
     in >> fileName
             >> decodedFileName
@@ -235,7 +253,8 @@ QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData)
             >> uniqueIdentifier
             >> size
             >> par2File
-            >> rarFile;
+            >> archiveFile
+            >> archiveFormat;
 
 
     nzbFileData.setFileName(fileName);
@@ -247,7 +266,8 @@ QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData)
     nzbFileData.setUniqueIdentifier(uniqueIdentifier);
     nzbFileData.setSize(size);
     nzbFileData.setPar2File(par2File);
-    nzbFileData.setRarFile(rarFile);
+    nzbFileData.setArchiveFile(archiveFile);
+    nzbFileData.setArchiveFormat((UtilityNamespace::ArchiveFormat)archiveFormat);
 
     // do not set decoded file name if it is empty as it will also
     // be apended to possibleFileNameList and will cause issues during extract process :

@@ -55,8 +55,10 @@ public:
     QString getFileSavePath() const;
     bool isPar2File() const;
     void setPar2File(const bool);
-    bool isRarFile() const;
-    void setRarFile(const bool);
+    bool isArchiveFile() const;
+    void setArchiveFile(const bool);
+    void setArchiveFormat(const UtilityNamespace::ArchiveFormat);
+    UtilityNamespace::ArchiveFormat getArchiveFormat() const;
     void setVerifyProgressionStep(const UtilityNamespace::ItemStatus);
     UtilityNamespace::ItemStatus getVerifyProgressionStep() const;
     void setExtractProgressionStep(const UtilityNamespace::ItemStatus);
@@ -77,8 +79,9 @@ private:
     quint64 size;
     UtilityNamespace::ItemStatus verifyProgressionStep;
     UtilityNamespace::ItemStatus extractProgressionStep;
+    UtilityNamespace::ArchiveFormat archiveFormat;
     bool par2File;
-    bool rarFile;
+    bool archiveFile;
 
 };
 
