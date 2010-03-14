@@ -27,8 +27,20 @@
 
 class PreferencesServer : public QWidget, public Ui::PreferencesServer
 {
+
+     Q_OBJECT
+
 public:
     PreferencesServer();
+
+
+private:
+    void setupConnections();
+
+
+private slots:
+    void portValueChangedSlot(int);
+
 };
 
 #endif // PREFERENCESSERVER_H
