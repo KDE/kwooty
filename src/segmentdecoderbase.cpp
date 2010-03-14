@@ -70,6 +70,7 @@ void SegmentDecoderBase::decodeSegments(NzbFileData currentNzbFileData, const QS
 
             // close the file :
             targetFile.close();
+
         }
         // can not create the file :
         else {
