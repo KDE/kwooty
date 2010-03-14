@@ -45,14 +45,32 @@ void PreferencesPrograms::aboutToShowSettingsSlot(){
     QString labelText;
 
     // display information about par2 program :
+    QString programPath;
     bool isProgramFound = false;
-    QString programPath = Utility::searchExternalPrograms(UtilityNamespace::repairProgram, isProgramFound);
+
+    programPath = Utility::searchExternalPrograms(UtilityNamespace::repairProgram, isProgramFound);
     this->displayProgramInfo(isProgramFound, programPath, par2LabelIcon, par2LabelText, UtilityNamespace::repairProgram);
 
     // display information about unrar program :
     isProgramFound = false;
-    programPath = Utility::searchExternalPrograms(UtilityNamespace::extractProgram, isProgramFound);
-    this->displayProgramInfo(isProgramFound, programPath, unrarLabelIcon, unrarLabelText, UtilityNamespace::extractProgram);
+    programPath = Utility::searchExternalPrograms(UtilityNamespace::rarExtractProgram, isProgramFound);
+    this->displayProgramInfo(isProgramFound, programPath, unrarLabelIcon, unrarLabelText, UtilityNamespace::rarExtractProgram);
+
+
+    // display information about 7z program :
+    isProgramFound = false;
+    programPath = Utility::searchExternalPrograms(UtilityNamespace::sevenZipExtractProgram, isProgramFound);
+
+    QString programName;
+
+    if (!programPath.isEmpty()) {
+        programName = programPath.split("/").takeLast();
+    }
+    else {
+        programName = UtilityNamespace::sevenZipExtractProgram.split(";").takeFirst();
+    }
+
+    this->displayProgramInfo(isProgramFound, programPath, sevenZipLabelIcon, sevenZipLabelText, programName);
 
 }
 
@@ -62,7 +80,7 @@ void PreferencesPrograms::displayProgramInfo(const bool isProgramFound, const QS
     // indicate path to binary file if program has been found :
     if (isProgramFound) {
         labelIcon->setPixmap(iconLoader->loadIcon("dialog-ok", KIconLoader::Small));
-        labelText->setText("<b>" + program + "</b> " +  i18n("program found in ") + path);
+        labelText->setText("<b>" + program + "</b> " +  i18n("program found: ") + path);
 
         // enable group box if program found :
         this->enableGroupBox(true, program);
@@ -89,7 +107,13 @@ void PreferencesPrograms::enableGroupBox(bool isEnabled, const QString& program)
     }
     // enable/ disable auto extract settings if unrar program found/not found :
     else {
-        kcfg_groupBoxAutoDecompress->setEnabled(isEnabled);
+
+        // enable extract group box is unrar or 7z program has been found :
+        if (!kcfg_groupBoxAutoDecompress->isEnabled()) {
+
+            kcfg_groupBoxAutoDecompress->setEnabled(isEnabled);
+
+        }
     }
 
 }
