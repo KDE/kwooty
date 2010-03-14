@@ -24,6 +24,7 @@
 #include <QThread>
 #include <QMutex>
 #include <QTimer>
+#include <QWaitCondition>
 
 #include "data/nzbfiledata.h"
 #include "utility.h"
@@ -31,7 +32,8 @@ using namespace UtilityNamespace;
 
 class CentralWidget;
 class Repair;
-class Extract;
+class ExtractRar;
+class ExtractZip;
 
 
 class RepairDecompressThread : public QThread {
@@ -46,10 +48,11 @@ public:
 private:
     CentralWidget* parent;
     Repair* repair;
-    Extract* extract;
-    QMap<QString, QList<NzbFileData> > par2NzbFileDataListMap;
+    ExtractRar* extractRar;
+    ExtractZip* extractZip;
     QTimer* repairDecompressTimer;
     QMutex mutex;
+    QMap<QString, QList<NzbFileData> > par2NzbFileDataListMap;
     QList< QList<NzbFileData> > filesToExtractList;
     QList< QList<NzbFileData> > filesToProcessList;
     bool waitForNextProcess;
@@ -63,6 +66,7 @@ private:
     QStringList listDifferentFileBaseName(QList<NzbFileData>&);
     QString getBaseNameFromPar2(const NzbFileData&);
     QString getBaseNameFromRar(const NzbFileData&);
+    UtilityNamespace::ArchiveFormat getArchiveFormatFromList(const QList<NzbFileData>&);
 
 
 signals:
@@ -80,6 +84,7 @@ private slots:
     void startRepairSlot();
     void startExtractSlot();
     void processPendingFilesSlot();
+    void processJobSlot();
 
 
 };
