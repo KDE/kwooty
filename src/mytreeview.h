@@ -41,17 +41,27 @@ class MyTreeView : public QTreeView
 {
     Q_OBJECT
 
+
 public:
     MyTreeView(QWidget*, CentralWidget*);
-    void moveRow(bool);
     bool areJobsFinished();
 
 private:
+
+    enum MoveRowType {
+            MoveRowsUp,
+            MoveRowsDown,
+            MoveRowsTop,
+            MoveRowsBottom
+    };
+
+
     CentralWidget* centralWidget;
     StandardItemModel* downloadModel;
 
     void setHeaderLabels();
     void setupConnections();
+    void moveRow(MyTreeView::MoveRowType);
 
 protected:
     void dragEnterEvent(QDragEnterEvent*);
@@ -74,8 +84,11 @@ public slots:
     void selectedItemSlot();
     void moveToTopSlot();
     void moveToBottomSlot();
+    void moveUpSlot();
+    void moveDownSlot();
     void removeRowSlot();
     void clearSlot();
+    void openFolderSlot();
     void settingsChangedSlot();
 
 
