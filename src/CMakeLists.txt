@@ -26,7 +26,9 @@ set(Kwooty_SRCS
   segmentdecoderuuenc.cpp
   repairdecompressthread.cpp
   repair.cpp
-  extract.cpp
+  extractbase.cpp
+  extractrar.cpp
+  extractzip.cpp
   datarestorer.cpp
   shutdownmanager.cpp
   preferences/preferencesserver.cpp
