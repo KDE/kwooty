@@ -49,7 +49,7 @@ void ItemPostDownloadUpdater::updateItems(const QModelIndex& parentModelIndex, c
     }
     // if status comes from *verify/repair* or *extract* process :
     else if ( (status >= VerifyStatus) &&
-              (status <= UnrarProgramMissing) ) {
+              (status <= SevenZipProgramMissing) ) {
         this->updateRepairExtractItems(parentModelIndex, progression, status, itemTarget);
     }
 
@@ -134,7 +134,7 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
 
         // add info about type of file (par2 or rar file) :
         if (!nzbFileData.isPar2File() &&
-            !nzbFileData.isRarFile()) {
+            !nzbFileData.isArchiveFile()) {
 
             QFile decodedFile(nzbFileData.getFileSavePath() + nzbFileData.getDecodedFileName());
             if (decodedFile.exists()) {
@@ -143,11 +143,20 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
 
                 // rar headers could be corrupted because repair process has not been proceeded yet at this stage
                 // but assume that at least one rar file will have a correct header to launch decompress process later :
-                if (decodedFile.peek(rarFilePattern.size()) == rarFilePattern) {
-                    nzbFileData.setRarFile(true);
+                if (decodedFile.peek(rarFileMagicNumber.size()) == rarFileMagicNumber) {
+                    nzbFileData.setArchiveFormat(RarFormat);
                 }
+
+                if (decodedFile.peek(zipFileMagicNumber.size()) == zipFileMagicNumber) {
+                    nzbFileData.setArchiveFormat(ZipFormat);
+                }
+
+                if (decodedFile.peek(sevenZipFileMagicNumber.size()) == sevenZipFileMagicNumber) {
+                    nzbFileData.setArchiveFormat(SevenZipFormat);
+                }
+
                 // check if it is a par2 file :
-                else if ( (decodedFile.peek(par2FilePattern.size()) == par2FilePattern) ||
+                else if ( (decodedFile.peek(par2FileMagicNumber.size()) == par2FileMagicNumber) ||
                           decodedFileName.endsWith(par2FileExt, Qt::CaseInsensitive)) {
 
                     nzbFileData.setPar2File(true);
