@@ -21,6 +21,7 @@
 #include "mytreeview.h"
 
 #include <KMessageBox>
+#include <KRun>
 #include <KDebug>
 
 #include <QVBoxLayout>
@@ -41,7 +42,7 @@ MyTreeView::MyTreeView(QWidget* parent, CentralWidget* centralWidget) : QTreeVie
     vBoxLayout->addWidget(this);
 
     // remove spacing, margin :
-    vBoxLayout->setMargin(0);
+    vBoxLayout->setMargin(1);
     vBoxLayout->setSpacing(0);
 
     this->setModel(downloadModel);
@@ -122,7 +123,7 @@ void MyTreeView::dropEvent(QDropEvent* event) {
 
         // get urls of dropped files :
         QList<QUrl> urlList = mimeData->urls();
-        
+
         foreach (KUrl nzbUrl, urlList) {
 
             // filter by .nzb extension :
@@ -133,84 +134,124 @@ void MyTreeView::dropEvent(QDropEvent* event) {
             }
 
         }
-        
+
     }
     event->acceptProposedAction();
 }
 
 
 
-void MyTreeView::moveRow(bool isMovedToTop) {
+void MyTreeView::moveRow(MyTreeView::MoveRowType moveRowType) {
 
+    // get selected indexes :
+    QList<QModelIndex> indexesList = this->selectionModel()->selectedRows();     
+
+    // get parent item :
     QStandardItem* parentItem = NULL;
-    QList<QModelIndex> indexesList = this->selectionModel()->selectedRows();
-    QList<int> rowList;
-
-    //stores rows in a list only if index is valid :
-    for (int i = 0; i < indexesList.size(); i++) {
-        rowList.append(indexesList.at(i).row());
+    if (!indexesList.isEmpty()) {
+        parentItem = downloadModel->getParentItem(indexesList.at(0));
     }
 
-    if (isMovedToTop) {
-        qSort(rowList.begin(), rowList.end(), qGreater<int>());
+    // sort indexes by decremental order
+    qSort(indexesList.begin(), indexesList.end(), qGreater<QModelIndex>());
+
+
+    // remove selected indexes from model
+    QMap< int, QList<QStandardItem*> > itemRowsMap;
+
+    foreach (QModelIndex index, indexesList) {
+
+        int rowNumber = index.row();
+        QList<QStandardItem*> rowItems = parentItem->takeRow(rowNumber);
+
+        itemRowsMap.insert(rowNumber, rowItems);
     }
-    else {
-        qSort(rowList.begin(), rowList.end());
-    }
 
 
-    // check selected rows :
-    for (int i = 0; i < indexesList.size(); i++) {
+    QList<int> rowNumberList = itemRowsMap.keys();
 
-        QModelIndex currentModelIndex = indexesList.at(i);
+    // sort indexes by incremental order
+    qSort(rowNumberList);
+    QList<int> updatedRowNumberList;
 
-        if (currentModelIndex.isValid()) {
+    // then replace removed indexes to the proper position :
+    foreach (int currentRow , rowNumberList) {
 
-            parentItem = downloadModel->getParentItem(currentModelIndex);
+        QList<QStandardItem*> itemRows = itemRowsMap.value(currentRow);
 
-            // remove item at the given row and add it to the first one
-            if (isMovedToTop) {
-                parentItem->insertRow(0, parentItem->takeRow(rowList.at(i) + i));
+        int updatedRowNumber;
+
+        if (moveRowType == MoveRowsUp) {
+            updatedRowNumber = currentRow - 1;
+        }
+
+        if (moveRowType == MoveRowsDown) {
+            updatedRowNumber = currentRow + 1;
+        }
+
+        if (moveRowType == MoveRowsTop) {
+            updatedRowNumber = 0;
+        }
+
+        if (moveRowType == MoveRowsBottom) {
+            updatedRowNumber = parentItem->rowCount();
+        }
+
+        // control out of range and multiple row selection :
+        if (updatedRowNumber < 0 ||
+            updatedRowNumber > parentItem->rowCount() ||
+            updatedRowNumberList.contains(updatedRowNumber)) {
+
+
+            if (moveRowType == MoveRowsUp ||
+                moveRowType == MoveRowsDown) {
+
+                updatedRowNumber = currentRow;
             }
-            else {
-                // remove item at the given row and add it to the last one
-                parentItem->appendRow(parentItem->takeRow(rowList.at(i) - i));
+
+            if (moveRowType == MoveRowsTop ||
+                moveRowType == MoveRowsBottom) {
+
+                updatedRowNumber = updatedRowNumberList.at(updatedRowNumberList.size() - 1) + 1;
             }
+
+
         }
+
+
+        // insert row to the model :
+        parentItem->insertRow(updatedRowNumber, itemRows);
+
+        // keep row number of inserted items :
+        updatedRowNumberList.append(updatedRowNumber);
+
+        this->selectionModel()->select(QItemSelection(itemRows.at(0)->index(), itemRows.at(itemRows.size() - 1)->index()),
+                                       QItemSelectionModel::Select);
     }
 
 
-    // highlight moved items :
-    if (parentItem != NULL) {
-        int topRow;
-        int bottomRow;
-        int lastColumn;
 
-        if (isMovedToTop) {
-            topRow = 0;
-            bottomRow = rowList.size() - 1;
-            lastColumn = parentItem->columnCount() - 1;
-        }
-        else {
-            topRow = parentItem->rowCount() - rowList.size();
-            bottomRow = parentItem->rowCount() - 1;
-            lastColumn = parentItem->columnCount() - 1;
+    // ensure that moved rows are still visible :
+    if (!rowNumberList.isEmpty()) {
+
+        QModelIndex visibleIndex;
+
+        if (moveRowType == MoveRowsUp ||
+            moveRowType == MoveRowsTop) {
+
+            visibleIndex = itemRowsMap.value(rowNumberList.takeFirst()).at(0)->index();
         }
 
-        QModelIndex topLeftIndex = downloadModel->index(topRow, 0, parentItem->index());
-        QModelIndex bottomRightIndex = downloadModel->index(bottomRow, lastColumn, parentItem->index());
+        if (moveRowType == MoveRowsDown ||
+            moveRowType == MoveRowsBottom) {
 
-        this->selectionModel()->select(QItemSelection(topLeftIndex, bottomRightIndex), QItemSelectionModel::Select);
+            visibleIndex = itemRowsMap.value(rowNumberList.takeLast()).at(0)->index();
+        }
 
-        // scroll to moved items :
-        if (isMovedToTop) {
-            this->scrollTo(downloadModel->index(topRow, 0, parentItem->index()));
-        }
-        else {
-            this->scrollTo(downloadModel->index(bottomRow, 0, parentItem->index()));
-        }
+
+        this->scrollTo(visibleIndex);
+
     }
-
 
 }
 
@@ -230,12 +271,22 @@ void MyTreeView::setHeaderLabels() {
 //============================================================================================================//
 
 void MyTreeView::moveToTopSlot() {
-    this->moveRow(true);
+    this->moveRow(MoveRowsTop);
 }
 
 void MyTreeView::moveToBottomSlot() {
-    this->moveRow(false);
+    this->moveRow(MoveRowsBottom);
 }
+
+void MyTreeView::moveUpSlot() {
+    this->moveRow(MoveRowsUp);
+}
+
+void MyTreeView::moveDownSlot() {
+    this->moveRow(MoveRowsDown);
+}
+
+
 
 void MyTreeView::selectedItemSlot() {
 
@@ -430,6 +481,39 @@ void MyTreeView::clearSlot() {
 
 
 }
+
+
+void MyTreeView::openFolderSlot() {
+
+    // get selected indexes :
+    QList<QModelIndex> indexesList = this->selectionModel()->selectedRows();
+    qSort(indexesList);
+
+    // open download folder by default :
+    QString fileSavePath = Settings::completedFolder().path();
+
+    // if a row has been selected, open folder below download folder :
+    if (!indexesList.isEmpty()) {
+
+        QModelIndex index = indexesList.at(0);
+
+        // if parent has been selected, get its first child to retrieve file save path :
+        if ( this->downloadModel->isNzbItem(this->downloadModel->itemFromIndex(index)) ) {
+
+            index = index.child(FILE_NAME_COLUMN, 0);
+        }
+
+        fileSavePath = this->downloadModel->getNzbFileDataFromIndex(index).getFileSavePath();
+
+    }
+
+    // do not manage delete as KRun uses auto deletion by default :
+    new KRun(KUrl(fileSavePath), this);
+
+}
+
+
+
 
 
 bool MyTreeView::areJobsFinished() {
