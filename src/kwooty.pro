@@ -21,14 +21,13 @@ SOURCES += main.cpp \
     preferences/preferencesprograms.cpp \
     standarditemmodel.cpp \
     segmentsdecoderthread.cpp \
-    segmentdecoder.cpp \
     itemabstractupdater.cpp \
     itempostdownloadupdater.cpp \
     itemparentupdater.cpp \
     data/itemstatusdata.cpp \
     repairdecompressthread.cpp \
     repair.cpp \
-    extract.cpp \
+    extractbase.cpp \
     uniqueapp.cpp \
     datarestorer.cpp \
     data/globalfiledata.cpp \
@@ -36,7 +35,12 @@ SOURCES += main.cpp \
     preferences/preferencesshutdown.cpp \
     itemchildrenmanager.cpp \
     mytreeview.cpp \
-    shutdownmanager.cpp
+    shutdownmanager.cpp \
+    segmentdecoderbase.cpp \
+    segmentdecoderyenc.cpp \
+    segmentdecoderuuenc.cpp \
+    extractrar.cpp \
+    extractzip.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -55,21 +59,25 @@ HEADERS += mainwindow.h \
     preferences/preferencesshutdown.h \
     standarditemmodel.h \
     segmentsdecoderthread.h \
-    segmentdecoder.h \
     itemabstractupdater.h \
     itempostdownloadupdater.h \
     itemparentupdater.h \
     data/itemstatusdata.h \
     repairdecompressthread.h \
     repair.h \
-    extract.h \
+    extractbase.h \
     uniqueapp.h \
     datarestorer.h \
     data/globalfiledata.h \
     preferences/preferencesdisplay.h \
     itemchildrenmanager.h \
     mytreeview.h \
-    shutdownmanager.h
+    shutdownmanager.h \
+    segmentdecoderbase.h \
+    segmentdecoderyenc.h \
+    segmentdecoderuuenc.h \
+    extractrar.h \
+    extractzip.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
