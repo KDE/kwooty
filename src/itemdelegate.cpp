@@ -56,12 +56,13 @@ ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent)
     statusTextMap.insert(RepairNotPossibleStatus,   i18n("Repair not possible"));
     statusTextMap.insert(RepairFailedStatus,        i18n("Repair failed"));
     statusTextMap.insert(Par2ProgramMissing,        i18n("par2 program not found !"));
-    statusTextMap.insert(ExtractStatus,             i18n("Extracting"));
+    statusTextMap.insert(ExtractStatus,             i18n("Extracting..."));
     statusTextMap.insert(ExtractBadCrcStatus,       i18n("Extract failed (bad CRC)"));
     statusTextMap.insert(ExtractFinishedStatus,     i18n("Extract finished"));
     statusTextMap.insert(ExtractSuccessStatus,      i18n("Extract complete"));
     statusTextMap.insert(ExtractFailedStatus,       i18n("Extract failed"));
     statusTextMap.insert(UnrarProgramMissing,       i18n("unrar program not found !"));
+    statusTextMap.insert(SevenZipProgramMissing,    i18n("7-zip (7z, 7za or 7zr) program not found !"));
 
     // associate color to display according to item status :
     statusColorMap.insert(DownloadStatus,            QColor(Qt::green));
@@ -76,6 +77,7 @@ ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent)
     statusColorMap.insert(ExtractBadCrcStatus,       QColor("orangered"));
     statusColorMap.insert(ExtractStatus,             QColor("royalblue"));
     statusColorMap.insert(UnrarProgramMissing,       QColor("orangered"));
+    statusColorMap.insert(SevenZipProgramMissing,    QColor("orangered"));
 
 }
 
@@ -121,7 +123,13 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
                 return;
             }
             else {
-                opt.text = QString::number(index.data(ProgressRole).toInt()) + " %";
+                int progress = index.data(ProgressRole).toInt();
+                opt.text = QString::number(progress) + " %";
+
+                // if progress unkwnown (appears 7z extract command is launched), display n/a :
+                if (progress == PROGRESS_UNKNOWN) {
+                    opt.text = "n/a";
+                }
 
             }
 
@@ -163,6 +171,11 @@ void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem
     int progress = index.data(ProgressRole).toInt();
     progressBarOpt.progress = progress;
     progressBarOpt.text = QString::number(progress) + " %";
+
+    if (progress == PROGRESS_UNKNOWN) {
+        progressBarOpt.text = "n/a";
+    }
+
 
     // draw progress bar :
     KApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOpt, painter);
