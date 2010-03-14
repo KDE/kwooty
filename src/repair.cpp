@@ -23,9 +23,10 @@
 #include <KDebug>
 #include <QFile>
 #include "settings.h"
+#include "repairdecompressthread.h"
 #include "data/nzbfiledata.h"
 
-Repair::Repair() {
+Repair::Repair() : QObject(){
 
     this->repairProcess = new KProcess(this);
     this->setupConnections();
@@ -63,7 +64,7 @@ void Repair::launchProcess(const QList<NzbFileData>& nzbFileDataList, const QStr
 
 
     // search par2 program at each process launch in case settings have been changed at anytime :
-    par2ProgramPath = Utility::searchExternalPrograms(repairProgram, isPar2ProgramFound);
+    this->par2ProgramPath = Utility::searchExternalPrograms(repairProgram, isPar2ProgramFound);
 
 
     // launch repair if par2 program found :
@@ -91,7 +92,7 @@ void Repair::launchProcess(const QList<NzbFileData>& nzbFileDataList, const QStr
                 this->repairProcess->setTextModeEnabled(true);
                 this->repairProcess->setOutputChannelMode(KProcess::MergedChannels);
                 this->repairProcess->setNextOpenMode(QIODevice::ReadOnly | QIODevice::Unbuffered);
-                this->repairProcess->setProgram(par2ProgramPath, args);
+                this->repairProcess->setProgram(this->par2ProgramPath, args);
                 this->repairProcess->start();
                 //this->repairProcess->closeWriteChannel();
 
