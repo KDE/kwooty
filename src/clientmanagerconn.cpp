@@ -26,6 +26,7 @@
 #include "centralwidget.h"
 #include "segmentmanager.h"
 #include "mystatusbar.h"
+#include "infocollectordispatcher.h"
 #include "nntpclient.h"
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -112,11 +113,11 @@ void ClientManagerConn::initSlot()
              parent->getStatusBar(),
              SLOT(nntpErrorSlot(const int)));
 
-    // send bytes downloaded to status bar :
+    // send bytes downloaded to info collector dispatcher :
     connect (nntpClient,
              SIGNAL(speedSignal(const int)),
-             parent->getStatusBar(),
-             SLOT(speedSlot(const int)));
+             parent->getInfoCollectorDispatcher(),
+             SLOT(nntpClientspeedSlot(const int)));
 
 }
 
