@@ -24,26 +24,18 @@
 #include <KRun>
 #include <KDebug>
 
-#include <QVBoxLayout>
-
 #include "itemdelegate.h"
 #include "centralwidget.h"
+#include "fileoperations.h"
 #include "standarditemmodel.h"
 #include "settings.h"
 
 
-MyTreeView::MyTreeView(QWidget* parent, CentralWidget* centralWidget) : QTreeView(parent) {
+
+MyTreeView::MyTreeView(CentralWidget* centralWidget) : QTreeView(centralWidget) {
 
     this->centralWidget = centralWidget;
     this->downloadModel = centralWidget->getDownloadModel();
-
-    // setup layout :
-    QVBoxLayout* vBoxLayout = new QVBoxLayout(parent);
-    vBoxLayout->addWidget(this);
-
-    // remove spacing, margin :
-    vBoxLayout->setMargin(1);
-    vBoxLayout->setSpacing(0);
 
     this->setModel(downloadModel);
 
@@ -89,6 +81,8 @@ void MyTreeView::setupConnections() {
              centralWidget,
              SIGNAL(changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus)) );
 
+
+
     // settings have changed :
     connect (centralWidget,
              SIGNAL(settingsChangedSignal()),
@@ -130,7 +124,8 @@ void MyTreeView::dropEvent(QDropEvent* event) {
             if (nzbUrl.url().endsWith(".nzb", Qt::CaseInsensitive)) {
 
                 // handle nzb file from drag and drop event :
-                emit openFileByDragAndDropSignal(nzbUrl);
+                this->centralWidget->getFileOperations()->openFileWithFileMode(nzbUrl, UtilityNamespace::OpenNormal);
+
             }
 
         }
@@ -349,7 +344,9 @@ void MyTreeView::selectedItemSlot() {
             if (!downloadModel->isNzbItem(stateItem) &&
                 !Utility::isInDownloadProcess(currentStatus) &&
                 currentStatus != UtilityNamespace::WaitForPar2IdleStatus) {
+
                 emit setRemoveButtonEnabledSignal(false);
+
             }
 
         } // end of loop

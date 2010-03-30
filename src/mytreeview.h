@@ -43,7 +43,7 @@ class MyTreeView : public QTreeView
 
 
 public:
-    MyTreeView(QWidget*, CentralWidget*);
+    MyTreeView(CentralWidget*);
     bool areJobsFinished();
 
 private:
@@ -77,7 +77,6 @@ signals:
     void statusBarFileSizeUpdateSignal(StatusBarUpdateType);
     void recalculateNzbSizeSignal(const QModelIndex);
     void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);
-    void openFileByDragAndDropSignal(KUrl);
     void allRowRemovedSignal();
 
 public slots:
