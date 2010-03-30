@@ -24,9 +24,11 @@
 #include <KIconLoader>
 #include <KStatusBar>
 #include <QLabel>
-#include <QTimer>
+
 #include "utility.h"
 using namespace UtilityNamespace;
+
+class IconTextWidget;
 
 class MyStatusBar : public KStatusBar
 {
@@ -37,40 +39,25 @@ public:
     MyStatusBar(QWidget* parent);
     MyStatusBar();
     ~MyStatusBar();
-    void addSize(const quint64);
-    void addFiles(const quint64);
-    void fullFileSizeUpdate(const quint64, const quint64);
-
 
 private:
-    static const int SPEED_AVERAGE_SECONDS = 2;
     static const int FILES_NUMBER_ID = 1;
     static const int SIZE_ID = 2;
     static const int SPEED_ID = 3;
 
     KIconLoader* iconLoader;
-    QWidget* connWidget;
-    QLabel* connIconLabel;
-    QLabel* shutdownIconLabel;
-    QLabel* connTextLabel;
-    QLabel* shutdownTextLabel;
     QLabel* filesLabel;
     QLabel* sizeLabel;
-    QTimer* downloadSpeedTimer;
+    IconTextWidget* connectionWidget;
+    IconTextWidget* shutdownWidget;
+
     QString encryptionMethod;
     QString issuerOrgranisation;
-    quint64 totalFiles;
-    quint64 totalSize;
-    quint64 totalBytesDownloaded;
     int totalConnections;
     int nttpErrorStatus;
     bool sslActive;
     bool certificateVerified;
 
-
-    QWidget* addWidgetToLayout(QLabel*, QLabel*);
-    void updateSizeText();
-    void updateFileText();
     void resetVariables();
     void setConnectionWidget();
     void setShutdownWidget();
@@ -82,13 +69,16 @@ private:
 signals:
 
 public slots:
-    void decrementSlot(const quint64, const int);
+
     void connectionStatusSlot(const int);
     void encryptionStatusSlot(const bool, const QString, const bool, const QString);
     void nntpErrorSlot(const int);
-    void speedSlot(const int);
-    void updateDownloadSpeedSlot();
     void statusBarShutdownInfoSlot(QString, QString);
+
+    void updateFileInfoSlot(const QString);
+    void updateDownloadSpeedInfoSlot(const QString);
+    void updateSizeInfoSlot(const QString);
+
 
 private slots:
 

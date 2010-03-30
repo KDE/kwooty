@@ -25,13 +25,15 @@
 #include <KDebug>
 
 #include <QHBoxLayout>
+
+#include "icontextwidget.h"
 #include "settings.h"
 
 
 MyStatusBar::MyStatusBar(QWidget* parent) : KStatusBar(parent)
 {
 
-    iconLoader = KIconLoader::global() ;
+    iconLoader = KIconLoader::global();
 
     this->resetVariables();
 
@@ -47,33 +49,19 @@ MyStatusBar::MyStatusBar(QWidget* parent) : KStatusBar(parent)
     this->insertPermanentItem("", SIZE_ID);
     // add download speed item :
     this->insertPermanentItem("", SPEED_ID);
-    // init display to default at startup :
-    this->fullFileSizeUpdate(0, 0);
-    this->updateDownloadSpeedSlot();
 
-    // set timer to compute download speed every each SPEED_AVERAGE_SECONDS :
-    downloadSpeedTimer = new QTimer(this);
-    downloadSpeedTimer->start(SPEED_AVERAGE_SECONDS * 1000);
-
-    connect(downloadSpeedTimer, SIGNAL(timeout()), this, SLOT(updateDownloadSpeedSlot()));
 
 }
 
-MyStatusBar::MyStatusBar()
-{
-}
+MyStatusBar::MyStatusBar() {}
+MyStatusBar::~MyStatusBar() {}
 
-MyStatusBar::~MyStatusBar()
-{
-}
+
 
 
 
 void MyStatusBar::resetVariables(){
-    this->totalFiles = 0;
-    this->totalSize = 0;
     this->totalConnections = 0;
-    this->totalBytesDownloaded = 0;
     this->sslActive = false;
     this->nttpErrorStatus = NoError;
 }
@@ -81,10 +69,10 @@ void MyStatusBar::resetVariables(){
 
 void MyStatusBar::setConnectionWidget(){
 
-    this->connIconLabel = new QLabel(this);
-    this->connTextLabel = new QLabel(this);
+    this->connectionWidget = new IconTextWidget(this);
 
-    this->connWidget = this->addWidgetToLayout(this->connIconLabel, this->connTextLabel);
+    // add aggregated widget to the status bar :
+    this->addWidget(this->connectionWidget);
 
     // set connection not active by default :
     this->setConnectionActive();
@@ -95,82 +83,65 @@ void MyStatusBar::setConnectionWidget(){
 
 void MyStatusBar::setShutdownWidget(){
 
-    this->shutdownIconLabel = new QLabel(this);
-    this->shutdownTextLabel = new QLabel(this);
-
-    this->addWidgetToLayout(this->shutdownIconLabel, this->shutdownTextLabel);
-
-}
-
-
-QWidget* MyStatusBar::addWidgetToLayout(QLabel* iconLabel, QLabel* textLabel){
-
-    QHBoxLayout* layout = new QHBoxLayout();
-    layout->addWidget(iconLabel);
-    layout->addWidget(textLabel);
-    layout->setMargin(0);
-    layout->setSpacing(2);
-
-    QWidget* globalWidget = new QWidget(this);
-    globalWidget->setLayout(layout);
+    this->shutdownWidget = new IconTextWidget(this);
 
     // add aggregated widget to the status bar :
-    this->addWidget(globalWidget);
-
-    return globalWidget;
+    this->addWidget(this->shutdownWidget);
 
 }
+
+
 
 
 void MyStatusBar::setConnectionActive(){
 
-    QPixmap connectionPixmap;
+    QString connectionIconStr;
     QString connection;
 
     // iinitialize icon loader
     iconLoader->newIconLoader();
 
     if (this->totalConnections == 0) {
-        connectionPixmap = iconLoader->loadIcon("weather-clear-night", KIconLoader::Small);
-        connection = i18n(" Disconnected");
+        connectionIconStr ="weather-clear-night";
+        connection = i18n("Disconnected");
 
         // detail disconnection issues to user :
         if (nttpErrorStatus == HostNotFound){
-            connection = i18n(" Disconnected (Host not found)");
+            connection = i18n("Disconnected (Host not found)");
         }
 
         if (nttpErrorStatus == ConnectionRefused) {
-            connection = i18n(" Disconnected (Connection refused)");
+            connection = i18n("Disconnected (Connection refused)");
         }
 
         if (nttpErrorStatus == RemoteHostClosed) {
-            connection = i18n(" Disconnected (Closed by remote host)");
+            connection = i18n("Disconnected (Closed by remote host)");
         }
 
         if (nttpErrorStatus == SslHandshakeFailed) {
-            connection = i18n(" Disconnected (SSL handshake failed)");
+            connection = i18n("Disconnected (SSL handshake failed)");
         }
 
         //kDebug() << "nttpErrorStatus = " << nttpErrorStatus;
         if (nttpErrorStatus == AuthenticationNeeded) {
-            connection = i18n(" Disconnected (Authentication required)");
+            connection = i18n("Disconnected (Authentication required)");
         }
 
 
         if (nttpErrorStatus == AuthenticationFailed) {
-            connection = i18n(" Disconnected (Authentication Denied)");
+            connection = i18n("Disconnected (Authentication Denied)");
         }
 
     }
     else{
         // set connection icon :
-        connectionPixmap = iconLoader->loadIcon("applications-internet", KIconLoader::Small);
-        connection = i18n(" Connected: ") + QString::number(this->totalConnections);
+        connectionIconStr = "applications-internet";
+        connection = i18n("Connected: ") + QString::number(this->totalConnections);
 
         if (this->sslActive) {
 
             // if SSL active use another connection icon :
-            connectionPixmap = iconLoader->loadIcon("document-encrypt", KIconLoader::Small);
+            connectionIconStr = "document-encrypt";
 
             // display type of encryption method used by server :
             if (!encryptionMethod.isEmpty()) {
@@ -182,8 +153,8 @@ void MyStatusBar::setConnectionActive(){
     }
 
 
-    connIconLabel->setPixmap(connectionPixmap);
-    connTextLabel->setText(connection);
+    connectionWidget->setIcon(connectionIconStr);
+    connectionWidget->setText(connection);
 
 
     // set tooltip to connection widget :
@@ -234,59 +205,31 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
     }
 
     // set tooltip :
-    this->connWidget->setToolTip(toolTipStr);
+    this->connectionWidget->setToolTip(toolTipStr);
 }
 
 
 
 
-void MyStatusBar::addSize(const quint64 size){
-    totalSize += size;
-    updateSizeText();
-}
 
+void MyStatusBar::updateSizeInfoSlot(const QString sizeStr) {
 
-void MyStatusBar::addFiles(const quint64 fileNumber){
-    totalFiles += fileNumber;
-    updateFileText();
-}
-
-
-void MyStatusBar::updateSizeText() {
-    QString sizeStr = Utility::convertByteHumanReadable(totalSize);
     this->changeItem(i18n("Size: ") + sizeStr, SIZE_ID);
 }
 
 
-void MyStatusBar::updateFileText() {
-    this->changeItem(i18n("Files: ") + QString::number(totalFiles), FILES_NUMBER_ID);
+void MyStatusBar::updateFileInfoSlot(const QString fileStr) {
+
+    this->changeItem(i18n("Files: ") + fileStr, FILES_NUMBER_ID);
 }
 
 
+void MyStatusBar::updateDownloadSpeedInfoSlot(const QString speedInKBStr){
 
-
-void MyStatusBar::fullFileSizeUpdate(const quint64 size, const quint64 files) {
-
-    totalSize = size;
-    totalFiles = files;
-
-    // status bar updates :
-    updateFileText();
-    updateSizeText();
+    this->changeItem(i18n("Speed: ") + speedInKBStr, SPEED_ID);
 
 }
 
-
-void MyStatusBar::decrementSlot(const quint64 size, const int fileNumber = 1) {
-
-    totalFiles -= fileNumber;
-    totalSize -= size;
-
-    // status bar updates :
-    updateFileText();
-    updateSizeText();
-
-}
 
 
 void MyStatusBar::connectionStatusSlot(const int connectionStatus){
@@ -326,38 +269,10 @@ void MyStatusBar::encryptionStatusSlot(const bool sslActive, const QString encry
 
 
 
-
-void MyStatusBar::speedSlot(const int bytesDownloaded){
-
-    totalBytesDownloaded += bytesDownloaded;
-
-}
-
-
-void MyStatusBar::updateDownloadSpeedSlot(){
-
-    int downloadSizeInKB = totalBytesDownloaded / 1024 / SPEED_AVERAGE_SECONDS;
-    QString sizeUnit = i18n(" KiB/s");
-    this->changeItem(i18n("Speed: ") + QString::number(downloadSizeInKB) + sizeUnit, SPEED_ID);
-
-    // reset number of bytes downloaded after text update :
-    totalBytesDownloaded = 0;
-}
-
-
-
 void MyStatusBar::statusBarShutdownInfoSlot(QString iconStr, QString text) {
 
-    QPixmap connectionPixmap;
-
-    if (!iconStr.isEmpty()) {
-        // initialize icon loader
-        iconLoader->newIconLoader();
-        connectionPixmap = iconLoader->loadIcon(iconStr, KIconLoader::Small);
-    }
-
-    this->shutdownIconLabel->setPixmap(connectionPixmap);
-    this->shutdownTextLabel->setText(text);
+    this->shutdownWidget->setIcon(iconStr);
+    this->shutdownWidget->setText(text);
 
 }
 
