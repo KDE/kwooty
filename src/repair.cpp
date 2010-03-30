@@ -164,6 +164,7 @@ QString Repair::sortPar2FilesBySize(/*const QString& par2BaseName*/){
     return fileSavePath;
 }
 
+
 void Repair::verifyUpdate(const QString& repairProcessOutput) {
 
     // search current processed file and its status :
@@ -283,11 +284,8 @@ UtilityNamespace::ItemTarget Repair::getItemTarget(const NzbFileData& nzbFileDat
 //                                         SLOTS                                                //
 //==============================================================================================//
 
-void Repair::repairReadyReadSlot(){
-    
-    // read all data :
-    //QString repairProcessOutput = repairProcess->readAll();
-    //QStringList lines = repairProcessOutput.split("\n");
+void Repair::repairReadyReadSlot(){  
+
     // read all data :
     this->stdOutputLines += repairProcess->readAll().replace("\r", "\n");
     QStringList lines = this->stdOutputLines.split("\n");
@@ -297,6 +295,8 @@ void Repair::repairReadyReadSlot(){
 
         if (!line.isEmpty()) {
             
+            //kDebug() << "line : " << line;
+
             switch(repairStatus) {
                 
             case  Repair::IdleRepair: {
@@ -374,6 +374,8 @@ void Repair::repairReadyReadSlot(){
 
 void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus exitStatus){
 
+
+     //kDebug() << "exitCode" << exitCode << " exitStatus " << exitStatus;
 
     // notify nzb parent item that verification has ended :
     for (int i = 0; i < this->nzbFileDataList.size(); i++) {
