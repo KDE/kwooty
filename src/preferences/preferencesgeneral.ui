@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>410</width>
-    <height>310</height>
+    <height>319</height>
    </rect>
   </property>
   <property name="toolTip">
-   <string>Expand treeview automatically when a .nzb file is open</string>
+   <string/>
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
    <item row="0" column="0">
@@ -32,10 +32,10 @@
         <property name="toolTip">
          <string>Set temporary folder</string>
         </property>
-        <property name="filter" stdset="0">
+        <property name="filter">
          <string notr="true"/>
         </property>
-        <property name="clickMessage" stdset="0">
+        <property name="clickMessage">
          <string notr="true"/>
         </property>
        </widget>
@@ -52,10 +52,10 @@
         <property name="toolTip">
          <string>Set download folder</string>
         </property>
-        <property name="filter" stdset="0">
+        <property name="filter">
          <string notr="true"/>
         </property>
-        <property name="clickMessage" stdset="0">
+        <property name="clickMessage">
          <string notr="true"/>
         </property>
        </widget>
