@@ -62,7 +62,7 @@ int UniqueApp::newInstance()
         // open nzb files set as argument :
         for (int i = 0; i < args->count(); i++) {
 
-            this->mainWindow->openFileByExternalApp(args->url(i));
+            this->mainWindow->openFileWithFileMode(args->url(i), UtilityNamespace::OpenWith);
 
         }
 
