@@ -62,8 +62,19 @@ namespace UtilityNamespace
     static const QString applicationFileOwner = "Kwooty_87b022df-17b9-409f-a423-3cc626831adc\r\n";
     static const QString remainingDownloadsFile = "kwootyInQueueDownloads.dat";
     
+    // units :
     static const int MINUTES_TO_MILLISECONDS = 60000;
     static const int HOURS_TO_MILLISECONDS = 3600000;
+
+    static const int SECONDS_IN_DAY = 86400;
+    static const int SECONDS_IN_HOUR = 3600;
+    static const int SECONDS_IN_MINUTE = 60;
+
+    static const double NBR_BYTES_IN_GB = 1073741824;
+    static const double NBR_BYTES_IN_MB = 1048576;
+    static const double NBR_BYTES_IN_KB = 1024;
+    static const double ONE_UNIT = 1;
+
 
     // custom roles used for storing data in items :
     enum MyRoles{
@@ -196,6 +207,15 @@ namespace UtilityNamespace
     };
 
 
+    // info about free disk space :
+    enum FreeDiskSpace {
+        SufficientDiskSpace,
+        InsufficientDiskSpace,
+        UnknownDiskSpace
+    };
+
+
+
 }
 
 class Utility
@@ -209,6 +229,7 @@ public:
     static QString convertByteHumanReadable(const quint64);
     static bool isInDownloadProcess(const UtilityNamespace::ItemStatus);
     static bool isReadyToDownload(const UtilityNamespace::ItemStatus);
+    static bool isInQueue(const UtilityNamespace::ItemStatus);
     static bool isPaused(const UtilityNamespace::ItemStatus);
     static bool isPausing(const UtilityNamespace::ItemStatus);
     static bool isDownloadOrPausing(const UtilityNamespace::ItemStatus);
@@ -224,10 +245,7 @@ public:
     
     
 private:
-    static const double NBR_BYTES_IN_GB = 1073741824;
-    static const double NBR_BYTES_IN_MB = 1048576;
-    static const double NBR_BYTES_IN_KB = 1024;
-    static const double ONE_UNIT = 1;
+
     
 };
 
