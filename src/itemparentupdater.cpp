@@ -23,7 +23,7 @@
 #include <KDebug>
 
 #include "centralwidget.h"
-#include "mystatusbar.h"
+#include "infocollectordispatcher.h"
 #include "standarditemmodel.h"
 #include "itemdownloadupdater.h"
 #include "itempostdownloadupdater.h"
@@ -75,7 +75,7 @@ void ItemParentUpdater::setupConnections() {
 
     connect (itemDownloadUpdater,
              SIGNAL(statusBarDecrementSignal(const quint64, const int)),
-             parent->getStatusBar(),
+             parent->getInfoCollectorDispatcher(),
              SLOT(decrementSlot(const quint64, const int)));
 
     // recalculate full nzb size when children may have been removed :
@@ -226,7 +226,8 @@ ItemStatusData ItemParentUpdater::updateStatusItemDecode(ItemStatusData& nzbItem
 ItemStatusData ItemParentUpdater::updateItemsDownload(ItemStatusData& nzbItemStatusData, const int rowNumber, const QModelIndex& nzbIndex, const quint64 totalProgress) {
 
     // calculate progression % :
-    quint64 nzbSize = this->downloadModel->getSizeItemFromIndex(nzbIndex)->data(SizeRole).toULongLong();
+
+    quint64 nzbSize = this->downloadModel->getSizeValueFromIndex(nzbIndex);
     nzbSize = qMax(nzbSize, (quint64)1); // avoid division by zero (should never happen)
     this->progressNumber = qMin( qRound((qreal)(totalProgress / nzbSize)), PROGRESS_COMPLETE );
 
