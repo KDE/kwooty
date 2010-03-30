@@ -51,9 +51,7 @@ SegmentsDecoderThread::~SegmentsDecoderThread() {
     delete decoderTimer;
 
     // delete decoders :
-    while (this->segmentDecoderList.size() != 0) {
-        delete this->segmentDecoderList.takeLast();
-    }
+    qDeleteAll(this->segmentDecoderList);
 
 }
 
