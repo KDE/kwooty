@@ -11,9 +11,9 @@
    </rect>
   </property>
   <property name="toolTip">
-   <string>Expand treeview automatically when a .nzb file is open</string>
+   <string/>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
     <widget class="QCheckBox" name="kcfg_displayIcons">
      <property name="toolTip">
@@ -55,6 +55,35 @@
     </widget>
    </item>
    <item row="4" column="0">
+    <widget class="QGroupBox" name="actionGroupBox">
+     <property name="title">
+      <string>Estimated time</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QRadioButton" name="kcfg_etaRadioButton">
+        <property name="toolTip">
+         <string>Display estimated time of arrival</string>
+        </property>
+        <property name="text">
+         <string>Display estimated time of arrival</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QRadioButton" name="kcfg_rtRadioButton">
+        <property name="toolTip">
+         <string>Display remaining time</string>
+        </property>
+        <property name="text">
+         <string>Display remaining time</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="5" column="0">
     <spacer name="spacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
