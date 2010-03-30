@@ -78,6 +78,16 @@ bool Utility::isReadyToDownload(const UtilityNamespace::ItemStatus statusItem){
     return status;
 }
 
+bool Utility::isInQueue(const UtilityNamespace::ItemStatus statusItem){
+    bool status = false;
+
+    if ( (statusItem == IdleStatus) || (statusItem == PauseStatus)){
+        status = true;
+    }
+
+    return status;
+}
+
 bool Utility::isDownloadOrPausing(const UtilityNamespace::ItemStatus statusItem){
     bool status = false;
 
