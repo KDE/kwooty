@@ -49,7 +49,7 @@ DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent)
     applicationVersion1 = 002;
     // map kwooty serialization version and its corresponding dataStream version
     versionStreamMap.insert(applicationVersion1, QDataStream::Qt_4_4);
-    
+
     this->setupConnections();
 
     // read data from previous sessions if exists :
@@ -146,7 +146,7 @@ void DataRestorer::writeDataToDisk() {
 
                 QModelIndex fileNameIndex = parentFileNameItem->child(j, FILE_NAME_COLUMN)->index();
 
-                // get nzbFileData, progress value and status data related to a file in order to save them :               
+                // get nzbFileData, progress value and status data related to a file in order to save them :
                 NzbFileData currentNzbFileData = this->downloadModel->getNzbFileDataFromIndex(fileNameIndex);
                 ItemStatusData currentStatusData = this->downloadModel->getStatusDataFromIndex(fileNameIndex);
                 int currentDownloadProgress = this->downloadModel->getProgressValueFromIndex(fileNameIndex);
@@ -213,7 +213,9 @@ bool DataRestorer::isHeaderOk(QDataStream& dataStreamIn) const {
 void DataRestorer::resetDataForDecodingFile(NzbFileData& currentNzbFileData, ItemStatusData& currentStatusData, int& currentDownloadProgress) {
 
     // set currentStatusData to default values :
-    currentStatusData.init();
+    currentStatusData.setStatus(IdleStatus);
+    currentStatusData.setDownloadFinish(false);
+    currentStatusData.setDecodeFinish(false);
 
     // set file download progress to 0%
     currentDownloadProgress = 0;
@@ -242,7 +244,9 @@ void DataRestorer::resetDataForDownloadingFile(NzbFileData& currentNzbFileData, 
 
     // the current item is being downloaded, set it with default values
     // (in order to set it to Idle during restoring) :
-    currentStatusData.init();
+    //TODO : A TESTER !!!
+    currentStatusData.setStatus(IdleStatus);
+
 
     // set corresponding segments being downloaded to Idle, keep the status of the previous downloaded ones :
     QList<SegmentData> segmentDataList = currentNzbFileData.getSegmentList();
