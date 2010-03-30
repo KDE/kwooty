@@ -165,6 +165,13 @@ int StandardItemModel::getProgressValueFromIndex(const QModelIndex& index) {
 }
 
 
+quint64 StandardItemModel::getSizeValueFromIndex(const QModelIndex& index) {
+    QStandardItem* sizeItem = this->getSizeItemFromIndex(index);
+    quint64 nzbSize = sizeItem->data(SizeRole).toULongLong();
+    return nzbSize;
+}
+
+
 QStandardItem* StandardItemModel::getStateItemFromIndex(const QModelIndex& index) {
     return this->getColumnItem(index, STATE_COLUMN);
 }

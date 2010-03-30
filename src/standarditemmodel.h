@@ -46,6 +46,7 @@ public:
     ItemStatusData getStatusDataFromIndex(const QModelIndex&);
     NzbFileData getNzbFileDataFromIndex(const QModelIndex&);
     int getProgressValueFromIndex(const QModelIndex&);
+    quint64 getSizeValueFromIndex(const QModelIndex&);
     UtilityNamespace::ItemStatus getStatusFromStateItem(QStandardItem*) const;
     UtilityNamespace::ItemStatus getChildStatusFromNzbIndex(const QModelIndex&, int);
     void updateSateItem(QStandardItem*, const UtilityNamespace::ItemStatus);
