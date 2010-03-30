@@ -116,6 +116,14 @@
             <label>Display status icon next to archive names</label>
             <default>true</default>
         </entry>
+	<entry name="etaRadioButton" type="Bool">
+            <label>Display estimated time of arrival</label>
+            <default>true</default>
+        </entry>
+	<entry name="rtRadioButton" type="Bool">
+            <label>Display remaining time</label>
+            <default>false</default>
+        </entry>
     </group>
   
     <group name="shutdown">
