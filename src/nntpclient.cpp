@@ -243,6 +243,10 @@ void NntpClient::getAnswerFromServer() {
 
     default: {
             kDebug() << "Answer from host : " << answer << " not handled !";
+
+            // TODO : A TESTER !
+            // response not handled, consider that segment is not present :
+            this->postDownloadProcess(NotPresent);
             break;
         }
 
@@ -267,7 +271,7 @@ void NntpClient::downloadSegmentFromServer(){
     emit speedSignal(chunckData.size());
 
     // if end of download has been reached :
-    if (chunckData.endsWith("\r\n.\r\n")) {
+    if (this->segmentByteArray.endsWith("\r\n.\r\n")) {
 
         this->postDownloadProcess(Present);
 
@@ -381,7 +385,7 @@ void NntpClient::setConnectedClientStatus(const NntpClient::NntpClientStatus sta
 
 
 
-void NntpClient::segmentDataRollBack(){
+void NntpClient::segmentDataRollBack() {
 
     if (currentSegmentData.getStatus() == DownloadStatus) {
 
