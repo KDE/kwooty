@@ -552,7 +552,7 @@ void RepairDecompressThread::processRarFilesFromSameGroup(const QList<NzbFileDat
 
     // in this case, par2Base name is not initialized in order to get only "*.*" as par2 argument during verifiying process :
     if (!groupedFileList.isEmpty()) {
-        QString par2BaseName = "*.*";
+        QString par2BaseName = "*";
         this->par2NzbFileDataListMap.insertMulti(par2BaseName, groupedFileList);
     }
 
