@@ -176,17 +176,24 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
 
     }
 
+    QList<GlobalFileData> globalFileDataOrderedList;
+
     // if error occured display error message box :
     if(!fileSucessfulyProcessed) {
         this->displayMessageBox(parent, file.fileName());
+
+    }
+    else {
+        globalFileDataOrderedList.append(globalFileDataNameMap.values());
+        globalFileDataOrderedList.append(globalPar2DataNameMap.values());
+
     }
 
-    QList<GlobalFileData> globalFileDataOrderedList = globalFileDataNameMap.values() +
-                                                      globalPar2DataNameMap.values();
 
     return globalFileDataOrderedList;
 
 }
+
 
 
 
