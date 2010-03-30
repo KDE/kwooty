@@ -38,8 +38,8 @@ class MainWindow : public KXmlGuiWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    void openFileByExternalApp(KUrl url);
 
+    void openFileWithFileMode(KUrl, UtilityNamespace::OpenFileMode);
 
 private:
     QString fileName;
@@ -48,7 +48,6 @@ private:
     MyTreeView* treeView;
 
     void setupActions();
-    void openUrl(KUrl, bool&, UtilityNamespace::OpenFileMode);
     bool queryClose() ;
 
 signals:
@@ -56,7 +55,7 @@ signals:
     void savePendingDownloadsSignal();
 
 public slots:
-    void openFileByDragAndDropSlot(KUrl);
+
 
 private slots:
     void openFile();
