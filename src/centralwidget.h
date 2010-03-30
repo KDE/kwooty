@@ -27,12 +27,14 @@
 #include "mytreeview.h"
 #include "data/globalfiledata.h"
 #include "utility.h"
+
 using namespace UtilityNamespace;
 
 
 class ClientManagerConn;
 class MyStatusBar;
 class MyTreeView;
+class InfoBar;
 class ItemParentUpdater;
 class StandardItemModel;
 class RepairDecompressThread;
@@ -40,6 +42,9 @@ class SegmentsDecoderThread;
 class SegmentManager;
 class DataRestorer;
 class ShutdownManager;
+class InfoCollectorDispatcher;
+class FileOperations;
+class FolderWatcherThread;
 class NzbFileData;
 class ItemStatusData;
 
@@ -47,13 +52,14 @@ class ItemStatusData;
 Q_DECLARE_METATYPE (QStandardItem*)
 Q_DECLARE_METATYPE (ItemStatusData*)
 
+
 class CentralWidget : public QWidget
-        
+
 {
     Q_OBJECT
     
 public:
-    CentralWidget(QWidget* parent = 0, MyStatusBar* parentStatuBar = 0);
+    CentralWidget(QWidget* parent = 0, MyStatusBar* parentStatusBar = 0);
     ~CentralWidget();
     void handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
     void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
@@ -65,11 +71,17 @@ public:
     ItemParentUpdater* getItemParentUpdater() const;
     MyTreeView* getTreeView() const;
     ShutdownManager* getShutdownManager() const;
+    InfoCollectorDispatcher* getInfoCollectorDispatcher() const;
+    InfoBar* getInfoBar() const;
+    FileOperations* getFileOperations() const;
+
 
 
 private:
+
     MyTreeView* treeView;
     MyStatusBar* statusBar;
+    InfoBar* infoBar;
     QList<ClientManagerConn*> clientManagerConnList;
     SegmentManager* segmentManager;
     DataRestorer* dataRestorer;
@@ -78,6 +90,9 @@ private:
     RepairDecompressThread* repairDecompressThread;
     ItemParentUpdater* itemParentUpdater;
     StandardItemModel* downloadModel;
+    InfoCollectorDispatcher* infoCollectorDispatcher;
+    FileOperations* fileOperations;
+    FolderWatcherThread* folderWatcherThread;
     int saveErrorButtonCode;
 
     void setDataToModel(const QList<GlobalFileData>&, const QString&);
@@ -89,6 +104,9 @@ private:
     void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QList<QModelIndex>&);
     void statusBarFileSizeUpdate();
     void initFoldersSettings();
+    void setupWidgets(QWidget*);
+
+
     
 signals:
     void dataHasArrivedSignal();

@@ -31,6 +31,7 @@
 #include "clientmanagerconn.h"
 #include "mystatusbar.h"
 #include "mytreeview.h"
+#include "infobar.h"
 #include "segmentmanager.h"
 #include "segmentsdecoderthread.h"
 #include "repairdecompressthread.h"
@@ -38,28 +39,40 @@
 #include "itemparentupdater.h"
 #include "datarestorer.h"
 #include "shutdownmanager.h"
+#include "infocollectordispatcher.h"
+#include "fileoperations.h"
 #include "data/itemstatusdata.h"
 
-using namespace UtilityNamespace;
+#include "folderwatcherthread.h"
 
 
 CentralWidget::CentralWidget(QWidget* parent, MyStatusBar* parentStatusBar) : QWidget(parent)
 {
 
+
+    // retrieve status bar :
+    statusBar = parentStatusBar;
+
     // init the downloadModel :
     downloadModel = new StandardItemModel(this);
     
     // init treeview :
-    treeView = new MyTreeView(parent, this);
+    treeView = new MyTreeView(this);
     
     // setup segment decoder thread :
     segmentsDecoderThread = new SegmentsDecoderThread(this);
     
     // setup repairing and decompressing thread :
     repairDecompressThread = new RepairDecompressThread(this);
-    
-    // retrieve status bar :
-    statusBar = parentStatusBar;
+
+    // setup infor (top widget) :
+    infoBar = new InfoBar(this);
+
+    // setup dir watcher :
+    folderWatcherThread = new FolderWatcherThread(this);
+
+    // collect download related info and feed status bar and remaining time bar :
+    infoCollectorDispatcher = new InfoCollectorDispatcher(this);
     
     // update view according to items data :
     itemParentUpdater = new ItemParentUpdater(this);
@@ -82,7 +95,14 @@ CentralWidget::CentralWidget(QWidget* parent, MyStatusBar* parentStatusBar) : QW
     // setup shutdown manager :
     shutdownManager = new ShutdownManager(this);
 
+    // setup nzb file opening closing :
+    fileOperations = new FileOperations(this);
+
+    // set objects connections :
     this->setupConnections();
+
+    // setup main widgets and layout :
+    this->setupWidgets(parent);
 
 }
 
@@ -92,10 +112,23 @@ CentralWidget::~CentralWidget()
 }
 
 
+void CentralWidget::setupWidgets(QWidget* parent) {
+
+    QVBoxLayout* mainVBoxLayout = new QVBoxLayout(parent);
+    mainVBoxLayout->setSpacing(2);
+    mainVBoxLayout->setMargin(1);
+
+    QFrame* line = new QFrame(this);
+    line->setFrameShape(QFrame::HLine);
+
+    mainVBoxLayout->addWidget(line);
+    mainVBoxLayout->addWidget(this->infoBar);
+    mainVBoxLayout->addWidget(treeView);
+
+}
 
 
-
-void CentralWidget::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList){
+void CentralWidget::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList) {
     
     // remove .nzb extension to file name:
     QFileInfo fileInfo(file.fileName());
@@ -180,34 +213,11 @@ void CentralWidget::restoreDataFromPreviousSession(const QList<GlobalFileData>& 
 
 void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataList, const QString& nzbName){
 
-    QStandardItem* nzbNameItem = new QStandardItem(nzbName);
-    nzbNameItem->setIcon(KIcon("go-next-view"));
-
-    quint64  nzbFilesSize = 0;
-    int  par2FileNumber = 0;
-
-    foreach (GlobalFileData currentGlobalFileData, globalFileDataList) {
-
-        // populate children :
-        this->addParentItem(nzbNameItem, currentGlobalFileData);
-        
-        // compute size of all files contained in the nzb :
-        nzbFilesSize += currentGlobalFileData.getNzbFileData().getSize();
-
-        // count number of par2 Files :
-        if (currentGlobalFileData.getNzbFileData().isPar2File()) {
-            par2FileNumber++;
-        }
-        
-    }
-
-    // set idle status by default :
-    QStandardItem* nzbStateItem = new QStandardItem();
-    nzbStateItem->setData(qVariantFromValue(ItemStatusData()), StatusRole);
-    
-    // set size :
+    QStandardItem* nzbNameItem = new QStandardItem(nzbName);    
+    QStandardItem* nzbStateItem = new QStandardItem();    
     QStandardItem* nzbSizeItem = new QStandardItem();
-    nzbSizeItem->setData(qVariantFromValue(nzbFilesSize), SizeRole);
+
+    nzbNameItem->setIcon(KIcon("go-next-view"));
     
     // add the nzb items to the model :
     int nzbNameItemRow = downloadModel->rowCount();
@@ -216,6 +226,35 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
     downloadModel->setItem(nzbNameItemRow, SIZE_COLUMN, nzbSizeItem);
     downloadModel->setItem(nzbNameItemRow, STATE_COLUMN, nzbStateItem);
     downloadModel->setItem(nzbNameItemRow, PROGRESS_COLUMN, new QStandardItem());
+
+
+    quint64 nzbFilesSize = 0;
+    int par2FileNumber = 0;
+
+    // add children to parent (nzbNameItem) :
+    foreach (GlobalFileData currentGlobalFileData, globalFileDataList) {
+
+        // populate children :
+        this->addParentItem(nzbNameItem, currentGlobalFileData);
+
+        // compute size of all files contained in the nzb :
+        nzbFilesSize += currentGlobalFileData.getNzbFileData().getSize();
+
+        // count number of par2 Files :
+        if (currentGlobalFileData.getNzbFileData().isPar2File()) {
+            par2FileNumber++;
+        }
+
+    }
+
+
+    // set idle status by default :
+    nzbStateItem->setData(qVariantFromValue(ItemStatusData()), StatusRole);
+
+    // set size :
+    nzbSizeItem->setData(qVariantFromValue(nzbFilesSize), SizeRole);
+
+
 
     // expand treeView :
     treeView->setExpanded(nzbNameItem->index(), Settings::expandTreeView());
@@ -316,13 +355,13 @@ void CentralWidget::setupConnections() {
              SLOT(suppressOldOrphanedSegmentsSlot()),Qt::QueuedConnection);
 
 
-    // update info about decoding repair process :
+    // update info about repair process :
     connect (repairDecompressThread,
              SIGNAL(updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
              segmentManager,
              SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
 
-    // update info about decoding extract process :
+    // update info about extract process :
     connect (repairDecompressThread,
              SIGNAL(updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
              segmentManager,
@@ -368,7 +407,8 @@ void CentralWidget::statusBarFileSizeUpdate() {
         
     }
     
-    statusBar->fullFileSizeUpdate(size, files);
+
+    infoCollectorDispatcher->fullFileSizeUpdate(size, files);
     
 }
 
@@ -469,6 +509,19 @@ ShutdownManager* CentralWidget::getShutdownManager() const{
     return this->shutdownManager;
 }
 
+InfoCollectorDispatcher* CentralWidget::getInfoCollectorDispatcher() const{
+    return this->infoCollectorDispatcher;
+}
+
+InfoBar* CentralWidget::getInfoBar() const{
+    return this->infoBar;
+}
+
+FileOperations* CentralWidget::getFileOperations() const{
+    return this->fileOperations;
+}
+
+
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
@@ -478,7 +531,7 @@ void CentralWidget::statusBarFileSizeUpdateSlot(StatusBarUpdateType statusBarUpd
 
     if (statusBarUpdateType == Reset) {
         // reset the status bar :
-        statusBar->fullFileSizeUpdate(0, 0);
+        infoCollectorDispatcher->fullFileSizeUpdate(0, 0);
     }
 
     if (statusBarUpdateType == Incremental) {
@@ -492,6 +545,7 @@ void CentralWidget::pauseDownloadSlot(){
     QList<QModelIndex> indexesList = treeView->selectionModel()->selectedRows();
     this->setStartPauseDownload(PauseStatus, indexesList);
 }
+
 
 void CentralWidget::startDownloadSlot(){
     
