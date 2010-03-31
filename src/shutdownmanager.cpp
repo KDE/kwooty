@@ -142,7 +142,7 @@ void ShutdownManager::updateStatusBar() {
 
         // define shutown method text :
         if (Settings::jobsRadioButton()) {
-            shutdownMethodText = ' ' + i18n("when jobs complete");
+            shutdownMethodText = i18n("when jobs complete");
         }
 
         if (Settings::timerRadioButton()) {
@@ -151,7 +151,7 @@ void ShutdownManager::updateStatusBar() {
             dateTime = dateTime.addSecs(Settings::scheduleDateTime().time().hour() * 3600 +
                                         Settings::scheduleDateTime().time().minute() * 60);
 
-            shutdownMethodText = ' ' + i18n("at") + ' ' + dateTime.toString("hh:mm");
+            shutdownMethodText = i18n("at") + ' ' + dateTime.toString("hh:mm");
         }
 
 
