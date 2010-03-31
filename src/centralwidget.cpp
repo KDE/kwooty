@@ -183,31 +183,11 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
     QStandardItem* nzbNameItem = new QStandardItem(nzbName);
     nzbNameItem->setIcon(KIcon("go-next-view"));
 
-    quint64  nzbFilesSize = 0;
-    int  par2FileNumber = 0;
-
-    foreach (GlobalFileData currentGlobalFileData, globalFileDataList) {
-
-        // populate children :
-        this->addParentItem(nzbNameItem, currentGlobalFileData);
-        
-        // compute size of all files contained in the nzb :
-        nzbFilesSize += currentGlobalFileData.getNzbFileData().getSize();
-
-        // count number of par2 Files :
-        if (currentGlobalFileData.getNzbFileData().isPar2File()) {
-            par2FileNumber++;
-        }
-        
-    }
-
     // set idle status by default :
     QStandardItem* nzbStateItem = new QStandardItem();
-    nzbStateItem->setData(qVariantFromValue(ItemStatusData()), StatusRole);
     
     // set size :
-    QStandardItem* nzbSizeItem = new QStandardItem();
-    nzbSizeItem->setData(qVariantFromValue(nzbFilesSize), SizeRole);
+    QStandardItem* nzbSizeItem = new QStandardItem();    
     
     // add the nzb items to the model :
     int nzbNameItemRow = downloadModel->rowCount();
@@ -216,6 +196,30 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
     downloadModel->setItem(nzbNameItemRow, SIZE_COLUMN, nzbSizeItem);
     downloadModel->setItem(nzbNameItemRow, STATE_COLUMN, nzbStateItem);
     downloadModel->setItem(nzbNameItemRow, PROGRESS_COLUMN, new QStandardItem());
+
+
+    quint64 nzbFilesSize = 0;
+    int par2FileNumber = 0;
+
+    foreach (GlobalFileData currentGlobalFileData, globalFileDataList) {
+
+        // populate children :
+        this->addParentItem(nzbNameItem, currentGlobalFileData);
+
+        // compute size of all files contained in the nzb :
+        nzbFilesSize += currentGlobalFileData.getNzbFileData().getSize();
+
+        // count number of par2 Files :
+        if (currentGlobalFileData.getNzbFileData().isPar2File()) {
+            par2FileNumber++;
+        }
+
+    }
+
+
+    nzbStateItem->setData(qVariantFromValue(ItemStatusData()), StatusRole);
+    nzbSizeItem->setData(qVariantFromValue(nzbFilesSize), SizeRole);
+
 
     // expand treeView :
     treeView->setExpanded(nzbNameItem->index(), Settings::expandTreeView());
