@@ -43,7 +43,7 @@
 #include "fileoperations.h"
 #include "data/itemstatusdata.h"
 
-#include "folderwatcherthread.h"
+#include "folderwatcher.h"
 
 
 CentralWidget::CentralWidget(QWidget* parent, MyStatusBar* parentStatusBar) : QWidget(parent)
@@ -69,7 +69,7 @@ CentralWidget::CentralWidget(QWidget* parent, MyStatusBar* parentStatusBar) : QW
     infoBar = new InfoBar(this);
 
     // setup dir watcher :
-    folderWatcherThread = new FolderWatcherThread(this);
+    folderWatcher = new FolderWatcher(this);
 
     // collect download related info and feed status bar and remaining time bar :
     infoCollectorDispatcher = new InfoCollectorDispatcher(this);
