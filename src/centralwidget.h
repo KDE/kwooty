@@ -44,7 +44,7 @@ class DataRestorer;
 class ShutdownManager;
 class InfoCollectorDispatcher;
 class FileOperations;
-class FolderWatcherThread;
+class FolderWatcher;
 class NzbFileData;
 class ItemStatusData;
 
@@ -92,7 +92,7 @@ private:
     StandardItemModel* downloadModel;
     InfoCollectorDispatcher* infoCollectorDispatcher;
     FileOperations* fileOperations;
-    FolderWatcherThread* folderWatcherThread;
+    FolderWatcher* folderWatcher;
     int saveErrorButtonCode;
 
     void setDataToModel(const QList<GlobalFileData>&, const QString&);
