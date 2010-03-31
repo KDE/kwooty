@@ -40,7 +40,12 @@ SOURCES += main.cpp \
     segmentdecoderyenc.cpp \
     segmentdecoderuuenc.cpp \
     extractrar.cpp \
-    extractzip.cpp
+    extractzip.cpp \
+    icontextwidget.cpp \
+    infocollectordispatcher.cpp \
+    infobar.cpp \
+    folderwatcher.cpp \
+    fileoperations.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -77,7 +82,12 @@ HEADERS += mainwindow.h \
     segmentdecoderyenc.h \
     segmentdecoderuuenc.h \
     extractrar.h \
-    extractzip.h
+    extractzip.h \
+    icontextwidget.h \
+    infocollectordispatcher.h \
+    infobar.h \
+    folderwatcher.h \
+    fileoperations.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
