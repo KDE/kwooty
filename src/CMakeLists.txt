@@ -20,6 +20,7 @@ set(Kwooty_SRCS
   segmentmanager.cpp
   mystatusbar.cpp
   mytreeview.cpp
+  infobar.cpp
   segmentsdecoderthread.cpp
   segmentdecoderbase.cpp
   segmentdecoderyenc.cpp
@@ -31,6 +32,10 @@ set(Kwooty_SRCS
   extractzip.cpp
   datarestorer.cpp
   shutdownmanager.cpp
+  infocollectordispatcher.cpp
+  icontextwidget.cpp
+  folderwatcher.cpp
+  fileoperations.cpp
   preferences/preferencesserver.cpp
   preferences/preferencesgeneral.cpp
   preferences/preferencesprograms.cpp
