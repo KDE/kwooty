@@ -24,19 +24,20 @@
 #include <KIconLoader>
 #include <KDebug>
 
+
 IconTextWidget::IconTextWidget(QWidget* parent) : QWidget(parent) {
 
-    iconLoader = KIconLoader::global();
+    this->iconLoader = KIconLoader::global();
 
-    hBoxLayout = new QHBoxLayout(this);
+    this->iconLabel = new QLabel(this);
+    this->textLabel = new QLabel(this);
 
-    iconLabel = new QLabel(this);
-    textLabel = new QLabel(this);
+    this->hBoxLayout = new QHBoxLayout(this);
+    this->hBoxLayout->addWidget(iconLabel);
+    this->hBoxLayout->addWidget(textLabel);
 
-    hBoxLayout->addWidget(iconLabel);
-    hBoxLayout->addWidget(textLabel);
-    hBoxLayout->setSpacing(5);
-    hBoxLayout->setMargin(0);
+    this->hBoxLayout->setSpacing(5);
+    this->hBoxLayout->setMargin(0);
 }
 
 
@@ -45,7 +46,7 @@ void IconTextWidget::setIcon(const QString& iconStr) {
 
     if (!iconStr.isEmpty()) {
 
-        this->iconLabel->setPixmap(iconLoader->loadIcon(iconStr, KIconLoader::Small));
+        this->iconLabel->setPixmap(this->iconLoader->loadIcon(iconStr, KIconLoader::Small));
     }
     else {
            this->iconLabel->setPixmap(QPixmap());
@@ -56,23 +57,21 @@ void IconTextWidget::setIcon(const QString& iconStr) {
 
 void IconTextWidget::setText(const QString& text) {
 
-   // kDebug() << text;
     this->textLabel->setText(text);
 }
 
 
 QString IconTextWidget::getText() const {
-
     return this->textLabel->text();
 }
 
-void IconTextWidget::showIcon() {
 
+void IconTextWidget::showIcon() {
     this->iconLabel->show();
 }
 
-void IconTextWidget::hideIcon() {
 
+void IconTextWidget::hideIcon() {
     this->iconLabel->hide();
 }
 
