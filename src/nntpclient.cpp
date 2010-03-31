@@ -143,6 +143,7 @@ void NntpClient::getAnswerFromServer() {
     // get answer from server :
     int answer = tcpSocket->readLine().left(3).toInt();
 
+
     switch (answer) {
 
     case ServerIsReadyPosting: case ServerIsReadyNoPosting: {
@@ -240,7 +241,11 @@ void NntpClient::getAnswerFromServer() {
         }
 
     default: {
+
             kDebug() << "Answer from host : " << answer << " not handled !";
+
+            // answer from host not handled, consider segment as not available :
+            this->postDownloadProcess(NotPresent);
             break;
         }
 
@@ -265,7 +270,7 @@ void NntpClient::downloadSegmentFromServer(){
     emit speedSignal(chunckData.size());
 
     // if end of download has been reached :
-    if (chunckData.endsWith("\r\n.\r\n")) {
+    if (this->segmentByteArray.endsWith("\r\n.\r\n")) {
 
         this->postDownloadProcess(Present);
 
