@@ -22,6 +22,7 @@
 #include "infocollectordispatcher.h"
 
 #include <KDebug>
+#include "kdiskfreespaceinfo.h"
 
 #include <QDateTime>
 
@@ -32,7 +33,6 @@
 #include "icontextwidget.h"
 #include "settings.h"
 
-#include "kdiskfreespaceinfo.h"
 
 
 InfoCollectorDispatcher::InfoCollectorDispatcher(CentralWidget* parent) : QObject(parent) {
@@ -40,7 +40,6 @@ InfoCollectorDispatcher::InfoCollectorDispatcher(CentralWidget* parent) : QObjec
     this->parent = parent;
 
     this->downloadModel = parent->getDownloadModel();
-
 
     // set timer to compute average download speed every each SPEED_AVERAGE_SECONDS :
     this->downloadSpeedTimer = new QTimer(this);
@@ -161,11 +160,9 @@ void InfoCollectorDispatcher::updateDownloadSpeedSlot() {
     float alpha = 0.2;
     this->meanDownloadSpeedKB = alpha * this->downloadSpeedKB + (1 - alpha) * this->meanDownloadSpeedKB;
 
-    //kDebug() << this->meanDownloadSpeedKB << (1 - alpha) << (1 - alpha) * this->meanDownloadSpeedKB;
 
     // get current download speed :
     this->downloadSpeedKB = this->totalBytesDownloaded / NBR_BYTES_IN_KB / SPEED_AVERAGE_SECONDS;
-
     QString sizeUnit = i18n(" KiB/s");
 
     emit updateDownloadSpeedInfoSignal(QString::number(this->downloadSpeedKB) + sizeUnit);
@@ -175,14 +172,17 @@ void InfoCollectorDispatcher::updateDownloadSpeedSlot() {
 
 
 
-    // calculate average download speed for remaining time calculation :
+    // at first mean speed equals current downloadSpeedKB in order to
+    // not get too lag before reaching proper mean speed value :
     if (this->meanSpeedActiveCounter < 10) {
 
         this->meanDownloadSpeedKB = this->downloadSpeedKB;
         this->meanSpeedActiveCounter++;
     }
 
+    // when download speed is 0, calculate mean speed as above :
     if (this->downloadSpeedKB  == 0) {
+
         this->meanSpeedActiveCounter = 0;
     }
 
@@ -249,10 +249,10 @@ void InfoCollectorDispatcher::retrieveQueuedFilesInfo(bool& parentDownloadingFou
             }
 
             parentDownloadingFound = true;
-            //break;
 
         }
 
+        // check if there are queued files in order to compute total remaining time :
         if (Utility::isInQueue(currentStatus)) {
 
             parentQueuedFound = true;
@@ -291,10 +291,8 @@ void InfoCollectorDispatcher::computeTimeInfo() {
         // compute CURRENT remaining download time (sec) :
         quint32 currentRemainingTimeSec = qRound(nzbSize * (PROGRESS_COMPLETE - downloadProgress) / (this->meanDownloadSpeedKB * PROGRESS_COMPLETE * NBR_BYTES_IN_KB));
 
-
         // calculate Estimated Time of Arrival :
         if (Settings::etaRadioButton()) {
-
 
             timeInfoStr.append(this->calculateArrivalTime(currentRemainingTimeSec));
         }
@@ -304,6 +302,7 @@ void InfoCollectorDispatcher::computeTimeInfo() {
 
             timeInfoStr.append(this->calculateRemainingTime(currentRemainingTimeSec));
         }
+
 
         // compute TOTAL remaining download time (sec) only if other pending parents have been found:
         if (parentQueuedFound) {
@@ -359,6 +358,7 @@ QString InfoCollectorDispatcher::calculateRemainingTime(const quint32& remaining
 
     QString remainingTimeStr;
 
+    // calculate remaining days, hours, minutes :
     int remainingDays = remainingSeconds / SECONDS_IN_DAY;
     int remainingHours =  (remainingSeconds - (remainingDays * SECONDS_IN_DAY)) / SECONDS_IN_HOUR;
     int remainingMinutes =  (remainingSeconds - ( (remainingDays * SECONDS_IN_DAY) + remainingHours *SECONDS_IN_HOUR) ) / SECONDS_IN_MINUTE;
@@ -385,7 +385,7 @@ QString InfoCollectorDispatcher::calculateRemainingTime(const quint32& remaining
     // when this is the last minute, display "< 1 minute" instead of 0 minute :
     if (remainingDays == 0 && remainingHours == 0 && remainingMinutes == 0) {
 
-        remainingTimeStr = i18n("less than ") +"1 " + minuteStr;
+        remainingTimeStr = i18n("less than ") + "1 " + minuteStr;
 
     }
 
@@ -414,7 +414,7 @@ void InfoCollectorDispatcher::retrieveFreeDiskSpace() {
         // get disk used :
         quint64 usedVal = KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).used();
 
-
+        // consider disk space is sufficient by default :
         UtilityNamespace::FreeDiskSpace diskSpaceStatus = SufficientDiskSpace;
 
         quint64 freeSpaceVal = KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).available();
@@ -422,7 +422,6 @@ void InfoCollectorDispatcher::retrieveFreeDiskSpace() {
         if (this->totalSize >= freeSpaceVal) {
             diskSpaceStatus = InsufficientDiskSpace;
         }
-
 
         // get free space size :
         QString freeSpaceStr = Utility::convertByteHumanReadable(freeSpaceVal) + " " + i18n("free");
@@ -434,6 +433,7 @@ void InfoCollectorDispatcher::retrieveFreeDiskSpace() {
 
     }
 
+    // disk space can not be retrieved :
     else {
 
         emit updateFreeSpaceSignal(UnknownDiskSpace);
