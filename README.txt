@@ -1,5 +1,15 @@
 Kwooty is a friendly newsgroup binary downloader that uses .nzb as entry files.
 
+
+Version 0.3.2:
+--------------
+This is a bugs fix release.
+
+* tree expander [+] was not displayed with Qt 4.6.X series .
+* Related to previous bug report #2955501, it could happen that some segments EOF were not correctly handled (kwooty did not succeed in finishing download).
+  This release should fix these randomly download issues. 
+
+
 Version 0.3.1:
 --------------
 This is a bugs fix release.
