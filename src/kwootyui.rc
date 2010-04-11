@@ -15,11 +15,11 @@
 	   <Separator/>
 	   <Action name="remove"/>
 	   <Separator/>
-	   <Action name="moveUp"/>
 	   <Action name="moveDown"/>
+	   <Action name="moveUp"/>
 	   <Separator/>
-	   <Action name="moveTop"/>   
 	   <Action name="moveBottom"/>
+	   <Action name="moveTop"/>   
 	   <Separator/>
 	   <Action name="shutdown"/>
     </Menu>   
@@ -33,8 +33,8 @@
 	<Separator/>
 	<Action name="remove"/>
 	<Separator/>
-	<Action name="moveUp"/>
 	<Action name="moveDown"/>
+	<Action name="moveUp"/>
 	<Separator/>
 	<Action name="downloadFolder"/>
 	<Separator/>
