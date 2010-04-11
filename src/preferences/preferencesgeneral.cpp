@@ -28,6 +28,7 @@ PreferencesGeneral::PreferencesGeneral()
     //set mode to folder mode :
     kcfg_completedFolder->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
     kcfg_temporaryFolder->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
+    kcfg_watchFolder->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
 
 }
 

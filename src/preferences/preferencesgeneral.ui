@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>410</width>
-    <height>319</height>
+    <height>359</height>
    </rect>
   </property>
   <property name="toolTip">
@@ -15,134 +15,220 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_4">
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBoxFolder">
-     <property name="title">
-      <string>Folders</string>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>0</number>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="1" column="0">
-       <widget class="QLabel" name="labelTempFolder">
-        <property name="text">
-         <string>Temporary folder: </string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="KUrlRequester" name="kcfg_temporaryFolder">
-        <property name="toolTip">
-         <string>Set temporary folder</string>
-        </property>
-        <property name="filter">
-         <string notr="true"/>
-        </property>
-        <property name="clickMessage">
-         <string notr="true"/>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="labelComplFolder">
-        <property name="text">
-         <string>Download folder: </string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="KUrlRequester" name="kcfg_completedFolder">
-        <property name="toolTip">
-         <string>Set download folder</string>
-        </property>
-        <property name="filter">
-         <string notr="true"/>
-        </property>
-        <property name="clickMessage">
-         <string notr="true"/>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QWidget" name="generalTab">
+      <attribute name="title">
+       <string>General</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="groupBoxFolder">
+         <property name="title">
+          <string>Folders</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelTempFolder">
+            <property name="text">
+             <string>Temporary folder: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="KUrlRequester" name="kcfg_temporaryFolder">
+            <property name="toolTip">
+             <string>Set temporary folder</string>
+            </property>
+            <property name="filter">
+             <string notr="true"/>
+            </property>
+            <property name="clickMessage">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelComplFolder">
+            <property name="text">
+             <string>Download folder: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="KUrlRequester" name="kcfg_completedFolder">
+            <property name="toolTip">
+             <string>Set download folder</string>
+            </property>
+            <property name="filter">
+             <string notr="true"/>
+            </property>
+            <property name="clickMessage">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="groupBoxMisc">
+         <property name="title">
+          <string>Extra features</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="kcfg_restoreDownloads">
+            <property name="toolTip">
+             <string>Restore pending downloads from previous session at startup</string>
+            </property>
+            <property name="text">
+             <string>Restore downloads from previous session at startup</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="kcfg_openWith">
+            <property name="toolTip">
+             <string>Copy nzb file in destination folder when added from another application by &quot;open with...&quot; action</string>
+            </property>
+            <property name="text">
+             <string>Copy nzb file added from external application in destination folder</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="kcfg_smartPar2Download">
+            <property name="toolTip">
+             <string>Do not download .par2 files if files archive do not need to be repaired</string>
+            </property>
+            <property name="text">
+             <string>Download Par2 files only if repairing is required</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>Confirmation dialogs</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="kcfg_confirmClear">
+            <property name="toolTip">
+             <string>Display dialog box when Clear button has been pushed</string>
+            </property>
+            <property name="text">
+             <string>Show confirm message when clearing rows</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="kcfg_confirmRemove">
+            <property name="toolTip">
+             <string>Display dialog box when Remove button has been pushed</string>
+            </property>
+            <property name="text">
+             <string>Show confirm message when removing selected rows</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <spacer name="spacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>382</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="advancedTab">
+      <attribute name="title">
+       <string>Advanced</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QGroupBox" name="kcfg_groupBoxWatch">
+         <property name="title">
+          <string>Enable folder monitoring</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_6">
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelWatchFolder">
+            <property name="text">
+             <string>Watch folder: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="KUrlRequester" name="kcfg_watchFolder">
+            <property name="toolTip">
+             <string>Set watch folder</string>
+            </property>
+            <property name="filter">
+             <string notr="true"/>
+            </property>
+            <property name="clickMessage">
+             <string notr="true"/>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QCheckBox" name="kcfg_suppressNzbFromWatch">
+            <property name="toolTip">
+             <string>Suppress nzb file from watch folder when enqueued</string>
+            </property>
+            <property name="text">
+             <string>Suppress nzb file from watch folder when enqueued</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QCheckBox" name="kcfg_copyNzbFromWatch">
+            <property name="toolTip">
+             <string>Copy nzb file in destination folder</string>
+            </property>
+            <property name="text">
+             <string>Copy nzb file in destination folder</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
     </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBoxMisc">
-     <property name="title">
-      <string>Extra features</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="kcfg_restoreDownloads">
-        <property name="toolTip">
-         <string>Restore pending downloads from previous session at startup</string>
-        </property>
-        <property name="text">
-         <string>Restore downloads from previous session at startup</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QCheckBox" name="kcfg_openWith">
-        <property name="toolTip">
-         <string>Copy nzb file in destination folder when added from another application by &quot;open with...&quot; action</string>
-        </property>
-        <property name="text">
-         <string>Copy nzb file added from external application in destination folder</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="kcfg_smartPar2Download">
-        <property name="toolTip">
-         <string>Do not download .par2 files if files archive do not need to be repaired</string>
-        </property>
-        <property name="text">
-         <string>Download Par2 files only if repairing is required</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
-      <string>Confirmation dialogs</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="kcfg_confirmClear">
-        <property name="toolTip">
-         <string>Display dialog box when Clear button has been pushed</string>
-        </property>
-        <property name="text">
-         <string>Show confirm message when clearing rows</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="kcfg_confirmRemove">
-        <property name="toolTip">
-         <string>Display dialog box when Remove button has been pushed</string>
-        </property>
-        <property name="text">
-         <string>Show confirm message when removing selected rows</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <spacer name="spacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>382</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>
