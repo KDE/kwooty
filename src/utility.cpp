@@ -22,9 +22,12 @@
 
 #include <KDebug>
 #include <KLocale>
+#include <kio/global.h>
+
 #include <QFile>
 #include <QDir>
 #include "settings.h"
+
 
 using namespace UtilityNamespace;
 
@@ -280,3 +283,15 @@ QString Utility::searchExternalPrograms(const QString& programToSearch, bool& pr
 }
 
 
+QString Utility::getSystemTimeFormat(const QString& dateFormat) {
+
+    QString properDateFormat = dateFormat;
+
+    // set time format to am/pm format if used by system :
+    if (KGlobal::locale()->use12Clock()) {
+
+        properDateFormat.append(" ap");
+    }
+
+    return properDateFormat;
+}

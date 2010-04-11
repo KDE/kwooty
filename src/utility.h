@@ -242,6 +242,7 @@ public:
     static bool isFolderExists(const QString&);
     static bool removeData(const QString&);
     static QString searchExternalPrograms(const QString&, bool&);
+    static QString getSystemTimeFormat(const QString&);
     
     
 private:
