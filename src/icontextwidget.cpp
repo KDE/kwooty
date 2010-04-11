@@ -33,8 +33,8 @@ IconTextWidget::IconTextWidget(QWidget* parent) : QWidget(parent) {
     this->textLabel = new QLabel(this);
 
     this->hBoxLayout = new QHBoxLayout(this);
-    this->hBoxLayout->addWidget(iconLabel);
-    this->hBoxLayout->addWidget(textLabel);
+    this->hBoxLayout->addWidget(this->iconLabel);
+    this->hBoxLayout->addWidget(this->textLabel);
 
     this->hBoxLayout->setSpacing(5);
     this->hBoxLayout->setMargin(0);
