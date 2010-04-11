@@ -25,6 +25,7 @@
 #include <KUrl>
 #include <kdirwatch.h>
 
+
 #include <QObject>
 #include <QStringList>
 #include <QTimer>
@@ -42,13 +43,18 @@ class FolderWatcher : public QObject
 
 public:
     FolderWatcher(CentralWidget* parent);
-    KDirWatch* kDirWatch;
 
 
 private:
+    static const int MAX_LIST_SIZE = 10;
+
+    KDirWatch* kDirWatch;
     CentralWidget* centralWidget;
     QTimer* fileCompleteTimer;
     QStringList nzbFileList;
+    QString currentWatchDir;
+
+    void setupConnections();
 
 
 signals:
@@ -60,6 +66,7 @@ public slots:
 private slots:
     void watchFileSlot(const QString&);
     void fileCompleteTimerSlot();
+    void settingsChangedSlot();
 
 
 };
