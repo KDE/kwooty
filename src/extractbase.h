@@ -77,21 +77,20 @@ protected:
     void setupConnections();
     void resetVariables();
     void updateNzbFileDataInList(NzbFileData&, const UtilityNamespace::ItemStatus, const int);
-
     void emitProgressToArchivesWithCurrentStatus(const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget, const int);
     void emitFinishToArchivesWithoutErrors(const UtilityNamespace::ItemStatus, const int);
     void emitStatusToAllArchives(const int&, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
-
     void findItemAndNotifyUser(const QString& fileNameStr, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
     void removeArchiveFiles();
-
     NzbFileData getFirstArchiveFileFromList() const;
 
+    // virtual functions implemented by extractrar and extractzip :
     virtual QStringList createProcessArguments(const QString&, const QString&, const bool&, const QString&)  = 0;
     virtual void extractUpdate(const QString&) = 0;
     virtual void checkIfArchivePassworded(const QString&, bool&) = 0;
     virtual void sendExtractProgramNotFoundNotification() = 0;
     virtual QString searchExtractProgram() = 0;
+
 
 signals:
     void extractProcessEndedSignal();
