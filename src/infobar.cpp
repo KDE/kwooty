@@ -35,9 +35,6 @@ InfoBar::InfoBar(CentralWidget* parent) : QFrame(parent) {
     timeInfoWidget->setIcon("user-away");
 
     this->capacityBar = new KCapacityBar(KCapacityBar::DrawTextInline, this);
-    //this->capacityBar->setMinimumWidth(100);
-
-
 
     hBoxLayout = new QHBoxLayout(this);
     hBoxLayout->setSpacing(0);
@@ -49,12 +46,9 @@ InfoBar::InfoBar(CentralWidget* parent) : QFrame(parent) {
     hBoxLayout->addStretch();
     iconTextFreeSpace = new IconTextWidget(this);
     iconTextFreeSpace->setText(i18n("Disk space: "));
-    //iconTextFreeSpace->setIcon("dialog-information");
 
     hBoxLayout->addWidget(iconTextFreeSpace);
     hBoxLayout->addWidget(this->capacityBar);
-
-
 
 }
 
@@ -111,7 +105,7 @@ void InfoBar::updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace diskSpac
         // adjust capacityBar size according to text :
         int widthInPixel = this->capacityBar->fontMetrics().width(availableVal) + 30;
 
-        // if column width is lower than current width, ajust it :
+        // if capacitybar width is lower than current width, ajust it :
         if (this->capacityBar->minimumWidth() < widthInPixel) {
 
             this->capacityBar->setMinimumWidth(widthInPixel);
