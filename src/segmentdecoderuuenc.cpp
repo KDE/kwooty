@@ -56,8 +56,7 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
 
     QByteArray decodeArray;
 
-    QByteArray toto(captureArray);
-    QList<QByteArray> uuEncodedLines = toto.split('\n');
+    QList<QByteArray> uuEncodedLines = captureArray.split('\n');
 
     foreach(QByteArray uuLine, uuEncodedLines) {
 
@@ -67,6 +66,7 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
 
             int counter = 0;
 
+            // first char corresponds to line size :
             for (int i = 1; i < uuLine.size() - 1; i++) {
 
                 // skip current loop (get groups of 4 bytes):
@@ -80,6 +80,7 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
 
                     decodeArray.append( ((uuLine.at(i) - 32) & 077) << shiftLeft |
                                         ((uuLine.at(i + 1) - 32) & 077 )>> shiftRight );
+
 
                     counter++;
                 }
