@@ -127,7 +127,7 @@ void InfoCollectorDispatcher::resetVariables() {
 
 void InfoCollectorDispatcher::settingsChangedSlot() {
 
-    // remaining time or estimated time of arrival could have been chosen, update text :
+    // "remaining time" or "estimated time of arrival" could have been chosen, update text :
     this->computeTimeInfo();
 
 }
@@ -161,19 +161,19 @@ void InfoCollectorDispatcher::updateDownloadSpeedSlot() {
     this->meanDownloadSpeedKB = alpha * this->downloadSpeedKB + (1 - alpha) * this->meanDownloadSpeedKB;
 
 
-    // get current download speed :
+    // then, get current download speed :
     this->downloadSpeedKB = this->totalBytesDownloaded / NBR_BYTES_IN_KB / SPEED_AVERAGE_SECONDS;
     QString sizeUnit = i18n(" KiB/s");
 
+    // send download speed to status bar :
     emit updateDownloadSpeedInfoSignal(QString::number(this->downloadSpeedKB) + sizeUnit);
 
     // reset number of bytes downloaded after text update :
     this->totalBytesDownloaded = 0;
 
 
-
-    // at first mean speed equals current downloadSpeedKB in order to
-    // not get too lag before reaching proper mean speed value :
+    // at download begining mean speed equals current downloadSpeedKB in order to
+    // not get too lag before reaching a proper mean speed value :
     if (this->meanSpeedActiveCounter < 10) {
 
         this->meanDownloadSpeedKB = this->downloadSpeedKB;
@@ -182,7 +182,6 @@ void InfoCollectorDispatcher::updateDownloadSpeedSlot() {
 
     // when download speed is 0, calculate mean speed as above :
     if (this->downloadSpeedKB  == 0) {
-
         this->meanSpeedActiveCounter = 0;
     }
 
@@ -191,7 +190,9 @@ void InfoCollectorDispatcher::updateDownloadSpeedSlot() {
 
     // call retrieveCurrentRemainingSize() every 2 * SPEED_AVERAGE_SECONDS (4 secs) :
     if ( (this->timeoutCounter % 2) == 0 ) {
+
         this->computeTimeInfo();
+
     }
 
     // call retrieveFreeDiskSpace() every 5 * SPEED_AVERAGE_SECONDS (10 secs):
@@ -199,7 +200,7 @@ void InfoCollectorDispatcher::updateDownloadSpeedSlot() {
 
         this->retrieveFreeDiskSpace();
 
-        // reset counter :
+        // reset the counter :
         this->timeoutCounter = 0;
     }
 
@@ -239,12 +240,13 @@ void InfoCollectorDispatcher::retrieveQueuedFilesInfo(bool& parentDownloadingFou
         UtilityNamespace::ItemStatus currentStatus = this->parent->getDownloadModel()->getStatusFromStateItem(parentStateItem);
 
 
+        // check if parent status is either downloading or pausing :
         if (!parentDownloadingFound && Utility::isDownloadOrPausing(currentStatus)) {
 
             // if the parent is different from the previous one :
             if (this->parentStateIndex != parentStateItem->index()) {
 
-                // get the new parent currently being downloading :
+                // update current "downloading" parent :
                 this->parentStateIndex = parentStateItem->index();
             }
 
@@ -288,7 +290,7 @@ void InfoCollectorDispatcher::computeTimeInfo() {
         quint64 nzbSize = this->downloadModel->getSizeValueFromIndex(this->parentStateIndex);
 
 
-        // compute CURRENT remaining download time (sec) :
+        // compute *current* remaining download time (sec) :
         quint32 currentRemainingTimeSec = qRound(nzbSize * (PROGRESS_COMPLETE - downloadProgress) / (this->meanDownloadSpeedKB * PROGRESS_COMPLETE * NBR_BYTES_IN_KB));
 
         // calculate Estimated Time of Arrival :
@@ -297,14 +299,14 @@ void InfoCollectorDispatcher::computeTimeInfo() {
             timeInfoStr.append(this->calculateArrivalTime(currentRemainingTimeSec));
         }
 
-        // calculate Remaining Time :
+        // else calculate Remaining Time :
         if (Settings::rtRadioButton()) {
 
             timeInfoStr.append(this->calculateRemainingTime(currentRemainingTimeSec));
         }
 
 
-        // compute TOTAL remaining download time (sec) only if other pending parents have been found:
+        // compute *total* remaining download time (sec) only if other pending parents have been found:
         if (parentQueuedFound) {
 
             quint32 totalRemainingTimeSec = qRound(this->totalSize / (this->meanDownloadSpeedKB * NBR_BYTES_IN_KB));
@@ -335,33 +337,32 @@ void InfoCollectorDispatcher::computeTimeInfo() {
         timeInfoStr.append(i18n("n/a"));
     }
 
-
     // send time info signal :
     emit updateTimeInfoSignal(timeInfoStr);
 
 }
 
 
-QString InfoCollectorDispatcher::calculateArrivalTime(const quint32& remainingSeconds) {
 
+QString InfoCollectorDispatcher::calculateArrivalTime(const quint32& remainingSeconds) {
 
     QDateTime dateTimeETA = QDateTime::currentDateTime();
     dateTimeETA = dateTimeETA.addSecs(remainingSeconds);
 
-    return dateTimeETA.toString("ddd hh:mm");
+    return dateTimeETA.toString(Utility::getSystemTimeFormat("ddd hh:mm"));
 
 }
 
 
-QString InfoCollectorDispatcher::calculateRemainingTime(const quint32& remainingSeconds) {
 
+QString InfoCollectorDispatcher::calculateRemainingTime(const quint32& remainingSeconds) {
 
     QString remainingTimeStr;
 
     // calculate remaining days, hours, minutes :
     int remainingDays = remainingSeconds / SECONDS_IN_DAY;
     int remainingHours =  (remainingSeconds - (remainingDays * SECONDS_IN_DAY)) / SECONDS_IN_HOUR;
-    int remainingMinutes =  (remainingSeconds - ( (remainingDays * SECONDS_IN_DAY) + remainingHours *SECONDS_IN_HOUR) ) / SECONDS_IN_MINUTE;
+    int remainingMinutes =  (remainingSeconds - ( (remainingDays * SECONDS_IN_DAY) + remainingHours * SECONDS_IN_HOUR) ) / SECONDS_IN_MINUTE;
 
     QString dayStr = i18n("day");
     QString hourStr = i18n("hour");
@@ -371,25 +372,25 @@ QString InfoCollectorDispatcher::calculateRemainingTime(const quint32& remaining
     if (remainingHours > 1) { hourStr = i18n("hours"); }
     if (remainingMinutes > 1) { minuteStr = i18n("minutes"); }
 
+    // display number of remaining days if any :
     if (remainingDays > 0) {
         remainingTimeStr.append(QString::number(remainingDays) + " " + dayStr + " ");
     }
 
-    if (remainingDays == 0 && remainingHours > 0) {
+    // display number of remaining hours if any :
+    if (remainingHours > 0) {
         remainingTimeStr.append(QString::number(remainingHours) + " " + hourStr + " ");
     }
 
+    // display number of remaining minutes :
     remainingTimeStr.append(QString::number(remainingMinutes) + " " + minuteStr);
 
-
-    // when this is the last minute, display "< 1 minute" instead of 0 minute :
+    // when this is the last minute, display "less than 1 minute" instead of 0 minute :
     if (remainingDays == 0 && remainingHours == 0 && remainingMinutes == 0) {
 
-        remainingTimeStr = i18n("less than ") + "1 " + minuteStr;
+        remainingTimeStr = i18n("less than") + " 1 " + minuteStr;
 
     }
-
-
 
 
     return remainingTimeStr;
@@ -401,10 +402,8 @@ QString InfoCollectorDispatcher::calculateRemainingTime(const quint32& remaining
 
 void InfoCollectorDispatcher::retrieveFreeDiskSpace() {
 
-
     // get download path :
     QString downloadDisk = Settings::completedFolder().path();
-
 
     if (KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).isValid()) {
 
@@ -435,7 +434,6 @@ void InfoCollectorDispatcher::retrieveFreeDiskSpace() {
 
     // disk space can not be retrieved :
     else {
-
         emit updateFreeSpaceSignal(UnknownDiskSpace);
     }
 
