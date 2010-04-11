@@ -21,7 +21,6 @@
 #include "clientmanagerconn.h"
 
 #include <KDebug>
-#include <QPointer>
 #include "settings.h"
 #include "centralwidget.h"
 #include "segmentmanager.h"
