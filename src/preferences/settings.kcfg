@@ -71,6 +71,21 @@
             <label>Do not download .par2 files if files archive do not need to be repaired</label>
             <default>true</default>
         </entry>
+        <entry name="groupBoxWatch" type="Bool">
+            <label>Enable folder monitoring</label>
+            <default>false</default>
+        </entry>
+	 <entry name="watchFolder" type="Url">
+            <label>watch folder</label>
+        </entry>
+	<entry name="suppressNzbFromWatch" type="Bool">
+            <label>Suppress nzb file from watch folder when enqueued</label>
+            <default>false</default>
+        </entry>
+	<entry name="copyNzbFromWatch" type="Bool">
+            <label>Copy nzb file in destination folder</label>
+            <default>true</default>
+        </entry>
     </group>
 
     <group name="programs">
