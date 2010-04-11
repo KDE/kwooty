@@ -123,7 +123,7 @@ void CentralWidget::setupWidgets(QWidget* parent) {
 
     mainVBoxLayout->addWidget(line);
     mainVBoxLayout->addWidget(this->infoBar);
-    mainVBoxLayout->addWidget(treeView);
+    mainVBoxLayout->addWidget(this->treeView);
 
 }
 
@@ -255,7 +255,6 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
     nzbSizeItem->setData(qVariantFromValue(nzbFilesSize), SizeRole);
 
 
-
     // expand treeView :
     treeView->setExpanded(nzbNameItem->index(), Settings::expandTreeView());
 
@@ -324,6 +323,7 @@ void CentralWidget::createNntpClients(){
     
     // set a delay of +100 ms between each nntp client instance :
     int connectionDelay = 0;
+
     for (int i = 0; i < connectionNumber; i++){
         this->clientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
         connectionDelay += 100;
@@ -440,7 +440,7 @@ void CentralWidget::setStartPauseDownload(const UtilityNamespace::ItemStatus tar
         
     }
     
-    //reset default buttons :
+    // reset default buttons :
     treeView->selectedItemSlot();
 }
 
@@ -481,6 +481,11 @@ void CentralWidget::initFoldersSettings() {
     if (Settings::temporaryFolder().path().isEmpty()) {
         Settings::setTemporaryFolder(QDir::homePath() + "/kwooty/Temp");
     }
+
+    if (Settings::watchFolder().path().isEmpty()) {
+        Settings::setWatchFolder(QDir::homePath() + "/kwooty/Watch");
+    }
+
 }
 
 
@@ -612,9 +617,12 @@ void CentralWidget::updateSettingsSlot() {
         
         int connectionDelay = 0;
         for (int i = clientManagerConnList.size(); i < connectionNumber; i++){
+
             this->clientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
+
             //set a delay of 100ms between each new connection :
             connectionDelay += 100;
+
         }
     }
     
