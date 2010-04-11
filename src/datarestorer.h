@@ -67,6 +67,7 @@ private:
     int displaySaveMessageBox(const bool) const;
     bool isDataToSaveExist() const;
     bool isHeaderOk(QDataStream&) const;
+    void requestSuppressOldOrphanedSegments();
 
 
 signals:

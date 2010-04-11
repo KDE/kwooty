@@ -397,9 +397,9 @@ void DataRestorer::readDataFromDiskSlot() {
                 // reset some data beloging to pending items and populate treeview :
                 this->preprocessAndHandleData(nzbFileList);
             }
-            // user dit not load download pending files, remove previous segments :
+            // user did not load download pending files, remove previous segments :
             else {
-                emit suppressOldOrphanedSegmentsSignal();
+                this->requestSuppressOldOrphanedSegments();
             }
 
             // remove processed file :
@@ -409,12 +409,28 @@ void DataRestorer::readDataFromDiskSlot() {
         }
         // saved data file can not be processed, remove previous segments
         else {
-            emit suppressOldOrphanedSegmentsSignal();
+            this->requestSuppressOldOrphanedSegments();
         }
 
     }
     // if file can not be opened, remove useless downloaded segments :
     else {
+        this->requestSuppressOldOrphanedSegments();
+    }
+
+}
+
+
+
+
+void DataRestorer::requestSuppressOldOrphanedSegments() {
+
+    // kwooty could just have been launched from another app (with "open with...") at this stage
+    // so check that nothing new is being downloading before removing old segments :
+    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+
+    // just check that model is empty :
+    if (rootItem->rowCount() == 0) {
         emit suppressOldOrphanedSegmentsSignal();
     }
 
