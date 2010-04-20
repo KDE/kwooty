@@ -41,6 +41,8 @@ int main (int argc, char** argv)
                          "http://kwooty.sourceforge.net/");
     aboutData.addAuthor(ki18n("Xavier Lefage"),ki18n("Maintainer, Lead Developer"), "xavier.kwooty@gmail.com");
     aboutData.setBugAddress("http://sourceforge.net/projects/kwooty");
+    aboutData.setCustomAuthorText(ki18n("Please report bugs to http://sourceforge.net/projects/kwooty"),
+                                  ki18n("Please report bugs to <a href='http://sourceforge.net/tracker/?group_id=285032&atid=1208199'>Kwooty bug tracker</a>"));
 
     KCmdLineArgs::init(argc, argv, &aboutData);
 
