@@ -27,8 +27,6 @@ SegmentDecoderYEnc::~SegmentDecoderYEnc() { }
 
 
 
-
-
 void SegmentDecoderYEnc::decodeEncodedData(QFile& targetFile, SegmentData& currentSegment, int& segmentCrc32MatchNumber, const QByteArray& segmentByteArray, bool& encodedDataFound, bool& writeError) {
 
 

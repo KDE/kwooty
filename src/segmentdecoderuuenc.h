@@ -45,10 +45,10 @@ private:
     bool decodeUUenc(const QByteArray&, QFile&, const int&);
     bool isUUEncodedLine(QByteArray&);
 
+
 signals:
 
 public slots:
-
 
 private slots:
 
