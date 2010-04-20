@@ -34,7 +34,6 @@ using namespace UtilityNamespace;
 class ClientManagerConn;
 class MyStatusBar;
 class MyTreeView;
-class InfoBar;
 class ItemParentUpdater;
 class StandardItemModel;
 class RepairDecompressThread;
@@ -72,7 +71,6 @@ public:
     MyTreeView* getTreeView() const;
     ShutdownManager* getShutdownManager() const;
     InfoCollectorDispatcher* getInfoCollectorDispatcher() const;
-    InfoBar* getInfoBar() const;
     FileOperations* getFileOperations() const;
 
 
@@ -81,7 +79,6 @@ private:
 
     MyTreeView* treeView;
     MyStatusBar* statusBar;
-    InfoBar* infoBar;
     QList<ClientManagerConn*> clientManagerConnList;
     SegmentManager* segmentManager;
     DataRestorer* dataRestorer;
