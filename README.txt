@@ -2,28 +2,28 @@ Kwooty is a friendly newsgroup binary downloader that uses .nzb as entry files.
 
 Version 0.4.0:
 --------------
-- zip and 7z file extract support (7z or 7za program required)
+- zip and 7z file extract support (7z or 7za program required).
 
-- An internal decoder for UUEncode file format has been added
+- Added internal decoder for UUEncode file format.
 
-- Add Down and Top buttons for better queue management. (Down and Up buttons now replace Bottom and Top button in toolbar, they remain available in "Download" menu and by keyboard shortcut as well).
+- Added "Down" and "Up" buttons for better queue management ("Down" and "Up" buttons now replace "Bottom" and "Top" buttons in toolbar, they remain available from "Download" menu and by keyboard shortcuts as well).
 
-- Add "Downloads" button in status bar: opens current download folder with file manager
+- Added "Downloads" button in tool bar: opens current download folder with file manager.
 
-- Remaining download time or estimated time of arrival (ETA) has been in status bar (you can switch between them in "Settings > Display Modes")
+- Remaining time or estimated time of arrival (ETA) of pending files has been added in status bar (you can switch between them in "Settings > Display Modes").
 
-- Free disk space indicator added in status bar (enable/disable available in "Settings > Display Modes").
-  If free disk space is not sufficient to download queued files, a warning icon will appear near free space bar.
+- Free disk space indicator added in status bar (enabled/disabled in "Settings > Display Modes").
+  If free disk space is not sufficient to download remaining queued files, a warning icon will appear near free space bar.
 
-- Watch folder feature added (configurable in "Settings > General > advanced tab") : new .nzb files put in an user specified watch folder will automatically be enqueued.
+- Added Watch folder feature (configurable in "Settings > General > advanced tab") : new .nzb files put in an user-specified watch folder will automatically be enqueued.
 
 - scheduled shutdown time and estimated download time will now be displayed according to system time settings (AM/PM format).
 
 - In "Connection" settings, when host connection port is set to 443 or 563, "Enable SSL connection" checkbox will automatically be set as checked.
 
 * Bug fixes :
- - par2 files download (mandatory for repairing because direct extract failed due to a Bad CRC archive file) could hang for a .nzb file with multi files-set content. 
- - Archive files with accentuated characters should be fully monitored during extract process as any normal archive files (related to utf-8 and accentued characters taken from unrar output).  
+ - par2 files download process (mandatory for repairing because direct extract failed due to a Bad CRC archive file) could hang for a .nzb file with multi files-set content. 
+ - Archive files with accentuated characters were not fully monitored during extract process (related to utf-8 and accentued characters taken from unrar output).  
  - workaround for QTBUG-7585 (related to Qt 4.6 series): tree expander could disappear during download process file when tree was not expanded.
 
 
