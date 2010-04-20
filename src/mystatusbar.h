@@ -23,12 +23,15 @@
 
 #include <KIconLoader>
 #include <KStatusBar>
+
+
 #include <QLabel>
 
 #include "utility.h"
 using namespace UtilityNamespace;
 
 class IconTextWidget;
+class IconCapacityWidget;
 
 class MyStatusBar : public KStatusBar
 {
@@ -40,17 +43,15 @@ public:
     MyStatusBar();
     ~MyStatusBar();
 
-private:
-    static const int FILES_NUMBER_ID = 1;
-    static const int SIZE_ID = 2;
-    static const int SPEED_ID = 3;
 
+private:
     KIconLoader* iconLoader;
-    QLabel* filesLabel;
     QLabel* sizeLabel;
+    QLabel* speedLabel;
     IconTextWidget* connectionWidget;
     IconTextWidget* shutdownWidget;
-
+    IconTextWidget* timeInfoWidget;
+    IconCapacityWidget* iconCapacityWidget;
     QString encryptionMethod;
     QString issuerOrgranisation;
     int totalConnections;
@@ -61,9 +62,9 @@ private:
     void resetVariables();
     void setConnectionWidget();
     void setShutdownWidget();
+    void setTimeInfoWidget();
     void setConnectionActive();
     void buildConnWidgetToolTip(const QString&);
-
 
 
 signals:
@@ -75,9 +76,10 @@ public slots:
     void nntpErrorSlot(const int);
     void statusBarShutdownInfoSlot(QString, QString);
 
-    void updateFileInfoSlot(const QString);
     void updateDownloadSpeedInfoSlot(const QString);
     void updateSizeInfoSlot(const QString);
+    void updateTimeInfoSlot(const QString, const QString, const bool);
+    void updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace, const QString, const int);
 
 
 private slots:

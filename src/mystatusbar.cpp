@@ -26,7 +26,9 @@
 
 #include <QHBoxLayout>
 
-#include "icontextwidget.h"
+#include "widgets/icontextwidget.h"
+#include "widgets/iconcapacitywidget.h"
+
 #include "settings.h"
 
 
@@ -40,15 +42,25 @@ MyStatusBar::MyStatusBar(QWidget* parent) : KStatusBar(parent)
     // create connection widget at bottom left of status bar :
     this->setConnectionWidget();
 
+
+    // create remaining time widget at bottom left of status bar :
+    this->setTimeInfoWidget();
+
     // create shutdown widget at bottom left of status bar :
     this->setShutdownWidget();
 
-    // add file counter item :
-    this->insertPermanentItem("", FILES_NUMBER_ID);
+
+    // add capacity bar widget :
+    this->iconCapacityWidget = new IconCapacityWidget(this);
+    this->addPermanentWidget(this->iconCapacityWidget);
+
     // add remaining download size item :
-    this->insertPermanentItem("", SIZE_ID);
+    this->sizeLabel = new QLabel(this);
+    this->addPermanentWidget(this->sizeLabel);
+
     // add download speed item :
-    this->insertPermanentItem("", SPEED_ID);
+    this->speedLabel = new QLabel(this);
+    this->addPermanentWidget(this->speedLabel);
 
 
 }
@@ -77,6 +89,17 @@ void MyStatusBar::setConnectionWidget(){
     // set connection not active by default :
     this->setConnectionActive();
 
+
+}
+
+
+void MyStatusBar::setTimeInfoWidget(){
+
+    this->timeInfoWidget = new IconTextWidget(this);
+    this->timeInfoWidget->setIcon("user-away");
+
+    // add aggregated widget to the status bar :
+    this->addWidget(this->timeInfoWidget);
 
 }
 
@@ -214,22 +237,78 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
 
 void MyStatusBar::updateSizeInfoSlot(const QString sizeStr) {
 
-    this->changeItem(i18n("Size: ") + sizeStr, SIZE_ID);
+    this->sizeLabel->setText(sizeStr);
 }
 
-
-void MyStatusBar::updateFileInfoSlot(const QString fileStr) {
-
-    this->changeItem(i18n("Files: ") + fileStr, FILES_NUMBER_ID);
-}
 
 
 void MyStatusBar::updateDownloadSpeedInfoSlot(const QString speedInKBStr){
 
-    this->changeItem(i18n("Speed: ") + speedInKBStr, SPEED_ID);
+    this->speedLabel->setText(i18n("Speed: ") + speedInKBStr);
 
 }
 
+void MyStatusBar::updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace diskSpaceStatus, const QString availableVal, const int usedDiskPercentage) {
+
+    // diskspace is unknown, hide widgets :
+    if (diskSpaceStatus == UnknownDiskSpace) {
+
+        this->iconCapacityWidget->hide();
+    }
+
+    else {
+
+        // if capacity bar was hidden because diskSpaceStatus was previously UnknownDiskSpace :
+        if (this->iconCapacityWidget->isHidden()) {
+            this->iconCapacityWidget->show();
+        }
+
+        // if free disk space is not sufficient display warning icon :
+        if (diskSpaceStatus == InsufficientDiskSpace) {
+
+            this->iconCapacityWidget->setIcon("dialog-warning");
+            this->iconCapacityWidget->setToolTip(i18n("Insufficient disk space"));
+
+        }
+
+        // if free disk space is not sufficient do not display icon :
+        if (diskSpaceStatus == SufficientDiskSpace) {
+
+            this->iconCapacityWidget->setIcon(QString());
+            this->iconCapacityWidget->setToolTip(QString());
+
+        }
+
+        // set text and repaint widget :
+        this->iconCapacityWidget->updateCapacity(availableVal, usedDiskPercentage);
+
+    }
+
+
+
+}
+
+
+
+
+
+
+void MyStatusBar::updateTimeInfoSlot(const QString timeStr, const QString timeToolTip, const bool parentDownloadingFound) {
+
+    this->timeInfoWidget->setText(timeStr);
+    this->timeInfoWidget->setToolTip(timeToolTip);
+
+    // if download is not active, hide the widget :
+    if (!parentDownloadingFound) {
+        this->timeInfoWidget->hide();
+    }
+    // else display it :
+    else if (this->timeInfoWidget->isHidden()) {
+        this->timeInfoWidget->show();
+    }
+
+
+}
 
 
 void MyStatusBar::connectionStatusSlot(const int connectionStatus){
