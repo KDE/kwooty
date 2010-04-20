@@ -235,7 +235,6 @@ void NntpClient::getAnswerFromServer() {
         }
 
     case NoSuchArticleMessageId: case NoSuchArticleNumber: {
-
             //kDebug() << "No such article" << "client ID : " << parent->getClientId();
             this->postDownloadProcess(NotPresent);
             break;
@@ -243,8 +242,6 @@ void NntpClient::getAnswerFromServer() {
 
     default: {
             kDebug() << "Answer from host : " << answer << " not handled !";
-
-            // TODO : A TESTER !
             // response not handled, consider that segment is not present :
             this->postDownloadProcess(NotPresent);
             break;
