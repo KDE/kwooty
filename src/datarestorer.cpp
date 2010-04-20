@@ -46,7 +46,7 @@ DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent)
 
 
     magicNumber = 0xC82F1D37;
-    applicationVersion1 = 002;
+    applicationVersion1 = 003;
     // map kwooty serialization version and its corresponding dataStream version
     versionStreamMap.insert(applicationVersion1, QDataStream::Qt_4_4);
 
@@ -84,6 +84,7 @@ void DataRestorer::saveQueueData(const bool saveSilently) {
                 this->writeDataToDisk();
 
             }
+
         }
         // there are no more pending downloads :
         else {
@@ -105,7 +106,6 @@ void DataRestorer::writeDataToDisk() {
 
     // global list of items to save :
     QList< QList<GlobalFileData> > nzbFileList;
-
 
     // get temporary path :
     QString pendingDataStr = Settings::temporaryFolder().path() + '/' + UtilityNamespace::remainingDownloadsFile;
@@ -213,9 +213,7 @@ bool DataRestorer::isHeaderOk(QDataStream& dataStreamIn) const {
 void DataRestorer::resetDataForDecodingFile(NzbFileData& currentNzbFileData, ItemStatusData& currentStatusData, int& currentDownloadProgress) {
 
     // set currentStatusData to default values :
-    currentStatusData.setStatus(IdleStatus);
-    currentStatusData.setDownloadFinish(false);
-    currentStatusData.setDecodeFinish(false);
+    currentStatusData.init();
 
     // set file download progress to 0%
     currentDownloadProgress = 0;
@@ -244,8 +242,7 @@ void DataRestorer::resetDataForDownloadingFile(NzbFileData& currentNzbFileData, 
 
     // the current item is being downloaded, set it with default values
     // (in order to set it to Idle during restoring) :
-    //TODO : A TESTER !!!
-    currentStatusData.setStatus(IdleStatus);
+    currentStatusData.init();
 
 
     // set corresponding segments being downloaded to Idle, keep the status of the previous downloaded ones :
@@ -339,8 +336,6 @@ bool DataRestorer::isDataToSaveExist() const {
     bool dataToSaveExist = false;
 
     for (int i = 0; i < downloadModel->rowCount(); i++) {
-
-        QList<GlobalFileData> globalFileDataList;
 
         // retrieve nzb parent item :
         QStandardItem* parentFileNameItem = this->downloadModel->item(i, FILE_NAME_COLUMN);
