@@ -35,10 +35,10 @@ class InfoCollectorDispatcher : public QObject
 {
     Q_OBJECT
 
+
 public:
     InfoCollectorDispatcher(CentralWidget* parent = 0);
-
-     void fullFileSizeUpdate(const quint64, const quint64);
+    void fullFileSizeUpdate(const quint64, const quint64);
 
 private:
 
@@ -46,7 +46,6 @@ private:
 
     CentralWidget* parent;
     StandardItemModel* downloadModel;
-
     QTimer* downloadSpeedTimer;
     quint64 totalFiles;
     quint64 totalSize;
@@ -56,34 +55,32 @@ private:
     int timeoutCounter;
     int meanSpeedActiveCounter;
     QModelIndex parentStateIndex;
+    QString nzbNameDownloading;
 
     void resetVariables();
     void setupConnections();
     void computeTimeInfo();
     void retrieveFreeDiskSpace();
     void retrieveQueuedFilesInfo(bool&, bool&);
+    void sendSizeUpdateToStatusBar();
     QString calculateArrivalTime(const quint32&);
     QString calculateRemainingTime(const quint32&);
 
 
 signals:
-
     void updateSizeInfoSignal(const QString);
     void updateFileInfoSignal(const QString);
     void updateDownloadSpeedInfoSignal(const QString);
-    void updateTimeInfoSignal(const QString);
+    void updateTimeInfoSignal(const QString, const QString, const bool);
     void updateFreeSpaceSignal(const UtilityNamespace::FreeDiskSpace, const QString = QString(), const int = 0);
 
 
 
 public slots:
-
     void decrementSlot(const quint64, const int);
     void nntpClientspeedSlot(const int);
     void updateDownloadSpeedSlot();
     void settingsChangedSlot();
-
-
 
 
 };

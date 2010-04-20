@@ -29,8 +29,7 @@
 #include "centralwidget.h"
 #include "mystatusbar.h"
 #include "standarditemmodel.h"
-#include "infobar.h"
-#include "icontextwidget.h"
+#include "widgets/icontextwidget.h"
 #include "settings.h"
 
 
@@ -71,23 +70,16 @@ void InfoCollectorDispatcher::setupConnections() {
              parent->getStatusBar(),
              SLOT(updateDownloadSpeedInfoSlot(const QString)));
 
-    // send remaining files to status bar :
+    // send ETA to status bar :
     connect (this,
-             SIGNAL(updateFileInfoSignal(const QString)),
+             SIGNAL(updateTimeInfoSignal(const QString, const QString, const bool)),
              parent->getStatusBar(),
-             SLOT(updateFileInfoSlot(const QString)));
+             SLOT(updateTimeInfoSlot(const QString, const QString, const bool)));
 
-
-    // send ETA to info bar :
-    connect (this,
-             SIGNAL(updateTimeInfoSignal(const QString)),
-             parent->getInfoBar(),
-             SLOT(updateTimeInfoSlot(const QString)));
-
-    // send free space info to info bar :
+    // send free space to status bar :
     connect (this,
              SIGNAL(updateFreeSpaceSignal(const UtilityNamespace::FreeDiskSpace, const QString, const int)),
-             parent->getInfoBar(),
+             parent->getStatusBar(),
              SLOT(updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace, const QString, const int)));
 
 
@@ -112,6 +104,7 @@ void InfoCollectorDispatcher::resetVariables() {
     this->meanSpeedActiveCounter = 0;
     this->timeoutCounter = 1;
     this->parentStateIndex = QModelIndex();
+    this->nzbNameDownloading = QString();
 
     // send reset values to status bar :
     this->fullFileSizeUpdate(0, 0);
@@ -130,6 +123,16 @@ void InfoCollectorDispatcher::settingsChangedSlot() {
     // "remaining time" or "estimated time of arrival" could have been chosen, update text :
     this->computeTimeInfo();
 
+    // disk free space should be displayed :
+    if (Settings::displayCapacityBar()) {
+        this->retrieveFreeDiskSpace();
+    }
+    // disk free space should be hidden :
+    else {
+        emit updateFreeSpaceSignal(UnknownDiskSpace);
+    }
+
+
 }
 
 
@@ -138,20 +141,6 @@ void InfoCollectorDispatcher::nntpClientspeedSlot(const int bytesDownloaded) {
     this->totalBytesDownloaded += bytesDownloaded;
 
 }
-
-
-void InfoCollectorDispatcher::decrementSlot(const quint64 size, const int fileNumber = 1) {
-
-
-    this->totalFiles -= fileNumber;
-    this->totalSize -= size;
-
-    // status bar updates :
-    emit updateSizeInfoSignal(Utility::convertByteHumanReadable(totalSize));
-    emit updateFileInfoSignal(QString::number(totalFiles));
-
-}
-
 
 
 void InfoCollectorDispatcher::updateDownloadSpeedSlot() {
@@ -212,6 +201,19 @@ void InfoCollectorDispatcher::updateDownloadSpeedSlot() {
 
 
 
+
+void InfoCollectorDispatcher::decrementSlot(const quint64 size, const int fileNumber = 1) {
+
+
+    this->totalFiles -= fileNumber;
+    this->totalSize -= size;
+
+    // status bar updates :
+    this->sendSizeUpdateToStatusBar();
+
+}
+
+
 void InfoCollectorDispatcher::fullFileSizeUpdate(const quint64 size, const quint64 files) {
 
 
@@ -219,16 +221,24 @@ void InfoCollectorDispatcher::fullFileSizeUpdate(const quint64 size, const quint
     this->totalFiles = files;
 
     // status bar updates :
-    emit updateSizeInfoSignal(Utility::convertByteHumanReadable(totalSize));
-    emit updateFileInfoSignal(QString::number(totalFiles));
+    this->sendSizeUpdateToStatusBar();
+
+}
+
+
+void InfoCollectorDispatcher::sendSizeUpdateToStatusBar() {
+
+    // status bar update, display number of files and remianing size :
+    QString remainingFiles = i18n("Files: ") + QString::number(this->totalFiles) +
+                             " (" + Utility::convertByteHumanReadable(this->totalSize) + ")";
+
+    emit updateSizeInfoSignal(remainingFiles);
 
 }
 
 
 
-
 void InfoCollectorDispatcher::retrieveQueuedFilesInfo(bool& parentDownloadingFound, bool& parentQueuedFound) {
-
 
     // get the root model :
     QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
@@ -248,7 +258,11 @@ void InfoCollectorDispatcher::retrieveQueuedFilesInfo(bool& parentDownloadingFou
 
                 // update current "downloading" parent :
                 this->parentStateIndex = parentStateItem->index();
+
             }
+
+            // get name of the current download nzb :
+            this->nzbNameDownloading = this->downloadModel->getFileNameItemFromIndex(this->parentStateIndex)->text();
 
             parentDownloadingFound = true;
 
@@ -278,6 +292,7 @@ void InfoCollectorDispatcher::computeTimeInfo() {
 
 
     QString timeInfoStr;
+    QString timeInfoToolTip;
 
 
     // compute remaining time only if a nzb is being downloading and if average speed not equals to 0 :
@@ -296,13 +311,21 @@ void InfoCollectorDispatcher::computeTimeInfo() {
         // calculate Estimated Time of Arrival :
         if (Settings::etaRadioButton()) {
 
-            timeInfoStr.append(this->calculateArrivalTime(currentRemainingTimeSec));
+            QString currentArrivalTime = this->calculateArrivalTime(currentRemainingTimeSec);
+
+            timeInfoStr.append(currentArrivalTime);
+            timeInfoToolTip.append(i18n("Time of arrival:<br><b>%1</b>%2<br>", currentArrivalTime, " (" +this->nzbNameDownloading + ")"));
+
+
         }
 
         // else calculate Remaining Time :
         if (Settings::rtRadioButton()) {
 
-            timeInfoStr.append(this->calculateRemainingTime(currentRemainingTimeSec));
+            QString currentRemainingTime = this->calculateRemainingTime(currentRemainingTimeSec);
+
+            timeInfoStr.append(currentRemainingTime);
+            timeInfoToolTip.append(i18n("Remaining time:<br><b>%1</b>%2<br>", currentRemainingTime, " (" +this->nzbNameDownloading + ")"));
         }
 
 
@@ -317,14 +340,21 @@ void InfoCollectorDispatcher::computeTimeInfo() {
             // calculate Estimated Time of Arrival :
             if (Settings::etaRadioButton()) {
 
-                timeInfoStr.append(this->calculateArrivalTime(totalRemainingTimeSec));
+                QString totalArrivalTime = this->calculateArrivalTime(totalRemainingTimeSec);
+
+                timeInfoStr.append(totalArrivalTime);
+                timeInfoToolTip.append(i18n("<b>%1</b>%2", totalArrivalTime , i18n(" (total)")));
 
             }
 
             // calculate Remaining Time :
             if (Settings::rtRadioButton()) {
 
-                timeInfoStr.append(this->calculateRemainingTime(totalRemainingTimeSec));
+                QString totalRemainingTime = this->calculateRemainingTime(totalRemainingTimeSec);
+
+                timeInfoStr.append(totalRemainingTime);
+                timeInfoToolTip.append(i18n("<b>%1</b>%2", totalRemainingTime, i18n(" (total)")));
+
             }
 
         }
@@ -338,7 +368,7 @@ void InfoCollectorDispatcher::computeTimeInfo() {
     }
 
     // send time info signal :
-    emit updateTimeInfoSignal(timeInfoStr);
+    emit updateTimeInfoSignal(timeInfoStr, timeInfoToolTip, parentDownloadingFound);
 
 }
 
@@ -402,41 +432,45 @@ QString InfoCollectorDispatcher::calculateRemainingTime(const quint32& remaining
 
 void InfoCollectorDispatcher::retrieveFreeDiskSpace() {
 
-    // get download path :
-    QString downloadDisk = Settings::completedFolder().path();
+    if (Settings::displayCapacityBar()) {
 
-    if (KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).isValid()) {
+        // get download path :
+        QString downloadDisk = Settings::completedFolder().path();
 
-        // get disk size :
-        quint64 sizeVal = KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).size();
+        if (KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).isValid()) {
 
-        // get disk used :
-        quint64 usedVal = KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).used();
+            // get disk size :
+            quint64 sizeVal = KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).size();
 
-        // consider disk space is sufficient by default :
-        UtilityNamespace::FreeDiskSpace diskSpaceStatus = SufficientDiskSpace;
+            // get disk used :
+            quint64 usedVal = KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).used();
 
-        quint64 freeSpaceVal = KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).available();
-        
-        if (this->totalSize >= freeSpaceVal) {
-            diskSpaceStatus = InsufficientDiskSpace;
+            // consider disk space is sufficient by default :
+            UtilityNamespace::FreeDiskSpace diskSpaceStatus = SufficientDiskSpace;
+
+            quint64 freeSpaceVal = KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).available();
+
+            if (this->totalSize >= freeSpaceVal) {
+                diskSpaceStatus = InsufficientDiskSpace;
+            }
+
+            // get free space size :
+            QString freeSpaceStr = Utility::convertByteHumanReadable(freeSpaceVal) + " " + i18n("free");
+
+            // calculate percentage of used disk :
+            int usedDiskPercentage = qMin( qRound(static_cast<qreal>(usedVal * 100 / sizeVal)), PROGRESS_COMPLETE );
+
+            emit updateFreeSpaceSignal(diskSpaceStatus, freeSpaceStr, usedDiskPercentage);
+
         }
 
-        // get free space size :
-        QString freeSpaceStr = Utility::convertByteHumanReadable(freeSpaceVal) + " " + i18n("free");
+        // disk space can not be retrieved :
+        else {
+            emit updateFreeSpaceSignal(UnknownDiskSpace);
+        }
 
-        // calculate percentage of used disk :
-        int usedDiskPercentage = qMin( qRound(static_cast<qreal>(usedVal * 100 / sizeVal)), PROGRESS_COMPLETE );
-
-        emit updateFreeSpaceSignal(diskSpaceStatus, freeSpaceStr, usedDiskPercentage);
 
     }
-
-    // disk space can not be retrieved :
-    else {
-        emit updateFreeSpaceSignal(UnknownDiskSpace);
-    }
-
 
 
 }
