@@ -66,7 +66,7 @@ void FolderWatcher::setupConnections() {
              this,
              SLOT(watchFileSlot(const QString& )));
 
-    // when time out occurs, check if nzb files from list can be processed
+    // when time-out occurs, check if nzb files from list can be processed
     connect(this->fileCompleteTimer,
             SIGNAL(timeout()),
             this,
@@ -115,9 +115,9 @@ void FolderWatcher::fileCompleteTimerSlot() {
     QStringList pendingFileList;
 
     // check if nzb files contained is the list are complete :
-    while (!this->nzbFileList.isEmpty()) {
+    foreach(QString nzbFilePath, this->nzbFileList) {
 
-        QString nzbFilePath = this->nzbFileList.takeFirst();
+        bool fileEnqueued = false;
 
         // get the last modified time of the current nzb file :
         QFileInfo fileInfo(nzbFilePath);
@@ -128,7 +128,7 @@ void FolderWatcher::fileCompleteTimerSlot() {
 
             // open the nzb file :
             QFile file(nzbFilePath);
-            if (file.open(QIODevice::ReadOnly)){
+            if (file.open(QIODevice::ReadOnly)) {
 
                 // if the end of the file pattern has been found :
                 if (file.readAll().contains("</nzb>")) {
@@ -148,25 +148,23 @@ void FolderWatcher::fileCompleteTimerSlot() {
                         QFile::remove(nzbFilePath);
                     }
 
-                }
-                // .nzb end of file pattern has not been found yet, add it to pending list again :
-                else {
+                    // file has been enqueued :
+                    fileEnqueued = true;
 
-                    pendingFileList.append(nzbFilePath);
                 }
+
+                // close the current file :
+                file.close();
             }
 
-            // file open has failed :
-            else {
-                // only set a debug message :
-                kDebug() << "File " << nzbFilePath << " can not be opened !";
-
-            }
         }
-        // file has been modified before 1 second elapsed, append it again :
-        else {
+
+
+        // file has not been enqueued yet :
+        if (!fileEnqueued) {
 
             pendingFileList.append(nzbFilePath);
+
         }
 
     }
@@ -192,8 +190,6 @@ void FolderWatcher::settingsChangedSlot() {
 
         // update the kdirwatch with the new folder :
         this->kDirWatch->addDir(this->currentWatchDir, KDirWatch::WatchFiles);
-
-        kDebug() << this->currentWatchDir;
 
     }
 
