@@ -56,7 +56,7 @@ namespace UtilityNamespace
     
     static const QString repairProgram = "par2";
     static const QString rarExtractProgram = "unrar";
-    static const QString sevenZipExtractProgram = "7z;7za;7zr";
+    static const QString sevenZipExtractProgram = "7z;7za";
     
     // segment file identifier :
     static const QString applicationFileOwner = "Kwooty_87b022df-17b9-409f-a423-3cc626831adc\r\n";
