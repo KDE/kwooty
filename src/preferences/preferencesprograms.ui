@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>417</width>
-    <height>318</height>
+    <width>412</width>
+    <height>308</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_6">
@@ -50,8 +50,8 @@
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>298</width>
-                <height>14</height>
+                <width>100</width>
+                <height>13</height>
                </size>
               </property>
              </spacer>
@@ -81,7 +81,7 @@
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>298</width>
+                <width>100</width>
                 <height>13</height>
                </size>
               </property>
@@ -112,7 +112,7 @@
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>298</width>
+                <width>100</width>
                 <height>13</height>
                </size>
               </property>

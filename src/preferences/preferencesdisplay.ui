@@ -55,9 +55,19 @@
     </widget>
    </item>
    <item row="4" column="0">
+    <widget class="QCheckBox" name="kcfg_displayCapacityBar">
+     <property name="toolTip">
+      <string>Display free space capacity bar</string>
+     </property>
+     <property name="text">
+      <string>Display free space information in status bar</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
     <widget class="QGroupBox" name="actionGroupBox">
      <property name="title">
-      <string>Estimated time</string>
+      <string>Estimated download time</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
@@ -83,7 +93,7 @@
      </layout>
     </widget>
    </item>
-   <item row="5" column="0">
+   <item row="6" column="0">
     <spacer name="spacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
