@@ -20,7 +20,6 @@ set(Kwooty_SRCS
   segmentmanager.cpp
   mystatusbar.cpp
   mytreeview.cpp
-  infobar.cpp
   segmentsdecoderthread.cpp
   segmentdecoderbase.cpp
   segmentdecoderyenc.cpp
@@ -33,7 +32,6 @@ set(Kwooty_SRCS
   datarestorer.cpp
   shutdownmanager.cpp
   infocollectordispatcher.cpp
-  icontextwidget.cpp
   folderwatcher.cpp
   fileoperations.cpp
   preferences/preferencesserver.cpp
@@ -45,6 +43,9 @@ set(Kwooty_SRCS
   data/nzbfiledata.cpp
   data/itemstatusdata.cpp
   data/globalfiledata.cpp 
+  data/nzbcollectiondata.cpp
+  widgets/icontextwidget.cpp
+  widgets/iconcapacitywidget.cpp
 
 )
 
