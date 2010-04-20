@@ -31,10 +31,7 @@
 
 ExtractZip::ExtractZip(RepairDecompressThread* parent) : ExtractBase(parent)
 {
-
     connect (this->extractProcess, SIGNAL(started()), this, SLOT(startedSlot()));
-
-
 }
 
 
@@ -71,6 +68,7 @@ QStringList ExtractZip::createProcessArguments(const QString& archiveName, const
 
         // if archive is passworded :
         if (passwordEnteredByUSer) {
+
             // set password entered by the user :
             if (!passwordStr.isEmpty()) {
                 args.append("-p" + passwordStr);
@@ -79,6 +77,7 @@ QStringList ExtractZip::createProcessArguments(const QString& archiveName, const
             else {
                 args.append("-p");
             }
+
         }
 
         // set output directory :
@@ -186,7 +185,7 @@ void ExtractZip::sendExtractProgramNotFoundNotification() {
 
     // notify parent that program is missing :
     NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
-    emit updateExtractSignal(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, UnrarProgramMissing, ParentItemTarget);
+    emit updateExtractSignal(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, SevenZipProgramMissing, ParentItemTarget);
 
     // notify repairDecompressThread that extraction is over :
     emit extractProcessEndedSignal();
