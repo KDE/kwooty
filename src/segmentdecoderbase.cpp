@@ -22,7 +22,9 @@
 #include "segmentdecoderbase.h"
 
 #include <KDebug>
+
 #include <QDir>
+
 #include "settings.h"
 #include "data/segmentdata.h"
 #include "segmentsdecoderthread.h"
@@ -157,12 +159,6 @@ bool SegmentDecoderBase::decodeSegmentFiles(QFile& targetFile) {
     return encodedDataFound;
 
 }
-
-
-
-
-
-
 
 
 
