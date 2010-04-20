@@ -24,6 +24,7 @@
 #include <QObject>
 #include "itemabstractupdater.h"
 #include "data/nzbfiledata.h"
+#include "data/nzbcollectiondata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -49,6 +50,10 @@ public:
     void updateNzbItemsPostDecode(const QModelIndex&, const int, UtilityNamespace::ItemStatus);
     void recalculateNzbSize(const QModelIndex&);
 
+#if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
+    CentralWidget* getCentraWidget() const;
+#endif
+
 
 private:
     CentralWidget* parent;
@@ -56,7 +61,6 @@ private:
     ItemDownloadUpdater* itemDownloadUpdater;
     ItemChildrenManager* itemChildrenManager;
     bool isItemUpdated;
-
 
     ItemStatusData updateItemsDownload(ItemStatusData&, const int, const QModelIndex&, const quint64);
     ItemStatusData updateStatusItemDownload(ItemStatusData&, const int);
@@ -71,7 +75,8 @@ private:
     void updateItemsIfDirectExtractFailed(const QModelIndex, QStandardItem*, UtilityNamespace::ItemStatus);
 
 signals:
-    void repairDecompressSignal(QList<NzbFileData>);
+
+    void repairDecompressSignal(NzbCollectionData);
     void statusItemUpdatedSignal();
     void downloadWaitingPar2Signal();
 

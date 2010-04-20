@@ -20,6 +20,8 @@
 
 #include "itemparentupdater.h"
 
+#include <QUuid>
+
 #include <KDebug>
 
 #include "centralwidget.h"
@@ -32,12 +34,11 @@
 #include "data/itemstatusdata.h"
 
 
-
 ItemParentUpdater::ItemParentUpdater(CentralWidget* parent) : ItemAbstractUpdater (parent)
 {
     this->parent = parent;
     this->downloadModel = parent->getDownloadModel();
-    
+
     // instanciate item updater classes :
     this->itemPostDownloadUpdater = new ItemPostDownloadUpdater(this);
     this->itemDownloadUpdater = new ItemDownloadUpdater(this);
@@ -57,6 +58,12 @@ ItemDownloadUpdater* ItemParentUpdater::getItemDownloadUpdater() const{
 StandardItemModel* ItemParentUpdater::getDownloadModel() const{
     return this->downloadModel;
 }
+
+#if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
+    CentralWidget* ItemParentUpdater::getCentraWidget() const{
+    return this->parent;
+}
+#endif
 
 
 
@@ -347,20 +354,54 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
         // set decode finish to true in order to emit repairing signal only once :
         nzbItemStatusData.setDecodeFinish(true);
 
+
+        // by default, consider that par2 files have been downloaded :
+        UtilityNamespace::ItemStatus par2FileStatus = DownloadFinishStatus;
+
         // prepare nzbFileDataList :
         QList<NzbFileData> nzbFileDataList;
 
         for (int i = 0; i < rowNumber; i++) {
-            NzbFileData currentNzbFileData = nzbIndex.child(i, FILE_NAME_COLUMN).data(NzbFileDataRole).value<NzbFileData>();
 
-            // remove segmentData list has they are no more used :
-            currentNzbFileData.setSegmentList(QList<SegmentData>());
-            nzbFileDataList.append(currentNzbFileData);
+            QModelIndex childIndex = nzbIndex.child(i, FILE_NAME_COLUMN);
+            NzbFileData currentNzbFileData = this->downloadModel->getNzbFileDataFromIndex(childIndex);
+
+
+            // get itemStatusData :
+            ItemStatusData childItemStatusData = this->downloadModel->getStatusDataFromIndex(childIndex);
+
+            // if par2 files have been required after extracting of a 1st nzb-set
+            // just append files of nzb-sets that have not been previously extracted :
+            if (childItemStatusData.getStatus() != ExtractSuccessStatus) {
+
+                // remove segmentData list has they are no more used :
+                currentNzbFileData.setSegmentList(QList<SegmentData>());
+
+                nzbFileDataList.append(currentNzbFileData);
+
+            }
+
+
+            // if current item is a par2 file, check if it status is Idle or WaitForPar2IdleStatus :
+            if ( currentNzbFileData.isPar2File() &&
+                 (childItemStatusData.getStatus() == WaitForPar2IdleStatus) )  {
+
+                par2FileStatus = WaitForPar2IdleStatus;
+
+            }
+
         }
 
 
-        // send nzbFileDataList to repairDecompressThread class :
-        emit repairDecompressSignal(nzbFileDataList);
+        // build data for repairing - extracting process :
+        NzbCollectionData nzbCollectionData;
+
+        nzbCollectionData.setNzbFileDataList(nzbFileDataList);
+        nzbCollectionData.setPar2FileDownloadStatus(par2FileStatus);
+        nzbCollectionData.setNzbParentId(QUuid::createUuid().toString());
+
+        // send nzbCollectionData to repairDecompressThread class :
+        emit repairDecompressSignal(nzbCollectionData);
 
     }
 
@@ -410,6 +451,7 @@ void ItemParentUpdater::countGlobalItemStatus(const ItemStatusData& itemStatusDa
     if (itemStatusData.getDataStatus() != NoData){
         this->articleFoundNumber++;
     }
+
 
     // count items status :
     this->countItemStatus(itemStatusData.getStatus());
