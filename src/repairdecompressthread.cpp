@@ -91,11 +91,11 @@ void RepairDecompressThread::setupConnections() {
 
 
     // receive data to repair and decompress from repairDecompressSignal :
-    qRegisterMetaType< QList<NzbFileData> >("QList<NzbFileData>");
+    qRegisterMetaType<NzbCollectionData>("NzbCollectionData");
     connect (parent->getItemParentUpdater(),
-             SIGNAL(repairDecompressSignal(QList<NzbFileData>)),
+             SIGNAL(repairDecompressSignal(NzbCollectionData)),
              this,
-             SLOT(repairDecompressSlot(QList<NzbFileData>)),
+             SLOT(repairDecompressSlot(NzbCollectionData)),
              Qt::QueuedConnection);
 
 
@@ -109,9 +109,9 @@ void RepairDecompressThread::setupConnections() {
 
     // begin file extraction when end repair signal has been received :
     connect (repair,
-             SIGNAL(repairProcessEndedSignal(QList<NzbFileData>, UtilityNamespace::ItemStatus)),
+             SIGNAL(repairProcessEndedSignal(NzbCollectionData, UtilityNamespace::ItemStatus)),
              this,
-             SLOT(repairProcessEndedSlot(QList<NzbFileData>, UtilityNamespace::ItemStatus)));
+             SLOT(repairProcessEndedSlot(NzbCollectionData, UtilityNamespace::ItemStatus)));
 
 
 }
@@ -155,27 +155,21 @@ void RepairDecompressThread::processJobSlot() {
 void RepairDecompressThread::startRepairSlot() {
 
     // if no data is currently being verified :
-    if (!this->waitForNextProcess && !this->par2NzbFileDataListMap.isEmpty()) {
+    if (!this->waitForNextProcess && !this->filesToRepairList.isEmpty()) {
 
         this->waitForNextProcess = true;
 
-        // get nzbfiledata to be verified from list :
-        QMap<QString, QList<NzbFileData> >::iterator iterMap = this->par2NzbFileDataListMap.begin();
-
-        // get par2 baseName from key :
-        QString par2BaseName = iterMap.key();
-        // get associated fileData list from value :
-        QList<NzbFileData> currentNzbFileDataList = iterMap.value();
-
-        this->par2NzbFileDataListMap.erase(iterMap);
-
+        // get nzbCollectionData to be verified from list :
+        NzbCollectionData currentNzbCollectionData = this->filesToRepairList.takeFirst();
 
         // verify data only if par has been found :
-        if ( !par2BaseName.isEmpty() && (Settings::groupBoxAutoRepair()) ) {
-            repair->launchProcess(currentNzbFileDataList, par2BaseName);
+        if ( !currentNzbCollectionData.getPar2BaseName().isEmpty() && (Settings::groupBoxAutoRepair()) ) {
+
+            repair->launchProcess(currentNzbCollectionData);
         }
         else {
-            this->repairProcessEndedSlot(currentNzbFileDataList, RepairFinishedStatus);
+
+            this->repairProcessEndedSlot(currentNzbCollectionData, RepairFinishedStatus);
         }
 
     }
@@ -191,34 +185,34 @@ void RepairDecompressThread::startExtractSlot() {
     if (!this->filesToExtractList.isEmpty()) {
 
         mutex.lock();
-        QList<NzbFileData> nzbFileDataListToExtract = filesToExtractList.takeFirst();
+        NzbCollectionData nzbCollectionDataToExtract = this->filesToExtractList.takeFirst();
         mutex.unlock();
 
         // extract data :
-        if (!nzbFileDataListToExtract.isEmpty() && (Settings::groupBoxAutoDecompress())) {
+        if (!nzbCollectionDataToExtract.getNzbFileDataList().isEmpty() && (Settings::groupBoxAutoDecompress())) {
 
             // get archive format (rar, zip or 7z) :
-            UtilityNamespace::ArchiveFormat archiveFormat = this->getArchiveFormatFromList(nzbFileDataListToExtract);
+            UtilityNamespace::ArchiveFormat archiveFormat = this->getArchiveFormatFromList(nzbCollectionDataToExtract.getNzbFileDataList());
 
             // extract with unrar for rar files :
             if (archiveFormat == RarFormat) {
-                extractRar->launchProcess(nzbFileDataListToExtract);
+                extractRar->launchProcess(nzbCollectionDataToExtract);
             }
 
             // extract with 7z for zip or 7-zip files :
             if ( (archiveFormat == ZipFormat) ||
                  (archiveFormat == SevenZipFormat) ) {
-                extractZip->launchProcess(nzbFileDataListToExtract);
+                extractZip->launchProcess(nzbCollectionDataToExtract);
             }
 
             // if archive format is unknown, abort extracting process :
             if (archiveFormat == UnknownArchiveFormat) {
-                this->extractProcessEndedSlot();
+                this->extractProcessEndedSlot(nzbCollectionDataToExtract);
             }
 
         }
         else {
-            this->extractProcessEndedSlot();
+            this->extractProcessEndedSlot(nzbCollectionDataToExtract);
         }
 
     }
@@ -228,12 +222,12 @@ void RepairDecompressThread::startExtractSlot() {
 }
 
 
-void RepairDecompressThread::repairProcessEndedSlot(QList<NzbFileData> nzbFileDataListToExtract, UtilityNamespace::ItemStatus repairStatus) {
+void RepairDecompressThread::repairProcessEndedSlot(NzbCollectionData nzbCollectionDataToExtract, UtilityNamespace::ItemStatus repairStatus) {
 
     // if verify/repair ok, launch archive extraction :
     if (repairStatus == RepairFinishedStatus) {
         mutex.lock();
-        this->filesToExtractList.append(nzbFileDataListToExtract);
+        this->filesToExtractList.append(nzbCollectionDataToExtract);
         mutex.unlock();
     }
 
@@ -247,7 +241,21 @@ void RepairDecompressThread::repairProcessEndedSlot(QList<NzbFileData> nzbFileDa
 
 
 
-void RepairDecompressThread::extractProcessEndedSlot() {
+void RepairDecompressThread::extractProcessEndedSlot(NzbCollectionData nzbCollectionData) {
+
+    // **case of multi set nzb** => remove other nzb sets as the first extraction failed,
+    // par2 files will have to be downloaded without extracting *now* the others parts of the nzb.
+    // all nzb-set will then be extracted when par2 files will be downloaded :
+    if ( (nzbCollectionData.getExtractTerminateStatus() == ExtractFailedStatus) &&
+         (nzbCollectionData.getPar2FileDownloadStatus() == WaitForPar2IdleStatus) ) {
+
+        // remove multi nzb-parts with the same parent ID :
+        if (filesToRepairList.contains(nzbCollectionData)) {
+
+            filesToRepairList.removeAll(nzbCollectionData);
+
+        }
+    }
 
     this->waitForNextProcess = false;
 
@@ -256,12 +264,12 @@ void RepairDecompressThread::extractProcessEndedSlot() {
 
 
 
-void RepairDecompressThread::repairDecompressSlot(QList<NzbFileData> nzbFileDataList) {
+void RepairDecompressThread::repairDecompressSlot(NzbCollectionData nzbCollectionData) {
 
     // all files have been downloaded and decoded, set them in the pending list
     // in order to process them :
     mutex.lock();
-    this->filesToProcessList.append(nzbFileDataList);
+    this->filesToProcessList.append(nzbCollectionData);
     mutex.unlock();
 
 }
@@ -270,33 +278,32 @@ void RepairDecompressThread::repairDecompressSlot(QList<NzbFileData> nzbFileData
 
 void RepairDecompressThread::processPendingFilesSlot() {
 
-    if (!filesToProcessList.isEmpty()) {
+    if (!this->filesToProcessList.isEmpty()) {
 
         // get nzbFileDataList to verify and repair :
         mutex.lock();
-        QList<NzbFileData> nzbFileDataList = this->filesToProcessList.takeFirst();
+        NzbCollectionData nzbCollectionData = this->filesToProcessList.takeFirst();
         mutex.unlock();
 
-
         // if the list contains rar files belonging to one group :
-        if (!this->isListContainsdifferentGroups(nzbFileDataList)) {
+        if (!this->isListContainsdifferentGroups(nzbCollectionData.getNzbFileDataList())) {
 
-            this->processRarFilesFromSameGroup(nzbFileDataList);
+            this->processRarFilesFromSameGroup(nzbCollectionData);
 
         }
         else {
-            // get each baseName list :
-            QStringList fileBaseNameList = this->listDifferentFileBaseName(nzbFileDataList);
+            // get each baseName list :           
+            QStringList fileBaseNameList = this->listDifferentFileBaseName(nzbCollectionData);
+
+            //kDebug() << "fileBaseNameList" << fileBaseNameList;
 
             // group files together according to their names in order to verify them :
-            this->processRarFilesFromDifferentGroups(fileBaseNameList, nzbFileDataList);
+            this->processRarFilesFromDifferentGroups(fileBaseNameList, nzbCollectionData);
         }
 
     }
 
 }
-
-
 
 
 
@@ -338,7 +345,9 @@ bool RepairDecompressThread::isListContainsdifferentGroups(const QList<NzbFileDa
 
 
 
-QStringList RepairDecompressThread::listDifferentFileBaseName(QList<NzbFileData>& nzbFileDataList) {
+QStringList RepairDecompressThread::listDifferentFileBaseName(NzbCollectionData& nzbCollectionData) {
+
+    QList<NzbFileData> nzbFileDataList = nzbCollectionData.takeNzbFileDataList();
 
     // at this step nzbFileData list contains archives without par2 files,
     // group archive files together :
@@ -370,6 +379,9 @@ QStringList RepairDecompressThread::listDifferentFileBaseName(QList<NzbFileData>
         }
 
     }
+
+    // file list has been updated, set it into collection :
+    nzbCollectionData.setNzbFileDataList(nzbFileDataList);
 
 
     return fileBaseNameList;
@@ -468,10 +480,12 @@ NzbFileData RepairDecompressThread::tryToGuessDecodedFileName(NzbFileData& targe
 
 
 
-void RepairDecompressThread::processRarFilesFromDifferentGroups(const QStringList& fileBaseNameList, const QList<NzbFileData>& nzbFileDataList) {
+void RepairDecompressThread::processRarFilesFromDifferentGroups(const QStringList& fileBaseNameList, NzbCollectionData& nzbCollectionData) {
 
     // group archives that own par2 files for verifying/repairing :
     if (!fileBaseNameList.isEmpty()) {
+
+        QList<NzbFileData> nzbFileDataList = nzbCollectionData.takeNzbFileDataList();
 
         foreach(QString fileBaseName, fileBaseNameList) {
 
@@ -491,7 +505,6 @@ void RepairDecompressThread::processRarFilesFromDifferentGroups(const QStringLis
                 // par2 file base names that could not exactly match :
                 if ( (!nzbFileData.isPar2File() && nzbFileData.getDecodedFileName().contains(fileBaseName) ) ||
                      (nzbFileData.isPar2File() && (nzbFileData.getBaseName() == fileBaseName)) ) {
-                    //if (nzbFileData.getDecodedFileName().contains(fileBaseName)){
 
                     // group nzbFileData with the same baseName :
                     groupedFileList.append(nzbFileData);
@@ -505,12 +518,14 @@ void RepairDecompressThread::processRarFilesFromDifferentGroups(const QStringLis
             }
 
 
-            //kDebug() << "par2BaseName :" << par2BaseName << "groupedFileList.size() : " << groupedFileList.size();
-
             // if par2BaseName is not empty, verify/repair will be proceeded,
             // if par2BaseName is empty, extraction will be done directly :
             if (!groupedFileList.isEmpty()) {
-                this->par2NzbFileDataListMap.insertMulti(par2BaseName, groupedFileList);
+
+                nzbCollectionData.setPar2BaseName(par2BaseName);
+                nzbCollectionData.setNzbFileDataList(groupedFileList);
+
+                this->filesToRepairList.append(nzbCollectionData);
             }
         }
 
@@ -519,7 +534,9 @@ void RepairDecompressThread::processRarFilesFromDifferentGroups(const QStringLis
 }
 
 
-void RepairDecompressThread::processRarFilesFromSameGroup(const QList<NzbFileData>& nzbFileDataList) {
+void RepairDecompressThread::processRarFilesFromSameGroup(NzbCollectionData& nzbCollectionData) {
+
+    QList<NzbFileData> nzbFileDataList = nzbCollectionData.takeNzbFileDataList();
 
     // get file base name for rar file :
     QString rarBaseName;
@@ -550,10 +567,14 @@ void RepairDecompressThread::processRarFilesFromSameGroup(const QList<NzbFileDat
         }
     }
 
-    // in this case, par2Base name is not initialized in order to get only "*.*" as par2 argument during verifiying process :
+    // in this case, par2Base name is not initialized in order to get only "*" as par2 argument during verifiying process :
     if (!groupedFileList.isEmpty()) {
+
         QString par2BaseName = "*";
-        this->par2NzbFileDataListMap.insertMulti(par2BaseName, groupedFileList);
+        nzbCollectionData.setPar2BaseName(par2BaseName);
+        nzbCollectionData.setNzbFileDataList(groupedFileList);
+
+        this->filesToRepairList.append(nzbCollectionData);
     }
 
 }

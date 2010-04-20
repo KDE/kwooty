@@ -27,6 +27,7 @@
 #include <QWaitCondition>
 
 #include "data/nzbfiledata.h"
+#include "data/nzbcollectiondata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -52,18 +53,18 @@ private:
     ExtractZip* extractZip;
     QTimer* repairDecompressTimer;
     QMutex mutex;
-    QMap<QString, QList<NzbFileData> > par2NzbFileDataListMap;
-    QList< QList<NzbFileData> > filesToExtractList;
-    QList< QList<NzbFileData> > filesToProcessList;
+    QList<NzbCollectionData> filesToRepairList;
+    QList<NzbCollectionData> filesToExtractList;
+    QList<NzbCollectionData> filesToProcessList;
     bool waitForNextProcess;
 
     void run();
     void setupConnections();
-    void processRarFilesFromDifferentGroups(const QStringList&, const QList<NzbFileData>&);
-    void processRarFilesFromSameGroup(const QList<NzbFileData>&);
+    void processRarFilesFromDifferentGroups(const QStringList&, NzbCollectionData&);
+    void processRarFilesFromSameGroup(NzbCollectionData&);
     bool isListContainsdifferentGroups(const QList<NzbFileData>&);
     NzbFileData tryToGuessDecodedFileName(NzbFileData&, const QList<NzbFileData>&, const QString&);
-    QStringList listDifferentFileBaseName(QList<NzbFileData>&);
+    QStringList listDifferentFileBaseName(NzbCollectionData&);
     QString getBaseNameFromPar2(const NzbFileData&);
     QString getBaseNameFromRar(const NzbFileData&);
     UtilityNamespace::ArchiveFormat getArchiveFormatFromList(const QList<NzbFileData>&);
@@ -75,10 +76,10 @@ signals:
     void passwordEnteredByUserSignal(bool, QString password = QString());
 
 public slots:
-    void repairDecompressSlot(QList<NzbFileData>);
+    void repairDecompressSlot(NzbCollectionData);
     void extractPasswordRequiredSlot(QString);
-    void repairProcessEndedSlot(QList<NzbFileData>, UtilityNamespace::ItemStatus);
-    void extractProcessEndedSlot();
+    void repairProcessEndedSlot(NzbCollectionData, UtilityNamespace::ItemStatus);
+    void extractProcessEndedSlot(NzbCollectionData);
 
 private slots:
     void startRepairSlot();
