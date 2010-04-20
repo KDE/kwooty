@@ -34,10 +34,7 @@ FileOperations::FileOperations(CentralWidget* centralWidget) : QObject(centralWi
 
     this->centralWidget = centralWidget;
 
-
 }
-
-
 
 
 void FileOperations::openFile() {
@@ -55,7 +52,7 @@ void FileOperations::openFile() {
 
             this->openUrl(KUrl(fileNameFromDialog), isWrongUrl, UtilityNamespace::OpenNormal);
 
-        } // end of iteration loop
+        }
 
 
         // If url cannot be reached open an error message box
