@@ -20,14 +20,13 @@
 
 
 #include "segmentdecoderuuenc.h"
+
 #include <KDebug>
 
 
 SegmentDecoderUUEnc::SegmentDecoderUUEnc() { }
 
-
 SegmentDecoderUUEnc::~SegmentDecoderUUEnc() { }
-
 
 
 
