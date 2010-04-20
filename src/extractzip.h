@@ -22,8 +22,9 @@
 #ifndef EXTRACTZIP_H
 #define EXTRACTZIP_H
 
-#include <QTimer>
+
 #include "extractbase.h"
+
 
 class ExtractZip : public ExtractBase
 {
@@ -45,7 +46,6 @@ private:
 signals:
 
 public slots:
-
 
 private slots:
     void startedSlot();
