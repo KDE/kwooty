@@ -35,14 +35,14 @@ ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent)
 {
 
     // associate text to display according to item status :
-    statusTextMap.insert(DownloadStatus,            i18n("Downloading"));
+    statusTextMap.insert(DownloadStatus,            i18n("Downloading..."));
     statusTextMap.insert(DownloadFinishStatus,      i18n("Finished"));
     statusTextMap.insert(IdleStatus,                i18n("In queue"));
     statusTextMap.insert(PauseStatus,               i18n("Pause"));
-    statusTextMap.insert(PausingStatus,             i18n("Pausing"));
+    statusTextMap.insert(PausingStatus,             i18n("Pausing..."));
     statusTextMap.insert(WaitForPar2IdleStatus,     i18n("Smart queue"));
     statusTextMap.insert(ScanStatus,                i18n("Scanning..."));
-    statusTextMap.insert(DecodeStatus,              i18n("Decoding"));
+    statusTextMap.insert(DecodeStatus,              i18n("Decoding..."));
     statusTextMap.insert(DecodeFinishStatus,        i18n("Decoded"));
     statusTextMap.insert(DecodeErrorStatus,         i18n("Decoding Error"));
     statusTextMap.insert(VerifyStatus,              i18n("Verifying file..."));
@@ -62,7 +62,7 @@ ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent)
     statusTextMap.insert(ExtractSuccessStatus,      i18n("Extract complete"));
     statusTextMap.insert(ExtractFailedStatus,       i18n("Extract failed"));
     statusTextMap.insert(UnrarProgramMissing,       i18n("unrar program not found !"));
-    statusTextMap.insert(SevenZipProgramMissing,    i18n("7-zip (7z, 7za or 7zr) program not found !"));
+    statusTextMap.insert(SevenZipProgramMissing,    i18n("7-zip (7z or 7za) program not found !"));
 
     // associate color to display according to item status :
     statusColorMap.insert(DownloadStatus,            QColor(Qt::green));
