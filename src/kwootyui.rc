@@ -21,6 +21,8 @@
 	   <Action name="moveBottom"/>
 	   <Action name="moveTop"/>   
 	   <Separator/>
+	   <Action name="downloadFolder"/>
+	   <Separator/>
 	   <Action name="shutdown"/>
     </Menu>   
 </MenuBar>
