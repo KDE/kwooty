@@ -193,19 +193,19 @@ void MyTreeView::moveRow(MyTreeView::MoveRowType moveRowType) {
         }
 
         // control out of range and multiple row selection :
-        if (updatedRowNumber < 0 ||
-            updatedRowNumber > parentItem->rowCount() ||
-            updatedRowNumberList.contains(updatedRowNumber)) {
+        if ( (updatedRowNumber < 0) ||
+             (updatedRowNumber > parentItem->rowCount()) ||
+            updatedRowNumberList.contains(updatedRowNumber) ) {
 
 
-            if (moveRowType == MoveRowsUp ||
-                moveRowType == MoveRowsDown) {
+            if ( (moveRowType == MoveRowsUp) ||
+                 (moveRowType == MoveRowsDown) )  {
 
                 updatedRowNumber = currentRow;
             }
 
-            if (moveRowType == MoveRowsTop ||
-                moveRowType == MoveRowsBottom) {
+            if ( (moveRowType == MoveRowsTop) ||
+                 (moveRowType == MoveRowsBottom) ) {
 
                 updatedRowNumber = updatedRowNumberList.at(updatedRowNumberList.size() - 1) + 1;
             }
@@ -231,14 +231,14 @@ void MyTreeView::moveRow(MyTreeView::MoveRowType moveRowType) {
 
         QModelIndex visibleIndex;
 
-        if (moveRowType == MoveRowsUp ||
-            moveRowType == MoveRowsTop) {
+        if ( (moveRowType == MoveRowsUp) ||
+             (moveRowType == MoveRowsTop) ) {
 
             visibleIndex = itemRowsMap.value(rowNumberList.takeFirst()).at(0)->index();
         }
 
-        if (moveRowType == MoveRowsDown ||
-            moveRowType == MoveRowsBottom) {
+        if ( (moveRowType == MoveRowsDown) ||
+             (moveRowType == MoveRowsBottom) ){
 
             visibleIndex = itemRowsMap.value(rowNumberList.takeLast()).at(0)->index();
         }
