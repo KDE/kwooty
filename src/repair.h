@@ -27,10 +27,13 @@
 #include <QProcess>
 #include <QUuid>
 
+#include "data/nzbcollectiondata.h"
+
 #include "utility.h"
 using namespace UtilityNamespace;
 
 class NzbFileData;
+
 
 class Repair : public QObject
 {
@@ -50,13 +53,14 @@ class Repair : public QObject
 
     Repair();
     ~Repair();
-    void launchProcess(const QList<NzbFileData>&, const QString&);
+    void launchProcess(const NzbCollectionData&);
     bool isProcessing();
 
 private:
     QString par2ProgramPath;
     KProcess* repairProcess;
     QList<NzbFileData> nzbFileDataList;
+    NzbCollectionData nzbCollectionData;
     QMap<QString, UtilityNamespace::ItemStatus> statusEnumMap;
     QStringList par2FilesOrderedList;
     QString stdOutputLines;
@@ -81,7 +85,7 @@ private:
 
 signals:
     void updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
-    void repairProcessEndedSignal(QList<NzbFileData>, UtilityNamespace::ItemStatus);
+    void repairProcessEndedSignal(NzbCollectionData, UtilityNamespace::ItemStatus);
 
 public slots:
     void repairReadyReadSlot();

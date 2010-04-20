@@ -31,7 +31,7 @@ Repair::Repair() : QObject(){
     this->repairProcess = new KProcess(this);
     this->setupConnections();
     this->resetVariables();
-    
+
     // init file status - enum status map :
     statusEnumMap.insert("found", VerifyFoundStatus);
     statusEnumMap.insert("damaged", VerifyDamagedStatus);
@@ -56,11 +56,12 @@ void Repair::setupConnections() {
 
 
 
-void Repair::launchProcess(const QList<NzbFileData>& nzbFileDataList, const QString& par2BaseName){
+void Repair::launchProcess(const NzbCollectionData& nzbCollectionData){
 
     // clear global variables :
     this->resetVariables();
-    this->nzbFileDataList = nzbFileDataList;
+    this->nzbCollectionData = nzbCollectionData;
+    this->nzbFileDataList = nzbCollectionData.getNzbFileDataList();
 
 
     // search par2 program at each process launch in case settings have been changed at anytime :
@@ -86,7 +87,7 @@ void Repair::launchProcess(const QList<NzbFileData>& nzbFileDataList, const QStr
                 QStringList args;
                 args.append("r");
                 args.append(this->par2FilesOrderedList.at(0));
-                args.append(fileSavePath + par2BaseName);
+                args.append(fileSavePath + nzbCollectionData.getPar2BaseName());
 
                 //kDebug() << "ARGS :" << args;
                 this->repairProcess->setTextModeEnabled(true);
@@ -100,7 +101,7 @@ void Repair::launchProcess(const QList<NzbFileData>& nzbFileDataList, const QStr
             // try to decompress files directly :
             else {
                 //kDebug() << "No Par2 files found!";
-                emit repairProcessEndedSignal(this->nzbFileDataList, RepairFinishedStatus);
+                emit repairProcessEndedSignal(this->nzbCollectionData, RepairFinishedStatus);
                 // clear global variables :
                 this->resetVariables();
 
@@ -118,7 +119,7 @@ void Repair::launchProcess(const QList<NzbFileData>& nzbFileDataList, const QStr
     else {
         this->sendPar2ProgramNotFoundNotification();
         // try to decompress files directly :
-        emit repairProcessEndedSignal(this->nzbFileDataList, RepairFinishedStatus);
+        emit repairProcessEndedSignal(this->nzbCollectionData, RepairFinishedStatus);
         // clear global variables :
         this->resetVariables();
     }
@@ -133,18 +134,17 @@ bool Repair::isProcessing(){
 //==============================================================================================//
 //                                       processing                                             //
 //==============================================================================================//
-QString Repair::sortPar2FilesBySize(/*const QString& par2BaseName*/){
-    
+QString Repair::sortPar2FilesBySize(){
+
     QString fileSavePath;
     QMap<quint64, QString> sizePar2fileMap;
-    
+
     foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
 
         QString currentFileName = nzbFileData.getDecodedFileName();
 
         // search par2 files that only match with par2BaseName pattern :
-        if ( nzbFileData.isPar2File() /*&&
-             currentFileName.contains(par2BaseName, Qt::CaseInsensitive)*/ ) {
+        if (nzbFileData.isPar2File()) {
 
             // check that file exists :
             fileSavePath = nzbFileData.getFileSavePath();
@@ -157,10 +157,10 @@ QString Repair::sortPar2FilesBySize(/*const QString& par2BaseName*/){
             }
         }
     } // end of loop
-    
+
     // order par2 files by size criteria :
     this->par2FilesOrderedList = sizePar2fileMap.values();
-    
+
     return fileSavePath;
 }
 
@@ -234,6 +234,7 @@ void Repair::resetVariables() {
     this->isPar2ProgramFound = false;
     this->isProcessingStatus = false;
     this->repairStatus = Repair::IdleRepair;
+    this->nzbCollectionData = NzbCollectionData();
     this->nzbFileDataList.clear();
     this->par2FilesOrderedList.clear();
     this->repairProgressValueOld = -1;
@@ -245,6 +246,7 @@ void Repair::resetVariables() {
 
 
 void Repair::updateNzbFileDataInList(NzbFileData& currentNzbFileData, const UtilityNamespace::ItemStatus verifyStep, const int index) {
+
     currentNzbFileData.setVerifyProgressionStep(verifyStep);
     this->nzbFileDataList.replace(index, currentNzbFileData);
 
@@ -253,10 +255,11 @@ void Repair::updateNzbFileDataInList(NzbFileData& currentNzbFileData, const Util
 
 
 void Repair::removePar2Files(){
+
     foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
 
         if (nzbFileData.isPar2File()){
-            //kDebug() << "Remove Par2 file :" << nzbFileData.getFileSavePath() + nzbFileData.getDecodedFileName();
+
             Utility::removeData(nzbFileData.getFileSavePath() + nzbFileData.getDecodedFileName());
         }
     }
@@ -284,7 +287,7 @@ UtilityNamespace::ItemTarget Repair::getItemTarget(const NzbFileData& nzbFileDat
 //                                         SLOTS                                                //
 //==============================================================================================//
 
-void Repair::repairReadyReadSlot(){  
+void Repair::repairReadyReadSlot(){
 
     // read all data :
     this->stdOutputLines += repairProcess->readAll().replace("\r", "\n");
@@ -294,26 +297,26 @@ void Repair::repairReadyReadSlot(){
     foreach (QString line, lines) {
 
         if (!line.isEmpty()) {
-            
+
             //kDebug() << "line : " << line;
 
             switch(repairStatus) {
-                
+
             case  Repair::IdleRepair: {
-                    
+
                     if (line.contains("Loading")) {
                         //kDebug() << "verifying";
                         // notify nzb parent and children files that verification has begun :
                         this->sendVerifyingFilesNotification();
 
                         repairStatus = Repair::Verifying;
-                        
+
                     }
                     break;
                 }
-                
+
             case Repair::Verifying: {
-                    
+
                     if (line.contains("Repair is possible")) {
                         //kDebug() << "Repair is possible";
                         this->sendMissingFilesNotification();
@@ -328,33 +331,33 @@ void Repair::repairReadyReadSlot(){
                         //kDebug() << "Repair complete";
                         repairStatus = Repair::RepairComplete;
                     }
-                    
+
                     else {
                         // monitor verification process :
                         this->verifyUpdate(line);
                     }
                     break;
-                    
+
                 }
-                
+
             case Repair::Repairing: {
-                    
+
                     if (line.contains("Verifying repaired files")) {
                         //kDebug() << "Verifying repaired files";
                         repairStatus = Repair::Verifying;
                     }
-                    
+
                     else {
                         // monitor repairing process :
                         this->repairUpdate(line);
                     }
                     break;
                 }
-                
+
             default: {
                     break;
                 }
-                
+
             }
         }
     }
@@ -368,7 +371,7 @@ void Repair::repairReadyReadSlot(){
         this->stdOutputLines = lines.takeLast();
     }
 
-    
+
 }
 
 
@@ -379,6 +382,7 @@ void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus e
 
     // notify nzb parent item that verification has ended :
     for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+
         NzbFileData nzbFileData = this->nzbFileDataList.at(i);
 
         if (nzbFileData.isPar2File()) {
@@ -410,7 +414,8 @@ void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus e
         }
 
         // notify that verify/repair process has ended in order to launch extract process :
-        emit repairProcessEndedSignal(this->nzbFileDataList, RepairFinishedStatus);
+        this->nzbCollectionData.setNzbFileDataList(this->nzbFileDataList);
+        emit repairProcessEndedSignal(this->nzbCollectionData, RepairFinishedStatus);
     }
 
     // 2. exit with errors :
@@ -436,7 +441,8 @@ void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus e
         }
 
         // notify that verify/repair process has ended in order to verify remaining pending files :
-        emit repairProcessEndedSignal(this->nzbFileDataList, RepairFailedStatus);
+        this->nzbCollectionData.setNzbFileDataList(this->nzbFileDataList);
+        emit repairProcessEndedSignal(this->nzbCollectionData, RepairFailedStatus);
     }
 
     this->resetVariables();
@@ -458,7 +464,8 @@ void Repair::sendPar2ProgramNotFoundNotification() {
         }
     }
 
-    emit repairProcessEndedSignal(this->nzbFileDataList, RepairFailedStatus);
+    this->nzbCollectionData.setNzbFileDataList(this->nzbFileDataList);
+    emit repairProcessEndedSignal(this->nzbCollectionData, RepairFailedStatus);
 }
 
 
