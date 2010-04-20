@@ -175,7 +175,6 @@ void MainWindow::setupActions()
     KAction* openFolderAction = new KAction(this);
     openFolderAction->setText(i18n("Downloads"));
     openFolderAction->setIcon(KIcon("folder-downloads"));
-    //openFolderAction->setIcon(KIcon("mail-folder-sent"));
     openFolderAction->setToolTip(i18n("Open current download folder"));
     openFolderAction->setShortcut(Qt::CTRL + Qt::Key_D);
     openFolderAction->setEnabled(true);
