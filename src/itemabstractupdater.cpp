@@ -94,6 +94,7 @@ void ItemAbstractUpdater::countItemStatus(const int status) {
             this->downloadItemNumber++;
             break;
         };
+
     case DownloadFinishStatus: {
             this->downloadFinishItemNumber++;
             break;
@@ -126,7 +127,18 @@ void ItemAbstractUpdater::countItemStatus(const int status) {
             this->scanItemNumber++;
             break;
         };
-   case WaitForPar2IdleStatus: {
+    case WaitForPar2IdleStatus: {
+            this->decodeFinishItemNumber++;
+            break;
+        };
+
+    // /!\ during download process the status could be ExtractSuccessStatus when following condition occurs :
+    // A multi nzb-set has been fully downloaded and par2 files were not needed (WaitForPar2IdleStatus)
+    // then extract process if directly done : 1st nzb-set is correctly extracted
+    // but extracting of 2nd nzb-set failed (due to a bad crc for eg.)
+    // par2 files are then downloaded for repairing of 2nd nzb-set.
+    // => consider previously extracted files from 1st nzb-set as decodeFinish files :
+    case ExtractSuccessStatus: {
             this->decodeFinishItemNumber++;
             break;
         };
@@ -134,6 +146,7 @@ void ItemAbstractUpdater::countItemStatus(const int status) {
     }
 
 }
+
 
 
 void ItemAbstractUpdater::setIconToFileNameItem(const QModelIndex& index, UtilityNamespace::ItemStatus status) {
