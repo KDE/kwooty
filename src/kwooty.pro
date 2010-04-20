@@ -41,11 +41,12 @@ SOURCES += main.cpp \
     segmentdecoderuuenc.cpp \
     extractrar.cpp \
     extractzip.cpp \
-    icontextwidget.cpp \
+    widgets/icontextwidget.cpp \
     infocollectordispatcher.cpp \
-    infobar.cpp \
     folderwatcher.cpp \
-    fileoperations.cpp
+    fileoperations.cpp \
+    data/nzbcollectiondata.cpp \
+    widgets/iconcapacitywidget.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -83,11 +84,12 @@ HEADERS += mainwindow.h \
     segmentdecoderuuenc.h \
     extractrar.h \
     extractzip.h \
-    icontextwidget.h \
+    widgets/icontextwidget.h \
     infocollectordispatcher.h \
-    infobar.h \
     folderwatcher.h \
-    fileoperations.h
+    fileoperations.h \
+    data/nzbcollectiondata.h \
+    widgets/iconcapacitywidget.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
