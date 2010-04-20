@@ -31,7 +31,6 @@
 #include "clientmanagerconn.h"
 #include "mystatusbar.h"
 #include "mytreeview.h"
-#include "infobar.h"
 #include "segmentmanager.h"
 #include "segmentsdecoderthread.h"
 #include "repairdecompressthread.h"
@@ -64,9 +63,6 @@ CentralWidget::CentralWidget(QWidget* parent, MyStatusBar* parentStatusBar) : QW
     
     // setup repairing and decompressing thread :
     repairDecompressThread = new RepairDecompressThread(this);
-
-    // setup infor (top widget) :
-    infoBar = new InfoBar(this);
 
     // setup dir watcher :
     folderWatcher = new FolderWatcher(this);
@@ -118,12 +114,7 @@ void CentralWidget::setupWidgets(QWidget* parent) {
     mainVBoxLayout->setSpacing(2);
     mainVBoxLayout->setMargin(1);
 
-    QFrame* line = new QFrame(this);
-    line->setFrameShape(QFrame::HLine);
-
-    mainVBoxLayout->addWidget(line);
-    mainVBoxLayout->addWidget(this->infoBar);
-    mainVBoxLayout->addWidget(this->treeView);
+    mainVBoxLayout->addWidget(this->treeView);   
 
 }
 
@@ -482,10 +473,6 @@ void CentralWidget::initFoldersSettings() {
         Settings::setTemporaryFolder(QDir::homePath() + "/kwooty/Temp");
     }
 
-    if (Settings::watchFolder().path().isEmpty()) {
-        Settings::setWatchFolder(QDir::homePath() + "/kwooty/Watch");
-    }
-
 }
 
 
@@ -518,9 +505,6 @@ InfoCollectorDispatcher* CentralWidget::getInfoCollectorDispatcher() const{
     return this->infoCollectorDispatcher;
 }
 
-InfoBar* CentralWidget::getInfoBar() const{
-    return this->infoBar;
-}
 
 FileOperations* CentralWidget::getFileOperations() const{
     return this->fileOperations;
