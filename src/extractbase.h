@@ -24,6 +24,8 @@
 #include <KProcess>
 #include <QObject>
 
+#include "data/nzbcollectiondata.h"
+
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -55,7 +57,7 @@ class ExtractBase : public QObject
 
     ExtractBase(RepairDecompressThread*);
     ~ExtractBase();
-    void launchProcess(const QList<NzbFileData>&, ExtractBase::ArchivePasswordStatus = ArchiveCheckIfPassworded,
+    void launchProcess(const NzbCollectionData&, ExtractBase::ArchivePasswordStatus = ArchiveCheckIfPassworded,
                        bool passwordEnteredByUSer = false, const QString passwordStr = QString());
 
 
@@ -64,6 +66,7 @@ class ExtractBase : public QObject
 protected:
 
     KProcess* extractProcess;
+    NzbCollectionData nzbCollectionData;
     QList<NzbFileData> nzbFileDataList;
     QTimer* processWaitAnswerTimer;
     ExtractBase::ArchivePasswordStatus  archivePasswordStatus;
@@ -93,7 +96,7 @@ protected:
 
 
 signals:
-    void extractProcessEndedSignal();
+    void extractProcessEndedSignal(NzbCollectionData = NzbCollectionData());
     void updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
     void extractPasswordRequiredSignal(QString);
 

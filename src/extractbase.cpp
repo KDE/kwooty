@@ -27,6 +27,7 @@
 #include "data/nzbfiledata.h"
 
 
+
 ExtractBase::ExtractBase(RepairDecompressThread* parent) {
 
     this->parent = parent;
@@ -59,9 +60,9 @@ void ExtractBase::setupConnections() {
 
     // begin verify - repair process for new pending files when signal has been received :
     connect (this,
-             SIGNAL(extractProcessEndedSignal()),
+             SIGNAL(extractProcessEndedSignal(NzbCollectionData)),
              this->parent,
-             SLOT(extractProcessEndedSlot()));
+             SLOT(extractProcessEndedSlot(NzbCollectionData)));
 
     // display dialog box when password is required for archive extraction :
     connect (this,
@@ -80,9 +81,11 @@ void ExtractBase::setupConnections() {
 
 
 
-void ExtractBase::launchProcess(const QList<NzbFileData>& nzbFileDataList, ExtractBase::ArchivePasswordStatus archivePasswordStatus, bool passwordEnteredByUSer, QString passwordStr){
+void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, ExtractBase::ArchivePasswordStatus archivePasswordStatus, bool passwordEnteredByUSer, QString passwordStr){
 
-    this->nzbFileDataList = nzbFileDataList;
+    this->nzbCollectionData = nzbCollectionData;
+    this->nzbFileDataList = nzbCollectionData.getNzbFileDataList();
+
     this->archivePasswordStatus = archivePasswordStatus;
 
     // search unrar program at each process launch in case settings have been changed at anytime :
@@ -118,9 +121,6 @@ void ExtractBase::launchProcess(const QList<NzbFileData>& nzbFileDataList, Extra
         this->extractProcess->setProgram(this->extractProgramPath, args);
         this->extractProcess->start();
 
-
-        // if path contains "*" add "\\" in order to avoid issues with QRegExp pattern search :
-        //this->fileSavePath.replace("*", "\\*");
 
     }
     // unrar or 7z program has not been found, notify user :
@@ -167,6 +167,7 @@ void ExtractBase::resetVariables(){
 
     this->isExtractProgramFound = false;
     this->fileNameToExtract.clear();
+    this->nzbCollectionData = NzbCollectionData();
     this->nzbFileDataList.clear();
     this->stdOutputLines.clear();
     this->extractProcess->close();
@@ -250,7 +251,9 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
     if (archivePasswordStatus == ExtractBase::ArchiveIsNotPassworded) {
 
         this->extractProcess->close();
-        this->launchProcess(this->nzbFileDataList, ExtractBase::ArchivePasswordCheckEnded);
+
+        this->nzbCollectionData.setNzbFileDataList(this->nzbFileDataList);
+        this->launchProcess(this->nzbCollectionData, ExtractBase::ArchivePasswordCheckEnded);
 
     }
     // password checking has ended, files are passworded, display password box to user :
@@ -264,11 +267,11 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
     // file extraction has ended :
     else {
 
-        // notify repairDecompressThread that extraction is over :
-        emit extractProcessEndedSignal();
-
         // 1. exit without errors :
         if (exitStatus == QProcess::NormalExit && exitCode == QProcess::NormalExit ){
+
+            // notify repairDecompressThread that extraction is over :
+            emit extractProcessEndedSignal();
 
             this->emitFinishToArchivesWithoutErrors(ExtractSuccessStatus, PROGRESS_COMPLETE);
 
@@ -280,6 +283,14 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
         }
         // 2. exit with errors :
         else {
+
+            // notify repairDecompressThread that extraction has failed
+            // send nzbCollectionData in order to cancel extracting of pending multi-set nzb (with same parent)
+            // if par2 have not been downloaded yet
+            // par2 will the be downloaded and extraction of multi-set nzb will then be made at that time :
+            this->nzbCollectionData.setExtractTerminateStatus(ExtractFailedStatus);
+            emit extractProcessEndedSignal(this->nzbCollectionData);
+
             this->emitFinishToArchivesWithoutErrors(ExtractFailedStatus, PROGRESS_COMPLETE);
         }
 
@@ -304,7 +315,8 @@ void ExtractBase::passwordEnteredByUserSlot(bool passwordEntered, QString passwo
 
         // set password entered by user to the extract process :
         if (passwordEntered) {
-            this->launchProcess(this->nzbFileDataList, ExtractBase::ArchivePasswordCheckEnded, passwordEntered, password);
+            this->nzbCollectionData.setNzbFileDataList(this->nzbFileDataList);
+            this->launchProcess(this->nzbCollectionData, ExtractBase::ArchivePasswordCheckEnded, passwordEntered, password);
         }
         // password has not been entered, stop extract process :
         else {
