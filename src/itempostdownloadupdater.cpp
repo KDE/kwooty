@@ -72,6 +72,15 @@ void ItemPostDownloadUpdater::updateDecodeItems(const QModelIndex& parentModelIn
     if (progression == PROGRESS_COMPLETE) {
         QStandardItem* nzbItem = stateItem->parent();
         nzbItem->appendRow(nzbItem->takeRow(stateItem->row()));
+
+
+        // quick and dirty workaround for Qt's treeview expander bug QTBUG-7585 (should be fixed in Qt 4.6.3):
+        #if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
+        if (!this->itemParentUpdater->getCentraWidget()->getTreeView()->isExpanded(parentModelIndex)) {
+            this->itemParentUpdater->getCentraWidget()->getTreeView()->setRowHidden(parentModelIndex.row(), parentModelIndex.parent(), false);
+        }
+        #endif
+
     }
 
     // update parent (nzb item) status :
@@ -86,8 +95,6 @@ void ItemPostDownloadUpdater::updateRepairExtractItems(const QModelIndex& parent
 
     // retrieve current progression and status related items :
     QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(parentModelIndex);
-
-    NzbFileData currentNzbFileData = parentModelIndex.data(NzbFileDataRole).value<NzbFileData>();
 
     // update child and parent items :
     if (itemTarget == UtilityNamespace::BothItemsTarget) {
