@@ -110,8 +110,6 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex index) 
         par2Required = true;
     }
 
-    //kDebug() << "par2Required : "  <<  par2Required << "extractFail :" << extractFail <<  "par2NotDownloaded " << par2NotDownloaded;
-
     // if par2 are not downloaded, change items status :
     if (par2Required) {
 
