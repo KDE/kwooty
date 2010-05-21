@@ -57,6 +57,24 @@ QString Utility::convertByteHumanReadable(const quint64 sizeInByte) {
 }
 
 
+QString Utility::convertDownloadSpeedHumanReadable(const quint64 downloadSpeedInByte) {
+
+    QString downloadSpeedStr;
+    double fileSize = downloadSpeedInByte / NBR_BYTES_IN_MB;
+
+    if (fileSize > ONE_UNIT){
+        downloadSpeedStr = QString::number(fileSize, 'f', 2) + i18n(" MiB/s");
+    }
+    else {
+        downloadSpeedStr = QString::number(static_cast<int>(downloadSpeedInByte / NBR_BYTES_IN_KB)) + i18n(" KiB/s");
+    }
+
+    return downloadSpeedStr;
+}
+
+
+
+
 bool Utility::isInDownloadProcess(const UtilityNamespace::ItemStatus statusItem){
 
     bool status = false;

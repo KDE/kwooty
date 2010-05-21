@@ -227,6 +227,7 @@ public:
     
     
     static QString convertByteHumanReadable(const quint64);
+    static QString convertDownloadSpeedHumanReadable(const quint64);
     static bool isInDownloadProcess(const UtilityNamespace::ItemStatus);
     static bool isReadyToDownload(const UtilityNamespace::ItemStatus);
     static bool isInQueue(const UtilityNamespace::ItemStatus);
