@@ -82,9 +82,6 @@ void ShutdownManager::setupConnections() {
     // enable or disable shutdown button according to nzb parent status:
     connect(parent->getItemParentUpdater(), SIGNAL(statusItemUpdatedSignal()), this, SLOT(statusItemUpdatedSlot()));
 
-    // send shutdown info in status bar :
-    connect(this, SIGNAL(statusBarShutdownInfoSignal(QString, QString)), parent->getStatusBar(), SLOT(statusBarShutdownInfoSlot(QString, QString)));
-
 }
 
 
@@ -557,7 +554,7 @@ void ShutdownManager::launchSystemShutdownSlot() {
     }
 
     // save potential pending data for future session restoring :
-    parent->savePendingDownloads(true, this->getChosenShutdownType());
+    parent->savePendingDownloads(this->getChosenShutdownType());
 
     // shutdown is launched, set system button as "not checked" :
     emit setShutdownButtonCheckedSignal(false);
