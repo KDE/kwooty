@@ -31,9 +31,11 @@ set(Kwooty_SRCS
   extractzip.cpp
   datarestorer.cpp
   shutdownmanager.cpp
-  infocollectordispatcher.cpp
+  clientsobserver.cpp
   folderwatcher.cpp
   fileoperations.cpp
+  queuefileobserver.cpp
+  statsinfobuilder.cpp
   preferences/preferencesserver.cpp
   preferences/preferencesgeneral.cpp
   preferences/preferencesprograms.cpp
@@ -46,8 +48,15 @@ set(Kwooty_SRCS
   data/nzbcollectiondata.cpp
   widgets/icontextwidget.cpp
   widgets/iconcapacitywidget.cpp
-
 )
+
+if(KSTATUSNOTIFIERITEM_FOUND)
+    set(Kwooty_SRCS ${Kwooty_SRCS} systray.cpp)
+else(KSTATUSNOTIFIERITEM_FOUND)
+    set(Kwooty_SRCS ${Kwooty_SRCS} systraylegacy.cpp)
+endif(KSTATUSNOTIFIERITEM_FOUND)
+
+
 
 kde4_add_ui_files(  Kwooty_SRCS
 		    preferences/preferencesserver.ui
