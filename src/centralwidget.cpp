@@ -29,7 +29,6 @@
 #include "utility.h"
 #include "settings.h"
 #include "clientmanagerconn.h"
-#include "mystatusbar.h"
 #include "mytreeview.h"
 #include "segmentmanager.h"
 #include "segmentsdecoderthread.h"
@@ -38,25 +37,32 @@
 #include "itemparentupdater.h"
 #include "datarestorer.h"
 #include "shutdownmanager.h"
-#include "infocollectordispatcher.h"
+#include "clientsobserver.h"
 #include "fileoperations.h"
+#include "mainwindow.h"
+#include "queuefileobserver.h"
 #include "data/itemstatusdata.h"
 
 #include "folderwatcher.h"
 
 
-CentralWidget::CentralWidget(QWidget* parent, MyStatusBar* parentStatusBar) : QWidget(parent)
+CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent)
 {
-
-
-    // retrieve status bar :
-    statusBar = parentStatusBar;
 
     // init the downloadModel :
     downloadModel = new StandardItemModel(this);
     
     // init treeview :
     treeView = new MyTreeView(this);
+
+    // init queue file observer :
+    queueFileObserver = new QueueFileObserver(this);
+
+    // collect connection statuses from clients and build stats info :
+    clientsObserver = new ClientsObserver(this);
+
+    // update view according to items data :
+    itemParentUpdater = new ItemParentUpdater(this);
     
     // setup segment decoder thread :
     segmentsDecoderThread = new SegmentsDecoderThread(this);
@@ -67,18 +73,12 @@ CentralWidget::CentralWidget(QWidget* parent, MyStatusBar* parentStatusBar) : QW
     // setup dir watcher :
     folderWatcher = new FolderWatcher(this);
 
-    // collect download related info and feed status bar and remaining time bar :
-    infoCollectorDispatcher = new InfoCollectorDispatcher(this);
-    
-    // update view according to items data :
-    itemParentUpdater = new ItemParentUpdater(this);
-    
     // manage dispatching / updating segments related to one item :
     segmentManager = new SegmentManager(this);
 
     // create one nntp connection per client:
     this->createNntpClients();
-    
+
     // set download ant temp folders into home dir if not specified by user :
     this->initFoldersSettings();
     
@@ -97,9 +97,6 @@ CentralWidget::CentralWidget(QWidget* parent, MyStatusBar* parentStatusBar) : QW
     // set objects connections :
     this->setupConnections();
 
-    // setup main widgets and layout :
-    this->setupWidgets(parent);
-
 }
 
 CentralWidget::~CentralWidget()
@@ -107,16 +104,6 @@ CentralWidget::~CentralWidget()
     
 }
 
-
-void CentralWidget::setupWidgets(QWidget* parent) {
-
-    QVBoxLayout* mainVBoxLayout = new QVBoxLayout(parent);
-    mainVBoxLayout->setSpacing(2);
-    mainVBoxLayout->setMargin(1);
-
-    mainVBoxLayout->addWidget(this->treeView);   
-
-}
 
 
 void CentralWidget::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList) {
@@ -168,9 +155,9 @@ void CentralWidget::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGl
 
 
 
-void CentralWidget::savePendingDownloads(bool saveSilently, UtilityNamespace::SystemShutdownType systemShutdownType) {
+int CentralWidget::savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType, bool saveSilently) {
 
-    dataRestorer->saveQueueData(saveSilently);
+    int answer = dataRestorer->saveQueueData(saveSilently);
 
     // disable dataRestorer when shutdown is requested because the app will be closed automatically
     // data saving will be triggered and then data saving dialog box could prevent system shutdown :
@@ -178,6 +165,7 @@ void CentralWidget::savePendingDownloads(bool saveSilently, UtilityNamespace::Sy
         dataRestorer->setActive(false);
     }
 
+    return answer;
 }
 
 
@@ -399,7 +387,7 @@ void CentralWidget::statusBarFileSizeUpdate() {
     }
     
 
-    infoCollectorDispatcher->fullFileSizeUpdate(size, files);
+    this->clientsObserver->fullFileSizeUpdate(size, files);
     
 }
 
@@ -450,7 +438,8 @@ void CentralWidget::setStartPauseDownloadAllItems(const UtilityNamespace::ItemSt
 
         UtilityNamespace::ItemStatus currentStatus = downloadModel->getStatusFromStateItem(stateItem);
 
-        if (Utility::isReadyToDownload(currentStatus)) {
+        if ( ( (targetStatus == PauseStatus) && Utility::isReadyToDownload(currentStatus) ) ||
+             ( (targetStatus == IdleStatus)  && Utility::isPaused(currentStatus) )  ) {
             indexesList.append(currentIndex);
         }
     }
@@ -485,10 +474,6 @@ StandardItemModel* CentralWidget::getDownloadModel() const{
     return this->downloadModel;
 }
 
-MyStatusBar* CentralWidget::getStatusBar() const{
-    return this->statusBar;
-}
-
 MyTreeView* CentralWidget::getTreeView() const{
     return this->treeView;
 }
@@ -501,13 +486,17 @@ ShutdownManager* CentralWidget::getShutdownManager() const{
     return this->shutdownManager;
 }
 
-InfoCollectorDispatcher* CentralWidget::getInfoCollectorDispatcher() const{
-    return this->infoCollectorDispatcher;
+ClientsObserver* CentralWidget::getClientsObserver() const{
+    return this->clientsObserver;
 }
 
 
 FileOperations* CentralWidget::getFileOperations() const{
     return this->fileOperations;
+}
+
+QueueFileObserver* CentralWidget::getQueueFileObserver() const{
+    return this->queueFileObserver;
 }
 
 
@@ -520,7 +509,7 @@ void CentralWidget::statusBarFileSizeUpdateSlot(StatusBarUpdateType statusBarUpd
 
     if (statusBarUpdateType == Reset) {
         // reset the status bar :
-        infoCollectorDispatcher->fullFileSizeUpdate(0, 0);
+        this->clientsObserver->fullFileSizeUpdate(0, 0);
     }
 
     if (statusBarUpdateType == Incremental) {
@@ -543,6 +532,14 @@ void CentralWidget::startDownloadSlot(){
     emit dataHasArrivedSignal();
 }
 
+void CentralWidget::startAllDownloadSlot() {
+    this->setStartPauseDownloadAllItems(UtilityNamespace::IdleStatus);
+    emit dataHasArrivedSignal();
+}
+
+void CentralWidget::pauseAllDownloadSlot() {
+    this->setStartPauseDownloadAllItems(UtilityNamespace::PauseStatus);
+}
 
 
 void CentralWidget::downloadWaitingPar2Slot(){

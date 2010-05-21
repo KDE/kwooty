@@ -32,7 +32,6 @@ using namespace UtilityNamespace;
 
 
 class ClientManagerConn;
-class MyStatusBar;
 class MyTreeView;
 class ItemParentUpdater;
 class StandardItemModel;
@@ -41,11 +40,14 @@ class SegmentsDecoderThread;
 class SegmentManager;
 class DataRestorer;
 class ShutdownManager;
-class InfoCollectorDispatcher;
+class ClientsObserver;
 class FileOperations;
 class FolderWatcher;
+class MainWindow;
+class QueueFileObserver;
 class NzbFileData;
 class ItemStatusData;
+
 
 
 Q_DECLARE_METATYPE (QStandardItem*)
@@ -58,27 +60,25 @@ class CentralWidget : public QWidget
     Q_OBJECT
     
 public:
-    CentralWidget(QWidget* parent = 0, MyStatusBar* parentStatusBar = 0);
+    CentralWidget(MainWindow* parent = 0);
     ~CentralWidget();
     void handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
     void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
-    void savePendingDownloads(bool saveSilently = false, UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown);
+    int savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown, bool saveSilently = false);
 
     SegmentManager* getSegmentManager() const;
     StandardItemModel* getDownloadModel() const;
-    MyStatusBar* getStatusBar() const;
     ItemParentUpdater* getItemParentUpdater() const;
     MyTreeView* getTreeView() const;
     ShutdownManager* getShutdownManager() const;
-    InfoCollectorDispatcher* getInfoCollectorDispatcher() const;
+    ClientsObserver* getClientsObserver() const;
     FileOperations* getFileOperations() const;
-
+    QueueFileObserver* getQueueFileObserver() const;
 
 
 private:
 
     MyTreeView* treeView;
-    MyStatusBar* statusBar;
     QList<ClientManagerConn*> clientManagerConnList;
     SegmentManager* segmentManager;
     DataRestorer* dataRestorer;
@@ -87,21 +87,22 @@ private:
     RepairDecompressThread* repairDecompressThread;
     ItemParentUpdater* itemParentUpdater;
     StandardItemModel* downloadModel;
-    InfoCollectorDispatcher* infoCollectorDispatcher;
+    ClientsObserver* clientsObserver;
     FileOperations* fileOperations;
     FolderWatcher* folderWatcher;
+    QueueFileObserver* queueFileObserver;
     int saveErrorButtonCode;
+    
 
     void setDataToModel(const QList<GlobalFileData>&, const QString&);
     void addParentItem (QStandardItem*, const GlobalFileData&);
-    void createNntpClients();
     void setupConnections();
     void updateItemsInView(QModelIndex, QModelIndex);
     void setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus);
     void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QList<QModelIndex>&);
     void statusBarFileSizeUpdate();
     void initFoldersSettings();
-    void setupWidgets(QWidget*);
+    void createNntpClients();
 
 
     
@@ -123,6 +124,8 @@ public slots:
     void updateSettingsSlot();
     void downloadWaitingPar2Slot();
     void statusBarFileSizeUpdateSlot(StatusBarUpdateType);
+    void startAllDownloadSlot();
+    void pauseAllDownloadSlot();
 
     
 private slots:
