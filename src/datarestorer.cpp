@@ -68,7 +68,9 @@ void DataRestorer::setupConnections() {
 
 
 
-void DataRestorer::saveQueueData(const bool saveSilently) {
+int DataRestorer::saveQueueData(const bool saveSilently) {
+
+    int answer = KMessageBox::Yes;
 
     // if option is enabled in settings and is datarestored has not been disabled by shutdown feature :
     if (Settings::restoreDownloads() && this->active)  {
@@ -76,7 +78,7 @@ void DataRestorer::saveQueueData(const bool saveSilently) {
         if (this->isDataToSaveExist()) {
 
             // ask question if previous pending downloads have to be restored :
-            int answer = this->displaySaveMessageBox(saveSilently);
+            answer = this->displaySaveMessageBox(saveSilently);
 
             // pendings downloads have to be saved :
             if (answer == KMessageBox::Yes) {
@@ -95,6 +97,8 @@ void DataRestorer::saveQueueData(const bool saveSilently) {
         }
 
     }
+
+    return answer;
 
 
 }
@@ -474,7 +478,7 @@ int DataRestorer::displaySaveMessageBox(const bool saveSilently) const {
     else {
         // ask question :
         return KMessageBox::messageBox(parent,
-                                       KMessageBox::QuestionYesNo,
+                                       KMessageBox::QuestionYesNoCancel,
                                        i18n("Save pending downloads from current session ?"));
 
     }
