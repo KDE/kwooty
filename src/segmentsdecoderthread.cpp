@@ -40,7 +40,8 @@ SegmentsDecoderThread::SegmentsDecoderThread(CentralWidget* inParent) : QThread(
     this->parent = inParent;
 
     // start current thread :
-    QTimer::singleShot(0, this, SLOT(start()));
+    this->start();
+
 }
 
 
@@ -200,7 +201,7 @@ void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
 
     // if file is a previous segment, suppress it :
     QFile currentSegment;
-    foreach (QString currentFileStr , segmentFilelist) {
+    foreach (QString currentFileStr, segmentFilelist) {
 
         currentSegment.setFileName(tempPathStr + "/" + currentFileStr);
 
