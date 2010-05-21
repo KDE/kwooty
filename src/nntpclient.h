@@ -34,7 +34,7 @@ class NntpClient : public QObject
 
 Q_OBJECT
 Q_ENUMS(ServerAnswer)
-Q_ENUMS(ServerStatus)
+Q_ENUMS(NntpClientStatus)
 
 public:
 
