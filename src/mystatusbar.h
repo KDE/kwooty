@@ -21,7 +21,6 @@
 #ifndef STATUSBAR_H
 #define STATUSBAR_H
 
-#include <KIconLoader>
 #include <KStatusBar>
 
 
@@ -30,6 +29,8 @@
 #include "utility.h"
 using namespace UtilityNamespace;
 
+class MainWindow;
+class ClientsObserver;
 class IconTextWidget;
 class IconCapacityWidget;
 
@@ -39,31 +40,25 @@ class MyStatusBar : public KStatusBar
     Q_OBJECT
 
 public:
-    MyStatusBar(QWidget* parent);
+    MyStatusBar(MainWindow* parent);
     MyStatusBar();
     ~MyStatusBar();
 
 
 private:
-    KIconLoader* iconLoader;
+    ClientsObserver* clientsObserver;
     QLabel* sizeLabel;
     QLabel* speedLabel;
     IconTextWidget* connectionWidget;
     IconTextWidget* shutdownWidget;
     IconTextWidget* timeInfoWidget;
     IconCapacityWidget* iconCapacityWidget;
-    QString encryptionMethod;
-    QString issuerOrgranisation;
-    int totalConnections;
-    int nttpErrorStatus;
-    bool sslActive;
-    bool certificateVerified;
 
-    void resetVariables();
+    void setupConnections();
     void setConnectionWidget();
     void setShutdownWidget();
     void setTimeInfoWidget();
-    void setConnectionActive();
+
     void buildConnWidgetToolTip(const QString&);
 
 
@@ -71,15 +66,12 @@ signals:
 
 public slots:
 
-    void connectionStatusSlot(const int);
-    void encryptionStatusSlot(const bool, const QString, const bool, const QString);
-    void nntpErrorSlot(const int);
-    void statusBarShutdownInfoSlot(QString, QString);
-
+    void updateConnectionStatusSlot();
     void updateDownloadSpeedInfoSlot(const QString);
-    void updateSizeInfoSlot(const QString);
-    void updateTimeInfoSlot(const QString, const QString, const bool);
+    void updateFileSizeInfoSlot(const quint64, const quint64);
+    void updateTimeInfoSlot(const bool);
     void updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace, const QString, const int);
+    void statusBarShutdownInfoSlot(QString, QString);
 
 
 private slots:

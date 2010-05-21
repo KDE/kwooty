@@ -26,29 +26,32 @@
 
 #include <QHBoxLayout>
 
+#include "mainwindow.h"
+#include "centralwidget.h"
+#include "clientsobserver.h"
+#include "statsinfobuilder.h"
+#include "shutdownmanager.h"
 #include "widgets/icontextwidget.h"
 #include "widgets/iconcapacitywidget.h"
 
 #include "settings.h"
 
 
-MyStatusBar::MyStatusBar(QWidget* parent) : KStatusBar(parent)
+MyStatusBar::MyStatusBar(MainWindow* parent) : KStatusBar(parent)
 {
 
-    iconLoader = KIconLoader::global();
+    this->clientsObserver = parent->getCentralWidget()->getClientsObserver();
 
-    this->resetVariables();
+    this->setupConnections();
 
     // create connection widget at bottom left of status bar :
     this->setConnectionWidget();
-
 
     // create remaining time widget at bottom left of status bar :
     this->setTimeInfoWidget();
 
     // create shutdown widget at bottom left of status bar :
     this->setShutdownWidget();
-
 
     // add capacity bar widget :
     this->iconCapacityWidget = new IconCapacityWidget(this);
@@ -62,6 +65,8 @@ MyStatusBar::MyStatusBar(QWidget* parent) : KStatusBar(parent)
     this->speedLabel = new QLabel(this);
     this->addPermanentWidget(this->speedLabel);
 
+    // get current connection status, numbre of remainig files, etc... from clients observer :
+    this->clientsObserver->sendFullUpdate();
 
 }
 
@@ -70,13 +75,46 @@ MyStatusBar::~MyStatusBar() {}
 
 
 
+void MyStatusBar::setupConnections() {
+
+    connect (this->clientsObserver,
+             SIGNAL(updateConnectionStatusSignal()),
+             this,
+             SLOT(updateConnectionStatusSlot()));
+
+    // send remaining size to status bar :
+    connect (this->clientsObserver,
+             SIGNAL(updateFileSizeInfoSignal(const quint64, const quint64)),
+             this,
+             SLOT(updateFileSizeInfoSlot(const quint64, const quint64)));
+
+    // send download speed to status bar :
+    connect (this->clientsObserver->getStatsInfoBuilder(),
+             SIGNAL(updateDownloadSpeedInfoSignal(const QString)),
+             this,
+             SLOT(updateDownloadSpeedInfoSlot(const QString)));
+
+    // send ETA to status bar :
+    connect (this->clientsObserver->getStatsInfoBuilder(),
+             SIGNAL(updateTimeInfoSignal(const bool)),
+             this,
+             SLOT(updateTimeInfoSlot(const bool)));
+
+    // send free space to status bar :
+    connect (this->clientsObserver->getStatsInfoBuilder(),
+             SIGNAL(updateFreeSpaceSignal(const UtilityNamespace::FreeDiskSpace, const QString, const int)),
+             this,
+             SLOT(updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace, const QString, const int)));
 
 
-void MyStatusBar::resetVariables(){
-    this->totalConnections = 0;
-    this->sslActive = false;
-    this->nttpErrorStatus = NoError;
+    // send shutdown info in status bar :
+    connect(((MainWindow*)this->parentWidget())->getCentralWidget()->getShutdownManager(),
+            SIGNAL(statusBarShutdownInfoSignal(QString, QString)),
+            this,
+            SLOT(statusBarShutdownInfoSlot(QString, QString)));
+
 }
+
 
 
 void MyStatusBar::setConnectionWidget(){
@@ -87,7 +125,7 @@ void MyStatusBar::setConnectionWidget(){
     this->addWidget(this->connectionWidget);
 
     // set connection not active by default :
-    this->setConnectionActive();
+    this->updateConnectionStatusSlot();
 
 
 }
@@ -114,20 +152,28 @@ void MyStatusBar::setShutdownWidget(){
 }
 
 
+void MyStatusBar::statusBarShutdownInfoSlot(QString iconStr, QString text) {
+
+    this->shutdownWidget->setIcon(iconStr);
+    this->shutdownWidget->setText(text);
+
+}
 
 
-void MyStatusBar::setConnectionActive(){
+void MyStatusBar::updateConnectionStatusSlot(){
+
 
     QString connectionIconStr;
     QString connection;
 
-    // iinitialize icon loader
-    iconLoader->newIconLoader();
+    int totalConnections = this->clientsObserver->getTotalConnections();
 
-    if (this->totalConnections == 0) {
+    if (totalConnections == 0) {
+
         connectionIconStr ="weather-clear-night";
         connection = i18n("Disconnected");
 
+        int nttpErrorStatus = this->clientsObserver->getNttpErrorStatus();
         // detail disconnection issues to user :
         if (nttpErrorStatus == HostNotFound){
             connection = i18n("Disconnected (Host not found)");
@@ -159,16 +205,17 @@ void MyStatusBar::setConnectionActive(){
     else{
         // set connection icon :
         connectionIconStr = "applications-internet";
-        connection = i18n("Connected: ") + QString::number(this->totalConnections);
+        connection = i18n("Connected: ") + QString::number(totalConnections);
 
-        if (this->sslActive) {
+        if (this->clientsObserver->isSslActive()) {
 
             // if SSL active use another connection icon :
             connectionIconStr = "document-encrypt";
 
             // display type of encryption method used by server :
+            QString encryptionMethod = this->clientsObserver->getEncryptionMethod();
             if (!encryptionMethod.isEmpty()) {
-                connection = connection + " :: " + this->encryptionMethod;
+                connection = connection + " :: " + encryptionMethod;
             }
 
         }
@@ -193,7 +240,7 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
     QString toolTipStr;
 
     // if totalConnections == 0, client is disconnected :
-    if (this->totalConnections == 0) {
+    if (this->clientsObserver->getTotalConnections() == 0) {
         toolTipStr.append(connection);
     }
 
@@ -202,18 +249,19 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
         toolTipStr.append(i18n("Connected to ") + Settings::hostName() + "<br>");
 
         // set SSL connection info :
-        if (this->sslActive) {
+        if (this->clientsObserver->isSslActive()) {
 
             toolTipStr.append(i18n("Connection is SSL encrypted"));
 
+            QString encryptionMethod = this->clientsObserver->getEncryptionMethod();
             if (!encryptionMethod.isEmpty()) {
-                toolTipStr.append(": " + this->encryptionMethod);
+                toolTipStr.append(": " + encryptionMethod);
             }
 
             toolTipStr.append("<br>");
 
-            if (this->certificateVerified) {
-                toolTipStr.append(i18n("Certificate <b>verified</b> by ") + this->issuerOrgranisation);
+            if (this->clientsObserver->isCertificateVerified()) {
+                toolTipStr.append(i18n("Certificate <b>verified</b> by ") + this->clientsObserver->getIssuerOrgranisation());
             }
             else {
                 toolTipStr.append(i18n("Certificate <b>can not be verified</b>"));
@@ -235,9 +283,13 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
 
 
 
-void MyStatusBar::updateSizeInfoSlot(const QString sizeStr) {
+void MyStatusBar::updateFileSizeInfoSlot(const quint64 totalFiles, const quint64 totalSize) {
 
-    this->sizeLabel->setText(sizeStr);
+    // status bar update, display number of files and remianing size :
+    QString remainingFiles = i18n("Files: ") + QString::number(totalFiles) +
+                             " (" + Utility::convertByteHumanReadable(totalSize) + ")";
+
+    this->sizeLabel->setText(remainingFiles);
 }
 
 
@@ -245,8 +297,8 @@ void MyStatusBar::updateSizeInfoSlot(const QString sizeStr) {
 void MyStatusBar::updateDownloadSpeedInfoSlot(const QString speedInKBStr){
 
     this->speedLabel->setText(i18n("Speed: ") + speedInKBStr);
-
 }
+
 
 void MyStatusBar::updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace diskSpaceStatus, const QString availableVal, const int usedDiskPercentage) {
 
@@ -293,10 +345,37 @@ void MyStatusBar::updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace disk
 
 
 
-void MyStatusBar::updateTimeInfoSlot(const QString timeStr, const QString timeToolTip, const bool parentDownloadingFound) {
+void MyStatusBar::updateTimeInfoSlot(const bool parentDownloadingFound) {
 
-    this->timeInfoWidget->setText(timeStr);
-    this->timeInfoWidget->setToolTip(timeToolTip);
+    QString timeInfoStr;
+    QString timeInfoToolTip;
+
+    QString currentTimeValue = this->clientsObserver->getStatsInfoBuilder()->getCurrentTimeValue();
+    QString totalTimeValue = this->clientsObserver->getStatsInfoBuilder()->getTotalTimeValue();
+
+
+    // build text and toolTip :
+    if (!currentTimeValue.isEmpty()) {
+        timeInfoStr.append(currentTimeValue);
+
+        QString timeLabel = this->clientsObserver->getStatsInfoBuilder()->getTimeLabel();
+        QString nzbNameDownloading = this->clientsObserver->getStatsInfoBuilder()->getNzbNameDownloading();
+        timeInfoToolTip.append(i18n("%1<br><b>%2</b>%3<br>", timeLabel, currentTimeValue, " (" + nzbNameDownloading + ")"));
+    }
+
+    if (!totalTimeValue.isEmpty()) {
+        timeInfoStr.append("  -  ");
+        timeInfoStr.append(totalTimeValue);
+
+        timeInfoToolTip.append(i18n("<b>%1</b>%2", totalTimeValue, i18n(" (total)")));
+    }
+
+    if (currentTimeValue.isEmpty()) {
+        timeInfoStr = i18n("n/a");
+    }
+
+    this->timeInfoWidget->setText(timeInfoStr);
+    this->timeInfoWidget->setToolTip(timeInfoToolTip);
 
     // if download is not active, hide the widget :
     if (!parentDownloadingFound) {
@@ -310,50 +389,6 @@ void MyStatusBar::updateTimeInfoSlot(const QString timeStr, const QString timeTo
 
 }
 
-
-void MyStatusBar::connectionStatusSlot(const int connectionStatus){
-
-    if (connectionStatus == Connected){
-        totalConnections++;
-    }
-
-    if (connectionStatus == Disconnected){
-        totalConnections--;
-    }
-
-    this->setConnectionActive();
-
-}
-
-
-void MyStatusBar::nntpErrorSlot(const int nttpErrorStatus){
-
-    this->nttpErrorStatus = nttpErrorStatus;
-    this->setConnectionActive();
-
-}
-
-void MyStatusBar::encryptionStatusSlot(const bool sslActive, const QString encryptionMethod, const bool certificateVerified, const QString issuerOrgranisation){
-
-    //kDebug() << "sslActive : " << sslActive << "encryptionMethod" << encryptionMethod;
-
-    this->encryptionMethod = encryptionMethod;
-    this->sslActive = sslActive;
-    this->certificateVerified = certificateVerified;
-    this->issuerOrgranisation = issuerOrgranisation;
-
-    this->setConnectionActive();
-
-}
-
-
-
-void MyStatusBar::statusBarShutdownInfoSlot(QString iconStr, QString text) {
-
-    this->shutdownWidget->setIcon(iconStr);
-    this->shutdownWidget->setText(text);
-
-}
 
 
 
