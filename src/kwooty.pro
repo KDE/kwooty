@@ -1,7 +1,7 @@
 # -------------------------------------------------
 # Project created by QtCreator 2009-02-21T14:20:28
 # -------------------------------------------------
-TARGET = tuto
+TARGET = kwooty
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
@@ -42,11 +42,15 @@ SOURCES += main.cpp \
     extractrar.cpp \
     extractzip.cpp \
     widgets/icontextwidget.cpp \
-    infocollectordispatcher.cpp \
+    clientsobserver.cpp \
     folderwatcher.cpp \
     fileoperations.cpp \
     data/nzbcollectiondata.cpp \
-    widgets/iconcapacitywidget.cpp
+    widgets/iconcapacitywidget.cpp \
+    systraylegacy.cpp \
+    systray.cpp \
+    queuefileobserver.cpp \
+    statsinfobuilder.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -85,11 +89,15 @@ HEADERS += mainwindow.h \
     extractrar.h \
     extractzip.h \
     widgets/icontextwidget.h \
-    infocollectordispatcher.h \
+    clientsobserver.h \
     folderwatcher.h \
     fileoperations.h \
     data/nzbcollectiondata.h \
-    widgets/iconcapacitywidget.h
+    widgets/iconcapacitywidget.h \
+    systraylegacy.h \
+    systray.h \
+    queuefileobserver.h \
+    statsinfobuilder.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
