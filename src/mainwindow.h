@@ -23,12 +23,16 @@
 
 #include <KXmlGuiWindow>
 #include <KUrl>
+
+#include <QPointer>
+
 #include "utility.h"
 using namespace UtilityNamespace;
 
 class MyStatusBar;
 class MyTreeView;
 class CentralWidget;
+class SysTray;
 
 class MainWindow : public KXmlGuiWindow
 
@@ -41,20 +45,30 @@ public:
 
     void openFileWithFileMode(KUrl, UtilityNamespace::OpenFileMode);
 
-private:
-    QString fileName;
-    CentralWidget* centralWidget;
-    MyStatusBar* statusBar;
-    MyTreeView* treeView;
+    MyStatusBar* getStatusBar() const;
+    CentralWidget* getCentralWidget() const;
 
+    QSize sizeHint() const;
+
+private:
+    CentralWidget* centralWidget;
+    MyTreeView* treeView;
+    QPointer<SysTray> sysTray;
+    MyStatusBar* statusBar;
+    bool quitSelected;
+
+    void buildLayout(QWidget*);
     void setupActions();
-    bool queryClose() ;
+    bool queryClose();
+    void askForSavingDownloads(bool&);
+
 
 signals:
     void aboutToShowSettingsSignal();
     void savePendingDownloadsSignal();
 
 public slots:
+    void systraySlot();
 
 
 private slots:

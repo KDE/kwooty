@@ -25,16 +25,17 @@
 #include <KLocale>
 #include <KActionCollection>
 #include <KStandardAction>
-
 #include <KConfigDialog>
 #include <KPageDialog>
 #include <KPageWidgetItem>
-
+#include <KMessageBox>
+#include <KActionCollection>
 #include <KSaveFile>
 #include <KDebug>
 
 #include <QTextStream>
 #include <QtGui>
+
 #include "settings.h"
 #include "mystatusbar.h"
 #include "mytreeview.h"
@@ -47,25 +48,39 @@
 #include "preferences/preferencesdisplay.h"
 #include "preferences/preferencesshutdown.h"
 
+#ifdef HAVE_KSTATUSNOTIFIERITEM
+#include "systray.h"
+#else
+#include "systraylegacy.h"
+#endif
 
-MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent), fileName(QString())
+
+MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
 {
+
+    // create the user interface :
+    QWidget* widget = new QWidget(this);
+
+    // setup centralWidget :
+    this->centralWidget = new CentralWidget(this);   
+
+    // get treeview instance :
+    this->treeView = this->centralWidget->getTreeView();
+
+    //build layout :
+    this->buildLayout(widget);
+    this->setCentralWidget(widget);
+
+    this->setupActions();
 
     //setup statusBar :
     this->statusBar = new MyStatusBar(this);
     this->setStatusBar(this->statusBar);
 
-    // create the user interface :
-    QWidget* widget = new QWidget(this);
-    this->centralWidget = new CentralWidget(widget, this->statusBar);
+    // setup system tray :
+    this->systraySlot();
 
-    // get treeview instance :
-    treeView = centralWidget->getTreeView();
-
-    this->setCentralWidget(widget);
-
-    this->setupActions();
-
+    this->quitSelected = false;
 
 }
 
@@ -76,8 +91,27 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::setupActions()
-{
+void MainWindow::buildLayout(QWidget* widget) {
+
+    QVBoxLayout* mainVBoxLayout = new QVBoxLayout(widget);
+    mainVBoxLayout->setSpacing(2);
+    mainVBoxLayout->setMargin(1);
+
+    mainVBoxLayout->addWidget(this->treeView);
+
+}
+
+
+MyStatusBar* MainWindow::getStatusBar() const {
+    return this->statusBar;
+}
+
+CentralWidget* MainWindow::getCentralWidget() const{
+    return this->centralWidget;
+}
+
+
+void MainWindow::setupActions() {
 
     //-------------------
     //custom Actions :
@@ -195,15 +229,31 @@ void MainWindow::setupActions()
     connect(centralWidget->getShutdownManager(), SIGNAL(setShutdownButtonEnabledSignal(bool)), shutdownAction, SLOT(setEnabled(bool)) );
 
 
-    //-------------------
+    //startAllDownloadAction
+    KAction* startAllDownloadAction = new KAction(this);
+    startAllDownloadAction->setText(i18n("Start all"));
+    startAllDownloadAction->setIcon(KIcon("media-playback-start"));
+    startAllDownloadAction->setToolTip(i18n("Start all paused downloads"));
+    startAllDownloadAction->setEnabled(true);
+    actionCollection()->addAction("startAll", startAllDownloadAction);
+    connect(startAllDownloadAction, SIGNAL(triggered(bool)), centralWidget, SLOT(startAllDownloadSlot()));
+
+    //pauseAllDownloadAction
+    KAction* pauseAllDownloadAction = new KAction(this);
+    pauseAllDownloadAction->setText(i18n("Pause all"));
+    pauseAllDownloadAction->setIcon(KIcon("media-playback-pause"));
+    pauseAllDownloadAction->setToolTip(i18n("Pause all pending downloads"));
+    pauseAllDownloadAction->setEnabled(true);
+    actionCollection()->addAction("pauseAll", pauseAllDownloadAction);
+    connect(pauseAllDownloadAction, SIGNAL(triggered(bool)), centralWidget, SLOT(pauseAllDownloadSlot()));
+
+
+    //------------------
     //standard Actions :
-    //-------------------
+    //------------------
 
     // quitAction
     KStandardAction::quit(this, SLOT(quit()), actionCollection());
-
-    // closeAction
-    //KStandardAction::close(kapp, SLOT(close()), actionCollection());
 
     // openAction
     KStandardAction::open(this, SLOT(openFile()), actionCollection());
@@ -213,6 +263,7 @@ void MainWindow::setupActions()
 
 
     setupGUI();
+
 
 }
 
@@ -249,6 +300,7 @@ void MainWindow::showSettings(){
 
         connect( dialog, SIGNAL(settingsChanged(const QString&)), centralWidget, SLOT(updateSettingsSlot()) );
         connect( dialog, SIGNAL(settingsChanged(const QString&)), preferencesPrograms, SLOT(aboutToShowSettingsSlot()) );
+        connect( dialog, SIGNAL(settingsChanged(const QString&)), this, SLOT(systraySlot()) );
         connect( this, SIGNAL(aboutToShowSettingsSignal()), preferencesPrograms, SLOT(aboutToShowSettingsSlot()) );
 
         // show settings box :
@@ -258,6 +310,15 @@ void MainWindow::showSettings(){
 
 
 }
+
+
+QSize MainWindow::sizeHint() const {
+    return QSize(QApplication::desktop()->screenGeometry(this).width() / 1.5,
+                 QApplication::desktop()->screenGeometry(this).height() / 2);
+}
+
+
+
 
 
 //============================================================================================================//
@@ -277,17 +338,88 @@ void MainWindow::openFileWithFileMode(KUrl nzbUrl, UtilityNamespace::OpenFileMod
 }
 
 
+
 void MainWindow::quit() {
-    // ask to save pending downloads when quitting action performed :
-    centralWidget->savePendingDownloads();
-    kapp->quit();
+
+    // quit has been requested :
+    this->quitSelected = true;
+
+    // call queryclose() for quit confirmation :
+    if (this->queryClose()) {
+        kapp->quit();
+    }
+
 }
 
 
+
 bool MainWindow::queryClose() {
-    // ask to save pending downloads when closing action performed :
-    centralWidget->savePendingDownloads();
-    return true;
+
+    // by default quit the application :
+    bool confirmQuit = true;
+
+    // session manager is not responsible from this call :
+    if (!kapp->sessionSaving()) {
+
+        // if the main window is just closed :
+        if (!this->quitSelected ) {
+
+            // if system tray icon exists :
+            if (Settings::sysTray()) {
+
+                // display a warning message :
+                KMessageBox::information( this,
+                                          i18n( "<qt>Closing the main window will keep Kwooty running in the System Tray. "
+                                                "Use <B>Quit</B> from the menu or the Kwooty tray icon to exit the application.</qt>" ),
+                                          i18n( "Docking in System Tray" ), "hideOnCloseInfo" );
+
+                // hide the main window and don't quit :
+                this->hide();
+                confirmQuit = false;
+            }
+            // system tray icon does not exist, ask to save data and close the application :
+            else {
+                this->askForSavingDownloads(confirmQuit);
+            }
+        }
+        // quit action has been performed, ask to save data and close the application :
+        else {
+            this->askForSavingDownloads(confirmQuit);
+        }
+    }
+    // session manager is about to quit, just save data silently and quit :
+    else {
+        centralWidget->savePendingDownloads(UtilityNamespace::ShutdownMethodUnknown, true);
+    }
+
+    return confirmQuit;
+
+}
+
+
+void MainWindow::askForSavingDownloads(bool& confirmQuit) {
+
+    int answer = centralWidget->savePendingDownloads();
+
+    if (answer == KMessageBox::Cancel) {
+        this->quitSelected = false;
+        confirmQuit = false;
+    }
+
+}
+
+
+void MainWindow::systraySlot() {
+
+    // remove system tray if requested by user :
+    if (!Settings::sysTray() && this->sysTray) {
+        delete this->sysTray;
+    }
+    // setup system tray if requested by user :
+    else if (Settings::sysTray() && !this->sysTray) {
+        this->sysTray = new SysTray(this);
+    }
+
 }
 
 
