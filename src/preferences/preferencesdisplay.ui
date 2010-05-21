@@ -65,6 +65,16 @@
     </widget>
    </item>
    <item row="5" column="0">
+    <widget class="QCheckBox" name="kcfg_sysTray">
+     <property name="toolTip">
+      <string>Display icon in system tray</string>
+     </property>
+     <property name="text">
+      <string>Display icon in system tray</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
     <widget class="QGroupBox" name="actionGroupBox">
      <property name="title">
       <string>Estimated download time</string>
@@ -93,7 +103,7 @@
      </layout>
     </widget>
    </item>
-   <item row="6" column="0">
+   <item row="7" column="0">
     <spacer name="spacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
