@@ -46,7 +46,7 @@ public:
 
     DataRestorer(CentralWidget* parent = 0);
     DataRestorer();
-    void saveQueueData(const bool);
+    int saveQueueData(const bool);
     void setActive(const bool);
 
 private:
