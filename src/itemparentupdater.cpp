@@ -25,7 +25,7 @@
 #include <KDebug>
 
 #include "centralwidget.h"
-#include "infocollectordispatcher.h"
+#include "clientsobserver.h"
 #include "standarditemmodel.h"
 #include "itemdownloadupdater.h"
 #include "itempostdownloadupdater.h"
@@ -82,7 +82,7 @@ void ItemParentUpdater::setupConnections() {
 
     connect (itemDownloadUpdater,
              SIGNAL(statusBarDecrementSignal(const quint64, const int)),
-             parent->getInfoCollectorDispatcher(),
+             parent->getClientsObserver(),
              SLOT(decrementSlot(const quint64, const int)));
 
     // recalculate full nzb size when children may have been removed :
