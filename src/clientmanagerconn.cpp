@@ -21,11 +21,11 @@
 #include "clientmanagerconn.h"
 
 #include <KDebug>
+#include <QTimer>
 #include "settings.h"
 #include "centralwidget.h"
 #include "segmentmanager.h"
-#include "mystatusbar.h"
-#include "infocollectordispatcher.h"
+#include "clientsobserver.h"
 #include "nntpclient.h"
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -97,26 +97,26 @@ void ClientManagerConn::initSlot()
     // send connection status (connected, deconnected) to status bar :
     connect (nntpClient,
              SIGNAL(connectionStatusSignal(const int)),
-             parent->getStatusBar(),
+             parent->getClientsObserver(),
              SLOT(connectionStatusSlot(const int)));
 
     // send type of encryption used by host with ssl connection to status bar :
     connect (nntpClient,
              SIGNAL(encryptionStatusSignal(const bool, const QString, const bool, const QString)),
-             parent->getStatusBar(),
+             parent->getClientsObserver(),
              SLOT(encryptionStatusSlot(const bool, const QString, const bool, const QString)));
 
     // send eventual socket error to status bar :
     connect (nntpClient,
              SIGNAL(nntpErrorSignal(const int)),
-             parent->getStatusBar(),
+             parent->getClientsObserver(),
              SLOT(nntpErrorSlot(const int)));
 
     // send bytes downloaded to info collector dispatcher :
     connect (nntpClient,
              SIGNAL(speedSignal(const int)),
-             parent->getInfoCollectorDispatcher(),
-             SLOT(nntpClientspeedSlot(const int)));
+             parent->getClientsObserver(),
+             SLOT(nntpClientSpeedSlot(const int)));
 
 }
 
