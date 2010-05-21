@@ -84,14 +84,27 @@ void StandardItemModel::updateSateItem(QStandardItem* stateItem, const UtilityNa
 
     // reinject itemstatusdata in stateItem :
     this->storeStatusDataToItem(stateItem, itemStatusData);
+
 }
 
 
 void StandardItemModel::updateProgressItem(const QModelIndex& index, const int progressNumber) {
 
     QStandardItem* progressItem = this->getProgressItemFromIndex(index);
-    // set progression :
-    progressItem->setData(progressNumber, ProgressRole);
+
+    int currentDownloadProgress = progressItem->data(ProgressRole).toInt();
+
+    if (currentDownloadProgress != progressNumber) {
+
+        // set progression :
+        progressItem->setData(progressNumber, ProgressRole);
+
+        if (this->isNzbItem(progressItem)) {
+            emit parentProgressItemChangedSignal();
+        }
+
+    }
+
 }
 
 
@@ -106,10 +119,24 @@ void StandardItemModel::updateStatusDataFromIndex(const QModelIndex& index, cons
 
 
 void StandardItemModel::storeStatusDataToItem(QStandardItem* stateItem, const ItemStatusData& itemStatusData) {
-    // set status data to item :
-    QVariant variant;
-    variant.setValue(itemStatusData);
-    stateItem->setData(variant, StatusRole);
+
+    // get itemstatusdata from stateItem :
+    ItemStatusData currentItemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
+
+    if (currentItemStatusData != itemStatusData) {
+
+        // set status data to item :
+        QVariant variant;
+        variant.setValue(itemStatusData);
+        stateItem->setData(variant, StatusRole);
+
+
+        if (this->isNzbItem(stateItem)) {
+            emit parentStatusItemChangedSignal();
+        }
+
+    }
+
 }
 
 

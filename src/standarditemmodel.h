@@ -35,6 +35,9 @@ class NzbFileData;
 
 class StandardItemModel : public QStandardItemModel
 {
+
+    Q_OBJECT
+
 public:
     StandardItemModel(CentralWidget* parent = 0);
     StandardItemModel();
@@ -62,6 +65,9 @@ private:
 
 
 signals:
+    void parentStatusItemChangedSignal();
+    void parentProgressItemChangedSignal();
+
 
 public slots:
 
