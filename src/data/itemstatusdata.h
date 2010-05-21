@@ -41,6 +41,7 @@ public:
     void setDecodeFinish(const bool);
     UtilityNamespace::CrcNotify getCrc32Match() const;
     void setCrc32Match(const UtilityNamespace::CrcNotify);
+    bool operator!=(const ItemStatusData&);
 
 private:
     UtilityNamespace::ItemStatus status;

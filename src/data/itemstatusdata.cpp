@@ -87,6 +87,23 @@ UtilityNamespace::ItemStatus ItemStatusData::getStatus() const{
 }
 
 
+bool ItemStatusData::operator!=(const ItemStatusData& itemStatusDataToCompare) {
+
+    bool different = false;
+
+    if ( (this->status            != itemStatusDataToCompare.getStatus())        ||
+         (this->data              != itemStatusDataToCompare.getDataStatus())    ||
+         (this->downloadFinish    != itemStatusDataToCompare.isDownloadFinish()) ||
+         (this->decodeFinish      != itemStatusDataToCompare.isDecodeFinish())   ||
+         (this->crc32Match        != itemStatusDataToCompare.getCrc32Match()) ) {
+
+            different = true;
+    }
+
+    return different;
+}
+
+
 QDataStream& operator<<(QDataStream& out, const ItemStatusData& itemStatusData) {
 
     out << (qint16)itemStatusData.getStatus()
