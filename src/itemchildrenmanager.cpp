@@ -34,9 +34,6 @@ ItemChildrenManager::ItemChildrenManager(CentralWidget* parent, ItemParentUpdate
     this->downloadModel = parent->getDownloadModel();
     this->itemParentUpdater = itemParentUpdater;
 
-    // set displayIcons setting value :
-    this->displayIcons = Settings::displayIcons();
-
     // set smartPar2Download setting value :
     this->smartPar2Download = Settings::smartPar2Download();
 
@@ -226,25 +223,7 @@ void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex index, Uti
 
 void ItemChildrenManager::settingsChangedSlot() {
 
-    // 1. settings have been changed, set or unset icons :
-    if (this->displayIcons != Settings::displayIcons()) {
-
-        // get the root model :
-        QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
-
-        // for each parent item, update it children :
-        for (int i = 0; i < rootItem->rowCount(); i++) {
-
-            QStandardItem* parentItem = rootItem->child(i, FILE_NAME_COLUMN);
-            this->setIconToFileNameItemSlot(parentItem->index());
-        }
-
-        // update displayIcons :
-        this->displayIcons = Settings::displayIcons();
-    }
-
-
-    // 2. settings have been changed, enable or disable smart par2 download :
+    // settings have been changed, enable or disable smart par2 download :
     if (this->smartPar2Download != Settings::smartPar2Download()) {
 
         // get the root model :
