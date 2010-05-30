@@ -22,8 +22,9 @@
 #define UNIQUEAPP_H
 
 #include <KUniqueApplication>
-
+#include <QPointer>
 class MainWindow;
+
 
 
 class UniqueApp : public KUniqueApplication
@@ -33,11 +34,14 @@ public:
     UniqueApp();
     virtual ~UniqueApp();
     virtual int newInstance();
+    static MainWindow* mainwindow();
 
 private:
     MainWindow* mainWindow;
+
     bool kwootyInstance;
 
 };
+
 
 #endif // UNIQUEAPP_H

@@ -28,6 +28,12 @@
 #include "mainwindow.h"
 
 
+namespace
+{
+    QPointer<MainWindow> globalMainWindow;
+}
+
+
 UniqueApp::UniqueApp() : KUniqueApplication()
 {
     this->kwootyInstance = false;
@@ -50,8 +56,11 @@ int UniqueApp::newInstance()
 
         this->setWindowIcon(KIcon("kwooty"));
 
-        mainWindow = new MainWindow();
-        mainWindow->show();
+        this->mainWindow = new MainWindow();
+        this->mainWindow->show();
+
+        globalMainWindow = this->mainWindow;
+
     }
 
     // instance already exists :
@@ -71,3 +80,12 @@ int UniqueApp::newInstance()
 
     return 0;
 }
+
+
+MainWindow* UniqueApp::mainwindow() {
+
+    return globalMainWindow;
+
+}
+
+
