@@ -20,8 +20,6 @@
 
 #include "itemparentupdater.h"
 
-#include <QUuid>
-
 #include <KDebug>
 
 #include "centralwidget.h"
@@ -395,10 +393,11 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
 
         // build data for repairing - extracting process :
         NzbCollectionData nzbCollectionData;
-
         nzbCollectionData.setNzbFileDataList(nzbFileDataList);
         nzbCollectionData.setPar2FileDownloadStatus(par2FileStatus);
-        nzbCollectionData.setNzbParentId(QUuid::createUuid().toString());
+        nzbCollectionData.setNzbParentId(this->downloadModel->getUuidStrFromIndex(nzbIndex));
+
+        //kDebug() << "UUID : " << nzbFileName->data(IdentifierRole).toString();
 
         // send nzbCollectionData to repairDecompressThread class :
         emit repairDecompressSignal(nzbCollectionData);
