@@ -41,6 +41,7 @@
 #include "fileoperations.h"
 #include "mainwindow.h"
 #include "queuefileobserver.h"
+#include "notificationmanager.h"
 #include "data/itemstatusdata.h"
 
 #include "folderwatcher.h"
@@ -93,6 +94,9 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent)
 
     // setup nzb file opening closing :
     fileOperations = new FileOperations(this);
+
+    // init text according to status for notification events :
+    NotificationManager::init();
 
     // set objects connections :
     this->setupConnections();
@@ -226,6 +230,9 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
 
     }
 
+
+    // set parent unique identifier:
+    nzbNameItem->setData(QVariant(QUuid::createUuid().toString()), IdentifierRole);
 
     // set idle status by default :
     nzbStateItem->setData(qVariantFromValue(ItemStatusData()), StatusRole);
