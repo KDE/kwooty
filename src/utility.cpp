@@ -192,6 +192,22 @@ bool Utility::isPostDownloadProcessing(const UtilityNamespace::ItemStatus status
 }
 
 
+bool Utility::isJobFinish(const UtilityNamespace::ItemStatus statusItem){
+
+    bool status = false;
+
+    if ( (statusItem == DownloadFinishStatus)    ||
+         (statusItem == DecodeFinishStatus)      ||
+         (statusItem == VerifyFinishedStatus)    ||
+         (statusItem == RepairFinishedStatus)    ||
+         (statusItem == ExtractFinishedStatus) ){
+
+        status = true;
+    }
+
+    return status;
+}
+
 
 bool Utility::saveData(const QString& fileSavePath, const QString& fileName, const QByteArray& segmentData){
 

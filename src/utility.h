@@ -238,6 +238,7 @@ public:
     static bool isDecoding(const UtilityNamespace::ItemStatus);
     static bool isWaitingForDecode(const UtilityNamespace::ItemStatus, const UtilityNamespace::Data);
     static bool isPostDownloadProcessing(const UtilityNamespace::ItemStatus);
+    static bool isJobFinish(const UtilityNamespace::ItemStatus);
     static bool saveData(const QString&, const QString&, const QByteArray&);
     static bool createFolder(const QString&);
     static bool isFolderExists(const QString&);
