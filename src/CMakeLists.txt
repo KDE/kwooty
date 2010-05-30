@@ -36,6 +36,7 @@ set(Kwooty_SRCS
   fileoperations.cpp
   queuefileobserver.cpp
   statsinfobuilder.cpp
+  notificationmanager.cpp
   preferences/preferencesserver.cpp
   preferences/preferencesgeneral.cpp
   preferences/preferencesprograms.cpp
@@ -46,6 +47,7 @@ set(Kwooty_SRCS
   data/itemstatusdata.cpp
   data/globalfiledata.cpp 
   data/nzbcollectiondata.cpp
+  data/jobnotifydata.cpp
   widgets/icontextwidget.cpp
   widgets/iconcapacitywidget.cpp
 )
@@ -77,6 +79,6 @@ target_link_libraries(kwooty ${KDE4_KDEUI_LIBS}
 
 
 install(TARGETS kwooty DESTINATION ${BIN_INSTALL_DIR})
-install(FILES kwootyui.rc DESTINATION  ${DATA_INSTALL_DIR}/kwooty)
+install(FILES kwootyui.rc kwooty.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kwooty)
 install(FILES preferences/settings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 install(FILES kwooty.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
