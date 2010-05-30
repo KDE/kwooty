@@ -41,7 +41,6 @@ public:
 
 private:
     CentralWidget* parent;
-    bool displayIcons;
     bool smartPar2Download;
 
     void setupConnections();
