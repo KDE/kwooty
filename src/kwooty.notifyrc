@@ -1,0 +1,12 @@
+[Global]
+IconName=kwooty
+Comment=Kwooty
+
+[Event/jobFinished]
+Name=Job Finished
+Action=Popup
+
+[Event/insufficientDiskSpace]
+Name=Insufficient Disk Space
+Action=Popup
+Persistent=True
