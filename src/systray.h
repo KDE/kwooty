@@ -60,7 +60,8 @@ private:
     void initPixmaps();
     void initShow();
     void updateIconProgress(const int&);
-    void updateIconStatus(const UtilityNamespace::ItemStatus&);
+    bool updateIconStatus(const UtilityNamespace::ItemStatus&);
+    bool blendOverlay(const QPixmap&);
     QString buildToolTipRow(const QString&, const QString&);
     void createToolTip();
 

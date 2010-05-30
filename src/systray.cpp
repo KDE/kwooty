@@ -106,6 +106,7 @@ void SysTray::setupConnections() {
 void SysTray::initShow() {
 
     this->setStatus(KStatusNotifierItem::Active);
+    this->setCategory(KStatusNotifierItem::ApplicationStatus);
 
     // setup signals/slots connections :
     this->setupConnections();
@@ -145,32 +146,34 @@ void SysTray::updateConnectionStatusSlot() {
 
 void SysTray::initPixmaps() {
 
-    this->normalBaseIcon = KIconLoader::global()->loadIcon("kwooty", KIconLoader::Panel);
+    this->normalBaseIcon = KIconLoader::global()->loadIcon("kwooty", KIconLoader::Panel, KIconLoader::SizeSmallMedium);
     this->setIconByName("kwooty");
     this->setOverlayIconByName(QString());
 
     // store grayed icon :
     this->grayedBaseIcon = this->normalBaseIcon;
-    KIconEffect::semiTransparent(this->grayedBaseIcon);
+    QImage normalImage = this->normalBaseIcon.toImage();
+    KIconEffect::toMonochrome(normalImage, QColor("black"), QColor("black"), 0.30);
+    this->grayedBaseIcon = QPixmap::fromImage(normalImage);
 
 }
 
 
-void SysTray::updateIconStatus(const UtilityNamespace::ItemStatus& itemStatus) {
+bool SysTray::updateIconStatus(const UtilityNamespace::ItemStatus& itemStatus) {
 
-    QString iconName;
+    KIcon icon;
 
     // get the proper icon according to item status :
     switch(itemStatus) {
 
     case UtilityNamespace::DownloadStatus:{
 
-            iconName = "mail-receive";
+            icon = KIcon("mail-receive");
             break;
         }
 
     case UtilityNamespace::PauseStatus: {
-            iconName = "media-playback-pause";
+            icon = KIcon("media-playback-pause");
             break;
         }
 
@@ -180,8 +183,16 @@ void SysTray::updateIconStatus(const UtilityNamespace::ItemStatus& itemStatus) {
 
     }
 
-    this->setIconByPixmap(this->renderedIcon);
-    this->setOverlayIconByName(iconName);
+
+    bool iconSet = false;
+    if (!icon.isNull()) {
+
+        QPixmap statusPixmap = icon.pixmap( 10, 10 );
+        iconSet = this->blendOverlay(statusPixmap);
+
+    }
+
+    return iconSet;
 
 }
 
@@ -212,7 +223,12 @@ void SysTray::updateIconProgress(const int& progress) {
             p.end();
 
             // draw kwooty icon with status overlay :
-            this->updateIconStatus(this->queueFileObserver->getFocusedItemStatus());
+            bool iconStatusSet = this->updateIconStatus(this->queueFileObserver->getFocusedItemStatus());
+
+            // if status icon has not been set, just set the rendered icon without status overlay :
+            if (!iconStatusSet) {
+                this->setIconByPixmap (this->renderedIcon);
+            }
 
             this->oldMergePos = mergePos;
 
@@ -221,6 +237,29 @@ void SysTray::updateIconProgress(const int& progress) {
     }
 
 }
+
+bool SysTray::blendOverlay(const QPixmap& overlay) {
+
+    bool iconSet = false;
+
+    if (!overlay.isNull()) {
+
+        // draw icon status overlay at bottom right
+        const int x = this->normalBaseIcon.size().width() - overlay.size().width();
+        const int y = this->normalBaseIcon.size().height() - overlay.size().width();
+
+        QPixmap finalIcon = this->renderedIcon;
+        QPainter p(&finalIcon);
+        p.drawPixmap( x, y, overlay );
+        p.end();
+        this->setIconByPixmap(finalIcon);
+
+        iconSet = true;
+    }
+
+    return iconSet;
+}
+
 
 
 
@@ -287,8 +326,6 @@ void SysTray::createToolTip() {
 
     currentTip.append("</table>");
 
-    //    this->setToolTipIconByName("kwooty");
-    //    this->setToolTipTitle("Kwooty");
     this->setToolTipSubTitle(currentTip);
 
 }
