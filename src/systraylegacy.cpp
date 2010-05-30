@@ -174,7 +174,11 @@ void SysTray::initPixmaps() {
 
     // store grayed icon :
     this->grayedBaseIcon = this->normalBaseIcon;
-    KIconEffect::semiTransparent(this->grayedBaseIcon);
+    QImage normalImage = this->normalBaseIcon.toImage();
+    KIconEffect::toMonochrome(normalImage, QColor("black"), QColor("black"), 0.30);
+    this->grayedBaseIcon = QPixmap::fromImage(normalImage);
+
+
 
 }
 
