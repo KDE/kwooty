@@ -50,7 +50,9 @@ SOURCES += main.cpp \
     systraylegacy.cpp \
     systray.cpp \
     queuefileobserver.cpp \
-    statsinfobuilder.cpp
+    statsinfobuilder.cpp \
+    data/jobnotifydata.cpp \
+    notificationmanager.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -97,7 +99,9 @@ HEADERS += mainwindow.h \
     systraylegacy.h \
     systray.h \
     queuefileobserver.h \
-    statsinfobuilder.h
+    statsinfobuilder.h \
+    data/jobnotifydata.h \
+    notificationmanager.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
