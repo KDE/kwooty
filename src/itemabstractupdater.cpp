@@ -132,12 +132,12 @@ void ItemAbstractUpdater::countItemStatus(const int status) {
             break;
         };
 
-    // /!\ during download process the status could be ExtractSuccessStatus when following condition occurs :
-    // A multi nzb-set has been fully downloaded and par2 files were not needed (WaitForPar2IdleStatus)
-    // then extract process if directly done : 1st nzb-set is correctly extracted
-    // but extracting of 2nd nzb-set failed (due to a bad crc for eg.)
-    // par2 files are then downloaded for repairing of 2nd nzb-set.
-    // => consider previously extracted files from 1st nzb-set as decodeFinish files :
+        // /!\ during download process the status could be ExtractSuccessStatus when following condition occurs :
+        // A multi nzb-set has been fully downloaded and par2 files were not needed (WaitForPar2IdleStatus)
+        // then extract process if directly done : 1st nzb-set is correctly extracted
+        // but extracting of 2nd nzb-set failed (due to a bad crc for eg.)
+        // par2 files are then downloaded for repairing of 2nd nzb-set.
+        // => consider previously extracted files from 1st nzb-set as decodeFinish files :
     case ExtractSuccessStatus: {
             this->decodeFinishItemNumber++;
             break;
@@ -153,42 +153,31 @@ void ItemAbstractUpdater::setIconToFileNameItem(const QModelIndex& index, Utilit
 
     if (!this->downloadModel->isNzbItem(this->downloadModel->itemFromIndex(index))) {
 
-        // if icons have to be displayed :
-        if (Settings::displayIcons()) {
 
-            // get final status :
-            QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(index);
-            ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
+        // get final status :
+        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(index);
+        ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
 
-            if (statusIconStrMap.contains(status)) {
+        if (statusIconStrMap.contains(status)) {
 
-                if (status == DownloadFinishStatus) {
+            if (status == DownloadFinishStatus) {
 
-                    if (itemStatusData.getDataStatus() == NoData) {
-                        // in this case the status is set to DecodeErrorStatus only to display the proper icon :
-                        status = DecodeErrorStatus;
-                    }
-
+                if (itemStatusData.getDataStatus() == NoData) {
+                    // in this case the status is set to DecodeErrorStatus only to display the proper icon :
+                    status = DecodeErrorStatus;
                 }
 
-                // get fileName item and set corresponding icon :
-                QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
-                fileNameItem->setIcon(KIcon(this->statusIconStrMap.value(status)));
-
             }
-        }
-        // if icon does not have to be displayed :
-        else {
+
+            // get fileName item and set corresponding icon :
             QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
-            if (!fileNameItem->icon().isNull()) {
-                // remove icon :
-                fileNameItem->setIcon(QIcon());
-
-            }
+            fileNameItem->setIcon(KIcon(this->statusIconStrMap.value(status)));
 
         }
-
     }
 
+
 }
+
+
 
