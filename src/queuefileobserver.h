@@ -24,7 +24,11 @@
 
 #include <QObject>
 #include <QStandardItem>
+#include <QMap>
+#include <QDateTime>
+#include <QTimer>
 
+#include "data/jobnotifydata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -33,7 +37,7 @@ class StandardItemModel;
 class MyTreeView;
 
 
-class QueueFileObserver : public QObject{
+class QueueFileObserver : public QObject {
 
     Q_OBJECT
 
@@ -45,16 +49,23 @@ public:
 
 
 private:
+
     StandardItemModel* downloadModel;
     MyTreeView* treeView;
     QStandardItem* parentItem;
     UtilityNamespace::ItemStatus focusedItemStatus;
     int focusedProgressValue;
     int previousProgressValue;
+    QTimer* jobNotifyTimer;
+    QList<JobNotifyData> jobNotifyDataList;
 
     void setupConnections();
     QStandardItem* searchParentItem(const UtilityNamespace::ItemStatus);
     void checkProgressItemValue(QStandardItem*);
+    JobNotifyData retrieveJobNotifyData(QStandardItem*, UtilityNamespace::ItemStatus);
+    void addToList(const JobNotifyData&);
+
+
 
 signals:
 
@@ -64,9 +75,13 @@ signals:
 public slots:
 
     void parentItemChangedSlot();
+    void jobFinishStatusSlot(QStandardItem*);
 
 
 private slots:
+
+
+    void checkJobFinishSlot();
 
 
 

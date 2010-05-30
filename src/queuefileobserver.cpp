@@ -26,6 +26,7 @@
 #include "centralwidget.h"
 #include "mytreeview.h"
 #include "standarditemmodel.h"
+#include "notificationmanager.h"
 
 
 QueueFileObserver::QueueFileObserver(CentralWidget* parent) : QObject(parent) {
@@ -33,11 +34,14 @@ QueueFileObserver::QueueFileObserver(CentralWidget* parent) : QObject(parent) {
     this->downloadModel = parent->getDownloadModel();
     this->treeView = parent->getTreeView();
 
+    this->jobNotifyTimer = new QTimer(this);
+
     this->setupConnections();
 
     // init variables :
     this->focusedProgressValue = PROGRESS_UNKNOWN;
     this->focusedItemStatus = IdleStatus;
+
 
 }
 
@@ -52,10 +56,15 @@ void QueueFileObserver::setupConnections() {
 
     // parent status item has been updated :
     connect(this->downloadModel,
-            SIGNAL(parentStatusItemChangedSignal()),
+            SIGNAL(parentStatusItemChangedSignal(QStandardItem*)),
             this,
             SLOT(parentItemChangedSlot()));
 
+    // parent status item has been updated :
+    connect(this->downloadModel,
+            SIGNAL(parentStatusItemChangedSignal(QStandardItem*)),
+            this,
+            SLOT(jobFinishStatusSlot(QStandardItem*)));
 
     // all rows have been removed :
     connect(this->treeView,
@@ -68,6 +77,10 @@ void QueueFileObserver::setupConnections() {
             SIGNAL(statusBarFileSizeUpdateSignal(StatusBarUpdateType)),
             this,
             SLOT(parentItemChangedSlot()));
+
+
+    connect(this->jobNotifyTimer, SIGNAL(timeout()), this, SLOT(checkJobFinishSlot()));
+
 
 }
 
@@ -93,22 +106,30 @@ QStandardItem* QueueFileObserver::searchParentItem(const UtilityNamespace::ItemS
             if (Utility::isDownloadOrPausing(currentStatus)) {
 
                 stateItem = parentStateItem;
-
-                //kDebug() << "DOWNLOAD ITEM FOUND";
                 break;
             }
         }
 
 
-        if (itemStatus == PauseStatus) {
+        else if (itemStatus == PauseStatus) {
             // check if parent status is either downloading or pausing :
             if (Utility::isPaused(currentStatus)) {
-                stateItem = parentStateItem;
 
-                //kDebug() << "PAUSE ITEM FOUND";
+                stateItem = parentStateItem;
                 break;
             }
         }
+
+        else if (itemStatus == VerifyStatus) {
+            // check if parent status is currently being post processed :
+            if (Utility::isPostDownloadProcessing(currentStatus)) {
+
+                stateItem = parentStateItem;
+                break;
+            }
+        }
+
+
 
 
     }
@@ -216,3 +237,109 @@ UtilityNamespace::ItemStatus QueueFileObserver::getFocusedItemStatus() const {
     return this->focusedItemStatus;
 }
 
+
+
+void QueueFileObserver::jobFinishStatusSlot(QStandardItem* stateItem) {
+
+
+    UtilityNamespace::ItemStatus status = this->downloadModel->getStatusFromStateItem(stateItem);
+    JobNotifyData currentJobNotifyData = this->retrieveJobNotifyData(stateItem, status);
+
+    // pending finish job has already been found in the list :
+    if (this->jobNotifyDataList.contains(currentJobNotifyData)) {
+
+
+        int currentIndex = this->jobNotifyDataList.indexOf(currentJobNotifyData);
+
+        if (Utility::isJobFinish(status)) {
+
+            // update data object in the list with new status value :
+            this->jobNotifyDataList.replace(currentIndex, currentJobNotifyData);
+
+        }
+        // job is currently no more finished :
+        else {
+            // status is not as job finished anymore (ie, switched from downloadFinish to Verifying...) :
+            this->jobNotifyDataList.removeAt(currentIndex);
+        }
+
+    }
+    // the current item is not in the list :
+    else {
+
+        // add it to the list if the status corresponds to a job finished :
+        if (Utility::isJobFinish(status)) {
+
+            JobNotifyData jobNotifyData = this->retrieveJobNotifyData(stateItem, status);
+            this->addToList(jobNotifyData);
+
+            this->jobNotifyTimer->start(1000);
+        }
+
+    }
+
+}
+
+
+
+void QueueFileObserver::addToList(const JobNotifyData& jobNotifyData) {
+
+    // keep a list with a max size of 10 :
+    if (this->jobNotifyDataList.size() > 10) {
+        this->jobNotifyDataList.takeFirst();
+    }
+
+    // append the nzb file to the list :
+    this->jobNotifyDataList.append(jobNotifyData);
+
+}
+
+
+JobNotifyData QueueFileObserver::retrieveJobNotifyData(QStandardItem* stateItem, UtilityNamespace::ItemStatus status) {
+
+
+    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
+
+    // store parent identifier :
+    JobNotifyData jobNotifyData;
+    jobNotifyData.setParentUniqueIdentifier(fileNameItem->data(IdentifierRole).toString());
+    jobNotifyData.setNzbFileName(fileNameItem->text());
+    jobNotifyData.setStatus(status);
+    jobNotifyData.setDateTime(QDateTime::currentDateTime());
+
+    return jobNotifyData;
+}
+
+
+
+
+void QueueFileObserver::checkJobFinishSlot() {
+
+    QList<JobNotifyData> pendingJobList;
+
+    foreach(JobNotifyData jobNotifyData, this->jobNotifyDataList) {
+
+        // if status of item did not changed after few seconds and that there is no verifing or extracting processed
+        // (eg : current item could be pending for verifying while a previous nzb is currently being verified),
+        // then send notification :
+        if ( (jobNotifyData.getDateTime().secsTo(QDateTime::currentDateTime()) > 2) &&
+             !this->searchParentItem(UtilityNamespace::VerifyStatus) ) {
+
+            NotificationManager::sendJobFinishedEvent(jobNotifyData.getStatus(), jobNotifyData.getNzbFileName());
+
+        }
+
+        else {
+            pendingJobList.append(jobNotifyData);
+        }
+
+
+    }
+
+    this->jobNotifyDataList = pendingJobList;
+
+    if (this->jobNotifyDataList.isEmpty()) {
+        this->jobNotifyTimer->stop();
+    }
+
+}
