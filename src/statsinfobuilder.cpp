@@ -28,6 +28,7 @@
 #include "standarditemmodel.h"
 #include "centralwidget.h"
 #include "clientsobserver.h"
+#include "notificationmanager.h"
 #include "settings.h"
 
 
@@ -367,7 +368,11 @@ void StatsInfoBuilder::retrieveFreeDiskSpace() {
             quint64 freeSpaceVal = KDiskFreeSpaceInfo::freeSpaceInfo(downloadDisk).available();
 
             if (this->clientsObserver->getTotalSize() >= freeSpaceVal) {
+
                 diskSpaceStatus = InsufficientDiskSpace;
+
+                // send notification event :
+                NotificationManager::sendInsufficientDiskSpaceEvent(i18n("Insufficient disk space"));
             }
 
             // get free space size :
