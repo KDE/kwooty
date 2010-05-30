@@ -50,6 +50,7 @@ public:
     NzbFileData getNzbFileDataFromIndex(const QModelIndex&);
     int getProgressValueFromIndex(const QModelIndex&);
     quint64 getSizeValueFromIndex(const QModelIndex&);
+    QString getUuidStrFromIndex(const QModelIndex&);
     UtilityNamespace::ItemStatus getStatusFromStateItem(QStandardItem*) const;
     UtilityNamespace::ItemStatus getChildStatusFromNzbIndex(const QModelIndex&, int);
     void updateSateItem(QStandardItem*, const UtilityNamespace::ItemStatus);
@@ -65,7 +66,7 @@ private:
 
 
 signals:
-    void parentStatusItemChangedSignal();
+    void parentStatusItemChangedSignal(QStandardItem*);
     void parentProgressItemChangedSignal();
 
 

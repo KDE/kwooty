@@ -132,7 +132,7 @@ void StandardItemModel::storeStatusDataToItem(QStandardItem* stateItem, const It
 
 
         if (this->isNzbItem(stateItem)) {
-            emit parentStatusItemChangedSignal();
+            emit parentStatusItemChangedSignal(stateItem);
         }
 
     }
@@ -196,6 +196,13 @@ quint64 StandardItemModel::getSizeValueFromIndex(const QModelIndex& index) {
     QStandardItem* sizeItem = this->getSizeItemFromIndex(index);
     quint64 nzbSize = sizeItem->data(SizeRole).toULongLong();
     return nzbSize;
+}
+
+QString StandardItemModel::getUuidStrFromIndex(const QModelIndex& index) {
+
+    QStandardItem* nzbFileName = this->getFileNameItemFromIndex(index);
+    return nzbFileName->data(IdentifierRole).toString();
+
 }
 
 
