@@ -25,13 +25,14 @@
 #include <KUrl>
 
 #include <QObject>
+#include "kwooty_export.h"
 
 #include "utility.h"
 using namespace UtilityNamespace;
 
 class CentralWidget;
 
-class FileOperations : public QObject {
+class KWOOTY_EXPORT FileOperations : public QObject {
 
     Q_OBJECT
 
