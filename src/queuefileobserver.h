@@ -71,6 +71,7 @@ signals:
 
     void progressUpdateSignal(const int);
     void statusUpdateSignal(const UtilityNamespace::ItemStatus);
+    void jobFinishSignal(const UtilityNamespace::ItemStatus, const QString);
 
 public slots:
 
