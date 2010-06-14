@@ -26,7 +26,6 @@
 #include "centralwidget.h"
 #include "mytreeview.h"
 #include "standarditemmodel.h"
-#include "notificationmanager.h"
 
 
 QueueFileObserver::QueueFileObserver(CentralWidget* parent) : QObject(parent) {
@@ -325,7 +324,8 @@ void QueueFileObserver::checkJobFinishSlot() {
         if ( (jobNotifyData.getDateTime().secsTo(QDateTime::currentDateTime()) > 2) &&
              !this->searchParentItem(UtilityNamespace::VerifyStatus) ) {
 
-            NotificationManager::sendJobFinishedEvent(jobNotifyData.getStatus(), jobNotifyData.getNzbFileName());
+            // notifications will handle this signal :
+            emit jobFinishSignal(jobNotifyData.getStatus(), jobNotifyData.getNzbFileName());
 
         }
 
