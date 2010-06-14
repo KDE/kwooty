@@ -42,11 +42,13 @@
 #include "centralwidget.h"
 #include "shutdownmanager.h"
 #include "fileoperations.h"
+#include "plugins/pluginmanager.h"
 #include "preferences/preferencesserver.h"
 #include "preferences/preferencesgeneral.h"
 #include "preferences/preferencesprograms.h"
 #include "preferences/preferencesdisplay.h"
 #include "preferences/preferencesshutdown.h"
+#include "preferences/preferencesplugins.h"
 
 #ifdef HAVE_KSTATUSNOTIFIERITEM
 #include "systray.h"
@@ -80,7 +82,13 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
     // setup system tray :
     this->systraySlot();
 
+    // setup plugin manager :
+    this->pluginManager = new PluginManager(this);
+    this->pluginManager->loadPlugins();
+
     this->quitSelected = false;
+
+    kDebug() << this;
 
 }
 
@@ -297,6 +305,13 @@ void MainWindow::showSettings(){
 
         PreferencesShutdown* preferencesShutdown = new PreferencesShutdown(this->centralWidget);
         dialog->addPage(preferencesShutdown, i18n("Shutdown"), "system-shutdown", i18n("Setup System Shutdown"));
+
+
+        //PreferencesPlugins* preferencesPlugins = new PreferencesPlugins(this, "settings", Settings::self(), this->pluginManager);
+        PreferencesPlugins* preferencesPlugins = new PreferencesPlugins(dialog, this->pluginManager);
+        dialog->addPage(preferencesPlugins, i18n("Plugins"), "preferences-plugin", i18n("Plugins Setup"));
+
+
 
         connect( dialog, SIGNAL(settingsChanged(const QString&)), centralWidget, SLOT(updateSettingsSlot()) );
         connect( dialog, SIGNAL(settingsChanged(const QString&)), preferencesPrograms, SLOT(aboutToShowSettingsSlot()) );
