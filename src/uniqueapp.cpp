@@ -28,12 +28,6 @@
 #include "mainwindow.h"
 
 
-namespace
-{
-    QPointer<MainWindow> globalMainWindow;
-}
-
-
 UniqueApp::UniqueApp() : KUniqueApplication()
 {
     this->kwootyInstance = false;
@@ -41,6 +35,7 @@ UniqueApp::UniqueApp() : KUniqueApplication()
 
 UniqueApp::~UniqueApp()
 {
+    delete this->mainWindow;
 }
 
 
@@ -58,8 +53,6 @@ int UniqueApp::newInstance()
 
         this->mainWindow = new MainWindow();
         this->mainWindow->show();
-
-        globalMainWindow = this->mainWindow;
 
     }
 
@@ -80,12 +73,4 @@ int UniqueApp::newInstance()
 
     return 0;
 }
-
-
-MainWindow* UniqueApp::mainwindow() {
-
-    return globalMainWindow;
-
-}
-
 
