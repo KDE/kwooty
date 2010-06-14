@@ -25,7 +25,8 @@
 #include <KUrl>
 
 #include <QPointer>
-
+#include "kwooty_export.h"
+#include "plugins/pluginmanager.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -33,8 +34,9 @@ class MyStatusBar;
 class MyTreeView;
 class CentralWidget;
 class SysTray;
+class PluginManager;
 
-class MainWindow : public KXmlGuiWindow
+class KWOOTY_EXPORT MainWindow : public KXmlGuiWindow
 
 {
     Q_OBJECT
@@ -55,6 +57,7 @@ private:
     MyTreeView* treeView;
     QPointer<SysTray> sysTray;
     MyStatusBar* statusBar;
+    PluginManager* pluginManager;
     bool quitSelected;
 
     void buildLayout(QWidget*);
