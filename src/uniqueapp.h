@@ -34,11 +34,9 @@ public:
     UniqueApp();
     virtual ~UniqueApp();
     virtual int newInstance();
-    static MainWindow* mainwindow();
 
 private:
     MainWindow* mainWindow;
-
     bool kwootyInstance;
 
 };
