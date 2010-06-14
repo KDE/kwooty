@@ -65,6 +65,7 @@ private:
     QModelIndex parentStateIndex;
     int timeoutCounter;
     int meanSpeedActiveCounter;
+    UtilityNamespace::FreeDiskSpace previousDiskSpaceStatus;
 
     void setupConnections();
     void resetVariables();
@@ -81,6 +82,7 @@ signals:
     void updateDownloadSpeedInfoSignal(const QString);
     void updateTimeInfoSignal(const bool);
     void updateFreeSpaceSignal(const UtilityNamespace::FreeDiskSpace, const QString = QString(), const int = 0);
+    void insufficientDiskSpaceSignal(const QString);
 
 public slots:
     void settingsChangedSlot();
