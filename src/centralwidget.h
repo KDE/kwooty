@@ -26,6 +26,7 @@
 #include <QStandardItem>
 #include "mytreeview.h"
 #include "data/globalfiledata.h"
+#include "kwooty_export.h"
 #include "utility.h"
 
 using namespace UtilityNamespace;
@@ -42,9 +43,9 @@ class DataRestorer;
 class ShutdownManager;
 class ClientsObserver;
 class FileOperations;
-class FolderWatcher;
 class MainWindow;
 class QueueFileObserver;
+class NotificationManager;
 class NzbFileData;
 class ItemStatusData;
 
@@ -54,7 +55,7 @@ Q_DECLARE_METATYPE (QStandardItem*)
 Q_DECLARE_METATYPE (ItemStatusData*)
 
 
-class CentralWidget : public QWidget
+class KWOOTY_EXPORT CentralWidget : public QWidget
 
 {
     Q_OBJECT
@@ -89,8 +90,8 @@ private:
     StandardItemModel* downloadModel;
     ClientsObserver* clientsObserver;
     FileOperations* fileOperations;
-    FolderWatcher* folderWatcher;
     QueueFileObserver* queueFileObserver;
+    NotificationManager* notificationManager;
     int saveErrorButtonCode;
     
 
