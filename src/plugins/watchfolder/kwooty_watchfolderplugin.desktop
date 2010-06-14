@@ -1,0 +1,15 @@
+[Desktop Entry]
+X-Kwooty-Plugin-Version=1
+X-KDE-Library=kwooty_watchfolderplugin
+X-KDE-PluginInfo-Author=Xavier Lefage
+X-KDE-PluginInfo-Email=xavier.kwooty@gmail.com
+X-KDE-PluginInfo-Name=kwooty_watchfolderplugin
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://kwooty.sourceforge.net
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+ServiceTypes=Kwooty/Plugin
+Type=Service
+Icon=folder-sync
+Name=Watch Folder
+Comment=Watch folder for nzb files and load them

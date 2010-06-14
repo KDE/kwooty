@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Watch folder Config Widget
+Type=Service
+X-KDE-ServiceTypes=KCModule
+X-KDE-Library=kwooty_watchfoldersettings
+X-KDE-ParentComponents=kwooty_watchfolderplugin
+X-KDE-PluginInfo-Name=kwooty_watchfoldersettings
+X-KDE-PluginInfo-Author=Xavier Lefage
+X-KDE-PluginInfo-Email=xavier.kwooty@gmail.com
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-License=GPL
+
