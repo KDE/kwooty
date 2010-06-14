@@ -89,6 +89,7 @@ void StatsInfoBuilder::resetVariables() {
     this->totalTimeValue = QString();
     this->currentTimeValue = QString();
     this->downloadSpeedReadableStr = QString();
+    this->previousDiskSpaceStatus = SufficientDiskSpace;
 
 }
 
@@ -371,8 +372,10 @@ void StatsInfoBuilder::retrieveFreeDiskSpace() {
 
                 diskSpaceStatus = InsufficientDiskSpace;
 
-                // send notification event :
-                NotificationManager::sendInsufficientDiskSpaceEvent(i18n("Insufficient disk space"));
+                // send notification event once if insufficent disk space occurs several times :
+                if (this->previousDiskSpaceStatus != InsufficientDiskSpace) {
+                    emit insufficientDiskSpaceSignal(i18n("Insufficient disk space"));
+                }
             }
 
             // get free space size :
@@ -382,6 +385,9 @@ void StatsInfoBuilder::retrieveFreeDiskSpace() {
             int usedDiskPercentage = qMin( qRound(static_cast<qreal>(usedVal * 100 / sizeVal)), PROGRESS_COMPLETE );
 
             emit updateFreeSpaceSignal(diskSpaceStatus, freeSpaceStr, usedDiskPercentage);
+
+            // store previous diskSpaceStatus :
+            this->previousDiskSpaceStatus = diskSpaceStatus;
 
         }
 
