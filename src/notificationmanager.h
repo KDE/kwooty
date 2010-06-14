@@ -30,22 +30,36 @@
 #include "utility.h"
 using namespace UtilityNamespace;
 
+class CentralWidget;
 
-class NotificationManager
-{
+
+class NotificationManager : public QObject {
+
+    Q_OBJECT
 
 
 public:
-    NotificationManager();
-
-    static void init();
-    static void sendJobFinishedEvent(const UtilityNamespace::ItemStatus&, const QString&);
-    static void sendInsufficientDiskSpaceEvent(const QString&);
+    NotificationManager(CentralWidget* parent = 0);
 
 private:
 
-    static void sendEvent(const QString&, const QString&, KNotification::NotificationFlags = KNotification::CloseOnTimeout);
-    static QHash<UtilityNamespace::ItemStatus, QString> finishSatusTextMap;
+    CentralWidget* parent;
+    QHash<UtilityNamespace::ItemStatus, QString> finishSatusTextMap;
+
+    void init();
+    void setupConnections();
+    void sendEvent(const QString&, const QString&, KNotification::NotificationFlags = KNotification::CloseOnTimeout);
+    
+
+
+signals:
+
+
+public slots:
+    void jobFinishSlot(const UtilityNamespace::ItemStatus, const QString);
+    void insufficientDiskSpaceSlot(const QString);
+
+private slots:
 
 };
 
