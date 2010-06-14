@@ -52,7 +52,13 @@ SOURCES += main.cpp \
     queuefileobserver.cpp \
     statsinfobuilder.cpp \
     data/jobnotifydata.cpp \
-    notificationmanager.cpp
+    notificationmanager.cpp \
+    plugins/watchfolder/watchfolderplugin.cpp \
+    plugins/watchfolder/watchfolder.cpp \
+    plugins/watchfolder/preferenceswatchfolder.cpp \
+    plugins/plugin.cpp \
+    plugins/pluginmanager.cpp \
+    preferences/preferencesplugins.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -101,10 +107,18 @@ HEADERS += mainwindow.h \
     queuefileobserver.h \
     statsinfobuilder.h \
     data/jobnotifydata.h \
-    notificationmanager.h
+    notificationmanager.h \
+    plugins/watchfolder/watchfolderplugin.h \
+    plugins/watchfolder/preferenceswatchfolder.h \
+    plugins/watchfolder/watchfolder.h \
+    plugins/plugin.h \
+    plugins/pluginmanager.h \
+    preferences/preferencesplugins.h \
+    kwooty_export.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
     preferences/preferencesgeneral.ui \
     preferences/preferencesdisplay.ui \
+    plugins/watchfolder/preferenceswatchfolder.ui \
     preferences/preferencesshutdown.ui
