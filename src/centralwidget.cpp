@@ -44,7 +44,6 @@
 #include "notificationmanager.h"
 #include "data/itemstatusdata.h"
 
-#include "folderwatcher.h"
 
 
 CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent)
@@ -71,9 +70,6 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent)
     // setup repairing and decompressing thread :
     repairDecompressThread = new RepairDecompressThread(this);
 
-    // setup dir watcher :
-    folderWatcher = new FolderWatcher(this);
-
     // manage dispatching / updating segments related to one item :
     segmentManager = new SegmentManager(this);
 
@@ -95,8 +91,8 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent)
     // setup nzb file opening closing :
     fileOperations = new FileOperations(this);
 
-    // init text according to status for notification events :
-    NotificationManager::init();
+    // setup notification events :
+    notificationManager = new NotificationManager(this);
 
     // set objects connections :
     this->setupConnections();
