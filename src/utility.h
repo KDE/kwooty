@@ -75,6 +75,8 @@ namespace UtilityNamespace
     static const double NBR_BYTES_IN_KB = 1024;
     static const double ONE_UNIT = 1;
 
+    // plugin version, if changed make sure to update X-Kwooty-Plugin-Version in .desktop files accordingly :
+    static const int KWOOTY_PLUGIN_VERSION = 1;
 
     // custom roles used for storing data in items :
     enum MyRoles{
