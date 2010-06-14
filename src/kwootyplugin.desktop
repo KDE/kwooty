@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=Kwooty/Plugin
+X-KDE-Derived=KPluginInfo
+Name=Kwooty Plugin
+# Defines the plugin version that will be loaded :
+[PropertyDef::X-Kwooty-Plugin-Version]
+Type=int
