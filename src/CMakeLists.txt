@@ -1,9 +1,21 @@
 include_directories( ${KDE4_INCLUDES} ${KWORKSPACE_INCLUDE_DIR}  ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
+
+set(KWOOTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+
+set(KWOOTY_INCLUDES
+${KWOOTY_SOURCE_DIR}/plugins/
+)
+
+
 add_subdirectory(icons)
+add_subdirectory(plugins)
 
 set(Kwooty_SRCS 
   main.cpp
   uniqueapp.cpp
+)
+
+set(Kwooty_lib_SRCS 
   mainwindow.cpp
   centralwidget.cpp
   nzbfilehandler.cpp
@@ -32,7 +44,6 @@ set(Kwooty_SRCS
   datarestorer.cpp
   shutdownmanager.cpp
   clientsobserver.cpp
-  folderwatcher.cpp
   fileoperations.cpp
   queuefileobserver.cpp
   statsinfobuilder.cpp
@@ -42,6 +53,9 @@ set(Kwooty_SRCS
   preferences/preferencesprograms.cpp
   preferences/preferencesdisplay.cpp
   preferences/preferencesshutdown.cpp
+  preferences/preferencesplugins.cpp
+  plugins/plugin.cpp
+  plugins/pluginmanager.cpp
   data/segmentdata.cpp
   data/nzbfiledata.cpp
   data/itemstatusdata.cpp
@@ -53,32 +67,42 @@ set(Kwooty_SRCS
 )
 
 if(KSTATUSNOTIFIERITEM_FOUND)
-    set(Kwooty_SRCS ${Kwooty_SRCS} systray.cpp)
+    set(Kwooty_lib_SRCS ${Kwooty_lib_SRCS} systray.cpp)
 else(KSTATUSNOTIFIERITEM_FOUND)
-    set(Kwooty_SRCS ${Kwooty_SRCS} systraylegacy.cpp)
+    set(Kwooty_lib_SRCS ${Kwooty_lib_SRCS} systraylegacy.cpp)
 endif(KSTATUSNOTIFIERITEM_FOUND)
 
 
 
-kde4_add_ui_files(  Kwooty_SRCS
+kde4_add_ui_files(  Kwooty_lib_SRCS
 		    preferences/preferencesserver.ui
 		    preferences/preferencesgeneral.ui
 		    preferences/preferencesprograms.ui
 		    preferences/preferencesdisplay.ui
 		    preferences/preferencesshutdown.ui
 		 )
-kde4_add_kcfg_files(Kwooty_SRCS preferences/settings.kcfgc)
+kde4_add_kcfg_files(Kwooty_lib_SRCS preferences/settings.kcfgc)
+
+
+kde4_add_library(kwootylib SHARED ${Kwooty_lib_SRCS})
+
+target_link_libraries(kwootylib
+		      ${KDE4_KDECORE_LIBS}
+		      ${KDE4_KIO_LIBS}
+		      ${KDE4_KUTILS_LIBS}
+		      ${KDE4WORKSPACE_KWORKSPACE_LIBS}
+		      ${KDE4WORKSPACE_SOLIDCONTROL_LIBS}
+  )
+
+set_target_properties(kwootylib PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+install(TARGETS kwootylib ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 kde4_add_executable(kwooty ${Kwooty_SRCS})
-
-target_link_libraries(kwooty ${KDE4_KDEUI_LIBS}
-			     ${KDE4_KDECORE_LIBS}
-			     ${KDE4_KIO_LIBS}
-			     ${KDE4WORKSPACE_KWORKSPACE_LIBS}
-			     ${KDE4WORKSPACE_SOLIDCONTROL_LIBS})
+target_link_libraries(kwooty ${KDE4_KDEUI_LIBS} kwootylib )
 
 
 install(TARGETS kwooty DESTINATION ${BIN_INSTALL_DIR})
 install(FILES kwootyui.rc kwooty.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kwooty)
 install(FILES preferences/settings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 install(FILES kwooty.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+install(FILES kwootyplugin.desktop DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
