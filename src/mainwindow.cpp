@@ -60,6 +60,7 @@
 MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
 {
 
+
     // create the user interface :
     QWidget* widget = new QWidget(this);
 
@@ -95,6 +96,7 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
 
 MainWindow::~MainWindow()
 {
+
 
 }
 
@@ -355,6 +357,7 @@ void MainWindow::openFileWithFileMode(KUrl nzbUrl, UtilityNamespace::OpenFileMod
 
 
 void MainWindow::quit() {
+
 
     // quit has been requested :
     this->quitSelected = true;
