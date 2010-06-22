@@ -22,8 +22,6 @@
 #define SEGMENTSDECODERTHREAD_H
 
 #include <QThread>
-#include <QMutex>
-#include <QTimer>
 #include "data/nzbfiledata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -33,7 +31,7 @@ class SegmentDecoderBase;
 class SegmentData;
 
 
-class SegmentsDecoderThread : public QThread {
+class SegmentsDecoderThread : public QObject {
 
     Q_OBJECT
 
@@ -43,17 +41,18 @@ public:
     ~SegmentsDecoderThread();
 
 private:
+
+    QThread* dedicatedThread;
     CentralWidget* parent;
     QList<SegmentDecoderBase*> segmentDecoderList;
     QList<SegmentData> segmentDataList;
     QList<NzbFileData> nzbFileDataList;
-    QTimer* decoderTimer;
-    QMutex mutex;
     int currentDecoderElement;
     bool currentlyDecoding;
 
-    void run();
+    void init();
     void setupConnections();
+    void startDecoding();
 
 
 signals:
@@ -65,7 +64,7 @@ public slots:
     void suppressOldOrphanedSegmentsSlot();
 
 private slots:
-    void startDecodingSlot();
+
 
 };
 
