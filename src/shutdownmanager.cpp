@@ -270,22 +270,22 @@ QList<UtilityNamespace::SystemShutdownType> ShutdownManager::retrieveAvailableSh
         indexShutdownTypeList.append(UtilityNamespace::Shutdown);
     }
 
-//    // then add supported sleep types by system :
-//    foreach (SleepState sleepState, Solid::PowerManagement::supportedSleepStates()) {
-//
-//        // add standby :
-//        if (sleepState == StandbyState) {
-//            indexShutdownTypeList.append(UtilityNamespace::Standby);
-//        }
-//        // add suspend :
-//        if (sleepState == SuspendState) {
-//            indexShutdownTypeList.append(UtilityNamespace::Suspend);
-//        }
-//        // add hibernate :
-//        if (sleepState == HibernateState) {
-//            indexShutdownTypeList.append(UtilityNamespace::Hibernate);
-//        }
-//    }
+    // then add supported sleep types by system :
+    foreach (SleepState sleepState, Solid::PowerManagement::supportedSleepStates()) {
+
+        // add standby :
+        if (sleepState == StandbyState) {
+            indexShutdownTypeList.append(UtilityNamespace::Standby);
+        }
+        // add suspend :
+        if (sleepState == SuspendState) {
+            indexShutdownTypeList.append(UtilityNamespace::Suspend);
+        }
+        // add hibernate :
+        if (sleepState == HibernateState) {
+            indexShutdownTypeList.append(UtilityNamespace::Hibernate);
+        }
+    }
 
     return indexShutdownTypeList;
 
