@@ -19,11 +19,14 @@
  ***************************************************************************/
 
 #include "segmentdecoderyenc.h"
+#include <KDebug>
 
 
-SegmentDecoderYEnc::SegmentDecoderYEnc() { }
+SegmentDecoderYEnc::SegmentDecoderYEnc(SegmentsDecoderThread* parent) : SegmentDecoderBase(parent){
+}
 
-SegmentDecoderYEnc::~SegmentDecoderYEnc() { }
+SegmentDecoderYEnc::~SegmentDecoderYEnc() {
+}
 
 
 
