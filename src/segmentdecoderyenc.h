@@ -30,7 +30,7 @@ class SegmentDecoderYEnc : public SegmentDecoderBase
     Q_OBJECT
 
 public:
-    SegmentDecoderYEnc();
+    SegmentDecoderYEnc(SegmentsDecoderThread*);
     ~SegmentDecoderYEnc();
 
 private:
