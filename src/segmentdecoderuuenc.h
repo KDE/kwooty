@@ -30,7 +30,7 @@ class SegmentDecoderUUEnc : public SegmentDecoderBase
     Q_OBJECT
 
 public:
-    SegmentDecoderUUEnc();
+    SegmentDecoderUUEnc(SegmentsDecoderThread*);
     ~SegmentDecoderUUEnc();
 
 
