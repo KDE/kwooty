@@ -82,6 +82,12 @@ void MyTreeView::setupConnections() {
              SIGNAL(changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus)) );
 
 
+    // enable or disable buttons according to selected items :
+    connect (this->selectionModel(),
+             SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+             this,
+             SLOT(selectedItemSlot()));
+
 
     // settings have changed :
     connect (centralWidget,
