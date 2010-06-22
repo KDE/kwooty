@@ -75,6 +75,7 @@ public:
     ClientsObserver* getClientsObserver() const;
     FileOperations* getFileOperations() const;
     QueueFileObserver* getQueueFileObserver() const;
+    DataRestorer* getDataRestorer() const;
 
 
 private:
@@ -97,7 +98,6 @@ private:
 
     void setDataToModel(const QList<GlobalFileData>&, const QString&);
     void addParentItem (QStandardItem*, const GlobalFileData&);
-    void setupConnections();
     void updateItemsInView(QModelIndex, QModelIndex);
     void setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus);
     void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QList<QModelIndex>&);
@@ -116,6 +116,7 @@ signals:
     void settingsChangedSignal();
     void setIconToFileNameItemSignal(const QModelIndex);
     void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);
+    void passwordEnteredByUserSignal(bool, QString password = QString());
 
 
 public slots:
@@ -125,6 +126,7 @@ public slots:
     void updateSettingsSlot();
     void downloadWaitingPar2Slot();
     void statusBarFileSizeUpdateSlot(StatusBarUpdateType);
+    void extractPasswordRequiredSlot(QString);
     void startAllDownloadSlot();
     void pauseAllDownloadSlot();
 
