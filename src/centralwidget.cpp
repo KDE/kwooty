@@ -21,6 +21,7 @@
 #include "centralwidget.h"
 
 #include <KMessageBox>
+#include <KPasswordDialog>
 #include <KDebug>
 #include <KIcon>
 #include <QtGui>
@@ -46,8 +47,7 @@
 
 
 
-CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent)
-{
+CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent) {
 
     // init the downloadModel :
     downloadModel = new StandardItemModel(this);
@@ -64,26 +64,23 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent)
     // update view according to items data :
     itemParentUpdater = new ItemParentUpdater(this);
     
+    // manage dispatching / updating segments related to one item :
+    segmentManager = new SegmentManager(this);
+
+    // save and restore pending downloads from previous session :
+    dataRestorer = new DataRestorer(this);
+
     // setup segment decoder thread :
     segmentsDecoderThread = new SegmentsDecoderThread(this);
     
     // setup repairing and decompressing thread :
     repairDecompressThread = new RepairDecompressThread(this);
 
-    // manage dispatching / updating segments related to one item :
-    segmentManager = new SegmentManager(this);
-
     // create one nntp connection per client:
     this->createNntpClients();
 
     // set download ant temp folders into home dir if not specified by user :
     this->initFoldersSettings();
-    
-    // init button code that avoid to display one message box per nntp client instance error :
-    saveErrorButtonCode = 0;
-
-    // save and restore pending downloads from previous session :
-    dataRestorer = new DataRestorer(this);
 
     // setup shutdown manager :
     shutdownManager = new ShutdownManager(this);
@@ -94,13 +91,16 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent)
     // setup notification events :
     notificationManager = new NotificationManager(this);
 
-    // set objects connections :
-    this->setupConnections();
+    // init button code that avoid to display one message box per nntp client instance error :
+    saveErrorButtonCode = 0;
+
 
 }
 
-CentralWidget::~CentralWidget()
-{
+CentralWidget::~CentralWidget() {
+
+    delete this->segmentsDecoderThread;
+    delete this->repairDecompressThread;
     
 }
 
@@ -316,46 +316,6 @@ void CentralWidget::createNntpClients(){
 
 
 
-void CentralWidget::setupConnections() {
-
-    // enable or disable buttons according to selected items :
-    connect (treeView->selectionModel(),
-             SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
-             treeView,
-             SLOT(selectedItemSlot()));
-
-    // update info about decoding process :
-    connect (segmentsDecoderThread,
-             SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)),
-             segmentManager,
-             SLOT(updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)));
-
-    // suppress old segments if user have to chosen to not reload data from previous session :
-    connect (dataRestorer,
-             SIGNAL(suppressOldOrphanedSegmentsSignal()),
-             segmentsDecoderThread,
-             SLOT(suppressOldOrphanedSegmentsSlot()),Qt::QueuedConnection);
-
-
-    // update info about repair process :
-    connect (repairDecompressThread,
-             SIGNAL(updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
-             segmentManager,
-             SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
-
-    // update info about extract process :
-    connect (repairDecompressThread,
-             SIGNAL(updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
-             segmentManager,
-             SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
-
-
-}
-
-
-
-
-
 void CentralWidget::statusBarFileSizeUpdate() {
 
     quint64 size = 0;
@@ -393,7 +353,6 @@ void CentralWidget::statusBarFileSizeUpdate() {
     this->clientsObserver->fullFileSizeUpdate(size, files);
     
 }
-
 
 
 
@@ -502,6 +461,9 @@ QueueFileObserver* CentralWidget::getQueueFileObserver() const{
     return this->queueFileObserver;
 }
 
+DataRestorer* CentralWidget::getDataRestorer() const{
+    return this->dataRestorer;
+}
 
 
 //============================================================================================================//
@@ -587,6 +549,26 @@ void CentralWidget::saveFileErrorSlot(int fromProcessing){
         
     }
     
+}
+
+
+void CentralWidget::extractPasswordRequiredSlot(QString currentArchiveFileName) {
+
+    kDebug();
+    KPasswordDialog kPasswordDialog(this);
+
+    kPasswordDialog.setPrompt(i18n("The archive <b>%1</b> is password protected. <br>Please enter the password to extract the file.",  currentArchiveFileName));
+
+    // if password has been entered :
+    if(kPasswordDialog.exec()) {
+        emit passwordEnteredByUserSignal(true, kPasswordDialog.password());
+    }
+    else {
+        // else password has not been entered :
+        emit passwordEnteredByUserSignal(false);
+    }
+
+
 }
 
 
