@@ -191,6 +191,134 @@
        </item>
       </layout>
      </widget>
+     <widget class="QWidget" name="priorityTab">
+      <attribute name="title">
+       <string>Priority</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_9">
+       <item row="0" column="0">
+        <widget class="QGroupBox" name="kcfg_groupBoxVerifyPriority">
+         <property name="toolTip">
+          <string>Lower verify/repair process priority</string>
+         </property>
+         <property name="title">
+          <string>Lower Verify/Repair process</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_7">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="toolTip">
+             <string>Select process priority</string>
+            </property>
+            <property name="text">
+             <string>Process priority: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="kcfg_verifyProcessValues"/>
+          </item>
+          <item row="0" column="2">
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>76</width>
+              <height>17</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLabel" name="verifyNiceValueText">
+            <property name="toolTip">
+             <string>Define verify/repair process priority from normal (0) to lowest (+19)</string>
+            </property>
+            <property name="text">
+             <string>Set nice value: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QSpinBox" name="kcfg_verifyNiceValue"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QGroupBox" name="kcfg_groupBoxExtractPriority">
+         <property name="toolTip">
+          <string>Lower extract process priority</string>
+         </property>
+         <property name="title">
+          <string>Lower Extract process</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_8">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_2">
+            <property name="toolTip">
+             <string>Select process priority</string>
+            </property>
+            <property name="text">
+             <string>Process priority: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="kcfg_extractProcessValues"/>
+          </item>
+          <item row="0" column="2">
+           <spacer name="horizontalSpacer_5">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>76</width>
+              <height>17</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="0" column="3">
+           <widget class="QLabel" name="extractNiceValueText">
+            <property name="toolTip">
+             <string>Define extract process priority from normal (0) to lowest (+19)</string>
+            </property>
+            <property name="text">
+             <string>Set nice value: </string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
+           <widget class="QSpinBox" name="kcfg_extractNiceValue"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>114</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
      <widget class="QWidget" name="searchTab">
       <attribute name="title">
        <string>Search path</string>
