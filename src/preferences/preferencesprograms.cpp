@@ -29,6 +29,24 @@
 PreferencesPrograms::PreferencesPrograms()
 {
     setupUi(this);
+    this->setupConnections();
+
+    // init combobox process priority list :
+    QStringList processPriorityList;
+    processPriorityList.append(i18n("Low"));
+    processPriorityList.append(i18n("Lowest"));
+    processPriorityList.append(i18n("Custom"));
+
+    kcfg_verifyProcessValues->addItems(processPriorityList);
+    kcfg_verifyNiceValue->setPrefix("+");
+
+    kcfg_extractProcessValues->addItems(processPriorityList);
+    kcfg_extractNiceValue->setPrefix("+");
+
+    this->verifyProcessPriorityChangedSlot();
+    this->extractProcessPriorityChangedSlot();
+
+
     iconLoader = new KIconLoader();
 }
 
@@ -73,6 +91,18 @@ void PreferencesPrograms::aboutToShowSettingsSlot(){
     this->displayProgramInfo(isProgramFound, programPath, sevenZipLabelIcon, sevenZipLabelText, programName);
 
 }
+
+
+void PreferencesPrograms::setupConnections() {
+
+    // show/hide text when priority method is changed :
+    connect (kcfg_verifyProcessValues, SIGNAL(currentIndexChanged(int)), this, SLOT(verifyProcessPriorityChangedSlot()));
+    connect (kcfg_extractProcessValues, SIGNAL(currentIndexChanged(int)), this, SLOT(extractProcessPriorityChangedSlot()));
+
+
+}
+
+
 
 
 void PreferencesPrograms::displayProgramInfo(const bool isProgramFound, const QString& path, QLabel* labelIcon, QLabel* labelText, const QString& program){
@@ -120,3 +150,34 @@ void PreferencesPrograms::enableGroupBox(bool isEnabled, const QString& program)
 
 
 
+
+
+void PreferencesPrograms::verifyProcessPriorityChangedSlot() {
+
+    // custom priority is not selected, hide nice process comboBox :
+    if (kcfg_verifyProcessValues->currentIndex() != (kcfg_verifyProcessValues->count() - 1)) {
+        verifyNiceValueText->hide();
+        kcfg_verifyNiceValue->hide();
+    }
+    else if (verifyNiceValueText->isHidden()) {
+        verifyNiceValueText->show();
+        kcfg_verifyNiceValue->show();
+    }
+
+
+}
+
+void PreferencesPrograms::extractProcessPriorityChangedSlot() {
+
+    // custom priority is not selected, hide nice process comboBox :
+    if (kcfg_extractProcessValues->currentIndex() != (kcfg_extractProcessValues->count() - 1)) {
+        extractNiceValueText->hide();
+        kcfg_extractNiceValue->hide();
+    }
+    else if (extractNiceValueText->isHidden()) {
+        extractNiceValueText->show();
+        kcfg_extractNiceValue->show();
+    }
+
+
+}
