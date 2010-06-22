@@ -24,9 +24,11 @@
 #include <KDebug>
 
 
-SegmentDecoderUUEnc::SegmentDecoderUUEnc() { }
+SegmentDecoderUUEnc::SegmentDecoderUUEnc(SegmentsDecoderThread* parent) : SegmentDecoderBase(parent) {
+}
 
-SegmentDecoderUUEnc::~SegmentDecoderUUEnc() { }
+SegmentDecoderUUEnc::~SegmentDecoderUUEnc() {
+}
 
 
 
