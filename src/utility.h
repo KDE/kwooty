@@ -34,6 +34,7 @@ namespace UtilityNamespace
     Q_ENUMS(Data)
     Q_ENUMS(SaveError)
     Q_ENUMS(ItemTarget)
+    Q_ENUMS(ProcessPriority)
             
    // treeView columns :
     static const int FILE_NAME_COLUMN = 0;
@@ -216,6 +217,13 @@ namespace UtilityNamespace
         UnknownDiskSpace
     };
 
+
+    // process priority :
+    enum ProcessPriority {
+        LowPriority,
+        LowestPriority,
+        CustomPriority
+    };
 
 
 }
