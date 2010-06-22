@@ -39,6 +39,7 @@ public:
 private:
     KIconLoader* iconLoader;
 
+    void setupConnections();
     void displayProgramInfo(const bool, const QString&, QLabel*, QLabel*, const QString&);
     void enableGroupBox(bool, const QString&);
 
@@ -46,6 +47,9 @@ public slots:
     void aboutToShowSettingsSlot();
 
 private slots:
+    void verifyProcessPriorityChangedSlot();
+    void extractProcessPriorityChangedSlot();
+
 
 };
 
