@@ -27,7 +27,6 @@
 
 #include "mainwindow.h"
 
-
 UniqueApp::UniqueApp() : KUniqueApplication()
 {
     this->kwootyInstance = false;
@@ -35,7 +34,9 @@ UniqueApp::UniqueApp() : KUniqueApplication()
 
 UniqueApp::~UniqueApp()
 {
-    delete this->mainWindow;
+    if (this->mainWindow) {
+        delete this->mainWindow;
+    }
 }
 
 
