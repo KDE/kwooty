@@ -33,6 +33,7 @@
 using namespace UtilityNamespace;
 
 class NzbFileData;
+class RepairDecompressThread;
 
 
 class Repair : public QObject
@@ -51,7 +52,7 @@ class Repair : public QObject
                               RepairComplete
         };
 
-    Repair();
+    Repair(RepairDecompressThread*);
     ~Repair();
     void launchProcess(const NzbCollectionData&);
     bool isProcessing();
@@ -81,6 +82,7 @@ private:
     void removePar2Files();
     QString sortPar2FilesBySize();
     UtilityNamespace::ItemTarget getItemTarget(const NzbFileData&);
+    QStringList buildPriorityArgument();
 
 
 signals:
