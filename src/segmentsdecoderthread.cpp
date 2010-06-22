@@ -29,41 +29,45 @@
 #include "data/segmentdata.h"
 #include "itemparentupdater.h"
 #include "segmentmanager.h"
+#include "datarestorer.h"
 #include "settings.h"
 
 
 SegmentsDecoderThread::SegmentsDecoderThread(){}
 
 
-SegmentsDecoderThread::SegmentsDecoderThread(CentralWidget* inParent) : QThread(inParent) {
+SegmentsDecoderThread::SegmentsDecoderThread(CentralWidget* inParent) {
 
     this->parent = inParent;
 
+    this->init();
+
+    this->dedicatedThread = new QThread();
+    this->moveToThread(this->dedicatedThread);
+
     // start current thread :
-    this->start();
+    this->dedicatedThread->start();
 
 }
 
 
 SegmentsDecoderThread::~SegmentsDecoderThread() {
-    quit();
-    wait();
 
-    delete decoderTimer;
+    this->dedicatedThread->quit();
+    this->dedicatedThread->wait();
 
-    // delete decoders :
-    qDeleteAll(this->segmentDecoderList);
+    delete this->dedicatedThread;
 
 }
 
 
-void SegmentsDecoderThread::run() {
+void SegmentsDecoderThread::init() {
 
     // create Yenc decoder instance :
-    this->segmentDecoderList.append(new SegmentDecoderYEnc());
+    this->segmentDecoderList.append(new SegmentDecoderYEnc(this));
 
     // create UU decoder instance :
-    this->segmentDecoderList.append(new SegmentDecoderUUEnc());
+    this->segmentDecoderList.append(new SegmentDecoderUUEnc(this));
 
     // init encoder instance :
     this->currentDecoderElement = 0;
@@ -71,35 +75,27 @@ void SegmentsDecoderThread::run() {
     // no decoding at startup :
     this->currentlyDecoding = false;
 
-    // create incoming data monitoring timer :
-    decoderTimer = new QTimer();
-
     // setup connections :
     this->setupConnections();
 
-    // start timer :
-    decoderTimer->start(100);
-
-    this->exec();
 }
 
 
 void SegmentsDecoderThread::setupConnections() {
-    
-    // check if there are data to decode :
-    connect (this->decoderTimer ,
-             SIGNAL(timeout()),
+        
+    // suppress old segments if user have to chosen to not reload data from previous session :
+    connect (parent->getDataRestorer(),
+             SIGNAL(suppressOldOrphanedSegmentsSignal()),
              this,
-             SLOT(startDecodingSlot()),
-             Qt::DirectConnection);
+             SLOT(suppressOldOrphanedSegmentsSlot()));
+
 
     // receive data to decode from decodeSegmentsSignal :
     qRegisterMetaType<NzbFileData>("NzbFileData");
     connect (parent->getItemParentUpdater()->getItemDownloadUpdater(),
              SIGNAL(decodeSegmentsSignal(NzbFileData)),
              this,
-             SLOT(decodeSegmentsSlot(NzbFileData)),
-             Qt::QueuedConnection);
+             SLOT(decodeSegmentsSlot(NzbFileData)));
 
 
     // update user interface about current decoding status :
@@ -107,21 +103,21 @@ void SegmentsDecoderThread::setupConnections() {
     qRegisterMetaType<UtilityNamespace::ItemStatus>("UtilityNamespace::ItemStatus");
 
 
-
     // for each decoders connect update signals :
     foreach (SegmentDecoderBase* currentSegmentDecoder, this->segmentDecoderList) {
 
-        connect (currentSegmentDecoder ,
+
+        // update info about decoding process :
+        connect (currentSegmentDecoder,
                  SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)),
-                 this,
-                 SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)));
+                 this->parent->getSegmentManager(),
+                 SLOT(updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)));
 
 
         connect (currentSegmentDecoder,
                  SIGNAL(saveFileErrorSignal(int)),
                  parent,
-                 SLOT(saveFileErrorSlot(int)),
-                 Qt::QueuedConnection);
+                 SLOT(saveFileErrorSlot(int)));
 
     }
 
@@ -130,49 +126,50 @@ void SegmentsDecoderThread::setupConnections() {
 
 
 
-void SegmentsDecoderThread::startDecodingSlot() {
+void SegmentsDecoderThread::startDecoding() {
 
     // if pending segments are present and check if decoding is currently processed :
-    if (!this->currentlyDecoding && !nzbFileDataList.isEmpty()) {
+    if (!this->currentlyDecoding) {
 
-        // decoding begins :
-        this->currentlyDecoding = true;
+        while (!nzbFileDataList.isEmpty()) {
 
-        // get nzbfiledata to decode from list
-        mutex.lock();
-        NzbFileData currentFileDataToDecode = nzbFileDataList.takeFirst();
-        mutex.unlock();
+            // decoding begins :
+            this->currentlyDecoding = true;
 
-        // decode data :
-        int decoderNumber = 0;
-        QString fileNameStr;
+            // get nzbfiledata to decode from list
+            NzbFileData currentFileDataToDecode = nzbFileDataList.takeFirst();
 
-        // apply a round robin in order to select the proper decoder (YDec or UUDec) :
-        while ( fileNameStr.isEmpty() && (decoderNumber++ < this->segmentDecoderList.size()) ) {
+            // decode data :
+            int decoderNumber = 0;
+            QString fileNameStr;
 
-            // scan segments with the current decoder :
-            fileNameStr = this->segmentDecoderList.at(this->currentDecoderElement)->scanSegmentFiles(currentFileDataToDecode);
+            // apply a round robin in order to select the proper decoder (YDec or UUDec) :
+            while ( fileNameStr.isEmpty() && (decoderNumber++ < this->segmentDecoderList.size()) ) {
 
-            // if fileName is not empty, decode segments with the current decoder :
-            if (!fileNameStr.isEmpty()) {
-                this->segmentDecoderList.at(this->currentDecoderElement)->decodeSegments(currentFileDataToDecode, fileNameStr);
+                // scan segments with the current decoder :
+                fileNameStr = this->segmentDecoderList.at(this->currentDecoderElement)->scanSegmentFiles(currentFileDataToDecode);
+
+                // if fileName is not empty, decode segments with the current decoder :
+                if (!fileNameStr.isEmpty()) {
+                    this->segmentDecoderList.at(this->currentDecoderElement)->decodeSegments(currentFileDataToDecode, fileNameStr);
+                }
+                // else scan segments with other decoder(s) at next iteration :
+                else {
+                    this->currentDecoderElement = (this->currentDecoderElement + 1) % this->segmentDecoderList.size();
+                }
+
             }
-            // else scan segments with other decoder(s) at next iteration :
-            else {
-                this->currentDecoderElement = (this->currentDecoderElement + 1) % this->segmentDecoderList.size();
+
+            // if fileName is empty after trying all decoders, decoding failed :
+            if (fileNameStr.isEmpty()) {
+                emit updateDecodeSignal(currentFileDataToDecode.getUniqueIdentifier(), PROGRESS_COMPLETE, DecodeErrorStatus, QString(), false);
             }
+
+
+            // decoding is over :
+            this->currentlyDecoding = false;
 
         }
-
-        // if fileName is empty after trying all decoders, decoding failed :
-        if (fileNameStr.isEmpty()) {
-            emit updateDecodeSignal(currentFileDataToDecode.getUniqueIdentifier(), PROGRESS_COMPLETE, DecodeErrorStatus, QString(), false);
-        }
-
-
-        // decoding is over :
-        this->currentlyDecoding = false;
-
     }
 
 }
@@ -183,14 +180,16 @@ void SegmentsDecoderThread::startDecodingSlot() {
 void SegmentsDecoderThread::decodeSegmentsSlot(NzbFileData nzbFileData) {
 
     // add nzbfiledata to the queue :
-    QMutexLocker locker(&mutex);
     nzbFileDataList.append(nzbFileData);
+
+    this->startDecoding();
 
 }
 
 
 
 void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
+
 
     // get temporary path :
     QString tempPathStr = Settings::temporaryFolder().path();
@@ -202,6 +201,7 @@ void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
     // if file is a previous segment, suppress it :
     QFile currentSegment;
     foreach (QString currentFileStr, segmentFilelist) {
+
 
         currentSegment.setFileName(tempPathStr + "/" + currentFileStr);
 
