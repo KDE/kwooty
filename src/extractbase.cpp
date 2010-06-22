@@ -21,14 +21,16 @@
 #include "extractbase.h"
 
 #include <KDebug>
+#include <KStandardDirs>
 #include <QFile>
+#include "centralwidget.h"
 #include "settings.h"
 #include "repairdecompressthread.h"
 #include "data/nzbfiledata.h"
 
 
 
-ExtractBase::ExtractBase(RepairDecompressThread* parent) {
+ExtractBase::ExtractBase(RepairDecompressThread* parent): QObject (parent) {
 
     this->parent = parent;
 
@@ -52,12 +54,6 @@ void ExtractBase::setupConnections() {
     connect (this->extractProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(extractFinishedSlot(int, QProcess::ExitStatus)));
 
 
-    // send extract related updates to segmentmanager :
-    connect (this ,
-             SIGNAL(updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
-             this->parent,
-             SIGNAL(updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
-
     // begin verify - repair process for new pending files when signal has been received :
     connect (this,
              SIGNAL(extractProcessEndedSignal(NzbCollectionData)),
@@ -67,15 +63,56 @@ void ExtractBase::setupConnections() {
     // display dialog box when password is required for archive extraction :
     connect (this,
              SIGNAL(extractPasswordRequiredSignal(QString)),
-             parent,
+             parent->getCentralWidget(),
              SLOT(extractPasswordRequiredSlot(QString)));
 
     // send password entered by the user :
-    connect (this->parent,
+    connect (this->parent->getCentralWidget(),
              SIGNAL(passwordEnteredByUserSignal(bool, QString)),
              this,
              SLOT(passwordEnteredByUserSlot(bool, QString)));
 
+
+}
+
+
+QStringList ExtractBase::buildPriorityArgument() {
+
+    QStringList niceProcessArgs;
+    QString nicePath;
+
+    // process priority has been checked :
+    if (Settings::groupBoxExtractPriority()) {
+
+        nicePath = KStandardDirs::findExe("nice");
+        niceProcessArgs.append(nicePath);
+        niceProcessArgs.append("-n");
+
+        switch (Settings::extractProcessValues()) {
+
+        case UtilityNamespace::LowPriority: {
+                 niceProcessArgs.append("10");
+                break;
+            }
+        case UtilityNamespace::LowestPriority: {
+                niceProcessArgs.append("20");
+                break;
+            }
+        case UtilityNamespace::CustomPriority: {
+                niceProcessArgs.append(QString::number(Settings::extractNiceValue()));
+                break;
+            }
+        default: {
+                break;
+            }
+        }
+    }
+
+    if (nicePath.isEmpty()) {
+        niceProcessArgs.clear();
+    }
+
+    return niceProcessArgs;
 
 }
 
@@ -111,14 +148,16 @@ void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, Extr
             archiveName = currentNzbFileData.getDecodedFileName();
         }
 
-        QStringList args = this->createProcessArguments(archiveName, fileSavePath, passwordEnteredByUSer, passwordStr);
+        QStringList args = this->buildPriorityArgument();
+        args.append(this->extractProgramPath);
+        args.append(this->createProcessArguments(archiveName, fileSavePath, passwordEnteredByUSer, passwordStr));
 
-        //kDebug() << "ARGS :" << this->extractProgramPath <<args;
+        kDebug() << "ARGS :" << this->extractProgramPath <<args;
 
         this->extractProcess->setTextModeEnabled(true);
         this->extractProcess->setOutputChannelMode(KProcess::MergedChannels);
         this->extractProcess->setNextOpenMode(QIODevice::ReadWrite | QIODevice::Unbuffered);
-        this->extractProcess->setProgram(this->extractProgramPath, args);
+        this->extractProcess->setProgram(args);
         this->extractProcess->start();
 
 
@@ -292,6 +331,7 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
             emit extractProcessEndedSignal(this->nzbCollectionData);
 
             this->emitFinishToArchivesWithoutErrors(ExtractFailedStatus, PROGRESS_COMPLETE);
+
         }
 
 
