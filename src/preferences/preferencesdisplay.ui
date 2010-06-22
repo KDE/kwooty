@@ -13,30 +13,30 @@
   <property name="toolTip">
    <string/>
   </property>
-  <layout class="QGridLayout" name="gridLayout_4">
+  <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
-    <widget class="QGroupBox" name="sysTrayGroupBox">
+    <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
-      <string>System tray</string>
+      <string>Confirmation dialogs</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QGridLayout" name="gridLayout_4">
       <item row="0" column="0">
-       <widget class="QCheckBox" name="kcfg_sysTray">
+       <widget class="QCheckBox" name="kcfg_confirmClear">
         <property name="toolTip">
-         <string>Check to enable the Kwooty system tray icon</string>
+         <string>Display dialog box when Clear button has been pushed</string>
         </property>
         <property name="text">
-         <string>Show tray icon</string>
+         <string>Show confirm message when clearing rows</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="kcfg_notification">
+       <widget class="QCheckBox" name="kcfg_confirmRemove">
         <property name="toolTip">
-         <string>Check to enable Kwooty notifications in system tray</string>
+         <string>Display dialog box when Remove button has been pushed</string>
         </property>
         <property name="text">
-         <string>Show notifications</string>
+         <string>Show confirm message when removing selected rows</string>
         </property>
        </widget>
       </item>
@@ -46,7 +46,7 @@
    <item row="1" column="0">
     <widget class="QGroupBox" name="actionGroupBox">
      <property name="title">
-      <string>Estimated download time</string>
+      <string>Status bar information</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
@@ -66,6 +66,16 @@
         </property>
         <property name="text">
          <string>Display remaining time</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QCheckBox" name="kcfg_displayCapacityBar">
+        <property name="toolTip">
+         <string>Display free space capacity bar in status bar</string>
+        </property>
+        <property name="text">
+         <string>Display free space information</string>
         </property>
        </widget>
       </item>
@@ -105,16 +115,6 @@
         </property>
         <property name="text">
          <string>Alternate row colors</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="kcfg_displayCapacityBar">
-        <property name="toolTip">
-         <string>Display free space capacity bar</string>
-        </property>
-        <property name="text">
-         <string>Display free space information in status bar</string>
         </property>
        </widget>
       </item>
