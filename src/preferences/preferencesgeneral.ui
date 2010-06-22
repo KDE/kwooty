@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>424</width>
-    <height>280</height>
+    <height>319</height>
    </rect>
   </property>
   <property name="toolTip">
    <string/>
   </property>
-  <layout class="QGridLayout" name="gridLayout_4">
+  <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBoxFolder">
      <property name="title">
@@ -32,10 +32,10 @@
         <property name="toolTip">
          <string>Set temporary folder</string>
         </property>
-        <property name="filter" stdset="0">
+        <property name="filter">
          <string notr="true"/>
         </property>
-        <property name="clickMessage" stdset="0">
+        <property name="clickMessage">
          <string notr="true"/>
         </property>
        </widget>
@@ -52,10 +52,10 @@
         <property name="toolTip">
          <string>Set download folder</string>
         </property>
-        <property name="filter" stdset="0">
+        <property name="filter">
          <string notr="true"/>
         </property>
-        <property name="clickMessage" stdset="0">
+        <property name="clickMessage">
          <string notr="true"/>
         </property>
        </widget>
@@ -103,28 +103,28 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="sysTrayGroupBox">
      <property name="title">
-      <string>Confirmation dialogs</string>
+      <string>System tray</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QGridLayout" name="gridLayout_4">
       <item row="0" column="0">
-       <widget class="QCheckBox" name="kcfg_confirmClear">
+       <widget class="QCheckBox" name="kcfg_sysTray">
         <property name="toolTip">
-         <string>Display dialog box when Clear button has been pushed</string>
+         <string>Check to enable the Kwooty system tray icon</string>
         </property>
         <property name="text">
-         <string>Show confirm message when clearing rows</string>
+         <string>Show tray icon</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QCheckBox" name="kcfg_confirmRemove">
+       <widget class="QCheckBox" name="kcfg_notification">
         <property name="toolTip">
-         <string>Display dialog box when Remove button has been pushed</string>
+         <string>Check to enable Kwooty notifications in system tray</string>
         </property>
         <property name="text">
-         <string>Show confirm message when removing selected rows</string>
+         <string>Show notifications</string>
         </property>
        </widget>
       </item>
