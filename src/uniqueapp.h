@@ -36,7 +36,7 @@ public:
     virtual int newInstance();
 
 private:
-    MainWindow* mainWindow;
+    QPointer<MainWindow> mainWindow;
     bool kwootyInstance;
 
 };
