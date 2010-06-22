@@ -1,9 +1,7 @@
-include_directories( ${KDE4_INCLUDES} ${KWORKSPACE_INCLUDE_DIR}  ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
-
-set(KWOOTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories( ${KDE4_INCLUDES} ${KDE4WORKSPACE_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set(KWOOTY_INCLUDES
-${KWOOTY_SOURCE_DIR}/plugins/
+  ${CMAKE_CURRENT_SOURCE_DIR}/plugins/
 )
 
 
@@ -84,21 +82,22 @@ kde4_add_ui_files(  Kwooty_lib_SRCS
 kde4_add_kcfg_files(Kwooty_lib_SRCS preferences/settings.kcfgc)
 
 
-kde4_add_library(kwootylib SHARED ${Kwooty_lib_SRCS})
+kde4_add_library(kwootycore SHARED ${Kwooty_lib_SRCS})
 
-target_link_libraries(kwootylib
+target_link_libraries(kwootycore
 		      ${KDE4_KDECORE_LIBS}
 		      ${KDE4_KIO_LIBS}
 		      ${KDE4_KUTILS_LIBS}
+		      ${KDE4_SOLID_LIBS}
 		      ${KDE4WORKSPACE_KWORKSPACE_LIBS}
 		      ${KDE4WORKSPACE_SOLIDCONTROL_LIBS}
   )
 
-set_target_properties(kwootylib PROPERTIES VERSION 1.0.0 SOVERSION 1 )
-install(TARGETS kwootylib ${INSTALL_TARGETS_DEFAULT_ARGS} )
+set_target_properties(kwootycore PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+install(TARGETS kwootycore ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 kde4_add_executable(kwooty ${Kwooty_SRCS})
-target_link_libraries(kwooty ${KDE4_KDEUI_LIBS} kwootylib )
+target_link_libraries(kwooty ${KDE4_KDEUI_LIBS} kwootycore )
 
 
 install(TARGETS kwooty DESTINATION ${BIN_INSTALL_DIR})
