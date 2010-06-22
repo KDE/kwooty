@@ -22,9 +22,7 @@
 #define REPAIRDECOMPRESSTHREAD_H
 
 #include <QThread>
-#include <QMutex>
 #include <QTimer>
-#include <QWaitCondition>
 
 #include "data/nzbfiledata.h"
 #include "data/nzbcollectiondata.h"
@@ -37,7 +35,7 @@ class ExtractRar;
 class ExtractZip;
 
 
-class RepairDecompressThread : public QThread {
+class RepairDecompressThread : public QObject {
 
     Q_OBJECT
 
@@ -45,20 +43,21 @@ public:
     RepairDecompressThread(CentralWidget*);
     RepairDecompressThread();
     ~RepairDecompressThread();
+    CentralWidget* getCentralWidget();
 
 private:
+    QThread* dedicatedThread;
+    QTimer* repairDecompressTimer;
     CentralWidget* parent;
     Repair* repair;
     ExtractRar* extractRar;
     ExtractZip* extractZip;
-    QTimer* repairDecompressTimer;
-    QMutex mutex;
     QList<NzbCollectionData> filesToRepairList;
     QList<NzbCollectionData> filesToExtractList;
     QList<NzbCollectionData> filesToProcessList;
     bool waitForNextProcess;
 
-    void run();
+    void init();
     void setupConnections();
     void processRarFilesFromDifferentGroups(const QStringList&, NzbCollectionData&);
     void processRarFilesFromSameGroup(NzbCollectionData&);
@@ -73,11 +72,9 @@ private:
 signals:
     void updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
     void updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
-    void passwordEnteredByUserSignal(bool, QString password = QString());
 
 public slots:
     void repairDecompressSlot(NzbCollectionData);
-    void extractPasswordRequiredSlot(QString);
     void repairProcessEndedSlot(NzbCollectionData, UtilityNamespace::ItemStatus);
     void extractProcessEndedSlot(NzbCollectionData);
 
@@ -86,6 +83,7 @@ private slots:
     void startExtractSlot();
     void processPendingFilesSlot();
     void processJobSlot();
+
 
 
 };

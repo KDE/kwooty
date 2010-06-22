@@ -21,7 +21,6 @@
 #include "repairdecompressthread.h"
 
 #include <KDebug>
-#include <KPasswordDialog>
 #include <QFileInfo>
 #include "centralwidget.h"
 #include "repair.h"
@@ -35,77 +34,77 @@
 RepairDecompressThread::RepairDecompressThread(){}
 
 
-RepairDecompressThread::RepairDecompressThread(CentralWidget* inParent) : QThread(inParent) {
+RepairDecompressThread::RepairDecompressThread(CentralWidget* inParent) {
 
     this->parent = inParent;
 
+    this->init();
+
+    this->dedicatedThread = new QThread();
+    this->moveToThread(this->dedicatedThread);
+
     // start current thread :
-    QTimer::singleShot(0, this, SLOT(start())) ;
+    this->dedicatedThread->start();
+
 }
 
 
 RepairDecompressThread::~RepairDecompressThread() {
 
-    quit();
-    wait();
+    this->dedicatedThread->quit();
+    this->dedicatedThread->wait();
 
-    delete repairDecompressTimer;
-    delete extractRar;
-    delete extractZip;
-    delete repair;
+    delete this->dedicatedThread;
+
 }
 
 
-void RepairDecompressThread::run() {
+CentralWidget* RepairDecompressThread::getCentralWidget() {
+
+    return this->parent;
+
+}
+
+
+void RepairDecompressThread::init() {
 
     this->waitForNextProcess = false;
 
     // create verify/repair instance :
-    repair = new Repair();
+    repair = new Repair(this);
 
     // create extract instances :
     extractRar = new ExtractRar(this);
     extractZip = new ExtractZip(this);
 
-    // create incoming data monitoring timer :
-    repairDecompressTimer = new QTimer();
+    this->repairDecompressTimer = new QTimer(this);
 
     // setup connections :
     this->setupConnections();
 
-    // start timer :
-    repairDecompressTimer->start(100);
-
-    this->exec();
 }
 
 
 void RepairDecompressThread::setupConnections() {
 
+
     // check if there are data to repair :
     connect (this->repairDecompressTimer ,
              SIGNAL(timeout()),
              this,
-             SLOT(processJobSlot()),
-             Qt::DirectConnection);
-
+             SLOT(processJobSlot()));
 
     // receive data to repair and decompress from repairDecompressSignal :
     qRegisterMetaType<NzbCollectionData>("NzbCollectionData");
     connect (parent->getItemParentUpdater(),
              SIGNAL(repairDecompressSignal(NzbCollectionData)),
              this,
-             SLOT(repairDecompressSlot(NzbCollectionData)),
-             Qt::QueuedConnection);
+             SLOT(repairDecompressSlot(NzbCollectionData)));
 
 
     // send repairing related updates to segmentmanager :
     qRegisterMetaType<QVariant>("QVariant");
     qRegisterMetaType<UtilityNamespace::ItemTarget>("UtilityNamespace::ItemTarget");
-    connect (repair ,
-             SIGNAL(updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
-             this,
-             SIGNAL(updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
 
     // begin file extraction when end repair signal has been received :
     connect (repair,
@@ -114,27 +113,28 @@ void RepairDecompressThread::setupConnections() {
              SLOT(repairProcessEndedSlot(NzbCollectionData, UtilityNamespace::ItemStatus)));
 
 
+
+    // update info about repair process :
+    connect (repair,
+             SIGNAL(updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
+             this->parent->getSegmentManager(),
+             SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
+
+    // update info about extract process :
+    connect (extractRar,
+             SIGNAL(updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
+             this->parent->getSegmentManager(),
+             SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
+
+    // update info about extract process :
+    connect (extractZip,
+             SIGNAL(updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
+             this->parent->getSegmentManager(),
+             SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
+
+
 }
 
-
-
-void RepairDecompressThread::extractPasswordRequiredSlot(QString currentArchiveFileName) {
-
-    KPasswordDialog kPasswordDialog(this->parent);
-
-    kPasswordDialog.setPrompt(i18n("The archive <b>%1</b> is password protected. <br>Please enter the password to extract the file.",  currentArchiveFileName));
-
-    // if password has been entered :
-    if(kPasswordDialog.exec()) {
-        emit passwordEnteredByUserSignal(true, kPasswordDialog.password());
-    }
-    else {
-        // else password has not been entered :
-        emit passwordEnteredByUserSignal(false);
-    }
-
-
-}
 
 
 void RepairDecompressThread::processJobSlot() {
@@ -147,6 +147,17 @@ void RepairDecompressThread::processJobSlot() {
 
     // extract files :
     this->startExtractSlot();
+
+
+    if (!this->waitForNextProcess &&
+        this->filesToRepairList.isEmpty() &&
+        this->filesToExtractList.isEmpty() &&
+        this->filesToProcessList.isEmpty() ) {
+
+        kDebug() << "TIMER STOP !!!";
+        this->repairDecompressTimer->stop();
+    }
+
 
 }
 
@@ -184,9 +195,7 @@ void RepairDecompressThread::startExtractSlot() {
     // if no data is currently being verified :
     if (!this->filesToExtractList.isEmpty()) {
 
-        mutex.lock();
         NzbCollectionData nzbCollectionDataToExtract = this->filesToExtractList.takeFirst();
-        mutex.unlock();
 
         // extract data :
         if (!nzbCollectionDataToExtract.getNzbFileDataList().isEmpty() && (Settings::groupBoxAutoDecompress())) {
@@ -226,15 +235,14 @@ void RepairDecompressThread::repairProcessEndedSlot(NzbCollectionData nzbCollect
 
     // if verify/repair ok, launch archive extraction :
     if (repairStatus == RepairFinishedStatus) {
-        mutex.lock();
         this->filesToExtractList.append(nzbCollectionDataToExtract);
-        mutex.unlock();
     }
 
     // if verify/repair ko, do not launch archive extraction and verify next pending items :
     if (repairStatus == RepairFailedStatus) {
         this->waitForNextProcess = false;
     }
+
 
 }
 
@@ -266,11 +274,17 @@ void RepairDecompressThread::extractProcessEndedSlot(NzbCollectionData nzbCollec
 
 void RepairDecompressThread::repairDecompressSlot(NzbCollectionData nzbCollectionData) {
 
+    kDebug();
     // all files have been downloaded and decoded, set them in the pending list
     // in order to process them :
-    mutex.lock();
     this->filesToProcessList.append(nzbCollectionData);
-    mutex.unlock();
+
+    this->processJobSlot();
+
+    if (!this->repairDecompressTimer->isActive()) {
+        this->repairDecompressTimer->start(100);
+    }
+
 
 }
 
@@ -281,9 +295,7 @@ void RepairDecompressThread::processPendingFilesSlot() {
     if (!this->filesToProcessList.isEmpty()) {
 
         // get nzbFileDataList to verify and repair :
-        mutex.lock();
         NzbCollectionData nzbCollectionData = this->filesToProcessList.takeFirst();
-        mutex.unlock();
 
         // if the list contains rar files belonging to one group :
         if (!this->isListContainsdifferentGroups(nzbCollectionData.getNzbFileDataList())) {
@@ -338,7 +350,6 @@ bool RepairDecompressThread::isListContainsdifferentGroups(const QList<NzbFileDa
         containsDifferentGroups = false;
 
     }
-
 
     return containsDifferentGroups;
 }
