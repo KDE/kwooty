@@ -25,7 +25,7 @@
 #include <QSslCipher>
 #include <QFile>
 
-#include "settings.h"
+#include "kwootysettings.h"
 #include "clientmanagerconn.h"
 
 
