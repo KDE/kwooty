@@ -1,4 +1,29 @@
-Kwooty is a friendly newsgroup binary downloader that uses .nzb as entry files.
+Kwooty, a friendly newsgroup binary downloader for KDE 4.
+
+Version 0.5.0:
+--------------
+- Systray icon support: download progress is displayed on systray icon (ala amarok).
+                        moose over systray icon will provide information tooltip about jobs being processed.  
+                        new Kde system tray support will be used (KStatusNotifierItem) if kwooty is compiled against Kde >= 4.4.
+                        
+- Added Pause all - Start all actions in systray icon context menu.
+                        
+- Nofication support: user can now be notified when a job is totally finished and when there is not enough free disk space.
+  
+- Nice process priority option: priority of external programs (par2, unrar, 7z) can now be lowered by settings a predefined or custom value to 'nice' program (configurable in Settings > External Programs > Priotiry tab).
+ 
+- Plugin handling support: kwooty now handles plugins.
+
+- "watch folder" feature has switched from core program to become a plugin part (can now be enabled/disabled in "Settings > Plugins").
+
+- Updated closing confirmation dialog box: cancel quitting is now possible.
+   
+- Updated download speed display in status bar : speed is displayed in MiB/s when appropriate (instead of KiB/s).
+
+- Preferences gui update.
+  
+- A few performance optimations.
+
 
 Version 0.4.0:
 --------------

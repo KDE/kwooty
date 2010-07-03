@@ -24,12 +24,8 @@ Build and install the project:
 2. build and install:
     > cd kwooty
     > cd build
-    > cmake ..
-    > sudo make install OR > su -c 'make install'
-    
-Note: Kwooty will be installed in the applications directory of Kde 4.X by default (probably located in /usr). 
-If you wish to install Kwooty in the directory of your choice (for ex. /home/userName/test), use:
-    > cmake .. -DCMAKE_INSTALL_PREFIX=/path/of/you/choice
+    > cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
+    > sudo make install OR > su -c 'make install'  
 
 3. uninstall :
   > sudo make uninstall OR > su -c 'make uninstall'
@@ -68,9 +64,4 @@ kdebase-workspace-dev
 par2
 unrar (non-free version)
  
- 
- 
- 
- 
-  
  
