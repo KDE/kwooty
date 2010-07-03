@@ -38,7 +38,7 @@ class KWOOTY_EXPORT FileOperations : public QObject {
 
 public:
 
-    FileOperations(CentralWidget* centralWidget = 0);
+    FileOperations(CentralWidget* = 0);
     void openFile();
     void openFileWithFileMode(KUrl, UtilityNamespace::OpenFileMode);
 
