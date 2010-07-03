@@ -82,7 +82,6 @@ private:
     void removePar2Files();
     QString sortPar2FilesBySize();
     UtilityNamespace::ItemTarget getItemTarget(const NzbFileData&);
-    QStringList buildPriorityArgument();
 
 
 signals:
