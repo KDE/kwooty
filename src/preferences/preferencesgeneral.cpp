@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "preferencesgeneral.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 PreferencesGeneral::PreferencesGeneral()
 {
