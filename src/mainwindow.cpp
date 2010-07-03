@@ -36,7 +36,7 @@
 #include <QTextStream>
 #include <QtGui>
 
-#include "settings.h"
+#include "kwootysettings.h"
 #include "mystatusbar.h"
 #include "mytreeview.h"
 #include "centralwidget.h"
@@ -60,7 +60,6 @@
 MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
 {
 
-
     // create the user interface :
     QWidget* widget = new QWidget(this);
 
@@ -70,13 +69,13 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
     // get treeview instance :
     this->treeView = this->centralWidget->getTreeView();
 
-    //build layout :
+    // build layout :
     this->buildLayout(widget);
     this->setCentralWidget(widget);
 
     this->setupActions();
 
-    //setup statusBar :
+    // setup statusBar :
     this->statusBar = new MyStatusBar(this);
     this->setStatusBar(this->statusBar);
 
@@ -88,8 +87,6 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
     this->pluginManager->loadPlugins();
 
     this->quitSelected = false;
-
-    kDebug() << this;
 
 }
 
@@ -238,7 +235,6 @@ void MainWindow::setupActions() {
     connect(centralWidget->getShutdownManager(), SIGNAL(setShutdownButtonCheckedSignal(bool)), shutdownAction, SLOT(setChecked(bool)));
     connect(centralWidget->getShutdownManager(), SIGNAL(setShutdownButtonEnabledSignal(bool)), shutdownAction, SLOT(setEnabled(bool)) );
 
-
     //startAllDownloadAction
     KAction* startAllDownloadAction = new KAction(this);
     startAllDownloadAction->setText(i18n("Start all"));
@@ -308,11 +304,8 @@ void MainWindow::showSettings(){
         PreferencesShutdown* preferencesShutdown = new PreferencesShutdown(this->centralWidget);
         dialog->addPage(preferencesShutdown, i18n("Shutdown"), "system-shutdown", i18n("Setup System Shutdown"));
 
-
-        //PreferencesPlugins* preferencesPlugins = new PreferencesPlugins(this, "settings", Settings::self(), this->pluginManager);
         PreferencesPlugins* preferencesPlugins = new PreferencesPlugins(dialog, this->pluginManager);
         dialog->addPage(preferencesPlugins, i18n("Plugins"), "preferences-plugin", i18n("Plugins Setup"));
-
 
 
         connect( dialog, SIGNAL(settingsChanged(const QString&)), centralWidget, SLOT(updateSettingsSlot()) );
