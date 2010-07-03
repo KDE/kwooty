@@ -24,10 +24,9 @@
 
 
 #include <kpluginselector.h>
-#include <QWidget>
 #include <KConfigDialog>
-#include <kcmodule.h>
-#include <QTimer>
+
+#include <QWidget>
 
 
 class PluginManager;
