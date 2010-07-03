@@ -20,16 +20,18 @@
 
 
 #include "preferencesplugins.h"
+
 #include <KPluginInfo>
 #include <KDebug>
-#include <QVBoxLayout>
 #include <KSharedConfig>
 #include <kpluginfactory.h>
+
+#include <QVBoxLayout>
 
 #include "plugins/pluginmanager.h"
 
 
-PreferencesPlugins::PreferencesPlugins(KConfigDialog* kConfigDialog, PluginManager* pluginManager){
+PreferencesPlugins::PreferencesPlugins(KConfigDialog* kConfigDialog, PluginManager* pluginManager) {
 
 
     this->kConfigDialog = kConfigDialog;
@@ -37,8 +39,6 @@ PreferencesPlugins::PreferencesPlugins(KConfigDialog* kConfigDialog, PluginManag
 
     this->kPluginSelector = new KPluginSelector(this);
     this->kPluginSelector->addPlugins(this->pluginManager->getPluginInfoList(), KPluginSelector::ReadConfigFile, i18n("General Plugins"));
-
-    kDebug() << this->pluginManager->getPluginInfoList().size();
 
     // setup layout :
     QVBoxLayout* layout = new QVBoxLayout(this);
