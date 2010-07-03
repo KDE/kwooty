@@ -25,6 +25,7 @@
 #include "ui_preferenceswatchfolder.h"
 
 #include <KCModule>
+
 #include <KPluginFactory>
 #include <KPluginLoader>
 
@@ -35,7 +36,7 @@ class PreferencesWatchFolder : public KCModule
     Q_OBJECT
 
 public:
-    PreferencesWatchFolder( QWidget* parent = 0, const QVariantList& args = QVariantList() );
+    PreferencesWatchFolder(QWidget* = 0, const QVariantList& = QVariantList());
     ~PreferencesWatchFolder();
 
     virtual void save();
