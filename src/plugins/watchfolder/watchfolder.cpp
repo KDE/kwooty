@@ -27,14 +27,16 @@
 
 #include <QFileInfo>
 
+#include "mainwindow.h"
 #include "centralwidget.h"
-#include "watchfoldersettings.h"
+#include "watchfolderplugin.h"
+#include "kwooty_watchfoldersettings.h"
 #include "fileoperations.h"
 
 
-WatchFolder::WatchFolder(CentralWidget* centralWidget) :  QObject(centralWidget) {
+WatchFolder::WatchFolder(WatchFolderPlugin* parent) :  QObject(parent) {
 
-    this->centralWidget = centralWidget;
+    this->centralWidget = parent->getCore()->getCentralWidget();
 
     this->kDirWatch = new KDirWatch(this);
 
@@ -53,8 +55,6 @@ WatchFolder::WatchFolder(CentralWidget* centralWidget) :  QObject(centralWidget)
 
 WatchFolder::~WatchFolder() {
 
-    kDebug();
-    delete this->kDirWatch;
 }
 
 
