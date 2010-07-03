@@ -25,7 +25,7 @@
 #include "centralwidget.h"
 #include "standarditemmodel.h"
 #include "itemparentupdater.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 
 ItemChildrenManager::ItemChildrenManager(CentralWidget* parent, ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater (parent) {
