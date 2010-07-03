@@ -28,7 +28,6 @@
 #include <QTimer>
 #include <QPointer>
 
-
 #include "utility.h"
 using namespace UtilityNamespace;
 
