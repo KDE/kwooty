@@ -25,11 +25,12 @@
 #include "kdiskfreespaceinfo.h"
 
 #include <QDateTime>
+
 #include "standarditemmodel.h"
 #include "centralwidget.h"
 #include "clientsobserver.h"
 #include "notificationmanager.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 
 StatsInfoBuilder::StatsInfoBuilder(ClientsObserver* clientsObserver, CentralWidget* parent)  : QObject(parent) {
@@ -84,11 +85,11 @@ void StatsInfoBuilder::resetVariables() {
     this->meanSpeedActiveCounter = 0;
     this->timeoutCounter = 1;
     this->parentStateIndex = QModelIndex();
-    this->nzbNameDownloading = QString();
-    this->timeLabel = QString();
-    this->totalTimeValue = QString();
-    this->currentTimeValue = QString();
-    this->downloadSpeedReadableStr = QString();
+    this->nzbNameDownloading.clear();
+    this->timeLabel.clear();
+    this->totalTimeValue.clear();
+    this->currentTimeValue.clear();
+    this->downloadSpeedReadableStr.clear();
     this->previousDiskSpaceStatus = SufficientDiskSpace;
 
 }
@@ -230,8 +231,6 @@ void StatsInfoBuilder::retrieveQueuedFilesInfo(bool& parentDownloadingFound, boo
 
 void StatsInfoBuilder::computeTimeInfo() {
 
-    QString timeInfoStr;
-    QString timeInfoToolTip;
     this->currentTimeValue = QString();
     this->totalTimeValue = QString();
 
@@ -312,32 +311,23 @@ QString StatsInfoBuilder::calculateRemainingTime(const quint32& remainingSeconds
     int remainingHours = (remainingSeconds - (remainingDays * SECONDS_IN_DAY)) / SECONDS_IN_HOUR;
     int remainingMinutes = (remainingSeconds - ( (remainingDays * SECONDS_IN_DAY) + remainingHours * SECONDS_IN_HOUR) ) / SECONDS_IN_MINUTE;
 
-    QString dayStr = i18n("day");
-    QString hourStr = i18n("hour");
-    QString minuteStr = i18n("minute");
-
-    if (remainingDays > 1) { dayStr = i18n("days"); }
-    if (remainingHours > 1) { hourStr = i18n("hours"); }
-    if (remainingMinutes > 1) { minuteStr = i18n("minutes"); }
 
     // display number of remaining days if any :
     if (remainingDays > 0) {
-        remainingTimeStr.append(QString::number(remainingDays) + " " + dayStr + " ");
+        remainingTimeStr.append(i18np("%1 day ", "%1 days ", remainingDays));
     }
 
     // display number of remaining hours if any :
     if (remainingHours > 0) {
-        remainingTimeStr.append(QString::number(remainingHours) + " " + hourStr + " ");
+        remainingTimeStr.append(i18np("%1 hour ", "%1 hours ", remainingHours));
     }
 
     // display number of remaining minutes :
-    remainingTimeStr.append(QString::number(remainingMinutes) + " " + minuteStr);
+    remainingTimeStr.append(i18np("%1 minute", "%1 minutes", remainingMinutes));
 
     // when this is the last minute, display "less than 1 minute" instead of 0 minute :
     if (remainingDays == 0 && remainingHours == 0 && remainingMinutes == 0) {
-
-        remainingTimeStr = i18n("less than") + " 1 " + minuteStr;
-
+        remainingTimeStr = i18n("less than 1 minute");
     }
 
 
@@ -379,7 +369,7 @@ void StatsInfoBuilder::retrieveFreeDiskSpace() {
             }
 
             // get free space size :
-            QString freeSpaceStr = Utility::convertByteHumanReadable(freeSpaceVal) + " " + i18n("free");
+            QString freeSpaceStr = i18nc("free disk space available", "%1 free", Utility::convertByteHumanReadable(freeSpaceVal));
 
             // calculate percentage of used disk :
             int usedDiskPercentage = qMin( qRound(static_cast<qreal>(usedVal * 100 / sizeVal)), PROGRESS_COMPLETE );
