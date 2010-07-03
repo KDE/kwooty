@@ -36,17 +36,17 @@ class WatchFolderPlugin : public Plugin
 
 public:
 
-    WatchFolderPlugin( QObject*, const QList<QVariant>&);
+    WatchFolderPlugin(QObject*, const QList<QVariant>&);
     ~WatchFolderPlugin();
 
 
 private:
 
+    WatchFolder* watchFolder;
+
     void load();
     void unload();
     void configUpdated();
-
-    WatchFolder* watchFolder;
 
 
 signals:
