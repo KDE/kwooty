@@ -23,31 +23,33 @@
 
 #include <KDebug>
 #include <KGlobal>
+
 #include <QHBoxLayout>
 
-#include "watchfoldersettings.h"
+#include "kwooty_watchfoldersettings.h"
 #include <kgenericfactory.h>
 
 
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesWatchFolder>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_watchfoldersettings"))
 
-PreferencesWatchFolder::PreferencesWatchFolder( QWidget* parent, const QVariantList& args ) :
-KCModule( PluginFactory::componentData(), parent, args )
-{
 
-    kDebug() << parent;
+PreferencesWatchFolder::PreferencesWatchFolder(QWidget* parent, const QVariantList& args) :
+KCModule(PluginFactory::componentData(), parent, args) {
 
+    // set layout config layout :
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->setMargin(0);
 
+    // setup ui file :
     QWidget* widget = new QWidget(this);
     this->preferencesWatchFolderUi.setupUi(widget);
     layout->addWidget(widget);
 
+    // add main kconfigskeleton :
     this->addConfig(WatchFolderSettings::self(), widget);
 
-
+    // set folder mode :
     this->preferencesWatchFolderUi.kcfg_watchFolder->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
 
 
@@ -56,18 +58,15 @@ KCModule( PluginFactory::componentData(), parent, args )
 
 PreferencesWatchFolder::~PreferencesWatchFolder() {
 
-    kDebug();
-    //delete this->preferencesWatchFolderUi;
 }
 
+
 void PreferencesWatchFolder::load(){
-    kDebug();
     KCModule::load();
 }
 
-void PreferencesWatchFolder::save(){
 
-    kDebug();
+void PreferencesWatchFolder::save(){
     KCModule::save();
 
 }
