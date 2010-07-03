@@ -28,7 +28,7 @@
 #include "extractzip.h"
 #include "itemparentupdater.h"
 #include "segmentmanager.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 
 RepairDecompressThread::RepairDecompressThread(){}
@@ -113,7 +113,6 @@ void RepairDecompressThread::setupConnections() {
              SLOT(repairProcessEndedSlot(NzbCollectionData, UtilityNamespace::ItemStatus)));
 
 
-
     // update info about repair process :
     connect (repair,
              SIGNAL(updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
@@ -148,13 +147,12 @@ void RepairDecompressThread::processJobSlot() {
     // extract files :
     this->startExtractSlot();
 
-
+    // stop timer i there is no more pending jobs :
     if (!this->waitForNextProcess &&
         this->filesToRepairList.isEmpty() &&
         this->filesToExtractList.isEmpty() &&
         this->filesToProcessList.isEmpty() ) {
 
-        kDebug() << "TIMER STOP !!!";
         this->repairDecompressTimer->stop();
     }
 
@@ -274,13 +272,11 @@ void RepairDecompressThread::extractProcessEndedSlot(NzbCollectionData nzbCollec
 
 void RepairDecompressThread::repairDecompressSlot(NzbCollectionData nzbCollectionData) {
 
-    kDebug();
     // all files have been downloaded and decoded, set them in the pending list
     // in order to process them :
     this->filesToProcessList.append(nzbCollectionData);
 
-    this->processJobSlot();
-
+    // start timer in order to process pending jobs :
     if (!this->repairDecompressTimer->isActive()) {
         this->repairDecompressTimer->start(100);
     }
