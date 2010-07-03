@@ -28,7 +28,7 @@
 #include "clientsobserver.h"
 #include "queuefileobserver.h"
 #include "statsinfobuilder.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 
 
