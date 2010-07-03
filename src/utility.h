@@ -255,6 +255,8 @@ public:
     static bool removeData(const QString&);
     static QString searchExternalPrograms(const QString&, bool&);
     static QString getSystemTimeFormat(const QString&);
+    static QString buildToolTipRow(const QString&, const QString&);
+    static QStringList buildPriorityArgument(const int&, const int&);
     
     
 private:
