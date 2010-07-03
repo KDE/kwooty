@@ -34,7 +34,7 @@
 using namespace UtilityNamespace;
 
 class CentralWidget;
-
+class WatchFolderPlugin;
 
 class WatchFolder : public QObject
 {
@@ -42,7 +42,7 @@ class WatchFolder : public QObject
     Q_OBJECT
 
 public:
-    WatchFolder(CentralWidget* parent);
+    WatchFolder(WatchFolderPlugin*);
     ~WatchFolder();
     void settingsChanged();
 
