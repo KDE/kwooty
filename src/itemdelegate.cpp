@@ -103,7 +103,7 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
                     opt.text = i18n("No Data");
                 }
                 if (itemStatusData.getDataStatus() == DataIncomplete){
-                    opt.text = opt.text  + i18n(" (incomplete)");
+                    opt.text = i18n("%1 (incomplete)", opt.text);
                 }
             }
             if (status == DownloadFinishStatus) {
@@ -124,11 +124,11 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
             }
             else {
                 int progress = index.data(ProgressRole).toInt();
-                opt.text = QString::number(progress) + " %";
+                opt.text = i18n("<numid>%1</numid> %", progress);
 
                 // if progress unkwnown (appears 7z extract command is launched), display n/a :
                 if (progress == PROGRESS_UNKNOWN) {
-                    opt.text = "n/a";
+                    opt.text = i18n("n/a");
                 }
 
             }
@@ -169,11 +169,12 @@ void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem
 
     // set progress value and text :
     int progress = index.data(ProgressRole).toInt();
-    progressBarOpt.progress = progress;
-    progressBarOpt.text = QString::number(progress) + " %";
+    progressBarOpt.progress = progress;    
+    progressBarOpt.text = i18n("<numid>%1</numid> %", progress);
+
 
     if (progress == PROGRESS_UNKNOWN) {
-        progressBarOpt.text = "n/a";
+        progressBarOpt.text = i18n("n/a");
     }
 
 
