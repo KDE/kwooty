@@ -24,7 +24,7 @@
 #include <KIcon>
 #include "itemparentupdater.h"
 #include "standarditemmodel.h"
-#include "settings.h"
+#include "kwootysettings.h"
 #include "data/itemstatusdata.h"
 #include "data/nzbfiledata.h"
 
