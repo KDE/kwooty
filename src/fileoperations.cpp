@@ -28,7 +28,7 @@
 #include <QFileInfo>
 
 #include "centralwidget.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 FileOperations::FileOperations(CentralWidget* centralWidget) : QObject(centralWidget) {
 
@@ -41,7 +41,7 @@ void FileOperations::openFile() {
 
     bool isWrongUrl = false;
 
-    QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(KUrl(), "*.nzb|" + i18n("nzb files"), this->centralWidget);
+    QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(KUrl(), i18n("*.nzb|nzb files"), this->centralWidget);
 
     // process selected file(s) :
     for (int i = 0; i < fileNameFromDialogList.size(); i++) {
