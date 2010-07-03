@@ -23,7 +23,7 @@
 #include <KDebug>
 #include <KStandardDirs>
 #include <QFile>
-#include "settings.h"
+#include "kwootysettings.h"
 #include "repairdecompressthread.h"
 #include "data/nzbfiledata.h"
 
@@ -56,46 +56,6 @@ void Repair::setupConnections() {
 }
 
 
-QStringList Repair::buildPriorityArgument() {
-
-    QStringList niceProcessArgs;
-    QString nicePath;
-
-    // process priority has been checked :
-    if (Settings::groupBoxVerifyPriority()) {
-
-        nicePath = KStandardDirs::findExe("nice");
-        niceProcessArgs.append(nicePath);
-        niceProcessArgs.append("-n");
-
-        switch (Settings::verifyProcessValues()) {
-
-        case UtilityNamespace::LowPriority: {
-                 niceProcessArgs.append("10");
-                break;
-            }
-        case UtilityNamespace::LowestPriority: {
-                niceProcessArgs.append("20");
-                break;
-            }
-        case UtilityNamespace::CustomPriority: {
-                niceProcessArgs.append(QString::number(Settings::verifyNiceValue()));
-                break;
-            }
-        default: {
-                break;
-            }
-        }
-    }
-
-    if (nicePath.isEmpty()) {
-        niceProcessArgs.clear();
-    }
-
-    return niceProcessArgs;
-
-}
-
 
 void Repair::launchProcess(const NzbCollectionData& nzbCollectionData){
 
@@ -125,13 +85,19 @@ void Repair::launchProcess(const NzbCollectionData& nzbCollectionData){
             if (!this->par2FilesOrderedList.isEmpty()) {
 
                 // list of arguments for par2repair command line :
-                QStringList args = this->buildPriorityArgument();
+                QStringList args;
+
+                // process priority has been checked :
+                if (Settings::groupBoxVerifyPriority()) {
+                    args.append(Utility::buildPriorityArgument(Settings::verifyProcessValues(), Settings::verifyNiceValue()));
+                }
+
                 args.append(this->par2ProgramPath);
                 args.append("r");
                 args.append(this->par2FilesOrderedList.at(0));
                 args.append(fileSavePath + nzbCollectionData.getPar2BaseName());
 
-                kDebug() << "ARGS :" << args;
+                //kDebug() << "ARGS :" << args;
                 this->repairProcess->setTextModeEnabled(true);
                 this->repairProcess->setOutputChannelMode(KProcess::MergedChannels);
                 this->repairProcess->setNextOpenMode(QIODevice::ReadOnly | QIODevice::Unbuffered);
