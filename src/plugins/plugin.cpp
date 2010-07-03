@@ -33,7 +33,7 @@
 Plugin::Plugin(const KComponentData& instance, QObject* parent): QObject(parent), KXMLGUIClient()
 {
 
-    kDebug() << instance.componentName();
+    //kDebug() << instance.componentName();
     this->setComponentData(instance);
 
 }
