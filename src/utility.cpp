@@ -21,12 +21,13 @@
 #include "utility.h"
 
 #include <KDebug>
+#include <KStandardDirs>
 #include <KLocale>
 #include <kio/global.h>
 
 #include <QFile>
 #include <QDir>
-#include "settings.h"
+#include "kwootysettings.h"
 
 
 using namespace UtilityNamespace;
@@ -63,10 +64,11 @@ QString Utility::convertDownloadSpeedHumanReadable(const quint64 downloadSpeedIn
     double fileSize = downloadSpeedInByte / NBR_BYTES_IN_MB;
 
     if (fileSize > ONE_UNIT){
-        downloadSpeedStr = QString::number(fileSize, 'f', 2) + i18n(" MiB/s");
+
+        downloadSpeedStr = ki18n("%1 MiB/s").subs(fileSize, 0, 'f', 2).toString();
     }
     else {
-        downloadSpeedStr = QString::number(static_cast<int>(downloadSpeedInByte / NBR_BYTES_IN_KB)) + i18n(" KiB/s");
+        downloadSpeedStr = i18n("<numid>%1</numid> KiB/s", static_cast<int>(downloadSpeedInByte / NBR_BYTES_IN_KB));
     }
 
     return downloadSpeedStr;
@@ -329,3 +331,54 @@ QString Utility::getSystemTimeFormat(const QString& dateFormat) {
 
     return properDateFormat;
 }
+
+
+
+QString Utility::buildToolTipRow(const QString& label, const QString& value) {
+
+    QString toolRipRow = "<tr><td>" + label + "</td><td>" + value + "</td></tr>";
+    return toolRipRow;
+}
+
+
+
+QStringList Utility::buildPriorityArgument(const int& processPriority, const int& niceValue) {
+
+
+    QStringList niceProcessArgs;
+
+    // look for 'nice' location :
+    QString nicePath = KStandardDirs::findExe("nice");
+    niceProcessArgs.append(nicePath);
+    niceProcessArgs.append("-n");
+
+    // set priority value :
+    switch (processPriority) {
+
+    case UtilityNamespace::LowPriority: {
+            niceProcessArgs.append("10");
+            break;
+        }
+    case UtilityNamespace::LowestPriority: {
+            niceProcessArgs.append("19");
+            break;
+        }
+    case UtilityNamespace::CustomPriority: {
+            niceProcessArgs.append(QString::number(niceValue));
+            break;
+        }
+    default: {
+            break;
+        }
+    }
+
+
+    // if program has not been found, clear argument list :
+    if (nicePath.isEmpty()) {
+        niceProcessArgs.clear();
+    }
+
+    return niceProcessArgs;
+
+}
+
