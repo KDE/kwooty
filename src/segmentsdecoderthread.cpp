@@ -30,7 +30,7 @@
 #include "itemparentupdater.h"
 #include "segmentmanager.h"
 #include "datarestorer.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 
 SegmentsDecoderThread::SegmentsDecoderThread(){}
