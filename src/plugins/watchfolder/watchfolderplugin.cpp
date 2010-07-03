@@ -33,6 +33,7 @@
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<WatchFolderPlugin>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_watchfolderplugin"))
 
+
 WatchFolderPlugin::WatchFolderPlugin(QObject* parent, const QList<QVariant>&) : Plugin(PluginFactory::componentData(), parent)
 {
 
@@ -41,31 +42,21 @@ WatchFolderPlugin::WatchFolderPlugin(QObject* parent, const QList<QVariant>&) : 
 
 WatchFolderPlugin::~WatchFolderPlugin()
 {
-    kDebug() << "DELETE !!";
 
 }
 
 
 
 void WatchFolderPlugin::load() {
-
-    kDebug() << "LOAD ... !!";
-    this->watchFolder = new WatchFolder(this->getCore()->getCentralWidget());
-    kDebug() << "LOAD OK!!";
+    this->watchFolder = new WatchFolder(this);
 }
 
 void WatchFolderPlugin::unload() {
-
-    kDebug() << "UNLOAD ... !!";
     delete this->watchFolder;
-    kDebug() << "UNLOAD OK !!";
 }
 
 
 void WatchFolderPlugin::configUpdated() {
-
-    kDebug() << "CONFIG  ... !!";
     this->watchFolder->settingsChanged();
-    kDebug() << "CONFIG UPDATED !!";
 }
 
