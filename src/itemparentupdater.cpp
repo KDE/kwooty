@@ -28,7 +28,7 @@
 #include "itemdownloadupdater.h"
 #include "itempostdownloadupdater.h"
 #include "itemchildrenmanager.h"
-#include "settings.h"
+#include "kwootysettings.h"
 #include "data/itemstatusdata.h"
 
 
