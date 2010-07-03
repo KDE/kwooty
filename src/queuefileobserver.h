@@ -50,14 +50,16 @@ public:
 
 private:
 
+    static const int MAX_LIST_SIZE = 10;
+
     StandardItemModel* downloadModel;
     MyTreeView* treeView;
     QStandardItem* parentItem;
+    QTimer* jobNotifyTimer;
+    QList<JobNotifyData> jobNotifyDataList;
     UtilityNamespace::ItemStatus focusedItemStatus;
     int focusedProgressValue;
     int previousProgressValue;
-    QTimer* jobNotifyTimer;
-    QList<JobNotifyData> jobNotifyDataList;
 
     void setupConnections();
     QStandardItem* searchParentItem(const UtilityNamespace::ItemStatus);
