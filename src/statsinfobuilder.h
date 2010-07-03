@@ -38,6 +38,7 @@ class StatsInfoBuilder : public QObject
     Q_OBJECT
 
 public:
+
     StatsInfoBuilder(ClientsObserver* clientsObserver = 0, CentralWidget* parent = 0);
     void sendFullUpdate();
     QString getTotalTimeValue() const;
@@ -46,17 +47,14 @@ public:
     QString getNzbNameDownloading() const;
     QString getDownloadSpeedReadableStr() const;
 
+
 private:
 
     static const int SPEED_AVERAGE_SECONDS = 2;
-
     CentralWidget* parent;
     ClientsObserver* clientsObserver;
     StandardItemModel* downloadModel;
     QTimer* downloadSpeedTimer;
-
-    int meanDownloadSpeed;
-    int downloadSpeed;
     QString nzbNameDownloading;
     QString currentTimeValue;
     QString totalTimeValue;
@@ -65,6 +63,8 @@ private:
     QModelIndex parentStateIndex;
     int timeoutCounter;
     int meanSpeedActiveCounter;
+    int meanDownloadSpeed;
+    int downloadSpeed;
     UtilityNamespace::FreeDiskSpace previousDiskSpaceStatus;
 
     void setupConnections();
@@ -85,10 +85,12 @@ signals:
     void insufficientDiskSpaceSignal(const QString);
 
 public slots:
+
     void settingsChangedSlot();
 
 
 private slots:
+
     void updateDownloadSpeedSlot();
 
 
