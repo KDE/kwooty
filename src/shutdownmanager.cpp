@@ -35,7 +35,7 @@ using namespace Solid::Control;
 #include "centralwidget.h"
 #include "itemparentupdater.h"
 #include "mystatusbar.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 
 ShutdownManager::ShutdownManager(CentralWidget* parent) : QObject (parent) {
@@ -148,7 +148,7 @@ void ShutdownManager::updateStatusBar() {
             dateTime = dateTime.addSecs(Settings::scheduleDateTime().time().hour() * 3600 +
                                         Settings::scheduleDateTime().time().minute() * 60);
 
-            shutdownMethodText = i18n("at") + ' ' + dateTime.toString(Utility::getSystemTimeFormat("hh:mm"));
+            shutdownMethodText = i18n("at %1", dateTime.toString(Utility::getSystemTimeFormat("hh:mm")));
         }
 
 
@@ -386,13 +386,14 @@ int ShutdownManager::displayAboutToShutdownMessageBox(const QString& shutdownMet
     this->aboutToShutdownDialog->setButtonGuiItem(KDialog::No, KStandardGuiItem::cancel());
 
     // display kmessagebox :
-    QString status = QString(i18n("Kwooty is about to %1 system. Continue?")).arg(shutdownMethodText.toLower());
+    bool checkboxReturn = false;
+    QString status = i18n("Kwooty is about to %1 system. Continue?", shutdownMethodText.toLower());
     return KMessageBox::createKMessageBox(this->aboutToShutdownDialog,
                                           QMessageBox::Warning,
                                           status,
                                           QStringList(),
                                           QString(),
-                                          false,
+                                          &checkboxReturn,
                                           KMessageBox::Notify);
 
 }
