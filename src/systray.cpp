@@ -37,7 +37,7 @@
 #include "clientsobserver.h"
 #include "statsinfobuilder.h"
 #include "queuefileobserver.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 
 SysTray::SysTray(MainWindow* parent) : KStatusNotifierItem(parent) {
@@ -291,7 +291,7 @@ void SysTray::createToolTip() {
         }
     }
 
-    currentTip.append(this->buildToolTipRow(i18n("Status: "), globalStatusValue));
+    currentTip.append(Utility::buildToolTipRow(i18n("Status: "), globalStatusValue));
 
 
     // 2. add additional info if status is either download or pause :
@@ -300,15 +300,16 @@ void SysTray::createToolTip() {
 
         // add download speed :
         QString downloadSpeed = this->statsInfoBuilder->getDownloadSpeedReadableStr();
-        currentTip.append(this->buildToolTipRow(i18n("Download speed: "), downloadSpeed));
+        currentTip.append(Utility::buildToolTipRow(i18n("Download speed: "), downloadSpeed));
 
         // add nzb file name :
         QString nzbFileNameValue = this->statsInfoBuilder->getNzbNameDownloading();
-        currentTip.append(this->buildToolTipRow(i18n("File: "), nzbFileNameValue));
+        currentTip.append(Utility::buildToolTipRow(i18n("File: "), nzbFileNameValue));
 
         // add download progress :
-        QString progressValue = QString::number(this->queueFileObserver->getFocusedProgressValue()) + " %";
-        currentTip.append(this->buildToolTipRow(i18n("Progress: "), progressValue));
+        QString progressValue = i18nc("download progress percent",
+                                      "<numid>%1</numid> %", this->queueFileObserver->getFocusedProgressValue());
+        currentTip.append(Utility::buildToolTipRow(i18n("Progress: "), progressValue));
 
     }
 
@@ -319,7 +320,7 @@ void SysTray::createToolTip() {
         QString currentTimeValue = this->statsInfoBuilder->getCurrentTimeValue();
 
         if (!currentTimeValue.isEmpty()) {
-            currentTip.append(this->buildToolTipRow(timeLabel, currentTimeValue));
+            currentTip.append(Utility::buildToolTipRow(timeLabel, currentTimeValue));
         }
 
     }
@@ -329,14 +330,5 @@ void SysTray::createToolTip() {
     this->setToolTipSubTitle(currentTip);
 
 }
-
-
-
-QString SysTray::buildToolTipRow(const QString& label, const QString& value) {
-
-    QString toolRipRow = "<tr><td>" + label + "</td><td>" + value + "</td></tr>";
-    return toolRipRow;
-}
-
 
 
