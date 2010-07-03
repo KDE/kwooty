@@ -28,7 +28,7 @@
 
 #include "nzbfilehandler.h"
 #include "utility.h"
-#include "settings.h"
+#include "kwootysettings.h"
 #include "clientmanagerconn.h"
 #include "mytreeview.h"
 #include "segmentmanager.h"
@@ -554,7 +554,6 @@ void CentralWidget::saveFileErrorSlot(int fromProcessing){
 
 void CentralWidget::extractPasswordRequiredSlot(QString currentArchiveFileName) {
 
-    kDebug();
     KPasswordDialog kPasswordDialog(this);
 
     kPasswordDialog.setPrompt(i18n("The archive <b>%1</b> is password protected. <br>Please enter the password to extract the file.",  currentArchiveFileName));
