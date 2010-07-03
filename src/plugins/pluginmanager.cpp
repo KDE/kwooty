@@ -55,30 +55,27 @@ void PluginManager::loadPlugins() {
         // look in config file if the plugin have to be loaded :
         QString entryReadStr = kConfigGroup.readEntry(QString("%1Enabled").arg(currentPluginInfo.pluginName()), "");
 
-        kDebug() << "entryReadVariant ? :" << entryReadStr;
-
         bool pluginEnable;
 
         // if no config previously stored found, check if plugin has to be loaded by default :
         if (entryReadStr == "") {
 
-            kDebug() << "entryReadVariant == QVariant() - currentPluginInfo.isPluginEnabledByDefault() :"  <<  currentPluginInfo.isPluginEnabledByDefault();
             pluginEnable = currentPluginInfo.isPluginEnabledByDefault();
         }
-        // confing has been found, enable or disable plugin accordingly :
+        // config has been found, enable or disable plugin accordingly :
         else {
 
             pluginEnable = kConfigGroup.readEntry<bool>(QString("%1Enabled").arg(currentPluginInfo.pluginName()), true);
 
         }
 
-        kDebug() << "PLUGIN ENABLED ? :" << pluginEnable;
+        //kDebug() << "plugin enabled ? :" << pluginEnable;
 
         // load plugin :
         if (pluginEnable && !this->loadedInfoPluginMap.contains(currentPluginInfo)) {
             this->loadCurrentPlugin(currentPluginInfo);
         }
-        // unlog plugin :
+        // unload plugin :
         else if (!pluginEnable && this->loadedInfoPluginMap.contains(currentPluginInfo)) {
             this->unloadCurrentPlugin(currentPluginInfo);
         }
@@ -98,7 +95,8 @@ void PluginManager::loadCurrentPlugin(const KPluginInfo& currentPluginInfo) {
 
         if (plugin) {
 
-            kDebug() << "Load plugin:" << currentPluginInfo.service()->name();
+            //kDebug() << "Load plugin:" << currentPluginInfo.service()->name();
+
             // give full access to plugin :
             plugin->setCore(this->core);
 
