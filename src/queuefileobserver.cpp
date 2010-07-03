@@ -284,7 +284,7 @@ void QueueFileObserver::jobFinishStatusSlot(QStandardItem* stateItem) {
 void QueueFileObserver::addToList(const JobNotifyData& jobNotifyData) {
 
     // keep a list with a max size of 10 :
-    if (this->jobNotifyDataList.size() > 10) {
+    if (this->jobNotifyDataList.size() > MAX_LIST_SIZE) {
         this->jobNotifyDataList.takeFirst();
     }
 
