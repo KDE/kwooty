@@ -21,10 +21,9 @@
 #include "extractbase.h"
 
 #include <KDebug>
-#include <KStandardDirs>
 #include <QFile>
 #include "centralwidget.h"
-#include "settings.h"
+#include "kwootysettings.h"
 #include "repairdecompressthread.h"
 #include "data/nzbfiledata.h"
 
@@ -76,47 +75,6 @@ void ExtractBase::setupConnections() {
 }
 
 
-QStringList ExtractBase::buildPriorityArgument() {
-
-    QStringList niceProcessArgs;
-    QString nicePath;
-
-    // process priority has been checked :
-    if (Settings::groupBoxExtractPriority()) {
-
-        nicePath = KStandardDirs::findExe("nice");
-        niceProcessArgs.append(nicePath);
-        niceProcessArgs.append("-n");
-
-        switch (Settings::extractProcessValues()) {
-
-        case UtilityNamespace::LowPriority: {
-                 niceProcessArgs.append("10");
-                break;
-            }
-        case UtilityNamespace::LowestPriority: {
-                niceProcessArgs.append("20");
-                break;
-            }
-        case UtilityNamespace::CustomPriority: {
-                niceProcessArgs.append(QString::number(Settings::extractNiceValue()));
-                break;
-            }
-        default: {
-                break;
-            }
-        }
-    }
-
-    if (nicePath.isEmpty()) {
-        niceProcessArgs.clear();
-    }
-
-    return niceProcessArgs;
-
-}
-
-
 
 void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, ExtractBase::ArchivePasswordStatus archivePasswordStatus, bool passwordEnteredByUSer, QString passwordStr){
 
@@ -148,11 +106,18 @@ void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, Extr
             archiveName = currentNzbFileData.getDecodedFileName();
         }
 
-        QStringList args = this->buildPriorityArgument();
+        // list of arguments for extract command line :
+        QStringList args;
+
+        // process priority has been checked :
+        if (Settings::groupBoxExtractPriority()) {
+            args.append(Utility::buildPriorityArgument(Settings::extractProcessValues(), Settings::extractNiceValue()));
+        }
+
         args.append(this->extractProgramPath);
         args.append(this->createProcessArguments(archiveName, fileSavePath, passwordEnteredByUSer, passwordStr));
 
-        kDebug() << "ARGS :" << this->extractProgramPath <<args;
+        //kDebug() << "ARGS :" << this->extractProgramPath <<args;
 
         this->extractProcess->setTextModeEnabled(true);
         this->extractProcess->setOutputChannelMode(KProcess::MergedChannels);
