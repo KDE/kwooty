@@ -79,7 +79,7 @@ kde4_add_ui_files(  Kwooty_lib_SRCS
 		    preferences/preferencesdisplay.ui
 		    preferences/preferencesshutdown.ui
 		 )
-kde4_add_kcfg_files(Kwooty_lib_SRCS preferences/settings.kcfgc)
+kde4_add_kcfg_files(Kwooty_lib_SRCS preferences/kwootysettings.kcfgc)
 
 
 kde4_add_library(kwootycore SHARED ${Kwooty_lib_SRCS})
@@ -93,7 +93,7 @@ target_link_libraries(kwootycore
 		      ${KDE4WORKSPACE_SOLIDCONTROL_LIBS}
   )
 
-set_target_properties(kwootycore PROPERTIES VERSION 1.0.0 SOVERSION 1 )
+set_target_properties(kwootycore PROPERTIES VERSION 0.5.0 SOVERSION 0 )
 install(TARGETS kwootycore ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 kde4_add_executable(kwooty ${Kwooty_SRCS})
@@ -102,6 +102,6 @@ target_link_libraries(kwooty ${KDE4_KDEUI_LIBS} kwootycore )
 
 install(TARGETS kwooty DESTINATION ${BIN_INSTALL_DIR})
 install(FILES kwootyui.rc kwooty.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kwooty)
-install(FILES preferences/settings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
+install(FILES preferences/kwootysettings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 install(FILES kwooty.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES kwootyplugin.desktop DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
