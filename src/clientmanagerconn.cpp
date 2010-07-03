@@ -22,7 +22,7 @@
 
 #include <KDebug>
 #include <QTimer>
-#include "settings.h"
+#include "kwootysettings.h"
 #include "centralwidget.h"
 #include "segmentmanager.h"
 #include "clientsobserver.h"
