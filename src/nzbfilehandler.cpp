@@ -29,7 +29,7 @@
 #include "data/nzbfiledata.h"
 #include "data/globalfiledata.h"
 #include "centralwidget.h"
-#include "settings.h"
+#include "kwootysettings.h"
 #include "utility.h"
 
 
