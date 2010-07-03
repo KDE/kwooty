@@ -28,7 +28,7 @@
 #include "centralwidget.h"
 #include "fileoperations.h"
 #include "standarditemmodel.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 
 
