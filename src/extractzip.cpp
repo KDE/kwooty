@@ -25,7 +25,7 @@
 #include <QFileInfo>
 
 #include "repairdecompressthread.h"
-#include "settings.h"
+#include "kwootysettings.h"
 #include "data/nzbfiledata.h"
 
 
