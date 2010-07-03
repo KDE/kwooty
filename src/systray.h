@@ -62,7 +62,6 @@ private:
     void updateIconProgress(const int&);
     bool updateIconStatus(const UtilityNamespace::ItemStatus&);
     bool blendOverlay(const QPixmap&);
-    QString buildToolTipRow(const QString&, const QString&);
     void createToolTip();
 
 signals:
