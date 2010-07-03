@@ -42,6 +42,7 @@ private:
     void setupConnections();
     void displayProgramInfo(const bool, const QString&, QLabel*, QLabel*, const QString&);
     void enableGroupBox(bool, const QString&);
+    QString buildNicePriorityToolTip();
 
 public slots:
     void aboutToShowSettingsSlot();
