@@ -23,8 +23,10 @@
 #define PLUGINMANAGER_H
 
 
-#include <QObject>
 #include <KPluginInfo>
+
+#include <QObject>
+
 #include "plugin.h"
 #include "kwooty_export.h"
 
@@ -56,6 +58,7 @@ private:
 signals:
 
 public slots:
+
     void configCommittedSlot(const QByteArray&);
 
 
