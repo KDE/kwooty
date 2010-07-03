@@ -1,0 +1,9 @@
+# Code generation options for kconfig_compiler
+File=kwooty_watchfoldersettings.kcfg
+ClassName=WatchFolderSettings
+Inherits=KConfigSkeleton
+Mutators=true
+Singleton=true
+IncludeFiles=kwooty_export.h
+Visibility=KWOOTY_EXPORT
+# will create the necessary code for setting those variables
