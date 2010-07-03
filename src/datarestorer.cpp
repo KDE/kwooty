@@ -29,7 +29,7 @@
 #include "data/itemstatusdata.h"
 #include "data/globalfiledata.h"
 #include "standarditemmodel.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent)
 {
