@@ -34,7 +34,7 @@
 #include "widgets/icontextwidget.h"
 #include "widgets/iconcapacitywidget.h"
 
-#include "settings.h"
+#include "kwootysettings.h"
 
 
 MyStatusBar::MyStatusBar(MainWindow* parent) : KStatusBar(parent)
@@ -205,7 +205,7 @@ void MyStatusBar::updateConnectionStatusSlot(){
     else{
         // set connection icon :
         connectionIconStr = "applications-internet";
-        connection = i18n("Connected: ") + QString::number(totalConnections);
+        connection = i18n("Connected: <numid>%1</numid>", totalConnections);
 
         if (this->clientsObserver->isSslActive()) {
 
@@ -246,7 +246,7 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
 
     else {
         // set host name info :
-        toolTipStr.append(i18n("Connected to ") + Settings::hostName() + "<br>");
+        toolTipStr.append(i18n("Connected to %1<br>", Settings::hostName()));
 
         // set SSL connection info :
         if (this->clientsObserver->isSslActive()) {
@@ -255,13 +255,13 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
 
             QString encryptionMethod = this->clientsObserver->getEncryptionMethod();
             if (!encryptionMethod.isEmpty()) {
-                toolTipStr.append(": " + encryptionMethod);
+                toolTipStr.append(i18nc("type of ssl encryption method", ": %1", encryptionMethod));
             }
 
             toolTipStr.append("<br>");
 
             if (this->clientsObserver->isCertificateVerified()) {
-                toolTipStr.append(i18n("Certificate <b>verified</b> by ") + this->clientsObserver->getIssuerOrgranisation());
+                toolTipStr.append(i18n("Certificate <b>verified</b> by %1", this->clientsObserver->getIssuerOrgranisation()));
             }
             else {
                 toolTipStr.append(i18n("Certificate <b>can not be verified</b>"));
@@ -286,8 +286,7 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
 void MyStatusBar::updateFileSizeInfoSlot(const quint64 totalFiles, const quint64 totalSize) {
 
     // status bar update, display number of files and remianing size :
-    QString remainingFiles = i18n("Files: ") + QString::number(totalFiles) +
-                             " (" + Utility::convertByteHumanReadable(totalSize) + ")";
+    QString remainingFiles = i18n("Files: <numid>%1</numid> (%2)", totalFiles, Utility::convertByteHumanReadable(totalSize));
 
     this->sizeLabel->setText(remainingFiles);
 }
@@ -296,7 +295,7 @@ void MyStatusBar::updateFileSizeInfoSlot(const quint64 totalFiles, const quint64
 
 void MyStatusBar::updateDownloadSpeedInfoSlot(const QString speedInKBStr){
 
-    this->speedLabel->setText(i18n("Speed: ") + speedInKBStr);
+    this->speedLabel->setText(i18n("Speed: %1", speedInKBStr));
 }
 
 
@@ -353,25 +352,34 @@ void MyStatusBar::updateTimeInfoSlot(const bool parentDownloadingFound) {
     QString currentTimeValue = this->clientsObserver->getStatsInfoBuilder()->getCurrentTimeValue();
     QString totalTimeValue = this->clientsObserver->getStatsInfoBuilder()->getTotalTimeValue();
 
-
     // build text and toolTip :
     if (!currentTimeValue.isEmpty()) {
+
         timeInfoStr.append(currentTimeValue);
 
         QString timeLabel = this->clientsObserver->getStatsInfoBuilder()->getTimeLabel();
-        QString nzbNameDownloading = this->clientsObserver->getStatsInfoBuilder()->getNzbNameDownloading();
-        timeInfoToolTip.append(i18n("%1<br><b>%2</b>%3<br>", timeLabel, currentTimeValue, " (" + nzbNameDownloading + ")"));
+        timeInfoToolTip.append((QString("<b>%1</b>").arg(timeLabel)));
+
+        timeInfoToolTip.append("<table style='white-space: nowrap'>");
+        QString nzbNameDownloading = this->clientsObserver->getStatsInfoBuilder()->getNzbNameDownloading();        
+        timeInfoToolTip.append(Utility::buildToolTipRow(QString("%1:").arg(currentTimeValue), nzbNameDownloading));
+
     }
 
     if (!totalTimeValue.isEmpty()) {
+
         timeInfoStr.append("  -  ");
         timeInfoStr.append(totalTimeValue);
 
-        timeInfoToolTip.append(i18n("<b>%1</b>%2", totalTimeValue, i18n(" (total)")));
+        timeInfoToolTip.append(Utility::buildToolTipRow(QString("%1:").arg(totalTimeValue), i18n("Total")));
     }
+
+    timeInfoToolTip.append("</table>");
+
 
     if (currentTimeValue.isEmpty()) {
         timeInfoStr = i18n("n/a");
+        timeInfoToolTip.clear();
     }
 
     this->timeInfoWidget->setText(timeInfoStr);
