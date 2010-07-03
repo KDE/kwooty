@@ -25,7 +25,7 @@
 
 #include "centralwidget.h"
 #include "statsinfobuilder.h"   
-#include "settings.h"
+#include "kwootysettings.h"
 
 
 
