@@ -86,7 +86,7 @@ protected:
     void findItemAndNotifyUser(const QString& fileNameStr, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
     void removeArchiveFiles();
     NzbFileData getFirstArchiveFileFromList() const;
-    QStringList buildPriorityArgument();
+
 
     // virtual functions implemented by extractrar and extractzip :
     virtual QStringList createProcessArguments(const QString&, const QString&, const bool&, const QString&)  = 0;
