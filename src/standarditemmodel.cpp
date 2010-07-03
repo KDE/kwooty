@@ -130,7 +130,7 @@ void StandardItemModel::storeStatusDataToItem(QStandardItem* stateItem, const It
         variant.setValue(itemStatusData);
         stateItem->setData(variant, StatusRole);
 
-
+        // if state changed and is a parent, emit signal :
         if (this->isNzbItem(stateItem)) {
             emit parentStatusItemChangedSignal(stateItem);
         }
