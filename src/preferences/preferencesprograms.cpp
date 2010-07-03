@@ -24,7 +24,7 @@
 #include <QFile>
 
 #include "utility.h"
-#include "settings.h"
+#include "kwootysettings.h"
 
 PreferencesPrograms::PreferencesPrograms()
 {
@@ -38,9 +38,11 @@ PreferencesPrograms::PreferencesPrograms()
     processPriorityList.append(i18n("Custom"));
 
     kcfg_verifyProcessValues->addItems(processPriorityList);
+    kcfg_verifyProcessValues->setToolTip(this->buildNicePriorityToolTip());
     kcfg_verifyNiceValue->setPrefix("+");
 
     kcfg_extractProcessValues->addItems(processPriorityList);
+    kcfg_extractProcessValues->setToolTip(this->buildNicePriorityToolTip());
     kcfg_extractNiceValue->setPrefix("+");
 
     this->verifyProcessPriorityChangedSlot();
@@ -110,7 +112,7 @@ void PreferencesPrograms::displayProgramInfo(const bool isProgramFound, const QS
     // indicate path to binary file if program has been found :
     if (isProgramFound) {
         labelIcon->setPixmap(iconLoader->loadIcon("dialog-ok", KIconLoader::Small));
-        labelText->setText("<b>" + program + "</b> " +  i18n("program found: ") + path);
+        labelText->setText(i18n("<b>%1</b> program found: %2", program, path));
 
         // enable group box if program found :
         this->enableGroupBox(true, program);
@@ -119,7 +121,7 @@ void PreferencesPrograms::displayProgramInfo(const bool isProgramFound, const QS
     // indicate that program has not been found :
     else {
         labelIcon->setPixmap(iconLoader->loadIcon("dialog-close", KIconLoader::Small));
-        labelText->setText("<b>" + program + "</b> " +  i18n("program not found"));
+        labelText->setText(i18n("<b>%1</b> program not found", program));
 
         // disable group box if program not found :
         this->enableGroupBox(false, program);
@@ -179,5 +181,18 @@ void PreferencesPrograms::extractProcessPriorityChangedSlot() {
         kcfg_extractNiceValue->show();
     }
 
-
 }
+
+
+
+QString PreferencesPrograms::buildNicePriorityToolTip() {
+
+    QString currentTip;
+    currentTip.append("<table style='white-space: nowrap'>");
+    currentTip.append(Utility::buildToolTipRow(i18n("Low:"), i18n("nice value set to +10")));
+    currentTip.append(Utility::buildToolTipRow(i18n("Lowest:"), i18n("nice value set to +19")));
+    currentTip.append(Utility::buildToolTipRow(i18n("Custom:"), i18n("choose nice value")));
+    currentTip.append("</table>");
+    return currentTip;
+}
+
