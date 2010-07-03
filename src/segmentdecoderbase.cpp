@@ -25,7 +25,7 @@
 
 #include <QDir>
 
-#include "settings.h"
+#include "kwootysettings.h"
 #include "data/segmentdata.h"
 #include "segmentsdecoderthread.h"
 
