@@ -24,6 +24,7 @@
 #include <KDebug>
 #include <KApplication>
 #include <KGlobal>
+#include <KIcon>
 #include <QStyleOptionViewItemV4>
 
 #include "data/itemstatusdata.h"
@@ -33,6 +34,8 @@ using namespace UtilityNamespace;
 
 ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent)
 {
+
+    kDebug();
 
     // associate text to display according to item status :
     statusTextMap.insert(DownloadStatus,            i18n("Downloading..."));
@@ -86,6 +89,61 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
 
     QStyleOptionViewItemV4 opt = option;
     int status = -1;
+
+    static int progress = 0;
+
+    if (index.parent() == QModelIndex()){
+        painter->save();
+
+        //painter->drawPie(rectangle, startAngle, spanAngle);
+
+         KIcon iconTest = KIcon("go-next-view");
+         QPixmap statusPixmap = iconTest.pixmap( 22,22 );
+
+         painter->drawPixmap(0,0,statusPixmap);
+
+         QFont boldFont = painter->font();
+         boldFont.setBold(true);
+         boldFont.setItalic(true);
+         painter->setFont(boldFont);
+         painter->drawText(QRect(36, 0, 500, 16), "openSUSE - 11.2 - x86_64 By Kal");
+         boldFont.setBold(false);
+         boldFont.setItalic(false);
+         painter->setFont(boldFont);
+
+         painter->translate(0,16);
+         painter->drawText(QRect(36, 2, 500, 16), "test gauche");
+         painter->drawText(QRect(600, 2, 500, 16), "test droite");
+
+         QStyleOptionProgressBar progressBarOpt;
+         progressBarOpt.rect = QRect(80, 2, 500, 16);
+         progressBarOpt.minimum = 0;
+         progressBarOpt.maximum = 100;
+         progressBarOpt.textVisible = true;
+
+         // set progress value and text :
+         //int progress = index.data(ProgressRole).toInt();
+
+         kDebug() << progress;
+         progressBarOpt.progress = progress;
+         progressBarOpt.text = i18n("<numid>%1</numid> %", progress++);
+
+
+         if (progress == PROGRESS_UNKNOWN) {
+             progressBarOpt.text = i18n("n/a");
+         }
+
+         KApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOpt, painter);
+
+
+
+        painter->restore();
+    }
+
+
+
+
+
 
     switch(index.column()){
 
@@ -181,4 +239,22 @@ void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem
     // draw progress bar :
     KApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOpt, painter);
 }
+
+
+QSize ItemDelegate::sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
+{
+
+
+        if (index.parent() == QModelIndex()) {
+            return QSize(50, 50);
+        }
+        else {
+
+            kDebug();
+    return QStyledItemDelegate::sizeHint(option, index);
+        }
+
+}
+
+
 

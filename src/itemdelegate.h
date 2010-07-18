@@ -39,6 +39,8 @@ private:
     QHash<int, QString> statusTextMap;
     QHash<int, QColor> statusColorMap;
 
+    QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+
 };
 
 #endif // ITEMDELEGATE_H

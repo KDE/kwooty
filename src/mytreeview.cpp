@@ -48,7 +48,7 @@ MyTreeView::MyTreeView(CentralWidget* centralWidget) : QTreeView(centralWidget) 
     // Allowing mutiple row selection :
     this->setSelectionMode(QAbstractItemView::ExtendedSelection);
     this->setSelectionBehavior(QAbstractItemView::SelectRows);
-    this->setUniformRowHeights(true);
+    this->setUniformRowHeights(false);
     this->setAllColumnsShowFocus(true);
     this->setAnimated(Settings::animateTreeView());
     this->setAcceptDrops(true);
@@ -228,6 +228,11 @@ void MyTreeView::moveRow(MyTreeView::MoveRowType moveRowType) {
 
         this->selectionModel()->select(QItemSelection(itemRows.at(0)->index(), itemRows.at(itemRows.size() - 1)->index()),
                                        QItemSelectionModel::Select);
+
+
+        if (parentItem->index() == QModelIndex()) {
+            this->setFirstColumnSpanned(updatedRowNumber, parentItem->index(), true);
+        }
     }
 
 

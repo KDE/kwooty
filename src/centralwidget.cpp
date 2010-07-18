@@ -192,11 +192,12 @@ void CentralWidget::restoreDataFromPreviousSession(const QList<GlobalFileData>& 
 
 void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataList, const QString& nzbName){
 
-    QStandardItem* nzbNameItem = new QStandardItem(nzbName);    
+    //QStandardItem* nzbNameItem = new QStandardItem(nzbName);
+    QStandardItem* nzbNameItem = new QStandardItem();
     QStandardItem* nzbStateItem = new QStandardItem();    
     QStandardItem* nzbSizeItem = new QStandardItem();
 
-    nzbNameItem->setIcon(KIcon("go-next-view"));
+    //nzbNameItem->setIcon(KIcon("go-next-view"));
     
     // add the nzb items to the model :
     int nzbNameItemRow = downloadModel->rowCount();
@@ -239,6 +240,8 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
 
     // expand treeView :
     treeView->setExpanded(nzbNameItem->index(), Settings::expandTreeView());
+
+    treeView->setFirstColumnSpanned(nzbNameItemRow, downloadModel->invisibleRootItem()->index(), true);
 
     // alternate row color :
     treeView->setAlternatingRowColors(Settings::alternateColors());
