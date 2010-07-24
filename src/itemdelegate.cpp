@@ -26,6 +26,7 @@
 #include <KGlobal>
 #include <QStyleOptionViewItemV4>
 
+
 #include "data/itemstatusdata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -141,6 +142,7 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
             break;
         }
 
+
     default: {
             break;
         }
@@ -163,6 +165,10 @@ void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem
 
     QStyleOptionProgressBar progressBarOpt;
     progressBarOpt.rect = option.rect;
+
+    progressBarOpt.rect.translate(QPoint(0, PARENT_ROW_PADDING / 2));
+
+    progressBarOpt.rect.setHeight(option.decorationSize.height());
     progressBarOpt.minimum = 0;
     progressBarOpt.maximum = 100;
     progressBarOpt.textVisible = true;
@@ -179,6 +185,26 @@ void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem
 
 
     // draw progress bar :
+    QStyledItemDelegate::paint(painter, option, index);
     KApplication::style()->drawControl(QStyle::CE_ProgressBar, &progressBarOpt, painter);
+
 }
 
+
+
+
+QSize ItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const {
+
+    // increase row height is index is a parent :
+    if (index.parent() == QModelIndex()) {
+
+        QSize decorationSize = option.decorationSize;
+        decorationSize.setHeight(decorationSize.height() + PARENT_ROW_PADDING);
+
+        return decorationSize;
+    }
+    else {
+        return QStyledItemDelegate::sizeHint(option, index);
+    }
+
+}

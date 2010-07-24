@@ -34,8 +34,12 @@ public:
     ItemDelegate(QWidget*);
     void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
     void drawProgressBar(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
+    QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const;
+
 
 private:
+    static const int PARENT_ROW_PADDING = 6;
+
     QHash<int, QString> statusTextMap;
     QHash<int, QColor> statusColorMap;
 
