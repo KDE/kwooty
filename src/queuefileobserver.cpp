@@ -26,6 +26,7 @@
 #include "centralwidget.h"
 #include "mytreeview.h"
 #include "standarditemmodel.h"
+#include "kwootysettings.h"
 
 
 QueueFileObserver::QueueFileObserver(CentralWidget* parent) : QObject(parent) {
@@ -77,9 +78,8 @@ void QueueFileObserver::setupConnections() {
             this,
             SLOT(parentItemChangedSlot()));
 
-
+    // ensure that jobs are finished after a time-out :
     connect(this->jobNotifyTimer, SIGNAL(timeout()), this, SLOT(checkJobFinishSlot()));
-
 
 }
 
@@ -128,17 +128,119 @@ QStandardItem* QueueFileObserver::searchParentItem(const UtilityNamespace::ItemS
             }
         }
 
-
-
-
     }
-
 
     return stateItem;
 
+}
+
+
+
+
+void QueueFileObserver::checkProgressItemValue(QStandardItem* stateItem) {
+
+    if (stateItem) {
+
+        // retrieve current progress value of current row :
+        int currentProgressValue = this->downloadModel->getProgressValueFromIndex(this->downloadModel->indexFromItem(stateItem));
+
+        // if progress has been updated send update signal :
+        if (this->focusedProgressValue != currentProgressValue) {
+
+            this->focusedProgressValue = currentProgressValue;
+            emit progressUpdateSignal(this->focusedProgressValue);
+
+        }
+
+    }
 
 }
 
+
+
+
+int QueueFileObserver::getFocusedProgressValue() const {
+    return this->focusedProgressValue;
+}
+
+
+UtilityNamespace::ItemStatus QueueFileObserver::getFocusedItemStatus() const {
+    return this->focusedItemStatus;
+}
+
+
+
+void QueueFileObserver::addToList(const JobNotifyData& jobNotifyData) {
+
+    // keep a list with a max size of 10 :
+    if (this->jobNotifyDataList.size() > MAX_LIST_SIZE) {
+        this->jobNotifyDataList.takeFirst();
+    }
+
+    // append the nzb file to the list :
+    this->jobNotifyDataList.append(jobNotifyData);
+
+}
+
+
+
+JobNotifyData QueueFileObserver::retrieveJobNotifyData(QStandardItem* stateItem, UtilityNamespace::ItemStatus status) {
+
+
+    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
+
+    // store parent identifier :
+    JobNotifyData jobNotifyData;
+    jobNotifyData.setParentUniqueIdentifier(fileNameItem->data(IdentifierRole).toString());
+    jobNotifyData.setNzbFileName(fileNameItem->text());
+    jobNotifyData.setStatus(status);
+    jobNotifyData.setDateTime(QDateTime::currentDateTime());
+
+    return jobNotifyData;
+}
+
+
+
+bool QueueFileObserver::areJobsFinished() {
+
+    bool jobFinished = true;
+
+    // get the root model :
+    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+
+    // for each parent item, get its current status :
+    for (int i = 0; i < rootItem->rowCount(); i++) {
+
+        QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
+        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
+
+        // check parent status activity :
+        if ( Utility::isReadyToDownload(currentStatus)       ||
+             Utility::isPausing(currentStatus)               ||
+             Utility::isDecoding(currentStatus)              ||
+             Utility::isPostDownloadProcessing(currentStatus) ) {
+
+            jobFinished = false;
+            break;
+        }
+
+        // if do not shutdown system if paused items found :
+        if ( Settings::pausedShutdown() && Utility::isPaused(currentStatus) ) {
+
+            jobFinished = false;
+            break;
+        }
+
+    }
+
+    return jobFinished;
+}
+
+
+
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
 
 
 void QueueFileObserver::parentItemChangedSlot() {
@@ -205,38 +307,6 @@ void QueueFileObserver::parentItemChangedSlot() {
 }
 
 
-void QueueFileObserver::checkProgressItemValue(QStandardItem* stateItem) {
-
-    if (stateItem) {
-
-        // retrieve current progress value of current row :
-        int currentProgressValue = this->downloadModel->getProgressValueFromIndex(this->downloadModel->indexFromItem(stateItem));
-
-        // if progress has been updated send update signal :
-        if (this->focusedProgressValue != currentProgressValue) {
-
-            this->focusedProgressValue = currentProgressValue;
-            emit progressUpdateSignal(this->focusedProgressValue);
-
-        }
-
-    }
-
-}
-
-
-
-
-int QueueFileObserver::getFocusedProgressValue() const {
-    return this->focusedProgressValue;
-}
-
-
-UtilityNamespace::ItemStatus QueueFileObserver::getFocusedItemStatus() const {
-    return this->focusedItemStatus;
-}
-
-
 
 void QueueFileObserver::jobFinishStatusSlot(QStandardItem* stateItem) {
 
@@ -277,36 +347,6 @@ void QueueFileObserver::jobFinishStatusSlot(QStandardItem* stateItem) {
 
     }
 
-}
-
-
-
-void QueueFileObserver::addToList(const JobNotifyData& jobNotifyData) {
-
-    // keep a list with a max size of 10 :
-    if (this->jobNotifyDataList.size() > MAX_LIST_SIZE) {
-        this->jobNotifyDataList.takeFirst();
-    }
-
-    // append the nzb file to the list :
-    this->jobNotifyDataList.append(jobNotifyData);
-
-}
-
-
-JobNotifyData QueueFileObserver::retrieveJobNotifyData(QStandardItem* stateItem, UtilityNamespace::ItemStatus status) {
-
-
-    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
-
-    // store parent identifier :
-    JobNotifyData jobNotifyData;
-    jobNotifyData.setParentUniqueIdentifier(fileNameItem->data(IdentifierRole).toString());
-    jobNotifyData.setNzbFileName(fileNameItem->text());
-    jobNotifyData.setStatus(status);
-    jobNotifyData.setDateTime(QDateTime::currentDateTime());
-
-    return jobNotifyData;
 }
 
 
