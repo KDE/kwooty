@@ -1,5 +1,14 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
+
+Version 0.5.1:
+--------------
+- Display update : parent row height is now larger
+- Display update : "Progress" column now displays proper background for selected and mouse hover parent row as other columns
+- Display update : when a parent row is expanded, "File Name" column size automatically adjusts according to children "File Name" size columns and available window size.
+- Localization ready : kwooty.pot has been added in "po" directory. Any translations are welcome ! :D
+
+
 Version 0.5.0:
 --------------
 - Systray icon support: download progress is displayed on systray icon (ala amarok).
