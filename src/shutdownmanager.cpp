@@ -35,6 +35,7 @@ using namespace Solid::Control;
 #include "centralwidget.h"
 #include "itemparentupdater.h"
 #include "mystatusbar.h"
+#include "queuefileobserver.h"
 #include "kwootysettings.h"
 
 
@@ -148,7 +149,8 @@ void ShutdownManager::updateStatusBar() {
             dateTime = dateTime.addSecs(Settings::scheduleDateTime().time().hour() * 3600 +
                                         Settings::scheduleDateTime().time().minute() * 60);
 
-            shutdownMethodText = i18n("at %1", dateTime.toString(Utility::getSystemTimeFormat("hh:mm")));
+            shutdownMethodText = i18nc("shutdown time notifier in status bar, example : 'shutdown icon' at 12:56",
+                                       "at %1", dateTime.toString(Utility::getSystemTimeFormat("hh:mm")));
         }
 
 
@@ -387,7 +389,8 @@ int ShutdownManager::displayAboutToShutdownMessageBox(const QString& shutdownMet
 
     // display kmessagebox :
     bool checkboxReturn = false;
-    QString status = i18n("Kwooty is about to %1 system. Continue?", shutdownMethodText.toLower());
+    QString status = i18nc("%1 = shutdown/suspend to RAM/suspend to disk",
+                           "Kwooty is about to %1 system. Continue?", shutdownMethodText.toLower());
     return KMessageBox::createKMessageBox(this->aboutToShutdownDialog,
                                           QMessageBox::Warning,
                                           status,
@@ -431,7 +434,7 @@ void ShutdownManager::shutdownCancelledSlot() {
     emit setShutdownButtonCheckedSignal(false);
 
     // if no more jobs are available, set system button as "not enabled" :
-    if (this->parent->getTreeView()->areJobsFinished()) {
+    if (this->parent->getQueueFileObserver()->areJobsFinished()) {
         emit setShutdownButtonEnabledSignal(false);
     }
 
@@ -443,7 +446,7 @@ void ShutdownManager::shutdownCancelledSlot() {
 void ShutdownManager::statusItemUpdatedSlot() {
 
     // if activity detected, set shutdown button as enabled :
-    if (!this->parent->getTreeView()->areJobsFinished()) {
+    if (!this->parent->getQueueFileObserver()->areJobsFinished()) {
 
         emit setShutdownButtonEnabledSignal(true);
     }
@@ -468,7 +471,7 @@ void ShutdownManager::enableSystemShutdownSlot(bool enable) {
         if (Settings::jobsRadioButton()) {
 
             // start activity polling timer :
-            if (!this->parent->getTreeView()->areJobsFinished()) {
+            if (!this->parent->getQueueFileObserver()->areJobsFinished()) {
 
                 this->activityMonitorTimer->start(this->shutdownTimerInterval);
 
@@ -509,7 +512,7 @@ void ShutdownManager::retrieveCurrentJobsInfoSlot(){
 
     if (Settings::jobsRadioButton()) {
 
-        bool jobsFinished = this->parent->getTreeView()->areJobsFinished();
+        bool jobsFinished = this->parent->getQueueFileObserver()->areJobsFinished();
 
         // set timer interval to lower value if jobs finished has been confirmed :
         if (jobsFinished) {
