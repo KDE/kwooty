@@ -46,6 +46,7 @@ public:
     QueueFileObserver(CentralWidget* parent = 0);
     UtilityNamespace::ItemStatus getFocusedItemStatus() const;
     int getFocusedProgressValue() const;
+    bool areJobsFinished();
 
 
 private:
