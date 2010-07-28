@@ -73,7 +73,7 @@ void NotificationManager::setupConnections() {
 
 
 void NotificationManager::jobFinishSlot(const UtilityNamespace::ItemStatus status, const QString message) {
-    this->sendEvent("jobFinished", i18n("%1 - %2", this->finishSatusTextMap.value(status), message));
+    this->sendEvent("jobFinished", QString("%1 - %2").arg(this->finishSatusTextMap.value(status)).arg(message));
 }
 
 
