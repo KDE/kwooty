@@ -22,7 +22,9 @@
 
 #include <KMessageBox>
 #include <KRun>
+#include <KIconLoader>
 #include <KDebug>
+
 
 #include "itemdelegate.h"
 #include "centralwidget.h"
@@ -48,7 +50,7 @@ MyTreeView::MyTreeView(CentralWidget* centralWidget) : QTreeView(centralWidget) 
     // Allowing mutiple row selection :
     this->setSelectionMode(QAbstractItemView::ExtendedSelection);
     this->setSelectionBehavior(QAbstractItemView::SelectRows);
-    this->setUniformRowHeights(true);
+    this->setUniformRowHeights(false);
     this->setAllColumnsShowFocus(true);
     this->setAnimated(Settings::animateTreeView());
     this->setAcceptDrops(true);
@@ -96,6 +98,13 @@ void MyTreeView::setupConnections() {
              SLOT(settingsChangedSlot()));
 
 
+    connect (this,
+             SIGNAL(expanded(const QModelIndex&)),
+             this,
+             SLOT(expandedSlot(const QModelIndex&)));
+
+
+
 #if QT_VERSION == 0x040503
     // fixes #QTBUG-5201
     connect(downloadModel, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(dataChangedSlot(QStandardItem*)));
@@ -103,6 +112,7 @@ void MyTreeView::setupConnections() {
 
 
 }
+
 
 
 
@@ -201,7 +211,7 @@ void MyTreeView::moveRow(MyTreeView::MoveRowType moveRowType) {
         // control out of range and multiple row selection :
         if ( (updatedRowNumber < 0) ||
              (updatedRowNumber > parentItem->rowCount()) ||
-            updatedRowNumberList.contains(updatedRowNumber) ) {
+             updatedRowNumberList.contains(updatedRowNumber) ) {
 
 
             if ( (moveRowType == MoveRowsUp) ||
@@ -519,41 +529,65 @@ void MyTreeView::openFolderSlot() {
 
 
 
-bool MyTreeView::areJobsFinished() {
+void MyTreeView::expandedSlot(const QModelIndex& index) {
 
-    bool jobFinished = true;
+    int maxFileNameSize = 0;
+    int maxSizeTextSize = 0;
+    int offset = 0;
 
-    // get the root model :
-    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+    // retrieve maximum child fileName and fileSize text size :
+    QStandardItem* parentItem = this->downloadModel->itemFromIndex(index);
 
-    // for each parent item, get its current status :
-    for (int i = 0; i < rootItem->rowCount(); i++) {
+    for (int i = 0; i < parentItem->rowCount(); i++) {
 
-        QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
-        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
+        // get corresponding file name index :
+        QModelIndex fileNameIndex = index.child(i, FILE_NAME_COLUMN);
+        QString fileNameText = this->downloadModel->itemFromIndex(fileNameIndex)->text();
+        int currentfileNameTextSize = this->fontMetrics().width(fileNameText);
 
-        // check parent status activity :
-        if ( Utility::isReadyToDownload(currentStatus)       ||
-             Utility::isPausing(currentStatus)               ||
-             Utility::isDecoding(currentStatus)              ||
-             Utility::isPostDownloadProcessing(currentStatus) ) {
 
-            jobFinished = false;
-            break;
+        if (currentfileNameTextSize > maxFileNameSize) {
+            maxFileNameSize = currentfileNameTextSize;
         }
 
-        // if do not shutdown system if paused items found :
-        if ( Settings::pausedShutdown() && Utility::isPaused(currentStatus) ) {
 
-            jobFinished = false;
-            break;
+        // get corresponding file size index :
+        QModelIndex sizeIndex = this->downloadModel->getSizeItemFromIndex(fileNameIndex)->index();
+        int sizeTextSize = this->fontMetrics().width(Utility::convertByteHumanReadable(sizeIndex.data(SizeRole).toULongLong()));
+
+        if (sizeTextSize > maxSizeTextSize) {
+            maxSizeTextSize = sizeTextSize;
         }
 
+        // compute child offset position :
+        offset = this->visualRect(fileNameIndex).left() + 2 * KIconLoader::SizeSmall;
     }
 
-    return jobFinished;
-}
 
+
+    // compute available space :
+    int availableSpace = this->width() -
+                         this->columnWidth(PROGRESS_COLUMN) -
+                         this->columnWidth(STATE_COLUMN) -
+                         maxSizeTextSize -
+                         offset;
+
+    // add offset (child branch + icon widths) to fileName size :
+    maxFileNameSize += offset;
+
+    // adjust column width according to free space available :
+    if (maxFileNameSize < availableSpace) {
+
+        if (maxFileNameSize > this->columnWidth(FILE_NAME_COLUMN))  {
+            this->setColumnWidth(FILE_NAME_COLUMN, maxFileNameSize);
+        }
+    }
+    else if (availableSpace > this->columnWidth(FILE_NAME_COLUMN)) {
+        this->setColumnWidth(FILE_NAME_COLUMN, availableSpace);
+    }
+
+
+}
 
 
 
@@ -564,7 +598,6 @@ void MyTreeView::settingsChangedSlot() {
     this->setAnimated(Settings::animateTreeView());
     this->setAlternatingRowColors(Settings::alternateColors());
 }
-
 
 
 

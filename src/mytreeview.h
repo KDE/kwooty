@@ -44,7 +44,6 @@ class MyTreeView : public QTreeView
 
 public:
     MyTreeView(CentralWidget*);
-    bool areJobsFinished();
 
 private:
 
@@ -89,6 +88,7 @@ public slots:
     void clearSlot();
     void openFolderSlot();
     void settingsChangedSlot();
+    void expandedSlot(const QModelIndex&);
 
 
     // #QTBUG-5201
