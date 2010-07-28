@@ -104,7 +104,7 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
                     opt.text = i18n("No Data");
                 }
                 if (itemStatusData.getDataStatus() == DataIncomplete){
-                    opt.text = i18n("%1 (incomplete)", opt.text);
+                    opt.text = i18nc("i.e: Downloading... (incomplete)", "%1 (incomplete)", opt.text);
                 }
             }
             if (status == DownloadFinishStatus) {
@@ -166,9 +166,9 @@ void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem
     QStyleOptionProgressBar progressBarOpt;
     progressBarOpt.rect = option.rect;
 
-    progressBarOpt.rect.translate(QPoint(0, PARENT_ROW_PADDING / 2));
+    progressBarOpt.rect.translate(QPoint(0, PARENT_ROW_PADDING - PARENT_BAR_PADDING));
 
-    progressBarOpt.rect.setHeight(option.decorationSize.height());
+    progressBarOpt.rect.setHeight(QFontMetricsF(option.font).height() + 2 * PARENT_BAR_PADDING);
     progressBarOpt.minimum = 0;
     progressBarOpt.maximum = 100;
     progressBarOpt.textVisible = true;
@@ -195,16 +195,13 @@ void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem
 
 QSize ItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const {
 
+    QSize size = QStyledItemDelegate::sizeHint(option, index);
+
     // increase row height is index is a parent :
-    if (index.parent() == QModelIndex()) {
-
-        QSize decorationSize = option.decorationSize;
-        decorationSize.setHeight(decorationSize.height() + PARENT_ROW_PADDING);
-
-        return decorationSize;
+    if (index.parent() == QModelIndex()) {        
+        size.setHeight(QFontMetricsF(option.font).height() + 2 * PARENT_ROW_PADDING);
     }
-    else {
-        return QStyledItemDelegate::sizeHint(option, index);
-    }
+
+    return size;
 
 }

@@ -38,7 +38,8 @@ public:
 
 
 private:
-    static const int PARENT_ROW_PADDING = 6;
+    static const int PARENT_ROW_PADDING = 4;
+    static const int PARENT_BAR_PADDING = 1;
 
     QHash<int, QString> statusTextMap;
     QHash<int, QColor> statusColorMap;
