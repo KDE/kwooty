@@ -53,7 +53,7 @@ int UniqueApp::newInstance()
         this->setWindowIcon(KIcon("kwooty"));
 
         this->mainWindow = new MainWindow();
-        this->mainWindow->show();
+
 
     }
 

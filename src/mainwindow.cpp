@@ -88,6 +88,17 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
 
     this->quitSelected = false;
 
+
+    // show main window :
+    this->show();
+
+    // hide main window when session is restored and systray icon is checked :
+    if (kapp->isSessionRestored() && Settings::sysTray()) {
+        this->hide();
+    }
+
+
+
 }
 
 
