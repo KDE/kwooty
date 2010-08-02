@@ -3,10 +3,11 @@ Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 Version 0.5.1:
 --------------
-- Display update : parent row height is now larger
-- Display update : "Progress" column now displays proper background for selected and mouse hover parent row as other columns
-- Display update : when a parent row is expanded, "File Name" column size automatically adjusts according to children "File Name" size columns and available window size.
-- Localization ready : kwooty.pot has been added in "po" directory. Any translations are welcome ! :D
+- Display update : parent row height has been increased
+- Display update : when parent row is selected or mouse hover, "Progress" column now displays colored background as other columns
+- Display update : when a parent row is expanded, "File Name" column automatically adjusts its size according to children "File Name" text size and available window size.
+- Behaviour fix : when a new kde session is started and kwooty session is loaded, main window remains minimized if "Show system tray icon" is enabled
+- Ready for language translation : kwooty.pot has been added in "po" directory. Any translations are welcome ! :D
 
 
 Version 0.5.0:
