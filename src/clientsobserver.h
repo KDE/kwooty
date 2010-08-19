@@ -49,6 +49,7 @@ public:
     int getNttpErrorStatus() const;
     QString getEncryptionMethod() const;
     QString getIssuerOrgranisation() const;
+    QStringList getSslErrors() const;
     quint64 getTotalBytesDownloaded() const;
     void resetTotalBytesDownloaded();
     quint64 getTotalSize() const;
@@ -69,6 +70,7 @@ private:
     int nttpErrorStatus;
     bool sslActive;
     bool certificateVerified;
+    QStringList sslErrors;
 
     void resetVariables();
 
@@ -83,7 +85,7 @@ public slots:
 
     void nntpClientSpeedSlot(const int);
     void connectionStatusSlot(const int);
-    void encryptionStatusSlot(const bool, const QString, const bool, const QString);
+    void encryptionStatusSlot(const bool, const QString, const bool, const QString, const QStringList);
     void nntpErrorSlot(const int);
     void decrementSlot(const quint64, const int);
 

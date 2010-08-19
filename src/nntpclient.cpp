@@ -571,7 +571,12 @@ void NntpClient::socketEncryptedSlot(){
     }
 
     // SSL connection is active, send also encryption method used by host :
-    emit encryptionStatusSignal(true, tcpSocket->sessionCipher().encryptionMethod(), this->certificateVerified, issuerOrgranisation);
+    QStringList sslErrorsStrings = QStringList();
+    QList<QSslError> sslErrors = this->tcpSocket->sslErrors();
+    for (int i = 0; i < sslErrors.size(); i++) {
+      sslErrorsStrings.append(sslErrors.at(i).errorString());
+    }
+    emit encryptionStatusSignal(true, tcpSocket->sessionCipher().encryptionMethod(), this->certificateVerified, issuerOrgranisation, sslErrorsStrings);
 
 }
 

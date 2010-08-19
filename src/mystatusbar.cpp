@@ -264,7 +264,7 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
                 toolTipStr.append(i18n("Certificate <b>verified</b> by %1", this->clientsObserver->getIssuerOrgranisation()));
             }
             else {
-                toolTipStr.append(i18n("Certificate <b>can not be verified</b>"));
+                toolTipStr.append(i18n("Certificate <b>can not be verified</b> (%1)", this->clientsObserver->getSslErrors().join(i18n(";"))));
             }
 
         }

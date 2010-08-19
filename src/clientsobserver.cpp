@@ -49,6 +49,7 @@ void ClientsObserver::resetVariables() {
 
     this->totalConnections = 0;
     this->sslActive = false;
+    this->sslErrors = QStringList();
     this->nttpErrorStatus = NoError;
 
 }
@@ -119,7 +120,7 @@ void ClientsObserver::nntpErrorSlot(const int nttpErrorStatus) {
 
 }
 
-void ClientsObserver::encryptionStatusSlot(const bool sslActive, const QString encryptionMethod, const bool certificateVerified, const QString issuerOrgranisation) {
+void ClientsObserver::encryptionStatusSlot(const bool sslActive, const QString encryptionMethod, const bool certificateVerified, const QString issuerOrgranisation, const QStringList sslErrors) {
 
     //kDebug() << "sslActive : " << sslActive << "encryptionMethod" << encryptionMethod;
 
@@ -127,6 +128,7 @@ void ClientsObserver::encryptionStatusSlot(const bool sslActive, const QString e
     this->sslActive = sslActive;
     this->certificateVerified = certificateVerified;
     this->issuerOrgranisation = issuerOrgranisation;
+    this->sslErrors = sslErrors;
 
     emit updateConnectionStatusSignal();
 
@@ -139,6 +141,10 @@ QString ClientsObserver::getEncryptionMethod() const {
 
 QString ClientsObserver::getIssuerOrgranisation() const {
     return this->issuerOrgranisation;
+}
+
+QStringList ClientsObserver::getSslErrors() const {
+  return this->sslErrors;
 }
 
 int ClientsObserver::getTotalConnections() const {

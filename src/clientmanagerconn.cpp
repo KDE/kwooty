@@ -102,9 +102,9 @@ void ClientManagerConn::initSlot()
 
     // send type of encryption used by host with ssl connection to status bar :
     connect (nntpClient,
-             SIGNAL(encryptionStatusSignal(const bool, const QString, const bool, const QString)),
+             SIGNAL(encryptionStatusSignal(const bool, const QString, const bool, const QString, const QStringList)),
              parent->getClientsObserver(),
-             SLOT(encryptionStatusSlot(const bool, const QString, const bool, const QString)));
+             SLOT(encryptionStatusSlot(const bool, const QString, const bool, const QString, const QStringList)));
 
     // send eventual socket error to status bar :
     connect (nntpClient,

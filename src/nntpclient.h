@@ -96,7 +96,7 @@ signals:
     void getNextSegmentSignal(ClientManagerConn*);
     void updateDownloadSegmentSignal(SegmentData);
     void connectionStatusSignal(int);
-    void encryptionStatusSignal(const bool, const QString = QString(), const bool = false, const QString = QString());
+    void encryptionStatusSignal(const bool, const QString = QString(), const bool = false, const QString = QString(), const QStringList = QStringList());
     void speedSignal(int);
     void saveFileErrorSignal(int);
     void nntpErrorSignal(const int);
