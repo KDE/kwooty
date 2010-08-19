@@ -66,7 +66,7 @@ void ItemPostDownloadUpdater::updateDecodeItems(const QModelIndex& parentModelIn
     QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(parentModelIndex);
 
     // set status to items :
-    this->downloadModel->updateSateItem(stateItem, status);
+    this->downloadModel->updateStateItem(stateItem, status);
 
     // move item to bottom of the list when decoding is finished :
     if (progression == PROGRESS_COMPLETE) {
@@ -100,7 +100,7 @@ void ItemPostDownloadUpdater::updateRepairExtractItems(const QModelIndex& parent
     if (itemTarget == UtilityNamespace::BothItemsTarget) {
 
         // update item status :
-        this->downloadModel->updateSateItem(stateItem, status);
+        this->downloadModel->updateStateItem(stateItem, status);
         // set progress to item :
         this->downloadModel->updateProgressItem(parentModelIndex, progression);
 
@@ -111,7 +111,7 @@ void ItemPostDownloadUpdater::updateRepairExtractItems(const QModelIndex& parent
     else if (itemTarget == UtilityNamespace::ChildItemTarget) {
 
         // update item status :
-        this->downloadModel->updateSateItem(stateItem, status);
+        this->downloadModel->updateStateItem(stateItem, status);
 
         // set progress to item :
         this->downloadModel->updateProgressItem(parentModelIndex, progression);

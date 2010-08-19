@@ -74,7 +74,7 @@ QStandardItem* StandardItemModel::getColumnItem(const QModelIndex& index, const 
 
 
 
-void StandardItemModel::updateSateItem(QStandardItem* stateItem, const UtilityNamespace::ItemStatus status) {
+void StandardItemModel::updateStateItem(QStandardItem* stateItem, const UtilityNamespace::ItemStatus status) {
 
     // get itemstatusdata from stateItem :
     ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();

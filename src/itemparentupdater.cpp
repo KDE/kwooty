@@ -173,7 +173,7 @@ void ItemParentUpdater::updateNzbItemsPostDecode(const QModelIndex& nzbIndex, co
 
     // if child are being verified / repaired or extracted :
     QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(nzbIndex);
-    this->downloadModel->updateSateItem(stateItem, status);
+    this->downloadModel->updateStateItem(stateItem, status);
 
     // update progression :
     this->downloadModel->updateProgressItem(nzbIndex, progression);
@@ -506,7 +506,7 @@ void ItemParentUpdater::updateItemsIfDirectExtractFailed(const QModelIndex nzbIn
         if (par2NotDownloaded) {
 
             // set nzbItem to IdleStatus in order to enable par2 file downloads :
-            this->downloadModel->updateSateItem(stateItem, IdleStatus);
+            this->downloadModel->updateStateItem(stateItem, IdleStatus);
 
             // set decodeFinish to false in order to allow post download process another time
             // and store statusData :

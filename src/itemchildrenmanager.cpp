@@ -124,7 +124,7 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex index) 
             if ( (childItemStatus == ExtractFailedStatus) ||
                  (childItemStatus == ExtractBadCrcStatus) ) {
 
-                this->downloadModel->updateSateItem(stateItem, DecodeFinishStatus);
+                this->downloadModel->updateStateItem(stateItem, DecodeFinishStatus);
 
             }
         }
@@ -195,7 +195,7 @@ void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex index, Uti
 
                     // set par2 item from IdleStatus to WaitForPar2IdleStatus and vice versa :
                     QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(childIndex);
-                    this->downloadModel->updateSateItem(stateItem, itemStatus);
+                    this->downloadModel->updateStateItem(stateItem, itemStatus);
 
                     par2StatusChanged = true;
 
