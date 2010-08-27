@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-07-25 18:03+0200\n"
+"POT-Creation-Date: 2010-08-26 22:08+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,50 +19,44 @@ msgstr ""
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: build/src/ui_preferencesdisplay.h:133 rc.cpp:179
+#: build/src/ui_preferencesdisplay.h:133 rc.cpp:41
 msgid "Confirmation dialogs"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:156
-#. i18n: ectx: label, entry (confirmClear), group (display)
 #. i18n: file: src/preferences/preferencesdisplay.ui:26
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_confirmClear)
 #. i18n: file: src/preferences/kwootysettings.kcfg:156
 #. i18n: ectx: label, entry (confirmClear), group (display)
-#: build/src/ui_preferencesdisplay.h:135 rc.cpp:110 rc.cpp:182 rc.cpp:470
+#: build/src/ui_preferencesdisplay.h:135 rc.cpp:44 rc.cpp:332
 msgid "Display dialog box when Clear button has been pushed"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:29
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_confirmClear)
-#: build/src/ui_preferencesdisplay.h:137 rc.cpp:185
+#: build/src/ui_preferencesdisplay.h:137 rc.cpp:47
 msgid "Show confirm message when clearing rows"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:160
-#. i18n: ectx: label, entry (confirmRemove), group (display)
 #. i18n: file: src/preferences/preferencesdisplay.ui:36
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_confirmRemove)
 #. i18n: file: src/preferences/kwootysettings.kcfg:160
 #. i18n: ectx: label, entry (confirmRemove), group (display)
-#: build/src/ui_preferencesdisplay.h:139 rc.cpp:113 rc.cpp:188 rc.cpp:473
+#: build/src/ui_preferencesdisplay.h:139 rc.cpp:50 rc.cpp:335
 msgid "Display dialog box when Remove button has been pushed"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:39
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_confirmRemove)
-#: build/src/ui_preferencesdisplay.h:141 rc.cpp:191
+#: build/src/ui_preferencesdisplay.h:141 rc.cpp:53
 msgid "Show confirm message when removing selected rows"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:49
 #. i18n: ectx: property (title), widget (QGroupBox, actionGroupBox)
-#: build/src/ui_preferencesdisplay.h:142 rc.cpp:194
+#: build/src/ui_preferencesdisplay.h:142 rc.cpp:56
 msgid "Status bar information"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:148
-#. i18n: ectx: label, entry (etaRadioButton), group (display)
 #. i18n: file: src/preferences/preferencesdisplay.ui:55
 #. i18n: ectx: property (toolTip), widget (QRadioButton, kcfg_etaRadioButton)
 #. i18n: file: src/preferences/preferencesdisplay.ui:58
@@ -70,12 +64,10 @@ msgstr ""
 #. i18n: file: src/preferences/kwootysettings.kcfg:148
 #. i18n: ectx: label, entry (etaRadioButton), group (display)
 #: build/src/ui_preferencesdisplay.h:144 build/src/ui_preferencesdisplay.h:146
-#: rc.cpp:104 rc.cpp:197 rc.cpp:200 rc.cpp:464
+#: rc.cpp:59 rc.cpp:62 rc.cpp:326
 msgid "Display estimated time of arrival"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:152
-#. i18n: ectx: label, entry (rtRadioButton), group (display)
 #. i18n: file: src/preferences/preferencesdisplay.ui:65
 #. i18n: ectx: property (toolTip), widget (QRadioButton, kcfg_rtRadioButton)
 #. i18n: file: src/preferences/preferencesdisplay.ui:68
@@ -83,151 +75,145 @@ msgstr ""
 #. i18n: file: src/preferences/kwootysettings.kcfg:152
 #. i18n: ectx: label, entry (rtRadioButton), group (display)
 #: build/src/ui_preferencesdisplay.h:148 build/src/ui_preferencesdisplay.h:150
-#: rc.cpp:107 rc.cpp:203 rc.cpp:206 rc.cpp:467
+#: rc.cpp:65 rc.cpp:68 rc.cpp:329
 msgid "Display remaining time"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:75
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_displayCapacityBar)
-#: build/src/ui_preferencesdisplay.h:152 rc.cpp:209
+#: build/src/ui_preferencesdisplay.h:152 rc.cpp:71
 msgid "Display free space capacity bar in status bar"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:78
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_displayCapacityBar)
-#: build/src/ui_preferencesdisplay.h:154 rc.cpp:212
+#: build/src/ui_preferencesdisplay.h:154 rc.cpp:74
 msgid "Display free space information"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:88
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
-#: build/src/ui_preferencesdisplay.h:155 rc.cpp:215
+#: build/src/ui_preferencesdisplay.h:155 rc.cpp:77
 msgid "Miscellaneous"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:136
-#. i18n: ectx: label, entry (expandTreeView), group (display)
 #. i18n: file: src/preferences/preferencesdisplay.ui:94
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_expandTreeView)
 #. i18n: file: src/preferences/kwootysettings.kcfg:136
 #. i18n: ectx: label, entry (expandTreeView), group (display)
-#: build/src/ui_preferencesdisplay.h:157 rc.cpp:95 rc.cpp:218 rc.cpp:455
+#: build/src/ui_preferencesdisplay.h:157 rc.cpp:80 rc.cpp:317
 msgid "Expand treeview automatically when a .nzb file is open"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:97
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_expandTreeView)
-#: build/src/ui_preferencesdisplay.h:159 rc.cpp:221
+#: build/src/ui_preferencesdisplay.h:159 rc.cpp:83
 msgid "Expand tree when opening nzb file"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:132
-#. i18n: ectx: label, entry (animateTreeView), group (display)
 #. i18n: file: src/preferences/preferencesdisplay.ui:104
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_animateTreeView)
 #. i18n: file: src/preferences/kwootysettings.kcfg:132
 #. i18n: ectx: label, entry (animateTreeView), group (display)
-#: build/src/ui_preferencesdisplay.h:161 rc.cpp:92 rc.cpp:224 rc.cpp:452
+#: build/src/ui_preferencesdisplay.h:161 rc.cpp:86 rc.cpp:314
 msgid "Expand and collapse treeview with animation"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:107
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateTreeView)
-#: build/src/ui_preferencesdisplay.h:163 rc.cpp:227
+#: build/src/ui_preferencesdisplay.h:163 rc.cpp:89
 msgid "Animate row expandsion/collasping"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:140
-#. i18n: ectx: label, entry (alternateColors), group (display)
 #. i18n: file: src/preferences/preferencesdisplay.ui:114
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_alternateColors)
 #. i18n: file: src/preferences/kwootysettings.kcfg:140
 #. i18n: ectx: label, entry (alternateColors), group (display)
-#: build/src/ui_preferencesdisplay.h:165 rc.cpp:98 rc.cpp:230 rc.cpp:458
+#: build/src/ui_preferencesdisplay.h:165 rc.cpp:92 rc.cpp:320
 msgid "Alternate background color for each row"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:117
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_alternateColors)
-#: build/src/ui_preferencesdisplay.h:167 rc.cpp:233
+#: build/src/ui_preferencesdisplay.h:167 rc.cpp:95
 msgid "Alternate row colors"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:17
 #. i18n: ectx: property (title), widget (QGroupBox, groupBoxConfig)
-#: build/src/ui_preferencesserver.h:199 rc.cpp:266
+#: build/src/ui_preferencesserver.h:199 rc.cpp:128
 msgid "Server configuration"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:23
 #. i18n: ectx: property (text), widget (QLabel, labelHost)
-#: build/src/ui_preferencesserver.h:200 rc.cpp:269
+#: build/src/ui_preferencesserver.h:200 rc.cpp:131
 msgid "Host:"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:36
 #. i18n: ectx: property (toolTip), widget (QLineEdit, kcfg_hostName)
-#: build/src/ui_preferencesserver.h:202 rc.cpp:272
+#: build/src/ui_preferencesserver.h:202 rc.cpp:134
 msgid "Set host address"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:43
 #. i18n: ectx: property (text), widget (QLabel, labelPort)
-#: build/src/ui_preferencesserver.h:204 rc.cpp:275
+#: build/src/ui_preferencesserver.h:204 rc.cpp:137
 msgid "Port:"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:50
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_port)
-#: build/src/ui_preferencesserver.h:206 rc.cpp:278
+#: build/src/ui_preferencesserver.h:206 rc.cpp:140
 msgid "Set connection port"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:66
 #. i18n: ectx: property (text), widget (QLabel, labelConnections)
-#: build/src/ui_preferencesserver.h:208 rc.cpp:281
+#: build/src/ui_preferencesserver.h:208 rc.cpp:143
 msgid "Number of connections:"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:73
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_connectionNumber)
-#: build/src/ui_preferencesserver.h:210 rc.cpp:284
+#: build/src/ui_preferencesserver.h:210 rc.cpp:146
 msgid "Set the number of simultaneous connections to the nntp server"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:92
 #. i18n: ectx: property (toolTip), widget (QGroupBox, kcfg_groupBoxAuthentication)
-#: build/src/ui_preferencesserver.h:213 rc.cpp:287
+#: build/src/ui_preferencesserver.h:213 rc.cpp:149
 msgid "Set login and password if authentication is required by host"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:95
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_groupBoxAuthentication)
-#: build/src/ui_preferencesserver.h:215 rc.cpp:290
+#: build/src/ui_preferencesserver.h:215 rc.cpp:152
 msgid "Authentication"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:107
 #. i18n: ectx: property (text), widget (QLabel, labelLogin)
-#: build/src/ui_preferencesserver.h:216 rc.cpp:293
+#: build/src/ui_preferencesserver.h:216 rc.cpp:155
 msgid "Login:"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:120
 #. i18n: ectx: property (toolTip), widget (QLineEdit, kcfg_login)
-#: build/src/ui_preferencesserver.h:218 rc.cpp:296
+#: build/src/ui_preferencesserver.h:218 rc.cpp:158
 msgid "Set login required by host"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:127
 #. i18n: ectx: property (text), widget (QLabel, labelPassword)
-#: build/src/ui_preferencesserver.h:220 rc.cpp:299
+#: build/src/ui_preferencesserver.h:220 rc.cpp:161
 msgid "Password:"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:140
 #. i18n: ectx: property (toolTip), widget (QLineEdit, kcfg_password)
-#: build/src/ui_preferencesserver.h:222 rc.cpp:302
+#: build/src/ui_preferencesserver.h:222 rc.cpp:164
 msgid "Set password required by host"
 msgstr ""
 
@@ -236,55 +222,55 @@ msgstr ""
 #. i18n: file: src/preferences/preferencesserver.ui:153
 #. i18n: ectx: property (title), widget (QGroupBox, groupBoxAdvanced)
 #: build/src/ui_preferencesserver.h:224 build/src/ui_preferencesshutdown.h:150
-#: rc.cpp:257 rc.cpp:305
+#: rc.cpp:119 rc.cpp:167
 msgid "Advanced"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:167
 #. i18n: ectx: property (text), widget (QLabel, labelDisconnect)
-#: build/src/ui_preferencesserver.h:225 rc.cpp:308
+#: build/src/ui_preferencesserver.h:225 rc.cpp:170
 msgid "Disconnect from server when idle after (minutes):"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:187
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_disconnectTimeout)
-#: build/src/ui_preferencesserver.h:227 rc.cpp:311
+#: build/src/ui_preferencesserver.h:227 rc.cpp:173
 msgid "Disconnect from host after a period of inactivity"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:199
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_enableSSL)
-#: build/src/ui_preferencesserver.h:230 rc.cpp:314
+#: build/src/ui_preferencesserver.h:230 rc.cpp:176
 msgid "Enable encrypted connection"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesserver.ui:202
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_enableSSL)
-#: build/src/ui_preferencesserver.h:232 rc.cpp:317
+#: build/src/ui_preferencesserver.h:232 rc.cpp:179
 msgid "Enable SSL connection"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, groupBoxFolder)
-#: build/src/ui_preferencesgeneral.h:144 rc.cpp:320
+#: build/src/ui_preferencesgeneral.h:144 rc.cpp:182
 msgid "Folders"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:26
 #. i18n: ectx: property (text), widget (QLabel, labelTempFolder)
-#: build/src/ui_preferencesgeneral.h:145 rc.cpp:323
+#: build/src/ui_preferencesgeneral.h:145 rc.cpp:185
 msgid "Temporary folder: "
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:33
 #. i18n: ectx: property (toolTip), widget (KUrlRequester, kcfg_temporaryFolder)
-#: build/src/ui_preferencesgeneral.h:147 rc.cpp:326
+#: build/src/ui_preferencesgeneral.h:147 rc.cpp:188
 msgid "Set temporary folder"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:46
 #. i18n: ectx: property (text), widget (QLabel, labelComplFolder)
-#: build/src/ui_preferencesgeneral.h:149 rc.cpp:329
+#: build/src/ui_preferencesgeneral.h:149 rc.cpp:191
 msgid "Download folder: "
 msgstr ""
 
@@ -293,40 +279,36 @@ msgstr ""
 #. i18n: file: src/preferences/preferencesgeneral.ui:53
 #. i18n: ectx: property (toolTip), widget (KUrlRequester, kcfg_completedFolder)
 #: build/src/ui_preferencesgeneral.h:151
-#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:94 rc.cpp:146
-#: rc.cpp:332
+#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:94 rc.cpp:8
+#: rc.cpp:194
 msgid "Set download folder"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:69
 #. i18n: ectx: property (title), widget (QGroupBox, groupBoxMisc)
-#: build/src/ui_preferencesgeneral.h:153 rc.cpp:335
+#: build/src/ui_preferencesgeneral.h:153 rc.cpp:197
 msgid "Extra features"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:55
-#. i18n: ectx: label, entry (restoreDownloads), group (general)
 #. i18n: file: src/preferences/preferencesgeneral.ui:75
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_restoreDownloads)
 #. i18n: file: src/preferences/kwootysettings.kcfg:55
 #. i18n: ectx: label, entry (restoreDownloads), group (general)
-#: build/src/ui_preferencesgeneral.h:155 rc.cpp:41 rc.cpp:338 rc.cpp:401
+#: build/src/ui_preferencesgeneral.h:155 rc.cpp:200 rc.cpp:263
 msgid "Restore pending downloads from previous session at startup"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:78
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_restoreDownloads)
-#: build/src/ui_preferencesgeneral.h:157 rc.cpp:341
+#: build/src/ui_preferencesgeneral.h:157 rc.cpp:203
 msgid "Restore downloads from previous session at startup"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:59
-#. i18n: ectx: label, entry (openWith), group (general)
 #. i18n: file: src/preferences/preferencesgeneral.ui:85
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_openWith)
 #. i18n: file: src/preferences/kwootysettings.kcfg:59
 #. i18n: ectx: label, entry (openWith), group (general)
-#: build/src/ui_preferencesgeneral.h:159 rc.cpp:44 rc.cpp:344 rc.cpp:404
+#: build/src/ui_preferencesgeneral.h:159 rc.cpp:206 rc.cpp:266
 msgid ""
 "Copy nzb file in destination folder when added from another application by "
 "\"open with...\" action"
@@ -334,68 +316,62 @@ msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:88
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_openWith)
-#: build/src/ui_preferencesgeneral.h:161 rc.cpp:347
+#: build/src/ui_preferencesgeneral.h:161 rc.cpp:209
 msgid "Copy nzb file added from external application in destination folder"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:63
-#. i18n: ectx: label, entry (smartPar2Download), group (general)
 #. i18n: file: src/preferences/preferencesgeneral.ui:95
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_smartPar2Download)
 #. i18n: file: src/preferences/kwootysettings.kcfg:63
 #. i18n: ectx: label, entry (smartPar2Download), group (general)
-#: build/src/ui_preferencesgeneral.h:163 rc.cpp:47 rc.cpp:350 rc.cpp:407
+#: build/src/ui_preferencesgeneral.h:163 rc.cpp:212 rc.cpp:269
 msgid "Do not download .par2 files if files archive do not need to be repaired"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:98
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_smartPar2Download)
-#: build/src/ui_preferencesgeneral.h:165 rc.cpp:353
+#: build/src/ui_preferencesgeneral.h:165 rc.cpp:215
 msgid "Download Par2 files only if repairing is required"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:108
 #. i18n: ectx: property (title), widget (QGroupBox, sysTrayGroupBox)
-#: build/src/ui_preferencesgeneral.h:166 rc.cpp:356
+#: build/src/ui_preferencesgeneral.h:166 rc.cpp:218
 msgid "System tray"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:114
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_sysTray)
-#: build/src/ui_preferencesgeneral.h:168 rc.cpp:359
+#: build/src/ui_preferencesgeneral.h:168 rc.cpp:221
 msgid "Check to enable the Kwooty system tray icon"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:67
-#. i18n: ectx: label, entry (sysTray), group (general)
 #. i18n: file: src/preferences/preferencesgeneral.ui:117
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_sysTray)
 #. i18n: file: src/preferences/kwootysettings.kcfg:67
 #. i18n: ectx: label, entry (sysTray), group (general)
-#: build/src/ui_preferencesgeneral.h:170 rc.cpp:50 rc.cpp:362 rc.cpp:410
+#: build/src/ui_preferencesgeneral.h:170 rc.cpp:224 rc.cpp:272
 msgid "Show tray icon"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:124
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_notification)
-#: build/src/ui_preferencesgeneral.h:172 rc.cpp:365
+#: build/src/ui_preferencesgeneral.h:172 rc.cpp:227
 msgid "Check to enable Kwooty notifications in system tray"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:127
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_notification)
-#: build/src/ui_preferencesgeneral.h:174 rc.cpp:368
+#: build/src/ui_preferencesgeneral.h:174 rc.cpp:230
 msgid "Show notifications"
 msgstr ""
 
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:22
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
-#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:92 rc.cpp:143
+#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:92 rc.cpp:5
 msgid "Watch folder: "
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwooty_watchfoldersettings.kcfg:22
-#. i18n: ectx: label, entry (copyNzbFromWatch), group (watchfolderplugin)
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:50
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_copyNzbFromWatch)
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:53
@@ -403,13 +379,11 @@ msgstr ""
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:22
 #. i18n: ectx: label, entry (copyNzbFromWatch), group (watchfolderplugin)
 #: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:97
-#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:99 rc.cpp:140
-#: rc.cpp:149 rc.cpp:152 rc.cpp:170
+#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:99 rc.cpp:11
+#: rc.cpp:14 rc.cpp:32
 msgid "Copy nzb file in destination folder"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwooty_watchfoldersettings.kcfg:18
-#. i18n: ectx: label, entry (suppressNzbFromWatch), group (watchfolderplugin)
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:60
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_suppressNzbFromWatch)
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:63
@@ -417,14 +391,14 @@ msgstr ""
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:18
 #. i18n: ectx: label, entry (suppressNzbFromWatch), group (watchfolderplugin)
 #: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:101
-#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:103 rc.cpp:137
-#: rc.cpp:155 rc.cpp:158 rc.cpp:167
+#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:103 rc.cpp:17
+#: rc.cpp:20 rc.cpp:29
 msgid "Suppress nzb file from watch folder when enqueued"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:27
 #. i18n: ectx: property (title), widget (QGroupBox, groupBoxprogramsFound)
-#: build/src/ui_preferencesprograms.h:295 rc.cpp:494
+#: build/src/ui_preferencesprograms.h:295 rc.cpp:356
 msgid "Programs found"
 msgstr ""
 
@@ -436,7 +410,7 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, sevenZipLabelIcon)
 #: build/src/ui_preferencesprograms.h:296
 #: build/src/ui_preferencesprograms.h:298
-#: build/src/ui_preferencesprograms.h:300 rc.cpp:497 rc.cpp:503 rc.cpp:509
+#: build/src/ui_preferencesprograms.h:300 rc.cpp:359 rc.cpp:365 rc.cpp:371
 msgid "Ic"
 msgstr ""
 
@@ -448,49 +422,49 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QLabel, sevenZipLabelText)
 #: build/src/ui_preferencesprograms.h:297
 #: build/src/ui_preferencesprograms.h:299
-#: build/src/ui_preferencesprograms.h:301 rc.cpp:500 rc.cpp:506 rc.cpp:512
+#: build/src/ui_preferencesprograms.h:301 rc.cpp:362 rc.cpp:368 rc.cpp:374
 msgid "TextLabel"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:129
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_groupBoxAutoRepair)
-#: build/src/ui_preferencesprograms.h:302 rc.cpp:515
+#: build/src/ui_preferencesprograms.h:302 rc.cpp:377
 msgid "Verify/Repair downloaded files"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:138
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_removeParFiles)
-#: build/src/ui_preferencesprograms.h:304 rc.cpp:518
+#: build/src/ui_preferencesprograms.h:304 rc.cpp:380
 msgid "Suppress par2 files if verify/repair succeed"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:141
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_removeParFiles)
-#: build/src/ui_preferencesprograms.h:306 rc.cpp:521
+#: build/src/ui_preferencesprograms.h:306 rc.cpp:383
 msgid "Suppress par2 files if repairing successful"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:154
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_groupBoxAutoDecompress)
-#: build/src/ui_preferencesprograms.h:307 rc.cpp:524
+#: build/src/ui_preferencesprograms.h:307 rc.cpp:386
 msgid "Extract downloaded files"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:166
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_removeArchiveFiles)
-#: build/src/ui_preferencesprograms.h:309 rc.cpp:527
+#: build/src/ui_preferencesprograms.h:309 rc.cpp:389
 msgid "Suppress archive files if extract succeed"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:169
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_removeArchiveFiles)
-#: build/src/ui_preferencesprograms.h:311 rc.cpp:530
+#: build/src/ui_preferencesprograms.h:311 rc.cpp:392
 msgid "Suppress archive files if extract successful"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:179
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_overwriteExtractedFiles)
-#: build/src/ui_preferencesprograms.h:313 rc.cpp:533
+#: build/src/ui_preferencesprograms.h:313 rc.cpp:395
 msgid ""
 "Overwrite extracted file if it already exists, otherwise the file to extract "
 "will be renamed"
@@ -498,36 +472,30 @@ msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:182
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_overwriteExtractedFiles)
-#: build/src/ui_preferencesprograms.h:315 rc.cpp:536
+#: build/src/ui_preferencesprograms.h:315 rc.cpp:398
 msgid "Overwrite extracted file if it already exists"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:21
 #. i18n: ectx: attribute (title), widget (QWidget, programsTab)
-#: build/src/ui_preferencesprograms.h:316 rc.cpp:491 src/mainwindow.cpp:299
+#: build/src/ui_preferencesprograms.h:316 rc.cpp:353 src/mainwindow.cpp:305
 msgid "Programs"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:98
-#. i18n: ectx: label, entry (groupBoxVerifyPriority), group (programs)
 #. i18n: file: src/preferences/kwootysettings.kcfg:98
 #. i18n: ectx: label, entry (groupBoxVerifyPriority), group (programs)
 #. i18n: file: src/preferences/preferencesprograms.ui:202
 #. i18n: ectx: property (toolTip), widget (QGroupBox, kcfg_groupBoxVerifyPriority)
-#: build/src/ui_preferencesprograms.h:318 rc.cpp:71 rc.cpp:431 rc.cpp:542
+#: build/src/ui_preferencesprograms.h:318 rc.cpp:293 rc.cpp:404
 msgid "Lower verify/repair process priority"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:205
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_groupBoxVerifyPriority)
-#: build/src/ui_preferencesprograms.h:320 rc.cpp:545
+#: build/src/ui_preferencesprograms.h:320 rc.cpp:407
 msgid "Lower Verify/Repair process"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:108
-#. i18n: ectx: label, entry (verifyProcessValues), group (programs)
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:122
-#. i18n: ectx: label, entry (extractProcessValues), group (programs)
 #. i18n: file: src/preferences/kwootysettings.kcfg:108
 #. i18n: ectx: label, entry (verifyProcessValues), group (programs)
 #. i18n: file: src/preferences/kwootysettings.kcfg:122
@@ -537,8 +505,8 @@ msgstr ""
 #. i18n: file: src/preferences/preferencesprograms.ui:268
 #. i18n: ectx: property (toolTip), widget (QLabel, label_2)
 #: build/src/ui_preferencesprograms.h:322
-#: build/src/ui_preferencesprograms.h:334 rc.cpp:77 rc.cpp:86 rc.cpp:437
-#: rc.cpp:446 rc.cpp:548 rc.cpp:566
+#: build/src/ui_preferencesprograms.h:334 rc.cpp:299 rc.cpp:308 rc.cpp:410
+#: rc.cpp:428
 msgid "Select process priority"
 msgstr ""
 
@@ -547,17 +515,15 @@ msgstr ""
 #. i18n: file: src/preferences/preferencesprograms.ui:271
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: build/src/ui_preferencesprograms.h:324
-#: build/src/ui_preferencesprograms.h:336 rc.cpp:551 rc.cpp:569
+#: build/src/ui_preferencesprograms.h:336 rc.cpp:413 rc.cpp:431
 msgid "Process priority: "
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:102
-#. i18n: ectx: label, entry (verifyNiceValue), group (programs)
 #. i18n: file: src/preferences/kwootysettings.kcfg:102
 #. i18n: ectx: label, entry (verifyNiceValue), group (programs)
 #. i18n: file: src/preferences/preferencesprograms.ui:240
 #. i18n: ectx: property (toolTip), widget (QLabel, verifyNiceValueText)
-#: build/src/ui_preferencesprograms.h:326 rc.cpp:74 rc.cpp:434 rc.cpp:554
+#: build/src/ui_preferencesprograms.h:326 rc.cpp:296 rc.cpp:416
 msgid "Define verify/repair process priority from normal (0) to lowest (+19)"
 msgstr ""
 
@@ -566,105 +532,101 @@ msgstr ""
 #. i18n: file: src/preferences/preferencesprograms.ui:297
 #. i18n: ectx: property (text), widget (QLabel, extractNiceValueText)
 #: build/src/ui_preferencesprograms.h:328
-#: build/src/ui_preferencesprograms.h:340 rc.cpp:557 rc.cpp:575
+#: build/src/ui_preferencesprograms.h:340 rc.cpp:419 rc.cpp:437
 msgid "Set nice value: "
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:112
-#. i18n: ectx: label, entry (groupBoxExtractPriority), group (programs)
 #. i18n: file: src/preferences/kwootysettings.kcfg:112
 #. i18n: ectx: label, entry (groupBoxExtractPriority), group (programs)
 #. i18n: file: src/preferences/preferencesprograms.ui:256
 #. i18n: ectx: property (toolTip), widget (QGroupBox, kcfg_groupBoxExtractPriority)
-#: build/src/ui_preferencesprograms.h:330 rc.cpp:80 rc.cpp:440 rc.cpp:560
+#: build/src/ui_preferencesprograms.h:330 rc.cpp:302 rc.cpp:422
 msgid "Lower extract process priority"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:259
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_groupBoxExtractPriority)
-#: build/src/ui_preferencesprograms.h:332 rc.cpp:563
+#: build/src/ui_preferencesprograms.h:332 rc.cpp:425
 msgid "Lower Extract process"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:116
-#. i18n: ectx: label, entry (extractNiceValue), group (programs)
 #. i18n: file: src/preferences/kwootysettings.kcfg:116
 #. i18n: ectx: label, entry (extractNiceValue), group (programs)
 #. i18n: file: src/preferences/preferencesprograms.ui:294
 #. i18n: ectx: property (toolTip), widget (QLabel, extractNiceValueText)
-#: build/src/ui_preferencesprograms.h:338 rc.cpp:83 rc.cpp:443 rc.cpp:572
+#: build/src/ui_preferencesprograms.h:338 rc.cpp:305 rc.cpp:434
 msgid "Define extract process priority from normal (0) to lowest (+19)"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:196
 #. i18n: ectx: attribute (title), widget (QWidget, priorityTab)
-#: build/src/ui_preferencesprograms.h:341 rc.cpp:539
+#: build/src/ui_preferencesprograms.h:341 rc.cpp:401
 msgid "Priority"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:330
 #. i18n: ectx: property (title), widget (KEditListBox, kcfg_searchPathList)
-#: build/src/ui_preferencesprograms.h:342 rc.cpp:581
+#: build/src/ui_preferencesprograms.h:342 rc.cpp:443
 msgid "Search Path"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:324
 #. i18n: ectx: attribute (title), widget (QWidget, searchTab)
-#: build/src/ui_preferencesprograms.h:343 rc.cpp:578
+#: build/src/ui_preferencesprograms.h:343 rc.cpp:440
 msgid "Search path"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, PowerManagemetGroupBox)
-#: build/src/ui_preferencesshutdown.h:141 rc.cpp:236
+#: build/src/ui_preferencesshutdown.h:141 rc.cpp:98
 msgid "Power Management"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:26
 #. i18n: ectx: property (toolTip), widget (QLabel, shutdownMethodLabel)
-#: build/src/ui_preferencesshutdown.h:143 rc.cpp:239
+#: build/src/ui_preferencesshutdown.h:143 rc.cpp:101
 msgid "Select system shutdown mode"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:29
 #. i18n: ectx: property (text), widget (QLabel, shutdownMethodLabel)
-#: build/src/ui_preferencesshutdown.h:145 rc.cpp:242
+#: build/src/ui_preferencesshutdown.h:145 rc.cpp:104
 msgid "System shutdown mode:"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:55
 #. i18n: ectx: property (title), widget (QGroupBox, actionGroupBox)
-#: build/src/ui_preferencesshutdown.h:146 rc.cpp:245
+#: build/src/ui_preferencesshutdown.h:146 rc.cpp:107
 msgid "Scheduler"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:63
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_timerRadioButton)
-#: build/src/ui_preferencesshutdown.h:147 rc.cpp:248
+#: build/src/ui_preferencesshutdown.h:147 rc.cpp:110
 msgid "in:"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:83
 #. i18n: ectx: property (displayFormat), widget (QDateTimeEdit, kcfg_scheduleDateTime)
-#: build/src/ui_preferencesshutdown.h:148 rc.cpp:251
+#: build/src/ui_preferencesshutdown.h:148 rc.cpp:113
 msgid "HH'h'mm'm'"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:92
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_jobsRadioButton)
-#: build/src/ui_preferencesshutdown.h:149 rc.cpp:254
+#: build/src/ui_preferencesshutdown.h:149 rc.cpp:116
 msgid "when all jobs are finished"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:108
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_pausedShutdown)
-#: build/src/ui_preferencesshutdown.h:152 rc.cpp:260
+#: build/src/ui_preferencesshutdown.h:152 rc.cpp:122
 msgid "Do not shutdown the system if some files are set on pause"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:111
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_pausedShutdown)
-#: build/src/ui_preferencesshutdown.h:154 rc.cpp:263
+#: build/src/ui_preferencesshutdown.h:154 rc.cpp:125
 msgid "if jobs are finished but paused files remain"
 msgstr ""
 
@@ -678,220 +640,166 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 
-#. i18n: file: build/share/apps/kwooty/kwootyui.rc:12
-#. i18n: ectx: Menu (download)
-#. i18n: file: src/kwootyui.rc:12
-#. i18n: ectx: Menu (download)
-#: rc.cpp:5 rc.cpp:173
-msgid "Download"
-msgstr ""
-
-#. i18n: file: build/share/apps/kwooty/kwootyui.rc:30
-#. i18n: ectx: ToolBar (mainToolBar)
-#. i18n: file: src/kwootyui.rc:30
-#. i18n: ectx: ToolBar (mainToolBar)
-#: rc.cpp:8 rc.cpp:176
-msgid "Main Toolbar"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:11
-#. i18n: ectx: label, entry (hostName), group (server)
-#. i18n: file: src/preferences/kwootysettings.kcfg:11
-#. i18n: ectx: label, entry (hostName), group (server)
-#: rc.cpp:11 rc.cpp:371
-msgid "Defines the server host name"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:14
-#. i18n: ectx: label, entry (port), group (server)
-#. i18n: file: src/preferences/kwootysettings.kcfg:14
-#. i18n: ectx: label, entry (port), group (server)
-#: rc.cpp:14 rc.cpp:374
-msgid "Defines the server port"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:20
-#. i18n: ectx: label, entry (connectionNumber), group (server)
-#. i18n: file: src/preferences/kwootysettings.kcfg:20
-#. i18n: ectx: label, entry (connectionNumber), group (server)
-#: rc.cpp:17 rc.cpp:377
-msgid "Defines the number of connection"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:26
-#. i18n: ectx: label, entry (groupBoxAuthentication), group (server)
-#. i18n: file: src/preferences/kwootysettings.kcfg:26
-#. i18n: ectx: label, entry (groupBoxAuthentication), group (server)
-#: rc.cpp:20 rc.cpp:380
-msgid "User name and password are required by server"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:30
-#. i18n: ectx: label, entry (login), group (server)
-#. i18n: file: src/preferences/kwootysettings.kcfg:30
-#. i18n: ectx: label, entry (login), group (server)
-#: rc.cpp:23 rc.cpp:383
-msgid "Defines the login"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:33
-#. i18n: ectx: label, entry (password), group (server)
-#. i18n: file: src/preferences/kwootysettings.kcfg:33
-#. i18n: ectx: label, entry (password), group (server)
-#: rc.cpp:26 rc.cpp:386
-msgid "Defines the password"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:36
-#. i18n: ectx: label, entry (enableSSL), group (server)
-#. i18n: file: src/preferences/kwootysettings.kcfg:36
-#. i18n: ectx: label, entry (enableSSL), group (server)
-#: rc.cpp:29 rc.cpp:389
-msgid "Use SSL encrypted connections"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:40
-#. i18n: ectx: label, entry (disconnectTimeout), group (server)
-#. i18n: file: src/preferences/kwootysettings.kcfg:40
-#. i18n: ectx: label, entry (disconnectTimeout), group (server)
-#: rc.cpp:32 rc.cpp:392
-msgid "Defines the timeout period of inactivity"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:49
-#. i18n: ectx: label, entry (completedFolder), group (general)
-#. i18n: file: src/preferences/kwootysettings.kcfg:49
-#. i18n: ectx: label, entry (completedFolder), group (general)
-#: rc.cpp:35 rc.cpp:395
-msgid "completed folder"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:52
-#. i18n: ectx: label, entry (temporaryFolder), group (general)
-#. i18n: file: src/preferences/kwootysettings.kcfg:52
-#. i18n: ectx: label, entry (temporaryFolder), group (general)
-#: rc.cpp:38 rc.cpp:398 src/centralwidget.cpp:534
-msgid "temporary folder"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:71
-#. i18n: ectx: label, entry (notification), group (general)
-#. i18n: file: src/preferences/kwootysettings.kcfg:71
-#. i18n: ectx: label, entry (notification), group (general)
-#: rc.cpp:53 rc.cpp:413
-msgid "Show notification"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:78
-#. i18n: ectx: label, entry (groupBoxAutoRepair), group (programs)
-#. i18n: file: src/preferences/kwootysettings.kcfg:78
-#. i18n: ectx: label, entry (groupBoxAutoRepair), group (programs)
-#: rc.cpp:56 rc.cpp:416
-msgid "Automatically verif and repair downloaded files"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:82
-#. i18n: ectx: label, entry (groupBoxAutoDecompress), group (programs)
-#. i18n: file: src/preferences/kwootysettings.kcfg:82
-#. i18n: ectx: label, entry (groupBoxAutoDecompress), group (programs)
-#: rc.cpp:59 rc.cpp:419
-msgid "Automatically decompress downloaded files"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:86
-#. i18n: ectx: label, entry (removeArchiveFiles), group (programs)
-#. i18n: file: src/preferences/kwootysettings.kcfg:86
-#. i18n: ectx: label, entry (removeArchiveFiles), group (programs)
-#: rc.cpp:62 rc.cpp:422
-msgid "Automatically remove archive files if extraction succeeded"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:90
-#. i18n: ectx: label, entry (overwriteExtractedFiles), group (programs)
-#. i18n: file: src/preferences/kwootysettings.kcfg:90
-#. i18n: ectx: label, entry (overwriteExtractedFiles), group (programs)
-#: rc.cpp:65 rc.cpp:425
-msgid "Overwrite extracted files if files already exist"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:94
-#. i18n: ectx: label, entry (removeParFiles), group (programs)
-#. i18n: file: src/preferences/kwootysettings.kcfg:94
-#. i18n: ectx: label, entry (removeParFiles), group (programs)
-#: rc.cpp:68 rc.cpp:428
-msgid "Automatically remove \".Par\" files if repair succeeded"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:126
-#. i18n: ectx: label, entry (searchPathList), group (programs)
-#. i18n: file: src/preferences/kwootysettings.kcfg:126
-#. i18n: ectx: label, entry (searchPathList), group (programs)
-#: rc.cpp:89 rc.cpp:449
-msgid "Path to search external programs"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:144
-#. i18n: ectx: label, entry (displayCapacityBar), group (display)
-#. i18n: file: src/preferences/kwootysettings.kcfg:144
-#. i18n: ectx: label, entry (displayCapacityBar), group (display)
-#: rc.cpp:101 rc.cpp:461
-msgid "Display free space information in status bar"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:167
-#. i18n: ectx: label, entry (shutdownMethods), group (shutdown)
-#. i18n: file: src/preferences/kwootysettings.kcfg:167
-#. i18n: ectx: label, entry (shutdownMethods), group (shutdown)
-#: rc.cpp:116 rc.cpp:476
-msgid "Select system shutdown method"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:171
-#. i18n: ectx: label, entry (jobsRadioButton), group (shutdown)
-#. i18n: file: src/preferences/kwootysettings.kcfg:171
-#. i18n: ectx: label, entry (jobsRadioButton), group (shutdown)
-#: rc.cpp:119 rc.cpp:479
-msgid "Shutdown will occur when all pensding jobs are finished"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:175
-#. i18n: ectx: label, entry (timerRadioButton), group (shutdown)
-#. i18n: file: src/preferences/kwootysettings.kcfg:175
-#. i18n: ectx: label, entry (timerRadioButton), group (shutdown)
-#: rc.cpp:122 rc.cpp:482
-msgid "Shutdown will occur at a precise time"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:179
-#. i18n: ectx: label, entry (scheduleDateTime), group (shutdown)
-#. i18n: file: src/preferences/kwootysettings.kcfg:179
-#. i18n: ectx: label, entry (scheduleDateTime), group (shutdown)
-#: rc.cpp:125 rc.cpp:485
-msgid "Schedule system shutdown in HH:mm from now"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:182
-#. i18n: ectx: label, entry (pausedShutdown), group (shutdown)
-#. i18n: file: src/preferences/kwootysettings.kcfg:182
-#. i18n: ectx: label, entry (pausedShutdown), group (shutdown)
-#: rc.cpp:128 rc.cpp:488
-msgid "Do not shutdown system if jobs are finished but paused files remain"
-msgstr ""
-
-#. i18n: file: build/share/config.kcfg/kwooty_watchfoldersettings.kcfg:11
-#. i18n: ectx: label, entry (groupBoxWatch), group (watchfolderplugin)
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:11
 #. i18n: ectx: label, entry (groupBoxWatch), group (watchfolderplugin)
-#: rc.cpp:131 rc.cpp:161
+#: rc.cpp:23
 msgid "Enable folder monitoring"
 msgstr ""
 
-#. i18n: file: build/share/config.kcfg/kwooty_watchfoldersettings.kcfg:15
-#. i18n: ectx: label, entry (watchFolder), group (watchfolderplugin)
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:15
 #. i18n: ectx: label, entry (watchFolder), group (watchfolderplugin)
-#: rc.cpp:134 rc.cpp:164
+#: rc.cpp:26
 msgid "watch folder"
+msgstr ""
+
+#. i18n: file: src/kwootyui.rc:12
+#. i18n: ectx: Menu (download)
+#: rc.cpp:35
+msgid "Download"
+msgstr ""
+
+#. i18n: file: src/kwootyui.rc:30
+#. i18n: ectx: ToolBar (mainToolBar)
+#: rc.cpp:38
+msgid "Main Toolbar"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:11
+#. i18n: ectx: label, entry (hostName), group (server)
+#: rc.cpp:233
+msgid "Defines the server host name"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:14
+#. i18n: ectx: label, entry (port), group (server)
+#: rc.cpp:236
+msgid "Defines the server port"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:20
+#. i18n: ectx: label, entry (connectionNumber), group (server)
+#: rc.cpp:239
+msgid "Defines the number of connection"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:26
+#. i18n: ectx: label, entry (groupBoxAuthentication), group (server)
+#: rc.cpp:242
+msgid "User name and password are required by server"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:30
+#. i18n: ectx: label, entry (login), group (server)
+#: rc.cpp:245
+msgid "Defines the login"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:33
+#. i18n: ectx: label, entry (password), group (server)
+#: rc.cpp:248
+msgid "Defines the password"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:36
+#. i18n: ectx: label, entry (enableSSL), group (server)
+#: rc.cpp:251
+msgid "Use SSL encrypted connections"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:40
+#. i18n: ectx: label, entry (disconnectTimeout), group (server)
+#: rc.cpp:254
+msgid "Defines the timeout period of inactivity"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:49
+#. i18n: ectx: label, entry (completedFolder), group (general)
+#: rc.cpp:257
+msgid "completed folder"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:52
+#. i18n: ectx: label, entry (temporaryFolder), group (general)
+#: rc.cpp:260 src/centralwidget.cpp:534
+msgid "temporary folder"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:71
+#. i18n: ectx: label, entry (notification), group (general)
+#: rc.cpp:275
+msgid "Show notification"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:78
+#. i18n: ectx: label, entry (groupBoxAutoRepair), group (programs)
+#: rc.cpp:278
+msgid "Automatically verif and repair downloaded files"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:82
+#. i18n: ectx: label, entry (groupBoxAutoDecompress), group (programs)
+#: rc.cpp:281
+msgid "Automatically decompress downloaded files"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:86
+#. i18n: ectx: label, entry (removeArchiveFiles), group (programs)
+#: rc.cpp:284
+msgid "Automatically remove archive files if extraction succeeded"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:90
+#. i18n: ectx: label, entry (overwriteExtractedFiles), group (programs)
+#: rc.cpp:287
+msgid "Overwrite extracted files if files already exist"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:94
+#. i18n: ectx: label, entry (removeParFiles), group (programs)
+#: rc.cpp:290
+msgid "Automatically remove \".Par\" files if repair succeeded"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:126
+#. i18n: ectx: label, entry (searchPathList), group (programs)
+#: rc.cpp:311
+msgid "Path to search external programs"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:144
+#. i18n: ectx: label, entry (displayCapacityBar), group (display)
+#: rc.cpp:323
+msgid "Display free space information in status bar"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:167
+#. i18n: ectx: label, entry (shutdownMethods), group (shutdown)
+#: rc.cpp:338
+msgid "Select system shutdown method"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:171
+#. i18n: ectx: label, entry (jobsRadioButton), group (shutdown)
+#: rc.cpp:341
+msgid "Shutdown will occur when all pending jobs are finished"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:175
+#. i18n: ectx: label, entry (timerRadioButton), group (shutdown)
+#: rc.cpp:344
+msgid "Shutdown will occur at a precise time"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:179
+#. i18n: ectx: label, entry (scheduleDateTime), group (shutdown)
+#: rc.cpp:347
+msgid "Schedule system shutdown in HH:mm from now"
+msgstr ""
+
+#. i18n: file: src/preferences/kwootysettings.kcfg:182
+#. i18n: ectx: label, entry (pausedShutdown), group (shutdown)
+#: rc.cpp:350
+msgid "Do not shutdown system if jobs are finished but paused files remain"
 msgstr ""
 
 #: src/nzbfilehandler.cpp:205
@@ -960,9 +868,12 @@ msgstr ""
 msgid "Certificate <b>can not be verified</b>"
 msgstr ""
 
+#: src/mystatusbar.cpp:273
+msgid "Connection is not encrypted"
+msgstr ""
+
 #: src/mystatusbar.cpp:289
 #, kde-format
-msgctxt "number or remaining files (remaining size)"
 msgid "Files: <numid>%1</numid> (%2)"
 msgstr ""
 
@@ -1012,7 +923,7 @@ msgid "Downloading"
 msgstr ""
 
 #: src/systraylegacy.cpp:307 src/systray.cpp:282 src/itemdelegate.cpp:42
-#: src/mainwindow.cpp:148
+#: src/mainwindow.cpp:154
 msgid "Pause"
 msgstr ""
 
@@ -1274,146 +1185,146 @@ msgstr ""
 msgid "<numid>%1</numid> %"
 msgstr ""
 
-#: src/mainwindow.cpp:128
+#: src/mainwindow.cpp:134
 msgid "Clear"
 msgstr ""
 
-#: src/mainwindow.cpp:130
+#: src/mainwindow.cpp:136
 msgid "Remove all rows"
 msgstr ""
 
-#: src/mainwindow.cpp:137
+#: src/mainwindow.cpp:143
 msgid "Start"
 msgstr ""
 
-#: src/mainwindow.cpp:139
+#: src/mainwindow.cpp:145
 msgid "Start download of selected rows"
 msgstr ""
 
-#: src/mainwindow.cpp:150
+#: src/mainwindow.cpp:156
 msgid "Pause download of selected rows"
 msgstr ""
 
-#: src/mainwindow.cpp:159
+#: src/mainwindow.cpp:165
 msgid "Remove"
 msgstr ""
 
-#: src/mainwindow.cpp:161
+#: src/mainwindow.cpp:167
 msgid "Remove all selected rows"
 msgstr ""
 
-#: src/mainwindow.cpp:171
+#: src/mainwindow.cpp:177
 msgid "Up"
 msgstr ""
 
-#: src/mainwindow.cpp:173
+#: src/mainwindow.cpp:179
 msgid "Go up all selected rows"
 msgstr ""
 
-#: src/mainwindow.cpp:182
+#: src/mainwindow.cpp:188
 msgid "Top"
 msgstr ""
 
-#: src/mainwindow.cpp:184
+#: src/mainwindow.cpp:190
 msgid "Move all selected rows to the top of the list"
 msgstr ""
 
-#: src/mainwindow.cpp:193
+#: src/mainwindow.cpp:199
 msgid "Down"
 msgstr ""
 
-#: src/mainwindow.cpp:195
+#: src/mainwindow.cpp:201
 msgid "Go down all selected rows"
 msgstr ""
 
-#: src/mainwindow.cpp:205
+#: src/mainwindow.cpp:211
 msgid "Bottom"
 msgstr ""
 
-#: src/mainwindow.cpp:207
+#: src/mainwindow.cpp:213
 msgid "Move all selected rows to the bottom of the list"
 msgstr ""
 
-#: src/mainwindow.cpp:217
+#: src/mainwindow.cpp:223
 msgid "Downloads"
 msgstr ""
 
-#: src/mainwindow.cpp:219
+#: src/mainwindow.cpp:225
 msgid "Open current download folder"
 msgstr ""
 
-#: src/mainwindow.cpp:227 src/mainwindow.cpp:305 src/shutdownmanager.cpp:339
+#: src/mainwindow.cpp:233 src/mainwindow.cpp:311 src/shutdownmanager.cpp:339
 msgid "Shutdown"
 msgstr ""
 
-#: src/mainwindow.cpp:229
+#: src/mainwindow.cpp:235
 msgid "Schedule system shutdown"
 msgstr ""
 
-#: src/mainwindow.cpp:240
+#: src/mainwindow.cpp:246
 msgid "Start all"
 msgstr ""
 
-#: src/mainwindow.cpp:242
+#: src/mainwindow.cpp:248
 msgid "Start all paused downloads"
 msgstr ""
 
-#: src/mainwindow.cpp:249
+#: src/mainwindow.cpp:255
 msgid "Pause all"
 msgstr ""
 
-#: src/mainwindow.cpp:251
+#: src/mainwindow.cpp:257
 msgid "Pause all pending downloads"
 msgstr ""
 
-#: src/mainwindow.cpp:293
+#: src/mainwindow.cpp:299
 msgid "General"
 msgstr ""
 
-#: src/mainwindow.cpp:293
+#: src/mainwindow.cpp:299
 msgid "General Setup"
 msgstr ""
 
-#: src/mainwindow.cpp:296
+#: src/mainwindow.cpp:302
 msgid "Connection"
 msgstr ""
 
-#: src/mainwindow.cpp:296
+#: src/mainwindow.cpp:302
 msgid "Setup Server Connection"
 msgstr ""
 
-#: src/mainwindow.cpp:299
+#: src/mainwindow.cpp:305
 msgid "Setup External Programs"
 msgstr ""
 
-#: src/mainwindow.cpp:302
+#: src/mainwindow.cpp:308
 msgid "Display modes"
 msgstr ""
 
-#: src/mainwindow.cpp:302
+#: src/mainwindow.cpp:308
 msgid "Setup Display Modes"
 msgstr ""
 
-#: src/mainwindow.cpp:305
+#: src/mainwindow.cpp:311
 msgid "Setup System Shutdown"
 msgstr ""
 
-#: src/mainwindow.cpp:308
+#: src/mainwindow.cpp:314
 msgid "Plugins"
 msgstr ""
 
-#: src/mainwindow.cpp:308
+#: src/mainwindow.cpp:314
 msgid "Plugins Setup"
 msgstr ""
 
-#: src/mainwindow.cpp:383
+#: src/mainwindow.cpp:389
 msgid ""
 "<qt>Closing the main window will keep Kwooty running in the System Tray. Use "
 "<B>Quit</B> from the menu or the Kwooty tray icon to exit the application.</"
 "qt>"
 msgstr ""
 
-#: src/mainwindow.cpp:385
+#: src/mainwindow.cpp:391
 msgid "Docking in System Tray"
 msgstr ""
 
