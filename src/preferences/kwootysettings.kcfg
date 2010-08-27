@@ -168,7 +168,7 @@
 	    <default>0</default>
         </entry>
 	<entry name="jobsRadioButton" type="Bool">
-            <label>Shutdown will occur when all pensding jobs are finished</label>
+            <label>Shutdown will occur when all pending jobs are finished</label>
             <default>true</default>
         </entry>
 	<entry name="timerRadioButton" type="Bool">
