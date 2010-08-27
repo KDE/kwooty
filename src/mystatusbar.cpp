@@ -270,7 +270,7 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
         }
         else {
 
-            toolTipStr.append("Connection is not encrypted");
+            toolTipStr.append(i18n("Connection is not encrypted"));
         }
 
     }
@@ -286,8 +286,7 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
 void MyStatusBar::updateFileSizeInfoSlot(const quint64 totalFiles, const quint64 totalSize) {
 
     // status bar update, display number of files and remianing size :
-    QString remainingFiles = i18nc("number of remaining files (remaining size)",
-                                   "Files: <numid>%1</numid> (%2)", totalFiles, Utility::convertByteHumanReadable(totalSize));
+    QString remainingFiles = i18n("Files: <numid>%1</numid> (%2)", totalFiles, Utility::convertByteHumanReadable(totalSize));
 
     this->sizeLabel->setText(remainingFiles);
 }
