@@ -187,7 +187,7 @@ bool SysTray::updateIconStatus(const UtilityNamespace::ItemStatus& itemStatus) {
     bool iconSet = false;
     if (!icon.isNull()) {
 
-        QPixmap statusPixmap = icon.pixmap( 10, 10 );
+        QPixmap statusPixmap = icon.pixmap(10, 10);
         iconSet = this->blendOverlay(statusPixmap);
 
     }
@@ -250,7 +250,7 @@ bool SysTray::blendOverlay(const QPixmap& overlay) {
 
         QPixmap finalIcon = this->renderedIcon;
         QPainter p(&finalIcon);
-        p.drawPixmap( x, y, overlay );
+        p.drawPixmap(x, y, overlay);
         p.end();
         this->setIconByPixmap(finalIcon);
 
