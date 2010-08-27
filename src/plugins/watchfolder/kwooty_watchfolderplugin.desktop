@@ -11,5 +11,8 @@ X-KDE-PluginInfo-EnabledByDefault=false
 ServiceTypes=Kwooty/Plugin
 Type=Service
 Icon=folder-sync
+
 Name=Watch Folder
+Name[de]=Beobachtet Verzeichnis
 Comment=Watch folder for nzb files and load them
+Comment[de]=Beobachtet Verzeichnis nach nzb Dateien und lädt sie
