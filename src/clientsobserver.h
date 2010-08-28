@@ -64,13 +64,14 @@ private:
 
 
     // from status bar :
+    QStringList sslErrors;
     QString encryptionMethod;
     QString issuerOrgranisation;
     int totalConnections;
     int nttpErrorStatus;
     bool sslActive;
     bool certificateVerified;
-    QStringList sslErrors;
+
 
     void resetVariables();
 
