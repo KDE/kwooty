@@ -462,10 +462,13 @@ void DataRestorer::saveQueueDataSilentlySlot() {
 
 int DataRestorer::displayRestoreMessageBox() const {
 
-    // ask question :
-    return KMessageBox::messageBox(parent,
-                                   KMessageBox::QuestionYesNo,
-                                   i18n("Reload pending downloads from previous session ?"));
+    // ask question :   
+    return KMessageBox::questionYesNo(parent,
+                                      i18n("Reload pending downloads from previous session ?"),
+                                      i18n("Reload pending downloads ?"),
+                                      KStandardGuiItem::yes(),
+                                      KStandardGuiItem::no(),
+                                      "restoreSilently");
 
 }
 
@@ -477,9 +480,13 @@ int DataRestorer::displaySaveMessageBox(const bool saveSilently) const {
     }
     else {
         // ask question :
-        return KMessageBox::messageBox(parent,
-                                       KMessageBox::QuestionYesNoCancel,
-                                       i18n("Save pending downloads from current session ?"));
+        return KMessageBox::questionYesNoCancel(parent,
+                                                i18n("Save pending downloads from current session ?"),
+                                                i18n("Save pending downloads ?"),
+                                                KStandardGuiItem::yes(),
+                                                KStandardGuiItem::no(),
+                                                KStandardGuiItem::cancel(),
+                                                "saveSilently");
 
     }
 }
