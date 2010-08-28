@@ -113,7 +113,7 @@ private slots:
     void disconnectedSlot();
     void tryToReconnectSlot();
     void socketEncryptedSlot();
-    void peerVerifyErrorSlot(const QSslError&);
+    void peerVerifyErrorSlot();
 
 
 };
