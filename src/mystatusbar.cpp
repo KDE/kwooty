@@ -165,6 +165,7 @@ void MyStatusBar::updateConnectionStatusSlot(){
 
     QString connectionIconStr;
     QString connection;
+    bool displayOverlay = false;
 
     int totalConnections = this->clientsObserver->getTotalConnections();
 
@@ -218,6 +219,11 @@ void MyStatusBar::updateConnectionStatusSlot(){
                 connection = connection + " :: " + encryptionMethod;
             }
 
+            // display overlay only if connected to server with ssl connection and with certificate not verified :
+            if (!this->clientsObserver->isCertificateVerified()) {
+                displayOverlay = true;
+            }
+
         }
 
     }
@@ -226,6 +232,10 @@ void MyStatusBar::updateConnectionStatusSlot(){
     connectionWidget->setIcon(connectionIconStr);
     connectionWidget->setText(connection);
 
+    // if certificate is not verified display warning icon over the secure connected one :
+    if (displayOverlay) {
+        connectionWidget->blendOverLay("emblem-important");
+    }
 
     // set tooltip to connection widget :
     this->buildConnWidgetToolTip(connection);
@@ -264,7 +274,22 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
                 toolTipStr.append(i18n("Certificate <b>verified</b> by %1", this->clientsObserver->getIssuerOrgranisation()));
             }
             else {
-                toolTipStr.append(i18n("Certificate <b>can not be verified</b> (%1)", this->clientsObserver->getSslErrors().join(i18n(";"))));
+                toolTipStr.append(i18n("Certificate <b>can not be verified</b> "));
+
+                // add ssl errors encountered :
+                QStringList sslErrorList = this->clientsObserver->getSslErrors();
+
+                if (!sslErrorList.isEmpty()) {
+
+                    QString errorListSeparator = "<li>";
+                    toolTipStr.append(i18np("(%1 error during SSL handshake): %2",
+                                            "(%1 errors during SSL handshake): %2",
+                                            sslErrorList.size(),
+                                            "<ul>" +
+                                            errorListSeparator + sslErrorList.join(errorListSeparator)) +
+                                            "</ul>");
+                }
+
             }
 
         }
