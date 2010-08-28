@@ -22,9 +22,11 @@
 #include "icontextwidget.h"
 
 #include <KIconLoader>
+#include <KIcon>
 #include <KDebug>
 
 #include <QPixmap>
+#include <QPainter>
 
 
 IconTextWidget::IconTextWidget(QWidget* parent) : QWidget(parent) {
@@ -53,7 +55,26 @@ void IconTextWidget::setIcon(const QString& iconStr) {
         this->iconLabel->setPixmap(this->iconLoader->loadIcon(iconStr, KIconLoader::Small));
     }
     else {
-           this->iconLabel->setPixmap(QPixmap());
+        this->iconLabel->setPixmap(QPixmap());
+    }
+
+}
+
+
+void IconTextWidget::blendOverLay(const QString& overlayIconStr) {
+
+    KIcon overlayIcon = KIcon(overlayIconStr);
+
+    if (!overlayIcon.isNull() && this->iconLabel->pixmap()) {
+
+        QPixmap warningPixmap = overlayIcon.pixmap(10, 10);
+
+        QPixmap finalIcon = this->iconLabel->pixmap()->copy();
+        QPainter p(&finalIcon);
+        p.drawPixmap(KIconLoader::SizeSmall / 2, KIconLoader::SizeSmall  / 2, warningPixmap);
+        p.end();
+
+        this->iconLabel->setPixmap(finalIcon);
     }
 
 }

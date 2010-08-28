@@ -37,6 +37,7 @@ public:
     IconTextWidget(QWidget* parent = 0);
 
     void setIcon(const QString&);
+    void blendOverLay(const QString&);
     void setText(const QString&);
     QString getText() const;
     void showIcon();
