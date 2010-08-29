@@ -607,4 +607,3 @@ UtilityNamespace::ArchiveFormat RepairDecompressThread::getArchiveFormatFromList
     return archiveFormat;
 
 }
-

@@ -204,7 +204,7 @@ void NntpClient::getAnswerFromServer() {
             this->sendQuitCommandToServer();
             tcpSocket->abort();
 
-            // In case authentication denied, try to reconnect to host in 30 seconds :
+            // In case of authentication denied, try to reconnect to host in 30 seconds :
             QTimer::singleShot(30000, this, SLOT(answerTimeOutSlot()) );
             kDebug() << "AuthenticationDenied,  try to reconnect in 30 seconds";
             break;
@@ -293,7 +293,7 @@ void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePres
         serverAnswerTimer->stop();
     }
 
-    // consider that data will be corrected saved by default :
+    // consider that data will be correctly saved by default :
     bool isSaved = true;
 
     // save data only if article has been found on server :
@@ -436,7 +436,7 @@ void NntpClient::dataHasArrivedSlot() {
         this->connectToHost();
     }
 
-    // if the client is not currently being downloading, request another segment
+    // if the client is not currently downloading, request another segment
     // only if socket is in connected state :
     if ( (this->clientStatus == ClientIdle) &&
          (tcpSocket->state() == QAbstractSocket::ConnectedState) ) {
@@ -570,7 +570,7 @@ void NntpClient::socketEncryptedSlot(){
     // retrieve peer certificate :
     QSslCertificate sslCertificate = tcpSocket->peerCertificate();
 
-    // get issuer organistation in order to display it as tooltip in status bar :
+    // get issuer organization in order to display it as tooltip in status bar :
     if (!sslCertificate.isNull()) {
         issuerOrgranisation = sslCertificate.issuerInfo(QSslCertificate::Organization);
     }
@@ -629,4 +629,3 @@ void NntpClient::sendPasswordCommandToServer(){
     QString commandStr("AUTHINFO PASS " + Settings::password() + "\r\n");
     tcpSocket->write( commandStr.toLatin1(), commandStr.size());
 }
-

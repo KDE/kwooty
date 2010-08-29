@@ -355,4 +355,3 @@ void SegmentManager::updateRepairExtractSegmentSlot(QVariant parentIdentifer, in
     }
 
 }
-

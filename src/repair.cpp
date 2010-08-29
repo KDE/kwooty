@@ -555,9 +555,3 @@ void Repair::sendVerifyNotification(const QString& fileNameStr, const QString& o
     } // end of loop
 
 }
-
-
-
-
-
-
