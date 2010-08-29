@@ -21,6 +21,9 @@
        <string>Programs</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="QGroupBox" name="groupBoxprogramsFound">
          <property name="title">
@@ -196,6 +199,9 @@
        <string>Priority</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_9">
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="QGroupBox" name="kcfg_groupBoxVerifyPriority">
          <property name="toolTip">
@@ -324,6 +330,9 @@
        <string>Search path</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_5">
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="KEditListBox" name="kcfg_searchPathList">
          <property name="title">
