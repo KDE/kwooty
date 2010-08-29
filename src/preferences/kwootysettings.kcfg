@@ -71,6 +71,24 @@
             <label>Show notification</label>
             <default>false</default>
         </entry>
+        
+        <entry name="confirmClear" type="Bool">
+            <label>Display dialog box when Clear button has been pushed</label>
+            <default>true</default>
+        </entry>
+	<entry name="confirmRemove" type="Bool">
+            <label>Display dialog box when Remove button has been pushed</label>
+            <default>false</default>
+        </entry>
+	<entry name="confirmSaveSilently" type="Bool">
+	    <label>If unchecked, automatically save pending downloads at exit</label>
+	    <default>true</default>
+	</entry>
+	<entry name="confirmRestoreSilently" type="Bool">
+	    <label>If unchecked, automatically restore pending downloads at startup</label>
+	    <default>true</default>
+	</entry>
+        
     </group>
 
     <group name="programs">
@@ -152,14 +170,6 @@
             <label>Display remaining time</label>
             <default>false</default>
         </entry>
-	<entry name="confirmClear" type="Bool">
-            <label>Display dialog box when Clear button has been pushed</label>
-            <default>true</default>
-        </entry>
-	<entry name="confirmRemove" type="Bool">
-            <label>Display dialog box when Remove button has been pushed</label>
-            <default>false</default>
-        </entry>
     </group>
   
     <group name="shutdown">
@@ -183,6 +193,6 @@
             <default>true</default>
         </entry>
     </group>
-
+    
 </kcfg>
 
