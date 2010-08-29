@@ -28,8 +28,19 @@
 class PreferencesGeneral : public QWidget, public Ui::PreferencesGeneral
 {
 
+     Q_OBJECT
+
 public:
     PreferencesGeneral();
+
+private:
+    void setupConnections();
+
+
+private slots:
+    void stateChangedSlot();
+
+
 };
 
 #endif // PREFERENCESGENERAL_H

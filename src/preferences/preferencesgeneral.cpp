@@ -29,7 +29,36 @@ PreferencesGeneral::PreferencesGeneral()
     kcfg_completedFolder->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
     kcfg_temporaryFolder->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
 
+    // setup connections :
+    this->setupConnections();
+
+    // enable or disable checkbox in confirmation dialog tab :
+    this->stateChangedSlot();
 }
 
 
 
+void PreferencesGeneral::setupConnections() {
+
+    // check/uncheck ssl checkbox according to port value:
+    connect (kcfg_restoreDownloads, SIGNAL(stateChanged (int)), this, SLOT(stateChangedSlot()));
+
+}
+
+
+
+void PreferencesGeneral::stateChangedSlot() {
+
+    // if "save pending downloads" is checked, enable confirmSaveSilently and confirmRestoreSilently checkboxes :
+    if (kcfg_restoreDownloads->checkState() == Qt::Checked) {
+        kcfg_confirmSaveSilently->setEnabled(true);
+        kcfg_confirmRestoreSilently->setEnabled(true);
+    }
+    // disable them :
+    else {
+        kcfg_confirmSaveSilently->setEnabled(false);
+        kcfg_confirmRestoreSilently->setEnabled(false);
+    }
+
+
+}
