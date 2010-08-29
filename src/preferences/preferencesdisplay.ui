@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>410</width>
-    <height>344</height>
+    <width>359</width>
+    <height>274</height>
    </rect>
   </property>
   <property name="toolTip">
@@ -15,35 +15,6 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>Confirmation dialogs</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <widget class="QCheckBox" name="kcfg_confirmClear">
-        <property name="toolTip">
-         <string>Display dialog box when Clear button has been pushed</string>
-        </property>
-        <property name="text">
-         <string>Show confirm message when clearing rows</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="kcfg_confirmRemove">
-        <property name="toolTip">
-         <string>Display dialog box when Remove button has been pushed</string>
-        </property>
-        <property name="text">
-         <string>Show confirm message when removing selected rows</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="0">
     <widget class="QGroupBox" name="actionGroupBox">
      <property name="title">
       <string>Status bar information</string>
@@ -82,7 +53,7 @@
      </layout>
     </widget>
    </item>
-   <item row="2" column="0">
+   <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Miscellaneous</string>
@@ -121,7 +92,7 @@
      </layout>
     </widget>
    </item>
-   <item row="3" column="0">
+   <item row="2" column="0">
     <spacer name="spacer">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
