@@ -24,13 +24,18 @@
 #include <KRun>
 #include <KIconLoader>
 #include <KDebug>
+#include <KMenu>
+#include <KActionCollection>
 
 
 #include "itemdelegate.h"
 #include "centralwidget.h"
 #include "fileoperations.h"
 #include "standarditemmodel.h"
+#include "mainwindow.h"
+#include "queuefileobserver.h"
 #include "kwootysettings.h"
+
 
 
 
@@ -113,6 +118,62 @@ void MyTreeView::setupConnections() {
 
 }
 
+
+void MyTreeView::contextMenuEvent(QContextMenuEvent* event)
+{
+
+    KMenu contextMenu(this);
+    KActionCollection* actionCollection = ((MainWindow*)this->centralWidget->parent())->actionCollection();
+
+    QStandardItem* stateItem;
+
+    // search for pause parents :
+    stateItem = this->centralWidget->getQueueFileObserver()->searchParentItem(PauseStatus);
+    if (stateItem) {
+        contextMenu.addAction(actionCollection->action("startAll"));
+    }
+
+    // search for downloading parents :
+    stateItem = this->centralWidget->getQueueFileObserver()->searchParentItem(DownloadStatus);
+    if (stateItem) {
+        contextMenu.addAction(actionCollection->action("pauseAll"));
+    }
+
+    // get item under mouse :
+    QStandardItem* item = this->downloadModel->itemFromIndex(this->indexAt(event->pos()));
+
+    // add actions if right-clicked an item :
+    if (item) {
+
+        // get item status :
+        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusDataFromIndex(item->index()).getStatus();
+
+        // if item is in pause :
+        if (Utility::isPaused(currentStatus)) {
+            contextMenu.addAction(actionCollection->action("start"));
+        }
+        // if item is in download process :
+        else if (Utility::isReadyToDownload(currentStatus)) {
+            contextMenu.addAction(actionCollection->action("pause"));
+        }
+
+        if (!contextMenu.actions().isEmpty()) {
+            contextMenu.addSeparator();
+        }
+
+        contextMenu.addAction(actionCollection->action("remove"));
+        contextMenu.addSeparator();
+        contextMenu.addAction(actionCollection->action("moveTop"));
+        contextMenu.addAction(actionCollection->action("moveUp"));
+        contextMenu.addAction(actionCollection->action("moveDown"));
+        contextMenu.addAction(actionCollection->action("moveBottom"));
+    }
+
+    // if menu is not empty display it :
+    if (!contextMenu.actions().isEmpty()) {
+        contextMenu.exec(event->globalPos());
+    }
+}
 
 
 

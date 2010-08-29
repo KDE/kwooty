@@ -63,6 +63,7 @@ private:
     void moveRow(MyTreeView::MoveRowType);
 
 protected:
+    void contextMenuEvent(QContextMenuEvent*);
     void dragEnterEvent(QDragEnterEvent*);
     void dragMoveEvent(QDragMoveEvent*);
     void dropEvent(QDropEvent*);
