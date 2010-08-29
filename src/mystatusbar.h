@@ -45,6 +45,9 @@ public:
     ~MyStatusBar();
 
 
+protected:
+    bool eventFilter(QObject*, QEvent*);
+
 private:
     ClientsObserver* clientsObserver;
     QLabel* sizeLabel;
@@ -53,6 +56,7 @@ private:
     IconTextWidget* shutdownWidget;
     IconTextWidget* timeInfoWidget;
     IconCapacityWidget* iconCapacityWidget;
+    QHash<QObject*, UtilityNamespace::PreferencesPage> widgetPreferencesPageMap;
 
     void setupConnections();
     void setConnectionWidget();
@@ -63,6 +67,7 @@ private:
 
 
 signals:
+    void showSettingsSignal(UtilityNamespace::PreferencesPage);
 
 public slots:
 

@@ -43,6 +43,9 @@ IconTextWidget::IconTextWidget(QWidget* parent) : QWidget(parent) {
     this->hBoxLayout->setSpacing(5);
     this->hBoxLayout->setMargin(0);
 
+    // installs event filter in order to display associated settings page :
+    this->installEventFilter(parent);
+
 
 }
 

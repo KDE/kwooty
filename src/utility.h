@@ -35,8 +35,9 @@ namespace UtilityNamespace
     Q_ENUMS(SaveError)
     Q_ENUMS(ItemTarget)
     Q_ENUMS(ProcessPriority)
-            
-   // treeView columns :
+    Q_ENUMS(PreferencesPage)
+
+    // treeView columns :
     static const int FILE_NAME_COLUMN = 0;
     static const int STATE_COLUMN = 1;
     static const int PROGRESS_COLUMN = 2;
@@ -87,7 +88,7 @@ namespace UtilityNamespace
         IdentifierRole = Qt::UserRole + 4,
         ProgressRole = Qt::UserRole + 5,
         SizeRole = Qt::UserRole + 6
-    };
+               };
     
     // item status list :
     enum ItemStatus{
@@ -225,6 +226,16 @@ namespace UtilityNamespace
         CustomPriority
     };
 
+
+    // configuration preferences pages :
+    enum PreferencesPage {
+        GeneralPage,
+        ServerPage,
+        ProgramsPage,
+        DisplayPage,
+        ShutdownPage,
+        PluginsPage
+    };
 
 }
 

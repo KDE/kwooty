@@ -281,12 +281,18 @@ void MainWindow::setupActions() {
 
 
 
-void MainWindow::showSettings(){
+void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage){
 
     // if instance has already been created :
     if (KConfigDialog::exists("settings")) {
 
         emit aboutToShowSettingsSignal();
+
+        if (this->preferencesPagesMap.contains(preferencesPage)) {
+
+            KConfigDialog::exists("settings")->setCurrentPage(this->preferencesPagesMap.value(preferencesPage));
+        }
+
         KConfigDialog::showDialog("settings");
 
     }
@@ -296,22 +302,28 @@ void MainWindow::showSettings(){
         KConfigDialog* dialog = new KConfigDialog(this, "settings", Settings::self());
 
         PreferencesGeneral* preferencesGeneral = new PreferencesGeneral();
-        dialog->addPage(preferencesGeneral, i18n("General"), "preferences-system", i18n("General Setup"));
+        KPageWidgetItem* preferencesGeneralPage = dialog->addPage(preferencesGeneral, i18n("General"), "preferences-system", i18n("General Setup"));
+        this->preferencesPagesMap.insert(GeneralPage, preferencesGeneralPage);
 
         PreferencesServer* preferencesServer = new PreferencesServer();
-        dialog->addPage(preferencesServer, i18n("Connection"), "network-workgroup", i18n("Setup Server Connection"));
+        KPageWidgetItem* preferencesServerPage = dialog->addPage(preferencesServer, i18n("Connection"), "network-workgroup", i18n("Setup Server Connection"));
+        this->preferencesPagesMap.insert(ServerPage, preferencesServerPage);
 
         PreferencesPrograms* preferencesPrograms = new PreferencesPrograms();
-        dialog->addPage(preferencesPrograms, i18n("Programs"), "system-run", i18n("Setup External Programs"));
+        KPageWidgetItem* preferencesProgramsPage = dialog->addPage(preferencesPrograms, i18n("Programs"), "system-run", i18n("Setup External Programs"));
+        this->preferencesPagesMap.insert(ProgramsPage, preferencesProgramsPage);
 
         PreferencesDisplay* preferencesDisplay = new PreferencesDisplay();
-        dialog->addPage(preferencesDisplay, i18n("Display modes"), "view-choose", i18n("Setup Display Modes"));
+        KPageWidgetItem* preferencesDisplayPage = dialog->addPage(preferencesDisplay, i18n("Display modes"), "view-choose", i18n("Setup Display Modes"));
+        this->preferencesPagesMap.insert(DisplayPage, preferencesDisplayPage);
 
         PreferencesShutdown* preferencesShutdown = new PreferencesShutdown(this->centralWidget);
-        dialog->addPage(preferencesShutdown, i18n("Shutdown"), "system-shutdown", i18n("Setup System Shutdown"));
+        KPageWidgetItem* preferencesShutdownPage = dialog->addPage(preferencesShutdown, i18n("Shutdown"), "system-shutdown", i18n("Setup System Shutdown"));
+        this->preferencesPagesMap.insert(ShutdownPage, preferencesShutdownPage);
 
         PreferencesPlugins* preferencesPlugins = new PreferencesPlugins(dialog, this->pluginManager);
-        dialog->addPage(preferencesPlugins, i18n("Plugins"), "preferences-plugin", i18n("Plugins Setup"));
+        KPageWidgetItem* preferencesPluginsPage = dialog->addPage(preferencesPlugins, i18n("Plugins"), "preferences-plugin", i18n("Plugins Setup"));
+        this->preferencesPagesMap.insert(PluginsPage, preferencesPluginsPage);
 
 
         connect( dialog, SIGNAL(settingsChanged(const QString&)), centralWidget, SLOT(updateSettingsSlot()) );
@@ -320,7 +332,7 @@ void MainWindow::showSettings(){
         connect( this, SIGNAL(aboutToShowSettingsSignal()), preferencesPrograms, SLOT(aboutToShowSettingsSlot()) );
 
         // show settings box :
-        this->showSettings();
+        this->showSettings(preferencesPage);
 
     }
 

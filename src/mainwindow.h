@@ -23,6 +23,7 @@
 
 #include <KXmlGuiWindow>
 #include <KUrl>
+#include <KPageWidgetItem>
 
 #include <QPointer>
 #include "kwooty_export.h"
@@ -58,6 +59,7 @@ private:
     QPointer<SysTray> sysTray;
     MyStatusBar* statusBar;
     PluginManager* pluginManager;
+    QHash<PreferencesPage, KPageWidgetItem*> preferencesPagesMap;
     bool quitSelected;
 
     void buildLayout(QWidget*);
@@ -76,7 +78,7 @@ public slots:
 
 private slots:
     void openFile();
-    void showSettings();
+    void showSettings(UtilityNamespace::PreferencesPage = UtilityNamespace::GeneralPage);
     void quit();
 
 };
