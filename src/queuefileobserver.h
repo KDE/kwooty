@@ -45,6 +45,7 @@ public:
 
     QueueFileObserver(CentralWidget* parent = 0);
     UtilityNamespace::ItemStatus getFocusedItemStatus() const;
+    QStandardItem* searchParentItem(const UtilityNamespace::ItemStatus);
     int getFocusedProgressValue() const;
     bool areJobsFinished();
 
@@ -63,7 +64,7 @@ private:
     int previousProgressValue;
 
     void setupConnections();
-    QStandardItem* searchParentItem(const UtilityNamespace::ItemStatus);
+
     void checkProgressItemValue(QStandardItem*);
     JobNotifyData retrieveJobNotifyData(QStandardItem*, UtilityNamespace::ItemStatus);
     void addToList(const JobNotifyData&);
