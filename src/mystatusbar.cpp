@@ -285,7 +285,7 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
                     toolTipStr.append(i18np("(%1 error during SSL handshake): %2",
                                             "(%1 errors during SSL handshake): %2",
                                             sslErrorList.size(),
-                                            "<ul>" +
+                                            "<ul style=\"margin-top:0px; margin-bottom:0px;\">" +
                                             errorListSeparator + sslErrorList.join(errorListSeparator)) +
                                             "</ul>");
                 }
