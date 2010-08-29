@@ -80,13 +80,13 @@
             <label>Display dialog box when Remove button has been pushed</label>
             <default>false</default>
         </entry>
-	<entry name="confirmSaveSilently" type="Bool">
-	    <label>If unchecked, automatically save pending downloads at exit</label>
-	    <default>true</default>
+	<entry name="saveDownloadsMethods" type="Int">
+	    <label>Select save pending downloads method</label>
+	    <default>0</default>
 	</entry>
-	<entry name="confirmRestoreSilently" type="Bool">
-	    <label>If unchecked, automatically restore pending downloads at startup</label>
-	    <default>true</default>
+	<entry name="restoreDownloadsMethods" type="Int">
+	    <label>Select restore pending downloads method</label>
+	    <default>0</default>
 	</entry>
         
     </group>

@@ -50,6 +50,11 @@ public:
     void setActive(const bool);
 
 private:
+
+    enum PendingDownloadsManagement{ WithConfirmation,
+                                     Automatically
+                                 };
+
     CentralWidget* parent;
     StandardItemModel* downloadModel;
     QTimer* dataSaverTimer;

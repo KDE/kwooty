@@ -35,6 +35,7 @@ public:
 
 private:
     void setupConnections();
+    void enableSaveRestoreItems(const bool&);
 
 
 private slots:

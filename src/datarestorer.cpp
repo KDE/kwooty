@@ -465,7 +465,7 @@ int DataRestorer::displayRestoreMessageBox() const {
     int answer = KMessageBox::Yes;
 
     // ask question if confirmRestoreSilently is checked:
-    if (Settings::confirmRestoreSilently()) {
+    if (Settings::restoreDownloadsMethods() == DataRestorer::WithConfirmation) {
 
         answer = KMessageBox::messageBox(parent,
                                          KMessageBox::QuestionYesNo,
@@ -484,11 +484,11 @@ int DataRestorer::displaySaveMessageBox(const bool saveSilently) const {
     if (!saveSilently) {
 
         // ask question if confirmSaveSilently is checked:
-        if (Settings::confirmSaveSilently()) {
+        if (Settings::saveDownloadsMethods() == DataRestorer::WithConfirmation) {
 
-            answer =  KMessageBox::messageBox(parent,
-                                              KMessageBox::QuestionYesNoCancel,
-                                              i18n("Save pending downloads from current session ?"));
+            answer = KMessageBox::messageBox(parent,
+                                             KMessageBox::QuestionYesNoCancel,
+                                             i18n("Save pending downloads from current session ?"));
         }
 
     }

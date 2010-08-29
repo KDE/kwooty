@@ -32,6 +32,15 @@ PreferencesGeneral::PreferencesGeneral()
     // setup connections :
     this->setupConnections();
 
+
+    // init combobox save/restore downloads methods list :
+    QStringList downloadsSessionList;
+    downloadsSessionList.append(i18n("With confirmation"));
+    downloadsSessionList.append(i18n("Automatically"));
+
+    kcfg_saveDownloadsMethods->addItems(downloadsSessionList);
+    kcfg_restoreDownloadsMethods->addItems(downloadsSessionList);
+
     // enable or disable checkbox in confirmation dialog tab :
     this->stateChangedSlot();
 }
@@ -51,14 +60,24 @@ void PreferencesGeneral::stateChangedSlot() {
 
     // if "save pending downloads" is checked, enable confirmSaveSilently and confirmRestoreSilently checkboxes :
     if (kcfg_restoreDownloads->checkState() == Qt::Checked) {
-        kcfg_confirmSaveSilently->setEnabled(true);
-        kcfg_confirmRestoreSilently->setEnabled(true);
+        this->enableSaveRestoreItems(true);
     }
     // disable them :
     else {
-        kcfg_confirmSaveSilently->setEnabled(false);
-        kcfg_confirmRestoreSilently->setEnabled(false);
+       this->enableSaveRestoreItems(false);
     }
 
 
 }
+
+
+void PreferencesGeneral::enableSaveRestoreItems(const bool& enable) {
+
+    restoreDownloadsLabel->setEnabled(enable);
+    saveDownloadsLabel->setEnabled(enable);
+    kcfg_saveDownloadsMethods->setEnabled(enable);
+    kcfg_restoreDownloadsMethods->setEnabled(enable);
+
+}
+
+

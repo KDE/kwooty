@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>384</width>
-    <height>359</height>
+    <width>376</width>
+    <height>351</height>
    </rect>
   </property>
   <property name="toolTip">
@@ -163,12 +163,9 @@
       <attribute name="title">
        <string>Confirmation dialogs</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_7">
-       <property name="margin">
-        <number>0</number>
-       </property>
-       <item row="0" column="0">
-        <widget class="QGroupBox" name="groupBox_2">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>Show confirmation dialog when</string>
          </property>
@@ -193,30 +190,64 @@
             </property>
            </widget>
           </item>
-          <item row="3" column="0">
-           <widget class="QCheckBox" name="kcfg_confirmRestoreSilently">
-            <property name="toolTip">
-             <string>If unchecked, automatically restore pending downloads at startup</string>
-            </property>
-            <property name="text">
-             <string>restoring pending downloads at startup</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="kcfg_confirmSaveSilently">
-            <property name="toolTip">
-             <string>If unchecked, automatically save pending downloads at exit</string>
-            </property>
-            <property name="text">
-             <string>saving pending downloads at exit</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
-       <item row="1" column="0">
+       <item>
+        <layout class="QHBoxLayout" name="saveLayout">
+         <item>
+          <widget class="QLabel" name="saveDownloadsLabel">
+           <property name="text">
+            <string>At exit, save pending downloads: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QComboBox" name="kcfg_saveDownloadsMethods"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="restoreLayout">
+         <item>
+          <widget class="QLabel" name="restoreDownloadsLabel">
+           <property name="text">
+            <string>At startup, restore pending downloads: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>18</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QComboBox" name="kcfg_restoreDownloadsMethods"/>
+         </item>
+        </layout>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
