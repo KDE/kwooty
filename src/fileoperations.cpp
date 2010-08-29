@@ -44,9 +44,7 @@ void FileOperations::openFile() {
     QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(KUrl(), i18n("*.nzb|nzb files"), this->centralWidget);
 
     // process selected file(s) :
-    for (int i = 0; i < fileNameFromDialogList.size(); i++) {
-
-        QString fileNameFromDialog = fileNameFromDialogList.at(i);
+    foreach (QString fileNameFromDialog, fileNameFromDialogList) {
 
         if (!fileNameFromDialog.isNull() || !fileNameFromDialog.isEmpty()) {
 
