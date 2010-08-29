@@ -111,7 +111,7 @@ QStandardItem* QueueFileObserver::searchParentItem(const UtilityNamespace::ItemS
 
 
         else if (itemStatus == PauseStatus) {
-            // check if parent status is either downloading or pausing :
+            // check if parent status is either in pause :
             if (Utility::isPaused(currentStatus)) {
 
                 stateItem = parentStateItem;
