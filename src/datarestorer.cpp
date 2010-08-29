@@ -462,33 +462,38 @@ void DataRestorer::saveQueueDataSilentlySlot() {
 
 int DataRestorer::displayRestoreMessageBox() const {
 
-    // ask question :   
-    return KMessageBox::questionYesNo(parent,
-                                      i18n("Reload pending downloads from previous session ?"),
-                                      i18n("Reload pending downloads ?"),
-                                      KStandardGuiItem::yes(),
-                                      KStandardGuiItem::no(),
-                                      "restoreSilently");
+    int answer = KMessageBox::Yes;
+
+    // ask question if confirmRestoreSilently is checked:
+    if (Settings::confirmRestoreSilently()) {
+
+        answer = KMessageBox::messageBox(parent,
+                                         KMessageBox::QuestionYesNo,
+                                         i18n("Reload pending downloads from previous session ?"));
+    }
+
+    return answer;
 
 }
 
 
 int DataRestorer::displaySaveMessageBox(const bool saveSilently) const {
 
-    if (saveSilently) {
-        return KMessageBox::Yes;
-    }
-    else {
-        // ask question :
-        return KMessageBox::questionYesNoCancel(parent,
-                                                i18n("Save pending downloads from current session ?"),
-                                                i18n("Save pending downloads ?"),
-                                                KStandardGuiItem::yes(),
-                                                KStandardGuiItem::no(),
-                                                KStandardGuiItem::cancel(),
-                                                "saveSilently");
+    int answer = KMessageBox::Yes;
+
+    if (!saveSilently) {
+
+        // ask question if confirmSaveSilently is checked:
+        if (Settings::confirmSaveSilently()) {
+
+            answer =  KMessageBox::messageBox(parent,
+                                              KMessageBox::QuestionYesNoCancel,
+                                              i18n("Save pending downloads from current session ?"));
+        }
 
     }
+
+    return answer;
 }
 
 
