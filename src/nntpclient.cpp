@@ -123,7 +123,6 @@ void NntpClient::connectToHost() {
 
         // by default, consider that certificate has been verified.
         // It could be set to false if peerVerifyErrorSlot() is raised
-        tcpSocket->setPeerVerifyMode(QSslSocket::AutoVerifyPeer);
         this->certificateVerified = true;
 
         tcpSocket->connectToHostEncrypted(hostName, port);
@@ -592,10 +591,7 @@ void NntpClient::socketEncryptedSlot(){
 
 void NntpClient::peerVerifyErrorSlot() {
 
-    // error occured during certificate verifying, set verify mode to QueryPeer in order to establish connection
-    // but inform the user that certificate is not verified by tooltip in status bar :
-    tcpSocket->setPeerVerifyMode(QSslSocket::QueryPeer);
-
+    // establish connection but inform the user that certificate is not verified by tooltip in status bar :
     this->certificateVerified = false;
 
 }
