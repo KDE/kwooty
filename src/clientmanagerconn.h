@@ -22,9 +22,10 @@
 #define CLIENTMANAGERCONN_H
 
 #include "data/segmentdata.h"
+#include "data/serverdata.h"
 
 class NntpClient;
-class CentralWidget;
+class ServerGroup;
 
 
 class ClientManagerConn : public QObject {
@@ -32,32 +33,29 @@ class ClientManagerConn : public QObject {
     Q_OBJECT
 
 public:
-    ClientManagerConn(CentralWidget*, int, int);
+    ClientManagerConn(ServerGroup*, int, int);
     ClientManagerConn();
     ~ClientManagerConn();
     int clientStatus;
     void processNextSegment(SegmentData);
     void noSegmentAvailable();
     int getClientId() const;
+    bool isClientReady();
+    NntpClient* getNntpClient();
+    ServerGroup* getServerGroup();
+    ServerData getServerData() const;
+    ServerData serverData;
 
 
 private:
     NntpClient* nntpClient;
-    CentralWidget* parent;
+    ServerGroup* parent;
     int clientId;
-    QString hostName;
-    QString login;
-    QString password;
-    int port;
-    int disconnectTimeout;
     int connectionDelay;
-    bool authentication;
-    bool enableSSL;
-
-    void updateSettings();
 
 
 signals:
+
 
 public slots:
     void settingsChangedSlot();

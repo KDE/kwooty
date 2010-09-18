@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Xavier Lefage                                   *
+ *   Copyright (C) 2010 by Xavier Lefage                                   *
  *   xavier.kwooty@gmail.com                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -22,8 +22,14 @@
 #define PREFERENCESSERVER_H
 
 #include <QWidget>
+
+#include <KConfigDialog>
+#include <QToolButton>
+
+#include "ui_serversettings.h"
 #include "ui_preferencesserver.h"
 
+class ServerTabWidget;
 
 class PreferencesServer : public QWidget, public Ui::PreferencesServer
 {
@@ -31,15 +37,38 @@ class PreferencesServer : public QWidget, public Ui::PreferencesServer
      Q_OBJECT
 
 public:
-    PreferencesServer();
+
+    static const int MAX_SERVERS = 5;
+
+    PreferencesServer(KConfigDialog*);
 
 
 private:
-    void setupConnections();
+
+    ServerTabWidget* tabWidget;
+    QToolButton* newTab;
+    QToolButton* closeTab;
+    KConfigDialog* dialog;
+
+
+    void loadSettings();
+    void saveSettings();
+    void restorePreviousSettings();
+    void syncTabPosition();
 
 
 private slots:
-    void portValueChangedSlot(int);
+
+    void textChangedSlot(const QString&);
+    void configButtonClickedSlot(KDialog::ButtonCode);
+
+
+public slots:
+
+
+signals:
+    void saveDataSignal();
+
 
 };
 

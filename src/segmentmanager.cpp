@@ -29,6 +29,7 @@
 #include "itempostdownloadupdater.h"
 #include "clientmanagerconn.h"
 #include "itemparentupdater.h"
+#include "servergroup.h"
 #include "data/segmentdata.h"
 #include "data/nzbfiledata.h"
 #include "standarditemmodel.h"
@@ -61,7 +62,12 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
 
         SegmentData segmentData = segmentList.at(i);
 
-        if ( (segmentData.getStatus() == IdleStatus) && !itemFound) {
+        int serverGroupId = currentClientManagerConn->getServerGroup()->getServerGroupId();
+
+        // filter Idle segments searching according to corresponding serverGroup id :
+        if ( !itemFound &&
+             (segmentData.getStatus() == IdleStatus) &&
+             ( segmentData.getServerGroupTarget() == serverGroupId )){
 
             itemFound = true;
 
@@ -259,7 +265,17 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
 
                     // check children status and send idle segment :
                     UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(stateItem);
-                    if (Utility::isReadyToDownload(currentStatus)) {
+
+                    // multi-server purpose :
+                    // check if all segments have already been scanned by the same server,
+                    // otherwise skip the current item and switch no next one for getting a next segment :
+                    int nextServerId = currentClientManagerConn->getServerGroup()->getServerGroupId();
+
+                    ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
+
+                    //allSegmentsScanned = false;
+                    if (Utility::isReadyToDownload(currentStatus) &&
+                        (nextServerId >= itemStatusData.getNextServerId()) ) {
 
                         itemFound = this->sendNextIdleSegment(fileNameItem, currentClientManagerConn);
                         
@@ -279,8 +295,7 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
 
 
 
-
-void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData){
+void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData) {
 
     // search index
     QStandardItem* fileNameItem = this->searchItem(segmentData.getParentUniqueIdentifier(), DownloadStatus);
@@ -301,6 +316,7 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData){
         this->downloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
 
         itemParentUpdater->getItemDownloadUpdater()->updateItems(fileNameItem->index(), nzbFileData);
+
 
     } else {
         //kDebug() <<  "Item not found - status : " << segmentData.getStatus();
@@ -355,3 +371,78 @@ void SegmentManager::updateRepairExtractSegmentSlot(QVariant parentIdentifer, in
     }
 
 }
+
+
+
+
+
+
+void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServerGroup, const int& nextServerGroup) {
+
+    //TODO : to be tested...
+    for (int i = 0; i < this->downloadModel->rowCount(); i++) {
+
+        QStandardItem* nzbItem = this->downloadModel->getFileNameItemFromRowNumber(i);
+        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusDataFromIndex(nzbItem->index()).getStatus();
+
+        if (Utility::isInDownloadProcess(currentStatus)) {
+
+            for (int j = 0; j < nzbItem->rowCount(); j++) {
+
+                QStandardItem* childFileNameItem = nzbItem->child(j, FILE_NAME_COLUMN);
+                UtilityNamespace::ItemStatus childStatus = this->downloadModel->getChildStatusFromNzbIndex(nzbItem->index(), j);
+
+
+                if (Utility::isInDownloadProcess(childStatus)) {
+
+                    NzbFileData nzbFileData = this->downloadModel->getNzbFileDataFromIndex(childFileNameItem->index());
+                    QList<SegmentData> segmentList = nzbFileData.getSegmentList();
+
+                    bool listUpdated = false;
+
+                    foreach (SegmentData currentSegment, segmentList) {
+
+                        if (currentSegment.getStatus() != DownloadFinishStatus &&
+                            currentSegment.getServerGroupTarget() == currentServerGroup) {
+
+                            kDebug() << "group : " << currentServerGroup;
+
+                            // if another backup server is available, set it ready to be downloaded with :
+                            if (nextServerGroup != NoTargetServer) {                               
+                                currentSegment.setReadyForNewServer(nextServerGroup);
+                            }
+
+                            // there is no backup server, this segment cannot be downloaded :
+                            else if (nextServerGroup == NoTargetServer) {
+                                currentSegment.setDownloadFinished(NotPresent);
+                            }
+
+                            // update segment list :
+                            segmentList.replace(currentSegment.getElementInList(), currentSegment);
+                            listUpdated = true;
+
+                        }
+
+                    }
+
+
+                    if (listUpdated) {
+                        // update the nzbFileData of current fileNameItem and its corresponding items;
+                        nzbFileData.setSegmentList(segmentList);
+                        this->downloadModel->updateNzbFileDataToItem(childFileNameItem, nzbFileData);
+
+                        itemParentUpdater->getItemDownloadUpdater()->updateItems(childFileNameItem->index(), nzbFileData);
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+}
+
+
+

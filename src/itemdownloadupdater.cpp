@@ -64,8 +64,10 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
 
     // get current item status :
     UtilityNamespace::ItemStatus previousStatus = itemStatusData.getStatus();
-    //itemStatusData.init();
 
+
+    // set a high value > to max number of backup servers by default :
+    int nextServerIdMin = 100;
 
     // get list of segments for the current file :
     QList<SegmentData> segmentList = nzbFileData.getSegmentList();
@@ -79,10 +81,18 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
         // count status of each segments :
         this->countGlobalItemStatus(currentSegmentData);
 
+        nextServerIdMin = qMin(nextServerIdMin, currentSegmentData.getServerGroupTarget());
+
     }
 
-    // calculate progression % (avoid division by zero (should never happen)):
-    //this->progressNumber = totalProgress / (qMax(segmentList.size(), 1));
+
+    // when all segments have been scanned by one server, set next backup server ID
+    // in order to speed up segment searching in "SegmentManager" by using filtering in getNextSegmentSlot();
+    if (itemStatusData.getNextServerId() != nextServerIdMin) {
+        itemStatusData.setNextServerId(nextServerIdMin);
+    }
+
+    // calculate progression % :
     this->progressNumber = totalProgress / segmentList.size();
 
     // set progression to item :
@@ -223,6 +233,7 @@ void ItemDownloadUpdater::countGlobalItemStatus(const SegmentData& segmentData) 
     if ( segmentData.getArticlePresenceOnServer() == NotPresent ){
         articleNotFoundNumber++;
     }
+
 
     // count items status :
     this->countItemStatus(segmentData.getStatus());

@@ -41,6 +41,9 @@ public:
     void setDecodeFinish(const bool);
     UtilityNamespace::CrcNotify getCrc32Match() const;
     void setCrc32Match(const UtilityNamespace::CrcNotify);
+    int getNextServerId() const;
+    void setNextServerId(const int&);
+
     bool operator!=(const ItemStatusData&);
 
 private:
@@ -49,6 +52,7 @@ private:
     bool downloadFinish;
     bool decodeFinish;
     UtilityNamespace::CrcNotify crc32Match;
+    int nextServerId;
 
 };
 

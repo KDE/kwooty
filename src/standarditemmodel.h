@@ -53,6 +53,7 @@ public:
     QString getUuidStrFromIndex(const QModelIndex&);
     UtilityNamespace::ItemStatus getStatusFromStateItem(QStandardItem*) const;
     UtilityNamespace::ItemStatus getChildStatusFromNzbIndex(const QModelIndex&, int);
+    QStandardItem* getFileNameItemFromRowNumber(const int&);
     void updateStateItem(QStandardItem*, const UtilityNamespace::ItemStatus);
     void updateProgressItem(const QModelIndex&, const int);
     void storeStatusDataToItem(QStandardItem*, const ItemStatusData&);

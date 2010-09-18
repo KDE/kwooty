@@ -46,12 +46,15 @@ set(Kwooty_lib_SRCS
   queuefileobserver.cpp
   statsinfobuilder.cpp
   notificationmanager.cpp
+  servermanager.cpp
+  servergroup.cpp
   preferences/preferencesserver.cpp
   preferences/preferencesgeneral.cpp
   preferences/preferencesprograms.cpp
   preferences/preferencesdisplay.cpp
   preferences/preferencesshutdown.cpp
   preferences/preferencesplugins.cpp
+  preferences/kconfiggrouphandler.cpp
   plugins/plugin.cpp
   plugins/pluginmanager.cpp
   data/segmentdata.cpp
@@ -60,8 +63,11 @@ set(Kwooty_lib_SRCS
   data/globalfiledata.cpp 
   data/nzbcollectiondata.cpp
   data/jobnotifydata.cpp
+  data/serverdata.cpp
   widgets/icontextwidget.cpp
   widgets/iconcapacitywidget.cpp
+  widgets/serverpreferenceswidget.cpp
+  widgets/servertabwidget.cpp
 )
 
 if(KSTATUSNOTIFIERITEM_FOUND)
@@ -78,6 +84,7 @@ kde4_add_ui_files(  Kwooty_lib_SRCS
 		    preferences/preferencesprograms.ui
 		    preferences/preferencesdisplay.ui
 		    preferences/preferencesshutdown.ui
+		    preferences/serversettings.ui
 		 )
 kde4_add_kcfg_files(Kwooty_lib_SRCS preferences/kwootysettings.kcfgc)
 

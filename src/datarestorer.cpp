@@ -52,13 +52,26 @@ DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent)
 
     this->setupConnections();
 
+
+    if (Settings::restoreDownloads()) {
+        QTimer::singleShot(10, this, SLOT(readDataFromDiskSlot()));
+    }
+
+
+
+}
+
+
+void DataRestorer::appReadySlot() {
+
+    //TODO : fix crash if data are restored too quickly before nntpclients instance!!!!
     // read data from previous sessions if exists :
     if (Settings::restoreDownloads()) {
         QTimer::singleShot(150, this, SLOT(readDataFromDiskSlot()));
     }
 
-}
 
+}
 
 void DataRestorer::setupConnections() {
 
@@ -393,7 +406,7 @@ void DataRestorer::readDataFromDiskSlot() {
                 QList< QList<GlobalFileData> > nzbFileList;
                 dataStreamIn >> nzbFileList;
 
-                // reset some data beloging to pending items and populate treeview :
+                // reset some data belonging to pending items and populate treeview :
                 this->preprocessAndHandleData(nzbFileList);
             }
             // user did not load download pending files, remove previous segments :
@@ -462,6 +475,7 @@ void DataRestorer::saveQueueDataSilentlySlot() {
 
 int DataRestorer::displayRestoreMessageBox() const {
 
+    //TODO !!!!!!
     int answer = KMessageBox::Yes;
 
     // ask question if confirmRestoreSilently is checked:

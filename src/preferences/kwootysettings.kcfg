@@ -6,41 +6,10 @@
   <kcfgfile/>
   <include>kglobalsettings.h</include>
 
-    <group name="server">
-        <entry name="hostName" type="String">
-            <label>Defines the server host name</label>
-        </entry>
-        <entry name="port" type="Int">
-            <label>Defines the server port</label>
-            <default>119</default>
-            <min>0</min>
-            <max>65535</max>
-        </entry>
-        <entry name="connectionNumber" type="Int">
-            <label>Defines the number of connection</label>
-            <default>4</default>
-            <min>1</min>
-            <max>100</max>
-        </entry>
-        <entry name="groupBoxAuthentication" type="Bool">
-            <label>User name and password are required by server</label>
-            <default>false</default>
-        </entry>
-        <entry name="login" type="String">
-            <label>Defines the login</label>
-        </entry>
-        <entry name="password" type="String">
-            <label>Defines the password</label>
-        </entry>
-        <entry name="enableSSL" type="Bool">
-            <label>Use SSL encrypted connections</label>
-            <default>false</default>
-        </entry>
-        <entry name="disconnectTimeout" type="Int">
-            <label>Defines the timeout period of inactivity</label>
-            <default>5</default>
-            <min>1</min>
-            <max>100</max>
+  <group name="server">
+	<entry name="serverChangesNotify" type="String">
+		<label>Notify that server settings have changed</label>
+            <default></default>
         </entry>
     </group>
 

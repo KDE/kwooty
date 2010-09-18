@@ -58,7 +58,13 @@ SOURCES += main.cpp \
     plugins/watchfolder/preferenceswatchfolder.cpp \
     plugins/plugin.cpp \
     plugins/pluginmanager.cpp \
-    preferences/preferencesplugins.cpp
+    preferences/preferencesplugins.cpp \
+    servermanager.cpp \
+    servergroup.cpp \
+    preferences/kconfiggrouphandler.cpp \
+    data/serverdata.cpp \
+    widgets/serverpreferenceswidget.cpp \
+    widgets/servertabwidget.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -114,11 +120,18 @@ HEADERS += mainwindow.h \
     plugins/plugin.h \
     plugins/pluginmanager.h \
     preferences/preferencesplugins.h \
-    kwooty_export.h
+    kwooty_export.h \
+    servermanager.h \
+    servergroup.h \
+    preferences/kconfiggrouphandler.h \
+    data/serverdata.h \
+    widgets/serverpreferenceswidget.h \
+    widgets/servertabwidget.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
     preferences/preferencesgeneral.ui \
     preferences/preferencesdisplay.ui \
     plugins/watchfolder/preferenceswatchfolder.ui \
-    preferences/preferencesshutdown.ui
+    preferences/preferencesshutdown.ui \
+    preferences/serversettings.ui

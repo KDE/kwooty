@@ -46,6 +46,7 @@ class FileOperations;
 class MainWindow;
 class QueueFileObserver;
 class NotificationManager;
+class ServerManager;
 class NzbFileData;
 class ItemStatusData;
 
@@ -76,12 +77,12 @@ public:
     FileOperations* getFileOperations() const;
     QueueFileObserver* getQueueFileObserver() const;
     DataRestorer* getDataRestorer() const;
+    ServerManager* getServerManager() const;
 
 
 private:
 
     MyTreeView* treeView;
-    QList<ClientManagerConn*> clientManagerConnList;
     SegmentManager* segmentManager;
     DataRestorer* dataRestorer;
     ShutdownManager* shutdownManager;
@@ -93,6 +94,7 @@ private:
     FileOperations* fileOperations;
     QueueFileObserver* queueFileObserver;
     NotificationManager* notificationManager;
+    ServerManager* serverManager;
     int saveErrorButtonCode;
     
 
@@ -103,8 +105,6 @@ private:
     void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QList<QModelIndex>&);
     void statusBarFileSizeUpdate();
     void initFoldersSettings();
-    void createNntpClients();
-
 
     
 signals:

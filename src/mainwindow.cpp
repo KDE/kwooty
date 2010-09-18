@@ -305,7 +305,7 @@ void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage)
         KPageWidgetItem* preferencesGeneralPage = dialog->addPage(preferencesGeneral, i18n("General"), "preferences-system", i18n("General Setup"));
         this->preferencesPagesMap.insert(GeneralPage, preferencesGeneralPage);
 
-        PreferencesServer* preferencesServer = new PreferencesServer();
+        PreferencesServer* preferencesServer = new PreferencesServer(dialog);
         KPageWidgetItem* preferencesServerPage = dialog->addPage(preferencesServer, i18n("Connection"), "network-workgroup", i18n("Setup Server Connection"));
         this->preferencesPagesMap.insert(ServerPage, preferencesServerPage);
 

@@ -226,6 +226,10 @@ QStandardItem* StandardItemModel::getSizeItemFromIndex(const QModelIndex& index)
 }
 
 
+QStandardItem* StandardItemModel::getFileNameItemFromRowNumber(const int& row) {
+    return this->item(row, FILE_NAME_COLUMN);
+}
+
 
 
 bool StandardItemModel::isNzbItem(QStandardItem* item){

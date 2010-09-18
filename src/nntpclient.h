@@ -35,6 +35,7 @@ class NntpClient : public QObject
 Q_OBJECT
 Q_ENUMS(ServerAnswer)
 Q_ENUMS(NntpClientStatus)
+Q_ENUMS(NewSegmentRequest)
 
 public:
 
@@ -58,38 +59,49 @@ public:
                             ClientSegmentRequest
                        };
 
+    enum NewSegmentRequest { RequestNewSegment,
+                            DoNotRequestNewSegment
+                       };
+
 
     NntpClient(ClientManagerConn* parent = 0);
-    NntpClient();
     ~NntpClient();
     void downloadNextSegment(const SegmentData);
+    void noSegmentAvailable();
     void setConnectedClientStatus(const NntpClient::NntpClientStatus);
+    bool isClientReady();
+
 
 private:
-
     ClientManagerConn* parent;
-    SegmentData currentSegmentData;
     QSslSocket* tcpSocket;
     QByteArray segmentByteArray;
     QTimer* tryToReconnectTimer;
     QTimer* idleTimeOutTimer;
     QTimer* serverAnswerTimer;
+    SegmentData currentSegmentData;
     NntpClient::NntpClientStatus clientStatus;
     int nntpError;
+    bool postingOk;
     bool authenticationDenied;
     bool certificateVerified;
+    bool segmentProcessed;
 
     void connectToHost();
     void setupConnections();
     void getAnswerFromServer();
     void downloadSegmentFromServer();
     void postDownloadProcess(const UtilityNamespace::Article);
+    void notifyDownloadHasFinished(const UtilityNamespace::Article);
     void sendBodyCommandToServer();
     void sendQuitCommandToServer();
     void sendUserCommandToServer();
     void sendPasswordCommandToServer();
     void segmentDataRollBack();
-
+    void requestNewSegment();
+    void postProcessIfBackupServer(NewSegmentRequest = RequestNewSegment);
+    bool downloadSegmentWithBackupServer();
+    bool isMasterServer();
 
 
 signals:
@@ -101,9 +113,12 @@ signals:
     void saveFileErrorSignal(int);
     void nntpErrorSignal(const int);
 
+
 public slots:
     void dataHasArrivedSlot();
     void answerTimeOutSlot();
+    void settingsChangedSlot();
+
 
 private slots:
     void readyReadSlot();
@@ -114,7 +129,6 @@ private slots:
     void tryToReconnectSlot();
     void socketEncryptedSlot();
     void peerVerifyErrorSlot();
-
 
 };
 

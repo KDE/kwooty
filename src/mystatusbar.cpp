@@ -269,7 +269,8 @@ void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
     
     else {
         // set host name info :
-        toolTipStr.append(i18n("Connected to %1<br>", Settings::hostName()));
+        // TODO
+        //toolTipStr.append(i18n("Connected to %1<br>", Settings::hostName()));
         
         // set SSL connection info :
         if (this->clientsObserver->isSslActive()) {

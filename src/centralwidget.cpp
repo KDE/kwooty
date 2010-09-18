@@ -43,6 +43,7 @@
 #include "mainwindow.h"
 #include "queuefileobserver.h"
 #include "notificationmanager.h"
+#include "servermanager.h"
 #include "data/itemstatusdata.h"
 
 
@@ -76,10 +77,13 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent) {
     // setup repairing and decompressing thread :
     repairDecompressThread = new RepairDecompressThread(this);
 
-    // create one nntp connection per client:
-    this->createNntpClients();
+    // handle nntp clients with one or several servers :
+    serverManager = new ServerManager(this);
 
-    // set download ant temp folders into home dir if not specified by user :
+    // create one nntp connection per client :
+    //this->createNntpClients();
+
+    // set download and temp folders into home dir if not specified by user :
     this->initFoldersSettings();
 
     // setup shutdown manager :
@@ -298,23 +302,6 @@ void CentralWidget::addParentItem (QStandardItem* nzbNameItem, const GlobalFileD
 }
 
 
-void CentralWidget::createNntpClients(){
-
-    //create the nntp clients tread manager :
-    int connectionNumber = Settings::connectionNumber();
-    
-    // set a delay of +100 ms between each nntp client instance :
-    int connectionDelay = 0;
-
-    for (int i = 0; i < connectionNumber; i++){
-        this->clientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
-        connectionDelay += 100;
-    }
-    
-}
-
-
-
 
 void CentralWidget::statusBarFileSizeUpdate() {
 
@@ -465,6 +452,9 @@ DataRestorer* CentralWidget::getDataRestorer() const{
     return this->dataRestorer;
 }
 
+ServerManager* CentralWidget::getServerManager() const{
+    return this->serverManager;
+}
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
@@ -574,32 +564,8 @@ void CentralWidget::extractPasswordRequiredSlot(QString currentArchiveFileName) 
 
 
 void CentralWidget::updateSettingsSlot() {
-    
-    // 1. ajust connection objects according to value set in settings :
-    // if more nntp connections are requested :
-    int connectionNumber = Settings::connectionNumber();
-    if (connectionNumber > clientManagerConnList.size()) {
-        
-        int connectionDelay = 0;
-        for (int i = clientManagerConnList.size(); i < connectionNumber; i++){
 
-            this->clientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
-
-            //set a delay of 100ms between each new connection :
-            connectionDelay += 100;
-
-        }
-    }
-    
-    // if less nntp connections are requested :
-    if (connectionNumber < clientManagerConnList.size()) {
-        while (clientManagerConnList.size() > connectionNumber) {
-            clientManagerConnList.takeLast()->deleteLater();
-        }
-    }  
-
-    
-    // 2. delegate specific settings to concerned object  :
+    // delegate specific settings to concerned object  :
     emit settingsChangedSignal();
     
 }

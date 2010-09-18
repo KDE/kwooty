@@ -35,10 +35,24 @@ SegmentData::SegmentData(const QString& bytes, const QString& number, const QStr
     this->number = number;
     this->part = part;
     this->status = status;
+    this->serverGroupTarget = MasterServer;
     this->articlePresence = Unknown;
 }
 
+void SegmentData::setReadyForNewServer(const int& nextServerGroup) {
 
+    this->setProgress(PROGRESS_INIT);
+    this->setStatus(IdleStatus);
+    this->setArticlePresenceOnServer(Unknown);
+    this->setServerGroupTarget(nextServerGroup);
+}
+
+void SegmentData::setDownloadFinished(const int& articlePresence) {
+
+    this->setProgress(PROGRESS_COMPLETE);
+    this->setStatus(DownloadFinishStatus);
+    this->setArticlePresenceOnServer(articlePresence);
+}
 
 
 void SegmentData::setBytes(const QString& bytes){
@@ -72,6 +86,15 @@ int SegmentData::getStatus() const{
 void SegmentData::setStatus(const int status){
     this->status = status;
 }
+
+int SegmentData::getServerGroupTarget() const{
+    return this->serverGroupTarget;
+}
+
+void SegmentData::setServerGroupTarget(const int serverGroupTarget){
+    this->serverGroupTarget = serverGroupTarget;
+}
+
 
 int SegmentData::getProgress() const{
     return this->progress;
@@ -125,8 +148,6 @@ QDataStream& operator>>(QDataStream& in, SegmentData& segmentData) {
     QString bytes;
     QString number;
     QString part;
-    QString fileSavePath;
-    QVariant parentUniqueIdentifier;
     quint32 elementInList;
     int status;
     int progress;
@@ -148,6 +169,7 @@ QDataStream& operator>>(QDataStream& in, SegmentData& segmentData) {
     segmentData.setStatus(status);
     segmentData.setProgress(progress);
     segmentData.setArticlePresenceOnServer(articlePresenceOnServer);
+    segmentData.setServerGroupTarget(MasterServer);
 
     return in;
 }

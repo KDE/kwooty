@@ -153,7 +153,7 @@ namespace UtilityNamespace
     enum Data {
         NoData,
         DataIncomplete,
-        DataComplete,
+        DataComplete
     };
     
     
@@ -236,6 +236,14 @@ namespace UtilityNamespace
         ShutdownPage,
         PluginsPage
     };
+
+
+    // server target for segments :
+    enum ServerTarget {
+        NoTargetServer = -1,
+        MasterServer
+    };
+
 
 }
 

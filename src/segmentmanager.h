@@ -44,6 +44,7 @@ public:
     SegmentManager();
     void setIdlePauseSegments(QStandardItem*, const int);
     QStandardItem* searchItem(const QVariant&, const UtilityNamespace::ItemStatus);
+    void updatePendingSegmentsToTargetServer(const int&, const int&);
 
 private:
     StandardItemModel* downloadModel;
@@ -59,6 +60,7 @@ public slots:
     void getNextSegmentSlot(ClientManagerConn*);
     void updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool);
     void updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
+
 
 private slots:
 

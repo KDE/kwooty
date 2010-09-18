@@ -29,6 +29,8 @@ class SegmentData
 public:
     SegmentData(const QString&, const QString&, const QString&, const int);
     SegmentData();
+    void setReadyForNewServer(const int&);
+    void setDownloadFinished(const int&);
 
 
     void setBytes(const QString&);
@@ -42,6 +44,9 @@ public:
 
     void setStatus(const int);
     int getStatus() const;
+
+    int getServerGroupTarget() const;
+    void setServerGroupTarget(const int);
 
     int getProgress() const;
     void setProgress(const int);
@@ -63,6 +68,7 @@ private:
     QVariant parentUniqueIdentifier;
     quint32 elementInList;
     int status;
+    int serverGroupTarget;
     int progress;
     int articlePresence;
 

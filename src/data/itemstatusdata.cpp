@@ -40,6 +40,7 @@ void ItemStatusData::init(){
     this->decodeFinish = false;
     this->crc32Match = CrcOk;
     this->data = DataComplete;
+    this->nextServerId = UtilityNamespace::MasterServer;
 
 }
 
@@ -86,6 +87,13 @@ UtilityNamespace::ItemStatus ItemStatusData::getStatus() const{
     return this->status;
 }
 
+int ItemStatusData::getNextServerId() const {
+    return this->nextServerId;
+}
+void ItemStatusData::setNextServerId(const int& nextServerId){
+    this->nextServerId = nextServerId;
+}
+
 
 bool ItemStatusData::operator!=(const ItemStatusData& itemStatusDataToCompare) {
 
@@ -95,7 +103,8 @@ bool ItemStatusData::operator!=(const ItemStatusData& itemStatusDataToCompare) {
          (this->data              != itemStatusDataToCompare.getDataStatus())    ||
          (this->downloadFinish    != itemStatusDataToCompare.isDownloadFinish()) ||
          (this->decodeFinish      != itemStatusDataToCompare.isDecodeFinish())   ||
-         (this->crc32Match        != itemStatusDataToCompare.getCrc32Match()) ) {
+         (this->crc32Match        != itemStatusDataToCompare.getCrc32Match())    ||
+         (this->nextServerId      != itemStatusDataToCompare.getNextServerId()) ) {
 
             different = true;
     }
@@ -136,6 +145,7 @@ QDataStream& operator>>(QDataStream& in, ItemStatusData& itemStatusData)
     itemStatusData.setDownloadFinish(downloadFinish);
     itemStatusData.setDecodeFinish(decodeFinish);
     itemStatusData.setCrc32Match((UtilityNamespace::CrcNotify)crc32Match);
+    itemStatusData.setNextServerId(MasterServer);
 
     return in;
 }

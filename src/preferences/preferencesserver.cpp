@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2009 by Xavier Lefage                                   *
+ *   Copyright (C) 2010 by Xavier Lefage                                   *
  *   xavier.kwooty@gmail.com                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -19,35 +19,119 @@
  ***************************************************************************/
 
 #include "preferencesserver.h"
+
 #include <KDebug>
 
-PreferencesServer::PreferencesServer()
+#include <QHBoxLayout>
+#include <QUuid>
+
+#include "widgets/servertabwidget.h"
+#include "data/serverdata.h"
+#include "kwootysettings.h"
+#include "kconfiggrouphandler.h"
+#include "utility.h"
+using namespace UtilityNamespace;
+
+
+PreferencesServer::PreferencesServer(KConfigDialog* dialog)
 {
+
+    this->dialog = dialog;
+
     setupUi(this);
 
-    this->setupConnections();
+    // dirty way to notify kCondfigDialog that a setting have changed in any server tabs widgets :
+    kcfg_serverChangesNotify->hide();
+    connect (kcfg_serverChangesNotify, SIGNAL(textChanged (const QString&)), this, SLOT(textChangedSlot (const QString&)));  
+
+    tabWidget = new ServerTabWidget(this);
+
+    // feedback from kConfigDialog, choose action according to button clicked by user :
+    connect(this->dialog,
+            SIGNAL(buttonClicked(KDialog::ButtonCode)),
+            this,
+            SLOT(configButtonClickedSlot(KDialog::ButtonCode)));
+
+
+    this->loadSettings();
 
 }
 
 
-void PreferencesServer::setupConnections() {
 
-    // check/uncheck ssl checkbox according to port value:
-    connect (kcfg_port, SIGNAL(valueChanged (int)), this, SLOT(portValueChangedSlot(int)));
-
-}
+void PreferencesServer::configButtonClickedSlot(KDialog::ButtonCode button) {
 
 
+    switch (button) {
 
-void PreferencesServer::portValueChangedSlot(int portValue) {
+    case KDialog::Cancel: case KDialog::Close: {
 
-    // if ports usually used for SSL are met :
-    if (portValue == 563 || portValue == 443) {
-        kcfg_enableSSL->setCheckState(Qt::Checked);
+            // restore previous settings :
+            this->restorePreviousSettings();
+            break;
+        }
+
+    case KDialog::Ok: case KDialog::Apply: {
+
+            // save them :
+            this->saveSettings();
+            break;
+        }
+
+    case KDialog::Default:    {
+            //TODO :
+            kDebug() << "Default button";
+            break;
+        }
+
+    default: {
+            break;
+
+        }
+
     }
-    // else is ports usually used for normal connections are met :
-    else {
-        kcfg_enableSSL->setCheckState(Qt::Unchecked);
+
+}
+
+
+
+void PreferencesServer::textChangedSlot(const QString& textChangedSlot) {
+
+    if (textChangedSlot.isEmpty()) {
+        // TODO :
+        kDebug() << "resetToDefaults !!";
     }
 
 }
+
+
+
+void PreferencesServer::restorePreviousSettings() {
+
+    // restore settings previously saved in file :
+    while(this->tabWidget->count() != 0) {
+
+        this->tabWidget->deleteAndRemoveTab(0);
+    }
+
+    this->loadSettings();
+
+}
+
+
+void PreferencesServer::loadSettings() {
+
+    int serverNumber = KConfigGroupHandler::getInstance()->readServerNumberSettings();
+
+    for (int i = 0; i < serverNumber; i++) {
+        this->tabWidget->addNewTab();
+    }
+
+
+}
+
+
+void PreferencesServer::saveSettings() {
+   emit saveDataSignal();
+}
+
