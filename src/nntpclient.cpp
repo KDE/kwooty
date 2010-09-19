@@ -438,7 +438,6 @@ void NntpClient::segmentDataRollBack() {
     // in case of download errors it can happen that segmentDataRollBack()
     // is called several times with the same segmentData instance
     // check that roll back occurs only once per segmentData :
-
     if (!this->segmentProcessed) {
 
         if (this->currentSegmentData.getStatus() == DownloadStatus) {
@@ -455,6 +454,7 @@ void NntpClient::segmentDataRollBack() {
     }
 
 }
+
 
 void NntpClient::postProcessIfBackupServer(NewSegmentRequest newSegmentRequest) {
 
@@ -574,7 +574,6 @@ void NntpClient::dataHasArrivedSlot() {
         this->connectToHost();
     }
 
-    //kDebug() << this->segmentProcessed;
     // if the client is not currently downloading, request another segment
     // only if socket is in connected state :
     if ( (this->clientStatus == ClientIdle) &&

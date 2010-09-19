@@ -80,9 +80,6 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent) {
     // handle nntp clients with one or several servers :
     serverManager = new ServerManager(this);
 
-    // create one nntp connection per client :
-    //this->createNntpClients();
-
     // set download and temp folders into home dir if not specified by user :
     this->initFoldersSettings();
 
