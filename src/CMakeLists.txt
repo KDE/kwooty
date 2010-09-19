@@ -93,7 +93,7 @@ target_link_libraries(kwootycore
 		      ${KDE4WORKSPACE_SOLIDCONTROL_LIBS}
   )
 
-set_target_properties(kwootycore PROPERTIES VERSION 0.5.1 SOVERSION 0 )
+set_target_properties(kwootycore PROPERTIES VERSION 0.5.2 SOVERSION 0 )
 install(TARGETS kwootycore ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 kde4_add_executable(kwooty ${Kwooty_SRCS})

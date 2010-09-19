@@ -1,6 +1,11 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.5.2:
+--------------
+- German translation: thanks to Michael for his great job !
+
+
 Version 0.5.1:
 --------------
 - Display update : parent row height has been increased
