@@ -31,6 +31,7 @@ public:
     SegmentData();
     void setReadyForNewServer(const int&);
     void setDownloadFinished(const int&);
+    bool isInitialized();
 
 
     void setBytes(const QString&);
@@ -51,8 +52,8 @@ public:
     int getProgress() const;
     void setProgress(const int);
 
-    void setElementInList(const quint32);
-    quint32 getElementInList() const;
+    void setElementInList(const int);
+    int getElementInList() const;
 
     void setParentUniqueIdentifier(const QVariant&);
     QVariant getParentUniqueIdentifier() const;
@@ -66,7 +67,7 @@ private:
     QString number;
     QString part;
     QVariant parentUniqueIdentifier;
-    quint32 elementInList;
+    int elementInList;
     int status;
     int serverGroupTarget;
     int progress;

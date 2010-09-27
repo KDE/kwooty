@@ -50,8 +50,6 @@ ClientManagerConn::ClientManagerConn(ServerGroup* parent, int clientId, int conn
     this->clientId = clientId;
 
 
-    this->serverData = KConfigGroupHandler::getInstance()->readServerSettings(parent->getServerGroupId());
-
     // start each nntpclient instance with a delay in order to not hammer the host :
     this->connectionDelay = connectionDelay;
     QTimer::singleShot(connectionDelay, this, SLOT(initSlot()) );
@@ -77,19 +75,25 @@ void ClientManagerConn::initSlot()
     // create nntp socket :
     this->nntpClient = new NntpClient(this);
 
-    // centralWidget notify all nntpClient instances that data to download is present :
-
+    // ServerGroup notify all nntpClient instances that connection settings changed :
     connect (centralWidget,
              SIGNAL(dataHasArrivedSignal()),
              nntpClient,
              SLOT(dataHasArrivedSlot()));
 
 
-    // centralWidget notify all nntpClient instances that connection settings changed :
-    connect (centralWidget,
-             SIGNAL(settingsChangedSignal()),
+    // ServerGroup asked for clients disconnection :
+    connect (this->parent,
+             SIGNAL(disconnectRequestSignal()),
              this,
-             SLOT(settingsChangedSlot()));
+             SLOT(disconnectRequestSlot()));
+
+    // ServerGroup asked for clients connection :
+    connect (this->parent,
+             SIGNAL(connectRequestSignal()),
+             this,
+             SLOT(connectRequestSlot()));
+
 
     // ask to segment manager to send a new segment to download :
     connect (nntpClient,
@@ -146,7 +150,6 @@ void ClientManagerConn::noSegmentAvailable() {
     // if the getNextSegmentSignal returns this method, there is no item to download
     // set the client to Idle Status :
     nntpClient->noSegmentAvailable();
-    //nntpClient->setConnectedClientStatus(NntpClient::ClientIdle);
 
 }
 
@@ -162,15 +165,26 @@ NntpClient* ClientManagerConn::getNntpClient() {
 }
 
 
-int ClientManagerConn::getClientId() const{
+int ClientManagerConn::getClientId() const {
     return clientId;
 }
 
 
 
-ServerData ClientManagerConn::getServerData() const{
-    return this->serverData;
+ServerData ClientManagerConn::getServerData() const {
+    return this->parent->getServerData();
 }
+
+
+bool ClientManagerConn::isMasterServer() const {
+    return this->parent->isMasterServer();
+}
+
+bool ClientManagerConn::isDisabledBackupServer() const {
+    return this->parent->isDisabledBackupServer();
+}
+
+
 
 
 bool ClientManagerConn::isClientReady() {
@@ -188,24 +202,11 @@ bool ClientManagerConn::isClientReady() {
 }
 
 
-void ClientManagerConn::settingsChangedSlot() {
 
-    //read new server config :
-    ServerData newServerData = KConfigGroupHandler::getInstance()->readServerSettings(parent->getServerGroupId());
-
-    // if config changed :
-    if (this->serverData != newServerData) {
-
-        this->serverData = newServerData;
-
-        // if connection settings changed, reconnect with new settings :
-        QTimer::singleShot(connectionDelay, nntpClient, SLOT(settingsChangedSlot()) );
-
-    }
-
+void ClientManagerConn::disconnectRequestSlot() {
+    this->nntpClient->disconnectRequestByManager();
 }
 
-
-
-
-
+void ClientManagerConn::connectRequestSlot() {
+    this->nntpClient->connectRequestByManager();
+}

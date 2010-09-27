@@ -23,18 +23,11 @@
 #define KCONFIGGROUPHANDLER_H
 
 #include <QObject>
-
-//TODO :
-#include "ksharedconfig.h"
-
 #include <KConfigGroup>
-
-
 #include "data/serverdata.h"
 
 
-class KConfigGroupHandler : public QObject
-{
+class KConfigGroupHandler : public QObject {
 
     Q_OBJECT
 
@@ -52,11 +45,9 @@ public:
     void writeServerNumberSettings(const int&);
     int serverConnectionNumber(const int&);
     QString tabName(const int&, const QString&);
+
 private:
-
     static KConfigGroupHandler* instance;
-
- //   KConfigGroup* configGroup;
 
 
 };

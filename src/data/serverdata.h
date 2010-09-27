@@ -50,9 +50,6 @@ public:
     void setDisconnectTimeout(const uint&);
     uint getDisconnectTimeout() const;
 
-    void setConnectionDelay(const uint&);
-    uint getConnectionDelay() const;
-
     void setAuthentication(const bool&);
     bool isAuthentication() const;
 
@@ -61,6 +58,10 @@ public:
 
     void setConnectionNumber(const uint&);
     uint getConnectionNumber() const;
+
+    void setServerModeIndex(const uint&);
+    uint getServerModeIndex() const;
+
 
     bool operator!=(const ServerData&);
 
@@ -73,10 +74,10 @@ private:
     QString password;
     uint port;
     uint disconnectTimeout;
-    uint connectionDelay;
     bool authentication;
     bool enableSSL;
     uint connectionNumber;
+    uint serverModeIndex;
 
 
 };

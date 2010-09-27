@@ -109,7 +109,7 @@ void PreferencesServer::textChangedSlot(const QString& textChangedSlot) {
 void PreferencesServer::restorePreviousSettings() {
 
     // restore settings previously saved in file :
-    while(this->tabWidget->count() != 0) {
+    while (this->tabWidget->count() != 0) {
 
         this->tabWidget->deleteAndRemoveTab(0);
     }

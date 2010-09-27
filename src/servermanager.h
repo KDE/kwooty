@@ -52,6 +52,7 @@ signals:
 
 public slots:
     void settingsChangedSlot();
+    void requestClientConnectionSlot();
 
 
 };

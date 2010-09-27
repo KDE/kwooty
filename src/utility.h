@@ -245,6 +245,14 @@ namespace UtilityNamespace
     };
 
 
+    // current backup server mode :
+    enum BackupServerMode {
+        FailOverServer,
+        LoadBalancingServer,
+        DisabledServer
+    };
+
+
 }
 
 class Utility

@@ -36,6 +36,7 @@ Q_OBJECT
 Q_ENUMS(ServerAnswer)
 Q_ENUMS(NntpClientStatus)
 Q_ENUMS(NewSegmentRequest)
+Q_ENUMS(TimerJob)
 
 public:
 
@@ -63,13 +64,18 @@ public:
                             DoNotRequestNewSegment
                        };
 
+    enum TimerJob { StartStopTimers,
+                    DoNotTouchTimers
+                  };
 
     NntpClient(ClientManagerConn* parent = 0);
     ~NntpClient();
     void downloadNextSegment(const SegmentData);
     void noSegmentAvailable();
-    void setConnectedClientStatus(const NntpClient::NntpClientStatus);
+    void setConnectedClientStatus(const NntpClientStatus, const TimerJob = StartStopTimers);
     bool isClientReady();
+    void disconnectRequestByManager();
+    void connectRequestByManager();
 
 
 private:
@@ -101,7 +107,6 @@ private:
     void requestNewSegment();
     void postProcessIfBackupServer(NewSegmentRequest = RequestNewSegment);
     bool downloadSegmentWithBackupServer();
-    bool isMasterServer();
 
 
 signals:
@@ -117,14 +122,13 @@ signals:
 public slots:
     void dataHasArrivedSlot();
     void answerTimeOutSlot();
-    void settingsChangedSlot();
+    void idleTimeOutSlot();
 
 
 private slots:
     void readyReadSlot();
     void connectedSlot();    
     void errorSlot(QAbstractSocket::SocketError);
-    void idleTimeOutSlot();
     void disconnectedSlot();
     void tryToReconnectSlot();
     void socketEncryptedSlot();

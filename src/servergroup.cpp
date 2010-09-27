@@ -37,11 +37,14 @@ ServerGroup::ServerGroup(ServerManager* parent, CentralWidget* centralWidget, in
     this->serverManager = parent;
     this->centralWidget = centralWidget;
     this->serverGroupId = serverGroupId;
-
     this->serverAvailable = true;
     this->pendingSegments = false;
 
     this->totalConnections = 0;
+
+    this->serverData = KConfigGroupHandler::getInstance()->readServerSettings(this->serverGroupId);
+
+    //this->setServerGroupId(serverGroupId);
 
     this->createNntpClients();
 
@@ -55,7 +58,21 @@ ServerGroup::ServerGroup(ServerManager* parent, CentralWidget* centralWidget, in
 
 
 int ServerGroup::getServerGroupId() const {
-    return this->serverGroupId;
+
+    int currentServerGroupId;
+
+    // if server is now configured in load balancing mode, set its server groupId to MasterServer
+    // in order be considered as another master server and to be able to download
+    // pending segment targeted with MasterServer Id :
+    if (this->isLoadBalancingBackupServer()) {
+        currentServerGroupId = MasterServer;
+    }
+    // else set its default server group id :
+    else {
+        currentServerGroupId = this->serverGroupId;
+    }
+
+    return currentServerGroupId;
 }
 
 
@@ -68,43 +85,37 @@ ServerManager* ServerGroup::getServerManager() {
 }
 
 
-void ServerGroup::setServerGroupId(const int serverGroupId) {
-    this->serverGroupId = serverGroupId;
+ServerData ServerGroup::getServerData() const {
+    return this->serverData;
 }
 
 
-//
-//void ServerGroup::addServerFromUnavailableSet(const int serverGroupId)  {
-//    this->unavailableServerSet.insert(serverGroupId);
-//}
-//
-//void ServerGroup::removeServerFromUnavailableSet(const int serverGroupId)  {
-//    this->unavailableServerSet.remove(serverGroupId);
-//}
-//
-//QSet<int> ServerGroup::getUnavailableSet() const {
-//    return this->unavailableServerSet;
-//}
+bool ServerGroup::isMasterServer() const {
+    return (this->serverGroupId == MasterServer);
+}
 
+bool ServerGroup::isDisabledBackupServer() const {
+    return (this->serverData.getServerModeIndex() == UtilityNamespace::DisabledServer);
+}
 
+bool ServerGroup::isFailOverBackupServer() const {
+    return (this->serverData.getServerModeIndex() == UtilityNamespace::FailOverServer);
+}
 
+bool ServerGroup::isLoadBalancingBackupServer() const {
+    return (this->serverData.getServerModeIndex() == UtilityNamespace::LoadBalancingServer);
+}
 
 
 
 void ServerGroup::setupConnections() {
-
-    // parent notify that settings have been changed :
-    connect (this->centralWidget,
-             SIGNAL(settingsChangedSignal()),
-             this,
-             SLOT(settingsChangedSlot()));
-
 
     connect(clientsAvailableTimer, SIGNAL(timeout()), this, SLOT(checkServerAvailabilitySlot()));
 
     connect(clientsAvailableTimer, SIGNAL(timeout()), this, SLOT(downloadPendingSegmentsSlot()));
 
 }
+
 
 
 void ServerGroup::createNntpClients() {
@@ -124,7 +135,8 @@ void ServerGroup::createNntpClients() {
 
 
 
-void ServerGroup::settingsChangedSlot() {
+bool ServerGroup::settingsServerChangedSlot() {
+
     // 1. ajust connection objects according to value set in settings :
     // if more nntp connections are requested :
     int connectionNumber = KConfigGroupHandler::getInstance()->serverConnectionNumber(this->serverGroupId);
@@ -151,8 +163,56 @@ void ServerGroup::settingsChangedSlot() {
 
     }
 
+    // read new server config :
+    ServerData newServerData = KConfigGroupHandler::getInstance()->readServerSettings(this->serverGroupId);
+
+    bool serverSettingsChanged = false;
+
+    // if config changed :
+    if (this->serverData != newServerData) {
+
+        // update new settings right now as they will used by nntpclients :
+        this->serverData = newServerData;
+
+        // notity to manager that some settings have changed :
+        serverSettingsChanged = true;
+
+    }
+
+    return serverSettingsChanged;
 
 }
+
+
+void ServerGroup::disconnectAllClients() {
+
+    // stop timer that notify if clients are available or not :
+    this->clientsAvailableTimer->stop();
+
+    // disconnect all clients :
+    emit disconnectRequestSignal();
+}
+
+
+void ServerGroup::connectAllClients() {
+
+    // connect all clients :
+    emit connectRequestSignal();
+
+    // restart timer that notify if clients are available :
+    this->serverAvailable = true;
+    QTimer::singleShot(500 * this->serverGroupId, this, SLOT(startTimerSlot()));
+
+
+
+}
+
+
+
+void ServerGroup::startTimerSlot() {
+    this->clientsAvailableTimer->start();
+}
+
 
 
 void ServerGroup::assignDownloadToReadyClients() {
@@ -172,7 +232,6 @@ void ServerGroup::downloadPendingSegmentsSlot() {
 
             if (clientManagerConn->isClientReady()) {
                 clientManagerConn->getNntpClient()->dataHasArrivedSlot();
-                //break;
             }
         }
 
@@ -187,7 +246,7 @@ void ServerGroup::downloadPendingSegmentsSlot() {
 
 void ServerGroup::checkServerAvailabilitySlot() {
 
-    if ( (this->serverGroupId != MasterServer)) {
+    if (this->serverGroupId != MasterServer) {
 
         bool serverAvailableOld = this->serverAvailable;
 
@@ -209,6 +268,11 @@ void ServerGroup::checkServerAvailabilitySlot() {
         }
 
 
+        // server has been disabled in settings, consider is as unavailable :
+        if (this->isDisabledBackupServer()) {
+            this->serverAvailable = false;
+        }
+
 
         // if availability of the server has changed and this is not the master server :
         if ( (this->serverAvailable != serverAvailableOld) &&
@@ -224,7 +288,10 @@ void ServerGroup::checkServerAvailabilitySlot() {
 
     }
 
+
 }
+
+
 
 
 bool ServerGroup::isServerAvailable() {

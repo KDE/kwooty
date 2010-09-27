@@ -23,20 +23,20 @@
 #include "utility.h"
 using namespace UtilityNamespace;
 
-SegmentData::SegmentData()
-{
-
+SegmentData::SegmentData() {
+    this->parentUniqueIdentifier = QVariant();
+    this->status = IdleStatus;
 }
 
 
-SegmentData::SegmentData(const QString& bytes, const QString& number, const QString& part, const int status)
-{
+SegmentData::SegmentData(const QString& bytes, const QString& number, const QString& part, const int status) {
     this->bytes = bytes;
     this->number = number;
     this->part = part;
     this->status = status;
     this->serverGroupTarget = MasterServer;
     this->articlePresence = Unknown;
+    this->parentUniqueIdentifier = QVariant();
 }
 
 void SegmentData::setReadyForNewServer(const int& nextServerGroup) {
@@ -54,6 +54,9 @@ void SegmentData::setDownloadFinished(const int& articlePresence) {
     this->setArticlePresenceOnServer(articlePresence);
 }
 
+bool SegmentData::isInitialized() {
+    return this->parentUniqueIdentifier != QVariant();
+}
 
 void SegmentData::setBytes(const QString& bytes){
     this->bytes = bytes;
@@ -104,11 +107,11 @@ void SegmentData::setProgress(const int progress){
     this->progress = progress;
 }
 
-void SegmentData::setElementInList(const quint32 elementInList){
+void SegmentData::setElementInList(const int elementInList){
     this->elementInList = elementInList;
 }
 
-quint32 SegmentData::getElementInList() const{
+int SegmentData::getElementInList() const{
     return this->elementInList;
 }
 
@@ -148,7 +151,7 @@ QDataStream& operator>>(QDataStream& in, SegmentData& segmentData) {
     QString bytes;
     QString number;
     QString part;
-    quint32 elementInList;
+    int elementInList;
     int status;
     int progress;
     int articlePresenceOnServer;

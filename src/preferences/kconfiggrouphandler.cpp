@@ -63,6 +63,7 @@ ServerData KConfigGroupHandler::readServerSettings(const int& serverId) {
     serverData.setPassword(configGroup.readEntry("password", QString()));
     serverData.setDisconnectTimeout(configGroup.readEntry("disconnectTimeout", 5));
     serverData.setEnableSSL(configGroup.readEntry("enableSSL", false));
+    serverData.setServerModeIndex(configGroup.readEntry("serverModeIndex", 0));
 
     return serverData;
 
@@ -76,6 +77,7 @@ void KConfigGroupHandler::writeServerNumberSettings(const int& serverNumber) {
     configGroup.writeEntry("serverNumber", serverNumber);
     configGroup.sync();
 }
+
 
 int KConfigGroupHandler::readServerNumberSettings() {
 
@@ -102,6 +104,7 @@ void KConfigGroupHandler::writeServerSettings(const int& serverId, ServerData se
     configGroup.writeEntry("password", serverData.getPassword());
     configGroup.writeEntry("disconnectTimeout", serverData.getDisconnectTimeout());
     configGroup.writeEntry("enableSSL", serverData.isEnableSSL());
+    configGroup.writeEntry("serverModeIndex", serverData.getServerModeIndex());
 
     configGroup.sync();
 

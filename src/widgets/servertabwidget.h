@@ -25,6 +25,7 @@
 #include <KTabWidget>
 #include <QWidget>
 #include <QToolButton>
+#include <QMap>
 
 class PreferencesServer;
 
@@ -36,6 +37,7 @@ class ServerTabWidget : public KTabWidget {
 
 public:
 
+    // query name of server only when created by user :
     enum ServerNameQuery { AskServerName,
                            DoNotAskServerName,
                        };
@@ -43,16 +45,21 @@ public:
     ServerTabWidget(PreferencesServer*);
     void addNewTab();
     void deleteAndRemoveTab(const int&);
+    void setServerTabText();
+    void setServerTabIcon(const int&, const int&);
+    QMap<int, QString> getComboBoxIconTextMap();
 
 
 private:
     QToolButton* newTab;
     QToolButton* closeTab;
     PreferencesServer* preferencesServer;
+    QMap<int, QString> comboBoxIconTextMap;
 
     void setupConnections();
     void enableDisableTabButtons();
     void syncGroupBoxTitle();
+    QString displayEditDialogBox();
 
 
 
@@ -70,6 +77,7 @@ private slots:
     void tabMovedSlot(int, int);
     void currentChangedSlot(int);
     void valueChangedSlot();
+    void renameTabSlot(QWidget*);
 
 };
 

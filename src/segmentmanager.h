@@ -38,13 +38,20 @@ class SegmentManager : public QObject
 {
 
     Q_OBJECT
+    Q_ENUMS(PendingSegments)
 
 public:
+
+    enum PendingSegments { UpdateSegments,
+                           ResetSegments
+                         };
+
+
     SegmentManager(CentralWidget* parent = 0);
     SegmentManager();
     void setIdlePauseSegments(QStandardItem*, const int);
     QStandardItem* searchItem(const QVariant&, const UtilityNamespace::ItemStatus);
-    void updatePendingSegmentsToTargetServer(const int&, const int&);
+    void updatePendingSegmentsToTargetServer(const int&, const int&, const PendingSegments = UpdateSegments);
 
 private:
     StandardItemModel* downloadModel;

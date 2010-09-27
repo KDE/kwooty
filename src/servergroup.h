@@ -26,6 +26,7 @@
 #include <QSet>
 #include <QTimer>
 
+#include "data/serverdata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -44,9 +45,14 @@ public:
     ServerManager* getServerManager();
     bool isServerAvailable();
     QSet<int> getUnavailableSet() const;
-    void addServerFromUnavailableSet(const int);
-    void removeServerFromUnavailableSet(const int);
     void assignDownloadToReadyClients();
+    void disconnectAllClients();
+    void connectAllClients();
+    ServerData getServerData() const;
+    bool isMasterServer() const;
+    bool isDisabledBackupServer() const;
+    bool isFailOverBackupServer() const;
+    bool isLoadBalancingBackupServer() const;
 
 private:
 
@@ -58,29 +64,29 @@ private:
     int nttpErrorStatus;
     bool serverAvailable;
     bool pendingSegments;
+    ServerData serverData;
     QSet<int> unavailableServerSet;
     QTimer* clientsAvailableTimer;
 
 
-    void setServerGroupId(const int);
     void createNntpClients();
     void setupConnections();
 
 
-
 signals:
-
     void dataHasArrivedClientReadySignal();
+    void disconnectRequestSignal();
+    void connectRequestSignal();
 
 
 public slots:
-
-    void settingsChangedSlot();
+    bool settingsServerChangedSlot();
     void downloadPendingSegmentsSlot();
 
 
 private slots:
     void checkServerAvailabilitySlot();
+    void startTimerSlot();
 
 
 

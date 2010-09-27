@@ -29,6 +29,7 @@
 
 class ServerTabWidget;
 class PreferencesServer;
+class ServerTabWidget;
 
 class ServerPreferencesWidget : public QWidget {
 
@@ -36,8 +37,6 @@ class ServerPreferencesWidget : public QWidget {
 
 
 public:
-
-
     ServerPreferencesWidget(ServerTabWidget*, PreferencesServer*, int);
     ~ServerPreferencesWidget();
 
@@ -49,9 +48,14 @@ public:
 private:
     Ui_ServerSettings* serverSettingsUi;
     PreferencesServer* preferencesServer;
+    ServerTabWidget* serverTabWidget;
     int tabIndex;
 
+
     void setupConnections();
+    void setupButtons();
+    void hideWidgets(const int&) ;
+    void enableWidgets(const bool&);
 
 
 signals:
@@ -61,6 +65,11 @@ public slots:
 private slots:
     void portValueChangedSlot(int);
     void valueChangedSlot();
+    void pushButtonEditSlot();
+    void pushButtonMoveLeftSlot();
+    void pushButtonMoveRightSlot();
+    void serverModeValueChangedSlot(int);
+
 
 
 };

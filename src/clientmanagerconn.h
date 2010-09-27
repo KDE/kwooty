@@ -44,7 +44,8 @@ public:
     NntpClient* getNntpClient();
     ServerGroup* getServerGroup();
     ServerData getServerData() const;
-    ServerData serverData;
+    bool isMasterServer() const;
+    bool isDisabledBackupServer() const;
 
 
 private:
@@ -58,7 +59,8 @@ signals:
 
 
 public slots:
-    void settingsChangedSlot();
+    void disconnectRequestSlot();
+    void connectRequestSlot();
 
 private slots:
     void initSlot();

@@ -54,6 +54,10 @@ ServerTabWidget::ServerTabWidget(PreferencesServer* parent) : KTabWidget(parent)
     this->closeTab->setIcon(KIcon("list-remove"));
     this->closeTab->setToolTip("Remove current backup server");
 
+    // create icons and associated texts for servers mode :
+    this->comboBoxIconTextMap.insert(FailOverServer,      QString("system-reboot;" + i18n("Failover")));
+    this->comboBoxIconTextMap.insert(LoadBalancingServer, QString("system-switch-user;" + i18n("Load Balancing")));
+    this->comboBoxIconTextMap.insert(DisabledServer,      QString("system-shutdown;" + i18n("Server Disabled")));
 
     // set buttons to right and left corners :
     this->setCornerWidget(this->newTab, Qt::TopRightCorner);
@@ -80,6 +84,9 @@ void ServerTabWidget::setupConnections() {
     connect (this->preferencesServer, SIGNAL(saveDataSignal()), this, SLOT(saveDataSlot()));
 
     connect (this->tabBar(), SIGNAL(tabMoved (int, int)), this, SLOT(valueChangedSlot()));
+
+    connect (this, SIGNAL(mouseDoubleClick(QWidget*)), this, SLOT(renameTabSlot(QWidget*)));
+
 
 }
 
@@ -111,10 +118,10 @@ void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery a
         // ask server name :
         if (askServerName == ServerTabWidget::AskServerName) {
 
-            QString input = KInputDialog::getText(i18n("Backup server name"), i18n("Please enter backup server name:"));
+            QString input = this->displayEditDialogBox();
             if (!input.isEmpty()) {
                 tabText = input;
-           }
+            }
 
         }
 
@@ -122,8 +129,15 @@ void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery a
         tabText = KConfigGroupHandler::getInstance()->tabName(tabNumbers, tabText);
 
         // add tab with new window widget :
-        this->addTab(new ServerPreferencesWidget(this, this->preferencesServer, tabNumbers), tabText);
-        this->setTabIcon(tabNumbers, KIcon(iconStr));
+        ServerPreferencesWidget* serverPreferencesWidget = new ServerPreferencesWidget(this, this->preferencesServer, tabNumbers);
+
+        this->addTab(serverPreferencesWidget, tabText);
+        this->setServerTabIcon(tabNumbers, serverPreferencesWidget->getData().getServerModeIndex());
+
+
+
+
+        //this->setTabIcon(tabNumbers, KIcon(iconStr));
 
         this->setCurrentIndex(tabNumbers);
         this->enableDisableTabButtons();
@@ -137,6 +151,29 @@ void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery a
     }
 
 }
+
+
+QMap<int, QString> ServerTabWidget::getComboBoxIconTextMap() {
+    return this->comboBoxIconTextMap;
+}
+
+
+QString ServerTabWidget::displayEditDialogBox() {
+    
+    return KInputDialog::getText(i18n("New server name"), i18n("Please enter server name:"));
+}
+
+
+void ServerTabWidget::setServerTabText() {
+
+    kDebug() << this->tabBar()->currentIndex();
+    QString input = this->displayEditDialogBox();
+    if (!input.isEmpty()) {
+        this->setTabText(this->currentIndex(), input);
+    }
+
+}
+
 
 
 void ServerTabWidget::closeTabClickedSlot() {
@@ -191,6 +228,7 @@ void ServerTabWidget::tabMovedSlot(int from, int to) {
 
 }
 
+
 void ServerTabWidget::currentChangedSlot(int index) {
 
     // the master server tab must stay at the first position :
@@ -220,6 +258,25 @@ void ServerTabWidget::enableDisableTabButtons() {
 
 
 }
+
+
+void ServerTabWidget::setServerTabIcon(const int& tabIndex, const int& serverModeIndex) {
+
+    QString iconStr;
+
+    if (tabIndex == MasterServer) {
+        iconStr = "applications-internet";
+    }
+    else {
+        iconStr = this->comboBoxIconTextMap.value(serverModeIndex).split(";").value(0);
+    }
+
+    this->setTabIcon(tabIndex, KIcon(iconStr));
+
+}
+
+
+
 
 
 void ServerTabWidget::syncGroupBoxTitle() {
@@ -267,4 +324,22 @@ void ServerTabWidget::saveDataSlot() {
 void ServerTabWidget::valueChangedSlot() {
     preferencesServer->kcfg_serverChangesNotify->setText(QUuid::createUuid().toString());
 }
+
+
+
+
+
+void ServerTabWidget::renameTabSlot(QWidget* widget) {
+
+    // if widget has been found, rename tab :
+    if (this->indexOf(widget) > -1) {
+        this->setServerTabText();
+
+    }
+
+}
+
+
+
+
 

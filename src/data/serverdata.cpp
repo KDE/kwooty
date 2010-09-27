@@ -79,14 +79,6 @@ uint ServerData::getDisconnectTimeout() const {
 }
 
 
-void ServerData::setConnectionDelay(const uint& connectionDelay) {
-    this->connectionDelay = connectionDelay;
-}
-uint ServerData::getConnectionDelay() const {
-    return this->connectionDelay;
-}
-
-
 void ServerData::setAuthentication(const bool& authentication) {
     this->authentication = authentication;
 }
@@ -110,6 +102,15 @@ uint ServerData::getConnectionNumber() const {
     return this->connectionNumber;
 }
 
+void ServerData::setServerModeIndex(const uint& serverModeIndex) {
+    this->serverModeIndex = serverModeIndex;
+}
+
+uint ServerData::getServerModeIndex() const{
+    return this->serverModeIndex;
+}
+
+
 
 bool ServerData::operator!=(const ServerData& serverDataToCompare) {
 
@@ -121,10 +122,10 @@ bool ServerData::operator!=(const ServerData& serverDataToCompare) {
          (password          != serverDataToCompare.getPassword())           ||
          (port              != serverDataToCompare.getPort())               ||
          (disconnectTimeout != serverDataToCompare.getDisconnectTimeout())  ||
-         (connectionDelay   != serverDataToCompare.getConnectionDelay())    ||
          (authentication    != serverDataToCompare.isAuthentication())      ||
          (enableSSL         != serverDataToCompare.isEnableSSL())           ||
-         (connectionNumber  != serverDataToCompare.getConnectionNumber()) ) {
+         (connectionNumber  != serverDataToCompare.getConnectionNumber())   ||
+         (serverModeIndex   != serverDataToCompare.getServerModeIndex()) ) {
 
         different = true;
     }

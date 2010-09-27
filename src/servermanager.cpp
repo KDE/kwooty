@@ -31,11 +31,9 @@ ServerManager::ServerManager(CentralWidget* parent) : QObject(parent) {
 
     this->parent = parent;
 
-
-    kDebug();
-
     int serverNumber = KConfigGroupHandler::getInstance()->readServerNumberSettings();
 
+    // create all nntp clients for all servers (master + backups) :
     for (int serverGroupId = 0; serverGroupId < serverNumber; serverGroupId++) {
         this->idServerGroupMap.insert(serverGroupId, new ServerGroup(this, parent, serverGroupId));
     }
@@ -58,14 +56,11 @@ void ServerManager::setupConnections() {
 
 
 
-
 void ServerManager::settingsChangedSlot() {
-
-    kDebug();
 
     int serverNumber = KConfigGroupHandler::getInstance()->readServerNumberSettings();
 
-    // if new backup servers are requested :
+    // 1.a if new backup servers are requested :
     if (serverNumber > this->idServerGroupMap.size()) {
 
         for (int serverGroupId = this->idServerGroupMap.size(); serverGroupId < serverNumber; serverGroupId++){
@@ -74,7 +69,7 @@ void ServerManager::settingsChangedSlot() {
     }
 
 
-    // if less backup servers are requested :
+    // 1.b if less backup servers are requested :
     if (serverNumber < this->idServerGroupMap.size()) {
 
         while (this->idServerGroupMap.size() > serverNumber) {
@@ -85,28 +80,70 @@ void ServerManager::settingsChangedSlot() {
 
     }
 
+
+    // 2.a notify servergroups that some settings changed :
+    bool serverSettingsChanged = false;
+    foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values()) {
+
+        bool currentServerSettingsChanged = nextServerGroup->settingsServerChangedSlot();
+
+        if (currentServerSettingsChanged) {
+            serverSettingsChanged = true;
+        }
+    }
+
+    // 2.b if one or several server(s) settings have changed :
+    if (serverSettingsChanged) {
+
+        // disconnect all clients from all servers :
+        foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values()) {
+            nextServerGroup->disconnectAllClients();
+        }
+
+        // retry to download pending segments with master server first, then first backup server, then second one...
+        // according to new servers settings :
+        this->parent->getSegmentManager()->updatePendingSegmentsToTargetServer(MasterServer, MasterServer, SegmentManager::ResetSegments);
+
+        // reconnect all clients 100 ms later :
+        QTimer::singleShot(100, this, SLOT(requestClientConnectionSlot()));
+
+    }
+
 }
 
 
-int ServerManager::getNextTargetServer(int currentTargetServer) {
 
-    ServerGroup* masterServerGroup = this->idServerGroupMap.value(MasterServer);
+
+
+void ServerManager::requestClientConnectionSlot() {
+
+    foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values()) {
+        nextServerGroup->connectAllClients();
+    }
+
+}
+
+
+int ServerManager::getNextTargetServer(int currentTargetServer) {   
 
     int nextTargetServer = UtilityNamespace::NoTargetServer;
 
-        if (this->idServerGroupMap.size() > currentTargetServer + 1) {
+    // if a next backup server exists :
+    if (this->idServerGroupMap.size() > currentTargetServer + 1) {
 
-            foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values().mid(currentTargetServer + 1)) {
+        // look for next available server :
+        foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values().mid(currentTargetServer + 1)) {
 
-                if (nextServerGroup->isServerAvailable()) {
+            if (nextServerGroup->isServerAvailable() &&
+                nextServerGroup->isFailOverBackupServer()) {
 
-                    nextTargetServer = nextServerGroup->getServerGroupId();
-                    break;
-                }
-
+                nextTargetServer = nextServerGroup->getServerGroupId();
+                break;
             }
 
         }
+
+    }
 
     return nextTargetServer;
 
@@ -115,12 +152,13 @@ int ServerManager::getNextTargetServer(int currentTargetServer) {
 
 
 
-
 void ServerManager::downloadWithAnotherBackupServer(int serverGroupId) {
 
-
+    // get next server group id :
     int nextServerId = this->getNextTargetServer(serverGroupId);
 
+    // update pending segments with this new server group id in order to be downloaded by
+    // this server group (if NoTargetServer pending segments are considered as download finish) :
     this->parent->getSegmentManager()->updatePendingSegmentsToTargetServer(serverGroupId, nextServerId);
 
     if (nextServerId != NoTargetServer) {
@@ -132,13 +170,13 @@ void ServerManager::downloadWithAnotherBackupServer(int serverGroupId) {
 
 
 
-
 void ServerManager::tryDownloadWithServer(const int nextTargetServer) {
 
     ServerGroup* nextServerGroup = this->idServerGroupMap.value(nextTargetServer);
 
     if (nextServerGroup && nextServerGroup->isServerAvailable()) {
 
+        // notify server group that pending segments wait for it :
         nextServerGroup->assignDownloadToReadyClients();
     }
 
