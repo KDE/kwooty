@@ -135,7 +135,7 @@ int ServerManager::getNextTargetServer(int currentTargetServer) {
         foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values().mid(currentTargetServer + 1)) {
 
             if (nextServerGroup->isServerAvailable() &&
-                nextServerGroup->isFailOverBackupServer()) {
+                nextServerGroup->isPassiveBackupServer()) {
 
                 nextTargetServer = nextServerGroup->getServerGroupId();
                 break;

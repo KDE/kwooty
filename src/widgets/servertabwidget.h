@@ -42,10 +42,14 @@ public:
                            DoNotAskServerName,
                        };
 
+    // new tab name or rename tab :
+    enum ServerTabNaming { CreateTab,
+                           RenameTab,
+                       };
+
     ServerTabWidget(PreferencesServer*);
     void addNewTab();
     void deleteAndRemoveTab(const int&);
-    void setServerTabText();
     void setServerTabIcon(const int&, const int&);
     QMap<int, QString> getComboBoxIconTextMap();
 
@@ -56,10 +60,12 @@ private:
     PreferencesServer* preferencesServer;
     QMap<int, QString> comboBoxIconTextMap;
 
+    void setServerTabText(const ServerTabNaming& = CreateTab);
     void setupConnections();
     void enableDisableTabButtons();
     void syncGroupBoxTitle();
     QString displayEditDialogBox();
+    QString displayRenameTabDialogBox();
 
 
 

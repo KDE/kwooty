@@ -21,6 +21,7 @@
 
 #include "serverpreferenceswidget.h"
 
+#include <KMessageBox>
 #include <QUuid>
 
 #include "preferences/preferencesserver.h"
@@ -31,7 +32,11 @@
 #include "utility.h"
 using namespace UtilityNamespace;
 
-ServerPreferencesWidget::ServerPreferencesWidget(ServerTabWidget* parent, PreferencesServer* preferencesServer, int tabIndex) : QWidget(parent) {
+ServerPreferencesWidget::ServerPreferencesWidget(ServerTabWidget* parent,
+                                                 PreferencesServer* preferencesServer,
+                                                 int tabIndex,
+                                                 const ServerTabWidget::ServerNameQuery serverNameQuery) : QWidget(parent) {
+
 
     this->serverTabWidget = parent;
     this->preferencesServer = preferencesServer;
@@ -45,6 +50,13 @@ ServerPreferencesWidget::ServerPreferencesWidget(ServerTabWidget* parent, Prefer
     this->setupButtons();
 
     this->setupConnections();
+
+    // ensure that default values are diplayed if a new tab has been created by user :
+    if (serverNameQuery == ServerTabWidget::AskServerName) {
+        // set a tab index that will no be found by kconfig in order to return default values for new tab creation :
+        tabIndex = -1;
+    }
+
 
     this->setData(tabIndex);
 
@@ -101,6 +113,9 @@ void ServerPreferencesWidget::setupConnections() {
     connect (this->serverSettingsUi->enableSSL, SIGNAL(stateChanged(int)), this, SLOT(valueChangedSlot()));
 
     connect (this->serverSettingsUi->comboBoxServerMode, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChangedSlot()));
+
+    // display information box when pushButtonInfo is clicked :
+    connect (this->serverSettingsUi->pushButtonInfo, SIGNAL(clicked (bool)), this, SLOT(pushButtonInfoClickedSlot()));
 
 }
 
@@ -259,29 +274,37 @@ void ServerPreferencesWidget::hideWidgets(const int& tabIndex) {
 
 
 
+void ServerPreferencesWidget::pushButtonInfoClickedSlot() {
+
+    QString divStyle = "<div style=\"margin-left: 20px; margin-top: 3px; margin-bottom: 10px\">";
+    QString text;
+
+    text.append(i18n("<b>%1</b>","Backup Server Mode:"));
+    text.append(divStyle);
+    text.append(i18n("<i>%1</i> %2<br>", "Passive:", "download only files not found on Master server"));
+    text.append(i18n("<i>%1</i> %2<br>", "Active:", "download files on par with Master server"));
+    text.append(i18n("<i>%1</i> %2", "Server Disabled:", "server not used"));
+    text.append("</div>");
+
+    text.append(i18n("<b>%1</b>", "Server priority:"));
+    text.append(divStyle);
+    text.append(i18n("Drag and drop tabs to manage backup server priority in <i>Passive</i> mode"));
+    text.append("</div>");
+
+    text.append(i18n("<b>%1</b>", "Tab renaming:"));
+    text.append(divStyle);
+    text.append(i18n("Double click on current tab for tab renaming"));
+    text.append("</div>");
 
 
-void ServerPreferencesWidget::pushButtonEditSlot() {
-    this->serverTabWidget->setServerTabText();
+    KMessageBox::information(this, text, i18n("Backup Server hints"));
+
 }
 
 
-void ServerPreferencesWidget::pushButtonMoveLeftSlot() {
-
-    int currentIndex = this->serverTabWidget->currentIndex();
-
-    if (currentIndex > 1) {
-        this->serverTabWidget->moveTab(currentIndex, currentIndex - 1);
-    }
-}
 
 
-void ServerPreferencesWidget::pushButtonMoveRightSlot() {
 
-    int currentIndex = this->serverTabWidget->currentIndex();
 
-    if (currentIndex > 0 && (currentIndex + 1 < this->serverTabWidget->count()) ) {
-        this->serverTabWidget->moveTab(currentIndex, currentIndex + 1);
-    }
 
-}
+

@@ -55,9 +55,9 @@ ServerTabWidget::ServerTabWidget(PreferencesServer* parent) : KTabWidget(parent)
     this->closeTab->setToolTip("Remove current backup server");
 
     // create icons and associated texts for servers mode :
-    this->comboBoxIconTextMap.insert(FailOverServer,      QString("system-reboot;" + i18n("Failover")));
-    this->comboBoxIconTextMap.insert(LoadBalancingServer, QString("system-switch-user;" + i18n("Load Balancing")));
-    this->comboBoxIconTextMap.insert(DisabledServer,      QString("system-shutdown;" + i18n("Server Disabled")));
+    this->comboBoxIconTextMap.insert(PassiveServer,     QString("system-reboot;" + i18n("Passive")));
+    this->comboBoxIconTextMap.insert(ActiveServer,      QString("system-switch-user;" + i18n("Active")));
+    this->comboBoxIconTextMap.insert(DisabledServer,    QString("system-shutdown;" + i18n("Server Disabled")));
 
     // set buttons to right and left corners :
     this->setCornerWidget(this->newTab, Qt::TopRightCorner);
@@ -104,49 +104,45 @@ void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery a
     if (tabNumbers < PreferencesServer::MAX_SERVERS) {
 
         QString tabText;
-        QString iconStr;
+
+        // if server is masterServer, set its default name automatically :
         if (tabNumbers == MasterServer) {
-            tabText = i18n("Main");
-            iconStr = "applications-internet";
-        }
-        else {
-            tabText = i18n("Backup %1", tabNumbers);
-            iconStr = "document-save";
-
+            tabText = i18n("Master");
         }
 
-        // ask server name :
+        // if a backup server has been required by user :
         if (askServerName == ServerTabWidget::AskServerName) {
 
             QString input = this->displayEditDialogBox();
             if (!input.isEmpty()) {
                 tabText = input;
             }
-
+        }
+        // if the backup server has been previously created, search its name in settings :
+        else {
+            tabText = KConfigGroupHandler::getInstance()->tabName(tabNumbers, tabText);
         }
 
-        // if the backup server has already been created, search its name in settings :
-        tabText = KConfigGroupHandler::getInstance()->tabName(tabNumbers, tabText);
+        // if tabText is empty, do not create the new tab :
+        if (!tabText.isEmpty()) {
 
-        // add tab with new window widget :
-        ServerPreferencesWidget* serverPreferencesWidget = new ServerPreferencesWidget(this, this->preferencesServer, tabNumbers);
+            // add tab with new window widget :
+            ServerPreferencesWidget* serverPreferencesWidget = new ServerPreferencesWidget(this, this->preferencesServer, tabNumbers, askServerName);
 
-        this->addTab(serverPreferencesWidget, tabText);
-        this->setServerTabIcon(tabNumbers, serverPreferencesWidget->getData().getServerModeIndex());
-
-
+            this->addTab(serverPreferencesWidget, tabText);
+            this->setServerTabIcon(tabNumbers, serverPreferencesWidget->getData().getServerModeIndex());
 
 
-        //this->setTabIcon(tabNumbers, KIcon(iconStr));
+            this->setCurrentIndex(tabNumbers);
+            this->enableDisableTabButtons();
 
-        this->setCurrentIndex(tabNumbers);
-        this->enableDisableTabButtons();
+            // update groupbox title according to its corresponding tab position :
+            this->syncGroupBoxTitle();
 
-        // update groupbox title according to its corresponding tab position :
-        this->syncGroupBoxTitle();
+            // enable apply button to notify changes :
+            this->valueChangedSlot();
 
-        // enable apply button to notify changes :
-        this->valueChangedSlot();
+        }
 
     }
 
@@ -159,15 +155,26 @@ QMap<int, QString> ServerTabWidget::getComboBoxIconTextMap() {
 
 
 QString ServerTabWidget::displayEditDialogBox() {
-    
     return KInputDialog::getText(i18n("New server name"), i18n("Please enter server name:"));
 }
 
+QString ServerTabWidget::displayRenameTabDialogBox() {
+    return KInputDialog::getText(i18n("Rename server"), i18n("Rename server:"), this->tabText(this->currentIndex()).remove("&"));
+}
 
-void ServerTabWidget::setServerTabText() {
 
-    kDebug() << this->tabBar()->currentIndex();
-    QString input = this->displayEditDialogBox();
+
+void ServerTabWidget::setServerTabText(const ServerTabNaming& serverTabNaming) {
+
+    QString input;
+
+    if (serverTabNaming == CreateTab) {
+        input = this->displayEditDialogBox();
+    }
+    else {
+        input = this->displayRenameTabDialogBox();
+    }
+
     if (!input.isEmpty()) {
         this->setTabText(this->currentIndex(), input);
     }
@@ -333,7 +340,7 @@ void ServerTabWidget::renameTabSlot(QWidget* widget) {
 
     // if widget has been found, rename tab :
     if (this->indexOf(widget) > -1) {
-        this->setServerTabText();
+        this->setServerTabText(RenameTab);
 
     }
 

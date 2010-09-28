@@ -51,8 +51,8 @@ public:
     ServerData getServerData() const;
     bool isMasterServer() const;
     bool isDisabledBackupServer() const;
-    bool isFailOverBackupServer() const;
-    bool isLoadBalancingBackupServer() const;
+    bool isPassiveBackupServer() const;
+    bool isActiveBackupServer() const;
 
 private:
 

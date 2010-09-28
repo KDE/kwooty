@@ -26,8 +26,8 @@
 
 #include "ui_serversettings.h"
 #include "data/serverdata.h"
+#include "servertabwidget.h"
 
-class ServerTabWidget;
 class PreferencesServer;
 class ServerTabWidget;
 
@@ -37,7 +37,7 @@ class ServerPreferencesWidget : public QWidget {
 
 
 public:
-    ServerPreferencesWidget(ServerTabWidget*, PreferencesServer*, int);
+    ServerPreferencesWidget(ServerTabWidget*, PreferencesServer*, int, const ServerTabWidget::ServerNameQuery);
     ~ServerPreferencesWidget();
 
     void setData(const int&);
@@ -65,10 +65,8 @@ public slots:
 private slots:
     void portValueChangedSlot(int);
     void valueChangedSlot();
-    void pushButtonEditSlot();
-    void pushButtonMoveLeftSlot();
-    void pushButtonMoveRightSlot();
     void serverModeValueChangedSlot(int);
+    void pushButtonInfoClickedSlot();
 
 
 

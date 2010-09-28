@@ -64,7 +64,7 @@ int ServerGroup::getServerGroupId() const {
     // if server is now configured in load balancing mode, set its server groupId to MasterServer
     // in order be considered as another master server and to be able to download
     // pending segment targeted with MasterServer Id :
-    if (this->isLoadBalancingBackupServer()) {
+    if (this->isActiveBackupServer()) {
         currentServerGroupId = MasterServer;
     }
     // else set its default server group id :
@@ -98,12 +98,12 @@ bool ServerGroup::isDisabledBackupServer() const {
     return (this->serverData.getServerModeIndex() == UtilityNamespace::DisabledServer);
 }
 
-bool ServerGroup::isFailOverBackupServer() const {
-    return (this->serverData.getServerModeIndex() == UtilityNamespace::FailOverServer);
+bool ServerGroup::isPassiveBackupServer() const {
+    return (this->serverData.getServerModeIndex() == UtilityNamespace::PassiveServer);
 }
 
-bool ServerGroup::isLoadBalancingBackupServer() const {
-    return (this->serverData.getServerModeIndex() == UtilityNamespace::LoadBalancingServer);
+bool ServerGroup::isActiveBackupServer() const {
+    return (this->serverData.getServerModeIndex() == UtilityNamespace::ActiveServer);
 }
 
 
