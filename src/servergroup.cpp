@@ -40,14 +40,11 @@ ServerGroup::ServerGroup(ServerManager* parent, CentralWidget* centralWidget, in
     this->serverAvailable = true;
     this->pendingSegments = false;
 
-    this->totalConnections = 0;
-
+    // retrieve server settings :
     this->serverData = KConfigGroupHandler::getInstance()->readServerSettings(this->serverGroupId);
 
-    //this->setServerGroupId(serverGroupId);
-
+    // connect clients :
     this->createNntpClients();
-
 
     this->clientsAvailableTimer = new QTimer();
     this->clientsAvailableTimer->start(500);
@@ -61,13 +58,13 @@ int ServerGroup::getServerGroupId() const {
 
     int currentServerGroupId;
 
-    // if server is now configured in load balancing mode, set its server groupId to MasterServer
+    // if server is now configured in load balancing mode, return MasterServer groupId
     // in order be considered as another master server and to be able to download
     // pending segment targeted with MasterServer Id :
     if (this->isActiveBackupServer()) {
         currentServerGroupId = MasterServer;
     }
-    // else set its default server group id :
+    // else return its default server group id :
     else {
         currentServerGroupId = this->serverGroupId;
     }
@@ -106,12 +103,18 @@ bool ServerGroup::isActiveBackupServer() const {
     return (this->serverData.getServerModeIndex() == UtilityNamespace::ActiveServer);
 }
 
+bool ServerGroup::isServerAvailable() const {
+    return this->serverAvailable;
+}
+
 
 
 void ServerGroup::setupConnections() {
 
+    // check that server is available or not :
     connect(clientsAvailableTimer, SIGNAL(timeout()), this, SLOT(checkServerAvailabilitySlot()));
 
+    // check if pending segments are ready for the current server :
     connect(clientsAvailableTimer, SIGNAL(timeout()), this, SLOT(downloadPendingSegmentsSlot()));
 
 }
@@ -130,6 +133,121 @@ void ServerGroup::createNntpClients() {
         this->clientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
         connectionDelay += 100;
     }
+
+}
+
+
+
+void ServerGroup::disconnectAllClients() {
+
+    // stop timer that notify if clients are available or not :
+    this->clientsAvailableTimer->stop();
+
+    // disconnect all clients :
+    emit disconnectRequestSignal();
+}
+
+
+void ServerGroup::connectAllClients() {
+
+    // connect all clients :
+    emit connectRequestSignal();
+
+    // restart timer that notify if clients are available :
+    this->serverAvailable = true;
+    QTimer::singleShot(500 * this->serverGroupId, this, SLOT(startTimerSlot()));
+
+}
+
+
+
+void ServerGroup::startTimerSlot() {
+    this->clientsAvailableTimer->start();
+}
+
+
+
+void ServerGroup::assignDownloadToReadyClients() {
+
+    // do not hammer backup servers that new segments are available,
+    // it will be done asynchronously every 500ms :
+    this->pendingSegments = true;
+}
+
+
+
+
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
+
+
+void ServerGroup::downloadPendingSegmentsSlot() {
+
+    if (this->pendingSegments) {
+
+        // notify only nntpclients ready that pending data are waiting :
+        foreach (ClientManagerConn* clientManagerConn, this->clientManagerConnList) {
+
+            if (clientManagerConn->isClientReady()) {
+                clientManagerConn->getNntpClient()->dataHasArrivedSlot();
+            }
+        }
+
+        // clients have been notified :
+        this->pendingSegments = false;
+    }
+
+}
+
+
+void ServerGroup::checkServerAvailabilitySlot() {
+
+    // if this is not the master server :
+    if (this->serverGroupId != MasterServer) {
+
+        bool serverAvailableOld = this->serverAvailable;
+
+        int clientsNotReady = 0;
+
+        // count the number of clients not ready to download :
+        foreach (ClientManagerConn* clientManagerConn, this->clientManagerConnList) {
+
+            if (!clientManagerConn->isClientReady()) {
+                clientsNotReady++;
+            }
+
+        }
+
+        // if all clients are not ready, the server is unavailable :
+        if (clientsNotReady == this->clientManagerConnList.size()) {
+            this->serverAvailable = false;
+        }
+        else {
+            this->serverAvailable = true;
+        }
+
+
+        // server has been disabled in settings, consider it as unavailable :
+        if (this->isDisabledBackupServer()) {
+            this->serverAvailable = false;
+        }
+
+
+        // if availability of the backup server has changed :
+        if ((this->serverAvailable != serverAvailableOld) &&
+            !this->serverAvailable)  {
+
+            kDebug() << "server group id : " << this->serverGroupId << "available : " << this->serverAvailable;
+
+            // current backup server is down, try to download pending downloads with
+            // another backup server if any :
+            this->serverManager->downloadWithAnotherBackupServer(this->serverGroupId);
+
+        }
+
+    }
+
 
 }
 
@@ -174,7 +292,7 @@ bool ServerGroup::settingsServerChangedSlot() {
         // update new settings right now as they will used by nntpclients :
         this->serverData = newServerData;
 
-        // notity to manager that some settings have changed :
+        // notity manager that some settings have changed :
         serverSettingsChanged = true;
 
     }
@@ -182,125 +300,6 @@ bool ServerGroup::settingsServerChangedSlot() {
     return serverSettingsChanged;
 
 }
-
-
-void ServerGroup::disconnectAllClients() {
-
-    // stop timer that notify if clients are available or not :
-    this->clientsAvailableTimer->stop();
-
-    // disconnect all clients :
-    emit disconnectRequestSignal();
-}
-
-
-void ServerGroup::connectAllClients() {
-
-    // connect all clients :
-    emit connectRequestSignal();
-
-    // restart timer that notify if clients are available :
-    this->serverAvailable = true;
-    QTimer::singleShot(500 * this->serverGroupId, this, SLOT(startTimerSlot()));
-
-
-
-}
-
-
-
-void ServerGroup::startTimerSlot() {
-    this->clientsAvailableTimer->start();
-}
-
-
-
-void ServerGroup::assignDownloadToReadyClients() {
-
-    // do not hammer backup servers that new segments are available,
-    // it will be done asynchronously every 500ms :
-    this->pendingSegments = true;
-}
-
-
-
-void ServerGroup::downloadPendingSegmentsSlot() {
-
-    if (this->pendingSegments) {
-
-        foreach (ClientManagerConn* clientManagerConn, this->clientManagerConnList) {
-
-            if (clientManagerConn->isClientReady()) {
-                clientManagerConn->getNntpClient()->dataHasArrivedSlot();
-            }
-        }
-
-        this->pendingSegments = false;
-    }
-
-}
-
-
-
-
-
-void ServerGroup::checkServerAvailabilitySlot() {
-
-    if (this->serverGroupId != MasterServer) {
-
-        bool serverAvailableOld = this->serverAvailable;
-
-        int clientsNotReady = 0;
-
-        foreach (ClientManagerConn* clientManagerConn, this->clientManagerConnList) {
-
-            if (!clientManagerConn->isClientReady()) {
-                clientsNotReady++;
-            }
-
-        }
-
-        if (clientsNotReady == this->clientManagerConnList.size()) {
-            this->serverAvailable = false;
-        }
-        else {
-            this->serverAvailable = true;
-        }
-
-
-        // server has been disabled in settings, consider is as unavailable :
-        if (this->isDisabledBackupServer()) {
-            this->serverAvailable = false;
-        }
-
-
-        // if availability of the server has changed and this is not the master server :
-        if ( (this->serverAvailable != serverAvailableOld) &&
-             (this->serverGroupId != MasterServer) )  {
-
-            kDebug() << "Is server now available ? :" << this->serverGroupId << this->serverAvailable;
-
-            // current backup server is down, try to download pending downloads with
-            // another backup server if any :
-            this->serverManager->downloadWithAnotherBackupServer(this->serverGroupId);
-
-        }
-
-    }
-
-
-}
-
-
-
-
-bool ServerGroup::isServerAvailable() {
-    return this->serverAvailable;
-}
-
-
-
-
 
 
 

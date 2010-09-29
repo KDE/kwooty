@@ -40,7 +40,7 @@ StatsInfoBuilder::StatsInfoBuilder(ClientsObserver* clientsObserver, CentralWidg
 
     this->downloadModel = parent->getDownloadModel();
 
-    // set timer to compute average download speed every each SPEED_AVERAGE_SECONDS :
+    // set timer to compute average download speed each SPEED_AVERAGE_SECONDS :
     this->downloadSpeedTimer = new QTimer(this);
     this->downloadSpeedTimer->start(SPEED_AVERAGE_SECONDS * 1000);
 

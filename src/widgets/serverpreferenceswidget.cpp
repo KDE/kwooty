@@ -32,6 +32,7 @@
 #include "utility.h"
 using namespace UtilityNamespace;
 
+
 ServerPreferencesWidget::ServerPreferencesWidget(ServerTabWidget* parent,
                                                  PreferencesServer* preferencesServer,
                                                  int tabIndex,
@@ -45,31 +46,33 @@ ServerPreferencesWidget::ServerPreferencesWidget(ServerTabWidget* parent,
     this->serverSettingsUi = new Ui_ServerSettings();
     this->serverSettingsUi->setupUi(this);
 
-
+    // hide server mode settings for master server :
     this->hideWidgets(tabIndex);
+
+    // setup help push button and server modes combo box:
     this->setupButtons();
 
     this->setupConnections();
 
-    // ensure that default values are diplayed if a new tab has been created by user :
-    if (serverNameQuery == ServerTabWidget::AskServerName) {
+    // ensure that default values are diplayed if a new tab has been created by user
+    // or default settings have been requested :
+    if ( (serverNameQuery == ServerTabWidget::AskServerName) ||
+         (serverNameQuery == ServerTabWidget::DefaultSettingsName) ) {
         // set a tab index that will no be found by kconfig in order to return default values for new tab creation :
         tabIndex = -1;
     }
 
-
+    // fill previously stored data in forms :
     this->setData(tabIndex);
-
-
 
 }
 
 
 ServerPreferencesWidget::~ServerPreferencesWidget() {
-
     kDebug();
     delete this->serverSettingsUi;
 }
+
 
 
 int ServerPreferencesWidget::getTabIndex() {
@@ -77,10 +80,13 @@ int ServerPreferencesWidget::getTabIndex() {
 }
 
 
+
 void ServerPreferencesWidget::setupButtons() {
 
+    // set icon for info button :
     this->serverSettingsUi->pushButtonInfo->setIcon(KIcon("system-help"));
 
+    // set icon and text for server mode combo box :
     QMap<int, QString> comboBoxIconTextMap = this->serverTabWidget->getComboBoxIconTextMap();
 
     foreach(QString pattern, comboBoxIconTextMap.values()) {
@@ -201,41 +207,6 @@ ServerData ServerPreferencesWidget::getData() {
 
 
 
-void ServerPreferencesWidget::valueChangedSlot() {
-    preferencesServer->kcfg_serverChangesNotify->setText(QUuid::createUuid().toString());
-}
-
-
-void ServerPreferencesWidget::portValueChangedSlot(int portValue) {
-
-    // if ports usually used for SSL are met :
-    if (portValue == 563 || portValue == 443) {
-        this->serverSettingsUi->enableSSL->setCheckState(Qt::Checked);
-    }
-    // else is ports usually used for normal connections are met :
-    else {
-        this->serverSettingsUi->enableSSL->setCheckState(Qt::Unchecked);
-    }
-
-}
-
-
-void ServerPreferencesWidget::serverModeValueChangedSlot(int serverModeIndex) {
-
-    this->serverTabWidget->setServerTabIcon(this->tabIndex, serverModeIndex);
-
-    if (serverModeIndex == UtilityNamespace::DisabledServer) {
-        this->enableWidgets(false);
-    }
-    else {
-        this->enableWidgets(true);
-    }
-
-
-}
-
-
-
 void ServerPreferencesWidget::enableWidgets(const bool& enable) {
 
     this->serverSettingsUi->hostName->setEnabled(enable);
@@ -261,7 +232,7 @@ void ServerPreferencesWidget::enableWidgets(const bool& enable) {
 
 void ServerPreferencesWidget::hideWidgets(const int& tabIndex) {
 
-    if (tabIndex == 0) {
+    if (tabIndex == MasterServer) {
 
         this->serverSettingsUi->labelServerMode->hide();
         this->serverSettingsUi->comboBoxServerMode->hide();
@@ -271,6 +242,46 @@ void ServerPreferencesWidget::hideWidgets(const int& tabIndex) {
 
 }
 
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
+
+void ServerPreferencesWidget::valueChangedSlot() {
+    preferencesServer->kcfg_serverChangesNotify->setText(QUuid::createUuid().toString());
+}
+
+
+
+void ServerPreferencesWidget::portValueChangedSlot(int portValue) {
+
+    // if ports usually used for SSL are met :
+    if (portValue == 563 || portValue == 443) {
+        this->serverSettingsUi->enableSSL->setCheckState(Qt::Checked);
+    }
+    // else is ports usually used for normal connections are met :
+    else {
+        this->serverSettingsUi->enableSSL->setCheckState(Qt::Unchecked);
+    }
+
+}
+
+
+
+void ServerPreferencesWidget::serverModeValueChangedSlot(int serverModeIndex) {
+
+    // update tab icon :
+    this->serverTabWidget->setServerTabIcon(this->tabIndex, serverModeIndex);
+
+    // disable all settings if current server has been disabled :
+    if (serverModeIndex == UtilityNamespace::DisabledServer) {
+        this->enableWidgets(false);
+    }
+    else {
+        this->enableWidgets(true);
+    }
+
+
+}
 
 
 
@@ -300,11 +311,5 @@ void ServerPreferencesWidget::pushButtonInfoClickedSlot() {
     KMessageBox::information(this, text, i18n("Backup Server hints"));
 
 }
-
-
-
-
-
-
 
 

@@ -67,7 +67,7 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
         // filter Idle segments searching according to corresponding serverGroup id :
         if ( !itemFound &&
              (segmentData.getStatus() == IdleStatus) &&
-             ( segmentData.getServerGroupTarget() == serverGroupId )) {
+             (segmentData.getServerGroupTarget() == serverGroupId) ) {
 
             itemFound = true;
 
@@ -314,6 +314,7 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData) {
 
         SegmentData previousSegmentData = segmentList.value(segmentData.getElementInList());
 
+        // update segment only if it has not already be downloaded :
         if ( (previousSegmentData.getStatus() <= PausingStatus) &&
              (segmentList.size() > segmentData.getElementInList()) ) {
 
@@ -394,12 +395,13 @@ void SegmentManager::updateRepairExtractSegmentSlot(QVariant parentIdentifer, in
 
 void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServerGroup, const int& nextServerGroup, const PendingSegments pendingSegments) {
 
-    //TODO : to be tested...
+
     for (int i = 0; i < this->downloadModel->rowCount(); i++) {
 
         QStandardItem* nzbItem = this->downloadModel->getFileNameItemFromRowNumber(i);
         UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusDataFromIndex(nzbItem->index()).getStatus();
 
+        // if nzb item is currently being downloaded :
         if (Utility::isInDownloadProcess(currentStatus)) {
 
             for (int j = 0; j < nzbItem->rowCount(); j++) {
@@ -407,7 +409,7 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
                 QStandardItem* childFileNameItem = nzbItem->child(j, FILE_NAME_COLUMN);
                 UtilityNamespace::ItemStatus childStatus = this->downloadModel->getChildStatusFromNzbIndex(nzbItem->index(), j);
 
-
+                // if the current file is pending or being downloaded :
                 if (Utility::isInDownloadProcess(childStatus)) {
 
                     NzbFileData nzbFileData = childFileNameItem->data(NzbFileDataRole).value<NzbFileData>();
@@ -417,6 +419,7 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
 
                     foreach (SegmentData currentSegment, segmentList) {
 
+                        // update pending segments to a new backup server target :
                         if (pendingSegments == UpdateSegments) {
 
                             if (currentSegment.getStatus() != DownloadFinishStatus &&
@@ -441,6 +444,7 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
                             }
 
                         }
+                        // reset pending segments to master server target :
                         else if (pendingSegments == ResetSegments) {
 
                             if (currentSegment.getStatus() != DownloadFinishStatus) {

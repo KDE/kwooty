@@ -70,7 +70,7 @@ public:
 
     NntpClient(ClientManagerConn* parent = 0);
     ~NntpClient();
-    void downloadNextSegment(const SegmentData);
+    void downloadNextSegment(const SegmentData&);
     void noSegmentAvailable();
     void setConnectedClientStatus(const NntpClientStatus, const TimerJob = StartStopTimers);
     bool isClientReady();

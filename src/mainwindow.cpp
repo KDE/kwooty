@@ -93,7 +93,6 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
         this->show();
     }
 
-
 }
 
 

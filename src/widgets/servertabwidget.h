@@ -40,6 +40,7 @@ public:
     // query name of server only when created by user :
     enum ServerNameQuery { AskServerName,
                            DoNotAskServerName,
+                           DefaultSettingsName
                        };
 
     // new tab name or rename tab :
@@ -49,6 +50,7 @@ public:
 
     ServerTabWidget(PreferencesServer*);
     void addNewTab();
+    void addDefaultTab();
     void deleteAndRemoveTab(const int&);
     void setServerTabIcon(const int&, const int&);
     QMap<int, QString> getComboBoxIconTextMap();

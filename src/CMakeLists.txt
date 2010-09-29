@@ -48,6 +48,7 @@ set(Kwooty_lib_SRCS
   notificationmanager.cpp
   servermanager.cpp
   servergroup.cpp
+  utilityiconpainting.cpp
   preferences/preferencesserver.cpp
   preferences/preferencesgeneral.cpp
   preferences/preferencesprograms.cpp

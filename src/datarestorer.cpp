@@ -31,8 +31,7 @@
 #include "standarditemmodel.h"
 #include "kwootysettings.h"
 
-DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent)
-{
+DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent) {
 
     this->parent = parent;
     this->downloadModel = parent->getDownloadModel();
@@ -46,34 +45,25 @@ DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent)
 
 
     magicNumber = 0xC82F1D37;
-    applicationVersion1 = 003;
+    applicationVersion1 = 004;
     // map kwooty serialization version and its corresponding dataStream version
     versionStreamMap.insert(applicationVersion1, QDataStream::Qt_4_4);
 
     this->setupConnections();
 
-
+    // wait 1 second, time to get several nntp instances created, before restoring pending data :
     if (Settings::restoreDownloads()) {
-        QTimer::singleShot(10, this, SLOT(readDataFromDiskSlot()));
+        QTimer::singleShot(1000, this, SLOT(readDataFromDiskSlot()));
     }
 
 
 
 }
 
-
-void DataRestorer::appReadySlot() {
-
-    //TODO : fix crash if data are restored too quickly before nntpclients instance!!!!
-    // read data from previous sessions if exists :
-    if (Settings::restoreDownloads()) {
-        QTimer::singleShot(150, this, SLOT(readDataFromDiskSlot()));
-    }
-
-
-}
 
 void DataRestorer::setupConnections() {
+
+    connect(this->parent->parent(), SIGNAL(applicationReadySignal()), this, SLOT(applicationReadySlot()));
 
     connect(dataSaverTimer, SIGNAL(timeout()), this, SLOT(saveQueueDataSilentlySlot()));
 
@@ -472,10 +462,8 @@ void DataRestorer::saveQueueDataSilentlySlot() {
 }
 
 
-
 int DataRestorer::displayRestoreMessageBox() const {
 
-    //TODO !!!!!!
     int answer = KMessageBox::Yes;
 
     // ask question if confirmRestoreSilently is checked:

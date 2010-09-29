@@ -36,14 +36,13 @@ public:
     ClientManagerConn(ServerGroup*, int, int);
     ClientManagerConn();
     ~ClientManagerConn();
-    int clientStatus;
-    void processNextSegment(SegmentData);
-    void noSegmentAvailable();
-    int getClientId() const;
-    bool isClientReady();
     NntpClient* getNntpClient();
     ServerGroup* getServerGroup();
+    void processNextSegment(const SegmentData&);
+    void noSegmentAvailable();
     ServerData getServerData() const;
+    int getClientId() const;
+    bool isClientReady() const;
     bool isMasterServer() const;
     bool isDisabledBackupServer() const;
 
@@ -59,6 +58,7 @@ signals:
 
 
 public slots:
+    void dataHasArrivedSlot();
     void disconnectRequestSlot();
     void connectRequestSlot();
 

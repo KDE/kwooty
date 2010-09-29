@@ -80,7 +80,7 @@ signals:
 
 
 public slots:
-    void appReadySlot();
+
 
 private slots:
     void readDataFromDiskSlot();

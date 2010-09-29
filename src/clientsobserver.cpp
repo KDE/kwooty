@@ -101,11 +101,11 @@ void ClientsObserver::fullFileSizeUpdate(const quint64 size, const quint64 files
 void ClientsObserver::connectionStatusSlot(const int connectionStatus) {
 
     if (connectionStatus == Connected){
-        totalConnections++;
+        this->totalConnections++;
     }
 
     if (connectionStatus == Disconnected){
-        totalConnections--;
+        this->totalConnections--;
     }
 
     emit updateConnectionStatusSignal();

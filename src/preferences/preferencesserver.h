@@ -24,15 +24,14 @@
 #include <QWidget>
 
 #include <KConfigDialog>
-#include <QToolButton>
 
 #include "ui_serversettings.h"
 #include "ui_preferencesserver.h"
 
 class ServerTabWidget;
 
-class PreferencesServer : public QWidget, public Ui::PreferencesServer
-{
+
+class PreferencesServer : public QWidget, public Ui::PreferencesServer {
 
      Q_OBJECT
 
@@ -44,22 +43,15 @@ public:
 
 
 private:
-
     ServerTabWidget* tabWidget;
-    QToolButton* newTab;
-    QToolButton* closeTab;
     KConfigDialog* dialog;
-
 
     void loadSettings();
     void saveSettings();
     void restorePreviousSettings();
-    void syncTabPosition();
-
+    void defaultSettings();
 
 private slots:
-
-    void textChangedSlot(const QString&);
     void configButtonClickedSlot(KDialog::ButtonCode);
 
 

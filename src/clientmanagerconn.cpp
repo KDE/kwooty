@@ -49,10 +49,9 @@ ClientManagerConn::ClientManagerConn(ServerGroup* parent, int clientId, int conn
     // client identifier :
     this->clientId = clientId;
 
-
     // start each nntpclient instance with a delay in order to not hammer the host :
     this->connectionDelay = connectionDelay;
-    QTimer::singleShot(connectionDelay, this, SLOT(initSlot()) );
+    QTimer::singleShot(this->connectionDelay, this, SLOT(initSlot()) );
 
 }
 
@@ -78,7 +77,7 @@ void ClientManagerConn::initSlot()
     // ServerGroup notify all nntpClient instances that connection settings changed :
     connect (centralWidget,
              SIGNAL(dataHasArrivedSignal()),
-             nntpClient,
+             this,
              SLOT(dataHasArrivedSlot()));
 
 
@@ -96,27 +95,27 @@ void ClientManagerConn::initSlot()
 
 
     // ask to segment manager to send a new segment to download :
-    connect (nntpClient,
+    connect (this->nntpClient,
              SIGNAL(getNextSegmentSignal(ClientManagerConn*)),
              centralWidget->getSegmentManager(),
              SLOT(getNextSegmentSlot(ClientManagerConn*)));
 
     // send to centralWidget segment data update :
     qRegisterMetaType<SegmentData>("SegmentData");
-    connect (nntpClient,
+    connect (this->nntpClient,
              SIGNAL(updateDownloadSegmentSignal(SegmentData)),
              centralWidget->getSegmentManager(),
              SLOT(updateDownloadSegmentSlot(SegmentData)));
 
     // notify centralWidget that error occured during file save process :
-    connect (nntpClient,
+    connect (this->nntpClient,
              SIGNAL(saveFileErrorSignal(int)),
              centralWidget,
              SLOT(saveFileErrorSlot(int)));
 
 
     // send connection status (connected, deconnected) to status bar :
-    connect (nntpClient,
+    connect (this->nntpClient,
              SIGNAL(connectionStatusSignal(const int)),
              centralWidget->getClientsObserver(),
              SLOT(connectionStatusSlot(const int)));
@@ -124,19 +123,19 @@ void ClientManagerConn::initSlot()
 
 
     // send type of encryption used by host with ssl connection to status bar :
-    connect (nntpClient,
+    connect (this->nntpClient,
              SIGNAL(encryptionStatusSignal(const bool, const QString, const bool, const QString, const QStringList)),
              centralWidget->getClientsObserver(),
              SLOT(encryptionStatusSlot(const bool, const QString, const bool, const QString, const QStringList)));
 
     // send eventual socket error to status bar :
-    connect (nntpClient,
+    connect (this->nntpClient,
              SIGNAL(nntpErrorSignal(const int)),
              centralWidget->getClientsObserver(),
              SLOT(nntpErrorSlot(const int)));
 
     // send bytes downloaded to info collector dispatcher :
-    connect (nntpClient,
+    connect (this->nntpClient,
              SIGNAL(speedSignal(const int)),
              centralWidget->getClientsObserver(),
              SLOT(nntpClientSpeedSlot(const int)));
@@ -149,14 +148,14 @@ void ClientManagerConn::initSlot()
 void ClientManagerConn::noSegmentAvailable() {
     // if the getNextSegmentSignal returns this method, there is no item to download
     // set the client to Idle Status :
-    nntpClient->noSegmentAvailable();
+    this->nntpClient->noSegmentAvailable();
 
 }
 
 
 
-void ClientManagerConn::processNextSegment(SegmentData inCurrentSegmentData){
-    nntpClient->downloadNextSegment(inCurrentSegmentData);
+void ClientManagerConn::processNextSegment(const SegmentData& inCurrentSegmentData){
+    this->nntpClient->downloadNextSegment(inCurrentSegmentData);
 }
 
 
@@ -187,7 +186,7 @@ bool ClientManagerConn::isDisabledBackupServer() const {
 
 
 
-bool ClientManagerConn::isClientReady() {
+bool ClientManagerConn::isClientReady() const {
 
     bool clientReady = false;
 
@@ -199,6 +198,19 @@ bool ClientManagerConn::isClientReady() {
 
     return clientReady;
 
+}
+
+
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
+
+void ClientManagerConn::dataHasArrivedSlot() {
+    // due to delay instanciation,
+    // be sure that the instance has been really created before requesting segments to download :
+    if (this->nntpClient) {
+        this->nntpClient->dataHasArrivedSlot();
+    }
 }
 
 

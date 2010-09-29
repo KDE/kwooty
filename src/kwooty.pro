@@ -64,7 +64,8 @@ SOURCES += main.cpp \
     preferences/kconfiggrouphandler.cpp \
     data/serverdata.cpp \
     widgets/serverpreferenceswidget.cpp \
-    widgets/servertabwidget.cpp
+    widgets/servertabwidget.cpp \
+    utilityiconpainting.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -126,7 +127,8 @@ HEADERS += mainwindow.h \
     preferences/kconfiggrouphandler.h \
     data/serverdata.h \
     widgets/serverpreferenceswidget.h \
-    widgets/servertabwidget.h
+    widgets/servertabwidget.h \
+    utilityiconpainting.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \

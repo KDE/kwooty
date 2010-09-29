@@ -23,7 +23,6 @@
 #define SERVERGROUP_H
 
 #include <QObject>
-#include <QSet>
 #include <QTimer>
 
 #include "data/serverdata.h"
@@ -40,34 +39,28 @@ class ServerGroup : public QObject {
 
 public:
     ServerGroup(ServerManager*, CentralWidget*, int);
-    int getServerGroupId() const;
     CentralWidget* getCentralWidget();
     ServerManager* getServerManager();
-    bool isServerAvailable();
-    QSet<int> getUnavailableSet() const;
     void assignDownloadToReadyClients();
     void disconnectAllClients();
     void connectAllClients();
+    int getServerGroupId() const;
     ServerData getServerData() const;
+    bool isServerAvailable() const;
     bool isMasterServer() const;
     bool isDisabledBackupServer() const;
     bool isPassiveBackupServer() const;
     bool isActiveBackupServer() const;
 
 private:
-
-    int serverGroupId;
+    ServerData serverData;
+    QTimer* clientsAvailableTimer;
     QList<ClientManagerConn*> clientManagerConnList;
     CentralWidget* centralWidget;
     ServerManager* serverManager;
-    int totalConnections;
-    int nttpErrorStatus;
+    int serverGroupId;
     bool serverAvailable;
     bool pendingSegments;
-    ServerData serverData;
-    QSet<int> unavailableServerSet;
-    QTimer* clientsAvailableTimer;
-
 
     void createNntpClients();
     void setupConnections();
@@ -87,7 +80,6 @@ public slots:
 private slots:
     void checkServerAvailabilitySlot();
     void startTimerSlot();
-
 
 
 };

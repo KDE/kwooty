@@ -74,77 +74,23 @@ ServerTabWidget::ServerTabWidget(PreferencesServer* parent) : KTabWidget(parent)
 
 void ServerTabWidget::setupConnections() {
 
+    // tab buttons have been clicked :
     connect (this->newTab, SIGNAL(clicked (bool)), this, SLOT(newTabClickedSlot()));
     connect (this->closeTab, SIGNAL(clicked (bool)), this, SLOT(closeTabClickedSlot()));
 
+    // current tab has been moved by user :
     connect (this->tabBar(), SIGNAL(tabMoved (int, int)), this, SLOT(tabMovedSlot(int, int)));
     connect (this->tabBar(), SIGNAL(currentChanged (int)), this, SLOT(currentChangedSlot(int)));
 
     // save data asked from kConfigDialog :
     connect (this->preferencesServer, SIGNAL(saveDataSignal()), this, SLOT(saveDataSlot()));
 
+    // notify changes in settings if tab has moved :
     connect (this->tabBar(), SIGNAL(tabMoved (int, int)), this, SLOT(valueChangedSlot()));
 
+    // double click has been performed on tab to rename server :
     connect (this, SIGNAL(mouseDoubleClick(QWidget*)), this, SLOT(renameTabSlot(QWidget*)));
 
-
-}
-
-
-void ServerTabWidget::addNewTab() {
-    this->newTabClickedSlot(ServerTabWidget::DoNotAskServerName);
-}
-
-
-void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery askServerName) {
-
-    int tabNumbers = this->count();
-
-    // if number of current tabs is < 5 allow to add a new backup server :
-    if (tabNumbers < PreferencesServer::MAX_SERVERS) {
-
-        QString tabText;
-
-        // if server is masterServer, set its default name automatically :
-        if (tabNumbers == MasterServer) {
-            tabText = i18n("Master");
-        }
-
-        // if a backup server has been required by user :
-        if (askServerName == ServerTabWidget::AskServerName) {
-
-            QString input = this->displayEditDialogBox();
-            if (!input.isEmpty()) {
-                tabText = input;
-            }
-        }
-        // if the backup server has been previously created, search its name in settings :
-        else {
-            tabText = KConfigGroupHandler::getInstance()->tabName(tabNumbers, tabText);
-        }
-
-        // if tabText is empty, do not create the new tab :
-        if (!tabText.isEmpty()) {
-
-            // add tab with new window widget :
-            ServerPreferencesWidget* serverPreferencesWidget = new ServerPreferencesWidget(this, this->preferencesServer, tabNumbers, askServerName);
-
-            this->addTab(serverPreferencesWidget, tabText);
-            this->setServerTabIcon(tabNumbers, serverPreferencesWidget->getData().getServerModeIndex());
-
-
-            this->setCurrentIndex(tabNumbers);
-            this->enableDisableTabButtons();
-
-            // update groupbox title according to its corresponding tab position :
-            this->syncGroupBoxTitle();
-
-            // enable apply button to notify changes :
-            this->valueChangedSlot();
-
-        }
-
-    }
 
 }
 
@@ -154,8 +100,18 @@ QMap<int, QString> ServerTabWidget::getComboBoxIconTextMap() {
 }
 
 
+
+void ServerTabWidget::addNewTab() {
+    this->newTabClickedSlot(ServerTabWidget::DoNotAskServerName);
+}
+
+void ServerTabWidget::addDefaultTab() {
+    this->newTabClickedSlot(ServerTabWidget::DefaultSettingsName);
+}
+
+
 QString ServerTabWidget::displayEditDialogBox() {
-    return KInputDialog::getText(i18n("New server name"), i18n("Please enter server name:"));
+    return KInputDialog::getText(i18n("Backup server name"), i18n("Please enter backup server name:"));
 }
 
 QString ServerTabWidget::displayRenameTabDialogBox() {
@@ -168,9 +124,11 @@ void ServerTabWidget::setServerTabText(const ServerTabNaming& serverTabNaming) {
 
     QString input;
 
+    // if tab is being created, ask for new tab name :
     if (serverTabNaming == CreateTab) {
         input = this->displayEditDialogBox();
     }
+    // tab already exists, ask for renaming :
     else {
         input = this->displayRenameTabDialogBox();
     }
@@ -181,26 +139,6 @@ void ServerTabWidget::setServerTabText(const ServerTabNaming& serverTabNaming) {
 
 }
 
-
-
-void ServerTabWidget::closeTabClickedSlot() {
-
-
-    int currentIndex = this->currentIndex();
-
-    if (currentIndex != 0) {
-
-        // delete the widget and the corresponding tab :
-        kDebug() << currentIndex;
-        this->deleteAndRemoveTab(currentIndex);
-        this->enableDisableTabButtons();
-
-    }
-
-    // update groupbox title according to its corresponding tab position :
-    //this->syncGroupBoxTitle();
-
-}
 
 
 void ServerTabWidget::deleteAndRemoveTab(const int& index) {
@@ -221,32 +159,6 @@ void ServerTabWidget::deleteAndRemoveTab(const int& index) {
     this->valueChangedSlot();
 }
 
-
-
-
-void ServerTabWidget::tabMovedSlot(int from, int to) {
-
-    // the master server tab must stay at the first position :
-    if (from == MasterServer && to == 1) {
-        this->tabBar()->moveTab(to, from);
-    }
-
-    this->syncGroupBoxTitle();
-
-}
-
-
-void ServerTabWidget::currentChangedSlot(int index) {
-
-    // the master server tab must stay at the first position :
-    if (index == MasterServer) {
-        this->setMovable(false);
-    }
-    else {
-        this->setMovable(true);
-    }
-
-}
 
 
 void ServerTabWidget::enableDisableTabButtons() {
@@ -271,9 +183,11 @@ void ServerTabWidget::setServerTabIcon(const int& tabIndex, const int& serverMod
 
     QString iconStr;
 
+    // set a dedicated icon for master server :
     if (tabIndex == MasterServer) {
         iconStr = "applications-internet";
     }
+    // adjust icon according to server mode :
     else {
         iconStr = this->comboBoxIconTextMap.value(serverModeIndex).split(";").value(0);
     }
@@ -284,14 +198,122 @@ void ServerTabWidget::setServerTabIcon(const int& tabIndex, const int& serverMod
 
 
 
-
-
 void ServerTabWidget::syncGroupBoxTitle() {
 
     int tabNumber = this->count();
 
     for (int i = 1; i < tabNumber; i++) {
         ((ServerPreferencesWidget*)this->widget(i))->setGroupBoxTitle(i);
+    }
+
+}
+
+
+
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
+
+
+void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery askServerName) {
+
+    int tabNumbers = this->count();
+
+    // if number of current tabs is < 5 allow to add a new backup server :
+    if (tabNumbers < PreferencesServer::MAX_SERVERS) {
+
+        QString tabText;
+
+        // if server is masterServer, set its default name automatically :
+        if (tabNumbers == MasterServer) {
+            tabText = i18n("Master");
+        }
+
+        // if a backup server has been required by user :
+        if (askServerName == ServerTabWidget::AskServerName) {
+
+            // retrieve server name entered by the user :
+            QString input = this->displayEditDialogBox();
+            if (!input.isEmpty()) {
+                tabText = input;
+            }
+        }
+        // if the backup server has been previously created, search its name in settings :
+        else {
+            tabText = KConfigGroupHandler::getInstance()->tabName(tabNumbers, tabText);
+        }
+
+        // if default settings are requested :
+        if (askServerName == DefaultSettingsName) {
+            tabText = i18n("Master");
+        }
+
+        // if tabText is empty, do not create the new tab :
+        if (!tabText.isEmpty()) {
+
+            // add tab with new window widget :
+            ServerPreferencesWidget* serverPreferencesWidget = new ServerPreferencesWidget(this, this->preferencesServer, tabNumbers, askServerName);
+
+            this->addTab(serverPreferencesWidget, tabText);
+
+            // set tab icon according to server mode :
+            this->setServerTabIcon(tabNumbers, serverPreferencesWidget->getData().getServerModeIndex());
+
+
+            this->setCurrentIndex(tabNumbers);
+            this->enableDisableTabButtons();
+
+            // update groupbox title according to its corresponding tab position :
+            this->syncGroupBoxTitle();
+
+            // enable apply button to notify changes :
+            this->valueChangedSlot();
+
+        }
+
+    }
+
+}
+
+
+
+void ServerTabWidget::closeTabClickedSlot() {
+
+    int currentIndex = this->currentIndex();
+
+    if (currentIndex != 0) {
+
+        // delete the widget and the corresponding tab :
+        this->deleteAndRemoveTab(currentIndex);
+        this->enableDisableTabButtons();
+
+    }
+
+}
+
+
+
+void ServerTabWidget::tabMovedSlot(int from, int to) {
+
+    // the master server tab must stay at the first position :
+    if (from == MasterServer && to == 1) {
+        this->tabBar()->moveTab(to, from);
+    }
+
+    this->syncGroupBoxTitle();
+
+}
+
+
+
+void ServerTabWidget::currentChangedSlot(int index) {
+
+    // the master server tab must stay at the first position :
+    if (index == MasterServer) {
+        this->setMovable(false);
+    }
+    else {
+        this->setMovable(true);
     }
 
 }
@@ -327,12 +349,9 @@ void ServerTabWidget::saveDataSlot() {
 
 
 
-
 void ServerTabWidget::valueChangedSlot() {
     preferencesServer->kcfg_serverChangesNotify->setText(QUuid::createUuid().toString());
 }
-
-
 
 
 

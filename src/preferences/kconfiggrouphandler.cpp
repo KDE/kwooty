@@ -26,10 +26,11 @@
 #include <KDebug>
 
 #include "preferences/preferencesserver.h"
+#include "utility.h"
+using namespace UtilityNamespace;
 
 
 KConfigGroupHandler::KConfigGroupHandler() : QObject(qApp){}
-
 
 KConfigGroupHandler::~KConfigGroupHandler() { kDebug();}
 
@@ -51,6 +52,13 @@ KConfigGroupHandler* KConfigGroupHandler::getInstance() {
 ServerData KConfigGroupHandler::readServerSettings(const int& serverId) {
 
     KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("Server_%1").arg(serverId));
+
+    // if KConfigGroup is invalid, it may be the first launch from a previous kwooty version
+    // try get previous settings :
+    if ((serverId == MasterServer) && !configGroup.exists()) {
+        configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("server"));
+    }
+
 
     ServerData serverData;
 

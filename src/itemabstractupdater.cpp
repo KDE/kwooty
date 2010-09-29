@@ -25,6 +25,7 @@
 #include "itemparentupdater.h"
 #include "standarditemmodel.h"
 #include "kwootysettings.h"
+#include "utilityiconpainting.h"
 #include "data/itemstatusdata.h"
 #include "data/nzbfiledata.h"
 
@@ -153,12 +154,11 @@ void ItemAbstractUpdater::setIconToFileNameItem(const QModelIndex& index, Utilit
 
     if (!this->downloadModel->isNzbItem(this->downloadModel->itemFromIndex(index))) {
 
-
-        // get final status :
-        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(index);
-        ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
-
         if (statusIconStrMap.contains(status)) {
+
+            // get final status :
+            QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(index);
+            ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
 
             if (status == DownloadFinishStatus) {
 
@@ -169,6 +169,23 @@ void ItemAbstractUpdater::setIconToFileNameItem(const QModelIndex& index, Utilit
 
             }
 
+
+            //            // set a special icon if segment is still pending and has not been found on master server :
+            //            if (itemStatusData.getNextServerId() != MasterServer)  {
+            //
+            //                QString iconStr = "mail-mark-unread";
+            //                if (this->statusIconStrMap.value(status) == iconStr) {
+            //
+            //                    finalPixmap = UtilityIconPainting::getInstance()->blendOverLayTopRight(iconStr, "system-reboot");
+            //
+            //                    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
+            //                    fileNameItem->setIcon(KIcon("mail-forwarded"));
+            //                    return;
+            //                }
+            //
+            //            }
+
+
             // get fileName item and set corresponding icon :
             QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
             fileNameItem->setIcon(KIcon(this->statusIconStrMap.value(status)));
@@ -176,8 +193,6 @@ void ItemAbstractUpdater::setIconToFileNameItem(const QModelIndex& index, Utilit
         }
     }
 
-
 }
-
 
 

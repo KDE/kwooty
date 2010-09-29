@@ -33,8 +33,7 @@
 using namespace UtilityNamespace;
 
 
-PreferencesServer::PreferencesServer(KConfigDialog* dialog)
-{
+PreferencesServer::PreferencesServer(KConfigDialog* dialog) {
 
     this->dialog = dialog;
 
@@ -42,9 +41,9 @@ PreferencesServer::PreferencesServer(KConfigDialog* dialog)
 
     // dirty way to notify kCondfigDialog that a setting have changed in any server tabs widgets :
     kcfg_serverChangesNotify->hide();
-    connect (kcfg_serverChangesNotify, SIGNAL(textChanged (const QString&)), this, SLOT(textChangedSlot (const QString&)));  
 
-    tabWidget = new ServerTabWidget(this);
+    // create one tab for each server :
+    this->tabWidget = new ServerTabWidget(this);
 
     // feedback from kConfigDialog, choose action according to button clicked by user :
     connect(this->dialog,
@@ -78,9 +77,10 @@ void PreferencesServer::configButtonClickedSlot(KDialog::ButtonCode button) {
             break;
         }
 
-    case KDialog::Default:    {
-            //TODO :
-            kDebug() << "Default button";
+    case KDialog::Default: {
+
+            // restore default settings :
+            this->defaultSettings();
             break;
         }
 
@@ -89,17 +89,6 @@ void PreferencesServer::configButtonClickedSlot(KDialog::ButtonCode button) {
 
         }
 
-    }
-
-}
-
-
-
-void PreferencesServer::textChangedSlot(const QString& textChangedSlot) {
-
-    if (textChangedSlot.isEmpty()) {
-        // TODO :
-        kDebug() << "resetToDefaults !!";
     }
 
 }
@@ -115,7 +104,6 @@ void PreferencesServer::restorePreviousSettings() {
     }
 
     this->loadSettings();
-
 }
 
 
@@ -127,11 +115,23 @@ void PreferencesServer::loadSettings() {
         this->tabWidget->addNewTab();
     }
 
-
 }
 
 
 void PreferencesServer::saveSettings() {
    emit saveDataSignal();
 }
+
+
+void PreferencesServer::defaultSettings() {
+
+    // set default settings :
+    while (this->tabWidget->count() != 0) {
+
+        this->tabWidget->deleteAndRemoveTab(0);
+    }
+
+    this->tabWidget->addDefaultTab();
+}
+
 
