@@ -23,7 +23,9 @@
 
 #include <KIconLoader>
 #include <KIcon>
+#include <KIconEffect>
 #include <KDebug>
+#include <QMouseEvent>
 
 #include <QPixmap>
 #include <QPainter>
@@ -33,6 +35,8 @@ IconTextWidget::IconTextWidget(QWidget* parent) : QWidget(parent) {
 
     this->iconLoader = KIconLoader::global();
 
+    this->iconGamma = false;
+    this->iconPressed = false;
     this->iconLabel = new QLabel(this);
     this->textLabel = new QLabel(this);
 
@@ -46,6 +50,39 @@ IconTextWidget::IconTextWidget(QWidget* parent) : QWidget(parent) {
     // installs event filter in order to display associated settings page :
     this->installEventFilter(parent);
 
+}
+
+
+void IconTextWidget::enterEvent(QEvent* event) {
+
+    Q_UNUSED(event);
+    if (this->iconGamma) {
+        this->iconLabel->setPixmap(this->clearIcon);
+    }
+}
+
+void IconTextWidget::leaveEvent(QEvent* event) {
+    Q_UNUSED(event);
+    if (this->iconGamma && !this->iconPressed) {
+        this->iconLabel->setPixmap(this->normalIcon);
+    }
+}
+
+void IconTextWidget::setIconGamma(const bool& iconGamma) {
+    this->iconGamma = iconGamma;
+}
+
+
+void IconTextWidget::setIconOnly(const QString& iconStr) {
+     this->hBoxLayout->setSpacing(0);
+     this->setIcon(iconStr);
+}
+
+void IconTextWidget::mousePressEvent(QMouseEvent* event)  {
+
+    Q_UNUSED(event);
+    this->iconPressed = !this->iconPressed;
+    this->enterEvent(event);
 
 }
 
@@ -55,7 +92,12 @@ void IconTextWidget::setIcon(const QString& iconStr) {
 
     if (!iconStr.isEmpty()) {
 
-        this->iconLabel->setPixmap(this->iconLoader->loadIcon(iconStr, KIconLoader::Small));
+        this->normalIcon = this->iconLoader->loadIcon(iconStr, KIconLoader::Small);
+        this->iconLabel->setPixmap(this->normalIcon);
+
+        QImage clearImage = this->normalIcon.toImage();
+        KIconEffect::toGamma(clearImage, 0.80);
+        this->clearIcon = QPixmap::fromImage(clearImage);        
     }
     else {
         this->iconLabel->setPixmap(QPixmap());

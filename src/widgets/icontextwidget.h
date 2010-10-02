@@ -37,11 +37,18 @@ public:
     IconTextWidget(QWidget* parent = 0);
 
     void setIcon(const QString&);
+    void setIconOnly(const QString&);
     void blendOverLay(const QString&);
     void setText(const QString&);
     QString getText() const;
+    void setIconGamma(const bool&);
     void showIcon();
     void hideIcon();
+
+protected:
+    void enterEvent(QEvent*);
+    void leaveEvent(QEvent*);
+    void mousePressEvent(QMouseEvent*);
 
 private:
 
@@ -49,6 +56,10 @@ private:
     QLabel* iconLabel;
     QLabel* textLabel;
     QHBoxLayout* hBoxLayout;
+    QPixmap normalIcon;
+    QPixmap clearIcon;
+    bool iconGamma;
+    bool iconPressed;
 
 
 
