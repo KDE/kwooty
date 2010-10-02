@@ -53,7 +53,7 @@ DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent) {
 
     // wait 1 second, time to get several nntp instances created, before restoring pending data :
     if (Settings::restoreDownloads()) {
-        QTimer::singleShot(1000, this, SLOT(readDataFromDiskSlot()));
+        QTimer::singleShot(500, this, SLOT(readDataFromDiskSlot()));
     }
 
 
@@ -62,8 +62,6 @@ DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent) {
 
 
 void DataRestorer::setupConnections() {
-
-    connect(this->parent->parent(), SIGNAL(applicationReadySignal()), this, SLOT(applicationReadySlot()));
 
     connect(dataSaverTimer, SIGNAL(timeout()), this, SLOT(saveQueueDataSilentlySlot()));
 
