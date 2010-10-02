@@ -55,6 +55,7 @@ private:
     IconTextWidget* connectionWidget;
     IconTextWidget* shutdownWidget;
     IconTextWidget* timeInfoWidget;
+    IconTextWidget* infoBarWidget;
     IconCapacityWidget* iconCapacityWidget;
     QHash<QObject*, UtilityNamespace::PreferencesPage> widgetPreferencesPageMap;
 
@@ -62,6 +63,7 @@ private:
     void setConnectionWidget();
     void setShutdownWidget();
     void setTimeInfoWidget();
+    void setInfoBarWidget();
 
     void buildConnWidgetToolTip(const QString&);
 
