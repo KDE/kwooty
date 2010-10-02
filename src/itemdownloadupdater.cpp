@@ -121,7 +121,7 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
 }
 
 
-ItemStatusData ItemDownloadUpdater::updateStatusNzbChildrenItem(ItemStatusData& itemStatusData, const int rowNumber) {
+ItemStatusData ItemDownloadUpdater::updateStatusNzbChildrenItem(ItemStatusData& itemStatusData, const int& rowNumber) {
 
 
     // if all segments have been downloaded :
@@ -157,22 +157,39 @@ ItemStatusData ItemDownloadUpdater::updateStatusNzbChildrenItem(ItemStatusData& 
 
 
 ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusData) {
-    // determine if current file has segments that are not present on server :
 
-    if (downloadFinishItemNumber > 0 ) {
+    UtilityNamespace::Data previousDataStatus = itemStatusData.getDataStatus();
+
+
+    // determine if current file has segments that are not present on server :
+    if (this->downloadFinishItemNumber > 0 ) {
 
         // no segment founds on server for the current file :
-        if (articleFoundNumber == 0) {
+        if (this->articleFoundNumber == 0) {
             itemStatusData.setDataStatus(NoData);
         }
         // at least one segment has been found on server :
-        else if (downloadFinishItemNumber > articleFoundNumber) {
+        else if (this->downloadFinishItemNumber > this->articleFoundNumber) {
             itemStatusData.setDataStatus(DataIncomplete);
         }
         else if (this->downloadFinishItemNumber == this->articleFoundNumber) {
             itemStatusData.setDataStatus(DataComplete);
         }
 
+    }
+
+    // item has not been updated, check if pending data exist :
+    if (previousDataStatus == itemStatusData.getDataStatus()) {
+
+        if ( Utility::isInQueue(itemStatusData.getStatus()) &&
+             this->pendingSegmentsOnBackupNumber > 0) {
+
+            itemStatusData.setDataStatus(DataPendingBackupServer);
+        }
+        // item has not been updated, set it to its default value :
+        else if (previousDataStatus == DataPendingBackupServer){
+            itemStatusData.setDataStatus(DataComplete);
+        }
     }
 
     return itemStatusData;
@@ -226,13 +243,19 @@ ItemStatusData ItemDownloadUpdater::postDownloadProcessing(const QModelIndex& in
 void ItemDownloadUpdater::countGlobalItemStatus(const SegmentData& segmentData) {
 
     // count number of files present / not present :
-    if ( segmentData.getArticlePresenceOnServer() == Present ){
-        articleFoundNumber++;
+    if (segmentData.getArticlePresenceOnServer() == Present) {
+        this->articleFoundNumber++;
     }
 
-    if ( segmentData.getArticlePresenceOnServer() == NotPresent ){
-        articleNotFoundNumber++;
+    if (segmentData.getArticlePresenceOnServer() == NotPresent) {
+        this->articleNotFoundNumber++;
     }
+
+    if (segmentData.getServerGroupTarget() != MasterServer &&
+        Utility::isInQueue((UtilityNamespace::ItemStatus)segmentData.getStatus())) {
+        this->pendingSegmentsOnBackupNumber++;
+    }
+
 
 
     // count items status :
