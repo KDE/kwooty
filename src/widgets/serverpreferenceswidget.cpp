@@ -290,19 +290,19 @@ void ServerPreferencesWidget::pushButtonInfoClickedSlot() {
     QString divStyle = "<div style=\"margin-left: 20px; margin-top: 3px; margin-bottom: 10px\">";
     QString text;
 
-    text.append(i18n("<b>%1</b>","Backup Server Mode:"));
+    text.append(i18n("<b>Backup Server Mode:</b>"));
     text.append(divStyle);
-    text.append(i18n("<i>%1</i> %2<br>", "Passive:", "download only files not found on Master server"));
-    text.append(i18n("<i>%1</i> %2<br>", "Active:", "download files simultaneously with Master server"));
-    text.append(i18n("<i>%1</i> %2", "Server Disabled:", "server not used"));
+    text.append(i18n("<i>Passive:</i> download only files not found on Master serverbr>"));
+    text.append(i18n("<i>Active:</i> download files simultaneously with Master server<br>"));
+    text.append(i18n("<i>Server Disabled:</i> server not used"));
     text.append("</div>");
 
-    text.append(i18n("<b>%1</b>", "Server priority:"));
+    text.append(i18n("<b>Server priority:</b>"));
     text.append(divStyle);
     text.append(i18n("Drag and drop tabs to manage backup server priority in <i>Passive</i> mode"));
     text.append("</div>");
 
-    text.append(i18n("<b>%1</b>", "Tab renaming:"));
+    text.append(i18n("<b>Tab renaming:</b>"));
     text.append(divStyle);
     text.append(i18n("Double click on current tab for tab renaming"));
     text.append("</div>");
