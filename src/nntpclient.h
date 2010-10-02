@@ -89,6 +89,7 @@ private:
     NntpClient::NntpClientStatus clientStatus;
     int nntpError;
     bool postingOk;
+    bool serverSentFirstAnswer;
     bool authenticationDenied;
     bool certificateVerified;
     bool segmentProcessed;
