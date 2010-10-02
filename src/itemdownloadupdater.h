@@ -41,7 +41,7 @@ public:
     void updateItems(const QModelIndex&, const NzbFileData&);
 
 private:    
-    ItemStatusData updateStatusNzbChildrenItem(ItemStatusData&, const int);
+    ItemStatusData updateStatusNzbChildrenItem(ItemStatusData&, const int&);
     ItemStatusData updateDataStatus(ItemStatusData&);
     ItemStatusData postDownloadProcessing(const QModelIndex&, const NzbFileData&, ItemStatusData&);
     void updateNzbChildrenItems(const NzbFileData&, const QModelIndex&);
