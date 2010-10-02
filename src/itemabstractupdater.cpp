@@ -81,6 +81,7 @@ void ItemAbstractUpdater::clear() {
     this->verifyItemNumber = 0;
     this->verifyFinishItemNumber = 0;
     this->repairItemNumber = 0;
+    this->pendingSegmentsOnBackupNumber = 0;
 
 }
 
@@ -170,20 +171,20 @@ void ItemAbstractUpdater::setIconToFileNameItem(const QModelIndex& index, Utilit
             }
 
 
-            //            // set a special icon if segment is still pending and has not been found on master server :
-            //            if (itemStatusData.getNextServerId() != MasterServer)  {
-            //
-            //                QString iconStr = "mail-mark-unread";
-            //                if (this->statusIconStrMap.value(status) == iconStr) {
-            //
-            //                    finalPixmap = UtilityIconPainting::getInstance()->blendOverLayTopRight(iconStr, "system-reboot");
-            //
-            //                    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
-            //                    fileNameItem->setIcon(KIcon("mail-forwarded"));
-            //                    return;
-            //                }
-            //
-            //            }
+            // set a special icon if segment is still pending and has not been found on master server :
+            if (itemStatusData.getDataStatus() == DataPendingBackupServer)  {
+
+                QString iconStr = "mail-mark-unread";
+                if (this->statusIconStrMap.value(status) == iconStr) {
+
+                    //QPixmap finalPixmap = UtilityIconPainting::getInstance()->blendOverLayTopRight(iconStr, "mail-reply-custom");
+
+                    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
+                    fileNameItem->setIcon(KIcon("mail-reply-list"));
+                    return;
+                }
+
+            }
 
 
             // get fileName item and set corresponding icon :

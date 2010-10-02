@@ -62,6 +62,7 @@ protected:
     int repairItemNumber;
     int articleNotFoundNumber;
     int articleFoundNumber;
+    int pendingSegmentsOnBackupNumber;
 
     void clear();
     void countItemStatus(const int);
