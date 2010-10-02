@@ -56,7 +56,6 @@ UtilityIconPainting* UtilityIconPainting::getInstance() {
 QPixmap UtilityIconPainting::blendOverLayTopRight(const QString& mainIconStr, const QString& overlayIconStr) {
 
     QPixmap pixmap;
-
     QString keyStr = mainIconStr + overlayIconStr;
 
     if (UtilityIconPainting::getInstance()->textIconMap.contains(keyStr)) {
@@ -70,12 +69,12 @@ QPixmap UtilityIconPainting::blendOverLayTopRight(const QString& mainIconStr, co
 
         if (!overlayIcon.isNull()) {
 
-
             pixmap = KIconLoader::global()->loadIcon(mainIconStr, KIconLoader::Small, KIconLoader::SizeSmall);
+
+            QPixmap overlayPixmap = KIconLoader::global()->loadIcon(overlayIconStr, KIconLoader::Small, KIconLoader::SizeSmall);
+            overlayPixmap = overlayPixmap.scaled(10, 10, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+
             QPainter p(&pixmap);
-
-            QPixmap overlayPixmap = overlayIcon.pixmap(10, 10);
-
             p.drawPixmap(6, 0, overlayPixmap);
             p.end();
 
