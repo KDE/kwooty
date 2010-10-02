@@ -65,12 +65,14 @@ MyStatusBar::MyStatusBar(MainWindow* parent) : KStatusBar(parent)
     this->speedLabel = new QLabel(this);
     this->addPermanentWidget(this->speedLabel);
     
+    // add info bar widget :
+    this->setInfoBarWidget();
+
     // this map allows access to configuration preferences page when double-clicking on widgets in the statusbar :
     this->widgetPreferencesPageMap.insert(this->connectionWidget, ServerPage);
     this->widgetPreferencesPageMap.insert(this->iconCapacityWidget, GeneralPage);
     this->widgetPreferencesPageMap.insert(this->shutdownWidget, ShutdownPage);
     
-
     // get current connection status, numbre of remainig files, etc... from clients observer :
     this->clientsObserver->sendFullUpdate();
     
@@ -162,6 +164,19 @@ void MyStatusBar::setShutdownWidget(){
     // add aggregated widget to the status bar :
     this->addWidget(this->shutdownWidget);
     
+}
+
+void MyStatusBar::setInfoBarWidget(){
+
+    // add widget that will toggle info bar :
+    this->infoBarWidget = new IconTextWidget(this);
+
+    this->infoBarWidget->setIconGamma(true);
+    this->infoBarWidget->setIconOnly("dialog-information");
+
+    // add aggregated widget to the right of status bar :
+    this->addPermanentWidget(this->infoBarWidget);
+
 }
 
 
