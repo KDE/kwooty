@@ -58,6 +58,7 @@ NntpClient::NntpClient(ClientManagerConn* parent) : QObject (parent) {
     this->authenticationDenied = false;
     this->segmentProcessed = false;
     this->postingOk = false;
+    this->serverSentFirstAnswer = false;
     this->nntpError = NoError;
 
     // set up connections with tcpSocket :
@@ -144,6 +145,8 @@ void NntpClient::connectToHost() {
 
 
 void NntpClient::getAnswerFromServer() {
+
+    this->serverSentFirstAnswer = true;
 
     // get answer from server :
     int answer = tcpSocket->readLine().left(3).toInt();
@@ -529,10 +532,18 @@ bool NntpClient::isClientReady() {
         clientReady = false;
     }
 
-    if (this->tcpSocket->state() == QAbstractSocket::ConnectedState &&
-        !this->postingOk) {
-        clientReady = false;
+    if (this->tcpSocket->state() == QAbstractSocket::ConnectedState) {
+
+        if (!this->serverSentFirstAnswer) {
+            clientReady = true;
+        }
+
+        else if (!this->postingOk) {
+            clientReady = false;
+        }
+
     }
+
 
     if (!clientReady) {
         this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
@@ -552,6 +563,7 @@ void NntpClient::disconnectRequestByManager() {
 
     this->authenticationDenied = false;
     this->postingOk = false;
+    this->serverSentFirstAnswer = false;
 
     this->segmentDataRollBack();
     this->sendQuitCommandToServer();
@@ -608,7 +620,7 @@ void NntpClient::dataHasArrivedSlot() {
 
 
 
-void NntpClient::connectedSlot(){
+void NntpClient::connectedSlot() {
 
     emit connectionStatusSignal(Connected);
 
@@ -622,9 +634,10 @@ void NntpClient::connectedSlot(){
 }
 
 
-void NntpClient::disconnectedSlot(){
+void NntpClient::disconnectedSlot() {
 
     this->postingOk = false;
+    this->serverSentFirstAnswer = false;
 
     this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
 
