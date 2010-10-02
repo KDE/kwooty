@@ -292,7 +292,7 @@ void ServerPreferencesWidget::pushButtonInfoClickedSlot() {
 
     text.append(i18n("<b>Backup Server Mode:</b>"));
     text.append(divStyle);
-    text.append(i18n("<i>Passive:</i> download only files not found on Master serverbr>"));
+    text.append(i18n("<i>Passive:</i> download only files not found on Master server<br>"));
     text.append(i18n("<i>Active:</i> download files simultaneously with Master server<br>"));
     text.append(i18n("<i>Server Disabled:</i> server not used"));
     text.append("</div>");
