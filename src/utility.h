@@ -153,7 +153,8 @@ namespace UtilityNamespace
     enum Data {
         NoData,
         DataIncomplete,
-        DataComplete
+        DataComplete,
+        DataPendingBackupServer
     };
     
     
