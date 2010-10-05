@@ -528,22 +528,32 @@ bool NntpClient::isClientReady() {
 
     bool clientReady = true;
 
+    // authentication denied, client is not ready :
     if (this->authenticationDenied) {
         clientReady = false;
     }
 
+    // client is connected :
     if (this->tcpSocket->state() == QAbstractSocket::ConnectedState) {
 
+        // server did not answer yet, consider client as ready until first answer :
         if (!this->serverSentFirstAnswer) {
             clientReady = true;
         }
-
+        // server answered but posting is not ok :
         else if (!this->postingOk) {
             clientReady = false;
         }
 
     }
+    // client is not connected :
+    else if (this->tcpSocket->state() == QAbstractSocket::UnconnectedState) {
 
+        // if client is not connected to server due to errors :
+        if (this->nntpError != NoError && this->nntpError != RemoteHostClosed) {
+            clientReady = false;
+        }
+    }
 
     if (!clientReady) {
         this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
@@ -671,11 +681,13 @@ void NntpClient::errorSlot(QAbstractSocket::SocketError socketError){
     if (socketError == QAbstractSocket::HostNotFoundError){
         // connection failed, notify error now :
         emit nntpErrorSignal(HostNotFound);
+        this->nntpError = HostNotFound;
     }
 
     if (socketError == QAbstractSocket::ConnectionRefusedError){
         // connection failed, notify error now :
         emit nntpErrorSignal(ConnectionRefused);
+        this->nntpError = ConnectionRefused;
     }
 
     if (socketError == QAbstractSocket::RemoteHostClosedError){
@@ -687,6 +699,7 @@ void NntpClient::errorSlot(QAbstractSocket::SocketError socketError){
         // disconnection will occur after this slot, notify error only when disconnect occurs :
         this->nntpError = SslHandshakeFailed;
     }
+
 
 }
 
