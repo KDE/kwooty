@@ -56,7 +56,8 @@ ServerTabWidget::ServerTabWidget(PreferencesServer* parent) : KTabWidget(parent)
 
     // create icons and associated texts for servers mode :
     this->comboBoxIconTextMap.insert(PassiveServer,     QString("system-reboot;" + i18n("Passive")));
-    this->comboBoxIconTextMap.insert(ActiveServer,      QString("system-switch-user;" + i18n("Active")));
+    this->comboBoxIconTextMap.insert(ActiveServer,      QString("system-log-out;" + i18n("Active")));
+    this->comboBoxIconTextMap.insert(FailoverServer,    QString("system-switch-user;" + i18n("Failover")));
     this->comboBoxIconTextMap.insert(DisabledServer,    QString("system-shutdown;" + i18n("Server Disabled")));
 
     // set buttons to right and left corners :
