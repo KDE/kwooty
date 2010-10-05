@@ -38,6 +38,9 @@ ServerManager::ServerManager(CentralWidget* parent) : QObject(parent) {
         this->idServerGroupMap.insert(serverGroupId, new ServerGroup(this, parent, serverGroupId));
     }
 
+    // by default, the master server is always the first one :
+    this->currentMasterServer = this->idServerGroupMap.value(MasterServer);
+
     this->setupConnections();
 
 
@@ -56,7 +59,7 @@ void ServerManager::setupConnections() {
 
 
 
-int ServerManager::getNextTargetServer(int currentTargetServer) {   
+int ServerManager::getNextTargetServer(const int& currentTargetServer) {
 
     int nextTargetServer = UtilityNamespace::NoTargetServer;
 
@@ -64,7 +67,8 @@ int ServerManager::getNextTargetServer(int currentTargetServer) {
     if (this->idServerGroupMap.size() > currentTargetServer + 1) {
 
         // look for next available backup server with passive mode only
-        // (a backup server with active mode is considered as another master server) :
+        // - a backup server with failover mode whose master server is available act as being in passive mode
+        // - a backup server with active mode is considered as another master server :
         foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values().mid(currentTargetServer + 1)) {
 
             if (nextServerGroup->isServerAvailable() &&
@@ -79,13 +83,12 @@ int ServerManager::getNextTargetServer(int currentTargetServer) {
     }
 
     return nextTargetServer;
-
 }
 
 
 
 
-void ServerManager::downloadWithAnotherBackupServer(int serverGroupId) {
+void ServerManager::downloadWithAnotherBackupServer(const int& serverGroupId) {
 
     // get next server group id :
     int nextServerId = this->getNextTargetServer(serverGroupId);
@@ -102,8 +105,7 @@ void ServerManager::downloadWithAnotherBackupServer(int serverGroupId) {
 
 
 
-
-void ServerManager::tryDownloadWithServer(const int nextTargetServer) {
+void ServerManager::tryDownloadWithServer(const int& nextTargetServer) {
 
     ServerGroup* nextServerGroup = this->idServerGroupMap.value(nextTargetServer);
 
@@ -115,6 +117,46 @@ void ServerManager::tryDownloadWithServer(const int nextTargetServer) {
 
 }
 
+
+
+void ServerManager::masterServerAvailabilityChanges() {
+
+    ServerGroup* newMasterServer = 0;
+
+    // current master server availability has changed ,
+    foreach (ServerGroup* currentServerGroup, this->idServerGroupMap.values()) {
+
+        // look for the first available master server substitute :
+        if (currentServerGroup->isServerAvailable() &&
+            ( currentServerGroup->isMasterServer() ||
+              currentServerGroup->isFailoverBackupServer() ) ) {
+
+            newMasterServer = currentServerGroup;
+            break;
+        }
+    }
+
+    // if a new master server has been found, store it :
+    if (newMasterServer &&
+        this->currentMasterServer != newMasterServer) {
+
+        this->currentMasterServer = newMasterServer;
+
+        // retry to download pending segments with new master server first :
+        this->parent->getSegmentManager()->updatePendingSegmentsToTargetServer(MasterServer, MasterServer, SegmentManager::ResetSegments);
+
+        // notify it that pending segments wait for it :
+        this->currentMasterServer->assignDownloadToReadyClients();
+
+    }
+
+}
+
+
+
+bool ServerManager::currentIsFirstMasterAvailable(const ServerGroup* currentServerGroup) const {
+    return (this->currentMasterServer == currentServerGroup);
+}
 
 
 //============================================================================================================//
@@ -169,6 +211,9 @@ void ServerManager::settingsChangedSlot() {
         // retry to download pending segments with master server first, then first backup server, then second one...
         // with new servers settings :
         this->parent->getSegmentManager()->updatePendingSegmentsToTargetServer(MasterServer, MasterServer, SegmentManager::ResetSegments);
+
+        // by default, the master server is always the first one :
+        this->currentMasterServer = this->idServerGroupMap.value(MasterServer);
 
         // reconnect all clients 100 ms later :
         QTimer::singleShot(100, this, SLOT(requestClientConnectionSlot()));

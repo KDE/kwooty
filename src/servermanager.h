@@ -37,15 +37,18 @@ class ServerManager : public QObject {
 
 public:
     ServerManager(CentralWidget*);
-    int getNextTargetServer(int);
-    void downloadWithAnotherBackupServer(int);
-    void tryDownloadWithServer(const int);
+    int getNextTargetServer(const int&);
+    void downloadWithAnotherBackupServer(const int&);
+    void tryDownloadWithServer(const int&);
+    void masterServerAvailabilityChanges();
+    bool currentIsFirstMasterAvailable(const ServerGroup*) const;
 
 private:
     CentralWidget* parent;
     QMap<int, ServerGroup*> idServerGroupMap;
-    void setupConnections();
+    ServerGroup* currentMasterServer;
 
+    void setupConnections();
 
 signals:
 

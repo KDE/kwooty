@@ -250,6 +250,7 @@ namespace UtilityNamespace
     enum BackupServerMode {
         PassiveServer,
         ActiveServer,
+        FailoverServer,
         DisabledServer
     };
 
