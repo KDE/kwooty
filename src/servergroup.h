@@ -51,19 +51,29 @@ public:
     bool isDisabledBackupServer() const;
     bool isPassiveBackupServer() const;
     bool isActiveBackupServer() const;
+    bool isFailoverBackupServer() const;
+    bool isPassiveFailover() const;
+    bool isActiveFailover() const;
+
 
 private:
+
+    static const int MAX_SERVER_DOWN_PER_MINUTE = 4;
+
     ServerData serverData;
     QTimer* clientsAvailableTimer;
+    QTimer* stabilityTimer;
     QList<ClientManagerConn*> clientManagerConnList;
     CentralWidget* centralWidget;
     ServerManager* serverManager;
     int serverGroupId;
+    int stabilityCounter;
     bool serverAvailable;
     bool pendingSegments;
 
     void createNntpClients();
     void setupConnections();
+    void serverSwitchIfFailure();
 
 
 signals:
@@ -79,6 +89,7 @@ public slots:
 
 private slots:
     void checkServerAvailabilitySlot();
+    void checkServerStabilitySlot();
     void startTimerSlot();
 
 

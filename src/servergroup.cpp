@@ -39,6 +39,7 @@ ServerGroup::ServerGroup(ServerManager* parent, CentralWidget* centralWidget, in
     this->serverGroupId = serverGroupId;
     this->serverAvailable = true;
     this->pendingSegments = false;
+    this->stabilityCounter = 0;
 
     // retrieve server settings :
     this->serverData = KConfigGroupHandler::getInstance()->readServerSettings(this->serverGroupId);
@@ -46,27 +47,52 @@ ServerGroup::ServerGroup(ServerManager* parent, CentralWidget* centralWidget, in
     // connect clients :
     this->createNntpClients();
 
+    // check server availabilty every 500 ms :
     this->clientsAvailableTimer = new QTimer();
     this->clientsAvailableTimer->start(500);
+
+    // check server stability every minutes :
+    this->stabilityTimer = new QTimer();
+    this->stabilityTimer->start(1 * UtilityNamespace::MINUTES_TO_MILLISECONDS);
+
 
     this->setupConnections();
 
 }
 
 
+
+void ServerGroup::setupConnections() {
+
+    // check that server is available or not :
+    connect(clientsAvailableTimer, SIGNAL(timeout()), this, SLOT(checkServerAvailabilitySlot()));
+
+    // check if pending segments are ready for the current server :
+    connect(clientsAvailableTimer, SIGNAL(timeout()), this, SLOT(downloadPendingSegmentsSlot()));
+
+    // check server stability :
+    connect(stabilityTimer, SIGNAL(timeout()), this, SLOT(checkServerStabilitySlot()));
+
+}
+
+
+
 int ServerGroup::getServerGroupId() const {
 
-    int currentServerGroupId;
+    // default server group id :
+    int currentServerGroupId = this->serverGroupId;
 
-    // if server is now configured in load balancing mode, return MasterServer groupId
+    // if server is now configured in Active mode, return MasterServer groupId
     // in order be considered as another master server and to be able to download
     // pending segment targeted with MasterServer Id :
     if (this->isActiveBackupServer()) {
         currentServerGroupId = MasterServer;
     }
-    // else return its default server group id :
-    else {
-        currentServerGroupId = this->serverGroupId;
+
+    // if backup server is in Failover mode and that master server is down
+    // the current backup server may be considered as master server :
+    else if (this->isActiveFailover()) {
+        currentServerGroupId = MasterServer;
     }
 
     return currentServerGroupId;
@@ -91,32 +117,47 @@ bool ServerGroup::isMasterServer() const {
     return (this->serverGroupId == MasterServer);
 }
 
+
 bool ServerGroup::isDisabledBackupServer() const {
     return (this->serverData.getServerModeIndex() == UtilityNamespace::DisabledServer);
 }
 
+
 bool ServerGroup::isPassiveBackupServer() const {
-    return (this->serverData.getServerModeIndex() == UtilityNamespace::PassiveServer);
+
+    bool passiveServer = false;
+
+    // current server is in passive mode :
+    if (this->serverData.getServerModeIndex() == UtilityNamespace::PassiveServer) {
+        passiveServer = true;
+    }
+    // else if it is in failover mode, it will works as passive if it is not currently replacing a down master server :
+    else if (this->isPassiveFailover()) {
+        passiveServer = true;
+    }
+
+    return passiveServer;
 }
 
 bool ServerGroup::isActiveBackupServer() const {
     return (this->serverData.getServerModeIndex() == UtilityNamespace::ActiveServer);
 }
 
-bool ServerGroup::isServerAvailable() const {
-    return this->serverAvailable;
+bool ServerGroup::isFailoverBackupServer() const {
+    return (this->serverData.getServerModeIndex() == UtilityNamespace::FailoverServer);
+}
+
+bool ServerGroup::isActiveFailover() const {
+    return (this->isFailoverBackupServer() && this->serverManager->currentIsFirstMasterAvailable(this));
+}
+
+bool ServerGroup::isPassiveFailover() const {
+    return (this->isFailoverBackupServer() && !this->serverManager->currentIsFirstMasterAvailable(this));
 }
 
 
-
-void ServerGroup::setupConnections() {
-
-    // check that server is available or not :
-    connect(clientsAvailableTimer, SIGNAL(timeout()), this, SLOT(checkServerAvailabilitySlot()));
-
-    // check if pending segments are ready for the current server :
-    connect(clientsAvailableTimer, SIGNAL(timeout()), this, SLOT(downloadPendingSegmentsSlot()));
-
+bool ServerGroup::isServerAvailable() const {
+    return this->serverAvailable;
 }
 
 
@@ -154,17 +195,11 @@ void ServerGroup::connectAllClients() {
     emit connectRequestSignal();
 
     // restart timer that notify if clients are available :
+    this->stabilityCounter = 0;
     this->serverAvailable = true;
     QTimer::singleShot(500 * this->serverGroupId, this, SLOT(startTimerSlot()));
 
 }
-
-
-
-void ServerGroup::startTimerSlot() {
-    this->clientsAvailableTimer->start();
-}
-
 
 
 void ServerGroup::assignDownloadToReadyClients() {
@@ -176,10 +211,68 @@ void ServerGroup::assignDownloadToReadyClients() {
 
 
 
+void ServerGroup::checkServerStabilitySlot() {
+
+    if (this->stabilityCounter > MAX_SERVER_DOWN_PER_MINUTE) {
+
+        // stop timer availability checking :
+        this->clientsAvailableTimer->stop();
+
+        // set server unavailable for 5 minutes :
+        this->serverAvailable = false;
+        this->serverSwitchIfFailure();
+
+        QTimer::singleShot(5 * UtilityNamespace::MINUTES_TO_MILLISECONDS, this, SLOT(startTimerSlot()));
+
+        kDebug() << "server stability issues, forced to unavailable for 5 minutes, group :" << this->serverGroupId;
+    }
+
+    // reset counter :
+    this->stabilityCounter = 0;
+}
+
+
+
+void ServerGroup::serverSwitchIfFailure() {
+
+    // availability of **master server** (master or active failover) has changed, notify server manager :
+    if (this->isMasterServer() || this->isActiveFailover()) {
+
+        kDebug() << "Master server group id : " << this->serverGroupId << "available : " << this->serverAvailable;
+        this->serverManager->masterServerAvailabilityChanges();
+
+    }
+    // availability of **backup server** has changed :
+    else {
+
+        // if backup server is now unavailable :
+        if (!this->serverAvailable) {
+
+            kDebug() << "Backup server group id : " << this->serverGroupId << "available : " << this->serverAvailable;
+
+            // current backup server is down, try to download pending downloads with another backup server if any :
+            this->serverManager->downloadWithAnotherBackupServer(this->serverGroupId);
+        }
+
+    }
+
+    // check that current server is not available / unavailable too frequently :
+    this->stabilityCounter++;
+
+}
+
+
+
+
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
+
+
+void ServerGroup::startTimerSlot() {
+    this->clientsAvailableTimer->start();
+}
 
 
 void ServerGroup::downloadPendingSegmentsSlot() {
@@ -203,52 +296,35 @@ void ServerGroup::downloadPendingSegmentsSlot() {
 
 void ServerGroup::checkServerAvailabilitySlot() {
 
-    // if this is not the master server :
-    if (this->serverGroupId != MasterServer) {
+    bool serverAvailableOld = this->serverAvailable;
 
-        bool serverAvailableOld = this->serverAvailable;
+    int clientsNotReady = 0;
 
-        int clientsNotReady = 0;
+    // count the number of clients not ready to download :
+    foreach (ClientManagerConn* clientManagerConn, this->clientManagerConnList) {
 
-        // count the number of clients not ready to download :
-        foreach (ClientManagerConn* clientManagerConn, this->clientManagerConnList) {
-
-            if (!clientManagerConn->isClientReady()) {
-                clientsNotReady++;
-            }
-
+        if (!clientManagerConn->isClientReady()) {
+            clientsNotReady++;
         }
-
-        // if all clients are not ready, the server is unavailable :
-        if (clientsNotReady == this->clientManagerConnList.size()) {
-            this->serverAvailable = false;
-        }
-        else {
-            this->serverAvailable = true;
-        }
-
-
-        // server has been disabled in settings, consider it as unavailable :
-        if (this->isDisabledBackupServer()) {
-            this->serverAvailable = false;
-        }
-
-
-        // if availability of the backup server has changed :
-        if ((this->serverAvailable != serverAvailableOld) &&
-            !this->serverAvailable)  {
-
-            kDebug() << "server group id : " << this->serverGroupId << "available : " << this->serverAvailable;
-
-            // current backup server is down, try to download pending downloads with
-            // another backup server if any :
-            this->serverManager->downloadWithAnotherBackupServer(this->serverGroupId);
-
-        }
-
     }
 
+    // if all clients are not ready, the server is unavailable :
+    if (clientsNotReady == this->clientManagerConnList.size()) {
+        this->serverAvailable = false;
+    }
+    else {
+        this->serverAvailable = true;
+    }
 
+    // server has been disabled in settings, consider it as unavailable :
+    if (this->isDisabledBackupServer()) {
+        this->serverAvailable = false;
+    }
+
+    // server availabilty has changed :
+    if (this->serverAvailable != serverAvailableOld) {
+        this->serverSwitchIfFailure();
+    }
 }
 
 
@@ -291,6 +367,9 @@ bool ServerGroup::settingsServerChangedSlot() {
 
         // update new settings right now as they will used by nntpclients :
         this->serverData = newServerData;
+
+        // reset stability counter :
+        this->stabilityCounter = 0;
 
         // notity manager that some settings have changed :
         serverSettingsChanged = true;
