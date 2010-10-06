@@ -55,12 +55,7 @@ NntpClient::NntpClient(ClientManagerConn* parent) : QObject (parent) {
     this->serverAnswerTimer->setInterval(20000);
     this->serverAnswerTimer->setSingleShot(true);
 
-    // due to multiple server features, a misconfigured server could hang in connecting state
-    // avoiding the other server to download, check connecting duration :
-    this->connectingTimer = new QTimer(this);
-    this->connectingTimer->setInterval(5000);
-    this->connectingTimer->setSingleShot(true);
-
+    this->connectingLoopCounter = 0;
     this->authenticationDenied = false;
     this->segmentProcessed = false;
     this->postingOk = false;
@@ -100,7 +95,6 @@ void NntpClient::setupConnections() {
 
     connect (this->tcpSocket, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
     connect (this->tcpSocket, SIGNAL(connected()), this, SLOT(connectedSlot()));
-    connect (this->tcpSocket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChangedSlot(QAbstractSocket::SocketState)));
     connect (this->tcpSocket, SIGNAL(disconnected()), this, SLOT(disconnectedSlot()));
     connect (this->tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorSlot(QAbstractSocket::SocketError)));
     connect (this->tcpSocket, SIGNAL(encrypted()), this, SLOT(socketEncryptedSlot()));
@@ -110,7 +104,6 @@ void NntpClient::setupConnections() {
     connect(this->tryToReconnectTimer, SIGNAL(timeout()), this, SLOT(tryToReconnectSlot()));
     connect(this->idleTimeOutTimer, SIGNAL(timeout()), this, SLOT(idleTimeOutSlot()));
     connect(this->serverAnswerTimer, SIGNAL(timeout()), this, SLOT(answerTimeOutSlot()));
-    connect(this->connectingTimer, SIGNAL(timeout()), this, SLOT(connectingTimeOutSlot()));
 
 
 }
@@ -545,6 +538,9 @@ bool NntpClient::isClientReady() {
     // client is connected :
     if (this->tcpSocket->state() == QAbstractSocket::ConnectedState) {
 
+        // reset connecting loop counter :
+        this->connectingLoopCounter = 0;
+
         // server did not answer yet, consider client as ready until first answer :
         if (!this->serverSentFirstAnswer) {
             clientReady = true;
@@ -558,8 +554,17 @@ bool NntpClient::isClientReady() {
     // client is not connected :
     else if (this->tcpSocket->state() == QAbstractSocket::UnconnectedState) {
 
+        // reset connecting loop counter :
+        this->connectingLoopCounter = 0;
+
         // if client is not connected to server due to errors :
         if (this->nntpError != NoError && this->nntpError != RemoteHostClosed) {
+            clientReady = false;
+        }
+    }
+    // socket is probably connecting, check that there is no hanging with certain servers :
+    else {
+        if (this->connectingLoopCounter++ > MAX_CONNECTING_LOOP) {
             clientReady = false;
         }
     }
@@ -640,19 +645,6 @@ void NntpClient::dataHasArrivedSlot() {
 
 }
 
-
-void NntpClient::stateChangedSlot(QAbstractSocket::SocketState socketState) {
-
-    //kDebug() << socketState;
-    if (socketState == QAbstractSocket::ConnectingState) {
-        this->connectingTimer->start();
-    }
-    else {
-        this->connectingTimer->stop();
-    }
-
-
-}
 
 
 void NntpClient::connectedSlot() {
@@ -737,15 +729,6 @@ void NntpClient::idleTimeOutSlot() {
     this->sendQuitCommandToServer();
     this->tcpSocket->disconnectFromHost();
 
-}
-
-
-void NntpClient::connectingTimeOutSlot() {
-
-    this->nntpError = ConnectionRefused;
-
-    // shtudown connecting :
-    this->tcpSocket->abort();
 }
 
 

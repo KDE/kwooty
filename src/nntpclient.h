@@ -79,16 +79,18 @@ public:
 
 
 private:
+    static const int MAX_CONNECTING_LOOP = 10;
+
     ClientManagerConn* parent;
     QSslSocket* tcpSocket;
     QByteArray segmentByteArray;
     QTimer* tryToReconnectTimer;
     QTimer* idleTimeOutTimer;
     QTimer* serverAnswerTimer;
-    QTimer* connectingTimer;
     SegmentData currentSegmentData;
     NntpClient::NntpClientStatus clientStatus;
     int nntpError;
+    int connectingLoopCounter;
     bool postingOk;
     bool serverSentFirstAnswer;
     bool authenticationDenied;
@@ -131,12 +133,10 @@ private slots:
     void readyReadSlot();
     void connectedSlot();    
     void errorSlot(QAbstractSocket::SocketError);
-    void stateChangedSlot(QAbstractSocket::SocketState);
     void disconnectedSlot();
     void tryToReconnectSlot();
     void socketEncryptedSlot();
     void peerVerifyErrorSlot();
-    void connectingTimeOutSlot();
 
 };
 
