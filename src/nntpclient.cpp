@@ -55,7 +55,6 @@ NntpClient::NntpClient(ClientManagerConn* parent) : QObject (parent) {
     this->serverAnswerTimer->setInterval(20000);
     this->serverAnswerTimer->setSingleShot(true);
 
-    this->connectingLoopCounter = 0;
     this->authenticationDenied = false;
     this->segmentProcessed = false;
     this->postingOk = false;
@@ -538,9 +537,6 @@ bool NntpClient::isClientReady() {
     // client is connected :
     if (this->tcpSocket->state() == QAbstractSocket::ConnectedState) {
 
-        // reset connecting loop counter :
-        this->connectingLoopCounter = 0;
-
         // server did not answer yet, consider client as ready until first answer :
         if (!this->serverSentFirstAnswer) {
             clientReady = true;
@@ -554,19 +550,14 @@ bool NntpClient::isClientReady() {
     // client is not connected :
     else if (this->tcpSocket->state() == QAbstractSocket::UnconnectedState) {
 
-        // reset connecting loop counter :
-        this->connectingLoopCounter = 0;
-
         // if client is not connected to server due to errors :
         if (this->nntpError != NoError && this->nntpError != RemoteHostClosed) {
             clientReady = false;
         }
     }
-    // socket is probably connecting, check that there is no hanging with certain servers :
+    // socket is probably connecting, client is considered as not ready during this period :
     else {
-        if (this->connectingLoopCounter++ > MAX_CONNECTING_LOOP) {
-            clientReady = false;
-        }
+        clientReady = false;
     }
 
 
@@ -574,7 +565,6 @@ bool NntpClient::isClientReady() {
         this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
     }
 
-    //kDebug() << this->parent->getServerGroup()->getServerGroupId() << this->tcpSocket->state();
 
     return clientReady;
 }

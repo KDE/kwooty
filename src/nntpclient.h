@@ -79,8 +79,6 @@ public:
 
 
 private:
-    static const int MAX_CONNECTING_LOOP = 10;
-
     ClientManagerConn* parent;
     QSslSocket* tcpSocket;
     QByteArray segmentByteArray;
@@ -90,7 +88,6 @@ private:
     SegmentData currentSegmentData;
     NntpClient::NntpClientStatus clientStatus;
     int nntpError;
-    int connectingLoopCounter;
     bool postingOk;
     bool serverSentFirstAnswer;
     bool authenticationDenied;
