@@ -55,6 +55,12 @@ NntpClient::NntpClient(ClientManagerConn* parent) : QObject (parent) {
     this->serverAnswerTimer->setInterval(20000);
     this->serverAnswerTimer->setSingleShot(true);
 
+    // due to multiple server features, a misconfigured server could hang in connecting state
+    // avoiding the other server to download, check connecting duration :
+    this->connectingTimer = new QTimer(this);
+    this->connectingTimer->setInterval(5000);
+    this->connectingTimer->setSingleShot(true);
+
     this->authenticationDenied = false;
     this->segmentProcessed = false;
     this->postingOk = false;
@@ -94,6 +100,7 @@ void NntpClient::setupConnections() {
 
     connect (this->tcpSocket, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
     connect (this->tcpSocket, SIGNAL(connected()), this, SLOT(connectedSlot()));
+    connect (this->tcpSocket, SIGNAL(stateChanged(QAbstractSocket::SocketState)), this, SLOT(stateChangedSlot(QAbstractSocket::SocketState)));
     connect (this->tcpSocket, SIGNAL(disconnected()), this, SLOT(disconnectedSlot()));
     connect (this->tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorSlot(QAbstractSocket::SocketError)));
     connect (this->tcpSocket, SIGNAL(encrypted()), this, SLOT(socketEncryptedSlot()));
@@ -103,6 +110,8 @@ void NntpClient::setupConnections() {
     connect(this->tryToReconnectTimer, SIGNAL(timeout()), this, SLOT(tryToReconnectSlot()));
     connect(this->idleTimeOutTimer, SIGNAL(timeout()), this, SLOT(idleTimeOutSlot()));
     connect(this->serverAnswerTimer, SIGNAL(timeout()), this, SLOT(answerTimeOutSlot()));
+    connect(this->connectingTimer, SIGNAL(timeout()), this, SLOT(connectingTimeOutSlot()));
+
 
 }
 
@@ -555,9 +564,12 @@ bool NntpClient::isClientReady() {
         }
     }
 
+
     if (!clientReady) {
         this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
     }
+
+    //kDebug() << this->parent->getServerGroup()->getServerGroupId() << this->tcpSocket->state();
 
     return clientReady;
 }
@@ -629,8 +641,23 @@ void NntpClient::dataHasArrivedSlot() {
 }
 
 
+void NntpClient::stateChangedSlot(QAbstractSocket::SocketState socketState) {
+
+    //kDebug() << socketState;
+    if (socketState == QAbstractSocket::ConnectingState) {
+        this->connectingTimer->start();
+    }
+    else {
+        this->connectingTimer->stop();
+    }
+
+
+}
+
 
 void NntpClient::connectedSlot() {
+
+    kDebug() << this->parent->getServerGroup()->getServerGroupId();
 
     emit connectionStatusSignal(Connected);
 
@@ -713,8 +740,16 @@ void NntpClient::idleTimeOutSlot() {
 }
 
 
+void NntpClient::connectingTimeOutSlot() {
 
-void NntpClient::answerTimeOutSlot(){
+    this->nntpError = ConnectionRefused;
+
+    // shtudown connecting :
+    this->tcpSocket->abort();
+}
+
+
+void NntpClient::answerTimeOutSlot() {
 
     //kDebug() << "Host answer time out, reconnecting...";
     this->serverAnswerTimer->stop();

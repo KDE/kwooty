@@ -85,6 +85,7 @@ private:
     QTimer* tryToReconnectTimer;
     QTimer* idleTimeOutTimer;
     QTimer* serverAnswerTimer;
+    QTimer* connectingTimer;
     SegmentData currentSegmentData;
     NntpClient::NntpClientStatus clientStatus;
     int nntpError;
@@ -130,10 +131,12 @@ private slots:
     void readyReadSlot();
     void connectedSlot();    
     void errorSlot(QAbstractSocket::SocketError);
+    void stateChangedSlot(QAbstractSocket::SocketState);
     void disconnectedSlot();
     void tryToReconnectSlot();
     void socketEncryptedSlot();
     void peerVerifyErrorSlot();
+    void connectingTimeOutSlot();
 
 };
 
