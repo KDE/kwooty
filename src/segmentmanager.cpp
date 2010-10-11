@@ -58,9 +58,9 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
     QList<SegmentData> segmentList = nzbFileData.getSegmentList();
 
     // parse segment list to find the next idle segment :
-    for (int i = 0; i < segmentList.size(); i++) {
+    for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
 
-        SegmentData segmentData = segmentList.at(i);
+        SegmentData segmentData = segmentList.value(segmentIndex);
 
         int serverGroupId = currentClientManagerConn->getServerGroup()->getServerGroupId();
 
@@ -75,7 +75,7 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
             segmentData.setStatus(DownloadStatus);
 
             // update parent item data :
-            segmentList.replace(i, segmentData);
+            segmentList.replace(segmentIndex, segmentData);
             nzbFileData.setSegmentList(segmentList);
             this->downloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
 
@@ -83,13 +83,14 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
 
             // set parent idenfier to segment before downloading it  :
             segmentData.setParentUniqueIdentifier(nzbFileData.getUniqueIdentifier());
+            segmentData.setElementInList(segmentIndex);
+
 
             // send the next part to the dedicated client :
             currentClientManagerConn->processNextSegment(segmentData);
 
             break;
         }
-
 
     } // end of for loop
 
@@ -113,8 +114,9 @@ void SegmentManager::setIdlePauseSegments(QStandardItem* fileNameItem, const int
         NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
         QList<SegmentData> segmentList = nzbFileData.getSegmentList();
 
-        for (int i = 0; i < segmentList.size(); i++){
-            SegmentData currentSegment = segmentList.at(i);
+        for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
+
+            SegmentData currentSegment = segmentList.value(segmentIndex);
 
             if (currentSegment.getStatus() == IdleStatus && targetStatus == PauseStatus) {
                 currentSegment.setStatus(targetStatus);
@@ -124,7 +126,8 @@ void SegmentManager::setIdlePauseSegments(QStandardItem* fileNameItem, const int
                 currentSegment.setStatus(targetStatus);
             }
 
-            segmentList.replace(currentSegment.getElementInList(), currentSegment);
+            segmentList.replace(segmentIndex, currentSegment);
+
         }
 
 
@@ -145,15 +148,17 @@ void SegmentManager::setIdlePauseSegments(QStandardItem* fileNameItem, const int
 
 QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const UtilityNamespace::ItemStatus itemStatus){
 
-    bool itemUpdated = false;
+    // init fileNameItem :
+    QStandardItem* fileNameItem = 0;
 
+    bool itemUpdated = false;
     QModelIndex parentModelIndex;
-    QStandardItem* fileNameItem = NULL;
     QModelIndex nzbFileModelIndex;
 
 
     // search the unique identifier modelIndex that match with the segmentData's one for updating it :
-    if (this->downloadModel->rowCount() > 0) {
+    if ( (this->downloadModel->rowCount() > 0) &&
+         (parentIdentifer != QVariant()) ) {
 
         int row = 0;
 
@@ -218,6 +223,7 @@ QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const
 
                 // parent should be found (otherwise the row has been removed by the user) :
                 if (!parentIndexList.isEmpty()){
+                    
                     // only one element is returned :
                     parentModelIndex = parentIndexList.at(0);
                     fileNameItem = this->downloadModel->itemFromIndex(parentModelIndex);
@@ -272,17 +278,17 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
                     QStandardItem* stateItem = nzbItem->child(i, STATE_COLUMN);
 
                     // check children status and send idle segment :
-                    UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(stateItem);
+                    UtilityNamespace::ItemStatus currentChildStatus = this->downloadModel->getStatusFromStateItem(stateItem);
 
                     // multi-server purpose :
                     // check if all segments have already been scanned by the same server,
                     // otherwise skip the current item and switch no next one for getting a next segment :
-                    int nextServerId = currentClientManagerConn->getServerGroup()->getServerGroupId();
+                    int currentServerId = currentClientManagerConn->getServerGroup()->getServerGroupId();
 
                     ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
 
-                    if (Utility::isReadyToDownload(currentStatus) &&
-                        (nextServerId >= itemStatusData.getNextServerId()) ) {
+                    if (Utility::isReadyToDownload(currentChildStatus) &&
+                        (currentServerId >= itemStatusData.getNextServerId()) ) {
 
                         itemFound = this->sendNextIdleSegment(fileNameItem, currentClientManagerConn);
                         
@@ -296,7 +302,7 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
     //notify the client that no segment has been found to return to idle status :
     if (!itemFound) {
         currentClientManagerConn->noSegmentAvailable();
-    }
+    };
 
 }
 
@@ -307,7 +313,8 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData) {
     // search index
     QStandardItem* fileNameItem = this->searchItem(segmentData.getParentUniqueIdentifier(), DownloadStatus);
 
-    if (fileNameItem != NULL){
+    // if corresponding item has been found :
+    if (fileNameItem) {
 
         NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
         QList<SegmentData> segmentList = nzbFileData.getSegmentList();        
@@ -331,10 +338,11 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData) {
             itemParentUpdater->getItemDownloadUpdater()->updateItems(fileNameItem->index(), nzbFileData);
         }
         else {
-            kDebug() << "ooops, something goes really wrong :" << segmentList.size() << segmentData.getElementInList();
+            kDebug() << "ooops, something goes really wrong :" << previousSegmentData.getStatus() << segmentList.size() << segmentData.getElementInList();
         }
 
-    } else {
+    }
+    else {
         //kDebug() <<  "Item not found - status : " << segmentData.getStatus();
     }
 
@@ -349,12 +357,12 @@ void SegmentManager::updateDecodeSegmentSlot(QVariant parentIdentifer, int progr
     QStandardItem* fileNameItem = this->searchItem(parentIdentifer, DecodeStatus);
 
     // if item has not been found the nzb parent item could be in pause state, search it :
-    if (fileNameItem == NULL){
+    if (!fileNameItem){
         fileNameItem = this->searchItem(parentIdentifer, PauseStatus);
     }
 
     // item has been found :
-    if (fileNameItem != NULL){
+    if (fileNameItem){
 
         // add info about decoded file type (par2 file or rar file) ;
         itemParentUpdater->getItemPostDownloadUpdater()->addFileTypeInfo(fileNameItem, decodedFileName, crc32Match);
@@ -377,7 +385,8 @@ void SegmentManager::updateRepairExtractSegmentSlot(QVariant parentIdentifer, in
     // search item according to its ID :
     QStandardItem* fileNameItem = this->searchItem(parentIdentifer, RepairStatus);
 
-    if (fileNameItem != NULL){
+    // if corresponding item has been found :
+    if (fileNameItem){
         // update items :
         itemParentUpdater->getItemPostDownloadUpdater()->updateItems(fileNameItem->index(), progression, status, itemTarget);
 
@@ -417,7 +426,9 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
 
                     bool listUpdated = false;
 
-                    foreach (SegmentData currentSegment, segmentList) {
+                    for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
+
+                        SegmentData currentSegment = segmentList.value(segmentIndex);
 
                         // update pending segments to a new backup server target :
                         if (pendingSegments == UpdateSegments) {
@@ -438,7 +449,7 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
                                 }
 
                                 // update segment list :
-                                segmentList.replace(currentSegment.getElementInList(), currentSegment);
+                                segmentList.replace(segmentIndex, currentSegment);
                                 listUpdated = true;
 
                             }
@@ -453,7 +464,7 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
                                 currentSegment.setReadyForNewServer(MasterServer);
 
                                 // update segment list :
-                                segmentList.replace(currentSegment.getElementInList(), currentSegment);
+                                segmentList.replace(segmentIndex, currentSegment);
                                 listUpdated = true;
                             }
 
