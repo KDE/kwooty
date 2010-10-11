@@ -65,7 +65,7 @@ SOURCES += main.cpp \
     data/serverdata.cpp \
     widgets/serverpreferenceswidget.cpp \
     widgets/servertabwidget.cpp \
-    utilityiconpainting.cpp
+    utilityiconpainting.cpp 
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -128,7 +128,7 @@ HEADERS += mainwindow.h \
     data/serverdata.h \
     widgets/serverpreferenceswidget.h \
     widgets/servertabwidget.h \
-    utilityiconpainting.h
+    utilityiconpainting.h 
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
