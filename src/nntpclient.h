@@ -32,11 +32,11 @@ class ClientManagerConn;
 class NntpClient : public QObject
 {
 
-Q_OBJECT
-Q_ENUMS(ServerAnswer)
-Q_ENUMS(NntpClientStatus)
-Q_ENUMS(NewSegmentRequest)
-Q_ENUMS(TimerJob)
+    Q_OBJECT
+    Q_ENUMS(ServerAnswer)
+    Q_ENUMS(NntpClientStatus)
+    Q_ENUMS(NewSegmentRequest)
+    Q_ENUMS(TimerJob)
 
 public:
 
@@ -58,27 +58,35 @@ public:
     enum NntpClientStatus { ClientIdle,
                             ClientDownload,
                             ClientSegmentRequest
-                       };
+                        };
 
     enum NewSegmentRequest { RequestNewSegment,
-                            DoNotRequestNewSegment
-                       };
+                             DoNotRequestNewSegment
+                         };
 
     enum TimerJob { StartStopTimers,
                     DoNotTouchTimers
-                  };
+                };
+
+    enum ServerAnswerStatus { ServerFirstAnswerNotSent,
+                              ServerFirstAnswerSent,
+                              ServerConnectedPostingOk,
+                              ServerDisconnectedPostingOk,
+                              ServerDisconnected
+                          };
 
     NntpClient(ClientManagerConn* parent = 0);
     ~NntpClient();
     void downloadNextSegment(const SegmentData&);
     void noSegmentAvailable();
-    void setConnectedClientStatus(const NntpClientStatus, const TimerJob = StartStopTimers);
     bool isClientReady();
     void disconnectRequestByManager();
     void connectRequestByManager();
 
 
 private:
+    static const int MAX_CONNECTING_LOOP = 5;
+
     ClientManagerConn* parent;
     QSslSocket* tcpSocket;
     QByteArray segmentByteArray;
@@ -87,13 +95,14 @@ private:
     QTimer* serverAnswerTimer;
     SegmentData currentSegmentData;
     NntpClient::NntpClientStatus clientStatus;
+    NntpClient::ServerAnswerStatus serverAnswerStatus;
     int nntpError;
-    bool postingOk;
-    bool serverSentFirstAnswer;
+    int connectingLoopCounter;
     bool authenticationDenied;
     bool certificateVerified;
     bool segmentProcessed;
 
+    void setConnectedClientStatus(const NntpClientStatus, const TimerJob = StartStopTimers);
     void connectToHost();
     void setupConnections();
     void getAnswerFromServer();
@@ -104,10 +113,13 @@ private:
     void sendQuitCommandToServer();
     void sendUserCommandToServer();
     void sendPasswordCommandToServer();
+    void sendCommand(const QString&);
     void segmentDataRollBack();
     void requestNewSegment();
     void postProcessIfBackupServer(NewSegmentRequest = RequestNewSegment);
     bool downloadSegmentWithBackupServer();
+    void updateServerAnswerStatus(const ServerAnswerStatus);
+
 
 
 signals:
