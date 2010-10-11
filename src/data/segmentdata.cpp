@@ -25,6 +25,7 @@ using namespace UtilityNamespace;
 
 SegmentData::SegmentData() {
     this->parentUniqueIdentifier = QVariant();
+    this->elementInList = -1;
     this->status = IdleStatus;
 }
 
@@ -34,9 +35,11 @@ SegmentData::SegmentData(const QString& bytes, const QString& number, const QStr
     this->number = number;
     this->part = part;
     this->status = status;
+
     this->serverGroupTarget = MasterServer;
     this->articlePresence = Unknown;
     this->parentUniqueIdentifier = QVariant();
+    this->elementInList = -1;
 }
 
 void SegmentData::setReadyForNewServer(const int& nextServerGroup) {
