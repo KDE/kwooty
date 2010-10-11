@@ -76,6 +76,10 @@ void ServerGroup::setupConnections() {
 }
 
 
+int ServerGroup::getRealServerGroupId() const {
+    // used for debugging puropses only :
+    return this->serverGroupId;
+}
 
 int ServerGroup::getServerGroupId() const {
 

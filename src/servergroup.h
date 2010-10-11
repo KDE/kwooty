@@ -45,6 +45,7 @@ public:
     void disconnectAllClients();
     void connectAllClients();
     int getServerGroupId() const;
+    int getRealServerGroupId() const;
     ServerData getServerData() const;
     bool isServerAvailable() const;
     bool isMasterServer() const;
