@@ -157,35 +157,34 @@ void ItemAbstractUpdater::setIconToFileNameItem(const QModelIndex& index, Utilit
 
         if (statusIconStrMap.contains(status)) {
 
-            // get final status :
-            QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(index);
-            ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
+            if (Utility::isDownloadFinish(status)) {
 
-            if (status == DownloadFinishStatus) {
-
+                // get final status :
+                ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(index);
                 if (itemStatusData.getDataStatus() == NoData) {
                     // in this case the status is set to DecodeErrorStatus only to display the proper icon :
                     status = DecodeErrorStatus;
                 }
-
             }
 
-
             // set a special icon if segment is still pending and has not been found on master server :
-            if (itemStatusData.getDataStatus() == DataPendingBackupServer)  {
+            else if (Utility::isInQueue(status)) {
 
-                QString iconStr = "mail-mark-unread";
-                if (this->statusIconStrMap.value(status) == iconStr) {
+                // get final status :
+                ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(index);
 
-                    //QPixmap finalPixmap = UtilityIconPainting::getInstance()->blendOverLayTopRight(iconStr, "mail-reply-custom");
+                if (itemStatusData.getDataStatus() == DataPendingBackupServer) {
 
-                    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
-                    fileNameItem->setIcon(KIcon("mail-reply-list"));
-                    return;
+                    QString iconStr = "mail-mark-unread";
+                    if (this->statusIconStrMap.value(status) == iconStr) {
+
+                        QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
+                        fileNameItem->setIcon(KIcon("mail-reply-list"));
+                        return;
+                    }
                 }
 
             }
-
 
             // get fileName item and set corresponding icon :
             QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
