@@ -106,9 +106,6 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
                 // add segments size to get whole file size :
                 fileSize += bytes.toUInt();
 
-                // retrieve temporary folder :
-                QString fileSavePath = Settings::temporaryFolder().path() + "/";
-
                 SegmentData segmentData(bytes, number, part, UtilityNamespace::IdleStatus);
                 segmentData.setProgress(PROGRESS_INIT);
                 segmentData.setElementInList(elementInList++);
