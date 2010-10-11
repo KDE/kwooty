@@ -86,7 +86,7 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
     }
 
 
-    // when all segments have been scanned by one server, set next backup server ID
+    // when all pending segments have been scanned by one server, set next backup server ID
     // in order to speed up segment searching in "SegmentManager" by using filtering in getNextSegmentSlot();
     if (itemStatusData.getNextServerId() != nextServerIdMin) {
         itemStatusData.setNextServerId(nextServerIdMin);
@@ -161,8 +161,14 @@ ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusD
     UtilityNamespace::Data previousDataStatus = itemStatusData.getDataStatus();
 
 
+    // item has not been updated, check if pending data exist :
+    if ( Utility::isInQueue(itemStatusData.getStatus()) &&
+         this->pendingSegmentsOnBackupNumber > 0) {
+
+        itemStatusData.setDataStatus(DataPendingBackupServer);
+    }
     // determine if current file has segments that are not present on server :
-    if (this->downloadFinishItemNumber > 0 ) {
+    else if (this->downloadFinishItemNumber > 0 ) {
 
         // no segment founds on server for the current file :
         if (this->articleFoundNumber == 0) {
@@ -178,19 +184,15 @@ ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusD
 
     }
 
-    // item has not been updated, check if pending data exist :
-    if (previousDataStatus == itemStatusData.getDataStatus()) {
 
-        if ( Utility::isInQueue(itemStatusData.getStatus()) &&
-             this->pendingSegmentsOnBackupNumber > 0) {
-
-            itemStatusData.setDataStatus(DataPendingBackupServer);
-        }
-        // item has not been updated, set it to its default value :
-        else if (previousDataStatus == DataPendingBackupServer){
-            itemStatusData.setDataStatus(DataComplete);
-        }
-    }
+//    //if (previousDataStatus == itemStatusData.getDataStatus()) {
+//
+//
+//    // item has not been updated, set it to its default value :
+//    else if (previousDataStatus == DataPendingBackupServer){
+//        itemStatusData.setDataStatus(DataComplete);
+//    }
+//    //}
 
     return itemStatusData;
 
