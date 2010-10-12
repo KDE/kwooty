@@ -294,7 +294,7 @@ void ServerPreferencesWidget::pushButtonInfoClickedSlot() {
     text.append(divStyle);
     text.append(i18n("<i>Passive:</i> downloads only files not found on Master server<br>"));
     text.append(i18n("<i>Active:</i> downloads files simultaneously with Master server<br>"));
-    text.append(i18n("<i>Failover:</i> supersedes previous <i>Master</i> or <i>Failover</i> server unavailable, otherwise works as <i>Passive</i><br>"));
+    text.append(i18n("<i>Failover:</i> supersedes former unavailable <i>Master</i> or <i>Failover</i> server, otherwise works as <i>Passive</i><br>"));
     text.append(i18n("<i>Server Disabled:</i> server not used"));
     text.append("</div>");
 
