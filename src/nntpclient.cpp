@@ -26,10 +26,10 @@
 #include <QFile>
 
 #include "servergroup.h"
-#include "data/serverdata.h"
 #include "kwootysettings.h"
 #include "clientmanagerconn.h"
 #include "servermanager.h"
+#include "data/serverdata.h"
 
 
 
@@ -521,9 +521,6 @@ void NntpClient::notifyDownloadHasFinished(const UtilityNamespace::Article artic
     emit updateDownloadSegmentSignal(currentSegmentData);
 
 }
-
-
-
 
 
 bool NntpClient::isClientReady() {

@@ -26,7 +26,6 @@
 #include "utility.h"
 using namespace UtilityNamespace;
 
-
 class CentralWidget;
 class ServerGroup;
 

@@ -21,8 +21,6 @@
 
 #include "servergroup.h"
 
-
-
 #include "servermanager.h"
 #include "segmentmanager.h"
 #include "centralwidget.h"

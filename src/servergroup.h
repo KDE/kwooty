@@ -58,7 +58,6 @@ public:
 
 
 private:
-
     static const int MAX_SERVER_DOWN_PER_MINUTE = 4;
 
     ServerData serverData;
