@@ -24,6 +24,7 @@
 #include <KDebug>
 #include <KIcon>
 #include <KInputDialog>
+#include <KMessageBox>
 
 #include <QTabBar>
 #include <QTabWidget>
@@ -176,6 +177,10 @@ void ServerTabWidget::enableDisableTabButtons() {
         this->closeTab->setEnabled(false);
     }
 
+    if (this->currentIndex() == MasterServer) {
+        this->closeTab->setEnabled(false);
+    }
+
 
 }
 
@@ -284,9 +289,20 @@ void ServerTabWidget::closeTabClickedSlot() {
 
     if (currentIndex != 0) {
 
-        // delete the widget and the corresponding tab :
-        this->deleteAndRemoveTab(currentIndex);
-        this->enableDisableTabButtons();
+        // ask for current server removing :
+        int answer = KMessageBox::messageBox(this,
+                                            KMessageBox::QuestionYesNo,
+                                            i18n("Remove <b>%1</b> backup server ?", this->tabText(this->currentIndex()).remove("&")) );
+
+
+        // if selected rows has not been canceled :
+        if (answer == KMessageBox::Yes) {
+
+            // delete the widget and the corresponding tab :
+            this->deleteAndRemoveTab(currentIndex);
+            this->enableDisableTabButtons();
+
+        }
 
     }
 
@@ -317,6 +333,9 @@ void ServerTabWidget::currentChangedSlot(int index) {
         this->setMovable(true);
     }
 
+    // enable / disable buttons tab accordingly :
+    this->enableDisableTabButtons();
+
 }
 
 
@@ -336,7 +355,6 @@ void ServerTabWidget::saveDataSlot() {
         ServerData serverData = ((ServerPreferencesWidget*)this->widget(i))->getData();
         serverData.setServerId(i);
 
-        kDebug() << this->tabText(i);
         serverData.setServerName(this->tabText(i));
 
         KConfigGroupHandler::getInstance()->writeServerSettings(i, serverData);
