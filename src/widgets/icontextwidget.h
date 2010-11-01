@@ -34,21 +34,29 @@ class IconTextWidget : public QWidget {
 
 public:
 
+    enum IconMode {
+        NormalModeIcon,
+        GammaIcon,
+        SwitchIcon
+    };
+
     IconTextWidget(QWidget* parent = 0);
 
-    void setIcon(const QString&);
-    void setIconOnly(const QString&);
-    void blendOverLay(const QString&);
+    void setIconMode(const IconMode = NormalModeIcon);
+    void setIcon(const QString&, const bool& = false);
+    void setIcon(const QString&, const QString&, const bool& = false);
+    void setIconOnly(const QString&, const QString& = QString());
     void setText(const QString&);
     QString getText() const;
-    void setIconGamma(const bool&);
     void showIcon();
     void hideIcon();
+    void setActive(const bool&);
 
 protected:
     void enterEvent(QEvent*);
     void leaveEvent(QEvent*);
     void mousePressEvent(QMouseEvent*);
+
 
 private:
 
@@ -57,9 +65,17 @@ private:
     QLabel* textLabel;
     QHBoxLayout* hBoxLayout;
     QPixmap normalIcon;
-    QPixmap clearIcon;
-    bool iconGamma;
+    QPixmap clearNormalIcon;
+    QPixmap clearActiveIcon;
+    QPixmap activeIcon;
+    IconMode iconMode;
     bool iconPressed;
+
+    void buildClearIcon(const QPixmap&, QPixmap&);
+
+signals:
+    void activeSignal(bool);
+
 
 
 

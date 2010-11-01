@@ -30,15 +30,18 @@
 #include <QPixmap>
 #include <QPainter>
 
+#include "utilityiconpainting.h"
+
 
 IconTextWidget::IconTextWidget(QWidget* parent) : QWidget(parent) {
 
     this->iconLoader = KIconLoader::global();
 
-    this->iconGamma = false;
     this->iconPressed = false;
     this->iconLabel = new QLabel(this);
     this->textLabel = new QLabel(this);
+
+    this->iconMode = NormalModeIcon;
 
     this->hBoxLayout = new QHBoxLayout(this);
     this->hBoxLayout->addWidget(this->iconLabel);
@@ -56,73 +59,123 @@ IconTextWidget::IconTextWidget(QWidget* parent) : QWidget(parent) {
 void IconTextWidget::enterEvent(QEvent* event) {
 
     Q_UNUSED(event);
-    if (this->iconGamma) {
-        this->iconLabel->setPixmap(this->clearIcon);
+
+    if (this->iconMode == GammaIcon) {
+        this->iconLabel->setPixmap(this->clearNormalIcon);
     }
+
+    if (this->iconMode == SwitchIcon && !this->iconPressed) {
+        this->iconLabel->setPixmap(this->clearNormalIcon);
+    }
+
+    if (this->iconMode == SwitchIcon && this->iconPressed) {
+        this->iconLabel->setPixmap(this->clearActiveIcon);
+    }
+
 }
+
 
 void IconTextWidget::leaveEvent(QEvent* event) {
+
     Q_UNUSED(event);
-    if (this->iconGamma && !this->iconPressed) {
+
+    if (this->iconMode == GammaIcon && !this->iconPressed) {
         this->iconLabel->setPixmap(this->normalIcon);
     }
+
+    if (this->iconMode == SwitchIcon && !this->iconPressed) {
+        this->iconLabel->setPixmap(this->normalIcon);
+    }
+
+    if (this->iconMode == SwitchIcon && this->iconPressed) {
+        this->iconLabel->setPixmap(this->activeIcon);
+    }
+
 }
 
-void IconTextWidget::setIconGamma(const bool& iconGamma) {
-    this->iconGamma = iconGamma;
+
+void IconTextWidget::setIconMode(const IconMode iconMode) {
+    this->iconMode = iconMode;
 }
 
 
-void IconTextWidget::setIconOnly(const QString& iconStr) {
-     this->hBoxLayout->setSpacing(0);
-     this->setIcon(iconStr);
+
+void IconTextWidget::setIconOnly(const QString& normalIconStr, const QString& enabledIconStr) {
+
+    this->hBoxLayout->setSpacing(0);
+    this->setIcon(normalIconStr, enabledIconStr);
+
+    // remove event filter in order to catch mouse double click events :
+    this->removeEventFilter(this->parent());
 }
+
+
 
 void IconTextWidget::mousePressEvent(QMouseEvent* event)  {
 
     Q_UNUSED(event);
     this->iconPressed = !this->iconPressed;
     this->enterEvent(event);
+    emit activeSignal(this->iconPressed);
 
 }
 
 
 
-void IconTextWidget::setIcon(const QString& iconStr) {
+void IconTextWidget::setIcon(const QString& normalIconStr, const bool& displayOverlay) {
 
-    if (!iconStr.isEmpty()) {
+    if (!normalIconStr.isEmpty()) {
 
-        this->normalIcon = this->iconLoader->loadIcon(iconStr, KIconLoader::Small);
+        this->normalIcon = this->iconLoader->loadIcon(normalIconStr, KIconLoader::Small);
+
         this->iconLabel->setPixmap(this->normalIcon);
 
-        QImage clearImage = this->normalIcon.toImage();
-        KIconEffect::toGamma(clearImage, 0.80);
-        this->clearIcon = QPixmap::fromImage(clearImage);        
+        this->clearNormalIcon = UtilityIconPainting::getInstance()->buildClearIcon(this->normalIcon);
+
     }
     else {
         this->iconLabel->setPixmap(QPixmap());
     }
 
-}
-
-
-void IconTextWidget::blendOverLay(const QString& overlayIconStr) {
-
-    KIcon overlayIcon = KIcon(overlayIconStr);
-
-    if (!overlayIcon.isNull() && this->iconLabel->pixmap()) {
-
-        QPixmap warningPixmap = overlayIcon.pixmap(10, 10);
-
-        QPixmap finalIcon = this->iconLabel->pixmap()->copy();
-        QPainter p(&finalIcon);
-        p.drawPixmap(KIconLoader::SizeSmall / 2, KIconLoader::SizeSmall  / 2, warningPixmap);
-        p.end();
-
-        this->iconLabel->setPixmap(finalIcon);
+    // if certificate is not verified display warning icon over the secure connected one :
+    if (displayOverlay) {
+        this->iconLabel->setPixmap(UtilityIconPainting::getInstance()->blendOverLayEmblem("emblem-important", this->iconLabel->pixmap()));
     }
 
 }
+
+
+void IconTextWidget::setIcon(const QString& normalIconStr, const QString& enabledIconStr, const bool& displayOverlay) {
+
+    this->setIcon(normalIconStr, displayOverlay);
+
+    if (!enabledIconStr.isEmpty()) {
+
+        this->activeIcon = this->iconLoader->loadIcon(enabledIconStr, KIconLoader::Small);
+        this->clearActiveIcon = UtilityIconPainting::getInstance()->buildClearIcon(this->activeIcon);
+
+    }
+
+}
+
+
+
+
+
+void IconTextWidget::setActive(const bool& active) {
+
+    this->iconPressed = active;
+
+    if (this->iconMode == GammaIcon) {
+        this->iconLabel->setPixmap(this->clearNormalIcon);
+    }
+
+    else if (active && this->iconMode == SwitchIcon) {
+        this->iconLabel->setPixmap(this->activeIcon);
+    }
+
+}
+
 
 
 void IconTextWidget::setText(const QString& text) {
