@@ -42,13 +42,16 @@
 #include "centralwidget.h"
 #include "shutdownmanager.h"
 #include "fileoperations.h"
+#include "sidebar.h"
 #include "plugins/pluginmanager.h"
+#include "preferences/kconfiggrouphandler.h"
 #include "preferences/preferencesserver.h"
 #include "preferences/preferencesgeneral.h"
 #include "preferences/preferencesprograms.h"
 #include "preferences/preferencesdisplay.h"
 #include "preferences/preferencesshutdown.h"
 #include "preferences/preferencesplugins.h"
+#include "widgets/sidebarwidget.h"
 
 #ifdef HAVE_KSTATUSNOTIFIERITEM
 #include "systray.h"
@@ -57,11 +60,18 @@
 #endif
 
 
+
 MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
 {
 
     // create the user interface :
     QWidget* widget = new QWidget(this);
+
+    // setup kconfig group handler :
+    this->kConfigGroupHandler = new KConfigGroupHandler(this);
+
+    // setup side bar below treeview :
+    this->sideBar = new SideBar(this);
 
     // setup centralWidget :
     this->centralWidget = new CentralWidget(this);   
@@ -96,11 +106,10 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
 }
 
 
-MainWindow::~MainWindow()
-{
-
+MainWindow::~MainWindow(){
 
 }
+
 
 
 void MainWindow::buildLayout(QWidget* widget) {
@@ -110,12 +119,17 @@ void MainWindow::buildLayout(QWidget* widget) {
     mainVBoxLayout->setMargin(1);
 
     mainVBoxLayout->addWidget(this->treeView);
+    mainVBoxLayout->addWidget(this->sideBar->getSideBarWidget());
 
 }
 
 
 MyStatusBar* MainWindow::getStatusBar() const {
     return this->statusBar;
+}
+
+SideBar* MainWindow::getSideBar() const {
+    return this->sideBar;
 }
 
 CentralWidget* MainWindow::getCentralWidget() const{
@@ -325,10 +339,11 @@ void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage)
         this->preferencesPagesMap.insert(PluginsPage, preferencesPluginsPage);
 
 
-        connect( dialog, SIGNAL(settingsChanged(const QString&)), centralWidget, SLOT(updateSettingsSlot()) );
-        connect( dialog, SIGNAL(settingsChanged(const QString&)), preferencesPrograms, SLOT(aboutToShowSettingsSlot()) );
-        connect( dialog, SIGNAL(settingsChanged(const QString&)), this, SLOT(systraySlot()) );
-        connect( this, SIGNAL(aboutToShowSettingsSignal()), preferencesPrograms, SLOT(aboutToShowSettingsSlot()) );
+        connect(dialog, SIGNAL(settingsChanged(const QString&)), this->centralWidget, SLOT(updateSettingsSlot()));
+        connect(dialog, SIGNAL(settingsChanged(const QString&)), this->kConfigGroupHandler, SLOT(settingsChangedSlot()));
+        connect(dialog, SIGNAL(settingsChanged(const QString&)), preferencesPrograms, SLOT(aboutToShowSettingsSlot()));
+        connect(dialog, SIGNAL(settingsChanged(const QString&)), this, SLOT(systraySlot()));
+        connect(this, SIGNAL(aboutToShowSettingsSignal()), preferencesPrograms, SLOT(aboutToShowSettingsSlot()));
 
         // show settings box :
         this->showSettings(preferencesPage);
@@ -367,7 +382,6 @@ void MainWindow::openFileWithFileMode(KUrl nzbUrl, UtilityNamespace::OpenFileMod
 
 
 void MainWindow::quit() {
-
 
     // quit has been requested :
     this->quitSelected = true;
@@ -422,6 +436,12 @@ bool MainWindow::queryClose() {
 
     return confirmQuit;
 
+}
+
+
+bool MainWindow::queryExit() {
+    this->sideBar->saveState();
+    return true;
 }
 
 

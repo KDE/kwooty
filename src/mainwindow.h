@@ -36,6 +36,9 @@ class MyTreeView;
 class CentralWidget;
 class SysTray;
 class PluginManager;
+class SideBar;
+class KConfigGroupHandler;
+
 
 class KWOOTY_EXPORT MainWindow : public KXmlGuiWindow
 
@@ -47,24 +50,27 @@ public:
     ~MainWindow();
 
     void openFileWithFileMode(KUrl, UtilityNamespace::OpenFileMode);
-
     MyStatusBar* getStatusBar() const;
+    SideBar* getSideBar() const;
     CentralWidget* getCentralWidget() const;
-
     QSize sizeHint() const;
+
 
 private:
     CentralWidget* centralWidget;
     MyTreeView* treeView;
     QPointer<SysTray> sysTray;
     MyStatusBar* statusBar;
+    SideBar* sideBar;
     PluginManager* pluginManager;
+    KConfigGroupHandler* kConfigGroupHandler;
     QHash<PreferencesPage, KPageWidgetItem*> preferencesPagesMap;
     bool quitSelected;
 
     void buildLayout(QWidget*);
     void setupActions();
     bool queryClose();
+    bool queryExit();
     void askForSavingDownloads(bool&);
 
 
