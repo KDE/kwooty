@@ -123,7 +123,6 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
 
 ItemStatusData ItemDownloadUpdater::updateStatusNzbChildrenItem(ItemStatusData& itemStatusData, const int& rowNumber) {
 
-
     // if all segments have been downloaded :
     if (rowNumber == this->downloadFinishItemNumber) {
         itemStatusData.setStatus(DownloadFinishStatus);
@@ -158,9 +157,6 @@ ItemStatusData ItemDownloadUpdater::updateStatusNzbChildrenItem(ItemStatusData& 
 
 ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusData) {
 
-    UtilityNamespace::Data previousDataStatus = itemStatusData.getDataStatus();
-
-
     // item has not been updated, check if pending data exist :
     if ( Utility::isInQueue(itemStatusData.getStatus()) &&
          this->pendingSegmentsOnBackupNumber > 0) {
@@ -183,16 +179,6 @@ ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusD
         }
 
     }
-
-
-//    //if (previousDataStatus == itemStatusData.getDataStatus()) {
-//
-//
-//    // item has not been updated, set it to its default value :
-//    else if (previousDataStatus == DataPendingBackupServer){
-//        itemStatusData.setDataStatus(DataComplete);
-//    }
-//    //}
 
     return itemStatusData;
 
