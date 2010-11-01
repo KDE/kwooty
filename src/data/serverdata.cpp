@@ -54,14 +54,12 @@ QString ServerData::getLogin() const {
     return this->login;
 }
 
-
 void ServerData::setPassword(const QString& password) {
     this->password = password;
 }
 QString ServerData::getPassword() const {
     return this->password;
 }
-
 
 void ServerData::setPort(const uint& port) {
     this->port = port;
@@ -70,14 +68,12 @@ uint ServerData::getPort() const {
     return this->port;
 }
 
-
 void ServerData::setDisconnectTimeout(const uint& disconnectTimeout) {
     this->disconnectTimeout = disconnectTimeout;
 }
 uint ServerData::getDisconnectTimeout() const {
     return this->disconnectTimeout;
 }
-
 
 void ServerData::setAuthentication(const bool& authentication) {
     this->authentication = authentication;
@@ -86,14 +82,12 @@ bool ServerData::isAuthentication() const {
     return this->authentication;
 }
 
-
 void ServerData::setEnableSSL(const bool& enableSSL) {
     this->enableSSL = enableSSL;
 }
 bool ServerData::isEnableSSL() const {
     return this->enableSSL;
 }
-
 
 void ServerData::setConnectionNumber(const uint& connectionNumber) {
     this->connectionNumber = connectionNumber;
