@@ -23,7 +23,10 @@
 #include "servermanager.h"
 #include "centralwidget.h"
 #include "servergroup.h"
+#include "sidebar.h"
 #include "segmentmanager.h"
+#include "mainwindow.h"
+#include "observers/clientsperserverobserver.h"
 #include "preferences/kconfiggrouphandler.h"
 
 
@@ -44,6 +47,10 @@ ServerManager::ServerManager(CentralWidget* parent) : QObject(parent) {
     this->setupConnections();
 
 
+    // notify sidebar that servergroups have been created :
+    emit serverManagerSettingsChangedSignal();
+
+
 }
 
 
@@ -55,8 +62,23 @@ void ServerManager::setupConnections() {
              this,
              SLOT(settingsChangedSlot()));
 
+
+    // notify sidebar that settings have been changed :
+    connect (this,
+             SIGNAL(serverManagerSettingsChangedSignal()),
+             this->parent->getSideBar(),
+             SLOT(serverManagerSettingsChangedSlot()), Qt::QueuedConnection);
 }
 
+
+
+int ServerManager::getServerNumber() const {
+    return this->idServerGroupMap.size();
+}
+
+ServerGroup* ServerManager::getServerGroupById(const int& index) {
+    return this->idServerGroupMap.value(index);
+}
 
 
 int ServerManager::getNextTargetServer(const int& currentTargetServer) {
@@ -119,6 +141,51 @@ void ServerManager::tryDownloadWithServer(const int& nextTargetServer) {
 
 
 
+bool ServerManager::areAllServersEncrypted() const {
+
+    bool allServersEncrypted = true;
+
+    // current master server availability has changed ,
+    foreach (ServerGroup* currentServerGroup, this->idServerGroupMap.values()) {
+
+        if (currentServerGroup->getClientsPerServerObserver()->isConnected() &&
+            !currentServerGroup->getClientsPerServerObserver()->isSslActive()) {
+
+            allServersEncrypted = false;
+            break;
+        }
+    }
+
+    return allServersEncrypted;
+
+}
+
+
+int ServerManager::retrieveCumulatedDownloadSpeed(const int& nzbDownloadRowPos) const {
+
+    int cumulatedDownloadSpeed = 0;
+
+    // look for every servers currently downloading the same nzb item (at nzbDownloadRowPos in model)
+    // in order to compute the current nzb item cumulated download speed :
+    foreach (ServerGroup* currentServerGroup, this->idServerGroupMap.values()) {
+
+        ClientsPerServerObserver* clientsPerServerObserver = currentServerGroup->getClientsPerServerObserver();
+        SegmentInfoData segmentInfoData = clientsPerServerObserver->getSegmentInfoData();
+
+        // if current server group is downloading the current nzb item, add it to the cumulatedDownloadSpeed :
+        if (segmentInfoData.getNzbRowModelPosition() == nzbDownloadRowPos) {
+
+            cumulatedDownloadSpeed += clientsPerServerObserver->getDownloadSpeed();
+
+        }
+
+    }
+
+    return cumulatedDownloadSpeed;
+
+}
+
+
 void ServerManager::masterServerAvailabilityChanges() {
 
     ServerGroup* newMasterServer = 0;
@@ -166,6 +233,8 @@ bool ServerManager::currentIsFirstMasterAvailable(const ServerGroup* currentServ
 
 void ServerManager::settingsChangedSlot() {
 
+    bool serverSettingsChanged = false;
+
     int serverNumber = KConfigGroupHandler::getInstance()->readServerNumberSettings();
 
     // 1.a if new backup servers are requested :
@@ -176,21 +245,13 @@ void ServerManager::settingsChangedSlot() {
         }
     }
 
-
     // 1.b if less backup servers are requested :
     if (serverNumber < this->idServerGroupMap.size()) {
-
-        while (this->idServerGroupMap.size() > serverNumber) {
-
-            this->idServerGroupMap.take(this->idServerGroupMap.size() - 1)->deleteLater();
-
-        }
-
+        serverSettingsChanged = true;
     }
 
 
     // 2.a notify servergroups that some settings changed :
-    bool serverSettingsChanged = false;
     foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values()) {
 
         bool currentServerSettingsChanged = nextServerGroup->settingsServerChangedSlot();
@@ -215,10 +276,21 @@ void ServerManager::settingsChangedSlot() {
         // by default, the master server is always the first one :
         this->currentMasterServer = this->idServerGroupMap.value(MasterServer);
 
+
+        // remove servers right now after disconnection done :
+        while (this->idServerGroupMap.size() > serverNumber) {
+            this->idServerGroupMap.take(this->idServerGroupMap.size() - 1)->deleteLater();
+        }
+
+
         // reconnect all clients 100 ms later :
         QTimer::singleShot(100, this, SLOT(requestClientConnectionSlot()));
 
+
     }
+
+
+    emit serverManagerSettingsChangedSignal();
 
 }
 

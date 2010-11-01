@@ -37,10 +37,14 @@ class ServerManager : public QObject {
 public:
     ServerManager(CentralWidget*);
     int getNextTargetServer(const int&);
+    int getServerNumber() const;
+    ServerGroup* getServerGroupById(const int&);
     void downloadWithAnotherBackupServer(const int&);
     void tryDownloadWithServer(const int&);
     void masterServerAvailabilityChanges();
     bool currentIsFirstMasterAvailable(const ServerGroup*) const;
+    bool areAllServersEncrypted() const;
+    int retrieveCumulatedDownloadSpeed(const int&) const;
 
 private:
     CentralWidget* parent;
@@ -50,6 +54,7 @@ private:
     void setupConnections();
 
 signals:
+    void serverManagerSettingsChangedSignal();
 
 
 public slots:
