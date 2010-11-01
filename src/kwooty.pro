@@ -42,14 +42,14 @@ SOURCES += main.cpp \
     extractrar.cpp \
     extractzip.cpp \
     widgets/icontextwidget.cpp \
-    clientsobserver.cpp \
+    observers/clientsobserver.cpp \
     folderwatcher.cpp \
     fileoperations.cpp \
     data/nzbcollectiondata.cpp \
     widgets/iconcapacitywidget.cpp \
     systraylegacy.cpp \
     systray.cpp \
-    queuefileobserver.cpp \
+    observers/queuefileobserver.cpp \
     statsinfobuilder.cpp \
     data/jobnotifydata.cpp \
     notificationmanager.cpp \
@@ -65,7 +65,15 @@ SOURCES += main.cpp \
     data/serverdata.cpp \
     widgets/serverpreferenceswidget.cpp \
     widgets/servertabwidget.cpp \
-    utilityiconpainting.cpp 
+    utilityiconpainting.cpp \
+    widgets/sidebarwidget.cpp \
+    widgets/serverstatuswidget.cpp \
+    sidebar.cpp \
+    observers/clientsperserverobserver.cpp \
+    utilityserverstatus.cpp \
+    observers/clientsobserverbase.cpp \
+    widgets/textpushbuttonwidget.cpp \
+    data/segmentinfodata.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -104,14 +112,14 @@ HEADERS += mainwindow.h \
     extractrar.h \
     extractzip.h \
     widgets/icontextwidget.h \
-    clientsobserver.h \
+    observers/clientsobserver.h \
     folderwatcher.h \
     fileoperations.h \
     data/nzbcollectiondata.h \
     widgets/iconcapacitywidget.h \
     systraylegacy.h \
     systray.h \
-    queuefileobserver.h \
+    observers/queuefileobserver.h \
     statsinfobuilder.h \
     data/jobnotifydata.h \
     notificationmanager.h \
@@ -128,7 +136,15 @@ HEADERS += mainwindow.h \
     data/serverdata.h \
     widgets/serverpreferenceswidget.h \
     widgets/servertabwidget.h \
-    utilityiconpainting.h 
+    utilityiconpainting.h \
+    widgets/sidebarwidget.h \
+    widgets/serverstatuswidget.h \
+    sidebar.h \
+    observers/clientsperserverobserver.h \
+    utilityserverstatus.h \
+    observers/clientsobserverbase.h \
+    widgets/textpushbuttonwidget.h \
+    data/segmentinfodata.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
