@@ -31,7 +31,7 @@ class ClientManagerConn;
 class ItemParentUpdater;
 class StandardItemModel;
 class SegmentData;
-
+class SegmentInfoData;
 
 
 class SegmentManager : public QObject
@@ -49,7 +49,7 @@ public:
 
     SegmentManager(CentralWidget* parent = 0);
     SegmentManager();
-    void setIdlePauseSegments(QStandardItem*, const int);
+    void setIdlePauseSegments(QStandardItem*, const UtilityNamespace::ItemStatus);
     QStandardItem* searchItem(const QVariant&, const UtilityNamespace::ItemStatus);
     void updatePendingSegmentsToTargetServer(const int&, const int&, const PendingSegments = UpdateSegments);
 
@@ -57,7 +57,7 @@ private:
     StandardItemModel* downloadModel;
     ItemParentUpdater* itemParentUpdater;
 
-    bool sendNextIdleSegment(QStandardItem*, ClientManagerConn*);
+    bool sendNextIdleSegment(QStandardItem*, ClientManagerConn*, const SegmentInfoData&);
 
 
 signals:

@@ -31,6 +31,7 @@
 #include "itemparentupdater.h"
 #include "servergroup.h"
 #include "data/segmentdata.h"
+#include "data/segmentinfodata.h"
 #include "data/nzbfiledata.h"
 #include "standarditemmodel.h"
 
@@ -49,7 +50,7 @@ SegmentManager::SegmentManager()
 
 
 
-bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientManagerConn* currentClientManagerConn){
+bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientManagerConn* currentClientManagerConn, const SegmentInfoData& segmentInfoData){
 
     bool itemFound = false;
 
@@ -74,6 +75,9 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
             // next idle status has been found, set it to download status :
             segmentData.setStatus(DownloadStatus);
 
+            // reset elements in list (may fix elements out of sync rare issues ?) :
+            segmentData.setElementInList(segmentIndex);
+
             // update parent item data :
             segmentList.replace(segmentIndex, segmentData);
             nzbFileData.setSegmentList(segmentList);
@@ -85,6 +89,9 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
             segmentData.setParentUniqueIdentifier(nzbFileData.getUniqueIdentifier());
             segmentData.setElementInList(segmentIndex);
 
+            // set segment info data (including nzb file name and row position)
+            // in order to notify sidebar of downloaded files per server :
+            segmentData.setSegmentInfoData(segmentInfoData);
 
             // send the next part to the dedicated client :
             currentClientManagerConn->processNextSegment(segmentData);
@@ -101,7 +108,7 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
 
 
 
-void SegmentManager::setIdlePauseSegments(QStandardItem* fileNameItem, const int targetStatus){
+void SegmentManager::setIdlePauseSegments(QStandardItem* fileNameItem, const UtilityNamespace::ItemStatus targetStatus){
 
     // check that the nzb status item is either Idle, Download or pausing / paused :
     QStandardItem* nzbStatusItem = this->downloadModel->getStateItemFromIndex(fileNameItem->index());
@@ -290,7 +297,8 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
                     if (Utility::isReadyToDownload(currentChildStatus) &&
                         (currentServerId >= itemStatusData.getNextServerId()) ) {
 
-                        itemFound = this->sendNextIdleSegment(fileNameItem, currentClientManagerConn);
+                        SegmentInfoData segmentInfoData(nzbItem->text(), nzbItem->row());
+                        itemFound = this->sendNextIdleSegment(fileNameItem, currentClientManagerConn, segmentInfoData);
                         
                     }
                 }
@@ -327,6 +335,7 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData) {
 
             // segment has been processed, parent identifier can now be removed :
             segmentData.setParentUniqueIdentifier(QVariant());
+            segmentData.setSegmentInfoData(SegmentInfoData());
 
             // update the segmentData list :
             segmentList.replace(segmentData.getElementInList(), segmentData);
@@ -433,10 +442,8 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
                         // update pending segments to a new backup server target :
                         if (pendingSegments == UpdateSegments) {
 
-                            if (currentSegment.getStatus() != DownloadFinishStatus &&
+                            if (Utility::isInDownloadProcess(currentSegment.getStatus()) &&
                                 currentSegment.getServerGroupTarget() == currentServerGroup) {
-
-                                kDebug() << "group : " << currentServerGroup;
 
                                 // if another backup server is available, set it ready to be downloaded with :
                                 if (nextServerGroup != NoTargetServer) {
@@ -458,7 +465,7 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
                         // reset pending segments to master server target :
                         else if (pendingSegments == ResetSegments) {
 
-                            if (currentSegment.getStatus() != DownloadFinishStatus) {
+                            if (Utility::isInDownloadProcess(currentSegment.getStatus())) {
 
                                 // reset pending segments with master server as target :
                                 currentSegment.setReadyForNewServer(MasterServer);
