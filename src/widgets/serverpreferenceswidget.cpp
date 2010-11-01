@@ -29,6 +29,7 @@
 #include "widgets/servertabwidget.h"
 #include "kwootysettings.h"
 
+#include "utilityserverstatus.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -69,7 +70,6 @@ ServerPreferencesWidget::ServerPreferencesWidget(ServerTabWidget* parent,
 
 
 ServerPreferencesWidget::~ServerPreferencesWidget() {
-    kDebug();
     delete this->serverSettingsUi;
 }
 
@@ -89,10 +89,10 @@ void ServerPreferencesWidget::setupButtons() {
     // set icon and text for server mode combo box :
     QMap<int, QString> comboBoxIconTextMap = this->serverTabWidget->getComboBoxIconTextMap();
 
-    foreach(QString pattern, comboBoxIconTextMap.values()) {
+    foreach(QString iconStr, comboBoxIconTextMap.values()) {
 
-        QStringList patternList = pattern.split(";");
-        this->serverSettingsUi->comboBoxServerMode->addItem(KIcon(patternList.value(0)), patternList.value(1));
+        QString serverModeStr = UtilityServerStatus::getServerModeString((UtilityNamespace::BackupServerMode)comboBoxIconTextMap.key(iconStr));
+        this->serverSettingsUi->comboBoxServerMode->addItem(KIcon(iconStr), serverModeStr);
     }
 
 }

@@ -28,12 +28,14 @@
 
 #include <QTabBar>
 #include <QTabWidget>
+#include <QVBoxLayout>
 #include <QUuid>
 
 #include "preferences/preferencesserver.h"
 #include "serverpreferenceswidget.h"
 #include "preferences/kconfiggrouphandler.h"
 
+#include "utilityserverstatus.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -56,19 +58,19 @@ ServerTabWidget::ServerTabWidget(PreferencesServer* parent) : KTabWidget(parent)
     this->closeTab->setToolTip("Remove current backup server");
 
     // create icons and associated texts for servers mode :
-    this->comboBoxIconTextMap.insert(PassiveServer,     QString("system-reboot;" + i18n("Passive")));
-    this->comboBoxIconTextMap.insert(ActiveServer,      QString("system-log-out;" + i18n("Active")));
-    this->comboBoxIconTextMap.insert(FailoverServer,    QString("system-switch-user;" + i18n("Failover")));
-    this->comboBoxIconTextMap.insert(DisabledServer,    QString("system-shutdown;" + i18n("Server Disabled")));
+    this->comboBoxIconTextMap.insert(PassiveServer,     QString("system-reboot"));
+    this->comboBoxIconTextMap.insert(ActiveServer,      QString("system-log-out"));
+    this->comboBoxIconTextMap.insert(FailoverServer,    QString("system-switch-user"));
+    this->comboBoxIconTextMap.insert(DisabledServer,    QString("system-shutdown"));
 
     // set buttons to right and left corners :
     this->setCornerWidget(this->newTab, Qt::TopRightCorner);
-    parent->layout()->addWidget(this);
-
     this->setCornerWidget(this->closeTab, Qt::TopLeftCorner);
-    parent->layout()->addWidget(this);
 
 
+    parent->mainLayout->addWidget(this);
+
+    this->setFocusPolicy(Qt::NoFocus);
     this->setupConnections();
 
 }
@@ -137,6 +139,9 @@ void ServerTabWidget::setServerTabText(const ServerTabNaming& serverTabNaming) {
 
     if (!input.isEmpty()) {
         this->setTabText(this->currentIndex(), input);
+
+        // enable apply button to notify changes :
+        this->valueChangedSlot();
     }
 
 }
@@ -195,7 +200,7 @@ void ServerTabWidget::setServerTabIcon(const int& tabIndex, const int& serverMod
     }
     // adjust icon according to server mode :
     else {
-        iconStr = this->comboBoxIconTextMap.value(serverModeIndex).split(";").value(0);
+        iconStr = this->comboBoxIconTextMap.value(serverModeIndex);
     }
 
     this->setTabIcon(tabIndex, KIcon(iconStr));
@@ -209,7 +214,7 @@ void ServerTabWidget::syncGroupBoxTitle() {
     int tabNumber = this->count();
 
     for (int i = 1; i < tabNumber; i++) {
-        ((ServerPreferencesWidget*)this->widget(i))->setGroupBoxTitle(i);
+        static_cast<ServerPreferencesWidget*>(this->widget(i))->setGroupBoxTitle(i);
     }
 
 }
@@ -352,7 +357,7 @@ void ServerTabWidget::saveDataSlot() {
     // save the new ones :
     for (int i = 0; i < tabNumber; i++) {
 
-        ServerData serverData = ((ServerPreferencesWidget*)this->widget(i))->getData();
+        ServerData serverData = static_cast<ServerPreferencesWidget*>(this->widget(i))->getData();
         serverData.setServerId(i);
 
         serverData.setServerName(this->tabText(i));
