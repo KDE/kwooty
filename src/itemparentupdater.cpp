@@ -23,13 +23,13 @@
 #include <KDebug>
 
 #include "centralwidget.h"
-#include "clientsobserver.h"
 #include "standarditemmodel.h"
 #include "itemdownloadupdater.h"
 #include "itempostdownloadupdater.h"
 #include "itemchildrenmanager.h"
-#include "kwootysettings.h"
+#include "observers/clientsobserver.h"
 #include "data/itemstatusdata.h"
+#include "kwootysettings.h"
 
 
 ItemParentUpdater::ItemParentUpdater(CentralWidget* parent) : ItemAbstractUpdater (parent)
