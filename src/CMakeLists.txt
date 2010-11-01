@@ -41,14 +41,18 @@ set(Kwooty_lib_SRCS
   extractzip.cpp
   datarestorer.cpp
   shutdownmanager.cpp
-  clientsobserver.cpp
   fileoperations.cpp
-  queuefileobserver.cpp
   statsinfobuilder.cpp
   notificationmanager.cpp
   servermanager.cpp
   servergroup.cpp
   utilityiconpainting.cpp
+  utilityserverstatus.cpp
+  sidebar.cpp
+  observers/clientsobserver.cpp
+  observers/clientsperserverobserver.cpp
+  observers/clientsobserverbase.cpp
+  observers/queuefileobserver.cpp
   preferences/preferencesserver.cpp
   preferences/preferencesgeneral.cpp
   preferences/preferencesprograms.cpp
@@ -59,6 +63,7 @@ set(Kwooty_lib_SRCS
   plugins/plugin.cpp
   plugins/pluginmanager.cpp
   data/segmentdata.cpp
+  data/segmentinfodata.cpp
   data/nzbfiledata.cpp
   data/itemstatusdata.cpp
   data/globalfiledata.cpp 
@@ -69,6 +74,9 @@ set(Kwooty_lib_SRCS
   widgets/iconcapacitywidget.cpp
   widgets/serverpreferenceswidget.cpp
   widgets/servertabwidget.cpp
+  widgets/sidebarwidget.cpp
+  widgets/serverstatuswidget.cpp
+  widgets/textpushbuttonwidget.cpp
 )
 
 if(KSTATUSNOTIFIERITEM_FOUND)
