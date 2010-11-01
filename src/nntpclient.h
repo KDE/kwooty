@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QSslSocket>
 #include "data/segmentdata.h"
+#include "data/segmentinfodata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -125,11 +126,11 @@ private:
 signals:
     void getNextSegmentSignal(ClientManagerConn*);
     void updateDownloadSegmentSignal(SegmentData);
-    void connectionStatusSignal(int);
-    void encryptionStatusSignal(const bool, const QString = QString(), const bool = false, const QString = QString(), const QStringList = QStringList());
-    void speedSignal(int);
-    void saveFileErrorSignal(int);
-    void nntpErrorSignal(const int);
+    void connectionStatusPerServerSignal(int);
+    void encryptionStatusPerServerSignal(const bool, const QString = QString(), const bool = false, const QString = QString(), const QStringList = QStringList());
+    void speedPerServerSignal(const SegmentInfoData);
+    void saveFileErrorSignal(const int);
+    void nntpErrorPerServerSignal(const int);
 
 
 public slots:

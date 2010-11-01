@@ -69,12 +69,13 @@ NntpClient::NntpClient(ClientManagerConn* parent) : QObject (parent) {
     this->connectToHost();
 
     // notify status bar that SSL is disabled by default :
-    emit encryptionStatusSignal(false);
+    emit encryptionStatusPerServerSignal(false);
 
 }
 
 
 NntpClient::~NntpClient() {
+    
     // stop all timers :
     this->idleTimeOutTimer->stop();
     this->tryToReconnectTimer->stop();
@@ -137,7 +138,7 @@ void NntpClient::connectToHost() {
         else {
             this->tcpSocket->connectToHost(hostName, port);
             // SSL is disabled :
-            emit encryptionStatusSignal(false);
+            emit encryptionStatusPerServerSignal(false);
         }
 
     }
@@ -276,8 +277,11 @@ void NntpClient::downloadSegmentFromServer(){
     QByteArray chunckData = tcpSocket->readAll();
     this->segmentByteArray.append(chunckData);
 
-    // send size of downloaded data to the status bar :
-    emit speedSignal(chunckData.size());
+    // send size of downloaded data to status bar and side bar :
+    SegmentInfoData segmentInfoData = this->currentSegmentData.getSegmentInfoData();
+    segmentInfoData.setBytesDownloaded(chunckData.size());
+
+    emit speedPerServerSignal(segmentInfoData);
 
     // if end of download has been reached :
     if (this->segmentByteArray.endsWith("\r\n.\r\n")) {
@@ -440,11 +444,13 @@ void NntpClient::segmentDataRollBack() {
     // in case of download errors it can happen that segmentDataRollBack()
     // is called several times with the same segmentData instance
     // check that roll back occurs only once per segmentData :
+
     if (!this->segmentProcessed) {
 
         if (this->currentSegmentData.getStatus() == DownloadStatus) {
 
-            kDebug() << "segmentData roll back effective !";
+            //kDebug() << "segmentData roll back effective !";
+
             this->currentSegmentData.setStatus(IdleStatus);
             this->currentSegmentData.setProgress(PROGRESS_INIT);
 
@@ -692,7 +698,7 @@ void NntpClient::connectedSlot() {
     // client has just connected to server and did not answer yet :
     this->updateServerAnswerStatus(ServerFirstAnswerNotSent);
 
-    emit connectionStatusSignal(Connected);
+    emit connectionStatusPerServerSignal(Connected);
 
     // if reconnection succeeded by timer :
     if (this->tryToReconnectTimer->isActive()) {
@@ -712,8 +718,8 @@ void NntpClient::disconnectedSlot() {
 
     // if disconnection comes after an socket error, notify type of error in status bar :
     // (if disconnection is normal, nntpError = NoError) :
-    emit nntpErrorSignal(this->nntpError);
-    emit connectionStatusSignal(Disconnected);
+    emit nntpErrorPerServerSignal(this->nntpError);
+    emit connectionStatusPerServerSignal(Disconnected);
 
 
     // try to reconnect only if login and password are ok :
@@ -732,19 +738,19 @@ void NntpClient::disconnectedSlot() {
 
 void NntpClient::errorSlot(QAbstractSocket::SocketError socketError) {
 
-    kDebug() << this->parent->getServerGroup()->getRealServerGroupId() << socketError;
+    //kDebug() << this->parent->getServerGroup()->getRealServerGroupId() << socketError;
 
     this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
 
 
     if (socketError == QAbstractSocket::HostNotFoundError) {
         // connection failed, notify error now :
-        emit nntpErrorSignal(HostNotFound);
+        emit nntpErrorPerServerSignal(HostNotFound);
     }
 
     if (socketError == QAbstractSocket::ConnectionRefusedError) {
         // connection failed, notify error now :
-        emit nntpErrorSignal(ConnectionRefused);
+        emit nntpErrorPerServerSignal(ConnectionRefused);
     }
 
     if (socketError == QAbstractSocket::RemoteHostClosedError) {
@@ -772,7 +778,7 @@ void NntpClient::idleTimeOutSlot() {
 
 void NntpClient::answerTimeOutSlot() {
 
-    //kDebug() << "Host answer time out, reconnecting...";
+    //kDebug() << "Host answer time out, reconnecting..., groupId : " << this->parent->getServerGroup()->getRealServerGroupId();
     this->serverAnswerTimer->stop();
 
     this->setConnectedClientStatus(ClientIdle);
@@ -780,8 +786,6 @@ void NntpClient::answerTimeOutSlot() {
     // anticipate socket error notification -> reconnect immediately :
     this->sendQuitCommandToServer();
     this->tcpSocket->abort();
-
-    kDebug() << this->parent->getServerGroup()->getRealServerGroupId();
 
     this->dataHasArrivedSlot();
 }
@@ -820,7 +824,7 @@ void NntpClient::socketEncryptedSlot(){
     }
 
     // SSL connection is active, send also encryption method used by host :
-    emit encryptionStatusSignal(true, this->tcpSocket->sessionCipher().encryptionMethod(), this->certificateVerified, issuerOrgranisation, sslErrors);
+    emit encryptionStatusPerServerSignal(true, this->tcpSocket->sessionCipher().encryptionMethod(), this->certificateVerified, issuerOrgranisation, sslErrors);
 
 }
 
