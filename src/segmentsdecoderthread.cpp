@@ -115,9 +115,9 @@ void SegmentsDecoderThread::setupConnections() {
 
 
         connect (currentSegmentDecoder,
-                 SIGNAL(saveFileErrorSignal(int)),
+                 SIGNAL(saveFileErrorSignal(const int)),
                  parent,
-                 SLOT(saveFileErrorSlot(int)));
+                 SLOT(saveFileErrorSlot(const int)));
 
     }
 
