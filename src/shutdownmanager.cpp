@@ -35,7 +35,7 @@ using namespace Solid::Control;
 #include "centralwidget.h"
 #include "itemparentupdater.h"
 #include "mystatusbar.h"
-#include "queuefileobserver.h"
+#include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
 
 
