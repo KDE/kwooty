@@ -32,6 +32,7 @@ using namespace UtilityNamespace;
 class ClientManagerConn;
 class ServerManager;
 class CentralWidget;
+class ClientsPerServerObserver;
 
 class ServerGroup : public QObject {
 
@@ -41,6 +42,7 @@ public:
     ServerGroup(ServerManager*, CentralWidget*, int);
     CentralWidget* getCentralWidget();
     ServerManager* getServerManager();
+    ClientsPerServerObserver* getClientsPerServerObserver();
     void assignDownloadToReadyClients();
     void disconnectAllClients();
     void connectAllClients();
@@ -66,6 +68,7 @@ private:
     QList<ClientManagerConn*> clientManagerConnList;
     CentralWidget* centralWidget;
     ServerManager* serverManager;
+    ClientsPerServerObserver* clientsPerServerObserver;
     int serverGroupId;
     int stabilityCounter;
     bool serverAvailable;

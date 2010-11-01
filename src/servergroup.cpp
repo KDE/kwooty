@@ -26,6 +26,7 @@
 #include "centralwidget.h"
 #include "clientmanagerconn.h"
 #include "nntpclient.h"
+#include "observers/clientsperserverobserver.h"
 #include "preferences/kconfiggrouphandler.h"
 #include "kwootysettings.h"
 
@@ -41,6 +42,9 @@ ServerGroup::ServerGroup(ServerManager* parent, CentralWidget* centralWidget, in
 
     // retrieve server settings :
     this->serverData = KConfigGroupHandler::getInstance()->readServerSettings(this->serverGroupId);
+
+    // create observer for clients specific to this server instance :
+    this->clientsPerServerObserver = new ClientsPerServerObserver(this);
 
     // connect clients :
     this->createNntpClients();
@@ -108,6 +112,11 @@ CentralWidget* ServerGroup::getCentralWidget() {
 ServerManager* ServerGroup::getServerManager() {
     return this->serverManager;
 }
+
+ClientsPerServerObserver* ServerGroup::getClientsPerServerObserver() {
+    return this->clientsPerServerObserver;
+}
+
 
 
 ServerData ServerGroup::getServerData() const {
@@ -377,6 +386,10 @@ bool ServerGroup::settingsServerChangedSlot() {
         serverSettingsChanged = true;
 
     }
+
+
+    // name of server may have changed, update it in order to synchronize tab name in side bar ;
+    this->serverData.setServerName(newServerData.getServerName());
 
     return serverSettingsChanged;
 
