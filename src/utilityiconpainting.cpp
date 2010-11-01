@@ -21,8 +21,9 @@
 
 #include "utilityiconpainting.h"
 
-#include <KIcon>
 #include <KDebug>
+#include <KIconEffect>
+#include <KIconLoader>
 
 #include <QApplication>
 #include <QPainter>
@@ -35,7 +36,7 @@ using namespace UtilityNamespace;
 
 UtilityIconPainting::UtilityIconPainting() : QObject(qApp){}
 
-UtilityIconPainting::~UtilityIconPainting() { kDebug();}
+UtilityIconPainting::~UtilityIconPainting() {}
 
 
 UtilityIconPainting* UtilityIconPainting::instance = 0;
@@ -48,6 +49,49 @@ UtilityIconPainting* UtilityIconPainting::getInstance() {
     return instance;
 
 }
+
+
+QPixmap UtilityIconPainting::blendOverLayEmblem(const QString& overlayIconStr, const QPixmap* pixmap) {
+
+    QPixmap finalIcon;
+
+    KIcon overlayIcon = KIcon(overlayIconStr);
+
+    if (!overlayIcon.isNull() && pixmap) {
+
+        QPixmap warningPixmap = overlayIcon.pixmap(10, 10);
+
+        finalIcon = pixmap->copy();
+        QPainter p(&finalIcon);
+        p.drawPixmap(KIconLoader::SizeSmall / 2, KIconLoader::SizeSmall  / 2, warningPixmap);
+        p.end();
+
+    }
+
+    return finalIcon;
+
+}
+
+
+QPixmap UtilityIconPainting::blendOverLayEmblem(const QString& overlayIconStr, const QIcon& icon) {
+
+    QPixmap pixmap = icon.pixmap(KIconLoader::SizeSmall);
+
+    return UtilityIconPainting::getInstance()->blendOverLayEmblem(overlayIconStr, &pixmap);
+
+
+}
+
+
+QPixmap UtilityIconPainting::buildClearIcon(const QPixmap& sourceIcon) {
+
+    QImage clearImage = sourceIcon.toImage();
+    KIconEffect::toGamma(clearImage, 0.80);
+    return QPixmap::fromImage(clearImage);
+
+}
+
+
 
 
 

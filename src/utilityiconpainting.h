@@ -23,10 +23,11 @@
 #define UTILITYICONPAINTING_H
 
 
-#include <QObject>
+#include <KIcon>
+#include <KIconLoader>
+
 #include <QMap>
 #include <QPixmap>
-
 
 class UtilityIconPainting : public QObject {
 
@@ -38,6 +39,9 @@ public:
 
     static UtilityIconPainting* getInstance();
     QPixmap blendOverLayTopRight(const QString&, const QString&);
+    QPixmap blendOverLayEmblem(const QString&, const QPixmap*);
+    QPixmap blendOverLayEmblem(const QString&, const QIcon&);
+    QPixmap buildClearIcon(const QPixmap&);
 
 
 private:
