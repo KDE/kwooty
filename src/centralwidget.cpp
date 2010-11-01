@@ -38,12 +38,12 @@
 #include "itemparentupdater.h"
 #include "datarestorer.h"
 #include "shutdownmanager.h"
-#include "clientsobserver.h"
 #include "fileoperations.h"
 #include "mainwindow.h"
-#include "queuefileobserver.h"
 #include "notificationmanager.h"
 #include "servermanager.h"
+#include "observers/clientsobserver.h"
+#include "observers/queuefileobserver.h"
 #include "data/itemstatusdata.h"
 
 
@@ -413,7 +413,7 @@ void CentralWidget::initFoldersSettings() {
 
 
 SegmentManager* CentralWidget::getSegmentManager() const{
-    return segmentManager;
+    return this->segmentManager;
 }
 
 StandardItemModel* CentralWidget::getDownloadModel() const{
@@ -452,6 +452,11 @@ DataRestorer* CentralWidget::getDataRestorer() const{
 ServerManager* CentralWidget::getServerManager() const{
     return this->serverManager;
 }
+
+SideBar* CentralWidget::getSideBar() const{
+    return ((MainWindow*)this->parent())->getSideBar();
+}
+
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
@@ -503,7 +508,7 @@ void CentralWidget::downloadWaitingPar2Slot(){
 
 
 
-void CentralWidget::saveFileErrorSlot(int fromProcessing){
+void CentralWidget::saveFileErrorSlot(const int fromProcessing){
     
     // 1. set all Idle items to pause before notify the user :
     this->setStartPauseDownloadAllItems(UtilityNamespace::PauseStatus);

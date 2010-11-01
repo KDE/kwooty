@@ -47,6 +47,7 @@ class MainWindow;
 class QueueFileObserver;
 class NotificationManager;
 class ServerManager;
+class SideBar;
 class NzbFileData;
 class ItemStatusData;
 
@@ -78,6 +79,7 @@ public:
     QueueFileObserver* getQueueFileObserver() const;
     DataRestorer* getDataRestorer() const;
     ServerManager* getServerManager() const;
+    SideBar* getSideBar() const;
 
 
 private:
@@ -122,7 +124,7 @@ signals:
 public slots:
     void startDownloadSlot();
     void pauseDownloadSlot();
-    void saveFileErrorSlot(int);
+    void saveFileErrorSlot(const int);
     void updateSettingsSlot();
     void downloadWaitingPar2Slot();
     void statusBarFileSizeUpdateSlot(StatusBarUpdateType);
