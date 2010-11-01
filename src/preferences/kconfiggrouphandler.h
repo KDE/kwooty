@@ -23,16 +23,21 @@
 #define KCONFIGGROUPHANDLER_H
 
 #include <QObject>
+#include <QPointer>
+
 #include <KConfigGroup>
+#include <kwallet.h>
+
 #include "data/serverdata.h"
 
+class MainWindow;
 
 class KConfigGroupHandler : public QObject {
 
     Q_OBJECT
 
 public:
-    KConfigGroupHandler();
+    KConfigGroupHandler(MainWindow*);
     ~KConfigGroupHandler();
 
     static KConfigGroupHandler* getInstance();
@@ -46,9 +51,31 @@ public:
     int serverConnectionNumber(const int&);
     QString tabName(const int&, const QString&);
 
+    void writeSideBarDisplay(const bool&);
+    bool readSideBarDisplay();
+    void writeSideBarTabOnlyDisplay(const bool&);
+    bool readSideBarTabOnlyDisplay();
+
+    void writeSideBarServerIndex(const int&);
+    int readSideBarServerIndex();
+
+
 private:
     static KConfigGroupHandler* instance;
+    KWallet::Wallet* wallet;
+    MainWindow* mainWindow;
+    int dialogButtonCode;
+    bool useKwallet;
 
+    bool openWallet();
+    void openWalletFails();
+    QString readPassword(const int&, KConfigGroup&);
+    void writePassword(const int&, KConfigGroup&, const QString&);
+    void removePasswordEntry(KConfigGroup&);
+
+
+public slots:
+    void settingsChangedSlot();
 
 };
 
