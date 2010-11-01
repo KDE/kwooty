@@ -11,6 +11,10 @@
 		<label>Notify that server settings have changed</label>
             <default></default>
         </entry>
+        <entry name="useKwallet" type="Bool">
+            <label>Store passwords with KWallet</label>
+            <default>false</default>
+        </entry>
     </group>
 
     <group name="general">
