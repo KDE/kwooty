@@ -23,14 +23,14 @@
 #include <KDebug>
 #include <KGlobal>
 
-#include <QTimer>
 #include "kwootysettings.h"
 #include "centralwidget.h"
 #include "servergroup.h"
 #include "segmentmanager.h"
 #include "servermanager.h"
-#include "clientsobserver.h"
 #include "nntpclient.h"
+#include "data/segmentinfodata.h"
+#include "observers/clientsperserverobserver.h"
 #include "preferences/kconfiggrouphandler.h"
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -109,36 +109,36 @@ void ClientManagerConn::initSlot()
 
     // notify centralWidget that error occured during file save process :
     connect (this->nntpClient,
-             SIGNAL(saveFileErrorSignal(int)),
+             SIGNAL(saveFileErrorSignal(const int)),
              centralWidget,
-             SLOT(saveFileErrorSlot(int)));
+             SLOT(saveFileErrorSlot(const int)));
 
 
-    // send connection status (connected, deconnected) to status bar :
+    // send connection status (connected, deconnected) to client observer for the current server :
     connect (this->nntpClient,
-             SIGNAL(connectionStatusSignal(const int)),
-             centralWidget->getClientsObserver(),
-             SLOT(connectionStatusSlot(const int)));
+             SIGNAL(connectionStatusPerServerSignal(const int)),
+             this->parent->getClientsPerServerObserver(),
+             SLOT(connectionStatusPerServerSlot(const int)));
 
 
-
-    // send type of encryption used by host with ssl connection to status bar :
+    // send type of encryption used by host with ssl connection to client observer for the current server :
     connect (this->nntpClient,
-             SIGNAL(encryptionStatusSignal(const bool, const QString, const bool, const QString, const QStringList)),
-             centralWidget->getClientsObserver(),
-             SLOT(encryptionStatusSlot(const bool, const QString, const bool, const QString, const QStringList)));
+             SIGNAL(encryptionStatusPerServerSignal(const bool, const QString, const bool, const QString, const QStringList)),
+             this->parent->getClientsPerServerObserver(),
+             SLOT(encryptionStatusPerServerSlot(const bool, const QString, const bool, const QString, const QStringList)));
 
-    // send eventual socket error to status bar :
+    // send eventual socket error to client observer for the current server :
     connect (this->nntpClient,
-             SIGNAL(nntpErrorSignal(const int)),
-             centralWidget->getClientsObserver(),
-             SLOT(nntpErrorSlot(const int)));
+             SIGNAL(nntpErrorPerServerSignal(const int)),
+             this->parent->getClientsPerServerObserver(),
+             SLOT(nntpErrorPerServerSlot(const int)));
 
-    // send bytes downloaded to info collector dispatcher :
+    // send bytes downloaded to client observer for the current server :
+    qRegisterMetaType<SegmentInfoData>("SegmentInfoData");
     connect (this->nntpClient,
-             SIGNAL(speedSignal(const int)),
-             centralWidget->getClientsObserver(),
-             SLOT(nntpClientSpeedSlot(const int)));
+             SIGNAL(speedPerServerSignal(const SegmentInfoData)),
+             this->parent->getClientsPerServerObserver(),
+             SLOT(nntpClientSpeedPerServerSlot(const SegmentInfoData)));
 
 
 }
