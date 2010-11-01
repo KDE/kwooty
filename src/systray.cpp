@@ -34,9 +34,9 @@
 
 #include "mainwindow.h"
 #include "centralwidget.h"
-#include "clientsobserver.h"
 #include "statsinfobuilder.h"
-#include "queuefileobserver.h"
+#include "observers/clientsobserver.h"
+#include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
 
 
