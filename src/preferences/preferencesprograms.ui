@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>350</width>
+    <width>404</width>
     <height>328</height>
    </rect>
   </property>
@@ -21,6 +21,9 @@
        <string>Programs</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_6">
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item row="0" column="0">
         <widget class="QGroupBox" name="groupBoxprogramsFound">
          <property name="title">

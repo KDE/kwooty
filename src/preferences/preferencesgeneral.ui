@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>376</width>
-    <height>300</height>
+    <height>327</height>
    </rect>
   </property>
   <property name="toolTip">
@@ -33,6 +33,12 @@
           <string>Folders</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item row="1" column="0">
            <widget class="QLabel" name="labelTempFolder">
             <property name="text">
@@ -82,6 +88,12 @@
           <string>Extra features</string>
          </property>
          <layout class="QGridLayout" name="gridLayout">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item row="0" column="0">
            <widget class="QCheckBox" name="kcfg_restoreDownloads">
             <property name="toolTip">
@@ -121,6 +133,12 @@
           <string>System tray</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_4">
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
           <item row="0" column="0">
            <widget class="QCheckBox" name="kcfg_sysTray">
             <property name="toolTip">
@@ -152,7 +170,7 @@
          <property name="sizeHint" stdset="0">
           <size>
            <width>148</width>
-           <height>0</height>
+           <height>2</height>
           </size>
          </property>
         </spacer>
@@ -164,6 +182,9 @@
        <string>Confirmation dialogs</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="margin">
+        <number>0</number>
+       </property>
        <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
@@ -195,6 +216,12 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="saveLayout">
+         <property name="leftMargin">
+          <number>4</number>
+         </property>
+         <property name="rightMargin">
+          <number>4</number>
+         </property>
          <item>
           <widget class="QLabel" name="saveDownloadsLabel">
            <property name="text">
@@ -222,6 +249,12 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="restoreLayout">
+         <property name="leftMargin">
+          <number>4</number>
+         </property>
+         <property name="rightMargin">
+          <number>5</number>
+         </property>
          <item>
           <widget class="QLabel" name="restoreDownloadsLabel">
            <property name="text">
