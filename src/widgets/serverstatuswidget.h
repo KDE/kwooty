@@ -19,77 +19,57 @@
  ***************************************************************************/
 
 
-#ifndef QUEUEFILEOBSERVER_H
-#define QUEUEFILEOBSERVER_H
+#ifndef SERVERSTATUSWIDGET_H
+#define SERVERSTATUSWIDGET_H
 
-#include <QObject>
-#include <QStandardItem>
-#include <QMap>
-#include <QDateTime>
-#include <QTimer>
+#include <QDockWidget>
+#include <QFormLayout>
+#include <QLabel>
 
-#include "data/jobnotifydata.h"
-#include "utility.h"
-using namespace UtilityNamespace;
-
-class CentralWidget;
-class StandardItemModel;
-class MyTreeView;
-
-
-class QueueFileObserver : public QObject {
+class ServerStatusWidget : public QDockWidget {
 
     Q_OBJECT
 
 public:
 
-    QueueFileObserver(CentralWidget* parent = 0);
-    UtilityNamespace::ItemStatus getFocusedItemStatus() const;
-    QStandardItem* searchParentItem(const UtilityNamespace::ItemStatus);
-    int getFocusedProgressValue() const;
-    bool areJobsFinished();
+    enum RowItemsLeft {
+        StatusItem,
+        VolumeItem,
+        SpeedItem,
+        FileItem
+    };
+
+    enum RowItemsRight {
+        NameItem,
+        ModeItem,
+        SslItem
+    };
+
+    enum RowPosition {
+        RowLeft,
+        RowRight
+    };
+
+    ServerStatusWidget(QWidget*);
+
+    void updateLeftLabelField(const int&, const QString&);
+    void updateRightLabelField(const int&, const QString&);
+    void updateTextPushButtonField(const int&, const QString&,  const bool&, const QString&, const bool&, const QString&);
 
 
 private:
+    QFormLayout* formLayoutLeft;
+    QFormLayout* formLayoutRight;
+    QString sslConnectionInfo;
 
-    static const int MAX_LIST_SIZE = 10;
+    void updateLabelField(QLabel*, const QString&);
+    void formatLayout(QFormLayout*);
 
-    StandardItemModel* downloadModel;
-    MyTreeView* treeView;
-    QStandardItem* parentItem;
-    QTimer* jobNotifyTimer;
-    QList<JobNotifyData> jobNotifyDataList;
-    UtilityNamespace::ItemStatus focusedItemStatus;
-    int focusedProgressValue;
-    int previousProgressValue;
-
-    void setupConnections();
-
-    void checkProgressItemValue(QStandardItem*);
-    JobNotifyData retrieveJobNotifyData(QStandardItem*, UtilityNamespace::ItemStatus);
-    void addToList(const JobNotifyData&);
-
-
-
-signals:
-
-    void progressUpdateSignal(const int);
-    void statusUpdateSignal(const UtilityNamespace::ItemStatus);
-    void jobFinishSignal(const UtilityNamespace::ItemStatus, const QString);
 
 public slots:
-
-    void parentItemChangedSlot();
-    void jobFinishStatusSlot(QStandardItem*);
-
-
-private slots:
-
-
-    void checkJobFinishSlot();
-
+    void buttonPressedSlot();
 
 
 };
 
-#endif // QUEUEFILEOBSERVER_H
+#endif // SERVERSTATUSWIDGET_H

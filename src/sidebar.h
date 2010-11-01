@@ -19,81 +19,56 @@
  ***************************************************************************/
 
 
-#ifndef CLIENTSOBSERVER_H
-#define CLIENTSOBSERVER_H
-
+#ifndef SIDEBAR_H
+#define SIDEBAR_H
 
 #include <QObject>
+#include <QHash>
 
 #include "utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
-class StatsInfoBuilder;
+
+class MainWindow;
+class SideBarWidget;
+class ServerManager;
+class ServerStatusWidget;
 
 
-class ClientsObserver : public QObject
-{
+class SideBar : public QObject {
+
+
     Q_OBJECT
 
 
 public:
-    ClientsObserver(CentralWidget* parent = 0);
-    StatsInfoBuilder* getStatsInfoBuilder() const;
-    void fullFileSizeUpdate(const quint64, const quint64);
-    void sendFullUpdate();
-
-    int getTotalConnections() const;
-    bool isSslActive() const;
-    bool isCertificateVerified() const;
-    int getNttpErrorStatus() const;
-    QString getEncryptionMethod() const;
-    QString getIssuerOrgranisation() const;
-    QStringList getSslErrors() const;
-    quint64 getTotalBytesDownloaded() const;
-    void resetTotalBytesDownloaded();
-    quint64 getTotalSize() const;
+    SideBar(MainWindow* parent);
+    SideBarWidget* getSideBarWidget();
+    void saveState();
+    void loadState();
 
 private:
+    SideBarWidget* sideBarWidget;
+    ServerManager* serverManager;
+    bool stateRestored;
 
-    CentralWidget* parent;
-    StatsInfoBuilder* statsInfoBuilder;
-    quint64 totalFiles;
-    quint64 totalSize;
-    quint64 totalBytesDownloaded;
-
-
-    // from status bar :
-    QStringList sslErrors;
-    QString encryptionMethod;
-    QString issuerOrgranisation;
-    int totalConnections;
-    int nttpErrorStatus;
-    bool sslActive;
-    bool certificateVerified;
-
-
-    void resetVariables();
-
+    QHash<int, QString> serverIdConnectionIconMap;
+    void createSideBarWidgets();
 
 
 signals:
-    void updateConnectionStatusSignal();
-    void updateFileSizeInfoSignal(const quint64, const quint64);
 
 
 public slots:
-
-    void nntpClientSpeedSlot(const int);
-    void connectionStatusSlot(const int);
-    void encryptionStatusSlot(const bool, const QString, const bool, const QString, const QStringList);
-    void nntpErrorSlot(const int);
-    void decrementSlot(const quint64, const int);
+    void activeSlot(bool);
+    void serverStatisticsUpdateSlot(const int);
+    void serverManagerSettingsChangedSlot();
 
 
+private slots:
 
 
 
 };
 
-#endif // CLIENTSOBSERVER_H
+#endif // SIDEBAR_H
