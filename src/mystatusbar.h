@@ -42,6 +42,7 @@ class MyStatusBar : public KStatusBar
 public:
     MyStatusBar(MainWindow* parent);
     MyStatusBar();
+    IconTextWidget* getInfoBarWidget();
     ~MyStatusBar();
 
 

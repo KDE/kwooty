@@ -28,22 +28,21 @@
 
 #include "mainwindow.h"
 #include "centralwidget.h"
-#include "clientsobserver.h"
 #include "statsinfobuilder.h"
 #include "shutdownmanager.h"
+#include "sidebar.h"
+#include "observers/clientsobserver.h"
 #include "widgets/icontextwidget.h"
 #include "widgets/iconcapacitywidget.h"
-
+#include "preferences/kconfiggrouphandler.h"
+#include "utilityserverstatus.h"
 #include "kwootysettings.h"
 
 
-MyStatusBar::MyStatusBar(MainWindow* parent) : KStatusBar(parent)
-{
+MyStatusBar::MyStatusBar(MainWindow* parent) : KStatusBar(parent) {
     
     this->clientsObserver = parent->getCentralWidget()->getClientsObserver();
-    
-    this->setupConnections();
-    
+
     // create connection widget at bottom left of status bar :
     this->setConnectionWidget();
     
@@ -67,6 +66,8 @@ MyStatusBar::MyStatusBar(MainWindow* parent) : KStatusBar(parent)
     
     // add info bar widget :
     this->setInfoBarWidget();
+
+    this->setupConnections();
 
     // this map allows access to configuration preferences page when double-clicking on widgets in the statusbar :
     this->widgetPreferencesPageMap.insert(this->connectionWidget, ServerPage);
@@ -127,7 +128,12 @@ void MyStatusBar::setupConnections() {
             (MainWindow*)this->parentWidget(),
             SLOT(showSettings(UtilityNamespace::PreferencesPage)));
 
-    
+    // show / hide sideBarWidget when button is toggled :
+    connect(this->infoBarWidget,
+            SIGNAL(activeSignal(bool)),
+            ((MainWindow*)this->parentWidget())->getSideBar(),
+            SLOT(activeSlot(bool)));
+
 }
 
 
@@ -171,12 +177,20 @@ void MyStatusBar::setInfoBarWidget(){
     // add widget that will toggle info bar :
     this->infoBarWidget = new IconTextWidget(this);
 
-    this->infoBarWidget->setIconGamma(true);
-    this->infoBarWidget->setIconOnly("dialog-information");
+    this->infoBarWidget->setIconMode(IconTextWidget::SwitchIcon);    
+    this->infoBarWidget->setIconOnly("arrow-up-double", "arrow-down-double");
+
+    bool sideBarDisplay = KConfigGroupHandler::getInstance()->readSideBarDisplay();
+    this->infoBarWidget->setActive(sideBarDisplay);
 
     // add aggregated widget to the right of status bar :
     this->addPermanentWidget(this->infoBarWidget);
 
+}
+
+
+IconTextWidget* MyStatusBar::getInfoBarWidget(){
+    return this->infoBarWidget;
 }
 
 
@@ -192,78 +206,14 @@ void MyStatusBar::updateConnectionStatusSlot(){
     
     
     QString connectionIconStr;
-    QString connection;
-    bool displayOverlay = false;
-    
-    int totalConnections = this->clientsObserver->getTotalConnections();
-    
-    if (totalConnections == 0) {
-        
-        connectionIconStr ="weather-clear-night";
-        connection = i18n("Disconnected");
-        
-        int nttpErrorStatus = this->clientsObserver->getNttpErrorStatus();
-        // detail disconnection issues to user :
-        if (nttpErrorStatus == HostNotFound){
-            connection = i18n("Disconnected (Host not found)");
-        }
-        
-        if (nttpErrorStatus == ConnectionRefused) {
-            connection = i18n("Disconnected (Connection refused)");
-        }
-        
-        if (nttpErrorStatus == RemoteHostClosed) {
-            connection = i18n("Disconnected (Closed by remote host)");
-        }
-        
-        if (nttpErrorStatus == SslHandshakeFailed) {
-            connection = i18n("Disconnected (SSL handshake failed)");
-        }
-        
-        //kDebug() << "nttpErrorStatus = " << nttpErrorStatus;
-        if (nttpErrorStatus == AuthenticationNeeded) {
-            connection = i18n("Disconnected (Authentication required)");
-        }
-        
-        
-        if (nttpErrorStatus == AuthenticationFailed) {
-            connection = i18n("Disconnected (Authentication Denied)");
-        }
-        
-    }
-    else{
-        // set connection icon :
-        connectionIconStr = "applications-internet";
-        connection = i18n("Connected: <numid>%1</numid>", totalConnections);
-        
-        if (this->clientsObserver->isSslActive()) {
-            
-            // if SSL active use another connection icon :
-            connectionIconStr = "document-encrypt";
-            
-            // display type of encryption method used by server :
-            QString encryptionMethod = this->clientsObserver->getEncryptionMethod();
-            if (!encryptionMethod.isEmpty()) {
-                connection = connection + " :: " + encryptionMethod;
-            }
-            
-            // display overlay only if connected to server with ssl connection and with certificate not verified :
-            if (!this->clientsObserver->isCertificateVerified()) {
-                displayOverlay = true;
-            }
-            
-        }
-        
-    }
-    
-    
-    connectionWidget->setIcon(connectionIconStr);
-    connectionWidget->setText(connection);
-    
-    // if certificate is not verified display warning icon over the secure connected one :
-    if (displayOverlay) {
-        connectionWidget->blendOverLay("emblem-important");
-    }
+    QString connection;  
+
+    bool displayOverlay = UtilityServerStatus::buildConnectionStringFromStatus(this->clientsObserver, connectionIconStr, connection);
+
+    // set icon :
+    this->connectionWidget->setIcon(connectionIconStr, displayOverlay);
+    // set text :
+    this->connectionWidget->setText(connection);
     
     // set tooltip to connection widget :
     this->buildConnWidgetToolTip(connection);
@@ -274,63 +224,18 @@ void MyStatusBar::updateConnectionStatusSlot(){
 
 
 void MyStatusBar::buildConnWidgetToolTip(const QString& connection) {
-    
+
     QString toolTipStr;
-    
-    // if totalConnections == 0, client is disconnected :
-    if (this->clientsObserver->getTotalConnections() == 0) {
-        toolTipStr.append(connection);
+
+    // display tooltip connection only for a single server connection :
+    QString hostName;
+    if (this->clientsObserver->isSingleServer(hostName)) {
+        toolTipStr = UtilityServerStatus::buildConnectionToolTip(this->clientsObserver, connection, hostName);
     }
-    
-    else {
-        // set host name info :
-        // TODO
-        //toolTipStr.append(i18n("Connected to %1<br>", Settings::hostName()));
-        
-        // set SSL connection info :
-        if (this->clientsObserver->isSslActive()) {
-            
-            toolTipStr.append(i18n("Connection is SSL encrypted"));
-            
-            QString encryptionMethod = this->clientsObserver->getEncryptionMethod();
-            if (!encryptionMethod.isEmpty()) {
-                toolTipStr.append(i18nc("type of ssl encryption method", ": %1", encryptionMethod));
-            }
-            
-            toolTipStr.append("<br>");
-            
-            if (this->clientsObserver->isCertificateVerified()) {
-                toolTipStr.append(i18n("Certificate <b>verified</b> by %1", this->clientsObserver->getIssuerOrgranisation()));
-            }
-            else {
-                toolTipStr.append(i18n("Certificate <b>can not be verified</b> "));
-                
-                // add ssl errors encountered :
-                QStringList sslErrorList = this->clientsObserver->getSslErrors();
-                
-                if (!sslErrorList.isEmpty()) {
-                    
-                    QString errorListSeparator = "<li>";
-                    toolTipStr.append(i18np("(%1 error during SSL handshake): %2",
-                                            "(%1 errors during SSL handshake): %2",
-                                            sslErrorList.size(),
-                                            "<ul style=\"margin-top:0px; margin-bottom:0px;\">" +
-                                            errorListSeparator + sslErrorList.join(errorListSeparator)) +
-                                      "</ul>");
-                }
-                
-            }
-            
-        }
-        else {
-            
-            toolTipStr.append(i18n("Connection is not encrypted"));
-        }
-        
-    }
-    
+
     // set tooltip :
     this->connectionWidget->setToolTip(toolTipStr);
+
 }
 
 
