@@ -28,8 +28,10 @@
 
 #include "standarditemmodel.h"
 #include "centralwidget.h"
-#include "clientsobserver.h"
 #include "notificationmanager.h"
+#include "servermanager.h"
+#include "observers/clientsobserver.h"
+#include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
 
 
@@ -77,11 +79,17 @@ QString StatsInfoBuilder::getDownloadSpeedReadableStr() const {
     return this->downloadSpeedReadableStr;
 }
 
+QTimer* StatsInfoBuilder::getDownloadSpeedTimer() const {
+    return this->downloadSpeedTimer;
+}
+
 
 void StatsInfoBuilder::resetVariables() {
 
-    this->meanDownloadSpeed = 0;
-    this->downloadSpeed = 0;
+    this->meanDownloadSpeedTotal = 0;
+    this->meanDownloadSpeedCurrent = 0;
+    this->downloadSpeedTotal = 0;
+    this->downloadSpeedCurrent = 0;
     this->meanSpeedActiveCounter = 0;
     this->timeoutCounter = 1;
     this->parentStateIndex = QModelIndex();
@@ -127,18 +135,48 @@ void StatsInfoBuilder::settingsChangedSlot() {
 
 
 
+void StatsInfoBuilder::computeMeanSpeed(const int& downloadSpeed, int& meanDownloadSpeed) {
+    float alpha = 0.2;
+    meanDownloadSpeed = alpha * downloadSpeed + (1 - alpha) * meanDownloadSpeed;
+}
+
+
 
 void StatsInfoBuilder::updateDownloadSpeedSlot() {
 
-    // calculate average download speed for remaining time calculation :
-    float alpha = 0.2;
-    this->meanDownloadSpeed = alpha * this->downloadSpeed + (1 - alpha) * this->meanDownloadSpeed;
+    // 1. calculate average download speed for the current nzb item downloaded
+    // (in case of multiserver usage, it can happens that several servers download the same nzb item simultaneously,
+    // retrieve the download speed of these servers to get the overall download speed of the current nzb item) :
+    ServerManager* serverManager = this->parent->getServerManager();
+
+    if (serverManager) {
+
+        // search first current item being downloading :
+        QStandardItem* stateItem = this->parent->getQueueFileObserver()->searchParentItem(DownloadStatus);
+
+        // if item has been found :
+        if (stateItem) {
+
+            // calculate average download speed for remaining time calculation of the current nzb being downloading :
+            this->computeMeanSpeed(this->downloadSpeedCurrent, this->meanDownloadSpeedCurrent);
+
+            // calculate download speed of each server groups downloading simultaneoulsy the same nzb item
+            // in order to get a more accurate time of arrival for the current downloaded item :
+            this->downloadSpeedCurrent = serverManager->retrieveCumulatedDownloadSpeed(stateItem->row());
+        }
+
+    }
+
+
+
+    // 2. calculate average download speed for remaining time calculation for total remaining nzb items :
+    this->computeMeanSpeed(this->downloadSpeedTotal, this->meanDownloadSpeedTotal);
 
     // then, get current download speed :
-    this->downloadSpeed = this->clientsObserver->getTotalBytesDownloaded() / SPEED_AVERAGE_SECONDS;
+    this->downloadSpeedTotal = this->clientsObserver->getTotalBytesDownloaded() / SPEED_AVERAGE_SECONDS;
 
     // send download speed to status bar :
-    this->downloadSpeedReadableStr = Utility::convertDownloadSpeedHumanReadable(this->downloadSpeed);
+    this->downloadSpeedReadableStr = Utility::convertDownloadSpeedHumanReadable(this->downloadSpeedTotal);
     emit updateDownloadSpeedInfoSignal(this->downloadSpeedReadableStr);
 
     // reset number of bytes downloaded after text update :
@@ -149,12 +187,14 @@ void StatsInfoBuilder::updateDownloadSpeedSlot() {
     // not get too lag before reaching a proper mean speed value :
     if (this->meanSpeedActiveCounter < 10) {
 
-        this->meanDownloadSpeed = this->downloadSpeed;
+        this->meanDownloadSpeedTotal = this->downloadSpeedTotal;
+        this->meanDownloadSpeedCurrent  = this->downloadSpeedCurrent;
+
         this->meanSpeedActiveCounter++;
     }
 
     // when download speed is 0, calculate mean speed as above :
-    if (this->downloadSpeed  == 0) {
+    if (this->downloadSpeedTotal == 0) {
         this->meanSpeedActiveCounter = 0;
     }
 
@@ -241,45 +281,53 @@ void StatsInfoBuilder::computeTimeInfo() {
     this->retrieveQueuedFilesInfo(parentDownloadingFound, parentQueuedFound);
 
     // compute remaining time only if a nzb is being downloading and if average speed not equals to 0 :
-    if (parentDownloadingFound && this->meanDownloadSpeed != 0) {
+    if (parentDownloadingFound) {
 
-        // retrieve accomplished download percentage :
-        int downloadProgress = this->downloadModel->getProgressValueFromIndex(this->parentStateIndex);
+        // compute remaining time for the current item being downloaded :
+        if (this->meanDownloadSpeedCurrent != 0) {
 
-        // retrieve nzb size :
-        quint64 nzbSize = this->downloadModel->getSizeValueFromIndex(this->parentStateIndex);
+            // retrieve accomplished download percentage :
+            int downloadProgress = this->downloadModel->getProgressValueFromIndex(this->parentStateIndex);
 
-        // compute *current* remaining download time (sec) :
-        quint32 currentRemainingTimeSec = qRound(nzbSize * (PROGRESS_COMPLETE - downloadProgress) / (this->meanDownloadSpeed * PROGRESS_COMPLETE ));
+            // retrieve nzb size :
+            quint64 nzbSize = this->downloadModel->getSizeValueFromIndex(this->parentStateIndex);
 
-        // calculate Estimated Time of Arrival :
-        if (Settings::etaRadioButton()) {
-            this->timeLabel = i18n("Time of arrival:");
-            this->currentTimeValue = this->calculateArrivalTime(currentRemainingTimeSec);
-        }
-
-        // else calculate Remaining Time :
-        if (Settings::rtRadioButton()) {
-            this->timeLabel = i18n("Remaining time:");
-            this->currentTimeValue = this->calculateRemainingTime(currentRemainingTimeSec);
-        }
-
-
-        // compute *total* remaining download time (sec) only if other pending parents have been found :
-        if (parentQueuedFound) {
-
-            quint32 totalRemainingTimeSec = qRound(this->clientsObserver->getTotalSize() / this->meanDownloadSpeed);
+            // compute *current* remaining download time (sec) :
+            quint32 currentRemainingTimeSec = qRound(nzbSize * (PROGRESS_COMPLETE - downloadProgress) / (this->meanDownloadSpeedCurrent * PROGRESS_COMPLETE ));
 
             // calculate Estimated Time of Arrival :
             if (Settings::etaRadioButton()) {
-                this->totalTimeValue = this->calculateArrivalTime(totalRemainingTimeSec);
+                this->timeLabel = i18n("Time of arrival:");
+                this->currentTimeValue = this->calculateArrivalTime(currentRemainingTimeSec);
             }
 
-            // calculate Remaining Time :
+            // else calculate Remaining Time :
             if (Settings::rtRadioButton()) {
-                this->totalTimeValue = this->calculateRemainingTime(totalRemainingTimeSec);
+                this->timeLabel = i18n("Remaining time:");
+                this->currentTimeValue = this->calculateRemainingTime(currentRemainingTimeSec);
             }
 
+        }
+
+        // compute remaining time for the total items to download :
+        if (this->meanDownloadSpeedTotal != 0) {
+
+            // compute *total* remaining download time (sec) only if other pending parents have been found :
+            if (parentQueuedFound) {
+
+                quint32 totalRemainingTimeSec = qRound(this->clientsObserver->getTotalSize() / this->meanDownloadSpeedTotal);
+
+                // calculate Estimated Time of Arrival :
+                if (Settings::etaRadioButton()) {
+                    this->totalTimeValue = this->calculateArrivalTime(totalRemainingTimeSec);
+                }
+
+                // calculate Remaining Time :
+                if (Settings::rtRadioButton()) {
+                    this->totalTimeValue = this->calculateRemainingTime(totalRemainingTimeSec);
+                }
+
+            }
         }
 
 
