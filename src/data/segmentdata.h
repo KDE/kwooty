@@ -23,11 +23,15 @@
 
 #include <QStandardItem>
 
-class SegmentData
-{
+#include "segmentinfodata.h"
+#include "utility.h"
+using namespace UtilityNamespace;
+
+class SegmentData {
+
 
 public:
-    SegmentData(const QString&, const QString&, const QString&, const int);
+    SegmentData(const QString&, const QString&, const QString&, const UtilityNamespace::ItemStatus);
     SegmentData();
     void setReadyForNewServer(const int&);
     void setDownloadFinished(const int&);
@@ -43,8 +47,8 @@ public:
     void setPart(const QString&);
     QString getPart() const;
 
-    void setStatus(const int);
-    int getStatus() const;
+    void setStatus(const UtilityNamespace::ItemStatus);
+    UtilityNamespace::ItemStatus getStatus() const;
 
     int getServerGroupTarget() const;
     void setServerGroupTarget(const int);
@@ -61,14 +65,18 @@ public:
     void setArticlePresenceOnServer(const int);
     int getArticlePresenceOnServer() const;
 
+    SegmentInfoData getSegmentInfoData() const;
+    void setSegmentInfoData(const SegmentInfoData& segmentInfoData);
+
 
 private:
     QString bytes;
     QString number;
     QString part;
     QVariant parentUniqueIdentifier;
+    SegmentInfoData segmentInfoData;
+    UtilityNamespace::ItemStatus status;
     int elementInList;
-    int status;
     int serverGroupTarget;
     int progress;
     int articlePresence;

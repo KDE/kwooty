@@ -20,17 +20,15 @@
 
 #include "segmentdata.h"
 
-#include "utility.h"
-using namespace UtilityNamespace;
-
 SegmentData::SegmentData() {
     this->parentUniqueIdentifier = QVariant();
     this->elementInList = -1;
     this->status = IdleStatus;
+    this->segmentInfoData.reset();
 }
 
 
-SegmentData::SegmentData(const QString& bytes, const QString& number, const QString& part, const int status) {
+SegmentData::SegmentData(const QString& bytes, const QString& number, const QString& part, const UtilityNamespace::ItemStatus status) {
     this->bytes = bytes;
     this->number = number;
     this->part = part;
@@ -40,6 +38,7 @@ SegmentData::SegmentData(const QString& bytes, const QString& number, const QStr
     this->articlePresence = Unknown;
     this->parentUniqueIdentifier = QVariant();
     this->elementInList = -1;
+    this->segmentInfoData.reset();
 }
 
 void SegmentData::setReadyForNewServer(const int& nextServerGroup) {
@@ -85,11 +84,11 @@ QString SegmentData::getPart() const{
     return this->part;
 }
 
-int SegmentData::getStatus() const{
+UtilityNamespace::ItemStatus SegmentData::getStatus() const{
     return this->status;
 }
 
-void SegmentData::setStatus(const int status){
+void SegmentData::setStatus(const UtilityNamespace::ItemStatus status){
     this->status = status;
 }
 
@@ -126,12 +125,21 @@ QVariant SegmentData::getParentUniqueIdentifier() const{
     return this->parentUniqueIdentifier;
 }
 
+
 int SegmentData::getArticlePresenceOnServer() const{
     return this->articlePresence;
 }
 
 void SegmentData::setArticlePresenceOnServer(const int articlePresence){
     this->articlePresence = articlePresence;
+}
+
+SegmentInfoData SegmentData::getSegmentInfoData() const{
+    return this->segmentInfoData;
+}
+
+void SegmentData::setSegmentInfoData(const SegmentInfoData& segmentInfoData){
+    this->segmentInfoData = segmentInfoData;
 }
 
 
@@ -141,7 +149,7 @@ QDataStream& operator<<(QDataStream& out, const SegmentData& segmentData) {
         << segmentData.getNumber()
         << segmentData.getPart()
         << segmentData.getElementInList()
-        << segmentData.getStatus()
+        << (qint16)segmentData.getStatus()
         << segmentData.getProgress()
         << segmentData.getArticlePresenceOnServer();
 
@@ -154,8 +162,8 @@ QDataStream& operator>>(QDataStream& in, SegmentData& segmentData) {
     QString bytes;
     QString number;
     QString part;
+    qint16 status;
     int elementInList;
-    int status;
     int progress;
     int articlePresenceOnServer;
 
@@ -172,7 +180,7 @@ QDataStream& operator>>(QDataStream& in, SegmentData& segmentData) {
     segmentData.setNumber(number);
     segmentData.setPart(part);
     segmentData.setElementInList(elementInList);
-    segmentData.setStatus(status);
+    segmentData.setStatus((UtilityNamespace::ItemStatus)status);
     segmentData.setProgress(progress);
     segmentData.setArticlePresenceOnServer(articlePresenceOnServer);
     segmentData.setServerGroupTarget(MasterServer);
