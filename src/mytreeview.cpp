@@ -33,7 +33,7 @@
 #include "fileoperations.h"
 #include "standarditemmodel.h"
 #include "mainwindow.h"
-#include "queuefileobserver.h"
+#include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
 
 
