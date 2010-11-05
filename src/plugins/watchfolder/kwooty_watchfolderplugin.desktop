@@ -15,4 +15,4 @@ Icon=folder-sync
 Name=Watch Folder
 Name[de]=Verzeichnisbeobachtung
 Comment=Watch folder for nzb files and load them
-Comment[de]=Durchsucht ein Verzeichnis nach nzb Dateien und lädt sie
+Comment[de]=Durchsucht ein Verzeichnis nach nzb Dateien und lädt diese
