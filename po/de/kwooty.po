@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 20:08+0100\n"
+"POT-Creation-Date: 2010-11-06 17:10+0100\n"
 "PO-Revision-Date: 2010-11-06 11:12+0100\n"
 "Last-Translator: Michael Wiescholek <Michael.Wiescholek@gmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -197,8 +197,7 @@ msgid ""
 "\"open with...\" action"
 msgstr ""
 "Kopiert nzb Datei in das Zielverzeichnis, wenn es von einem externen "
-"Programm "
-"mit dem \"Datei öffnen mit ...\" Dialog geöffnet wurde"
+"Programm mit dem \"Datei öffnen mit ...\" Dialog geöffnet wurde"
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:113
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_openWith)
@@ -940,7 +939,7 @@ msgid "Total"
 msgstr "Gesamt"
 
 #: src/mystatusbar.cpp:340 src/itemdelegate.cpp:132 src/itemdelegate.cpp:183
-#: src/sidebar.cpp:231
+#: src/sidebar.cpp:238
 msgid "n/a"
 msgstr "N/A"
 
@@ -993,39 +992,39 @@ msgctxt "type of ssl encryption method"
 msgid ": %1"
 msgstr ": %1"
 
-#: src/utilityserverstatus.cpp:134
+#: src/utilityserverstatus.cpp:137
+msgid "Connection is not encrypted"
+msgstr "Verbindung ist nicht verschlüsselt"
+
+#: src/utilityserverstatus.cpp:153
 #, kde-format
 msgid "Certificate <b>verified</b> by %1"
 msgstr "Zertifikat von %1 <b>verifiziert</b>"
 
-#: src/utilityserverstatus.cpp:137
+#: src/utilityserverstatus.cpp:156
 msgid "Certificate <b>can not be verified</b> "
 msgstr "Zertifikat <b>kann nicht verifiziert werden</b>"
 
-#: src/utilityserverstatus.cpp:145
+#: src/utilityserverstatus.cpp:164
 #, kde-format
 msgid "(%1 error during SSL handshake): %2"
 msgid_plural "(%1 errors during SSL handshake): %2"
 msgstr[0] "(%1 Fehler während SSL handshake): %2"
 msgstr[1] "(%1 Fehler während SSL handshake): %2"
 
-#: src/utilityserverstatus.cpp:158
-msgid "Connection is not encrypted"
-msgstr "Verbindung ist nicht verschlüsselt"
-
-#: src/utilityserverstatus.cpp:176
+#: src/utilityserverstatus.cpp:187
 msgid "Passive"
 msgstr "Passiv"
 
-#: src/utilityserverstatus.cpp:180
+#: src/utilityserverstatus.cpp:191
 msgid "Active"
 msgstr "Aktiv"
 
-#: src/utilityserverstatus.cpp:184
+#: src/utilityserverstatus.cpp:195
 msgid "Failover"
 msgstr "Ausweich"
 
-#: src/utilityserverstatus.cpp:188
+#: src/utilityserverstatus.cpp:199
 msgid "Server Disabled"
 msgstr "Deaktiviert"
 
@@ -1169,13 +1168,29 @@ msgstr "Xavier Lefage"
 msgid "Maintainer, Lead Developer"
 msgstr "Betreuer und Hauptentwickler"
 
-#: src/main.cpp:44
+#: src/main.cpp:45
+msgid "Michael Wiescholek"
+msgstr ""
+
+#: src/main.cpp:46
+msgid "For the first German translation."
+msgstr ""
+
+#: src/main.cpp:48
+msgid "Guillaume Pujol"
+msgstr ""
+
+#: src/main.cpp:49
+msgid "For his patches."
+msgstr ""
+
+#: src/main.cpp:53
 msgid "Please report bugs to http://sourceforge.net/projects/kwooty"
 msgstr ""
 "Bitte verwenden Sie http://sourceforge.net/projects/kwooty \n"
 "für Problemberichte."
 
-#: src/main.cpp:45
+#: src/main.cpp:54
 msgid ""
 "Please report bugs to <a href='http://sourceforge.net/tracker/?"
 "group_id=285032&atid=1208199'>Kwooty bug tracker</a>"
@@ -1184,7 +1199,7 @@ msgstr ""
 "group_id=285032&atid=1208199'>Kwooty bug tracker</a> \n"
 "für Problemberichte."
 
-#: src/main.cpp:50
+#: src/main.cpp:59
 msgid "Document to open"
 msgstr "Zu öffnendes Dokument"
 
@@ -1222,7 +1237,7 @@ msgstr "Informationen zur Verschlüsselung"
 
 #: src/widgets/serverpreferenceswidget.cpp:135
 #: src/widgets/servertabwidget.cpp:240 src/widgets/servertabwidget.cpp:259
-#: src/sidebar.cpp:219
+#: src/sidebar.cpp:140 src/sidebar.cpp:226
 msgid "Master"
 msgstr "Hauptserver"
 
@@ -1260,17 +1275,16 @@ msgstr ""
 #: src/widgets/serverpreferenceswidget.cpp:296
 msgid "<i>Active:</i> downloads files simultaneously with Master server<br>"
 msgstr ""
-"<i>Aktiv:</i> Dateien werden simultan mit dem Hauptserver heruntergeladen<"
-"br>"
+"<i>Aktiv:</i> Dateien werden simultan mit dem Hauptserver heruntergeladen<br>"
 
 #: src/widgets/serverpreferenceswidget.cpp:297
 msgid ""
 "<i>Failover:</i> supersedes former unavailable <i>Master</i> or <i>Failover</"
 "i> server, otherwise works as <i>Passive</i><br>"
 msgstr ""
-"<i>Ausfallsicherung: </i> Bei Nichterreichen des <i>Haupt-</i> oder <i>"
-"Ausfallsicherungsservers</i> wird dieser ersetzt. Bei Erreichbarkeit wird im "
-"<i>Passivmodus</i> heruntergeladen.<br>"
+"<i>Ausfallsicherung: </i> Bei Nichterreichen des <i>Haupt-</i> oder "
+"<i>Ausfallsicherungsservers</i> wird dieser ersetzt. Bei Erreichbarkeit wird "
+"im <i>Passivmodus</i> heruntergeladen.<br>"
 
 #: src/widgets/serverpreferenceswidget.cpp:298
 msgid "<i>Server Disabled:</i> server not used"
@@ -1285,8 +1299,8 @@ msgid ""
 "Drag and drop tabs to manage backup server priority in <i>Passive</i> and "
 "<i>Failover</i> modes"
 msgstr ""
-"Ändern der Priorität der Backupserver in den Modi <i>Passive</i> und <i>"
-"Ausfallsicherung</i>,  durch Verschieben der Registerkarten"
+"Ändern der Priorität der Backupserver in den Modi <i>Passive</i> und "
+"<i>Ausfallsicherung</i>,  durch Verschieben der Registerkarten"
 
 #: src/widgets/serverpreferenceswidget.cpp:306
 msgid "<b>Tab renaming:</b>"
@@ -1606,7 +1620,7 @@ msgstr ""
 msgid "Docking in System Tray"
 msgstr "An der Kontrollleiste andocken"
 
-#: src/sidebar.cpp:239
+#: src/sidebar.cpp:246
 msgid "None"
 msgstr "Nichts"
 

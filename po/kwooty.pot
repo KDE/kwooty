@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 20:08+0100\n"
+"POT-Creation-Date: 2010-11-06 17:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -922,7 +922,7 @@ msgid "Total"
 msgstr ""
 
 #: src/mystatusbar.cpp:340 src/itemdelegate.cpp:132 src/itemdelegate.cpp:183
-#: src/sidebar.cpp:231
+#: src/sidebar.cpp:238
 msgid "n/a"
 msgstr ""
 
@@ -975,39 +975,39 @@ msgctxt "type of ssl encryption method"
 msgid ": %1"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:134
+#: src/utilityserverstatus.cpp:137
+msgid "Connection is not encrypted"
+msgstr ""
+
+#: src/utilityserverstatus.cpp:153
 #, kde-format
 msgid "Certificate <b>verified</b> by %1"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:137
+#: src/utilityserverstatus.cpp:156
 msgid "Certificate <b>can not be verified</b> "
 msgstr ""
 
-#: src/utilityserverstatus.cpp:145
+#: src/utilityserverstatus.cpp:164
 #, kde-format
 msgid "(%1 error during SSL handshake): %2"
 msgid_plural "(%1 errors during SSL handshake): %2"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/utilityserverstatus.cpp:158
-msgid "Connection is not encrypted"
-msgstr ""
-
-#: src/utilityserverstatus.cpp:176
+#: src/utilityserverstatus.cpp:187
 msgid "Passive"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:180
+#: src/utilityserverstatus.cpp:191
 msgid "Active"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:184
+#: src/utilityserverstatus.cpp:195
 msgid "Failover"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:188
+#: src/utilityserverstatus.cpp:199
 msgid "Server Disabled"
 msgstr ""
 
@@ -1149,17 +1149,33 @@ msgstr ""
 msgid "Maintainer, Lead Developer"
 msgstr ""
 
-#: src/main.cpp:44
+#: src/main.cpp:45
+msgid "Michael Wiescholek"
+msgstr ""
+
+#: src/main.cpp:46
+msgid "For the first German translation."
+msgstr ""
+
+#: src/main.cpp:48
+msgid "Guillaume Pujol"
+msgstr ""
+
+#: src/main.cpp:49
+msgid "For his patches."
+msgstr ""
+
+#: src/main.cpp:53
 msgid "Please report bugs to http://sourceforge.net/projects/kwooty"
 msgstr ""
 
-#: src/main.cpp:45
+#: src/main.cpp:54
 msgid ""
 "Please report bugs to <a href='http://sourceforge.net/tracker/?"
 "group_id=285032&atid=1208199'>Kwooty bug tracker</a>"
 msgstr ""
 
-#: src/main.cpp:50
+#: src/main.cpp:59
 msgid "Document to open"
 msgstr ""
 
@@ -1197,7 +1213,7 @@ msgstr ""
 
 #: src/widgets/serverpreferenceswidget.cpp:135
 #: src/widgets/servertabwidget.cpp:240 src/widgets/servertabwidget.cpp:259
-#: src/sidebar.cpp:219
+#: src/sidebar.cpp:140 src/sidebar.cpp:226
 msgid "Master"
 msgstr ""
 
@@ -1569,7 +1585,7 @@ msgstr ""
 msgid "Docking in System Tray"
 msgstr ""
 
-#: src/sidebar.cpp:239
+#: src/sidebar.cpp:246
 msgid "None"
 msgstr ""
 
