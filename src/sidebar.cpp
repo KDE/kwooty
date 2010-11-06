@@ -132,9 +132,16 @@ void SideBar::createSideBarWidgets() {
     while (this->serverManager->getServerNumber() > this->sideBarWidget->count()) {
 
         int serverWidgetIndex = this->sideBarWidget->count();
-        ServerData serverData = this->serverManager->getServerGroupById(serverWidgetIndex)->getServerData();
+        QString serverName = this->serverManager->getServerGroupById(serverWidgetIndex)->getServerData().getServerName();
 
-        this->sideBarWidget->addTab(new ServerStatusWidget(this->sideBarWidget), "weather-clear-night", serverData.getServerName());
+        // if this is the first kwooty launch, config file is new and server name will be empty
+        // set serverName to Master for first Id:
+        if (serverWidgetIndex == MasterServer && serverName.isEmpty()) {
+             serverName = i18n("Master");
+        }
+
+
+        this->sideBarWidget->addTab(new ServerStatusWidget(this->sideBarWidget), "weather-clear-night", serverName);
 
     }
 
@@ -224,7 +231,7 @@ void SideBar::serverStatisticsUpdateSlot(const int serverId) {
 
 
         // retrieve connection related information :
-        QString sslConnectionInfo = UtilityServerStatus::buildConnectionToolTip(clientsPerServerObserver, connection, serverGroup->getServerData().getHostName());
+        QString sslConnectionInfo = UtilityServerStatus::buildSslHandshakeStatus(clientsPerServerObserver);
 
 
         // if server is currently being downloading, get the downloaded nzb name :
