@@ -129,7 +129,7 @@
         </entry>
         <entry name="alternateColors" type="Bool">
             <label>Alternate background color for each row</label>
-            <default>false</default>
+            <default>true</default>
         </entry>
 	<entry name="displayCapacityBar" type="Bool">
             <label>Display free space information in status bar</label>
