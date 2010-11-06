@@ -325,6 +325,7 @@ void KConfigGroupHandler::removeServerSettings(const int& serverId) {
 void KConfigGroupHandler::removePasswordEntry(KConfigGroup& configGroup) {
 
     QString passwordStr = "password";
+
     // check if password entry exists :
     if (configGroup.hasKey(passwordStr)) {
         configGroup.deleteEntry(passwordStr);
