@@ -129,28 +129,7 @@ QString UtilityServerStatus::buildConnectionToolTip(const ClientsObserverBase* c
             }
 
             toolTipStr.append("<br>");
-
-            if (clientsObserver->isCertificateVerified()) {
-                toolTipStr.append(i18n("Certificate <b>verified</b> by %1", clientsObserver->getIssuerOrgranisation()));
-            }
-            else {
-                toolTipStr.append(i18n("Certificate <b>can not be verified</b> "));
-
-                // add ssl errors encountered :
-                QStringList sslErrorList = clientsObserver->getSslErrors();
-
-                if (!sslErrorList.isEmpty()) {
-
-                    QString errorListSeparator = "<li>";
-                    toolTipStr.append(i18np("(%1 error during SSL handshake): %2",
-                                            "(%1 errors during SSL handshake): %2",
-                                            sslErrorList.size(),
-                                            "<ul style=\"margin-top:0px; margin-bottom:0px;\">" +
-                                            errorListSeparator + sslErrorList.join(errorListSeparator)) +
-                                      "</ul>");
-                }
-
-            }
+            toolTipStr.append(UtilityServerStatus::buildSslHandshakeStatus(clientsObserver));
 
         }
         else {
@@ -161,6 +140,38 @@ QString UtilityServerStatus::buildConnectionToolTip(const ClientsObserverBase* c
     }
 
     return toolTipStr;
+
+}
+
+
+
+QString UtilityServerStatus::buildSslHandshakeStatus(const ClientsObserverBase* clientsObserver) {
+
+    QString sslHandshakeStatus;
+
+    if (clientsObserver->isCertificateVerified()) {
+        sslHandshakeStatus.append(i18n("Certificate <b>verified</b> by %1", clientsObserver->getIssuerOrgranisation()));
+    }
+    else {
+        sslHandshakeStatus.append(i18n("Certificate <b>can not be verified</b> "));
+
+        // add ssl errors encountered :
+        QStringList sslErrorList = clientsObserver->getSslErrors();
+
+        if (!sslErrorList.isEmpty()) {
+
+            QString errorListSeparator = "<li>";
+            sslHandshakeStatus.append(i18np("(%1 error during SSL handshake): %2",
+                                    "(%1 errors during SSL handshake): %2",
+                                    sslErrorList.size(),
+                                    "<ul style=\"margin-top:0px; margin-bottom:0px;\">" +
+                                    errorListSeparator + sslErrorList.join(errorListSeparator)) +
+                              "</ul>");
+        }
+
+    }   
+
+    return sslHandshakeStatus;
 
 }
 

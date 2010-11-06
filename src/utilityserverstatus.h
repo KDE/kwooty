@@ -36,6 +36,7 @@ public:
     };
 
     static bool buildConnectionStringFromStatus(const ClientsObserverBase*, QString&, QString&, EncryptionMethodDisplay = DisplayEncryptionMethod);
+    static QString buildSslHandshakeStatus(const ClientsObserverBase*);
     static QString buildConnectionToolTip(const ClientsObserverBase*, const QString&, const QString&);
     static QString getServerModeString(UtilityNamespace::BackupServerMode);
 
