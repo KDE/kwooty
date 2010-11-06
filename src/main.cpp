@@ -33,13 +33,22 @@ int main (int argc, char** argv)
 {
     KAboutData aboutData("kwooty",
                          "",
-                         ki18n("Kwooty"), "0.5.1",
+                         ki18n("Kwooty"), "0.6.0",
                          ki18n("Kwooty is a friendly nzb usenet binary downloader.\n It also supports automatic file repairing and archive extraction."),
                          KAboutData::License_GPL,
                          ki18n("Copyright (c) 2010 Xavier Lefage"),
                          KLocalizedString(),
                          "http://kwooty.sourceforge.net/");
     aboutData.addAuthor(ki18n("Xavier Lefage"),ki18n("Maintainer, Lead Developer"), "xavier.kwooty@gmail.com");
+
+
+    aboutData.addCredit(ki18n("Michael Wiescholek"),
+                        ki18n("For the first German translation."),
+                        "Michael.Wiescholek@gmail.com" );
+    aboutData.addCredit(ki18n("Guillaume Pujol"),
+                        ki18n("For his patches."),
+                        "guill.p@gmail.com" );
+
     aboutData.setBugAddress("http://sourceforge.net/projects/kwooty");
     aboutData.setCustomAuthorText(ki18n("Please report bugs to http://sourceforge.net/projects/kwooty"),
                                   ki18n("Please report bugs to <a href='http://sourceforge.net/tracker/?group_id=285032&atid=1208199'>Kwooty bug tracker</a>"));
