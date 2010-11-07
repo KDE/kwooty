@@ -119,8 +119,7 @@ void MyTreeView::setupConnections() {
 }
 
 
-void MyTreeView::contextMenuEvent(QContextMenuEvent* event)
-{
+void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
 
     KMenu contextMenu(this);
     KActionCollection* actionCollection = ((MainWindow*)this->centralWidget->parent())->actionCollection();
