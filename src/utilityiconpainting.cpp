@@ -59,7 +59,7 @@ QPixmap UtilityIconPainting::blendOverLayEmblem(const QString& overlayIconStr, c
 
     if (!overlayIcon.isNull() && pixmap) {
 
-        QPixmap warningPixmap = overlayIcon.pixmap(10, 10);
+        QPixmap warningPixmap = overlayIcon.pixmap(8, 8);
 
         finalIcon = pixmap->copy();
         QPainter p(&finalIcon);
