@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-06 22:45+0100\n"
-"PO-Revision-Date: 2010-11-06 11:12+0100\n"
+"PO-Revision-Date: 2010-11-07 11:24+0100\n"
 "Last-Translator: Michael Wiescholek <Michael.Wiescholek@gmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -632,7 +632,7 @@ msgstr "Niedrigere Prozesspriorität des Entpackvorgangs"
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_groupBoxExtractPriority)
 #: build/src/ui_preferencesprograms.h:340 rc.cpp:557
 msgid "Lower Extract process"
-msgstr "Niedrigere Prozesspriorität für das entpacken"
+msgstr "Niedrigere Prozesspriorität für das Entpacken"
 
 #. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:107
 #. i18n: ectx: label, entry (extractNiceValue), group (programs)
@@ -643,7 +643,7 @@ msgstr "Niedrigere Prozesspriorität für das entpacken"
 #: build/src/ui_preferencesprograms.h:346 rc.cpp:77 rc.cpp:443 rc.cpp:566
 msgid "Define extract process priority from normal (0) to lowest (+19)"
 msgstr ""
-"Setzt die Prozesspriorität zum entpacken von normal(0) bis am niedrigsten "
+"Setzt die Prozesspriorität zum Entpacken von normal(0) bis am niedrigsten "
 "(+19)"
 
 #. i18n: file: src/preferences/preferencesprograms.ui:212
@@ -1182,7 +1182,7 @@ msgstr "Guillaume Pujol"
 
 #: src/main.cpp:49
 msgid "For his patches."
-msgstr "Für seine patches."
+msgstr "Für seine Patches."
 
 #: src/main.cpp:53
 msgid "Please report bugs to http://sourceforge.net/projects/kwooty"
@@ -1195,7 +1195,7 @@ msgid ""
 "Please report bugs to <a href='http://sourceforge.net/tracker/?"
 "group_id=285032&atid=1208199'>Kwooty bug tracker</a>"
 msgstr ""
-"Bitte verwenden Sie<a href='http://sourceforge.net/tracker/?"
+"Bitte verwenden Sie <a href='http://sourceforge.net/tracker/?"
 "group_id=285032&atid=1208199'>Kwooty bug tracker</a> \n"
 "für Problemberichte."
 
