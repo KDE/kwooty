@@ -1,6 +1,41 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.6.0:
+--------------
+
+- Multi-server support:
+
+  - Up to 4 backup servers can be added.
+    Server priority can be managed in settings by dragging and dropping tab to the desired position in "Connection" settings.
+
+  - 4 modes are available for each backup server:
+
+    - Passive: a Passive backup server will download files only not found on Master server and will stay Idle the rest of the time
+
+    - Active: an Active backup server will download files simultaneously with Master server until all pending files are processed
+
+    - Failover: a Failover backup server will work as "Passive" as long as Master server is available. 
+		In any case Master server is down, the Failover backup server replaces Master server and downloads queued files until Master server come back available (several Failover backup servers are possible, priority is then managed by tab order in server settings)
+
+    - Disabled: server is not used by server configuration is kept for later usage
+
+
+- An information bar allowing to watch the following information on a per-server basis has been added (hidden or shown by clicking on the "double arrow" icon at the right of the status bar):
+  Server availability, downloaded content size, current download speed, current downloaded file, server name, backup server mode and encryption information.
+
+- Added new icon to identify queued files that need to be downloaded by a backup server 
+
+- Kwallet support
+
+- Pending downloads can be restored without confirmation at startup and / or be saved without confirmation at exit (configurable in "General > Confirmation dialogs" tab)
+
+- Added context menu allows access to frequent actions (Start All, Start, Pause All , etc...)
+
+- Added shortcuts to settings when double clicking on server status or shutdown information on status bar
+
+
+
 Version 0.5.1:
 --------------
 - Display update : parent row height has been increased
