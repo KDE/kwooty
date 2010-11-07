@@ -262,6 +262,12 @@ ServerData KConfigGroupHandler::readServerSettings(const int& serverId) {
     // read password with Kwallet or kconfig file :
     serverData.setPassword(this->readPassword(serverId, configGroup));
 
+    // if this is the first kwooty launch, config file is new and server name will be empty
+    // set serverName to Master for first Id :
+    if ((serverId == MasterServer) && serverData.getServerName().isEmpty()) {
+        serverData.setServerName(i18n("Master"));
+    }
+
     return serverData;
 
 }

@@ -134,13 +134,6 @@ void SideBar::createSideBarWidgets() {
         int serverWidgetIndex = this->sideBarWidget->count();
         QString serverName = this->serverManager->getServerGroupById(serverWidgetIndex)->getServerData().getServerName();
 
-        // if this is the first kwooty launch, config file is new and server name will be empty
-        // set serverName to Master for first Id:
-        if (serverWidgetIndex == MasterServer && serverName.isEmpty()) {
-             serverName = i18n("Master");
-        }
-
-
         this->sideBarWidget->addTab(new ServerStatusWidget(this->sideBarWidget), "weather-clear-night", serverName);
 
     }
