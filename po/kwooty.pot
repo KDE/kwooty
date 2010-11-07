@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-06 17:10+0100\n"
+"POT-Creation-Date: 2010-11-06 22:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -922,7 +922,7 @@ msgid "Total"
 msgstr ""
 
 #: src/mystatusbar.cpp:340 src/itemdelegate.cpp:132 src/itemdelegate.cpp:183
-#: src/sidebar.cpp:238
+#: src/sidebar.cpp:231
 msgid "n/a"
 msgstr ""
 
@@ -1213,7 +1213,7 @@ msgstr ""
 
 #: src/widgets/serverpreferenceswidget.cpp:135
 #: src/widgets/servertabwidget.cpp:240 src/widgets/servertabwidget.cpp:259
-#: src/sidebar.cpp:140 src/sidebar.cpp:226
+#: src/sidebar.cpp:219 src/preferences/kconfiggrouphandler.cpp:268
 msgid "Master"
 msgstr ""
 
@@ -1585,7 +1585,7 @@ msgstr ""
 msgid "Docking in System Tray"
 msgstr ""
 
-#: src/sidebar.cpp:246
+#: src/sidebar.cpp:239
 msgid "None"
 msgstr ""
 
