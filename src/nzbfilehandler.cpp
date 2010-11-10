@@ -50,7 +50,6 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
     QMap<QString, GlobalFileData> globalPar2DataNameMap;
 
     NzbFileData nzbFileData;
-    QVariant parentVariantId;
     quint32 elementInList = 0;
     quint64 fileSize = 0;
     bool fileSucessfulyProcessed = true;
@@ -86,8 +85,7 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
 
                 // set name of the nzb :
                 nzbFileData.setNzbName(nzbName);
-                // set unique ID for parent :
-                parentVariantId.setValue(QUuid::createUuid().toString());
+
             }
 
             // get the group(s) :
@@ -137,7 +135,7 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
                 // set size of the nzbFileData
                 nzbFileData.setSize(fileSize);
                 // set unique identifier :
-                nzbFileData.setUniqueIdentifier(parentVariantId);
+                nzbFileData.setUniqueIdentifier(QVariant(QUuid::createUuid().toString()));
                 // set download folder :
                 nzbFileData.setFileSavePath(Settings::completedFolder().path() + "/" + nzbFileData.getNzbName() + "/");
 
@@ -154,7 +152,6 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
                 NzbFileData nzbFileDataTemp;
                 nzbFileData = nzbFileDataTemp;
                 segmentMap.clear();
-                parentVariantId.clear();
                 elementInList = 0;
                 fileSize = 0;
 
