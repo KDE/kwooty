@@ -62,7 +62,7 @@ public:
 
 private:
     static KConfigGroupHandler* instance;
-    KWallet::Wallet* wallet;
+    QPointer<KWallet::Wallet> wallet;
     MainWindow* mainWindow;
     int dialogButtonCode;
     bool useKwallet;
@@ -72,10 +72,12 @@ private:
     QString readPassword(const int&, KConfigGroup&);
     void writePassword(const int&, KConfigGroup&, const QString&);
     void removePasswordEntry(KConfigGroup&);
+    ServerData fillServerData(const int&, KConfigGroup&);
 
 
 public slots:
     void settingsChangedSlot();
+    void walletClosedSlot();
 
 };
 

@@ -61,10 +61,15 @@ KConfigGroupHandler::~KConfigGroupHandler() {
 }
 
 
+
+//======================================================================================//
+//                                    SLOTS :                                           //
+//======================================================================================//
+
 void KConfigGroupHandler::settingsChangedSlot() {
 
     // switch passwords between config file and kwallet :
-    if (this->useKwallet != Settings::useKwallet() && this->openWallet()) {       
+    if (this->useKwallet != Settings::useKwallet() && this->openWallet()) {
 
         // avoid to display dialog box during synchronization :
         this->dialogButtonCode = KMessageBox::Ok;
@@ -95,6 +100,12 @@ void KConfigGroupHandler::settingsChangedSlot() {
 
 }
 
+
+
+void KConfigGroupHandler::walletClosedSlot() {
+    // if wallet is closed, delete the current one to reopen later a new one if needed :
+    delete this->wallet;
+}
 
 
 
@@ -136,7 +147,11 @@ bool KConfigGroupHandler::openWallet() {
 
         // open the wallet if not open :
         if (!this->wallet) {
+
             this->wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), this->mainWindow->winId());
+
+            // be notified that the wallet has been closed :
+            connect (this->wallet, SIGNAL(walletClosed ()), this, SLOT(walletClosedSlot()));
         }
 
         // if wallet has been successfully open :
@@ -179,6 +194,8 @@ bool KConfigGroupHandler::openWallet() {
     return walletOpen;
 
 }
+
+
 
 
 QString KConfigGroupHandler::readPassword(const int& serverId, KConfigGroup& configGroup) {
@@ -241,10 +258,31 @@ ServerData KConfigGroupHandler::readServerSettings(const int& serverId) {
 
     // if KConfigGroup is invalid, it may be the first launch from a previous kwooty version
     // try get previous settings :
+    bool firstLaunchFromPreviousVersion = false;
+
     if ((serverId == MasterServer) && !configGroup.exists()) {
+
         configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("server"));
+        firstLaunchFromPreviousVersion = true;
     }
 
+
+    // read data from cofing file and kwallet :
+    ServerData serverData = this->fillServerData(serverId, configGroup);
+
+
+    // remove previous kwooty version server group if any :
+    if (firstLaunchFromPreviousVersion) {
+        configGroup.deleteGroup();
+    }
+
+
+    return serverData;
+
+}
+
+
+ServerData KConfigGroupHandler::fillServerData(const int& serverId, KConfigGroup& configGroup) {
 
     ServerData serverData;
 
@@ -254,7 +292,7 @@ ServerData KConfigGroupHandler::readServerSettings(const int& serverId) {
     serverData.setPort(configGroup.readEntry("port", 119));
     serverData.setConnectionNumber(configGroup.readEntry("connectionNumber", 4));
     serverData.setAuthentication(configGroup.readEntry("authentication", false));
-    serverData.setLogin(configGroup.readEntry("login", QString()));  
+    serverData.setLogin(configGroup.readEntry("login", QString()));
     serverData.setDisconnectTimeout(configGroup.readEntry("disconnectTimeout", 5));
     serverData.setEnableSSL(configGroup.readEntry("enableSSL", false));
     serverData.setServerModeIndex(configGroup.readEntry("serverModeIndex", 0));
