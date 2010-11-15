@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-06 22:45+0100\n"
-"PO-Revision-Date: 2010-11-09 16:36+0100\n"
-"Last-Translator: Pavel Fric <fripohled@blogspot.com>\n"
+"PO-Revision-Date: 2010-11-10 23:45+0100\n"
+"Last-Translator: \n"
 "Language-Team: Czech <kde-i18n-de@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -217,7 +217,7 @@ msgstr "Nestahovat soubory .par2, pokud archiv se soubory nemusí být opraven"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_smartPar2Download)
 #: build/src/ui_preferencesgeneral.h:271 rc.cpp:281
 msgid "Download Par2 files only if repairing is required"
-msgstr "Stáhnout soubory Par2 Dateien jen tehdy, když je potřeba je opravit"
+msgstr "Stáhnout soubory Par2 jen tehdy, když je potřeba je opravit"
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:133
 #. i18n: ectx: property (title), widget (QGroupBox, sysTrayGroupBox)
@@ -265,7 +265,7 @@ msgstr "Nastavení"
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: build/src/ui_preferencesgeneral.h:282 rc.cpp:302
 msgid "Show confirmation dialog when"
-msgstr "Ukázat potvrzovací dialog, když"
+msgstr "Ukázat potvrzovací dialog"
 
 #. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:49
 #. i18n: ectx: label, entry (confirmClear), group (general)
@@ -281,7 +281,7 @@ msgstr "Po stisknutí tlačítka \"Vše odstranit\" žádat o potvrzení"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_confirmClear)
 #: build/src/ui_preferencesgeneral.h:286 rc.cpp:308
 msgid "clearing rows"
-msgstr "jsou odstraňována všechna stahování"
+msgstr "Jsou-li odstraňována všechna stahování"
 
 #. i18n: file: build/share/config.kcfg/kwootysettings.kcfg:53
 #. i18n: ectx: label, entry (confirmRemove), group (general)
@@ -297,7 +297,7 @@ msgstr "Po stisknutí tlačítka \"Odstranit\" žádat o potvrzení"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_confirmRemove)
 #: build/src/ui_preferencesgeneral.h:290 rc.cpp:314
 msgid "removing selected rows"
-msgstr "jsou odstraňovány vybrané záznamy"
+msgstr "Jsou-li odstraňovány vybrané záznamy"
 
 #. i18n: file: src/preferences/preferencesgeneral.ui:228
 #. i18n: ectx: property (text), widget (QLabel, saveDownloadsLabel)
@@ -506,7 +506,7 @@ msgstr "Smaže soubory par2, když bylo ověření/oprava úspěšně provedeno"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_removeParFiles)
 #: build/src/ui_preferencesprograms.h:314 rc.cpp:515
 msgid "Suppress par2 files if repairing successful"
-msgstr "Smaže soubory par2, když byla oprava úspěšně provedena"
+msgstr "Smazat soubory par2, když byla oprava úspěšně provedena"
 
 #. i18n: file: src/preferences/preferencesprograms.ui:157
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_groupBoxAutoDecompress)
@@ -524,7 +524,7 @@ msgstr "Smaže soubory v archivu, když bylo rozbalení úspěšně provedeno"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_removeArchiveFiles)
 #: build/src/ui_preferencesprograms.h:319 rc.cpp:524
 msgid "Suppress archive files if extract successful"
-msgstr "Smaže soubory v archivu, když bylo rozbalení úspěšně provedeno"
+msgstr "Smazat soubory v archivu, když bylo rozbalení úspěšně provedeno"
 
 #. i18n: file: src/preferences/preferencesprograms.ui:182
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_overwriteExtractedFiles)
@@ -681,7 +681,7 @@ msgstr "Režim zastavení provozu systému:"
 #. i18n: ectx: property (title), widget (QGroupBox, actionGroupBox)
 #: build/src/ui_preferencesshutdown.h:146 rc.cpp:218
 msgid "Scheduler"
-msgstr "Rozvrhovač"
+msgstr "Plánovač"
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:63
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_timerRadioButton)
@@ -717,7 +717,7 @@ msgstr "Nevypínat, když jsou některá stahování pozastavena"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_pausedShutdown)
 #: build/src/ui_preferencesshutdown.h:154 rc.cpp:236
 msgid "if jobs are finished but paused files remain"
-msgstr "když jsou všechny soubory staženy, ale zbývají pozastavené soubory"
+msgstr "Když jsou všechny soubory staženy, ale zbývají pozastavené soubory"
 
 #: rc.cpp:1
 msgctxt "NAME OF TRANSLATORS"
@@ -735,7 +735,7 @@ msgstr "fripohled.blogspot.com"
 #. i18n: ectx: Menu (download)
 #: rc.cpp:5 rc.cpp:161
 msgid "Download"
-msgstr "Stahování"
+msgstr "Stáhnout"
 
 #. i18n: file: build/share/apps/kwooty/kwootyui.rc:30
 #. i18n: ectx: ToolBar (mainToolBar)
@@ -1055,7 +1055,7 @@ msgstr "Stahuje se"
 #: src/systraylegacy.cpp:307 src/systray.cpp:282 src/itemdelegate.cpp:42
 #: src/mainwindow.cpp:167
 msgid "Pause"
-msgstr "Přestávka"
+msgstr "Pozastavit"
 
 #: src/systraylegacy.cpp:319 src/systray.cpp:294
 msgid "Status: "
@@ -1532,7 +1532,7 @@ msgstr "Posunout všechny vybrané záznamy v seznamu zcela dolů"
 
 #: src/mainwindow.cpp:236
 msgid "Downloads"
-msgstr "Stahování"
+msgstr "Stáhnout"
 
 #: src/mainwindow.cpp:238
 msgid "Open current download folder"
@@ -1623,14 +1623,14 @@ msgstr "Žádné"
 
 #: src/shutdownmanager.cpp:143
 msgid "when jobs complete"
-msgstr "když byly všechny úlohy dokončeny"
+msgstr "Když byly všechny úlohy dokončeny"
 
 #: src/shutdownmanager.cpp:153
 #, kde-format
 msgctxt ""
 "shutdown time notifier in status bar, example : 'shutdown icon' at 12:56"
 msgid "at %1"
-msgstr "v  %1"
+msgstr "v %1"
 
 #: src/shutdownmanager.cpp:185
 msgid "Shutdown has failed (session manager can not be contacted)."
@@ -1682,20 +1682,20 @@ msgstr "Automaticky"
 #, kde-format
 msgctxt "%1 = Shutdown/Suspend to RAM/Suspend to disk"
 msgid "%1 in:"
-msgstr "%1 v:"
+msgstr "%1 za:"
 
 #: src/preferences/preferencesshutdown.cpp:74
 #, kde-format
 msgctxt "%1 = Shutdown/Suspend to RAM/Suspend to disk"
 msgid "%1 when all jobs are finished"
-msgstr "když jsou všechny úlohy vyřízeny: %1 "
+msgstr "%1, když jsou všechny úlohy vyřízeny"
 
 #: src/preferences/preferencesshutdown.cpp:80
 #, kde-format
 msgctxt "%1%2 = shutdown/suspend to RAM/suspend"
 msgid "Do not %1%2 if jobs are finished but paused files remain"
 msgstr ""
-"Nezměnit na stav %1%2 , pokud byly všechny úlohy dokončeny, ale zůstávají "
+"Nezměnit na stav %1%2, pokud byly všechny úlohy dokončeny, ale zůstávají "
 "pozastavené soubory"
 
 #: src/preferences/kconfiggrouphandler.cpp:115
@@ -1727,12 +1727,12 @@ msgstr "Vlastní"
 #: src/preferences/preferencesprograms.cpp:115
 #, kde-format
 msgid "<b>%1</b> program found: %2"
-msgstr "<b>%1</b> Program nalezen: %2"
+msgstr "Program <b>%1</b> nalezen: %2"
 
 #: src/preferences/preferencesprograms.cpp:124
 #, kde-format
 msgid "<b>%1</b> program not found"
-msgstr "<b>%1</b> Program nenalezen"
+msgstr "Program <b>%1</b> nenalezen"
 
 #: src/preferences/preferencesprograms.cpp:192
 msgid "Low:"
