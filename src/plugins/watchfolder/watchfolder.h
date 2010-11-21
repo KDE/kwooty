@@ -25,10 +25,12 @@
 #include <KUrl>
 #include <kdirwatch.h>
 
-
 #include <QObject>
 #include <QStringList>
+#include <QSet>
 #include <QTimer>
+#include <QHash>
+#include <QDateTime>
 
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -54,9 +56,14 @@ private:
     CentralWidget* centralWidget;
     QTimer* fileCompleteTimer;
     QStringList nzbFileList;
+    QHash<QString, QDateTime> nzbFilePathlastEnqueuedMap;
+    QSet<QString> nzbFileInWatchFolderSet;
     QString currentWatchDir;
+    bool firstEnqueueMethod;
 
     void setupConnections();
+    QSet<QString> getNzbFileSetFromWatchFolder();
+    void appendFileToList(const QString&);
 
 
 signals:

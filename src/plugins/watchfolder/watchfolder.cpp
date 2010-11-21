@@ -26,6 +26,7 @@
 #include <klocale.h>
 
 #include <QFileInfo>
+#include <QDir>
 
 #include "mainwindow.h"
 #include "centralwidget.h"
@@ -84,6 +85,57 @@ void WatchFolder::setupConnections() {
 
 
 
+QSet<QString> WatchFolder::getNzbFileSetFromWatchFolder() {
+
+    QDir watchFolderDir(WatchFolderSettings::watchFolder().path());
+    QStringList filters;
+    filters.append("*.nzb");
+    filters.append("*.NZB");
+
+    // order list of nzb files by date and return the last modified 10 last files :
+    return watchFolderDir.entryList(filters, QDir::Files, QDir::Time).mid(0, MAX_LIST_SIZE).toSet();
+
+}
+
+
+
+void WatchFolder::appendFileToList(const QString& filePath) {
+
+    bool allowEnqueue = true;
+
+    // if file has already been enqueued :
+    if (this->nzbFilePathlastEnqueuedMap.keys().contains(filePath)) {
+
+        // check that the file has been previously enqueued more than 2 seconds in order
+        // to avoid double file enqueue :
+        if (this->nzbFilePathlastEnqueuedMap.value(filePath).secsTo(QDateTime::currentDateTime()) < 2)  {
+            allowEnqueue = false;
+        }
+        // else file can be removed from map :
+        else {
+            this->nzbFilePathlastEnqueuedMap.remove(filePath);
+
+        }
+    }
+
+
+    // if nzb file is not contained in the list :
+    if (!this->nzbFileList.contains(filePath) && allowEnqueue) {
+
+        // keep a list with a max size of 10 :
+        if (this->nzbFileList.size() > MAX_LIST_SIZE) {
+            this->nzbFileList.takeFirst();
+        }
+
+        // append the nzb file to the list :
+        this->nzbFileList.append(filePath);
+
+    }
+
+}
+
+
+
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
@@ -93,6 +145,8 @@ void WatchFolder::watchFileSlot(const QString& filePath) {
 
     // filter by .nzb extension :
     if (filePath.endsWith(".nzb", Qt::CaseInsensitive)) {
+
+        this->firstEnqueueMethod = true;
 
         // if nzb file is not contained in the list :
         if (!this->nzbFileList.contains(filePath)) {
@@ -107,6 +161,30 @@ void WatchFolder::watchFileSlot(const QString& filePath) {
 
         }
     }
+
+    // nzb file name may not be returned if FAM or INotify is not used. filePath will only
+    // contain the watch folder path, this is a workaround for this issue :
+    else if (filePath == WatchFolderSettings::watchFolder().path()) {
+
+        this->firstEnqueueMethod = false;
+
+        QSet<QString> currentNzbFileInWatchFolderSet = this->getNzbFileSetFromWatchFolder();
+
+        // filter with only new nzb files added from watch folder :
+        QSet<QString> newNzbFiles = currentNzbFileInWatchFolderSet.subtract(this->nzbFileInWatchFolderSet);
+
+        foreach (const QString& nzbFile, newNzbFiles) {
+
+            QString nzbfilePath = WatchFolderSettings::watchFolder().path() + "/" +  nzbFile;
+            this->appendFileToList(nzbfilePath);
+
+        }
+
+        // update list of nzb files in watch folder directory :
+        this->nzbFileInWatchFolderSet = this->getNzbFileSetFromWatchFolder();
+
+    }
+
 }
 
 
@@ -150,6 +228,8 @@ void WatchFolder::fileCompleteTimerSlot() {
                     }
 
                     // file has been enqueued :
+                    this->nzbFilePathlastEnqueuedMap.insert(nzbFilePath, QDateTime::currentDateTime());
+
                     fileEnqueued = true;
 
                 }
@@ -163,16 +243,20 @@ void WatchFolder::fileCompleteTimerSlot() {
 
         // file has not been enqueued yet :
         if (!fileEnqueued) {
-
             pendingFileList.append(nzbFilePath);
 
         }
 
     }
 
+    // if nzbname is not sent by dirty or created signal, manage nzb enqueuing diffrently :
+    if (!this->firstEnqueueMethod) {
+        this->nzbFileInWatchFolderSet = this->getNzbFileSetFromWatchFolder();
+    }
+
+
     // update nzb pending list :
     this->nzbFileList = pendingFileList;
-
 
 }
 
@@ -188,7 +272,9 @@ void WatchFolder::settingsChanged() {
     if (WatchFolderSettings::watchFolder().path() != this->currentWatchDir) {
 
         // remove previous watched folder :
-        this->kDirWatch->removeDir(this->currentWatchDir);
+        if (!this->currentWatchDir.isEmpty()) {
+            this->kDirWatch->removeDir(this->currentWatchDir);
+        }
 
         // get the new one :
         this->currentWatchDir = WatchFolderSettings::watchFolder().path();
@@ -196,9 +282,17 @@ void WatchFolder::settingsChanged() {
         // update the kdirwatch with the new folder :
         this->kDirWatch->addDir(this->currentWatchDir, KDirWatch::WatchFiles);
 
+        // retrieve nzb file list from watch folder at this stage :
+        this->nzbFileInWatchFolderSet = this->getNzbFileSetFromWatchFolder();
+
+        // by default consider that the first enqueue method is used :
+        this->firstEnqueueMethod = true;
+
     }
 
     // start monitoring :
     this->kDirWatch->startScan();
 
 }
+
+
