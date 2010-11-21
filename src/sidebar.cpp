@@ -45,47 +45,9 @@ SideBar::SideBar(MainWindow* parent) : QObject(parent) {
 }
 
 
-void SideBar::serverManagerSettingsChangedSlot() {
-
-    // if servermanager instance is not yet initialized :
-    if (!this->serverManager) {
-        this->serverManager = static_cast<MainWindow*>(this->parent())->getCentralWidget()->getServerManager();
-    }
-
-    if (this->serverManager) {
-
-        // remove widgets from side bar if number of servers has been reduced :
-        if (this->serverManager->getServerNumber() < this->sideBarWidget->count()) {
-
-            while (this->serverManager->getServerNumber() < this->sideBarWidget->count()) {
-
-                this->sideBarWidget->removeLast();
-            }
-        }
-        // add widgets from side bar if number of servers has been increased :
-        else {
-            this->createSideBarWidgets();
-        }
-
-
-        // synchronize info for each server with newly settings :
-        for (int i = 0; i < this->sideBarWidget->count(); i++) {
-
-            ServerData serverData = this->serverManager->getServerGroupById(i)->getServerData();
-            this->sideBarWidget->updateTextByIndex(i, serverData.getServerName());
-
-            this->serverStatisticsUpdateSlot(i);
-        }
-
-        // for first call, restore previous session settings :
-        if (!this->stateRestored) {
-            this->loadState();
-        }
-
-    }
-
+SideBarWidget* SideBar::getSideBarWidget() {
+    return this->sideBarWidget;
 }
-
 
 
 void SideBar::saveState() {
@@ -143,6 +105,10 @@ void SideBar::createSideBarWidgets() {
 
 
 
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
+
 
 void SideBar::activeSlot(bool active) {
 
@@ -150,14 +116,54 @@ void SideBar::activeSlot(bool active) {
 }
 
 
+void SideBar::serverManagerSettingsChangedSlot() {
 
-SideBarWidget* SideBar::getSideBarWidget() {
-    return this->sideBarWidget;
+    // if servermanager instance is not yet initialized :
+    if (!this->serverManager) {
+        this->serverManager = static_cast<MainWindow*>(this->parent())->getCentralWidget()->getServerManager();
+    }
+
+    if (this->serverManager) {
+
+        // remove widgets from side bar if number of servers has been reduced :
+        if (this->serverManager->getServerNumber() < this->sideBarWidget->count()) {
+
+            while (this->serverManager->getServerNumber() < this->sideBarWidget->count()) {
+
+                this->sideBarWidget->removeLast();
+            }
+        }
+        // add widgets from side bar if number of servers has been increased :
+        else {
+            this->createSideBarWidgets();
+        }
+
+
+        // synchronize info for each server with newly settings :
+        for (int i = 0; i < this->sideBarWidget->count(); i++) {
+
+            ServerData serverData = this->serverManager->getServerGroupById(i)->getServerData();
+
+            // update text and tooltip accordingly :
+            this->sideBarWidget->updateTextByIndex(i, serverData.getServerName());
+            this->sideBarWidget->updateToolTipByIndex(i, serverData.getServerName());
+
+            this->serverStatisticsUpdateSlot(i);
+        }
+
+        // for first call, restore previous session settings :
+        if (!this->stateRestored) {
+            this->loadState();
+        }
+
+    }
+
 }
 
 
 
-void SideBar::serverStatisticsUpdateSlot(const int serverId) {  
+
+void SideBar::serverStatisticsUpdateSlot(const int serverId) {
 
     if (this->serverManager) {
 
@@ -194,8 +200,13 @@ void SideBar::serverStatisticsUpdateSlot(const int serverId) {
         bool displayOverlay = UtilityServerStatus::buildConnectionStringFromStatus(clientsPerServerObserver, connectionIconStr, connection, UtilityServerStatus::DoNotDisplayEncryptionMethod);
 
 
+        QString tabConnectionIconMapStr = tabConnectionIconStr;
+        if (displayOverlay) {
+            tabConnectionIconMapStr.append("_withOverlay");
+        }
+
         // if previous icon is different from the current one, update display :
-        if (serverIdConnectionIconMap.value(serverId) != tabConnectionIconStr) {
+        if (serverIdConnectionIconMap.value(serverId) != tabConnectionIconMapStr) {
 
             bool displayOverlayLocal = displayOverlay;
 
@@ -208,7 +219,7 @@ void SideBar::serverStatisticsUpdateSlot(const int serverId) {
             this->sideBarWidget->updateIconByIndex(serverId, tabConnectionIconStr, displayOverlayLocal);
 
             // store icon currently displayed :
-            this->serverIdConnectionIconMap.insert(serverId, tabConnectionIconStr);
+            this->serverIdConnectionIconMap.insert(serverId, tabConnectionIconMapStr);
 
         }
 

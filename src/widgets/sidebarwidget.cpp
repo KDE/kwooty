@@ -88,6 +88,10 @@ void SideBarWidget::updateTextByIndex(const int& currentIndex, const QString& ta
     this->multiTabBar->tab(currentIndex)->setText(tabName);
 }
 
+void SideBarWidget::updateToolTipByIndex(const int& currentIndex, const QString& tabName) {
+    this->multiTabBar->tab(currentIndex)->setToolTip(tabName);
+}
+
 
 void SideBarWidget::activeDefaultTab(const int& index) {
 

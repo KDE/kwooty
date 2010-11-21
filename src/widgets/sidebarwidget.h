@@ -44,6 +44,7 @@ public:
     int currentIndex() const;
     void updateIconByIndex(const int&, const QString&, const bool&);
     void updateTextByIndex(const int&, const QString&);
+    void updateToolTipByIndex(const int&, const QString&);
     void activeDefaultTab(const int&);
     bool isOnlyTabDisplayed() const;
     void displayTabOnly();
