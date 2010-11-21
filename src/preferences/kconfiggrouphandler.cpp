@@ -90,6 +90,8 @@ void KConfigGroupHandler::settingsChangedSlot() {
             // write password kwallet or plain text :
             this->writePassword(serverId, configGroup, password);
 
+            configGroup.sync();
+
         }
 
         // store new setting value :
