@@ -1,6 +1,18 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.6.1:
+--------------
+
+- Czech translation (thanks a lot Pavel !)
+
+Bug fixes :
+
+* Kwallet now reopens the wallet it is closed
+* Credentials were not correctly removed from plain text when Kwallet option was enabled
+* Watch folder was not working correctly on certain distro
+
+
 Version 0.6.0:
 --------------
 
