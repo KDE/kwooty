@@ -148,18 +148,7 @@ void WatchFolder::watchFileSlot(const QString& filePath) {
 
         this->firstEnqueueMethod = true;
 
-        // if nzb file is not contained in the list :
-        if (!this->nzbFileList.contains(filePath)) {
-
-            // keep a list with a max size of 10 :
-            if (this->nzbFileList.size() > MAX_LIST_SIZE) {
-                this->nzbFileList.takeFirst();
-            }
-
-            // append the nzb file to the list :
-            this->nzbFileList.append(filePath);
-
-        }
+        this->appendFileToList(filePath);
     }
 
     // nzb file name may not be returned if FAM or INotify is not used. filePath will only
