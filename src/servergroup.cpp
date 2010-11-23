@@ -235,7 +235,7 @@ void ServerGroup::checkServerStabilitySlot() {
 
         QTimer::singleShot(5 * UtilityNamespace::MINUTES_TO_MILLISECONDS, this, SLOT(startTimerSlot()));
 
-        kDebug() << "server stability issues, forced to unavailable for 5 minutes, group :" << this->serverGroupId;
+        kDebug() << "server stability issues, forced to unavailable during 5 minutes, group :" << this->serverGroupId;
     }
 
     // reset counter :
