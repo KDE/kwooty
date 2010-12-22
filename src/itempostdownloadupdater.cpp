@@ -22,11 +22,14 @@
 
 #include <KDebug>
 
+#include <QFileInfo>
+
 #include "data/itemstatusdata.h"
 #include "data/nzbfiledata.h"
 #include "centralwidget.h"
 #include "itemparentupdater.h"
 #include "standarditemmodel.h"
+#include "fileoperations.h"
 
 
 ItemPostDownloadUpdater::ItemPostDownloadUpdater(ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater)
@@ -75,11 +78,11 @@ void ItemPostDownloadUpdater::updateDecodeItems(const QModelIndex& parentModelIn
 
 
         // quick and dirty workaround for Qt's treeview expander bug QTBUG-7585 (should be fixed in Qt 4.6.3):
-        #if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
+#if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
         if (!this->itemParentUpdater->getCentraWidget()->getTreeView()->isExpanded(parentModelIndex)) {
             this->itemParentUpdater->getCentraWidget()->getTreeView()->setRowHidden(parentModelIndex.row(), parentModelIndex.parent(), false);
         }
-        #endif
+#endif
 
     }
 
@@ -130,7 +133,7 @@ void ItemPostDownloadUpdater::updateRepairExtractItems(const QModelIndex& parent
 
 
 
-void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const QString& decodedFileName, const bool& crc32Match) {
+void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const QString& decodedFileName, const bool& crc32Match, const UtilityNamespace::ArticleEncodingType& articleEncodingType) {
 
 
     NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
@@ -153,12 +156,12 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
                 if (decodedFile.peek(rarFileMagicNumber.size()) == rarFileMagicNumber) {
                     nzbFileData.setArchiveFormat(RarFormat);
                 }
-
-                if (decodedFile.peek(zipFileMagicNumber.size()) == zipFileMagicNumber) {
+                // check if it a zip file :
+                else if (decodedFile.peek(zipFileMagicNumber.size()) == zipFileMagicNumber) {
                     nzbFileData.setArchiveFormat(ZipFormat);
                 }
-
-                if (decodedFile.peek(sevenZipFileMagicNumber.size()) == sevenZipFileMagicNumber) {
+                // check if it a 7z file :
+                else if (decodedFile.peek(sevenZipFileMagicNumber.size()) == sevenZipFileMagicNumber) {
                     nzbFileData.setArchiveFormat(SevenZipFormat);
                 }
 
@@ -168,6 +171,13 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
 
                     nzbFileData.setPar2File(true);
                 }
+
+                // check if it is a splitted file :
+                else if (FileOperations::isSplitFileFormat(decodedFile)) {
+                        nzbFileData.setArchiveFormat(SplitFileFormat);
+
+                }
+
 
                 decodedFile.close();
             }
@@ -185,10 +195,14 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
 
         ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
 
-        // inidicate if crc32 of the archive is ok :
+        // indicate if crc32 of the archive is ok :
         if (!crc32Match) {
             itemStatusData.setCrc32Match(CrcKo);
         }
+
+        // indicate type of article encoding :
+        itemStatusData.setArticleEncodingType(articleEncodingType);
+
 
         QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(fileNameItem->index());
         this->downloadModel->storeStatusDataToItem(stateItem, itemStatusData);
