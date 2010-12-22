@@ -73,7 +73,9 @@ SOURCES += main.cpp \
     utilityserverstatus.cpp \
     observers/clientsobserverbase.cpp \
     widgets/textpushbuttonwidget.cpp \
-    data/segmentinfodata.cpp
+    data/segmentinfodata.cpp \
+    extractsplit.cpp \
+    jobs/concatsplitfilesjob.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -144,7 +146,9 @@ HEADERS += mainwindow.h \
     utilityserverstatus.h \
     observers/clientsobserverbase.h \
     widgets/textpushbuttonwidget.h \
-    data/segmentinfodata.h
+    data/segmentinfodata.h \
+    extractsplit.h \
+    jobs/concatsplitfilesjob.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
