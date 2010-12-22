@@ -360,7 +360,7 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData) {
 
 
 
-void SegmentManager::updateDecodeSegmentSlot(QVariant parentIdentifer, int progression, UtilityNamespace::ItemStatus status, QString decodedFileName, bool crc32Match) {
+void SegmentManager::updateDecodeSegmentSlot(QVariant parentIdentifer, int progression, UtilityNamespace::ItemStatus status, QString decodedFileName, bool crc32Match, UtilityNamespace::ArticleEncodingType articleEncodingType) {
 
     // search index in current downloading nzb :
     QStandardItem* fileNameItem = this->searchItem(parentIdentifer, DecodeStatus);
@@ -374,7 +374,7 @@ void SegmentManager::updateDecodeSegmentSlot(QVariant parentIdentifer, int progr
     if (fileNameItem){
 
         // add info about decoded file type (par2 file or rar file) ;
-        itemParentUpdater->getItemPostDownloadUpdater()->addFileTypeInfo(fileNameItem, decodedFileName, crc32Match);
+        itemParentUpdater->getItemPostDownloadUpdater()->addFileTypeInfo(fileNameItem, decodedFileName, crc32Match, articleEncodingType);
 
         // update items :
         itemParentUpdater->getItemPostDownloadUpdater()->updateItems(fileNameItem->index(), progression, status);

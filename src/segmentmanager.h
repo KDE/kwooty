@@ -65,7 +65,7 @@ signals:
 public slots:
     void updateDownloadSegmentSlot(SegmentData);
     void getNextSegmentSlot(ClientManagerConn*);
-    void updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool);
+    void updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType);
     void updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
 
 
