@@ -49,6 +49,7 @@ public:
     void setDecodedFileName(const QString&);
     QString getRenamedFileName() const;
     void setRenamedFileName(const QString&, const QString&);
+    void clearRenamedFileName();
     void setUniqueIdentifier(const QVariant&);
     QVariant getUniqueIdentifier() const;
     void setFileSavePath(const QString&);
@@ -64,6 +65,7 @@ public:
     void setExtractProgressionStep(const UtilityNamespace::ItemStatus);
     UtilityNamespace::ItemStatus getExtractProgressionStep() const;
     bool operator==(const NzbFileData&);
+    bool operator<(const NzbFileData&) const;
 
 private:
     QString fileName;

@@ -93,10 +93,14 @@ void NzbFileData::setRenamedFileName(const QString& fileNameStr, const QString& 
 
 }
 
+void NzbFileData::clearRenamedFileName() {
+    this->renamedFileName.clear();
+}
 
 QString NzbFileData::getRenamedFileName() const {
     return this->renamedFileName;
 }
+
 
 QString NzbFileData::getNzbName() const {
     return this->nzbName;
@@ -205,6 +209,10 @@ bool NzbFileData::operator==(const NzbFileData& nzbFileDataToCompare) {
     return (this->getUniqueIdentifier() == nzbFileDataToCompare.getUniqueIdentifier());
 }
 
+bool NzbFileData::operator<(const NzbFileData& nzbFileDataToCompare) const{
+    // this data object will be sorted according to file name criteria :
+    return (this->getDecodedFileName() < nzbFileDataToCompare.getDecodedFileName());
+}
 
 
 
