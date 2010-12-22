@@ -185,6 +185,20 @@ void ItemAbstractUpdater::setIconToFileNameItem(const QModelIndex& index, Utilit
                 }
 
             }
+            else if (Utility::isDecodeFinish(status)) {
+                // get final status :
+                ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(index);
+
+                if (Utility::isBadCrcForYencArticle(itemStatusData.getCrc32Match(), itemStatusData.getArticleEncodingType())) {
+
+                    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
+                    fileNameItem->setIcon(KIcon("mail-mark-important"));
+                    return;
+
+                }
+
+
+            }
 
             // get fileName item and set corresponding icon :
             QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
