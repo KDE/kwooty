@@ -36,12 +36,6 @@ SegmentDecoderBase::SegmentDecoderBase(SegmentsDecoderThread* parent) : QObject(
 }
 
 
-void SegmentDecoderBase::decodeProgression(const int progression, const UtilityNamespace::ItemStatus status, const QString& decodedFileName){
-
-    emit updateDecodeSignal(this->parentIdentifer, progression, status, decodedFileName, this->crc32Match);
-}
-
-
 
 void SegmentDecoderBase::decodeSegments(NzbFileData currentNzbFileData, const QString& fileNameStr) {
 

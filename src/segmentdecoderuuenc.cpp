@@ -31,6 +31,12 @@ SegmentDecoderUUEnc::~SegmentDecoderUUEnc() {
 }
 
 
+void SegmentDecoderUUEnc::decodeProgression(const int progression, UtilityNamespace::ItemStatus status, const QString& decodedFileName){
+
+    emit updateDecodeSignal(this->parentIdentifer, progression, status, decodedFileName, this->crc32Match, ArticleEncodingUUEnc);
+
+}
+
 
 void SegmentDecoderUUEnc::decodeEncodedData(QFile& targetFile, SegmentData& currentSegment, int& segmentCrc32MatchNumber, const QByteArray& segmentByteArray, bool& encodedDataFound, bool& writeError) {
 

@@ -49,14 +49,14 @@ protected:
 
     virtual QString searchPattern(QFile& segmentFile) = 0;
     virtual void decodeEncodedData(QFile&, SegmentData&, int&, const QByteArray& , bool&, bool&) = 0;
+    virtual void decodeProgression(const int, UtilityNamespace::ItemStatus, const QString& decodedFileName = QString()) = 0;
     bool decodeSegmentFiles(QFile&);
-    void decodeProgression(const int, UtilityNamespace::ItemStatus, const QString& decodedFileName = QString());
     QList<SegmentData> segmentDataList;
     QVariant parentIdentifer;
     bool crc32Match;
 
 signals:
-    void updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool);
+    void updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType = ArticleEncodingYEnc);
     void saveFileErrorSignal(int);
 
 
