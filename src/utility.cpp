@@ -155,6 +155,16 @@ bool Utility::isDecoding(const UtilityNamespace::ItemStatus statusItem){
     return status;
 }
 
+bool Utility::isDecodeFinish(const UtilityNamespace::ItemStatus statusItem){
+    bool status = false;
+
+    if ( statusItem == DecodeFinishStatus){
+        status = true;
+    }
+
+    return status;
+}
+
 
 bool Utility::isWaitingForDecode(const UtilityNamespace::ItemStatus statusItem, const UtilityNamespace::Data data){
     bool status = false;
@@ -210,6 +220,20 @@ bool Utility::isJobFinish(const UtilityNamespace::ItemStatus statusItem){
     return status;
 }
 
+
+bool Utility::isBadCrcForYencArticle(const UtilityNamespace::CrcNotify& crcNotify, const UtilityNamespace::ArticleEncodingType& articleEncodingType) {
+
+    bool badCrcForYencArticle = false;
+
+    if ( (crcNotify != CrcOk) &&
+         (articleEncodingType == ArticleEncodingYEnc) ) {
+
+        badCrcForYencArticle = true;
+    }
+
+    return badCrcForYencArticle;
+
+}
 
 bool Utility::saveData(const QString& fileSavePath, const QString& fileName, const QByteArray& segmentData){
 

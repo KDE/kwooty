@@ -126,6 +126,13 @@ namespace UtilityNamespace
         SevenZipProgramMissing
     };
     
+
+    // type of article encoding :
+    enum ArticleEncodingType {
+        ArticleEncodingYEnc,
+        ArticleEncodingUUEnc
+    };
+
     // connection status list used by statusbar :
     enum ConnectionStatus {
         Disconnected,
@@ -208,6 +215,7 @@ namespace UtilityNamespace
         RarFormat,
         ZipFormat,
         SevenZipFormat,
+        SplitFileFormat,
         UnknownArchiveFormat
     };
 
@@ -275,9 +283,11 @@ public:
     static bool isDownloadOrPausing(const UtilityNamespace::ItemStatus);
     static bool isDownloadFinish(const UtilityNamespace::ItemStatus);
     static bool isDecoding(const UtilityNamespace::ItemStatus);
+    static bool isDecodeFinish(const UtilityNamespace::ItemStatus);
     static bool isWaitingForDecode(const UtilityNamespace::ItemStatus, const UtilityNamespace::Data);
     static bool isPostDownloadProcessing(const UtilityNamespace::ItemStatus);
     static bool isJobFinish(const UtilityNamespace::ItemStatus);
+    static bool isBadCrcForYencArticle(const UtilityNamespace::CrcNotify&, const UtilityNamespace::ArticleEncodingType&);
     static bool saveData(const QString&, const QString&, const QByteArray&);
     static bool createFolder(const QString&);
     static bool isFolderExists(const QString&);
