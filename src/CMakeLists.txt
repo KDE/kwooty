@@ -39,6 +39,7 @@ set(Kwooty_lib_SRCS
   extractbase.cpp
   extractrar.cpp
   extractzip.cpp
+  extractsplit.cpp
   datarestorer.cpp
   shutdownmanager.cpp
   fileoperations.cpp
@@ -77,6 +78,7 @@ set(Kwooty_lib_SRCS
   widgets/sidebarwidget.cpp
   widgets/serverstatuswidget.cpp
   widgets/textpushbuttonwidget.cpp
+  jobs/concatsplitfilesjob.cpp
 )
 
 if(KSTATUSNOTIFIERITEM_FOUND)
