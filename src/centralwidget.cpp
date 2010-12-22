@@ -210,6 +210,7 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
 
     quint64 nzbFilesSize = 0;
     int par2FileNumber = 0;
+    bool badCrc = false;
 
     // add children to parent (nzbNameItem) :
     foreach (GlobalFileData currentGlobalFileData, globalFileDataList) {
@@ -223,6 +224,11 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
         // count number of par2 Files :
         if (currentGlobalFileData.getNzbFileData().isPar2File()) {
             par2FileNumber++;
+        }
+
+        // if it is data restoring, check overall crc value in order to enable or disable smart par2 feature :
+        if (currentGlobalFileData.getItemStatusData().getCrc32Match() != CrcOk) {
+            badCrc = true;
         }
 
     }
@@ -245,7 +251,7 @@ void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataLi
     treeView->setAlternatingRowColors(Settings::alternateColors());
 
     // enable / disable smart par2 download :
-    if ( Settings::smartPar2Download() && (par2FileNumber < globalFileDataList.size()) ) {
+    if ( !badCrc && Settings::smartPar2Download() && (par2FileNumber < globalFileDataList.size()) ) {
         emit changePar2FilesStatusSignal(nzbNameItem->index(), WaitForPar2IdleStatus);
     }
 
