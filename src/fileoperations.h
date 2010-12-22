@@ -25,6 +25,7 @@
 #include <KUrl>
 
 #include <QObject>
+#include <QFile>
 #include "kwooty_export.h"
 
 #include "utility.h"
@@ -41,6 +42,8 @@ public:
     FileOperations(CentralWidget* = 0);
     void openFile();
     void openFileWithFileMode(KUrl, UtilityNamespace::OpenFileMode);
+
+    static bool isSplitFileFormat(const QFile&);
 
 private:
 

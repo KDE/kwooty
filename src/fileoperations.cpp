@@ -26,6 +26,7 @@
 #include <KIO/NetAccess>
 
 #include <QFileInfo>
+#include <QRegExp>
 
 #include "centralwidget.h"
 #include "kwootysettings.h"
@@ -128,3 +129,22 @@ void FileOperations::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenF
     }
 
 }
+
+
+
+
+bool FileOperations::isSplitFileFormat(const QFile& decodedFile) {
+
+    bool splitFile = false;
+
+    QRegExp regExp("\\d+");
+    regExp.setCaseSensitivity(Qt::CaseInsensitive);
+
+    if (regExp.exactMatch(QFileInfo(decodedFile).suffix())) {
+        splitFile = true;
+    }
+
+    return splitFile;
+
+}
+
