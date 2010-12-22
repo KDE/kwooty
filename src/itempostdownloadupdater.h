@@ -33,7 +33,7 @@ class ItemPostDownloadUpdater : public ItemAbstractUpdater
 public:
     ItemPostDownloadUpdater(ItemParentUpdater*);
     void updateItems(const QModelIndex&, const int, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget itemTarget = BothItemsTarget);
-    void addFileTypeInfo(QStandardItem*, const QString&, const bool&);
+    void addFileTypeInfo(QStandardItem*, const QString&, const bool&, const UtilityNamespace::ArticleEncodingType&);
 
 private:
     void updateNzbChildrenItems(const QModelIndex&, const int, const int);
