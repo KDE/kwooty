@@ -89,22 +89,14 @@ void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, Extr
     // launch extract if unrar program found :
     if (this->isExtractProgramFound) {
 
-        // look for archive name (renamed name or decoded name) to set as argument :
-        QString archiveName;
 
         NzbFileData currentNzbFileData = this->getFirstArchiveFileFromList();
 
         // get archive saved path :
         QString fileSavePath = currentNzbFileData.getFileSavePath();
 
-        // case archives have been renamed, get original file name :
-        if (!currentNzbFileData.getRenamedFileName().isEmpty()) {
-            archiveName = currentNzbFileData.getRenamedFileName();
-        }
-        // otherwise get the decoded file name (default behavior) :
-        else {
-            archiveName = currentNzbFileData.getDecodedFileName();
-        }
+        // look for archive name (renamed name or decoded name) to set as argument :
+        QString archiveName = this->getOriginalFileName(currentNzbFileData);
 
         // list of arguments for extract command line :
         QStringList args;
@@ -140,12 +132,25 @@ void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, Extr
 //                                       processing                                             //
 //==============================================================================================//
 
+QString ExtractBase::getOriginalFileName(const NzbFileData& currentNzbFileData) const {
+
+    // get the decoded file name (default behavior) :
+    QString archiveName = currentNzbFileData.getDecodedFileName();
+
+    // unless archives have been renamed, get original file name :
+    if (!currentNzbFileData.getRenamedFileName().isEmpty()) {
+        archiveName = currentNzbFileData.getRenamedFileName();
+    }
+
+    return archiveName;
+}
 
 
-NzbFileData ExtractBase::getFirstArchiveFileFromList() const {
+
+NzbFileData ExtractBase::getFirstArchiveFileFromList(const QList<NzbFileData>& currentNzbFileDataList) const {
 
     NzbFileData currentNzbFileData;
-    foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData& nzbFileData, currentNzbFileDataList) {
 
         if (nzbFileData.isArchiveFile()) {
             //return the first achive file from list :
@@ -155,6 +160,11 @@ NzbFileData ExtractBase::getFirstArchiveFileFromList() const {
     }
 
     return currentNzbFileData;
+}
+
+
+NzbFileData ExtractBase::getFirstArchiveFileFromList() const {
+   return this->getFirstArchiveFileFromList(this->nzbFileDataList);
 }
 
 
@@ -170,7 +180,6 @@ void ExtractBase::updateNzbFileDataInList(NzbFileData& currentNzbFileData, const
 void ExtractBase::resetVariables(){
 
     this->isExtractProgramFound = false;
-    this->fileNameToExtract.clear();
     this->nzbCollectionData = NzbCollectionData();
     this->nzbFileDataList.clear();
     this->stdOutputLines.clear();
@@ -272,7 +281,7 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
     else {
 
         // 1. exit without errors :
-        if (exitStatus == QProcess::NormalExit && exitCode == QProcess::NormalExit ){
+        if (exitStatus == QProcess::NormalExit && exitCode == QProcess::NormalExit){
 
             // notify repairDecompressThread that extraction is over :
             emit extractProcessEndedSignal();

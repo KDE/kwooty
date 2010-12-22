@@ -71,7 +71,6 @@ protected:
     QTimer* processWaitAnswerTimer;
     ExtractBase::ArchivePasswordStatus  archivePasswordStatus;
     QString extractProgramPath;
-    QString fileNameToExtract;
     QString stdOutputLines;
     int extractProgressValue;
     bool isExtractProgramFound;
@@ -86,6 +85,8 @@ protected:
     void findItemAndNotifyUser(const QString& fileNameStr, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
     void removeArchiveFiles();
     NzbFileData getFirstArchiveFileFromList() const;
+    NzbFileData getFirstArchiveFileFromList(const QList<NzbFileData>&) const;
+    QString getOriginalFileName(const NzbFileData&) const ;
 
 
     // virtual functions implemented by extractrar and extractzip :
