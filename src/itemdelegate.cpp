@@ -107,9 +107,14 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
                     opt.text = i18nc("i.e: Downloading... (incomplete)", "%1 (incomplete)", opt.text);
                 }
             }
-            if (status == DownloadFinishStatus) {
+            else if (status == DownloadFinishStatus) {
                 if (itemStatusData.getDataStatus() == NoData) {
                     opt.text = i18n("File not found");
+                }
+            }
+            else if (status == DecodeFinishStatus) {
+                if (Utility::isBadCrcForYencArticle(itemStatusData.getCrc32Match(), itemStatusData.getArticleEncodingType())) {
+                    opt.text = i18nc("i.e: Decoded (bad crc)", "%1 (bad crc)", opt.text);
                 }
             }
 
