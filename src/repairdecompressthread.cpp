@@ -26,6 +26,7 @@
 #include "repair.h"
 #include "extractrar.h"
 #include "extractzip.h"
+#include "extractsplit.h"
 #include "itemparentupdater.h"
 #include "segmentmanager.h"
 #include "kwootysettings.h"
@@ -76,6 +77,7 @@ void RepairDecompressThread::init() {
     // create extract instances :
     extractRar = new ExtractRar(this);
     extractZip = new ExtractZip(this);
+    extractSplit = new ExtractSplit(this);
 
     this->repairDecompressTimer = new QTimer(this);
 
@@ -96,7 +98,7 @@ void RepairDecompressThread::setupConnections() {
 
     // receive data to repair and decompress from repairDecompressSignal :
     qRegisterMetaType<NzbCollectionData>("NzbCollectionData");
-    connect (parent->getItemParentUpdater(),
+    connect (this->parent->getItemParentUpdater(),
              SIGNAL(repairDecompressSignal(NzbCollectionData)),
              this,
              SLOT(repairDecompressSlot(NzbCollectionData)));
@@ -131,6 +133,11 @@ void RepairDecompressThread::setupConnections() {
              this->parent->getSegmentManager(),
              SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
 
+    // update info about extract process :
+    connect (extractSplit,
+             SIGNAL(updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
+             this->parent->getSegmentManager(),
+             SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
 
 }
 
@@ -147,7 +154,7 @@ void RepairDecompressThread::processJobSlot() {
     // extract files :
     this->startExtractSlot();
 
-    // stop timer i there is no more pending jobs :
+    // stop timer if there is no more pending jobs :
     if (!this->waitForNextProcess &&
         this->filesToRepairList.isEmpty() &&
         this->filesToExtractList.isEmpty() &&
@@ -170,6 +177,9 @@ void RepairDecompressThread::startRepairSlot() {
 
         // get nzbCollectionData to be verified from list :
         NzbCollectionData currentNzbCollectionData = this->filesToRepairList.takeFirst();
+
+        // perform some pre-processing dedicated to "splitted-only" files :
+        this->preRepairProcessing(currentNzbCollectionData);
 
         // verify data only if par has been found :
         if ( !currentNzbCollectionData.getPar2BaseName().isEmpty() && (Settings::groupBoxAutoRepair()) ) {
@@ -198,7 +208,7 @@ void RepairDecompressThread::startExtractSlot() {
         // extract data :
         if (!nzbCollectionDataToExtract.getNzbFileDataList().isEmpty() && (Settings::groupBoxAutoDecompress())) {
 
-            // get archive format (rar, zip or 7z) :
+            // get archive format (rar, zip, 7z or split) :
             UtilityNamespace::ArchiveFormat archiveFormat = this->getArchiveFormatFromList(nzbCollectionDataToExtract.getNzbFileDataList());
 
             // extract with unrar for rar files :
@@ -207,13 +217,18 @@ void RepairDecompressThread::startExtractSlot() {
             }
 
             // extract with 7z for zip or 7-zip files :
-            if ( (archiveFormat == ZipFormat) ||
-                 (archiveFormat == SevenZipFormat) ) {
+            else if ( (archiveFormat == ZipFormat) ||
+                      (archiveFormat == SevenZipFormat) ) {
                 extractZip->launchProcess(nzbCollectionDataToExtract);
             }
 
+            // join splitted files :
+            else if (archiveFormat == SplitFileFormat) {
+                extractSplit->launchProcess(nzbCollectionDataToExtract);
+            }
+
             // if archive format is unknown, abort extracting process :
-            if (archiveFormat == UnknownArchiveFormat) {
+            else if (archiveFormat == UnknownArchiveFormat) {
                 this->extractProcessEndedSlot(nzbCollectionDataToExtract);
             }
 
@@ -223,8 +238,6 @@ void RepairDecompressThread::startExtractSlot() {
         }
 
     }
-
-
 
 }
 
@@ -309,6 +322,22 @@ void RepairDecompressThread::processPendingFilesSlot() {
             this->processRarFilesFromDifferentGroups(fileBaseNameList, nzbCollectionData);
         }
 
+    }
+
+}
+
+
+
+
+void RepairDecompressThread::preRepairProcessing(const NzbCollectionData& currentNzbCollectionData) {
+
+    // check archive format :
+    UtilityNamespace::ArchiveFormat archiveFormat = this->getArchiveFormatFromList(currentNzbCollectionData.getNzbFileDataList());
+
+    // if format is splitted files only, check that the joined file does not exists already (may happen when a .nzb is dowloaded twice)
+    // this is required by extraSplit job in order to know if joined file has been created during repair process or not :
+    if (archiveFormat == SplitFileFormat) {
+        this->extractSplit->removeEventualPreviouslyJoinedFile(currentNzbCollectionData);
     }
 
 }
@@ -530,6 +559,10 @@ void RepairDecompressThread::processRarFilesFromDifferentGroups(const QStringLis
             if (!groupedFileList.isEmpty()) {
 
                 nzbCollectionData.setPar2BaseName(par2BaseName);
+
+                // sort file list by alphabetical order
+                // in order to get achives files sorted from the first one to the last one (eg split.001, split.002, etc...):
+                qSort(groupedFileList);
                 nzbCollectionData.setNzbFileDataList(groupedFileList);
 
                 this->filesToRepairList.append(nzbCollectionData);
@@ -579,6 +612,10 @@ void RepairDecompressThread::processRarFilesFromSameGroup(NzbCollectionData& nzb
 
         QString par2BaseName = "*";
         nzbCollectionData.setPar2BaseName(par2BaseName);
+
+        // sort file list by alphabetical order
+        // in order to get achives files sorted from the first one to the last one (eg split.001, split.002, etc...):
+        qSort(groupedFileList);
         nzbCollectionData.setNzbFileDataList(groupedFileList);
 
         this->filesToRepairList.append(nzbCollectionData);
@@ -591,7 +628,7 @@ UtilityNamespace::ArchiveFormat RepairDecompressThread::getArchiveFormatFromList
 
     UtilityNamespace::ArchiveFormat archiveFormat = UnknownArchiveFormat;
 
-    foreach (NzbFileData nzbFileData, nzbFileDataListToExtract) {
+    foreach (const NzbFileData& nzbFileData, nzbFileDataListToExtract) {
 
         // files are grouped with unique archive type, get corresponding archive format :
         if ( nzbFileData.isArchiveFile() &&
