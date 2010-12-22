@@ -101,7 +101,7 @@ void SegmentsDecoderThread::setupConnections() {
     // update user interface about current decoding status :
     qRegisterMetaType<QVariant>("QVariant");
     qRegisterMetaType<UtilityNamespace::ItemStatus>("UtilityNamespace::ItemStatus");
-
+    qRegisterMetaType<UtilityNamespace::ArticleEncodingType>("UtilityNamespace::ArticleEncodingType");
 
     // for each decoders connect update signals :
     foreach (SegmentDecoderBase* currentSegmentDecoder, this->segmentDecoderList) {
@@ -109,9 +109,9 @@ void SegmentsDecoderThread::setupConnections() {
 
         // update info about decoding process :
         connect (currentSegmentDecoder,
-                 SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)),
+                 SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType)),
                  this->parent->getSegmentManager(),
-                 SLOT(updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool)));
+                 SLOT(updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType)));
 
 
         connect (currentSegmentDecoder,
