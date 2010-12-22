@@ -78,6 +78,14 @@ void ItemStatusData::setCrc32Match(const UtilityNamespace::CrcNotify crc32Match)
     this->crc32Match = crc32Match;
 }
 
+UtilityNamespace::ArticleEncodingType ItemStatusData::getArticleEncodingType() const {
+    return this->articleEncodingType;
+}
+
+void ItemStatusData::setArticleEncodingType(const UtilityNamespace::ArticleEncodingType articleEncodingType) {
+    this->articleEncodingType = articleEncodingType;
+}
+
 
 void ItemStatusData::setStatus(const UtilityNamespace::ItemStatus status){
     this->status = status;
@@ -99,12 +107,13 @@ bool ItemStatusData::operator!=(const ItemStatusData& itemStatusDataToCompare) {
 
     bool different = false;
 
-    if ( (this->status            != itemStatusDataToCompare.getStatus())        ||
-         (this->data              != itemStatusDataToCompare.getDataStatus())    ||
-         (this->downloadFinish    != itemStatusDataToCompare.isDownloadFinish()) ||
-         (this->decodeFinish      != itemStatusDataToCompare.isDecodeFinish())   ||
-         (this->crc32Match        != itemStatusDataToCompare.getCrc32Match())    ||
-         (this->nextServerId      != itemStatusDataToCompare.getNextServerId()) ) {
+    if ( (this->status              != itemStatusDataToCompare.getStatus())             ||
+         (this->data                != itemStatusDataToCompare.getDataStatus())         ||
+         (this->downloadFinish      != itemStatusDataToCompare.isDownloadFinish())      ||
+         (this->decodeFinish        != itemStatusDataToCompare.isDecodeFinish())        ||
+         (this->crc32Match          != itemStatusDataToCompare.getCrc32Match())         ||
+         (this->articleEncodingType != itemStatusDataToCompare.getArticleEncodingType())||
+         (this->nextServerId        != itemStatusDataToCompare.getNextServerId()) ) {
 
             different = true;
     }
@@ -119,7 +128,8 @@ QDataStream& operator<<(QDataStream& out, const ItemStatusData& itemStatusData) 
         << (qint16)itemStatusData.getDataStatus()
         << itemStatusData.isDownloadFinish()
         << itemStatusData.isDecodeFinish()
-        << (qint16)itemStatusData.getCrc32Match();
+        << (qint16)itemStatusData.getCrc32Match()
+        << (qint16)itemStatusData.getArticleEncodingType();
 
     return out;
 }
@@ -133,18 +143,21 @@ QDataStream& operator>>(QDataStream& in, ItemStatusData& itemStatusData)
     bool downloadFinish;
     bool decodeFinish;
     qint16 crc32Match;
+    qint16 articleEncodingType;
 
     in >> status
        >> data
        >> downloadFinish
        >> decodeFinish
-       >> crc32Match;
+       >> crc32Match
+       >> articleEncodingType;
 
     itemStatusData.setStatus((UtilityNamespace::ItemStatus)status);
     itemStatusData.setDataStatus((UtilityNamespace::Data)data);
     itemStatusData.setDownloadFinish(downloadFinish);
     itemStatusData.setDecodeFinish(decodeFinish);
     itemStatusData.setCrc32Match((UtilityNamespace::CrcNotify)crc32Match);
+    itemStatusData.setArticleEncodingType((UtilityNamespace::ArticleEncodingType)articleEncodingType);
     itemStatusData.setNextServerId(MasterServer);
 
     return in;
