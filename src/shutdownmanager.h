@@ -21,7 +21,18 @@
 #ifndef SHUTDOWNMANAGER_H
 #define SHUTDOWNMANAGER_H
 
+
+#include <kdeversion.h>
+#if KDE_IS_VERSION(4, 5, 82)
+// nothing to do for KDE >= 4.6
+#else
 #include <solid/control/powermanager.h>
+using namespace Solid::Control;
+#endif
+
+#include <solid/powermanagement.h>
+using namespace Solid::PowerManagement;
+
 #include <KDialog>
 
 #include <QObject>
@@ -41,9 +52,9 @@ public:
 
     // distinguish type of desktop session in order to call proper shutdown command :
     enum SessionType {
-      Kde,
-      Gnome,
-      Unknown
+        Kde,
+        Gnome,
+        Unknown
     };
 
     ShutdownManager(CentralWidget* parent = 0);
@@ -71,7 +82,7 @@ private:
     QString getShutdownMethodText(UtilityNamespace::SystemShutdownType) const;
     int displayAboutToShutdownMessageBox(const QString&);
     void systemAboutToShutdown();
-    void requestSuspend(Solid::Control::PowerManager::SuspendMethod);
+    void requestSuspend(Solid::PowerManagement::SleepState);
     void requestShutdown();
     void storeSettings();
     void displayShutdownErrorMessageBox(const QString&);
@@ -85,9 +96,9 @@ signals:
     void statusBarShutdownInfoSignal(QString, QString);
 
 public slots:
-  void enableSystemShutdownSlot(bool);
-  void shutdownCancelledSlot();
-  void statusItemUpdatedSlot();
+    void enableSystemShutdownSlot(bool);
+    void shutdownCancelledSlot();
+    void statusItemUpdatedSlot();
 
 private slots:
     void retrieveCurrentJobsInfoSlot();

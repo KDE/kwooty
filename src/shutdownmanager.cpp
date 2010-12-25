@@ -26,9 +26,6 @@
 #include <KProcess>
 #include <KApplication>
 #include <kworkspace/kworkspace.h>
-#include <solid/powermanagement.h>
-using namespace Solid::PowerManagement;
-using namespace Solid::Control;
 
 #include <QDateTime>
 
@@ -204,12 +201,15 @@ void ShutdownManager::requestShutdown() {
 
 
 
-void ShutdownManager::requestSuspend(Solid::Control::PowerManager::SuspendMethod suspendMethod) {
-
+void ShutdownManager::requestSuspend(Solid::PowerManagement::SleepState suspendMethod) {
     // requests a suspend of the system :
-    Solid::Control::PowerManager::suspend(suspendMethod)->start();
-
+#if KDE_IS_VERSION(4, 5, 82)
+    Solid::PowerManagement::requestSleep(suspendMethod, 0, 0);
+#else
+    Solid::Control::PowerManager::suspend(static_cast<Solid::Control::PowerManager::SuspendMethod>(suspendMethod))->start();
+#endif
 }
+
 
 
 ShutdownManager::SessionType ShutdownManager::retrieveSessionType() {
@@ -572,17 +572,17 @@ void ShutdownManager::launchSystemShutdownSlot() {
         }
 
     case UtilityNamespace::Standby: {
-            this->requestSuspend(Solid::Control::PowerManager::Standby);
+            this->requestSuspend(Solid::PowerManagement::StandbyState);
             break;
         }
 
     case UtilityNamespace::Suspend: {
-            this->requestSuspend(Solid::Control::PowerManager::ToRam);
+            this->requestSuspend(Solid::PowerManagement::SuspendState);
             break;
         }
 
     case UtilityNamespace::Hibernate: {
-            this->requestSuspend(Solid::Control::PowerManager::ToDisk);
+            this->requestSuspend(Solid::PowerManagement::HibernateState);
             break;
         }
 

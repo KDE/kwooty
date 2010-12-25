@@ -106,8 +106,15 @@ target_link_libraries(kwootycore
 		      ${KDE4_KUTILS_LIBS}
 		      ${KDE4_SOLID_LIBS}
 		      ${KDE4WORKSPACE_KWORKSPACE_LIBS}
-		      ${KDE4WORKSPACE_SOLIDCONTROL_LIBS}
   )
+
+if (NOT NEW_SOLID_POWERMANAGEMENT_FOUND) 
+  target_link_libraries(kwootycore
+			${KDE4WORKSPACE_SOLIDCONTROL_LIBS}
+  )
+endif(NOT NEW_SOLID_POWERMANAGEMENT_FOUND)
+
+
 
 set_target_properties(kwootycore PROPERTIES VERSION 0.6.1 SOVERSION 0 )
 install(TARGETS kwootycore ${INSTALL_TARGETS_DEFAULT_ARGS} )

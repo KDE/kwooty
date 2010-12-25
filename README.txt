@@ -1,6 +1,13 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.6.2:
+--------------
+
+* Fix compilation issue with KDE SC 4.6 shipped with new power management
+* Small update in Czech translation
+
+
 Version 0.6.1:
 --------------
 
