@@ -158,11 +158,11 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
                 }
                 // check if it a zip file :
                 else if (decodedFile.peek(zipFileMagicNumber.size()) == zipFileMagicNumber) {
-                    nzbFileData.setArchiveFormat(ZipFormat);
+                    nzbFileData.setArchiveFormat(ZipOrSevenZipFormat);
                 }
                 // check if it a 7z file :
                 else if (decodedFile.peek(sevenZipFileMagicNumber.size()) == sevenZipFileMagicNumber) {
-                    nzbFileData.setArchiveFormat(SevenZipFormat);
+                    nzbFileData.setArchiveFormat(ZipOrSevenZipFormat);
                 }
 
                 // check if it is a par2 file :

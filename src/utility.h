@@ -213,8 +213,7 @@ namespace UtilityNamespace
     // type of archive :
     enum ArchiveFormat {
         RarFormat,
-        ZipFormat,
-        SevenZipFormat,
+        ZipOrSevenZipFormat,
         SplitFileFormat,
         UnknownArchiveFormat
     };

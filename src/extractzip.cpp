@@ -29,9 +29,10 @@
 #include "data/nzbfiledata.h"
 
 
-ExtractZip::ExtractZip(RepairDecompressThread* parent) : ExtractBase(parent)
-{
+ExtractZip::ExtractZip(RepairDecompressThread* parent) : ExtractBase(parent) {
+
     connect (this->extractProcess, SIGNAL(started()), this, SLOT(startedSlot()));
+    this->archiveFormat = ZipOrSevenZipFormat;
 }
 
 

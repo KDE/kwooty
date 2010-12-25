@@ -31,9 +31,7 @@ using namespace UtilityNamespace;
 
 class CentralWidget;
 class Repair;
-class ExtractRar;
-class ExtractZip;
-class ExtractSplit;
+class ExtractBase;
 
 
 class RepairDecompressThread : public QObject {
@@ -51,9 +49,7 @@ private:
     QTimer* repairDecompressTimer;
     CentralWidget* parent;
     Repair* repair;
-    ExtractRar* extractRar;
-    ExtractZip* extractZip;
-    ExtractSplit* extractSplit;
+    QList<ExtractBase*> extracterList;
     QList<NzbCollectionData> filesToRepairList;
     QList<NzbCollectionData> filesToExtractList;
     QList<NzbCollectionData> filesToProcessList;
@@ -69,7 +65,8 @@ private:
     QString getBaseNameFromPar2(const NzbFileData&);
     QString getBaseNameFromRar(const NzbFileData&);
     UtilityNamespace::ArchiveFormat getArchiveFormatFromList(const QList<NzbFileData>&);
-    void preRepairProcessing(const NzbCollectionData&) ;
+    void preRepairProcessing(const NzbCollectionData&);
+    ExtractBase* retrieveCorrespondingExtracter(const NzbCollectionData&);
 
 
 signals:

@@ -28,9 +28,8 @@
 #include "data/nzbfiledata.h"
 
 
-ExtractRar::ExtractRar(RepairDecompressThread* parent) : ExtractBase(parent)
-{
-
+ExtractRar::ExtractRar(RepairDecompressThread* parent) : ExtractBase(parent) {
+    this->archiveFormat = RarFormat;
 }
 
 

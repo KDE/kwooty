@@ -44,6 +44,7 @@ private:
     QString searchExtractProgram();
     void emitStatusToAllArchives(const int&, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
 
+
 signals:
 
 
