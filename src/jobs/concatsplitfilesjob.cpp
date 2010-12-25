@@ -67,8 +67,6 @@ void ConcatSplitFilesJob::joinFilesSlot(QList<NzbFileData> nzbFileDataList, cons
     this->fileSavePath = fileSavePath;
     this->joinFileName = joinFileName;
 
-    while (true) {};
-
     // join split files together :
     bool processFailed = this->joinSplittedFiles();
 
