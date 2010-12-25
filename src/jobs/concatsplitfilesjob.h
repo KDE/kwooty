@@ -22,37 +22,45 @@
 #ifndef CONCATSPLITFILESJOB_H
 #define CONCATSPLITFILESJOB_H
 
-#include <KJob>
-
 #include <QObject>
+#include <QThread>
 
 #include "data/nzbfiledata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
+class ExtractSplit;
 
-class ConcatSplitFilesJob : public KJob {
+
+class ConcatSplitFilesJob : public QObject {
 
     Q_OBJECT
 
 public:
-    ConcatSplitFilesJob(QList <NzbFileData>, const QString, const QString);
-    void start();
+    ConcatSplitFilesJob(ExtractSplit*);
+    ~ConcatSplitFilesJob();
+
 
 private:
-    QList <NzbFileData> nzbFileDataList;
+    QList<NzbFileData> nzbFileDataList;
     QString fileSavePath;
     QString joinFileName;
+    QThread* dedicatedThread;
 
     bool joinSplittedFiles();
 
+
 signals:
     void progressPercentSignal(int, QString);
+    void resultSignal(int);
+
 
 public slots:
+    void joinFilesSlot(QList<NzbFileData>, const QString, const QString);
+
 
 private slots:
-    void joinFilesSlot();
+
 
 };
 

@@ -29,36 +29,60 @@
 #include <QTimer>
 
 #include "fileoperations.h"
+#include "extractsplit.h"
 
 
-ConcatSplitFilesJob::ConcatSplitFilesJob(QList <NzbFileData> nzbFileDataList, const QString fileSavePath, const QString joinFileName) : KJob() {
+ConcatSplitFilesJob::ConcatSplitFilesJob(ExtractSplit* parent) {
+
+    this->dedicatedThread = new QThread();
+    this->moveToThread(this->dedicatedThread);
+
+    qRegisterMetaType< QList<NzbFileData> >("QList<NzbFileData>");
+    // launch joining process from parent :
+    connect (parent,
+             SIGNAL(joinFilesSignal(QList<NzbFileData>, const QString, const QString)),
+             this,
+             SLOT(joinFilesSlot(QList<NzbFileData>, const QString, const QString)));
+
+    // start current thread :
+    this->dedicatedThread->start();
+
+}
+
+
+ConcatSplitFilesJob::~ConcatSplitFilesJob() {
+
+    this->dedicatedThread->quit();
+    // if query close is requested during joining file process,
+    // forces kwooty to close by terminating the running thread (maximum 3 seconds later) :
+    this->dedicatedThread->wait(3000);
+
+    delete this->dedicatedThread;
+}
+
+
+void ConcatSplitFilesJob::joinFilesSlot(QList<NzbFileData> nzbFileDataList, const QString fileSavePath, const QString joinFileName) {
 
     this->nzbFileDataList = nzbFileDataList;
     this->fileSavePath = fileSavePath;
     this->joinFileName = joinFileName;
 
-}
-
-
-void ConcatSplitFilesJob::start() {
-    QTimer::singleShot(0, this, SLOT(joinFilesSlot()));
-}
-
-
-
-void ConcatSplitFilesJob::joinFilesSlot() {
+    while (true) {};
 
     // join split files together :
     bool processFailed = this->joinSplittedFiles();
 
-
+    int error = QProcess::NormalExit;
     if (processFailed) {
-        // set a value different from zero to notify read/write error :
-        this->setError(255);
+        // set a value different from zero (QProcess::NormalExit) to notify read/write error :
+        error = 255;
     }
 
-    this->emitResult();
+    emit resultSignal(error);
 }
+
+
+
 
 
 
@@ -74,7 +98,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
     bool joinFileExists = joinFile.exists();
 
     if (!joinFileExists) {
-       joinFile.open(QIODevice::WriteOnly | QIODevice::Append);
+        joinFile.open(QIODevice::WriteOnly | QIODevice::Append);
     }
 
     // join splitted files (list of files is assumed to be ordered at this stage) :
@@ -114,7 +138,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
             }
 
             // write content in joined file :
-            if (joinFile.write(currentSplitFile.readAll()) == -1 ) {
+            if (joinFile.write(currentSplitFile.readAll()) == -1) {
                 processFailed = true;
                 break;
             }
@@ -126,7 +150,6 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
         // emit progress percentage :
         int progress = qRound(fileProcessedNumber * PROGRESS_COMPLETE / this->nzbFileDataList.size());
         emit progressPercentSignal(progress, archiveName);
-        //emitPercent(fileProcessedNumber, this->nzbFileDataList.size());
 
     }
 
