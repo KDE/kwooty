@@ -49,7 +49,6 @@ public:
     void setDecodedFileName(const QString&);
     QString getRenamedFileName() const;
     void setRenamedFileName(const QString&, const QString&);
-    void clearRenamedFileName();
     void setUniqueIdentifier(const QVariant&);
     QVariant getUniqueIdentifier() const;
     void setFileSavePath(const QString&);

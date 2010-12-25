@@ -93,9 +93,6 @@ void NzbFileData::setRenamedFileName(const QString& fileNameStr, const QString& 
 
 }
 
-void NzbFileData::clearRenamedFileName() {
-    this->renamedFileName.clear();
-}
 
 QString NzbFileData::getRenamedFileName() const {
     return this->renamedFileName;
