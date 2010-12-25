@@ -34,12 +34,25 @@
 
 
 ExtractSplit::ExtractSplit(RepairDecompressThread* parent): ExtractBase(parent) {
+    this->archiveFormat = SplitFileFormat;
 
+    this->concatSplitFilesJob = new ConcatSplitFilesJob(this);
+
+    // get joinning progression from joining thread :
+    connect (this->concatSplitFilesJob, SIGNAL(progressPercentSignal(int, QString)), this, SLOT(jobPercentSlot(int, QString)));
+
+    // be notified when joining file thread has finished :
+    connect (this->concatSplitFilesJob, SIGNAL(resultSignal(int)), this, SLOT(jobFinishSlot(int)));
+
+}
+
+ExtractSplit::~ExtractSplit() {
+    delete this->concatSplitFilesJob;
 }
 
 
 
-void ExtractSplit::launchProcess(const NzbCollectionData& nzbCollectionData) {
+void ExtractSplit::launchProcess(const NzbCollectionData& nzbCollectionData, ExtractBase::ArchivePasswordStatus, bool, QString) {
 
     this->nzbCollectionData = nzbCollectionData;
 
@@ -47,20 +60,10 @@ void ExtractSplit::launchProcess(const NzbCollectionData& nzbCollectionData) {
     QString joinFileName;
     QString fileSavePath;
     this->retrieveFullPathJoinFileName(nzbCollectionData, fileSavePath, joinFileName);
-
     this->nzbFileDataList = this->retrieveSplitFilesOnly(fileSavePath);
 
-    KJob* concatSplitFilesJob = new ConcatSplitFilesJob(this->nzbFileDataList, fileSavePath, joinFileName);
-
-    // get joinning progression from job :
-    connect (concatSplitFilesJob, SIGNAL(progressPercentSignal(int, QString)), this, SLOT(jobPercentSlot(int, QString)));
-    // be notified when job is finished :
-    connect (concatSplitFilesJob, SIGNAL(finished(KJob*)), this, SLOT(jobFinishSlot(KJob*)));
-
-    kDebug() << "START JOB !!!";
-
     // start the job :
-    concatSplitFilesJob->start();
+    emit joinFilesSignal(this->nzbFileDataList, fileSavePath, joinFileName);
 
 }
 
@@ -77,13 +80,6 @@ QList<NzbFileData> ExtractSplit::retrieveSplitFilesOnly(const QString& fileSaveP
 
         // check if it is a splitted file (check for .001, .002, etc... pattern) :
         if (FileOperations::isSplitFileFormat(currentSplitFile)) {
-
-            // /!\  at this stage if renamedFileName is not empty,
-            // it may probably correspond to the 'joined file' name if repair processing previously occured.
-            // it is important to clear renamedFileName first in order to avoid
-            // joined file to be removed by removeArchiveFiles() when job has finished :
-            currentNzbFileData.clearRenamedFileName();
-
             nzbFileDataFilteredList.append(currentNzbFileData);
         }
     }
@@ -105,7 +101,16 @@ void ExtractSplit::retrieveFullPathJoinFileName(const NzbCollectionData& nzbColl
 
 
 
-void ExtractSplit::removeEventualPreviouslyJoinedFile(const NzbCollectionData& nzbCollectionData) {
+void ExtractSplit::removeRenamedArchiveFile(const NzbFileData&) {
+
+    // /!\  reimplemented from ExtractBase : at this stage if renamedFileName is not empty,
+    // it may probably correspond to the 'joined file' name if repair processing previously occured.
+    // it is important to not try to remove the 'joined file', in that case nothing have to be done.
+
+}
+
+
+void ExtractSplit::preRepairProcessing(const NzbCollectionData& nzbCollectionData) {
 
     QString fileSavePath;
     QString joinFileName;
@@ -115,14 +120,11 @@ void ExtractSplit::removeEventualPreviouslyJoinedFile(const NzbCollectionData& n
 }
 
 
-
 //==============================================================================================//
 //                                         SLOTS                                                //
 //==============================================================================================//
 
 void ExtractSplit::jobPercentSlot(int progress, QString fileNameStr) {
-
-   kDebug() << "fileNameStr : " << fileNameStr << progress;
 
     // search corresponding file into the list :
     this->findItemAndNotifyUser(fileNameStr, ExtractStatus, BothItemsTarget);
@@ -134,10 +136,10 @@ void ExtractSplit::jobPercentSlot(int progress, QString fileNameStr) {
 
 
 
-void ExtractSplit::jobFinishSlot(KJob* job) {
+void ExtractSplit::jobFinishSlot(int errorCode) {
 
     // post processing when job is complete (if no error occured during the job, job->error() == 0) :
-    this->extractFinishedSlot(job->error(), QProcess::NormalExit);
+    this->extractFinishedSlot(errorCode, QProcess::NormalExit);
 
 }
 

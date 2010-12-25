@@ -22,10 +22,9 @@
 #ifndef EXTRACTSPLIT_H
 #define EXTRACTSPLIT_H
 
-#include <KJob>
-
 #include <QObject>
 
+#include "jobs/concatsplitfilesjob.h"
 #include "data/nzbcollectiondata.h"
 #include "extractbase.h"
 #include "utility.h"
@@ -42,8 +41,10 @@ public:
 
 public:
     ExtractSplit(RepairDecompressThread*);
-    void launchProcess(const NzbCollectionData&);
-    void removeEventualPreviouslyJoinedFile(const NzbCollectionData&);
+    ~ExtractSplit();
+    void launchProcess(const NzbCollectionData&, ExtractBase::ArchivePasswordStatus = ArchiveCheckIfPassworded,
+                       bool passwordEnteredByUSer = false, const QString passwordStr = QString());
+
 
 private:
     QStringList createProcessArguments(const QString&, const QString&, const bool&, const QString&);
@@ -53,13 +54,21 @@ private:
     QString searchExtractProgram();
     void retrieveFullPathJoinFileName(const NzbCollectionData&, QString&, QString&) const;
     QList<NzbFileData> retrieveSplitFilesOnly(const QString&) const;
+    void removeRenamedArchiveFile(const NzbFileData&);
+    void preRepairProcessing(const NzbCollectionData&);
+    ConcatSplitFilesJob* concatSplitFilesJob;
+
+
+signals:
+    void joinFilesSignal(QList <NzbFileData>, const QString, const QString);
+
 
 public slots:
 
+
 private slots:
-    //void jobPercentSlot(KJob*, unsigned long);
     void jobPercentSlot(int, QString);
-    void jobFinishSlot(KJob*);
+    void jobFinishSlot(int);
 
 
 };
