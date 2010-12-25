@@ -45,6 +45,16 @@ ExtractBase::~ExtractBase() {
 }
 
 
+bool ExtractBase::canHandleFormat(UtilityNamespace::ArchiveFormat archiveFormat) {
+    return (this->archiveFormat == archiveFormat);
+}
+
+void ExtractBase::preRepairProcessing(const NzbCollectionData&) {
+    // do nothing by default, may be implemented in derivated classes.
+}
+
+
+
 void ExtractBase::setupConnections() {
 
     qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
@@ -70,7 +80,6 @@ void ExtractBase::setupConnections() {
              SIGNAL(passwordEnteredByUserSignal(bool, QString)),
              this,
              SLOT(passwordEnteredByUserSlot(bool, QString)));
-
 
 }
 
@@ -202,18 +211,22 @@ void ExtractBase::removeArchiveFiles(){
             Utility::removeData(fullPathFileName + ".1");
 
             // if file has been renamed, par2 may have created the archive with the original name suppress it :
-            if (!nzbFileData.getRenamedFileName().isEmpty()) {
-
-                fullPathFileName = nzbFileData.getFileSavePath() + nzbFileData.getRenamedFileName();
-                Utility::removeData(fullPathFileName);
-
-            }
+            this->removeRenamedArchiveFile(nzbFileData);
         }
-
     }
 }
 
+void ExtractBase::removeRenamedArchiveFile(const NzbFileData& nzbFileData) {
 
+    // if file has been renamed, par2 may have created the archive with the original name suppress it :
+    if (!nzbFileData.getRenamedFileName().isEmpty()) {
+
+        QString fullPathFileName = nzbFileData.getFileSavePath() + nzbFileData.getRenamedFileName();
+        Utility::removeData(fullPathFileName);
+
+    }
+
+}
 
 
 //==============================================================================================//

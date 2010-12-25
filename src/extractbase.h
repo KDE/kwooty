@@ -56,10 +56,11 @@ class ExtractBase : public QObject
 
 
     ExtractBase(RepairDecompressThread*);
-    ~ExtractBase();
-    void launchProcess(const NzbCollectionData&, ExtractBase::ArchivePasswordStatus = ArchiveCheckIfPassworded,
-                       bool passwordEnteredByUSer = false, const QString passwordStr = QString());
-
+    virtual ~ExtractBase();
+    virtual void launchProcess(const NzbCollectionData&, ExtractBase::ArchivePasswordStatus = ArchiveCheckIfPassworded,
+                               bool passwordEnteredByUSer = false, const QString passwordStr = QString());
+    virtual void preRepairProcessing(const NzbCollectionData&);
+    bool canHandleFormat(UtilityNamespace::ArchiveFormat);
 
 
 
@@ -75,6 +76,7 @@ protected:
     int extractProgressValue;
     bool isExtractProgramFound;
     RepairDecompressThread* parent;
+    UtilityNamespace::ArchiveFormat archiveFormat;
 
     void setupConnections();
     void resetVariables();
@@ -88,8 +90,10 @@ protected:
     NzbFileData getFirstArchiveFileFromList(const QList<NzbFileData>&) const;
     QString getOriginalFileName(const NzbFileData&) const ;
 
+    // virtual methods :
+    virtual void removeRenamedArchiveFile(const NzbFileData&);
 
-    // virtual functions implemented by extractrar and extractzip :
+    // pure virtual methods implemented by extractrar and extractzip :
     virtual QStringList createProcessArguments(const QString&, const QString&, const bool&, const QString&)  = 0;
     virtual void extractUpdate(const QString&) = 0;
     virtual void checkIfArchivePassworded(const QString&, bool&) = 0;
