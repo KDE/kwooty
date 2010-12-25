@@ -2,13 +2,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Pavel Fric <fripohled@blogspot.com>, 2010.
+# Pavel Fric <fripohled.blogspot.com>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-06 22:45+0100\n"
-"PO-Revision-Date: 2010-11-10 23:45+0100\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2010-11-24 18:43+0100\n"
+"Last-Translator: Pavel Fric <fripohled.blogspot.com>\n"
 "Language-Team: Czech <kde-i18n-de@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1235,7 +1236,7 @@ msgstr "Informace k šifrování"
 #: src/widgets/servertabwidget.cpp:240 src/widgets/servertabwidget.cpp:259
 #: src/sidebar.cpp:219 src/preferences/kconfiggrouphandler.cpp:268
 msgid "Master"
-msgstr "Havní server"
+msgstr "Hlavní server"
 
 #: src/widgets/serverpreferenceswidget.cpp:139
 msgid "First backup"
