@@ -56,6 +56,9 @@ SOURCES += main.cpp \
     plugins/watchfolder/watchfolderplugin.cpp \
     plugins/watchfolder/watchfolder.cpp \
     plugins/watchfolder/preferenceswatchfolder.cpp \
+    plugins/scheduler/schedulerplugin.cpp \
+    plugins/scheduler/scheduler.cpp \
+    plugins/scheduler/preferencesscheduler.cpp \
     plugins/plugin.cpp \
     plugins/pluginmanager.cpp \
     preferences/preferencesplugins.cpp \
@@ -75,7 +78,8 @@ SOURCES += main.cpp \
     widgets/textpushbuttonwidget.cpp \
     data/segmentinfodata.cpp \
     extractsplit.cpp \
-    jobs/concatsplitfilesjob.cpp
+    jobs/concatsplitfilesjob.cpp \
+    plugins/scheduler/schedulertableitemdelegate.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -128,6 +132,9 @@ HEADERS += mainwindow.h \
     plugins/watchfolder/watchfolderplugin.h \
     plugins/watchfolder/preferenceswatchfolder.h \
     plugins/watchfolder/watchfolder.h \
+    plugins/scheduler/schedulerplugin.h \
+    plugins/scheduler/scheduler.h \
+    plugins/scheduler/preferencesscheduler.h \
     plugins/plugin.h \
     plugins/pluginmanager.h \
     preferences/preferencesplugins.h \
@@ -148,12 +155,14 @@ HEADERS += mainwindow.h \
     widgets/textpushbuttonwidget.h \
     data/segmentinfodata.h \
     extractsplit.h \
-    jobs/concatsplitfilesjob.h
+    jobs/concatsplitfilesjob.h \
+    plugins/scheduler/schedulertableitemdelegate.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
     preferences/preferencesgeneral.ui \
     preferences/preferencesdisplay.ui \
     plugins/watchfolder/preferenceswatchfolder.ui \
+    plugins/scheduler/preferencesscheduler.ui \
     preferences/preferencesshutdown.ui \
     preferences/serversettings.ui
