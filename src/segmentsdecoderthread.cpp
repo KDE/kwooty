@@ -82,7 +82,7 @@ void SegmentsDecoderThread::init() {
 
 
 void SegmentsDecoderThread::setupConnections() {
-        
+
     // suppress old segments if user have to chosen to not reload data from previous session :
     connect (parent->getDataRestorer(),
              SIGNAL(suppressOldOrphanedSegmentsSignal()),
@@ -103,27 +103,29 @@ void SegmentsDecoderThread::setupConnections() {
     qRegisterMetaType<UtilityNamespace::ItemStatus>("UtilityNamespace::ItemStatus");
     qRegisterMetaType<UtilityNamespace::ArticleEncodingType>("UtilityNamespace::ArticleEncodingType");
 
-    // for each decoders connect update signals :
-    foreach (SegmentDecoderBase* currentSegmentDecoder, this->segmentDecoderList) {
+    // update info about decoding process :
+    connect (this,
+             SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType)),
+             this->parent->getSegmentManager(),
+             SLOT(updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType)));
 
 
-        // update info about decoding process :
-        connect (currentSegmentDecoder,
-                 SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType)),
-                 this->parent->getSegmentManager(),
-                 SLOT(updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType)));
-
-
-        connect (currentSegmentDecoder,
-                 SIGNAL(saveFileErrorSignal(const int)),
-                 parent,
-                 SLOT(saveFileErrorSlot(const int)));
-
-    }
+    connect (this,
+             SIGNAL(saveFileErrorSignal(const int)),
+             parent,
+             SLOT(saveFileErrorSlot(const int)));
 
 
 }
 
+
+void SegmentsDecoderThread::emitDecodeProgression(QVariant& parentIdentifer, const int& progression, const UtilityNamespace::ItemStatus& status, const QString& decodedFileName, const bool& crc32Match, const UtilityNamespace::ArticleEncodingType& articleEncodingType) {
+    emit updateDecodeSignal(parentIdentifer, progression, status, decodedFileName, crc32Match, articleEncodingType);
+}
+
+void SegmentsDecoderThread::emitSaveFileError() {
+    emit saveFileErrorSignal(DuringDecode);
+}
 
 
 void SegmentsDecoderThread::startDecoding() {

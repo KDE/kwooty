@@ -24,6 +24,7 @@
 
 #include "segmentdecoderbase.h"
 
+
 class SegmentDecoderYEnc : public SegmentDecoderBase
 {
 

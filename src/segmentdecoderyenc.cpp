@@ -20,9 +20,10 @@
 
 #include "segmentdecoderyenc.h"
 #include <KDebug>
-
+#include "segmentsdecoderthread.h"
 
 SegmentDecoderYEnc::SegmentDecoderYEnc(SegmentsDecoderThread* parent) : SegmentDecoderBase(parent){
+
 }
 
 SegmentDecoderYEnc::~SegmentDecoderYEnc() {
@@ -30,9 +31,7 @@ SegmentDecoderYEnc::~SegmentDecoderYEnc() {
 
 
 void SegmentDecoderYEnc::decodeProgression(const int progression, UtilityNamespace::ItemStatus status, const QString& decodedFileName){
-
-    emit updateDecodeSignal(this->parentIdentifer, progression, status, decodedFileName, this->crc32Match);
-
+    this->segmentsDecoderThread->emitDecodeProgression(this->parentIdentifer, progression, status, decodedFileName, this->crc32Match, ArticleEncodingYEnc);
 }
 
 
