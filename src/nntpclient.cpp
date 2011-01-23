@@ -252,8 +252,22 @@ void NntpClient::getAnswerFromServer() {
             break;
         }
 
-    case IdleTimeout: case QuitFromServer: {
+    case QuitFromServer: {
             this->setConnectedClientStatus(ClientIdle);
+            break;
+        }
+
+    case IdleTimeout: {
+            kDebug() << "CODE 400 !";
+            // reconnect to host with long delay (1 minute) :
+            this->retryDownloadDelayed(60);
+            break;
+        }
+
+    case CommandNotPerformed: case TransfertFailed: {
+            kDebug() << "CODE 503, 406 !";
+            // reconnect to host with short delay (10 seconds) :
+            this->retryDownloadDelayed(10);
             break;
         }
 
@@ -266,6 +280,18 @@ void NntpClient::getAnswerFromServer() {
     }
 }
 
+
+void NntpClient::retryDownloadDelayed(const int& seconds) {
+    this->serverAnswerTimer->stop();
+    this->idleTimeOutTimer->stop();
+
+    // rollback segment right now :
+    this->segmentDataRollBack();
+    // then set client as Idle (like that it's sure that segment will be requested to be downloaded again) :
+    this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
+
+    QTimer::singleShot(seconds * 1000, this, SLOT(dataHasArrivedSlot()));
+}
 
 
 void NntpClient::downloadSegmentFromServer(){
@@ -444,7 +470,6 @@ void NntpClient::segmentDataRollBack() {
     // in case of download errors it can happen that segmentDataRollBack()
     // is called several times with the same segmentData instance
     // check that roll back occurs only once per segmentData :
-
     if (!this->segmentProcessed) {
 
         if (this->currentSegmentData.getStatus() == DownloadStatus) {
@@ -476,7 +501,7 @@ void NntpClient::postProcessIfBackupServer(NewSegmentRequest newSegmentRequest) 
 
             if (!nextServerFound) {
 
-                // consider current segment has not found as there no other available bakcup server :
+                // consider current segment has not found as there no other available backup server :
                 this->notifyDownloadHasFinished(NotPresent);
             }
 
