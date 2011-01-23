@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Scheduler Config Widget
+Type=Service
+X-KDE-ServiceTypes=KCModule
+X-KDE-Library=kwooty_schedulersettings
+X-KDE-ParentComponents=kwooty_schedulerplugin
+X-KDE-PluginInfo-Name=kwooty_schedulersettings
+X-KDE-PluginInfo-Author=Xavier Lefage
+X-KDE-PluginInfo-Email=xavier.kwooty@gmail.com
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-License=GPL
+
