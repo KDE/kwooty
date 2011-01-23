@@ -85,9 +85,8 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
 
             itemParentUpdater->getItemDownloadUpdater()->updateItems(fileNameItem->index(), nzbFileData);
 
-            // set parent idenfier to segment before downloading it  :
+            // set parent identifier to segment before downloading it  :
             segmentData.setParentUniqueIdentifier(nzbFileData.getUniqueIdentifier());
-            segmentData.setElementInList(segmentIndex);
 
             // set segment info data (including nzb file name and row position)
             // in order to notify sidebar of downloaded files per server :
