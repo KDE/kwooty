@@ -62,7 +62,6 @@ private:
     bool firstEnqueueMethod;
 
     void setupConnections();
-    //QSet<QString> getNzbFileSetFromWatchFolder();
     void appendFileToList(const QString&);
 
 
