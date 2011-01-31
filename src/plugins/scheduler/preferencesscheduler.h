@@ -24,6 +24,8 @@
 #include <QWidget>
 #include "ui_preferencesscheduler.h"
 
+
+#include <QHash>
 #include <KCModule>
 
 #include <KPluginFactory>
@@ -31,11 +33,27 @@
 
 
 
+
 class PreferencesScheduler : public KCModule
 {
     Q_OBJECT
+    Q_ENUMS(DownloadLimitStatus)
 
 public:
+
+    enum DownloadLimitStatus {
+        NoLimitDownload,
+        LimitDownload,
+        DisabledDownload
+    };
+
+
+    // custom roles used for storing data in items :
+    enum SchedulerRoles {
+        DownloadLimitRole  = Qt::UserRole + 1
+                         };
+
+
     PreferencesScheduler(QWidget* = 0, const QVariantList& = QVariantList());
     ~PreferencesScheduler();
 
@@ -44,17 +62,21 @@ public:
 
 private:
 
-    enum DownloadLimit {
-        NoLimitDownload,
-        LimitDownload,
-        DisabledDownload
-    };
+    static const int HEADER_ROW = 0;
+    static const int ROW_NUMBER = 8;
+    static const int COLUMN_NUMBER = 48;
 
     Ui_PreferencesScheduler preferencesSchedulerUi;
-    QColor getRateLimitColor(PreferencesScheduler::DownloadLimit);
-    void assignDownloadRateToCell(int, int);
+    QColor getRateLimitColor(PreferencesScheduler::DownloadLimitStatus);
+    QHash<DownloadLimitStatus, QColor> statusColorMap;
     int mousePressedRow;
     int mousePressedColumn;
+
+
+    void assignDownloadRateToCell(int, int);
+    void initItems();
+    void setupConnections();
+
 
 
 signals:
@@ -65,6 +87,7 @@ private slots:
     void cellEnteredSlot(int, int);
     void cellPressedSlot(int, int);
     void downloadLimitValueChangedSlot(int);
+    void schedulerToggledSlot(bool);
 
 };
 
