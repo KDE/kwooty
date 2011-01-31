@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Xavier Lefage                                   *
+ *   Copyright (C) 2011 by Xavier Lefage                                   *
  *   xavier.kwooty@gmail.com                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
