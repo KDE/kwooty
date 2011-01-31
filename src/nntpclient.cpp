@@ -258,15 +258,13 @@ void NntpClient::getAnswerFromServer() {
         }
 
     case IdleTimeout: {
-            kDebug() << "CODE 400 !";
-            // reconnect to host with long delay (1 minute) :
-            this->retryDownloadDelayed(60);
+            // request new segment with long delay (50 seconds) :
+            this->retryDownloadDelayed(50);
             break;
         }
 
     case CommandNotPerformed: case TransfertFailed: {
-            kDebug() << "CODE 503, 406 !";
-            // reconnect to host with short delay (10 seconds) :
+            // request new segment with short delay (10 seconds) :
             this->retryDownloadDelayed(10);
             break;
         }
@@ -282,15 +280,22 @@ void NntpClient::getAnswerFromServer() {
 
 
 void NntpClient::retryDownloadDelayed(const int& seconds) {
-    this->serverAnswerTimer->stop();
-    this->idleTimeOutTimer->stop();
 
-    // rollback segment right now :
-    this->segmentDataRollBack();
-    // then set client as Idle (like that it's sure that segment will be requested to be downloaded again) :
-    this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
+    // ensure that host does not send the same command several times in a row :
+    if (this->clientStatus != ClientIdle ||
+        !this->idleTimeOutTimer->isActive()) {
 
-    QTimer::singleShot(seconds * 1000, this, SLOT(dataHasArrivedSlot()));
+        this->serverAnswerTimer->stop();
+        this->idleTimeOutTimer->stop();
+
+        // rollback segment right now :
+        this->segmentDataRollBack();
+        // then set client as Idle (in that order it's sure that segment will be requested to be downloaded again) :
+        this->setConnectedClientStatus(ClientIdle);
+
+        QTimer::singleShot(seconds * 1000, this, SLOT(dataHasArrivedSlot()));
+
+    }
 }
 
 
@@ -449,7 +454,10 @@ void NntpClient::setConnectedClientStatus(const NntpClientStatus status, const T
 
         // start disconnect timeout if idle :
         if (this->clientStatus == ClientIdle) {
-            idleTimeOutTimer->start();
+
+            if (!idleTimeOutTimer->isActive()) {
+                idleTimeOutTimer->start();
+            }
         }
         else {
             // client is connected and working, stop timers :
