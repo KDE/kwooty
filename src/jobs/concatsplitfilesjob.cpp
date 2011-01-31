@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2010 by Xavier Lefage                                   *
+ *   Copyright (C) 2011 by Xavier Lefage                                   *
  *   xavier.kwooty@gmail.com                                               *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -153,6 +153,11 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
 
     // job done, close file :
     joinFile.close();
+
+    // if process failed, remove the incomplete joined file :
+    if (processFailed) {
+        joinFile.remove();
+    }
 
     return processFailed;
 
