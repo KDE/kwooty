@@ -23,6 +23,7 @@
 
 #include <QObject>
 
+#include "kwooty_export.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -30,7 +31,7 @@ class CentralWidget;
 class ServerGroup;
 
 
-class ServerManager : public QObject {
+class KWOOTY_EXPORT ServerManager : public QObject {
 
     Q_OBJECT
 
@@ -45,6 +46,7 @@ public:
     bool currentIsFirstMasterAvailable(const ServerGroup*) const;
     bool areAllServersEncrypted() const;
     int retrieveCumulatedDownloadSpeed(const int&) const;
+    int retrieveServerDownloadSpeed(const int&) const;
 
 private:
     CentralWidget* parent;

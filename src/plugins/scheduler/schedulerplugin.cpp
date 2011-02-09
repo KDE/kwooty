@@ -48,6 +48,7 @@ SchedulerPlugin::~SchedulerPlugin()
 
 
 void SchedulerPlugin::load() {
+
     this->watchFolder = new Scheduler(this);
 }
 

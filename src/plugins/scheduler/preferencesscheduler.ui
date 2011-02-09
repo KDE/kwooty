@@ -94,7 +94,7 @@
        </widget>
       </item>
       <item row="3" column="0">
-       <widget class="QTableWidget" name="schedulerTableWidget"/>
+       <widget class="QTableView" name="schedulerTableView"/>
       </item>
      </layout>
     </widget>

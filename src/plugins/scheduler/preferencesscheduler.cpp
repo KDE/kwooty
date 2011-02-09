@@ -37,7 +37,6 @@
 #include "schedulertableitemdelegate.h"
 
 
-
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesScheduler>();)
         K_EXPORT_PLUGIN(PluginFactory("kwooty_schedulersettings"))
 
@@ -46,6 +45,7 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesScheduler>();)
         KCModule(PluginFactory::componentData(), parent, args) {
 
 
+    kDebug() << parent;
 
     // associate color to display according to item status :
     statusColorMap.insert(NoLimitDownload,    KColorUtils::lighten(QColor(Qt::green)));
@@ -72,24 +72,24 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesScheduler>();)
     this->setupConnections();
 
 
-    QTableWidget* schedulerTableWidget = this->preferencesSchedulerUi.schedulerTableWidget;
+    QTableView* schedulerTableView = this->preferencesSchedulerUi.schedulerTableView;
+    //this->schedulerModel = new QStandardItemModel(this);
+    this->schedulerModel = SchedulerFileHandler().loadModelFromFile(this);
+    schedulerTableView->setModel(this->schedulerModel);
 
-    schedulerTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    schedulerTableWidget->setSelectionMode(QAbstractItemView::NoSelection);
+    schedulerTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    schedulerTableView->setSelectionMode(QAbstractItemView::NoSelection);
 
-    schedulerTableWidget->setColumnCount(COLUMN_NUMBER);
-    schedulerTableWidget->setRowCount(ROW_NUMBER);
+    schedulerTableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    schedulerTableView->setItemDelegate(new SchedulerTableItemDelegate(schedulerTableView));
 
-    schedulerTableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    schedulerTableWidget->setItemDelegate(new SchedulerTableItemDelegate(schedulerTableWidget));
-
-    QHeaderView* horizontalHeader = schedulerTableWidget->horizontalHeader();
+    QHeaderView* horizontalHeader = schedulerTableView->horizontalHeader();
     horizontalHeader->setResizeMode(QHeaderView::Stretch);
     horizontalHeader->setDefaultSectionSize(10);
     horizontalHeader->setMinimumSectionSize(10);
     horizontalHeader->hide();
 
-    QHeaderView* verticalHeader = schedulerTableWidget->verticalHeader();
+    QHeaderView* verticalHeader = schedulerTableView->verticalHeader();
     verticalHeader->setResizeMode(QHeaderView::Stretch);
     verticalHeader->setDefaultSectionSize(5);
     verticalHeader->setMinimumSectionSize(5);
@@ -99,17 +99,17 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesScheduler>();)
     QStringList verticalHeaderLabels;
     verticalHeaderLabels << QString();
 
-    for (int i = HEADER_ROW + 1; i < ROW_NUMBER; i++) {
+    for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; i++) {
         verticalHeaderLabels.append(QDate::longDayName(i));
     }
-    schedulerTableWidget->setVerticalHeaderLabels(verticalHeaderLabels);
+    this->schedulerModel->setVerticalHeaderLabels(verticalHeaderLabels);
 
 
     // span first row with 4 cells (it will be used to display a spanned horizontal headern thanks to itemDelegate) :
-    for (int i = 0; i < COLUMN_NUMBER; i++) {
+    for (int i = 0; i < COLUMN_NUMBER_SCHEDULER; i++) {
 
         int index = i * 4;
-        schedulerTableWidget->setSpan(HEADER_ROW, index, 1, 4);
+        schedulerTableView->setSpan(HEADER_ROW_SCHEDULER, index, 1, 4);
 
     }
 
@@ -149,8 +149,9 @@ void PreferencesScheduler::setupConnections() {
     connect (this->preferencesSchedulerUi.kcfg_downloadLimitSpinBox, SIGNAL(valueChanged(int)), this, SLOT(downloadLimitValueChangedSlot(int)));
     connect (this->preferencesSchedulerUi.kcfg_enableScheduler, SIGNAL(toggled(bool)), this, SLOT(schedulerToggledSlot(bool)));
 
-    connect (this->preferencesSchedulerUi.schedulerTableWidget, SIGNAL(cellEntered(int, int)), this, SLOT(cellEnteredSlot(int, int)));
-    connect (this->preferencesSchedulerUi.schedulerTableWidget, SIGNAL(cellPressed(int, int)), this, SLOT(cellPressedSlot(int, int)));
+    connect (this->preferencesSchedulerUi.schedulerTableView, SIGNAL(entered (const QModelIndex&)), this, SLOT(cellEnteredSlot(const QModelIndex&)));
+    connect (this->preferencesSchedulerUi.schedulerTableView, SIGNAL(pressed (const QModelIndex&)), this, SLOT(cellPressedSlot(const QModelIndex&)));
+
 
 }
 
@@ -159,12 +160,13 @@ void PreferencesScheduler::setupConnections() {
 
 void PreferencesScheduler::initItems() {
 
-    for (int i = HEADER_ROW + 1; i < ROW_NUMBER; i++) {
-        for (int j = 0; j < COLUMN_NUMBER; j++) {
+    for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; i++) {
+        for (int j = 0; j < COLUMN_NUMBER_SCHEDULER; j++) {
 
-            this->preferencesSchedulerUi.schedulerTableWidget->setItem(i, j, new QTableWidgetItem());
-            this->preferencesSchedulerUi.schedulerTableWidget->item(i, j)->setData(Qt::BackgroundColorRole, this->statusColorMap.value(NoLimitDownload));
-            this->preferencesSchedulerUi.schedulerTableWidget->item(i, j)->setData(DownloadLimitRole, NoLimitDownload);
+            QStandardItem* item = this->schedulerModel->itemFromIndex(this->schedulerModel->index(i, j));
+
+            DownloadLimitStatus downloadLimit = static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
+            item->setData(this->statusColorMap.value(downloadLimit), Qt::BackgroundColorRole);
         }
 
     }
@@ -172,7 +174,7 @@ void PreferencesScheduler::initItems() {
 }
 
 
-QColor PreferencesScheduler::getRateLimitColor(PreferencesScheduler::DownloadLimitStatus downloadLimit) {
+QColor PreferencesScheduler::getRateLimitColor(SchedulerNamespace::DownloadLimitStatus downloadLimit) {
 
     QColor color;
     if (downloadLimit == NoLimitDownload) {
@@ -189,18 +191,22 @@ QColor PreferencesScheduler::getRateLimitColor(PreferencesScheduler::DownloadLim
 
 }
 
-void PreferencesScheduler::cellPressedSlot(int row, int column) {
+void PreferencesScheduler::cellPressedSlot(const QModelIndex& index) {
 
-    this->mousePressedRow = row;
-    this->mousePressedColumn = column;
+    this->mousePressedRow = index.row();
+    this->mousePressedColumn = index.column();
 
-    this->assignDownloadRateToCell(row, column);
+    this->assignDownloadRateToCell(index.row(), index.column());
 
+    // the model has been updated, emit signal that will call save() when "ok" button will be pressed :
+    emit changed(true);
 }
 
 
-void PreferencesScheduler::cellEnteredSlot(int row, int column) {
+void PreferencesScheduler::cellEnteredSlot(const QModelIndex& index) {
 
+    int row = index.row();
+    int column = index.column();
     kDebug() << row << column;
 
     if (row > 0) {  
@@ -229,34 +235,34 @@ void  PreferencesScheduler::schedulerToggledSlot(bool toggled) {
 
     if (!toggled) {
 
-        for (int i = HEADER_ROW + 1; i < ROW_NUMBER; i++) {
-            for (int j = 0; j < COLUMN_NUMBER; j++) {
+        for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; i++) {
+            for (int j = 0; j < COLUMN_NUMBER_SCHEDULER; j++) {
 
-                QTableWidgetItem* widgetItem = this->preferencesSchedulerUi.schedulerTableWidget->item(i, j);
-                widgetItem->setData(Qt::BackgroundColorRole, QModelIndex().data(Qt::BackgroundColorRole));
+                QStandardItem* item = this->schedulerModel->itemFromIndex(this->schedulerModel->index(i, j));
+                item->setData(QModelIndex().data(Qt::BackgroundColorRole), Qt::BackgroundColorRole);
 
             }
         }
 
-        this->preferencesSchedulerUi.schedulerTableWidget->setDisabled(true);
+        this->preferencesSchedulerUi.schedulerTableView->setDisabled(true);
     }
 
     else {
 
-        for (int i = HEADER_ROW + 1; i < ROW_NUMBER; i++) {
-            for (int j = 0; j < COLUMN_NUMBER; j++) {
+        for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; i++) {
+            for (int j = 0; j < COLUMN_NUMBER_SCHEDULER; j++) {
 
 
-                QTableWidgetItem* widgetItem = this->preferencesSchedulerUi.schedulerTableWidget->item(i, j);
-                DownloadLimitStatus downloadLimit = static_cast<DownloadLimitStatus>(widgetItem->data(DownloadLimitRole).toInt());
+                QStandardItem* item = this->schedulerModel->itemFromIndex(this->schedulerModel->index(i, j));
+                DownloadLimitStatus downloadLimit = static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
 
                 // set proper background :
-                widgetItem->setData(Qt::BackgroundColorRole, this->statusColorMap.value(downloadLimit));
+                item->setData(this->statusColorMap.value(downloadLimit), Qt::BackgroundColorRole);
 
             }
         }
 
-        this->preferencesSchedulerUi.schedulerTableWidget->setDisabled(false);
+        this->preferencesSchedulerUi.schedulerTableView->setDisabled(false);
 
 
     }
@@ -282,8 +288,9 @@ void PreferencesScheduler::assignDownloadRateToCell(int row, int column) {
     }
 
 
-    this->preferencesSchedulerUi.schedulerTableWidget->item(row, column)->setData(Qt::BackgroundColorRole, this->statusColorMap.value(downloadLimit));
-    this->preferencesSchedulerUi.schedulerTableWidget->item(row, column)->setData(DownloadLimitRole, static_cast<int>(downloadLimit));
+    QStandardItem* item = this->schedulerModel->itemFromIndex(this->schedulerModel->index(row, column));
+    item->setData(this->statusColorMap.value(downloadLimit), Qt::BackgroundColorRole);
+    item->setData(static_cast<int>(downloadLimit), DownloadLimitRole);
 
 }
 
@@ -313,6 +320,10 @@ void PreferencesScheduler::load(){
 
 
 void PreferencesScheduler::save(){
+
+    kDebug() << "SAVE CALLED";
+    
+    SchedulerFileHandler().saveModelToFile(this->schedulerModel);
     KCModule::save();
 
 }

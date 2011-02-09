@@ -22,31 +22,44 @@
 #include "scheduler.h"
 
 #include <KDebug>
-#include <kdirwatch.h>
-#include <klocale.h>
 
-#include <QFileInfo>
-#include <QDir>
+#include <QTime>
+#include <QDate>
+#include <QStandardItem>
 
 #include "mainwindow.h"
 #include "centralwidget.h"
 #include "schedulerplugin.h"
 #include "kwooty_schedulersettings.h"
 #include "fileoperations.h"
+#include "schedulerfilehandler.h"
 
+#include "servermanager.h"
+#include "servergroup.h"
+#include "observers/clientsperserverobserver.h"
+
+
+using namespace SchedulerNamespace;
 
 Scheduler::Scheduler(SchedulerPlugin* parent) :  QObject(parent) {
 
+    kDebug() << parent << this;
+
     this->centralWidget = parent->getCore()->getCentralWidget();
 
-    this->kDirWatch = new KDirWatch(this);
+    kDebug() <<"LOAD";
+    this->schedulerModel = SchedulerFileHandler().loadModelFromFile(this);
 
-    // init folder to watch :
-    this->settingsChanged();
+    kDebug() <<"LOAD DONE"; 
+
+    this->serverManager = parent->getCore()->getCentralWidget()->getServerManager();
 
     // start nzb file process timer
-    this->fileCompleteTimer = new QTimer(this);
-    this->fileCompleteTimer->start(500);
+    this->schedulerTimer = new QTimer(this);
+    this->schedulerTimer->start(5000);
+
+    // update scheduler behavior :
+    this->settingsChanged();
 
     // setup signals/slots connections :
     this->setupConnections();
@@ -61,35 +74,15 @@ Scheduler::~Scheduler() {
 
 void Scheduler::setupConnections() {
 
-    // kDirWatch notify that a file has been created :
-    connect (this->kDirWatch,
-             SIGNAL(created(const QString&)),
-             this,
-             SLOT(watchFileSlot(const QString& )));
-
-
-    // kDirWatch notify that a file has changed :
-    connect (this->kDirWatch,
-             SIGNAL(dirty(const QString&)),
-             this,
-             SLOT(watchFileSlot(const QString& )));
-
     // when time-out occurs, check if nzb files from list can be processed
-    connect(this->fileCompleteTimer,
+    connect(this->schedulerTimer,
             SIGNAL(timeout()),
             this,
-            SLOT(fileCompleteTimerSlot()));
+            SLOT(schedulerTimerSlot()));
 
 
 }
 
-
-
-
-
-void Scheduler::appendFileToList(const QString& filePath) {
-
-}
 
 
 
@@ -97,16 +90,41 @@ void Scheduler::appendFileToList(const QString& filePath) {
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
+void Scheduler::schedulerTimerSlot() {
 
-void Scheduler::watchFileSlot(const QString& filePath) {
+    QTime currentTime = QTime::currentTime();
+    int column = (currentTime.hour() * 60 + currentTime.minute()) / 30;
+    int row = QDate().currentDate().dayOfWeek();
+
+    QStandardItem* item = this->schedulerModel->item(row, column);
+
+    int downloadLimitStatus = item->data(DownloadLimitRole).toInt();
 
 
-}
+
+    int serverNumber = this->serverManager->getServerNumber();
+
+    int totalDownloadSpeed = 0;
+
+    for (int i = 0; i < serverNumber; i++) {
+        totalDownloadSpeed += this->serverManager->retrieveServerDownloadSpeed(i);
+    }
+
+    for (int i = 0; i < serverNumber; i++) {
+
+        if (totalDownloadSpeed > SchedulerSettings::downloadLimitSpinBox()) {
+            int ratio = static_cast<qint64>(this->serverManager->retrieveServerDownloadSpeed(i) * SchedulerSettings::downloadLimitSpinBox()) / totalDownloadSpeed;
+
+            kDebug() << "serveur group : " << i << ", limited download speed : " << ratio << " KiB/s";
+        }
 
 
+    }
 
-void Scheduler::fileCompleteTimerSlot() {
 
+    kDebug() << "row, column, downloadStatus : " << row << column << downloadLimitStatus;
+
+    //kDebug () << "download speed per server : " << this->serverManager->retrieveDownloadSpeedServersList() << SchedulerSettings::downloadLimitSpinBox();
 
 }
 
@@ -114,9 +132,11 @@ void Scheduler::fileCompleteTimerSlot() {
 
 void Scheduler::settingsChanged() {
 
+    kDebug() << "settings changed";
     // reload settings from just saved config file :
     SchedulerSettings::self()->readConfig();
 
+    this->schedulerModel = SchedulerFileHandler().loadModelFromFile(this);
 
 }
 

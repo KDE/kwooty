@@ -186,6 +186,15 @@ int ServerManager::retrieveCumulatedDownloadSpeed(const int& nzbDownloadRowPos) 
 }
 
 
+int ServerManager::retrieveServerDownloadSpeed(const int& currentServer) const {
+
+    // retrieve average download speed for the current server :
+    ServerGroup* currentServerGroup = this->idServerGroupMap.value(currentServer);
+    return currentServerGroup->getClientsPerServerObserver()->getDownloadSpeed();
+
+}
+
+
 void ServerManager::masterServerAvailabilityChanges() {
 
     ServerGroup* newMasterServer = 0;

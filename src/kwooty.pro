@@ -79,7 +79,8 @@ SOURCES += main.cpp \
     data/segmentinfodata.cpp \
     extractsplit.cpp \
     jobs/concatsplitfilesjob.cpp \
-    plugins/scheduler/schedulertableitemdelegate.cpp
+    plugins/scheduler/schedulertableitemdelegate.cpp \
+    plugins/scheduler/schedulerfilehandler.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -156,7 +157,8 @@ HEADERS += mainwindow.h \
     data/segmentinfodata.h \
     extractsplit.h \
     jobs/concatsplitfilesjob.h \
-    plugins/scheduler/schedulertableitemdelegate.h
+    plugins/scheduler/schedulertableitemdelegate.h \
+    plugins/scheduler/schedulerfilehandler.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \

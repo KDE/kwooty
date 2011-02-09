@@ -22,24 +22,20 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
-#include <KUrl>
-#include <kdirwatch.h>
 
 #include <QObject>
-#include <QStringList>
-#include <QSet>
 #include <QTimer>
-#include <QHash>
-#include <QDateTime>
+#include <QStandardItemModel>
 
 #include "utility.h"
 using namespace UtilityNamespace;
 
 class CentralWidget;
 class SchedulerPlugin;
+class ServerManager;
 
-class Scheduler : public QObject
-{
+
+class Scheduler : public QObject {
 
     Q_OBJECT
 
@@ -50,19 +46,14 @@ public:
 
 
 private:
-    static const int MAX_LIST_SIZE = 10;
 
-    KDirWatch* kDirWatch;
+    QStandardItemModel* schedulerModel;
     CentralWidget* centralWidget;
-    QTimer* fileCompleteTimer;
-    QStringList nzbFileList;
-    QHash<QString, QDateTime> nzbFilePathlastEnqueuedMap;
-    QSet<QString> nzbFileInWatchFolderSet;
-    QString currentWatchDir;
-    bool firstEnqueueMethod;
+    QTimer* schedulerTimer;
+    ServerManager* serverManager;
 
     void setupConnections();
-    void appendFileToList(const QString&);
+
 
 
 signals:
@@ -72,8 +63,8 @@ public slots:
 
 
 private slots:
-    void watchFileSlot(const QString&);
-    void fileCompleteTimerSlot();
+
+    void schedulerTimerSlot();
 
 
 };
