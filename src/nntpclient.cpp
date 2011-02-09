@@ -257,6 +257,12 @@ void NntpClient::getAnswerFromServer() {
             break;
         }
 
+    case CommandNotPerformed: case TransfertFailed: {
+            // request new segment with short delay (10 seconds) :
+            this->retryDownloadDelayed(10);
+            break;
+        }
+
     default: {
             kDebug() << "Answer from host : " << answer << " not handled !" << "group :" << parent->getServerGroup()->getRealServerGroupId();
             // response not handled, consider that segment is not present :
@@ -266,6 +272,20 @@ void NntpClient::getAnswerFromServer() {
     }
 }
 
+
+void NntpClient::retryDownloadDelayed(const int& seconds) {
+
+        this->serverAnswerTimer->stop();
+        this->idleTimeOutTimer->stop();
+
+        // rollback segment right now :
+        this->segmentDataRollBack();
+        // then set client as Idle (in that order it's sure that segment will be requested to be downloaded again) :
+        this->setConnectedClientStatus(ClientIdle);
+
+        QTimer::singleShot(seconds * 1000, this, SLOT(dataHasArrivedSlot()));
+
+}
 
 
 void NntpClient::downloadSegmentFromServer(){
@@ -423,7 +443,10 @@ void NntpClient::setConnectedClientStatus(const NntpClientStatus status, const T
 
         // start disconnect timeout if idle :
         if (this->clientStatus == ClientIdle) {
-            idleTimeOutTimer->start();
+
+            if (!idleTimeOutTimer->isActive()) {
+                idleTimeOutTimer->start();
+            }
         }
         else {
             // client is connected and working, stop timers :
@@ -444,7 +467,6 @@ void NntpClient::segmentDataRollBack() {
     // in case of download errors it can happen that segmentDataRollBack()
     // is called several times with the same segmentData instance
     // check that roll back occurs only once per segmentData :
-
     if (!this->segmentProcessed) {
 
         if (this->currentSegmentData.getStatus() == DownloadStatus) {
@@ -476,7 +498,7 @@ void NntpClient::postProcessIfBackupServer(NewSegmentRequest newSegmentRequest) 
 
             if (!nextServerFound) {
 
-                // consider current segment has not found as there no other available bakcup server :
+                // consider current segment has not found as there no other available backup server :
                 this->notifyDownloadHasFinished(NotPresent);
             }
 

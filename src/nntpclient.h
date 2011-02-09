@@ -53,7 +53,9 @@ public:
                         AuthenticationRequired = 480,
                         AuthenticationRejected = 482,
                         NoSuchArticleMessageId = 430,
-                        NoSuchArticleNumber = 423
+                        NoSuchArticleNumber = 423,
+                        CommandNotPerformed = 503,
+                        TransfertFailed = 436
                        };
 
     enum NntpClientStatus { ClientIdle,
@@ -120,7 +122,7 @@ private:
     void postProcessIfBackupServer(NewSegmentRequest = RequestNewSegment);
     bool downloadSegmentWithBackupServer();
     void updateServerAnswerStatus(const ServerAnswerStatus);
-
+    void retryDownloadDelayed(const int&);
 
 
 signals:
