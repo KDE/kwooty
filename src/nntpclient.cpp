@@ -252,14 +252,8 @@ void NntpClient::getAnswerFromServer() {
             break;
         }
 
-    case QuitFromServer: {
+    case IdleTimeout: case QuitFromServer: {
             this->setConnectedClientStatus(ClientIdle);
-            break;
-        }
-
-    case IdleTimeout: {
-            // request new segment with long delay (50 seconds) :
-            this->retryDownloadDelayed(50);
             break;
         }
 
@@ -281,10 +275,6 @@ void NntpClient::getAnswerFromServer() {
 
 void NntpClient::retryDownloadDelayed(const int& seconds) {
 
-    // ensure that host does not send the same command several times in a row :
-    if (this->clientStatus != ClientIdle ||
-        !this->idleTimeOutTimer->isActive()) {
-
         this->serverAnswerTimer->stop();
         this->idleTimeOutTimer->stop();
 
@@ -295,7 +285,6 @@ void NntpClient::retryDownloadDelayed(const int& seconds) {
 
         QTimer::singleShot(seconds * 1000, this, SLOT(dataHasArrivedSlot()));
 
-    }
 }
 
 
