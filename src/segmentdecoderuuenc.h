@@ -44,6 +44,7 @@ private:
     QString searchPattern(QFile& segmentFile);
     bool decodeUUenc(const QByteArray&, QFile&, const int&);
     bool isUUEncodedLine(QByteArray&);
+    void decodeProgression(const int, UtilityNamespace::ItemStatus, const QString& decodedFileName = QString());
 
 
 signals:

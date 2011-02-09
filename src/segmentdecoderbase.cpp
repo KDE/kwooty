@@ -32,13 +32,8 @@
 
 SegmentDecoderBase::SegmentDecoderBase(SegmentsDecoderThread* parent) : QObject(parent) {
 
+    this->segmentsDecoderThread = parent;
 
-}
-
-
-void SegmentDecoderBase::decodeProgression(const int progression, const UtilityNamespace::ItemStatus status, const QString& decodedFileName){
-
-    emit updateDecodeSignal(this->parentIdentifer, progression, status, decodedFileName, this->crc32Match);
 }
 
 
@@ -84,7 +79,8 @@ void SegmentDecoderBase::decodeSegments(NzbFileData currentNzbFileData, const QS
     }
     // notify user of the issue :
     else {
-        emit saveFileErrorSignal(DuringDecode);
+        this->decodeProgression(PROGRESS_COMPLETE, DecodeErrorStatus);
+        this->segmentsDecoderThread->emitSaveFileError();
     }
 
 
@@ -154,7 +150,7 @@ bool SegmentDecoderBase::decodeSegmentFiles(QFile& targetFile) {
         encodedDataFound = false;
         this->crc32Match = false;
 
-        emit saveFileErrorSignal(DuringDecode);
+        this->segmentsDecoderThread->emitSaveFileError();
     }
 
     return encodedDataFound;

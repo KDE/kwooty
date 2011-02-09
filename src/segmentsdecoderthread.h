@@ -39,7 +39,8 @@ public:
     SegmentsDecoderThread(CentralWidget*);
     SegmentsDecoderThread();
     ~SegmentsDecoderThread();
-
+    void emitDecodeProgression(QVariant&, const int&, const UtilityNamespace::ItemStatus&, const QString&, const bool&);
+    void emitSaveFileError();
 private:
 
     QThread* dedicatedThread;
@@ -58,6 +59,7 @@ private:
 signals:
     void updateDecodeSegmentSignal(SegmentData, int, int);
     void updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool);
+    void saveFileErrorSignal(int);
 
 public slots:
     void decodeSegmentsSlot(NzbFileData);

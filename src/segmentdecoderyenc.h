@@ -24,6 +24,7 @@
 
 #include "segmentdecoderbase.h"
 
+
 class SegmentDecoderYEnc : public SegmentDecoderBase
 {
 
@@ -40,6 +41,8 @@ private:
     bool decodeYenc(QByteArray&, QFile&, const int&, const quint32&, int&);
     quint32 computeCrc32Part(quint32&, unsigned char);
     QByteArray getLineByteArray(const QString&, const QByteArray&, int&);
+    void decodeProgression(const int, UtilityNamespace::ItemStatus, const QString& decodedFileName = QString());
+
 
 signals:
 

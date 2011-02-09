@@ -20,14 +20,21 @@
 
 
 #include "segmentdecoderuuenc.h"
-
 #include <KDebug>
+#include "segmentsdecoderthread.h"
 
 
 SegmentDecoderUUEnc::SegmentDecoderUUEnc(SegmentsDecoderThread* parent) : SegmentDecoderBase(parent) {
 }
 
 SegmentDecoderUUEnc::~SegmentDecoderUUEnc() {
+}
+
+
+void SegmentDecoderUUEnc::decodeProgression(const int progression, UtilityNamespace::ItemStatus status, const QString& decodedFileName) {
+
+        this->segmentsDecoderThread->emitDecodeProgression(this->parentIdentifer, progression, status, decodedFileName, this->crc32Match);
+
 }
 
 

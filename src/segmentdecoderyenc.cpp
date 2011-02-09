@@ -20,14 +20,19 @@
 
 #include "segmentdecoderyenc.h"
 #include <KDebug>
-
+#include "segmentsdecoderthread.h"
 
 SegmentDecoderYEnc::SegmentDecoderYEnc(SegmentsDecoderThread* parent) : SegmentDecoderBase(parent){
+
 }
 
 SegmentDecoderYEnc::~SegmentDecoderYEnc() {
 }
 
+
+void SegmentDecoderYEnc::decodeProgression(const int progression, UtilityNamespace::ItemStatus status, const QString& decodedFileName){
+    this->segmentsDecoderThread->emitDecodeProgression(this->parentIdentifer, progression, status, decodedFileName, this->crc32Match);
+}
 
 
 void SegmentDecoderYEnc::decodeEncodedData(QFile& targetFile, SegmentData& currentSegment, int& segmentCrc32MatchNumber, const QByteArray& segmentByteArray, bool& encodedDataFound, bool& writeError) {
