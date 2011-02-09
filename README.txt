@@ -1,6 +1,13 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.6.3:
+--------------
+
+* Corrupted download files could happen if host returned 503 or 436 response codes
+* Regression fix : user was not notified about eventual decoding errors
+
+
 Version 0.6.2:
 --------------
 
