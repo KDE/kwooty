@@ -23,6 +23,8 @@
 #include <KMessageBox>
 #include <KDebug>
 
+#include <QUuid>
+
 #include "centralwidget.h"
 #include "data/segmentdata.h"
 #include "data/nzbfiledata.h"
@@ -315,6 +317,9 @@ void DataRestorer::preprocessAndHandleData(const QList< QList<GlobalFileData> >&
             if (Utility::isInDownloadProcess(itemStatus)) {
                 this->resetDataForDownloadingFile(currentNzbFileData, currentStatusData);
             }
+
+            // set a new uuid during restoring (fix elements out of sync rare issues due to duplicate uuid ??) :
+            currentNzbFileData.setUniqueIdentifier(QVariant(QUuid::createUuid().toString()));
 
             // update status :
             currentGlobalFileData.setNzbFileData(currentNzbFileData);
