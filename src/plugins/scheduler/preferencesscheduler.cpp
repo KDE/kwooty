@@ -154,6 +154,11 @@ void PreferencesScheduler::setupConnections() {
     connect (this->preferencesSchedulerUi.schedulerTableView, SIGNAL(entered (const QModelIndex&)), this, SLOT(cellEnteredSlot(const QModelIndex&)));
     connect (this->preferencesSchedulerUi.schedulerTableView, SIGNAL(pressed (const QModelIndex&)), this, SLOT(cellPressedSlot(const QModelIndex&)));
 
+    connect (this->preferencesSchedulerUi.kcfg_enableScheduler, SIGNAL(pressed()), this, SLOT(schedulerPressedSlot()));
+    connect (this->preferencesSchedulerUi.kcfg_enablePermanentSpeedLimit, SIGNAL(pressed()), this, SLOT(permanentSpeedLimitPressedSlot()));
+    connect (this->preferencesSchedulerUi.kcfg_enableScheduler, SIGNAL(released()), this, SLOT(radioButtonReleasedSlot()));
+    connect (this->preferencesSchedulerUi.kcfg_enablePermanentSpeedLimit, SIGNAL(released()), this, SLOT(radioButtonReleasedSlot()));
+
 }
 
 
@@ -276,5 +281,30 @@ void PreferencesScheduler::downloadLimitValueChangedSlot(int downloadRate) {
 
 
 }
+
+
+
+void PreferencesScheduler::schedulerPressedSlot() {
+    this->schedulerPressed = true;
+    this->permanentSpeedLimitPressed = false;
+}
+
+void PreferencesScheduler::permanentSpeedLimitPressedSlot() {
+    this->schedulerPressed = false;
+    this->permanentSpeedLimitPressed = true;
+}
+
+
+void PreferencesScheduler::radioButtonReleasedSlot() {
+
+    if (!this->preferencesSchedulerUi.kcfg_enableScheduler->isChecked() &&
+        !this->preferencesSchedulerUi.kcfg_enablePermanentSpeedLimit->isChecked()) {
+
+        this->preferencesSchedulerUi.kcfg_enableScheduler->setChecked(this->schedulerPressed);
+        this->preferencesSchedulerUi.kcfg_enablePermanentSpeedLimit->setChecked(this->permanentSpeedLimitPressed);
+    }
+
+}
+
 
 

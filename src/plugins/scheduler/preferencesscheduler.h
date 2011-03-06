@@ -41,7 +41,7 @@ class PreferencesScheduler : public KCModule {
 
 public:
 
-    PreferencesScheduler(QWidget* = 0, const QVariantList& = QVariantList());
+            PreferencesScheduler(QWidget* = 0, const QVariantList& = QVariantList());
     ~PreferencesScheduler();
 
     virtual void save();
@@ -53,7 +53,8 @@ private:
     Ui_PreferencesScheduler preferencesSchedulerUi;
     int mousePressedRow;
     int mousePressedColumn;
-
+    bool schedulerPressed;
+    bool permanentSpeedLimitPressed;
 
     void assignDownloadRateToCell(int, int);
     void setupConnections();
@@ -68,6 +69,9 @@ private slots:
     void cellPressedSlot(const QModelIndex&);
     void downloadLimitValueChangedSlot(int);
     void schedulerToggledSlot(bool);
+    void schedulerPressedSlot();
+    void permanentSpeedLimitPressedSlot();
+    void radioButtonReleasedSlot();
 
 };
 
