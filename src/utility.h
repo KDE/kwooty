@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QStandardItem>
 
+#include "kwooty_export.h"
 
 namespace UtilityNamespace
 {
@@ -262,9 +263,19 @@ namespace UtilityNamespace
     };
 
 
+    // nntp client bandwidth management :
+    enum BandwidthClientMode {
+        BandwidthNotNeeded,
+        BandwidthLimited,
+        BandwidthFull,
+    };
+
+
+
 }
 
-class Utility
+
+class KWOOTY_EXPORT Utility
 {
     
 public:
