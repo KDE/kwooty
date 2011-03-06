@@ -22,18 +22,19 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
-
 #include <QObject>
 #include <QTimer>
 #include <QStandardItemModel>
 
 #include "utility.h"
+#include "schedulerfilehandler.h"
 using namespace UtilityNamespace;
+using namespace SchedulerNamespace;
+
 
 class CentralWidget;
 class SchedulerPlugin;
 class ServerManager;
-
 
 class Scheduler : public QObject {
 
@@ -43,6 +44,7 @@ public:
     Scheduler(SchedulerPlugin*);
     ~Scheduler();
     void settingsChanged();
+    void disableSpeedLimit();
 
 
 private:
@@ -51,8 +53,12 @@ private:
     CentralWidget* centralWidget;
     QTimer* schedulerTimer;
     ServerManager* serverManager;
+    DownloadLimitStatus downloadLimitStatus;
 
     void setupConnections();
+    void applySpeedLimit();
+    void checkDownloadStatus(const DownloadLimitStatus&);
+    void suspendDownloads();
 
 
 
@@ -60,10 +66,9 @@ signals:
 
 
 public slots:
-
+    void serverManagerSettingsChangedSlot();
 
 private slots:
-
     void schedulerTimerSlot();
 
 

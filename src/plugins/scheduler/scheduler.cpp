@@ -29,34 +29,30 @@
 
 #include "mainwindow.h"
 #include "centralwidget.h"
-#include "schedulerplugin.h"
-#include "kwooty_schedulersettings.h"
 #include "fileoperations.h"
-#include "schedulerfilehandler.h"
-
 #include "servermanager.h"
 #include "servergroup.h"
 #include "observers/clientsperserverobserver.h"
+#include "schedulerplugin.h"
+#include "schedulerfilehandler.h"
+#include "kwooty_schedulersettings.h"
 
 
-using namespace SchedulerNamespace;
 
 Scheduler::Scheduler(SchedulerPlugin* parent) :  QObject(parent) {
 
-    kDebug() << parent << this;
-
     this->centralWidget = parent->getCore()->getCentralWidget();
-
-    kDebug() <<"LOAD";
-    this->schedulerModel = SchedulerFileHandler().loadModelFromFile(this);
-
-    kDebug() <<"LOAD DONE"; 
-
     this->serverManager = parent->getCore()->getCentralWidget()->getServerManager();
 
-    // start nzb file process timer
+    // get model :
+    this->schedulerModel = SchedulerFileHandler().loadModelFromFile(this);
+
+    // check average download speed every 5 seconds :
     this->schedulerTimer = new QTimer(this);
     this->schedulerTimer->start(5000);
+
+    // init to no download limit :
+    this->downloadLimitStatus = NoLimitDownload;
 
     // update scheduler behavior :
     this->settingsChanged();
@@ -81,6 +77,12 @@ void Scheduler::setupConnections() {
             SLOT(schedulerTimerSlot()));
 
 
+    // be notified when server settings have changed :
+    connect (this->serverManager,
+             SIGNAL(serverManagerSettingsChangedSignal()),
+             this,
+             SLOT(serverManagerSettingsChangedSlot()));
+
 }
 
 
@@ -92,51 +94,143 @@ void Scheduler::setupConnections() {
 
 void Scheduler::schedulerTimerSlot() {
 
-    QTime currentTime = QTime::currentTime();
-    int column = (currentTime.hour() * 60 + currentTime.minute()) / 30;
-    int row = QDate().currentDate().dayOfWeek();
+    // permanent speed limit is enabled :
+    if (SchedulerSettings::enablePermanentSpeedLimit()) {
 
-    QStandardItem* item = this->schedulerModel->item(row, column);
+        this->checkDownloadStatus(LimitDownload);
+        this->applySpeedLimit();
 
-    int downloadLimitStatus = item->data(DownloadLimitRole).toInt();
+    }
+    // speed limit is scheduled :
+    else {
 
+        // retrieve current time :
+        QTime currentTime = QTime::currentTime();
 
+        // get row and column numbers from model according to current time :
+        int column = (currentTime.hour() * 60 + currentTime.minute()) / 30;
+        int row = QDate().currentDate().dayOfWeek();
 
-    int serverNumber = this->serverManager->getServerNumber();
+        // get corresponding download limit status :
+        QStandardItem* item = this->schedulerModel->item(row, column);
+        DownloadLimitStatus downloadLimitStatus = static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
 
-    int totalDownloadSpeed = 0;
+        // start downloads if they were previously paused :
+        this->checkDownloadStatus(downloadLimitStatus);
 
-    for (int i = 0; i < serverNumber; i++) {
-        totalDownloadSpeed += this->serverManager->retrieveServerDownloadSpeed(i);
+        if (downloadLimitStatus == LimitDownload) {
+            this->applySpeedLimit();
+        }
+
     }
 
+}
+
+
+void Scheduler::serverManagerSettingsChangedSlot() {
+
+    // reset download status to full speed if server settings changed :
+    this->downloadLimitStatus = NoLimitDownload;
+    this->disableSpeedLimit();
+}
+
+
+
+
+void Scheduler::suspendDownloads() {
+    this->centralWidget->pauseAllDownloadSlot();
+}
+
+
+void Scheduler::checkDownloadStatus(const DownloadLimitStatus& downloadLimitStatus) {
+
+    // for each polling, check that pending files are set on pause if download status is disabled :
+    if (downloadLimitStatus == DisabledDownload) {
+        this->suspendDownloads();
+    }
+
+    // restart downloads if download status is no more disabled :
+    if (downloadLimitStatus != this->downloadLimitStatus) {
+
+        // if previous status has paused downloads, its time to restart them :
+        if (this->downloadLimitStatus == DisabledDownload) {
+            this->centralWidget->startAllDownloadSlot();
+        }
+
+        // then apply proper bandwidth management according to current status :
+        if (downloadLimitStatus == NoLimitDownload) {
+            this->serverManager->setBandwidthMode(BandwidthFull);
+        }
+        else if (downloadLimitStatus == LimitDownload) {
+            this->serverManager->setBandwidthMode(BandwidthLimited);
+        }
+
+    }
+
+    // store download status :
+    this->downloadLimitStatus = downloadLimitStatus;
+
+}
+
+
+void Scheduler::applySpeedLimit() {
+
+    int serverNumber = this->serverManager->getServerNumber();
+    int serversCurrentlyDownloadingNumber = 0;
+    int totalDownloadSpeed = 0;
+
+    // retrieve download speed for all avaialable servers (master + backups) :
+    for (int i = 0; i < serverNumber; i++) {
+
+        int serverDownloadSpeed = this->serverManager->retrieveServerDownloadSpeed(i);
+
+        if (serverDownloadSpeed > 0) {
+            serversCurrentlyDownloadingNumber++;
+        }
+
+        totalDownloadSpeed += serverDownloadSpeed;
+    }
+
+
+    // for each server group, apply download speed limit :
     for (int i = 0; i < serverNumber; i++) {
 
         if (totalDownloadSpeed > SchedulerSettings::downloadLimitSpinBox()) {
-            int ratio = static_cast<qint64>(this->serverManager->retrieveServerDownloadSpeed(i) * SchedulerSettings::downloadLimitSpinBox()) / totalDownloadSpeed;
 
-            kDebug() << "serveur group : " << i << ", limited download speed : " << ratio << " KiB/s";
+            qint64 serverLimitSpeedInBytes = SchedulerSettings::downloadLimitSpinBox() * NBR_BYTES_IN_KB / serversCurrentlyDownloadingNumber;
+
+            int serverDownloadSpeed = this->serverManager->retrieveServerDownloadSpeed(i);
+
+            if (serverDownloadSpeed > 0) {
+
+                this->serverManager->setLimitServerDownloadSpeed(i, serverLimitSpeedInBytes);
+
+                //kDebug() << "serveur group : " << i << ", limited download speed : " << serverLimitSpeedInBytes / NBR_BYTES_IN_KB << " KiB/s";
+            }
         }
 
 
     }
 
 
-    kDebug() << "row, column, downloadStatus : " << row << column << downloadLimitStatus;
-
-    //kDebug () << "download speed per server : " << this->serverManager->retrieveDownloadSpeedServersList() << SchedulerSettings::downloadLimitSpinBox();
-
 }
 
 
 
+void Scheduler::disableSpeedLimit() {
+    this->serverManager->setBandwidthMode(BandwidthFull);
+}
+
+
 void Scheduler::settingsChanged() {
 
-    kDebug() << "settings changed";
     // reload settings from just saved config file :
     SchedulerSettings::self()->readConfig();
 
     this->schedulerModel = SchedulerFileHandler().loadModelFromFile(this);
+
+    // restart previously paused downloads after settings changes :
+    this->checkDownloadStatus(NoLimitDownload);
 
 }
 
