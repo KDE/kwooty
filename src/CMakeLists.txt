@@ -47,6 +47,7 @@ set(Kwooty_lib_SRCS
   notificationmanager.cpp
   servermanager.cpp
   servergroup.cpp
+  serverspeedmanager.cpp
   utilityiconpainting.cpp
   utilityserverstatus.cpp
   sidebar.cpp
