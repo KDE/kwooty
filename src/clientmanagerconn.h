@@ -24,6 +24,9 @@
 #include "data/segmentdata.h"
 #include "data/serverdata.h"
 
+#include "utility.h"
+using namespace UtilityNamespace;
+
 class NntpClient;
 class ServerGroup;
 
@@ -34,7 +37,6 @@ class ClientManagerConn : public QObject {
 
 public:
     ClientManagerConn(ServerGroup*, int, int);
-    ClientManagerConn();
     ~ClientManagerConn();
     NntpClient* getNntpClient();
     ServerGroup* getServerGroup();
@@ -45,6 +47,11 @@ public:
     bool isClientReady() const;
     bool isMasterServer() const;
     bool isDisabledBackupServer() const;
+    void setBandwidthMode(const BandwidthClientMode&);
+    bool isBandwidthNotNeeded() const;
+    bool isBandwidthLimited() const;
+    bool isBandwidthFull() const;
+
 
 
 private:
@@ -52,6 +59,7 @@ private:
     ServerGroup* parent;
     int clientId;
     int connectionDelay;
+    BandwidthClientMode bandwidthClientMode;
 
 
 signals:
@@ -61,6 +69,7 @@ public slots:
     void dataHasArrivedSlot();
     void disconnectRequestSlot();
     void connectRequestSlot();
+    void limitDownloadSpeedSlot(BandwidthClientMode);
 
 private slots:
     void initSlot();

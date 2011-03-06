@@ -28,30 +28,27 @@
 #include "servergroup.h"
 #include "segmentmanager.h"
 #include "servermanager.h"
+#include "serverspeedmanager.h"
 #include "nntpclient.h"
 #include "data/segmentinfodata.h"
 #include "observers/clientsperserverobserver.h"
 #include "preferences/kconfiggrouphandler.h"
-#include "utility.h"
-using namespace UtilityNamespace;
 
 
 
-ClientManagerConn::ClientManagerConn() : QObject(){}
-
-
-ClientManagerConn::ClientManagerConn(ServerGroup* parent, int clientId, int connectionDelay) : QObject(parent)
-{
+ClientManagerConn::ClientManagerConn(ServerGroup* parent, int clientId, int connectionDelay) : QObject(parent) {
 
     this->nntpClient = 0;
     this->parent = parent;
+    this->bandwidthClientMode = BandwidthFull;
 
     // client identifier :
     this->clientId = clientId;
 
+
     // start each nntpclient instance with a delay in order to not hammer the host :
     this->connectionDelay = connectionDelay;
-    QTimer::singleShot(this->connectionDelay, this, SLOT(initSlot()) );
+    QTimer::singleShot(this->connectionDelay, this, SLOT(initSlot()));
 
 }
 
@@ -66,8 +63,8 @@ ServerGroup* ClientManagerConn::getServerGroup() {
 
 
 
-void ClientManagerConn::initSlot()
-{
+void ClientManagerConn::initSlot() {
+
 
     CentralWidget* centralWidget = this->parent->getCentralWidget();
 
@@ -93,6 +90,11 @@ void ClientManagerConn::initSlot()
              this,
              SLOT(connectRequestSlot()));
 
+    // manage bandwidth download speed:
+    connect (this->parent->getServerSpeedManager(),
+             SIGNAL(limitDownloadSpeedSignal(BandwidthClientMode)),
+             this,
+             SLOT(limitDownloadSpeedSlot(BandwidthClientMode)));
 
     // ask to segment manager to send a new segment to download :
     connect (this->nntpClient,
@@ -141,6 +143,9 @@ void ClientManagerConn::initSlot()
              SLOT(nntpClientSpeedPerServerSlot(const SegmentInfoData)));
 
 
+
+
+
 }
 
 
@@ -156,6 +161,7 @@ void ClientManagerConn::noSegmentAvailable() {
 
 void ClientManagerConn::processNextSegment(const SegmentData& inCurrentSegmentData){
     this->nntpClient->downloadNextSegment(inCurrentSegmentData);
+
 }
 
 
@@ -201,15 +207,50 @@ bool ClientManagerConn::isClientReady() const {
 }
 
 
+
+
+void ClientManagerConn::setBandwidthMode(const BandwidthClientMode& bandwidthClientMode) {
+
+    BandwidthClientMode bandwidthClientModeOld = this->bandwidthClientMode;
+    this->bandwidthClientMode = bandwidthClientMode;
+
+    if (this->bandwidthClientMode != bandwidthClientModeOld) {
+        this->dataHasArrivedSlot();
+    }
+
+}
+
+
+bool ClientManagerConn::isBandwidthNotNeeded() const {
+    return this->bandwidthClientMode == BandwidthNotNeeded;
+}
+
+
+bool ClientManagerConn::isBandwidthLimited() const {
+    return this->bandwidthClientMode == BandwidthLimited;
+}
+
+bool ClientManagerConn::isBandwidthFull() const {
+    return this->bandwidthClientMode == BandwidthFull;
+}
+
+
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
 void ClientManagerConn::dataHasArrivedSlot() {
+
     // due to delay instanciation,
     // be sure that the instance has been really created before requesting segments to download :
     if (this->nntpClient) {
-        this->nntpClient->dataHasArrivedSlot();
+
+        // this slot is called each time segments have been set pending for backup servers by ServerGroup,
+        // if client is currently not used for limit speed purposes (disconnected), do not go further
+        // as calling dataHasArrivedSlot() will have the effect to reconnect current client again :
+         if (!this->isBandwidthNotNeeded()) {
+            this->nntpClient->dataHasArrivedSlot();
+         }
     }
 }
 
@@ -222,3 +263,9 @@ void ClientManagerConn::disconnectRequestSlot() {
 void ClientManagerConn::connectRequestSlot() {
     this->nntpClient->connectRequestByManager();
 }
+
+
+void ClientManagerConn::limitDownloadSpeedSlot(BandwidthClientMode bandwidthClientMode) {
+    this->setBandwidthMode(bandwidthClientMode);
+}
+
