@@ -50,7 +50,7 @@ namespace SchedulerNamespace {
 
 class SchedulerFileHandler : public QObject {
 
-Q_OBJECT
+    Q_OBJECT
 
 
 public:
@@ -60,7 +60,7 @@ public:
     void saveModelToFile(QStandardItemModel*);
 
 private:
-QString retrieveSchedulerFilePath();
+    QString retrieveSchedulerFilePath();
 
 
 signals:

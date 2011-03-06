@@ -21,15 +21,19 @@
 
 #include "schedulerfilehandler.h"
 
-#include "preferencesscheduler.h"
-
 #include <KStandardDirs>
 #include <KDebug>
+#include <KLocale>
 
 #include <QFile>
+#include <QDate>
+#include <QTime>
 #include <QXmlStreamWriter>
 
+#include "utility.h"
+using namespace UtilityNamespace;
 using namespace SchedulerNamespace;
+
 
 SchedulerFileHandler::SchedulerFileHandler(QObject* parent) : QObject(parent) {
 
@@ -52,8 +56,8 @@ QStandardItemModel* SchedulerFileHandler::loadModelFromFile(QObject* parent) {
     schedulerFile.open(QIODevice::ReadOnly);
     QXmlStreamReader stream (&schedulerFile);
 
-    int dayNumer = 1;
-    int halfHourNumer = 0;
+    int dayNumber = 1;
+    int halfHourNumber = 0;
     int downloadLimitStatus = 0;
 
     while (!stream.atEnd()) {
@@ -79,8 +83,8 @@ QStandardItemModel* SchedulerFileHandler::loadModelFromFile(QObject* parent) {
             if (stream.name().toString() == "day") {
 
                 // retrieve the day number :
-                dayNumer = attributes.value("number").toString().toInt();
-                dayNumer = qBound(1, dayNumer, ROW_NUMBER_SCHEDULER - 1);
+                dayNumber = attributes.value("number").toString().toInt();
+                dayNumber = qBound(1, dayNumber, ROW_NUMBER_SCHEDULER - 1);
 
             }
 
@@ -88,15 +92,25 @@ QStandardItemModel* SchedulerFileHandler::loadModelFromFile(QObject* parent) {
             if (stream.name().toString() == "halfhour") {
 
                 // retrieve the halfhour number :
-                halfHourNumer = attributes.value("number").toString().toInt();
-                halfHourNumer = qBound(0, halfHourNumer, COLUMN_NUMBER_SCHEDULER - 1);
+                halfHourNumber = attributes.value("number").toString().toInt();
+                halfHourNumber = qBound(0, halfHourNumber, COLUMN_NUMBER_SCHEDULER - 1);
 
                 // retrieve the download limit status :
                 downloadLimitStatus = stream.readElementText().toInt();
 
                 // set data to model :
-                QStandardItem* item = schedulerModel->itemFromIndex(schedulerModel->index(dayNumer, halfHourNumer));
+                QStandardItem* item = schedulerModel->itemFromIndex(schedulerModel->index(dayNumber, halfHourNumber));
                 item->setData(downloadLimitStatus, DownloadLimitRole);
+
+                // set tooltip :
+                int cellHour = halfHourNumber / 2;
+                int cellMinute = halfHourNumber - (cellHour * 2);
+
+                QString timeBegin = QTime(cellHour, cellMinute * 30).toString(Utility::getSystemTimeFormat("hh:mm"));
+                QString timeEnd = QTime(cellHour, cellMinute * 30 + 29).toString(Utility::getSystemTimeFormat("hh:mm"));
+
+                item->setToolTip(i18nc("day of week, begin time - end time",
+                                       "%1, %2 - %3", QDate::longDayName(dayNumber), timeBegin, timeEnd));
 
             }
 
@@ -133,10 +147,7 @@ QStandardItemModel* SchedulerFileHandler::loadModelFromFile(QObject* parent) {
 void SchedulerFileHandler::saveModelToFile(QStandardItemModel* schedulerModel) {
 
     QFile schedulerFile(this->retrieveSchedulerFilePath());
-    kDebug() << "SAVE FILE" << schedulerFile.fileName();
-
     schedulerFile.open(QIODevice::WriteOnly);
-
 
     QXmlStreamWriter stream(&schedulerFile);
     stream.setAutoFormatting(true);
