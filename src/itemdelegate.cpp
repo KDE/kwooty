@@ -114,7 +114,7 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
             }
             else if (status == DecodeFinishStatus) {
                 if (Utility::isBadCrcForYencArticle(itemStatusData.getCrc32Match(), itemStatusData.getArticleEncodingType())) {
-                    opt.text = i18nc("i.e: Decoded (bad crc)", "%1 (bad crc)", opt.text);
+                    opt.text = i18nc("i.e: Decoded (bad CRC)", "%1 (bad CRC)", opt.text);
                 }
             }
 
