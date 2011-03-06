@@ -186,7 +186,7 @@ void SideBar::serverStatisticsUpdateSlot(const int serverId) {
         }
 
 
-        int downloadSpeed = clientsPerServerObserver->getDownloadSpeed();
+        quint64 downloadSpeed = clientsPerServerObserver->getDownloadSpeed();
 
         if (downloadSpeed > 0) {
             tabConnectionIconStr = "mail-receive";
