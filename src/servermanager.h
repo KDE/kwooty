@@ -47,6 +47,9 @@ public:
     bool areAllServersEncrypted() const;
     int retrieveCumulatedDownloadSpeed(const int&) const;
     int retrieveServerDownloadSpeed(const int&) const;
+    void setLimitServerDownloadSpeed(const int&, const qint64&);
+    void setBandwidthMode(const BandwidthClientMode&);
+
 
 private:
     CentralWidget* parent;

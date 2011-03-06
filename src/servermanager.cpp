@@ -23,6 +23,7 @@
 #include "servermanager.h"
 #include "centralwidget.h"
 #include "servergroup.h"
+#include "serverspeedmanager.h"
 #include "sidebar.h"
 #include "segmentmanager.h"
 #include "mainwindow.h"
@@ -193,6 +194,26 @@ int ServerManager::retrieveServerDownloadSpeed(const int& currentServer) const {
     return currentServerGroup->getClientsPerServerObserver()->getDownloadSpeed();
 
 }
+
+
+
+void ServerManager::setBandwidthMode(const BandwidthClientMode& bandwidthClientMode) {
+
+    // retrieve average download speed for the current server :
+    foreach (ServerGroup* currentServerGroup, this->idServerGroupMap.values()) {
+        currentServerGroup->getServerSpeedManager()->setBandwidthMode(bandwidthClientMode);
+    }
+}
+
+
+void ServerManager::setLimitServerDownloadSpeed(const int& currentServer, const qint64& serverGroupLimitSpeedInBytes) {
+
+    // retrieve average download speed for the current server :
+    ServerGroup* currentServerGroup = this->idServerGroupMap.value(currentServer);
+    currentServerGroup->getServerSpeedManager()->setDownloadSpeedLimitInBytes(serverGroupLimitSpeedInBytes);
+
+}
+
 
 
 void ServerManager::masterServerAvailabilityChanges() {
