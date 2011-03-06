@@ -23,6 +23,10 @@
 #define SCHEDULERTABLEITEMDELEGATE_H
 
 #include <QStyledItemDelegate>
+#include <QHash>
+
+#include "schedulerfilehandler.h"
+using namespace SchedulerNamespace;
 
 class SchedulerTableItemDelegate : public QStyledItemDelegate {
 
@@ -35,6 +39,7 @@ public:
 
 private:
     bool isSchedulerEnabled() const;
+    QHash<DownloadLimitStatus, QColor> statusColorMap;
 
 signals:
 

@@ -22,21 +22,26 @@
 #include "schedulertableitemdelegate.h"
 
 #include <KDebug>
+#include <KColorUtils>
 
 #include <QApplication>
+#include <QTableView>
 #include <QPainter>
-#include <QTableWidget>
 #include <QModelIndex>
 #include <QStyleOptionViewItem>
 #include <QStyleOptionHeader>
 #include <QTime>
 
 
+
 SchedulerTableItemDelegate::SchedulerTableItemDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 
+    // associate color to display according to item status :
+    this->statusColorMap.insert(NoLimitDownload,    KColorUtils::lighten(QColor(Qt::green), 0.40));
+    this->statusColorMap.insert(LimitDownload,      KColorUtils::lighten(QColor(Qt::darkBlue), 0.40));
+    this->statusColorMap.insert(DisabledDownload,   KColorUtils::lighten(QColor(Qt::darkRed), 0.40));
+
 }
-
-
 
 
 
@@ -62,13 +67,18 @@ void SchedulerTableItemDelegate::paint(QPainter *painter, const QStyleOptionView
 
     } else {
 
-        QStyleOptionViewItemV4 opt = option;
+        QStyleOptionViewItem opt = option;
 
         if (!this->isSchedulerEnabled()) {
             opt.palette.setCurrentColorGroup(QPalette::Disabled);
+            QStyledItemDelegate::paint(painter, opt, index);
         }
 
-        QStyledItemDelegate::paint(painter, opt, index);
+        else {
+            DownloadLimitStatus downloadLimit = static_cast<DownloadLimitStatus>(index.data(DownloadLimitRole).toInt());
+            painter->fillRect(option.rect, this->statusColorMap.value(downloadLimit));
+        }
+
 
     }
 
@@ -76,7 +86,6 @@ void SchedulerTableItemDelegate::paint(QPainter *painter, const QStyleOptionView
 
 
 bool SchedulerTableItemDelegate::isSchedulerEnabled() const {
-
-    return (static_cast<QTableWidget*>(this->parent()))->isEnabled();
+    return (static_cast<QTableView*>(this->parent()))->isEnabled();
 }
 
