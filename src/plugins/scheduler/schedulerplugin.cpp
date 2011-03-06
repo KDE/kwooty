@@ -49,15 +49,20 @@ SchedulerPlugin::~SchedulerPlugin()
 
 void SchedulerPlugin::load() {
 
-    this->watchFolder = new Scheduler(this);
+    this->scheduler = new Scheduler(this);
 }
 
 void SchedulerPlugin::unload() {
-    delete this->watchFolder;
+
+    // disable speed limit when plugin is unloaded :
+    this->scheduler->disableSpeedLimit();
+
+    delete this->scheduler;
+
 }
 
 
 void SchedulerPlugin::configUpdated() {
-    this->watchFolder->settingsChanged();
+    this->scheduler->settingsChanged();
 }
 

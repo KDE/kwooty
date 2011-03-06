@@ -42,7 +42,7 @@ public:
 
 private:
 
-    Scheduler* watchFolder;
+    Scheduler* scheduler;
 
     void load();
     void unload();
