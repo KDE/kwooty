@@ -80,7 +80,8 @@ SOURCES += main.cpp \
     extractsplit.cpp \
     jobs/concatsplitfilesjob.cpp \
     plugins/scheduler/schedulertableitemdelegate.cpp \
-    plugins/scheduler/schedulerfilehandler.cpp
+    plugins/scheduler/schedulerfilehandler.cpp \
+    serverspeedmanager.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -158,7 +159,8 @@ HEADERS += mainwindow.h \
     extractsplit.h \
     jobs/concatsplitfilesjob.h \
     plugins/scheduler/schedulertableitemdelegate.h \
-    plugins/scheduler/schedulerfilehandler.h
+    plugins/scheduler/schedulerfilehandler.h \
+    serverspeedmanager.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
