@@ -96,6 +96,7 @@ private:
     QTimer* tryToReconnectTimer;
     QTimer* idleTimeOutTimer;
     QTimer* serverAnswerTimer;
+    QTimer* rateControlTimer;
     SegmentData currentSegmentData;
     NntpClient::NntpClientStatus clientStatus;
     NntpClient::ServerAnswerStatus serverAnswerStatus;
@@ -104,6 +105,8 @@ private:
     bool authenticationDenied;
     bool certificateVerified;
     bool segmentProcessed;
+    int missingBytes;
+
 
     void setConnectedClientStatus(const NntpClientStatus, const TimerJob = StartStopTimers);
     void connectToHost();
@@ -123,6 +126,10 @@ private:
     bool downloadSegmentWithBackupServer();
     void updateServerAnswerStatus(const ServerAnswerStatus);
     void retryDownloadDelayed(const int&);
+    bool isSocketUnconnected() const;
+    bool isSocketConnected() const;
+    void checkRateControlTimer();
+
 
 
 signals:
@@ -149,6 +156,7 @@ private slots:
     void tryToReconnectSlot();
     void socketEncryptedSlot();
     void peerVerifyErrorSlot();
+    void rateControlSlot();
 
 };
 
