@@ -496,8 +496,12 @@ void CentralWidget::startDownloadSlot(){
 }
 
 void CentralWidget::startAllDownloadSlot() {
-    this->setStartPauseDownloadAllItems(UtilityNamespace::IdleStatus);
-    emit dataHasArrivedSignal();
+
+    // ensure that any previous save file error message box is closed before starting pending downloads again :
+    if (this->saveErrorButtonCode == 0) {
+        this->setStartPauseDownloadAllItems(UtilityNamespace::IdleStatus);
+        emit dataHasArrivedSignal();
+    }
 }
 
 void CentralWidget::pauseAllDownloadSlot() {
