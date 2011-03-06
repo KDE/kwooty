@@ -96,6 +96,7 @@ void ClientsPerServerObserver::resetVariables() {
     ClientsObserverBase::resetVariables() ;
 
     this->downloadSpeed = 0;
+    this->averageDownloadSpeed = 0;
     this->segmentInfoData = SegmentInfoData();
     this->bytesDownloadedForCurrentSession = 0;
 
@@ -160,8 +161,11 @@ void ClientsPerServerObserver::encryptionStatusPerServerSlot(const bool sslActiv
 
 void ClientsPerServerObserver::updateDownloadSpeedSlot() {
 
-    // then, get current download speed :
+    // get current download speed :
     this->downloadSpeed = this->totalBytesDownloaded / StatsInfoBuilder::SPEED_AVERAGE_SECONDS;
+
+    // compute average download speed :
+    this->averageDownloadSpeed = (this->averageDownloadSpeed + this->downloadSpeed) / 2;
 
     // notify side bar that download speed has been updated :
     emit serverStatisticsUpdateSignal(this->parent->getRealServerGroupId());
@@ -177,8 +181,13 @@ bool ClientsPerServerObserver::isSslActive() const {
 }
 
 
-int ClientsPerServerObserver::getDownloadSpeed() const {
+quint64 ClientsPerServerObserver::getDownloadSpeed() const {
     return this->downloadSpeed;
+}
+
+
+quint64 ClientsPerServerObserver::getAverageDownloadSpeed() const {
+    return this->averageDownloadSpeed;
 }
 
 

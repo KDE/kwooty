@@ -36,7 +36,8 @@ class ClientsPerServerObserver : public ClientsObserverBase
 public:
     ClientsPerServerObserver(ServerGroup* parent);
 
-    int getDownloadSpeed() const;
+    quint64 getDownloadSpeed() const;
+    quint64 getAverageDownloadSpeed() const;
     SegmentInfoData getSegmentInfoData() const;
     quint64 getBytesDownloadedForCurrentSession() const;
     bool isSslActive() const;
@@ -45,7 +46,8 @@ public:
 private:
     ServerGroup* parent;
     SegmentInfoData segmentInfoData;
-    int downloadSpeed;
+    quint64 downloadSpeed;
+    quint64 averageDownloadSpeed;
     quint64 bytesDownloadedForCurrentSession;
 
     void setupConnections();
