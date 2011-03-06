@@ -22,6 +22,7 @@
 #include "servergroup.h"
 
 #include "servermanager.h"
+#include "serverspeedmanager.h"
 #include "segmentmanager.h"
 #include "centralwidget.h"
 #include "clientmanagerconn.h"
@@ -46,17 +47,19 @@ ServerGroup::ServerGroup(ServerManager* parent, CentralWidget* centralWidget, in
     // create observer for clients specific to this server instance :
     this->clientsPerServerObserver = new ClientsPerServerObserver(this);
 
+    // create download speed manager for this server group :
+    this->serverSpeedManager = new ServerSpeedManager(this);
+
     // connect clients :
     this->createNntpClients();
 
     // check server availabilty every 500 ms :
-    this->clientsAvailableTimer = new QTimer();
+    this->clientsAvailableTimer = new QTimer(this);
     this->clientsAvailableTimer->start(500);
 
     // check server stability every minutes :
-    this->stabilityTimer = new QTimer();
+    this->stabilityTimer = new QTimer(this);
     this->stabilityTimer->start(1 * UtilityNamespace::MINUTES_TO_MILLISECONDS);
-
 
     this->setupConnections();
 
@@ -117,10 +120,18 @@ ClientsPerServerObserver* ServerGroup::getClientsPerServerObserver() {
     return this->clientsPerServerObserver;
 }
 
+ServerSpeedManager* ServerGroup::getServerSpeedManager() {
+    return this->serverSpeedManager;
+}
 
 
 ServerData ServerGroup::getServerData() const {
     return this->serverData;
+}
+
+
+QList<ClientManagerConn*> ServerGroup::getClientManagerConnList() {
+    return this->clientManagerConnList;
 }
 
 
@@ -276,6 +287,8 @@ void ServerGroup::serverSwitchIfFailure() {
 
 
 
+
+
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
@@ -294,7 +307,7 @@ void ServerGroup::downloadPendingSegmentsSlot() {
         foreach (ClientManagerConn* clientManagerConn, this->clientManagerConnList) {
 
             if (clientManagerConn->isClientReady()) {
-                clientManagerConn->getNntpClient()->dataHasArrivedSlot();
+                clientManagerConn->dataHasArrivedSlot();
             }
         }
 
@@ -336,6 +349,8 @@ void ServerGroup::checkServerAvailabilitySlot() {
     if (this->serverAvailable != serverAvailableOld) {
         this->serverSwitchIfFailure();
     }
+
+
 }
 
 
@@ -390,6 +405,7 @@ bool ServerGroup::settingsServerChangedSlot() {
 
     // name of server may have changed, update it in order to synchronize tab name in side bar ;
     this->serverData.setServerName(newServerData.getServerName());
+
 
     return serverSettingsChanged;
 

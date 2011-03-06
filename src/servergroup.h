@@ -33,6 +33,7 @@ class ClientManagerConn;
 class ServerManager;
 class CentralWidget;
 class ClientsPerServerObserver;
+class ServerSpeedManager;
 
 class ServerGroup : public QObject {
 
@@ -43,9 +44,11 @@ public:
     CentralWidget* getCentralWidget();
     ServerManager* getServerManager();
     ClientsPerServerObserver* getClientsPerServerObserver();
+    ServerSpeedManager* getServerSpeedManager();
     void assignDownloadToReadyClients();
     void disconnectAllClients();
     void connectAllClients();
+    QList<ClientManagerConn*> getClientManagerConnList();
     int getServerGroupId() const;
     int getRealServerGroupId() const;
     ServerData getServerData() const;
@@ -68,6 +71,7 @@ private:
     QList<ClientManagerConn*> clientManagerConnList;
     CentralWidget* centralWidget;
     ServerManager* serverManager;
+    ServerSpeedManager* serverSpeedManager;
     ClientsPerServerObserver* clientsPerServerObserver;
     int serverGroupId;
     int stabilityCounter;
