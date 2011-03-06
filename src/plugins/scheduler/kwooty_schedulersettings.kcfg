@@ -7,6 +7,11 @@
     <kcfgfile name="kwootyrc"/>
     <group name="schedulerplugin">
     
+      <entry name="enablePermanentSpeedLimit" type="Bool">
+            <label>Enable scheduler</label>
+            <default>true</default>
+       </entry>
+    
        <entry name="enableScheduler" type="Bool">
             <label>Enable scheduler</label>
             <default>false</default>
@@ -16,7 +21,7 @@
 	  <label>Download limit rate</label>
 	  <default>0</default>
 	  <min>0</min>
-          <max>9999</max>
+          <max>99999</max>
         </entry>
        
     </group>
