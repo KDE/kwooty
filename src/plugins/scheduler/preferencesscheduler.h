@@ -21,23 +21,21 @@
 #ifndef PREFERENCESSCHEDULER_H
 #define PREFERENCESSCHEDULER_H
 
-#include <QWidget>
-#include "ui_preferencesscheduler.h"
-
-
-#include <QHash>
-#include <QStandardItemModel>
-
 #include <KCModule>
 #include <KPluginFactory>
 #include <KPluginLoader>
 
+#include <QWidget>
+#include <QHash>
+#include <QStandardItemModel>
+
+#include "ui_preferencesscheduler.h"
 #include "schedulerfilehandler.h"
 using namespace SchedulerNamespace;
 
 
-class PreferencesScheduler : public KCModule
-{
+class PreferencesScheduler : public KCModule {
+
     Q_OBJECT
     Q_ENUMS(DownloadLimitStatus)
 
@@ -53,16 +51,12 @@ private:
 
     QStandardItemModel* schedulerModel;
     Ui_PreferencesScheduler preferencesSchedulerUi;
-    QColor getRateLimitColor(SchedulerNamespace::DownloadLimitStatus);
-    QHash<DownloadLimitStatus, QColor> statusColorMap;
     int mousePressedRow;
     int mousePressedColumn;
 
 
     void assignDownloadRateToCell(int, int);
-    void initItems();
     void setupConnections();
-
 
 
 signals:

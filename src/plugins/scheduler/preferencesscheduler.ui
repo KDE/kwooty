@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>330</width>
-    <height>271</height>
+    <width>335</width>
+    <height>292</height>
    </rect>
   </property>
   <property name="toolTip">
@@ -15,86 +15,103 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
-    <widget class="QGroupBox" name="groupBox">
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="DownloadLimitLabel">
+       <property name="toolTip">
+        <string>Download limit rate</string>
+       </property>
+       <property name="text">
+        <string>Maximum download speed:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="kcfg_downloadLimitSpinBox">
+       <property name="specialValueText">
+        <string>No limit</string>
+       </property>
+       <property name="suffix">
+        <string> KiB/s</string>
+       </property>
+       <property name="maximum">
+        <number>9999</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="speedControlGroupBox">
      <property name="title">
-      <string>GroupBox</string>
+      <string>Bandwidth control</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="DownloadLimitLabel">
-          <property name="toolTip">
-           <string>Download limit rate</string>
-          </property>
-          <property name="text">
-           <string>Download limit rate:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QSpinBox" name="kcfg_downloadLimitSpinBox">
-          <property name="specialValueText">
-           <string>No limit</string>
-          </property>
-          <property name="suffix">
-           <string> KiB/s</string>
-          </property>
-          <property name="maximum">
-           <number>9999</number>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QGroupBox" name="kcfg_enableScheduler">
-     <property name="title">
-      <string>Enable scheduler</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QRadioButton" name="noLimitRadioButton">
+       <widget class="QRadioButton" name="kcfg_enablePermanentSpeedLimit">
         <property name="text">
-         <string>No limit</string>
+         <string>Always limit download speed</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QRadioButton" name="donwloadLimitRadioButton">
+       <widget class="QRadioButton" name="kcfg_enableScheduler">
         <property name="text">
-         <string>Limit to</string>
+         <string>Schedule download speed</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QRadioButton" name="downloadDisabledRadioButton">
-        <property name="text">
-         <string>Download disabled</string>
+       <widget class="QGroupBox" name="schedulerGroupBox">
+        <property name="title">
+         <string/>
         </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="0" column="0">
+          <widget class="QRadioButton" name="noLimitRadioButton">
+           <property name="text">
+            <string>No limit</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QRadioButton" name="downloadDisabledRadioButton">
+           <property name="text">
+            <string>Download suspended</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QTableView" name="schedulerTableView"/>
+         </item>
+         <item row="1" column="0">
+          <widget class="QRadioButton" name="donwloadLimitRadioButton">
+           <property name="text">
+            <string>Limit to</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QTableView" name="schedulerTableView"/>
       </item>
      </layout>
     </widget>
