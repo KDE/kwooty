@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gui name="Kwooty"
-        version="3"
+        version="4"
         xmlns="http://www.kde.org/standards/kxmlgui/1.0"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.kde.org/standards/kxmlgui/1.0
@@ -12,6 +12,7 @@
     <Menu name="download" ><text>Download</text>
 	   <Action name="start"/>
 	   <Action name="pause"/>
+	   <Action name="retryDownload"/>
 	   <Separator/>
 	   <Action name="remove"/>
 	   <Separator/>
