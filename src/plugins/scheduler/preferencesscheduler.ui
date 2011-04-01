@@ -96,7 +96,7 @@
          <item row="2" column="0">
           <widget class="QRadioButton" name="downloadDisabledRadioButton">
            <property name="text">
-            <string>Download suspended</string>
+            <string>Download paused</string>
            </property>
           </widget>
          </item>
