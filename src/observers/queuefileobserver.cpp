@@ -237,6 +237,87 @@ bool QueueFileObserver::areJobsFinished() {
 }
 
 
+bool QueueFileObserver::haveItemsSameParent(const QList<QModelIndex>& indexesList) {
+
+    bool sameParent = true;
+
+    // get the parent of the first selected element :
+    QModelIndex firstParentIndex = indexesList.at(0).parent();
+
+    for (int i = 1; i < indexesList.size(); i++) {
+
+        QModelIndex currentModelIndex = indexesList.at(i);
+
+        // if elements do not have the same parent :
+        if (firstParentIndex != currentModelIndex.parent()) {
+            sameParent = false;
+            break;
+        }
+    }
+
+    return sameParent;
+
+}
+
+
+
+ItemStatus QueueFileObserver::isRetryDownloadAllowed(QStandardItem* fileNameItem, bool& changeItemStatus) {
+
+    changeItemStatus = false;
+
+    // by default consider that item does not need to be downloaded again :
+    ItemStatus itemStatusResetTarget = ExtractFinishedStatus;
+
+    ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
+    //kDebug() <<  "status:" << itemStatusData.getDataStatus() << "crc:" << itemStatusData.getCrc32Match() << "decodeFinish:" << itemStatusData.isDecodeFinish() << "downloadFinish:" <<itemStatusData.isDownloadFinish();
+
+    // item has been postprocessed :
+    if (itemStatusData.getStatus() >= VerifyStatus) {
+
+        // if file has been correctly verified, do not enable "Retry button",
+        // but item have to be set to DecodeFinish status if retry action comes from parent item :
+        if (Utility::isVerifyFileCorrect(itemStatusData.getStatus())) {
+            itemStatusResetTarget = DecodeFinishStatus;
+        }
+        else if  (Utility::isPostDownloadFailed(itemStatusData.getStatus())) {
+            changeItemStatus = true;
+        }
+    }
+    // else item has been decoded :
+    else if (itemStatusData.isDecodeFinish()) {
+
+        // item is decoded and crc does not match, try to download file again :
+        if (itemStatusData.getCrc32Match() != UtilityNamespace::CrcOk) {
+            changeItemStatus = true;
+        }
+        // else crc matches and item status indicates that post processing has already been performed,
+        // item does not need to be downloaded again :
+        else if (itemStatusData.getStatus() != DecodeFinishStatus) {
+            itemStatusResetTarget = DecodeFinishStatus;
+            changeItemStatus = true;
+        }
+    }
+    // else item may have been downloaded but not decoded due to missing segments :
+    else if (itemStatusData.isDownloadFinish()) {
+
+        if ( itemStatusData.getDataStatus() == NoData ||
+             itemStatusData.getDataStatus() == DataIncomplete ) {
+            changeItemStatus = true;
+        }
+    }
+
+    // if item have to be changed :
+    if ( changeItemStatus &&
+         itemStatusResetTarget == ExtractFinishedStatus ) {
+        itemStatusResetTarget = IdleStatus;
+    }
+
+    return itemStatusResetTarget;
+
+}
+
+
+
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
