@@ -131,6 +131,7 @@ public slots:
     void extractPasswordRequiredSlot(QString);
     void startAllDownloadSlot();
     void pauseAllDownloadSlot();
+    void retryDownloadSlot();
 
     
 private slots:

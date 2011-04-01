@@ -36,6 +36,7 @@
 #include "repairdecompressthread.h"
 #include "standarditemmodel.h"
 #include "itemparentupdater.h"
+#include "itemchildrenmanager.h"
 #include "datarestorer.h"
 #include "shutdownmanager.h"
 #include "fileoperations.h"
@@ -52,7 +53,7 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent) {
 
     // init the downloadModel :
     downloadModel = new StandardItemModel(this);
-    
+
     // init treeview :
     treeView = new MyTreeView(this);
 
@@ -64,7 +65,7 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent) {
 
     // update view according to items data :
     itemParentUpdater = new ItemParentUpdater(this);
-    
+
     // manage dispatching / updating segments related to one item :
     segmentManager = new SegmentManager(this);
 
@@ -73,7 +74,7 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent) {
 
     // setup segment decoder thread :
     segmentsDecoderThread = new SegmentsDecoderThread(this);
-    
+
     // setup repairing and decompressing thread :
     repairDecompressThread = new RepairDecompressThread(this);
 
@@ -102,17 +103,17 @@ CentralWidget::~CentralWidget() {
 
     delete this->segmentsDecoderThread;
     delete this->repairDecompressThread;
-    
+
 }
 
 
 
 void CentralWidget::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList) {
-    
+
     // remove .nzb extension to file name:
     QFileInfo fileInfo(file.fileName());
     QString nzbName = fileInfo.completeBaseName();
-    
+
     QList<GlobalFileData> globalFileDataList;
 
     // if list is empty it corresponds to a normal nzb file processing :
@@ -193,15 +194,15 @@ void CentralWidget::restoreDataFromPreviousSession(const QList<GlobalFileData>& 
 
 void CentralWidget::setDataToModel(const QList<GlobalFileData>& globalFileDataList, const QString& nzbName){
 
-    QStandardItem* nzbNameItem = new QStandardItem(nzbName);    
-    QStandardItem* nzbStateItem = new QStandardItem();    
+    QStandardItem* nzbNameItem = new QStandardItem(nzbName);
+    QStandardItem* nzbStateItem = new QStandardItem();
     QStandardItem* nzbSizeItem = new QStandardItem();
 
     nzbNameItem->setIcon(KIcon("go-next-view"));
-    
+
     // add the nzb items to the model :
     int nzbNameItemRow = downloadModel->rowCount();
-    
+
     downloadModel->setItem(nzbNameItemRow, FILE_NAME_COLUMN, nzbNameItem);
     downloadModel->setItem(nzbNameItemRow, SIZE_COLUMN, nzbSizeItem);
     downloadModel->setItem(nzbNameItemRow, STATE_COLUMN, nzbStateItem);
@@ -268,18 +269,18 @@ void CentralWidget::addParentItem (QStandardItem* nzbNameItem, const GlobalFileD
 
     // get the current row of the nzbName item :
     int nzbNameItemNextRow = nzbNameItem->rowCount();
-    
+
     const NzbFileData currentNzbFileData  = currentGlobalFileData.getNzbFileData();
 
     // add the file name as parent's item :
     QString fileName = currentNzbFileData.getFileName();
     QStandardItem* fileNameItem = new QStandardItem(fileName);
-    
+
     // set data to fileNameItem :
     QVariant variant;
     variant.setValue(currentNzbFileData);
     fileNameItem->setData(variant, NzbFileDataRole);
-    
+
     // set unique identifier :
     fileNameItem->setData(currentNzbFileData.getUniqueIdentifier(), IdentifierRole);
     // set tool tip :
@@ -291,12 +292,12 @@ void CentralWidget::addParentItem (QStandardItem* nzbNameItem, const GlobalFileD
     QStandardItem* parentStateItem = new QStandardItem();
     parentStateItem->setData(qVariantFromValue(currentGlobalFileData.getItemStatusData()), StatusRole);
     nzbNameItem->setChild(nzbNameItemNextRow, STATE_COLUMN, parentStateItem);
-    
+
     // set size :
     QStandardItem* parentSizeItem = new QStandardItem();
     parentSizeItem->setData(qVariantFromValue(currentNzbFileData.getSize()), SizeRole);
     nzbNameItem->setChild(nzbNameItemNextRow, SIZE_COLUMN, parentSizeItem);
-    
+
     // set download progression (0 by default) :
     QStandardItem* parentProgressItem = new QStandardItem();
     parentProgressItem->setData(qVariantFromValue(currentGlobalFileData.getProgressValue()), ProgressRole);
@@ -310,23 +311,23 @@ void CentralWidget::statusBarFileSizeUpdate() {
 
     quint64 size = 0;
     quint64 files = 0;
-    
+
     // get the root item :
     QStandardItem* rootItem = downloadModel->invisibleRootItem();
-    
+
     // parse nzb items :
     for (int i = 0; i < rootItem->rowCount(); i++) {
 
         QStandardItem* nzbItem = rootItem->child(i);
-        
+
         // parse nzb children :
         for (int j = 0; j < nzbItem->rowCount(); j++) {
 
             QStandardItem* statusItem = nzbItem->child(j, STATE_COLUMN);
-            
-            // if the item is pending (Idle, Download, Paused, Pausing states), processes it :            
+
+            // if the item is pending (Idle, Download, Paused, Pausing states), processes it :
             UtilityNamespace::ItemStatus status = downloadModel->getStatusFromStateItem(statusItem);
-            
+
             if ( Utility::isReadyToDownload(status) ||
                  Utility::isPaused(status)          ||
                  Utility::isPausing(status) )       {
@@ -336,12 +337,12 @@ void CentralWidget::statusBarFileSizeUpdate() {
                 files++;
             }
         }
-        
+
     }
-    
+
 
     this->clientsObserver->fullFileSizeUpdate(size, files);
-    
+
 }
 
 
@@ -353,7 +354,7 @@ void CentralWidget::setStartPauseDownload(const UtilityNamespace::ItemStatus tar
 
         // get file name item related to selected index :
         QStandardItem* fileNameItem = downloadModel->getFileNameItemFromIndex(currentModelIndex);
-        
+
         // if the item is a nzbItem, retrieve their children :
         if (downloadModel->isNzbItem(fileNameItem)){
 
@@ -363,14 +364,14 @@ void CentralWidget::setStartPauseDownload(const UtilityNamespace::ItemStatus tar
                 segmentManager->setIdlePauseSegments(nzbChildrenItem, targetStatus);
             }
         }
-        
+
         else {
             // update selected nzb children segments :
             segmentManager->setIdlePauseSegments(fileNameItem, targetStatus);
         }
-        
+
     }
-    
+
     // reset default buttons :
     treeView->selectedItemSlot();
 }
@@ -402,14 +403,13 @@ void CentralWidget::setStartPauseDownloadAllItems(const UtilityNamespace::ItemSt
 }
 
 
-
 void CentralWidget::initFoldersSettings() {
 
     // set default path for download and temporary folders if not filled by user :
     if (Settings::completedFolder().path().isEmpty()) {
         Settings::setCompletedFolder(QDir::homePath() + "/kwooty/Download");
     }
-    
+
     if (Settings::temporaryFolder().path().isEmpty()) {
         Settings::setTemporaryFolder(QDir::homePath() + "/kwooty/Temp");
     }
@@ -482,14 +482,14 @@ void CentralWidget::statusBarFileSizeUpdateSlot(StatusBarUpdateType statusBarUpd
 
 
 void CentralWidget::pauseDownloadSlot(){
-    
+
     QList<QModelIndex> indexesList = treeView->selectionModel()->selectedRows();
     this->setStartPauseDownload(PauseStatus, indexesList);
 }
 
 
 void CentralWidget::startDownloadSlot(){
-    
+
     QList<QModelIndex> indexesList = treeView->selectionModel()->selectedRows();
     this->setStartPauseDownload(IdleStatus, indexesList);
     emit dataHasArrivedSignal();
@@ -509,6 +509,72 @@ void CentralWidget::pauseAllDownloadSlot() {
 }
 
 
+void CentralWidget::retryDownloadSlot() {   
+
+    foreach (QModelIndex currentModelIndex, treeView->selectionModel()->selectedRows()) {
+
+        bool changeItemStatus = false;
+        bool allowRetry = false;
+
+        // by default consider that item does not need to be downloaded again :
+        ItemStatus itemStatusResetTarget = ExtractFinishedStatus;
+
+        // get file name item related to selected index :
+        QStandardItem* fileNameItem = downloadModel->getFileNameItemFromIndex(currentModelIndex);
+
+        // if current item is a nzbItem, retrieve their children :
+        if (downloadModel->isNzbItem(fileNameItem)) {
+
+            for (int i = 0; i < fileNameItem->rowCount(); i++) {
+
+                QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
+                itemStatusResetTarget = this->queueFileObserver->isRetryDownloadAllowed(nzbChildrenItem, allowRetry);
+
+                if (itemStatusResetTarget != ExtractFinishedStatus) {
+                    this->itemParentUpdater->getItemChildrenManager()->resetItemStatusToTarget(nzbChildrenItem, itemStatusResetTarget);
+                    changeItemStatus = true;
+                }
+            }
+        }
+        // else current item is a child :
+        else {
+            // update selected nzb children segments :
+            itemStatusResetTarget = this->queueFileObserver->isRetryDownloadAllowed(fileNameItem, allowRetry);
+
+            // reset current child item :
+            if (itemStatusResetTarget != ExtractFinishedStatus) {
+
+                this->itemParentUpdater->getItemChildrenManager()->resetItemStatusToTarget(fileNameItem, itemStatusResetTarget);
+
+                fileNameItem = fileNameItem->parent();
+                this->itemParentUpdater->getItemChildrenManager()->resetFinishedChildrenItemToDecodeFinish(fileNameItem);
+                changeItemStatus = true;
+            }
+
+        }
+
+        // finish to update parent status :
+        if (changeItemStatus) {
+
+            ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
+            itemStatusData.setDecodeFinish(false);
+
+            if (itemStatusResetTarget == IdleStatus) {
+                itemStatusData.setStatus(IdleStatus);
+                itemStatusData.setDownloadFinish(false);
+            }
+
+            this->downloadModel->updateStatusDataFromIndex(fileNameItem->index(), itemStatusData);
+
+        }
+
+    }
+
+    // update status bar and notify nntp clients :
+    this->downloadWaitingPar2Slot();
+}
+
+
 void CentralWidget::downloadWaitingPar2Slot(){
 
     this->statusBarFileSizeUpdate();
@@ -519,38 +585,38 @@ void CentralWidget::downloadWaitingPar2Slot(){
 
 
 void CentralWidget::saveFileErrorSlot(const int fromProcessing){
-    
+
     // 1. set all Idle items to pause before notify the user :
     this->setStartPauseDownloadAllItems(UtilityNamespace::PauseStatus);
 
-    
+
     // 2. notify user with a message box (and avoid multiple message box instances):
     if (this->saveErrorButtonCode == 0) {
-        
+
         QString saveErrorFolder;
-        
+
         if (fromProcessing == DuringDecode) {
             saveErrorFolder = i18n("download folder");
         }
         if (fromProcessing == DuringDownload) {
             saveErrorFolder = i18n("temporary folder");
         }
-        
-        
-        this->saveErrorButtonCode = KMessageBox::Cancel;      
+
+
+        this->saveErrorButtonCode = KMessageBox::Cancel;
         this->saveErrorButtonCode = KMessageBox::messageBox(this,
                                                             KMessageBox::Sorry,
                                                             i18n("Write error in <b>%1</b>: disk drive may be full.<br>Downloads have been suspended.",
                                                                  saveErrorFolder),
                                                             i18n("Write error"));
-        
-        
+
+
         if (this->saveErrorButtonCode == KMessageBox::Ok) {
             this->saveErrorButtonCode = 0;
         }
-        
+
     }
-    
+
 }
 
 
@@ -573,14 +639,9 @@ void CentralWidget::extractPasswordRequiredSlot(QString currentArchiveFileName) 
 }
 
 
-
-
 void CentralWidget::updateSettingsSlot() {
 
     // delegate specific settings to concerned object  :
     emit settingsChangedSignal();
-    
+
 }
-
-
-
