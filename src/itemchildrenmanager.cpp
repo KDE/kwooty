@@ -22,9 +22,12 @@
 
 #include <KDebug>
 
+#include <QPointer>
+
 #include "centralwidget.h"
 #include "standarditemmodel.h"
 #include "itemparentupdater.h"
+#include "segmentmanager.h"
 #include "kwootysettings.h"
 
 
@@ -218,6 +221,68 @@ void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex index, Uti
     }
 
 }
+
+
+
+
+void ItemChildrenManager::resetItemStatusToTarget(QStandardItem* fileNameItem, const ItemStatus& itemStatusResetTarget) {
+
+    ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
+
+    // if current item has to be downloaded again :
+    if (itemStatusResetTarget == IdleStatus) {
+
+        itemStatusData.init();
+
+        QPointer<SegmentManager> segmentManager = this->parent->getSegmentManager();
+
+        if (segmentManager) {
+            segmentManager->setIdleDownloadFailSegments(fileNameItem);
+        }
+
+    }
+    // else the current item has been correctly downloaded, set it status do DecodeFinishStatus
+    // in order to reenable post processing (repair/extract) :
+    else if (itemStatusResetTarget == DecodeFinishStatus) {
+        itemStatusData.setStatus(DecodeFinishStatus);
+    }
+    else {
+        kDebug() << "status target not handled :" << itemStatusResetTarget;
+    }
+
+    // set parent to decodeFinish to false in order to reenable verify process :
+    if (downloadModel->isNzbItem(fileNameItem)) {
+        itemStatusData.setDecodeFinish(false);
+    }
+
+    this->downloadModel->updateStatusDataFromIndex(fileNameItem->index(), itemStatusData);
+
+}
+
+
+
+void ItemChildrenManager::resetFinishedChildrenItemToDecodeFinish(QStandardItem* fileNameItem) {
+
+    for (int i = 0; i < fileNameItem->rowCount(); i++) {
+
+        QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
+
+        ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(nzbChildrenItem->index());
+        UtilityNamespace::ItemStatus nzbChildrenStatus = itemStatusData.getStatus();
+
+        // if current file has already been decoded but post processing failed :
+        if ( itemStatusData.isDecodeFinish() &&
+             Utility::isPostDownloadFailed(nzbChildrenStatus) ) {
+
+            // reset item to decode finish :
+            ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(nzbChildrenItem->index());
+            itemStatusData.setStatus(DecodeFinishStatus);
+            this->downloadModel->updateStatusDataFromIndex(nzbChildrenItem->index(), itemStatusData);
+        }
+    }
+
+}
+
 
 
 

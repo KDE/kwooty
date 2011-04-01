@@ -38,6 +38,8 @@ class ItemChildrenManager : public ItemAbstractUpdater {
 public:
     ItemChildrenManager(CentralWidget*, ItemParentUpdater*);
     bool resetItemStatusIfExtractFail(const QModelIndex);
+    void resetFinishedChildrenItemToDecodeFinish(QStandardItem*);
+    void resetItemStatusToTarget(QStandardItem*, const ItemStatus&);
 
 private:
     CentralWidget* parent;
