@@ -135,7 +135,7 @@ void StatsInfoBuilder::settingsChangedSlot() {
 
 
 
-void StatsInfoBuilder::computeMeanSpeed(const int& downloadSpeed, int& meanDownloadSpeed) {
+void StatsInfoBuilder::computeMeanSpeed(const quint64& downloadSpeed, quint64& meanDownloadSpeed) {
     float alpha = 0.2;
     meanDownloadSpeed = alpha * downloadSpeed + (1 - alpha) * meanDownloadSpeed;
 }
