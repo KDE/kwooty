@@ -43,12 +43,12 @@ namespace UtilityNamespace
     static const int STATE_COLUMN = 1;
     static const int PROGRESS_COLUMN = 2;
     static const int SIZE_COLUMN = 3;
-    
+
     // percentage progression values :
     static const int PROGRESS_COMPLETE = 100;
     static const int PROGRESS_INIT = 0;
     static const int PROGRESS_UNKNOWN = -1;
-    
+
     // file patterns :
     static const QString rarFileMagicNumber = "Rar";
     static const QString zipFileMagicNumber = "PK";
@@ -56,15 +56,15 @@ namespace UtilityNamespace
     static const QString par2FileMagicNumber = "PAR2";
 
     static const QString par2FileExt = ".par2";
-    
+
     static const QString repairProgram = "par2";
     static const QString rarExtractProgram = "unrar";
     static const QString sevenZipExtractProgram = "7z;7za";
-    
+
     // segment file identifier :
     static const QString applicationFileOwner = "Kwooty_87b022df-17b9-409f-a423-3cc626831adc\r\n";
     static const QString remainingDownloadsFile = "kwootyInQueueDownloads.dat";
-    
+
     // units :
     static const int MINUTES_TO_MILLISECONDS = 60000;
     static const int HOURS_TO_MILLISECONDS = 3600000;
@@ -81,6 +81,9 @@ namespace UtilityNamespace
     // plugin version, if changed make sure to update X-Kwooty-Plugin-Version in .desktop files accordingly :
     static const int KWOOTY_PLUGIN_VERSION = 1;
 
+    // number of maximum master and backup servers :
+    static const int MAX_SERVERS = 5;
+
     // custom roles used for storing data in items :
     enum MyRoles{
         StatusRole  = Qt::UserRole + 1,
@@ -90,7 +93,7 @@ namespace UtilityNamespace
         ProgressRole = Qt::UserRole + 5,
         SizeRole = Qt::UserRole + 6
                };
-    
+
     // item status list :
     enum ItemStatus{
         IdleStatus,
@@ -126,7 +129,7 @@ namespace UtilityNamespace
         UnrarProgramMissing,
         SevenZipProgramMissing
     };
-    
+
 
     // type of article encoding :
     enum ArticleEncodingType {
@@ -149,14 +152,14 @@ namespace UtilityNamespace
         Connected,
         NoError
     };
-    
+
     // indicate presence of segment on server :
     enum Article {
         Present,
         NotPresent,
         Unknown,
     };
-    
+
     // indicate if downloaded data are missing :
     enum Data {
         NoData,
@@ -164,22 +167,22 @@ namespace UtilityNamespace
         DataComplete,
         DataPendingBackupServer
     };
-    
-    
+
+
     // add details about message box error :
     enum SaveError {
         DuringDecode,
         DuringDownload
     };
-    
-    
+
+
     // choose target item to be updated :
     enum ItemTarget {
         ChildItemTarget,
         ParentItemTarget,
         BothItemsTarget
     };
-    
+
 
     // indicate if file is open by another app or directly by this app :
     enum OpenFileMode {
@@ -250,7 +253,8 @@ namespace UtilityNamespace
     // server target for segments :
     enum ServerTarget {
         NoTargetServer = -1,
-        MasterServer
+        MasterServer,
+        ActiveBackupServer = MAX_SERVERS + 1
     };
 
 
@@ -286,6 +290,8 @@ public:
     static QString convertByteHumanReadable(const quint64);
     static QString convertDownloadSpeedHumanReadable(const quint64);
     static bool isInDownloadProcess(const UtilityNamespace::ItemStatus);
+    static bool isPostDownloadFailed(const UtilityNamespace::ItemStatus);
+    static bool isVerifyFileCorrect(const UtilityNamespace::ItemStatus);
     static bool isReadyToDownload(const UtilityNamespace::ItemStatus);
     static bool isInQueue(const UtilityNamespace::ItemStatus);
     static bool isPaused(const UtilityNamespace::ItemStatus);
