@@ -174,7 +174,7 @@ void ServerTabWidget::enableDisableTabButtons() {
     this->closeTab->setEnabled(true);
 
     // do not allow to add more than 5 servers :
-    if (this->count() == PreferencesServer::MAX_SERVERS) {
+    if (this->count() == UtilityNamespace::MAX_SERVERS) {
         this->newTab->setEnabled(false);
     }
     // do not allow to remove the master server :
@@ -231,7 +231,7 @@ void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery a
     int tabNumbers = this->count();
 
     // if number of current tabs is < 5 allow to add a new backup server :
-    if (tabNumbers < PreferencesServer::MAX_SERVERS) {
+    if (tabNumbers < UtilityNamespace::MAX_SERVERS) {
 
         QString tabText;
 
@@ -350,7 +350,7 @@ void ServerTabWidget::saveDataSlot() {
     int tabNumber = this->count();
 
     // delete all previous server settings entries :
-    for (int i = 0; i < PreferencesServer::MAX_SERVERS; i++) {
+    for (int i = 0; i < UtilityNamespace::MAX_SERVERS; i++) {
         KConfigGroupHandler::getInstance()->removeServerSettings(i);
     }
 
