@@ -37,7 +37,7 @@ class PreferencesServer : public QWidget, public Ui::PreferencesServer {
 
 public:
 
-    static const int MAX_SERVERS = 5;
+
 
     PreferencesServer(KConfigDialog*);
 
