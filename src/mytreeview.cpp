@@ -110,6 +110,17 @@ void MyTreeView::setupConnections() {
 
 
 
+    connect (this->centralWidget->getDownloadModel(),
+             SIGNAL(childStatusItemChangedSignal(QStandardItem*)),
+             this,
+             SLOT(selectedItemSlot()));
+
+    connect (this->centralWidget->getDownloadModel(),
+             SIGNAL(parentStatusItemChangedSignal(QStandardItem*)),
+             this,
+             SLOT(selectedItemSlot()));
+
+
 #if QT_VERSION == 0x040503
     // fixes #QTBUG-5201
     connect(downloadModel, SIGNAL(itemChanged(QStandardItem*)), this, SLOT(dataChangedSlot(QStandardItem*)));
@@ -157,6 +168,7 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
         }
 
         if (!contextMenu.actions().isEmpty()) {
+            contextMenu.addAction(actionCollection->action("retryDownload"));
             contextMenu.addSeparator();
         }
 
@@ -361,44 +373,32 @@ void MyTreeView::moveDownSlot() {
 
 void MyTreeView::selectedItemSlot() {
 
-    bool enableMoveButton = true;
+    bool sameParents = true;
     bool enableStartButton = false;
     bool enablePauseButton = false;
+    bool enableRetryButton = false;
 
     // get selected items :
     QList<QModelIndex> indexesList = this->selectionModel()->selectedRows();
-
-    if (!indexesList.isEmpty()) {
-
-        // get the parent of the first selected element :
-        QModelIndex firstParentIndex = indexesList.at(0).parent();
-
-        for (int i = 1; i < indexesList.size(); i++) {
-
-            QModelIndex currentModelIndex = indexesList.at(i);
-
-            // if elements do not have the same parent :
-            if (firstParentIndex != currentModelIndex.parent()) {
-                enableMoveButton = false;
-            }
-        }
-    }
 
     // if no item selected :
     if (indexesList.isEmpty()) {
         emit setMoveButtonEnabledSignal(false);
     }
+
     else {
-        emit setMoveButtonEnabledSignal(enableMoveButton);
+        sameParents = this->centralWidget->getQueueFileObserver()->haveItemsSameParent(indexesList);
+        emit setMoveButtonEnabledSignal(sameParents);
     }
 
 
     // enable/disable start-pause buttons :
-    if (!enableMoveButton) {
+    if (!sameParents) {
         emit setPauseButtonEnabledSignal(false);
         emit setStartButtonEnabledSignal(false);
+        emit setRetryButtonEnabledSignal(false);
     }
-    else{
+    else {
 
         for (int i = 0; i < indexesList.size(); i++) {
 
@@ -418,12 +418,33 @@ void MyTreeView::selectedItemSlot() {
 
             // disable remove button when download has been accomplished :
             if (!downloadModel->isNzbItem(stateItem) &&
-                !Utility::isInDownloadProcess(currentStatus) &&
-                currentStatus != UtilityNamespace::WaitForPar2IdleStatus) {
+                    !Utility::isInDownloadProcess(currentStatus) &&
+                    currentStatus != UtilityNamespace::WaitForPar2IdleStatus) {
 
                 emit setRemoveButtonEnabledSignal(false);
 
             }
+
+
+            // enable retry button if current item is parent :
+            if (downloadModel->isNzbItem(stateItem)) {
+
+                QStandardItem* fileNameItem = downloadModel->getFileNameItemFromIndex(currentModelIndex);
+
+                for (int i = 0; i < fileNameItem->rowCount(); i++) {
+
+                    if (!enableRetryButton) {
+                        QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
+                        this->centralWidget->getQueueFileObserver()->isRetryDownloadAllowed(nzbChildrenItem, enableRetryButton);
+                    }
+                }
+            }
+            // else enable retry button if current item is child :
+            else if (!enableRetryButton){
+                this->centralWidget->getQueueFileObserver()->isRetryDownloadAllowed(stateItem, enableRetryButton);
+
+            }
+
 
         } // end of loop
 
@@ -435,6 +456,9 @@ void MyTreeView::selectedItemSlot() {
             emit setPauseButtonEnabledSignal(enablePauseButton);
             emit setStartButtonEnabledSignal(enableStartButton);
         }
+
+
+        emit setRetryButtonEnabledSignal(enableRetryButton);
 
     }
 }

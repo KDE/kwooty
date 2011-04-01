@@ -74,6 +74,7 @@ signals:
     void setPauseButtonEnabledSignal(bool);
     void setStartButtonEnabledSignal(bool);
     void setRemoveButtonEnabledSignal(bool);
+    void setRetryButtonEnabledSignal(bool);
     void statusBarFileSizeUpdateSignal(StatusBarUpdateType);
     void recalculateNzbSizeSignal(const QModelIndex);
     void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);
