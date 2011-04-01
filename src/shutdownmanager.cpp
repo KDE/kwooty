@@ -30,7 +30,7 @@
 #include <QDateTime>
 
 #include "centralwidget.h"
-#include "itemparentupdater.h"
+#include "standarditemmodel.h"
 #include "mystatusbar.h"
 #include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
@@ -78,7 +78,7 @@ void ShutdownManager::setupConnections() {
     connect (parent->getTreeView(), SIGNAL(allRowRemovedSignal()), this, SLOT(shutdownCancelledSlot()));
 
     // enable or disable shutdown button according to nzb parent status:
-    connect(parent->getItemParentUpdater(), SIGNAL(statusItemUpdatedSignal()), this, SLOT(statusItemUpdatedSlot()));
+    connect(parent->getDownloadModel(), SIGNAL(parentStatusItemChangedSignal(QStandardItem*)), this, SLOT(statusItemUpdatedSlot()));
 
 }
 
