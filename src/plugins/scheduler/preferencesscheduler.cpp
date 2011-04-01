@@ -30,6 +30,7 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QModelIndex>
+#include <QTime>
 
 #include "kwooty_schedulersettings.h"
 #include "schedulertableitemdelegate.h"
@@ -47,7 +48,7 @@ PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& 
 
     // setup ui file :
     QWidget* widget = new QWidget(this);
-    widget->setMinimumSize(600, 200);
+    widget->setMinimumSize(600, 400);
     this->preferencesSchedulerUi.setupUi(widget);
     layout->addWidget(widget);
 
@@ -74,8 +75,10 @@ PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& 
     // build horizontal header :
     QHeaderView* horizontalHeader = schedulerTableView->horizontalHeader();
     horizontalHeader->setResizeMode(QHeaderView::Stretch);
+
+    QString timeSize = QTime::currentTime().toString("hh:mm");
     horizontalHeader->setDefaultSectionSize(10);
-    horizontalHeader->setMinimumSectionSize(10);
+    horizontalHeader->setMinimumSectionSize(qRound(parent->fontMetrics().width(timeSize) / 4));
     horizontalHeader->hide();
 
     // build vertical header :
