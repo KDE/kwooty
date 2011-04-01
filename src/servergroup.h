@@ -51,7 +51,9 @@ public:
     QList<ClientManagerConn*> getClientManagerConnList();
     int getServerGroupId() const;
     int getRealServerGroupId() const;
+    ServerGroup* getNextTargetServer();
     ServerData getServerData() const;
+    bool canDownload(const int&) const;
     bool isServerAvailable() const;
     bool isMasterServer() const;
     bool isDisabledBackupServer() const;

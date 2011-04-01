@@ -95,7 +95,7 @@ int ServerGroup::getServerGroupId() const {
     // in order be considered as another master server and to be able to download
     // pending segment targeted with MasterServer Id :
     if (this->isActiveBackupServer()) {
-        currentServerGroupId = MasterServer;
+        currentServerGroupId = ActiveBackupServer;
     }
 
     // if backup server is in Failover mode and that master server is down
@@ -106,6 +106,61 @@ int ServerGroup::getServerGroupId() const {
 
     return currentServerGroupId;
 }
+
+
+ServerGroup* ServerGroup::getNextTargetServer() {
+
+    return this->getServerManager()->getNextTargetServer(this);
+
+}
+
+
+bool ServerGroup::canDownload(const int& serverGroupTargetId) const {
+
+    bool segmentMatch = false;
+
+
+    // if this is the Master server or an activeFailOver server that supersedes it :
+    if (this->isMasterServer() || this->isActiveFailover()) {
+
+        // allow to download segments only targeted for MasterServer :
+        if (serverGroupTargetId == MasterServer) {
+            segmentMatch = true;
+        }
+
+    }
+    // if this is a passiveBackupServer
+    else if (this->isPassiveBackupServer() || this->isPassiveFailover()) {
+
+        // check that the current target corresponds to the proper server group id :
+        if (serverGroupTargetId == this->serverGroupId) {
+            segmentMatch = true;
+        }
+
+    }
+    // if current serverGroup is an ActiveBackupServer :
+    else if (this->isActiveBackupServer()) {
+
+        // servergroup will download segments targeted for Master server and also for itself :
+        if (serverGroupTargetId == MasterServer ||
+            serverGroupTargetId == ActiveBackupServer) {
+
+            segmentMatch = true;
+
+        }
+
+    }
+    // unhandled case, should not happen but try to download segment anyway :
+    else {
+        segmentMatch = true;
+    }
+
+
+
+    return segmentMatch;
+
+}
+
 
 
 CentralWidget* ServerGroup::getCentralWidget() {
@@ -273,7 +328,7 @@ void ServerGroup::serverSwitchIfFailure() {
             kDebug() << "Backup server group id : " << this->serverGroupId << "available : " << this->serverAvailable;
 
             // current backup server is down, try to download pending downloads with another backup server if any :
-            this->serverManager->downloadWithAnotherBackupServer(this->serverGroupId);
+            this->serverManager->downloadWithAnotherBackupServer(this);
         }
 
     }
