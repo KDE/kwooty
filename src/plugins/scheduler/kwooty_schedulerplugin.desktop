@@ -12,9 +12,9 @@ ServiceTypes=Kwooty/Plugin
 Type=Service
 Icon=view-calendar
 
-Name=Scheduler
-Name[de]=Scheduler
-Name[cs]=Scheduler
-Comment=Bandwidth manager and scheduler
-Comment[de]=Bandwidth manager and scheduler
-Comment[cs]=Bandwidth manager and scheduler
+Name=Bandwidth manager
+Name[de]=Bandwidth manager
+Name[cs]=Bandwidth manager
+Comment=Schedule and limit bandwidth
+Comment[de]=Schedule and limit bandwidth
+Comment[cs]=Schedule and limit bandwidth
