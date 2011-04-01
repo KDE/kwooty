@@ -351,7 +351,7 @@ int KConfigGroupHandler::readServerNumberSettings() {
     KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("NumberOfServers"));
     int serverNumber = configGroup.readEntry("serverNumber", 1);
 
-    return qMin(PreferencesServer::MAX_SERVERS, serverNumber);
+    return qMin(UtilityNamespace::MAX_SERVERS, serverNumber);
 
 }
 
