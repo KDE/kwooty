@@ -134,6 +134,10 @@ void StandardItemModel::storeStatusDataToItem(QStandardItem* stateItem, const It
         if (this->isNzbItem(stateItem)) {
             emit parentStatusItemChangedSignal(stateItem);
         }
+        // else emit signal if child status have changed :
+        else {
+            emit childStatusItemChangedSignal(stateItem);
+        }
 
     }
 

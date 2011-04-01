@@ -68,6 +68,7 @@ private:
 
 signals:
     void parentStatusItemChangedSignal(QStandardItem*);
+    void childStatusItemChangedSignal(QStandardItem*);
     void parentProgressItemChangedSignal();
 
 
