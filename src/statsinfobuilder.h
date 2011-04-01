@@ -63,10 +63,10 @@ private:
     QModelIndex parentStateIndex;
     int timeoutCounter;
     int meanSpeedActiveCounter;
-    int meanDownloadSpeedTotal;
-    int downloadSpeedTotal;
-    int meanDownloadSpeedCurrent;
-    int downloadSpeedCurrent;
+    quint64 meanDownloadSpeedTotal;
+    quint64 downloadSpeedTotal;
+    quint64 meanDownloadSpeedCurrent;
+    quint64 downloadSpeedCurrent;
     UtilityNamespace::FreeDiskSpace previousDiskSpaceStatus;
 
     void setupConnections();
@@ -76,7 +76,7 @@ private:
     void retrieveQueuedFilesInfo(bool&, bool&);
     QString calculateArrivalTime(const quint32&);
     QString calculateRemainingTime(const quint32&);
-    void computeMeanSpeed(const int&, int&);
+    void computeMeanSpeed(const quint64&, quint64&);
 
 
 
