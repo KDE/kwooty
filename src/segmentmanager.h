@@ -50,6 +50,7 @@ public:
     SegmentManager(CentralWidget* parent = 0);
     SegmentManager();
     void setIdlePauseSegments(QStandardItem*, const UtilityNamespace::ItemStatus);
+    void setIdleDownloadFailSegments(QStandardItem*);
     QStandardItem* searchItem(const QVariant&, const UtilityNamespace::ItemStatus);
     void updatePendingSegmentsToTargetServer(const int&, const int&, const PendingSegments = UpdateSegments);
 

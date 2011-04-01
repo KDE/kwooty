@@ -63,12 +63,10 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
 
         SegmentData segmentData = segmentList.value(segmentIndex);
 
-        int serverGroupId = currentClientManagerConn->getServerGroup()->getServerGroupId();
-
         // filter Idle segments searching according to corresponding serverGroup id :
         if ( !itemFound &&
              (segmentData.getStatus() == IdleStatus) &&
-             (segmentData.getServerGroupTarget() == serverGroupId) ) {
+             (currentClientManagerConn->getServerGroup()->canDownload(segmentData.getServerGroupTarget())) ) {
 
             itemFound = true;
 
@@ -148,6 +146,30 @@ void SegmentManager::setIdlePauseSegments(QStandardItem* fileNameItem, const Uti
 
 
 
+void SegmentManager::setIdleDownloadFailSegments(QStandardItem* fileNameItem) {
+
+    // set post processed segments with a bad crc back to Idle :
+    NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
+
+    QList<SegmentData> segmentList = nzbFileData.getSegmentList();
+
+    for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
+
+        SegmentData currentSegment = segmentList.value(segmentIndex);
+        currentSegment.setReadyForNewServer(MasterServer);
+        segmentList.replace(segmentIndex, currentSegment);
+
+    }
+
+    // update the nzbFileData of current fileNameItem and its corresponding items;
+    nzbFileData.setSegmentList(segmentList);
+
+    this->downloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
+    this->downloadModel->updateProgressItem(fileNameItem->index(), 0);
+
+    itemParentUpdater->getItemDownloadUpdater()->updateItems(fileNameItem->index(), nzbFileData);
+
+}
 
 
 
@@ -186,32 +208,32 @@ QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const
             switch (itemStatus) {
 
             case DownloadStatus: {
-                    if (Utility::isReadyToDownload(nzbStatus) ||
-                        Utility::isPausing(nzbStatus)) {
-                        isSearchInNzb = true;
-                    }
-                    break;
-                }
-            case DecodeStatus: {
-                    if (Utility::isReadyToDownload(nzbStatus) ||
-                        Utility::isDownloadFinish(nzbStatus) ||
-                        Utility::isPausing(nzbStatus)  ||
-                        Utility::isDecoding(nzbStatus)) {
-                        isSearchInNzb = true;
-                    }
-                    break;
-                }
-            case RepairStatus: case ExtractStatus: {
+                if ( Utility::isReadyToDownload(nzbStatus) ||
+                     Utility::isPausing(nzbStatus) ) {
                     isSearchInNzb = true;
-                    break;
                 }
+                break;
+            }
+            case DecodeStatus: {
+                if ( Utility::isReadyToDownload(nzbStatus) ||
+                     Utility::isDownloadFinish(nzbStatus) ||
+                     Utility::isPausing(nzbStatus)  ||
+                     Utility::isDecoding(nzbStatus) ) {
+                    isSearchInNzb = true;
+                }
+                break;
+            }
+            case RepairStatus: case ExtractStatus: {
+                isSearchInNzb = true;
+                break;
+            }
             case PauseStatus: {
-                    isSearchInNzb = Utility::isPaused(nzbStatus);
-                    break;
-                }
+                isSearchInNzb = Utility::isPaused(nzbStatus);
+                break;
+            }
             default: {
-                    break;
-                }
+                break;
+            }
             }
 
             // if search in Nzb item :
@@ -293,8 +315,8 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
 
                     ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
 
-                    if (Utility::isReadyToDownload(currentChildStatus) &&
-                        (currentServerId >= itemStatusData.getNextServerId()) ) {
+                    if ( Utility::isReadyToDownload(currentChildStatus) &&
+                         (currentServerId >= itemStatusData.getNextServerId()) ) {
 
                         SegmentInfoData segmentInfoData(nzbItem->text(), nzbItem->row());
                         itemFound = this->sendNextIdleSegment(fileNameItem, currentClientManagerConn, segmentInfoData);
@@ -441,8 +463,8 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
                         // update pending segments to a new backup server target :
                         if (pendingSegments == UpdateSegments) {
 
-                            if (Utility::isInDownloadProcess(currentSegment.getStatus()) &&
-                                currentSegment.getServerGroupTarget() == currentServerGroup) {
+                            if ( Utility::isInDownloadProcess(currentSegment.getStatus()) &&
+                                 currentSegment.getServerGroupTarget() == currentServerGroup ) {
 
                                 // if another backup server is available, set it ready to be downloaded with :
                                 if (nextServerGroup != NoTargetServer) {
