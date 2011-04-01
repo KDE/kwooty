@@ -690,17 +690,18 @@ bool NntpClient::downloadSegmentWithBackupServer() {
     bool nextServerFound = false;
 
     // get server group of the next backup server :
-    int nextServerGroupId = this->parent->getServerGroup()->getServerManager()->getNextTargetServer(parent->getServerGroup()->getServerGroupId());
+    ServerGroup* nextServerGroup = this->parent->getServerGroup()->getNextTargetServer();
 
-    if (nextServerGroupId != UtilityNamespace::NoTargetServer) {
+    // if another group of servers have been found :
+    if (nextServerGroup) {
 
-        this->currentSegmentData.setReadyForNewServer(nextServerGroupId);
+        this->currentSegmentData.setReadyForNewServer(nextServerGroup->getServerGroupId());
 
         // update segmentData :
         emit updateDownloadSegmentSignal(this->currentSegmentData);
 
         // tells clients connected to next server that this segment is pending :
-        this->parent->getServerGroup()->getServerManager()->tryDownloadWithServer(nextServerGroupId);
+        nextServerGroup->assignDownloadToReadyClients();
 
         this->segmentProcessed = true;
         nextServerFound = true;
