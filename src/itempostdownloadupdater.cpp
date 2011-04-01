@@ -62,6 +62,15 @@ void ItemPostDownloadUpdater::updateItems(const QModelIndex& parentModelIndex, c
 
 void ItemPostDownloadUpdater::updateDecodeItems(const QModelIndex& parentModelIndex, const int progression, const UtilityNamespace::ItemStatus status) {
 
+    // if item has been decoded store this status (useful for download retry feature) :
+    if (status == DecodeFinishStatus) {
+
+        ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(parentModelIndex);
+        itemStatusData.setDecodeFinish(true);
+        this->downloadModel->updateStatusDataFromIndex(parentModelIndex, itemStatusData);
+    }
+
+
     // set progress to item :
     this->downloadModel->updateProgressItem(parentModelIndex, progression);
 
@@ -70,6 +79,7 @@ void ItemPostDownloadUpdater::updateDecodeItems(const QModelIndex& parentModelIn
 
     // set status to items :
     this->downloadModel->updateStateItem(stateItem, status);
+
 
     // move item to bottom of the list when decoding is finished :
     if (progression == PROGRESS_COMPLETE) {
