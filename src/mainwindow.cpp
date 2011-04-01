@@ -273,6 +273,18 @@ void MainWindow::setupActions() {
     connect(pauseAllDownloadAction, SIGNAL(triggered(bool)), centralWidget, SLOT(pauseAllDownloadSlot()));
 
 
+    //retryDownloadAction
+    KAction* retryDownloadAction = new KAction(this);
+    retryDownloadAction->setText(i18n("Retry"));
+    retryDownloadAction->setIcon(KIcon("edit-redo"));
+    retryDownloadAction->setToolTip(i18n("Retry to download selected rows"));
+    retryDownloadAction->setShortcut(Qt::CTRL + Qt::Key_R);
+    retryDownloadAction->setEnabled(false);
+    actionCollection()->addAction("retryDownload", retryDownloadAction);
+    connect(retryDownloadAction, SIGNAL(triggered(bool)), centralWidget, SLOT(retryDownloadSlot()));
+    connect(treeView, SIGNAL(setRetryButtonEnabledSignal(bool)), retryDownloadAction, SLOT(setEnabled(bool)) );
+
+
     //------------------
     //standard Actions :
     //------------------
