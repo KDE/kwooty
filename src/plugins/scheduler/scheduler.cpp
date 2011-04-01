@@ -199,7 +199,7 @@ void Scheduler::applySpeedLimit() {
 
             qint64 serverLimitSpeedInBytes = SchedulerSettings::downloadLimitSpinBox() * NBR_BYTES_IN_KB / serversCurrentlyDownloadingNumber;
 
-            int serverDownloadSpeed = this->serverManager->retrieveServerDownloadSpeed(i);
+            qint64 serverDownloadSpeed = this->serverManager->retrieveServerDownloadSpeed(i);
 
             if (serverDownloadSpeed > 0) {
 
