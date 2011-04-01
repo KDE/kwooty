@@ -64,8 +64,7 @@ QString Utility::convertDownloadSpeedHumanReadable(const quint64 downloadSpeedIn
     double fileSize = downloadSpeedInByte / NBR_BYTES_IN_MB;
 
     if (fileSize > ONE_UNIT){
-
-        downloadSpeedStr = ki18n("%1 MiB/s").subs(fileSize, 0, 'f', 2).toString();
+        downloadSpeedStr = i18n("%1 MiB/s", QString("%1").arg(fileSize, 0, 'f', 2));
     }
     else {
         downloadSpeedStr = i18n("<numid>%1</numid> KiB/s", static_cast<int>(downloadSpeedInByte / NBR_BYTES_IN_KB));
@@ -89,6 +88,38 @@ bool Utility::isInDownloadProcess(const UtilityNamespace::ItemStatus statusItem)
     }
     return status;
 }
+
+
+bool Utility::isPostDownloadFailed(const UtilityNamespace::ItemStatus statusItem) {
+
+    bool status = false;
+
+    if ( statusItem >= DecodeErrorStatus &&
+         statusItem != ExtractSuccessStatus &&
+         statusItem != VerifyFinishedStatus ) {
+
+        status = true;
+    }
+
+    return status;
+}
+
+
+bool Utility::isVerifyFileCorrect(const UtilityNamespace::ItemStatus statusItem) {
+
+    bool status = false;
+
+    if ( statusItem == VerifyFoundStatus ||
+         statusItem == VerifyMatchStatus ) {
+
+        status = true;
+    }
+
+    return status;
+
+
+}
+
 
 
 bool Utility::isReadyToDownload(const UtilityNamespace::ItemStatus statusItem){
@@ -202,6 +233,7 @@ bool Utility::isPostDownloadProcessing(const UtilityNamespace::ItemStatus status
 
     return status;
 }
+
 
 
 bool Utility::isJobFinish(const UtilityNamespace::ItemStatus statusItem){
@@ -380,20 +412,20 @@ QStringList Utility::buildPriorityArgument(const int& processPriority, const int
     switch (processPriority) {
 
     case UtilityNamespace::LowPriority: {
-            niceProcessArgs.append("10");
-            break;
-        }
+        niceProcessArgs.append("10");
+        break;
+    }
     case UtilityNamespace::LowestPriority: {
-            niceProcessArgs.append("19");
-            break;
-        }
+        niceProcessArgs.append("19");
+        break;
+    }
     case UtilityNamespace::CustomPriority: {
-            niceProcessArgs.append(QString::number(niceValue));
-            break;
-        }
+        niceProcessArgs.append(QString::number(niceValue));
+        break;
+    }
     default: {
-            break;
-        }
+        break;
+    }
     }
 
 
