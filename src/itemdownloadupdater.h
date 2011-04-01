@@ -50,7 +50,6 @@ private:
 
 signals:
     void statusBarDecrementSignal(quint64, int);
-    void statusItemUpdatedSignal();
     void decodeSegmentsSignal(NzbFileData);
 
 public slots:

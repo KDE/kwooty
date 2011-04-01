@@ -62,10 +62,6 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
     // get itemStatusData :
     ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(parentModelIndex);
 
-    // get current item status :
-    UtilityNamespace::ItemStatus previousStatus = itemStatusData.getStatus();
-
-
     // set a high value > to max number of backup servers by default :
     int nextServerIdMin = 100;
 
@@ -107,13 +103,6 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
 
     // update itemStatusData in state item :
     this->downloadModel->updateStatusDataFromIndex(parentModelIndex, itemStatusData);
-
-    // if item status has been updated :
-    if (previousStatus != itemStatusData.getStatus()) {
-        // send signal to central widget to update enbled/disabled buttons :
-        emit statusItemUpdatedSignal();
-
-    }
 
     // set status icon :
     this->setIconToFileNameItem(parentModelIndex, itemStatusData.getStatus());
