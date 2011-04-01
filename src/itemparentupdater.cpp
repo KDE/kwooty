@@ -53,9 +53,13 @@ ItemPostDownloadUpdater* ItemParentUpdater::getItemPostDownloadUpdater() const{
 ItemDownloadUpdater* ItemParentUpdater::getItemDownloadUpdater() const{
     return this->itemDownloadUpdater;
 }
+ItemChildrenManager* ItemParentUpdater::getItemChildrenManager() const{
+    return this->itemChildrenManager;
+}
 StandardItemModel* ItemParentUpdater::getDownloadModel() const{
     return this->downloadModel;
 }
+
 
 #if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
     CentralWidget* ItemParentUpdater::getCentraWidget() const{
@@ -66,17 +70,6 @@ StandardItemModel* ItemParentUpdater::getDownloadModel() const{
 
 
 void ItemParentUpdater::setupConnections() {
-
-    // update buttons enable / disable after item status has been updated :
-    connect (itemDownloadUpdater,
-             SIGNAL(statusItemUpdatedSignal()),
-             parent->getTreeView(),
-             SLOT(selectedItemSlot()));
-
-    connect (this,
-             SIGNAL(statusItemUpdatedSignal()),
-             parent->getTreeView(),
-             SLOT(selectedItemSlot()));
 
     connect (itemDownloadUpdater,
              SIGNAL(statusBarDecrementSignal(const quint64, const int)),
@@ -111,9 +104,6 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
     // get itemStatusData :
     ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex);
 
-    // get current item status :
-    int previousStatus = nzbItemStatusData.getStatus();
-
     // get number of rows :
     int rowNumber = this->downloadModel->itemFromIndex(nzbIndex)->rowCount();
 
@@ -146,13 +136,6 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
 
     // store statusData :
     this->downloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
-
-
-    // if item status has been updated :
-    if (previousStatus != nzbItemStatusData.getStatus()) {
-        // send signal to central widget to update enabled/disabled buttons :
-        emit statusItemUpdatedSignal();
-    }
 
     // if crc fail, emit a signal in order to download par2 files :
     if (par2FilesUpdated) {

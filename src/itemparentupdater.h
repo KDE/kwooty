@@ -45,6 +45,7 @@ public:
     ItemParentUpdater(CentralWidget*);
     ItemPostDownloadUpdater* getItemPostDownloadUpdater() const;
     ItemDownloadUpdater* getItemDownloadUpdater() const;
+    ItemChildrenManager* getItemChildrenManager() const;
     StandardItemModel* getDownloadModel() const;
     void updateNzbItems(const QModelIndex&);
     void updateNzbItemsPostDecode(const QModelIndex&, const int, UtilityNamespace::ItemStatus);
@@ -77,7 +78,6 @@ private:
 signals:
 
     void repairDecompressSignal(NzbCollectionData);
-    void statusItemUpdatedSignal();
     void downloadWaitingPar2Signal();
 
 public slots:
