@@ -82,61 +82,85 @@ ServerGroup* ServerManager::getServerGroupById(const int& index) {
 }
 
 
-int ServerManager::getNextTargetServer(const int& currentTargetServer) {
+ServerGroup* ServerManager::getNextTargetServer(ServerGroup* currentServerGroup) {
 
-    int nextTargetServer = UtilityNamespace::NoTargetServer;
+    ServerGroup* nextServerGroupTarget = 0;
 
-    // if a next backup server exists :
-    if (this->idServerGroupMap.size() > currentTargetServer + 1) {
+    // if current server is the MasterServer :
+    if (currentServerGroup->isMasterServer()) {
 
-        // look for next available backup server with passive mode only
-        // - a backup server with failover mode whose master server is available act as being in passive mode
-        // - a backup server with active mode is considered as another master server :
-        foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values().mid(currentTargetServer + 1)) {
+        // search any other Active servers in order to download missing segments from MasterServer with them :
+        foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values()) {
 
-            if (nextServerGroup->isServerAvailable() &&
-                nextServerGroup->isPassiveBackupServer()) {
+            if ( nextServerGroup->isActiveBackupServer() &&
+                 nextServerGroup->isServerAvailable() ) {
 
-                nextTargetServer = nextServerGroup->getServerGroupId();
+                nextServerGroupTarget = nextServerGroup;
                 break;
             }
 
         }
-
     }
 
-    return nextTargetServer;
+    // if current server is not the master server or no active server have been found :
+    if (!nextServerGroupTarget) {
+
+        int currentTargetServer = currentServerGroup->getServerGroupId();
+
+        // current Active server could be at any position, in order to not skip any
+        // eventual backup server at a lower position set currentTargetServer as first position :
+        if (currentServerGroup->isActiveBackupServer()) {
+            currentTargetServer = MasterServer;
+        }
+
+        // if a next backup server exists :
+        if (this->idServerGroupMap.size() > currentTargetServer + 1) {
+
+            // look for next available backup server with passive mode only
+            // - a backup server with failover mode whose master server is available act as being in passive mode
+            // - a backup server with active mode is considered as another master server :
+            foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values().mid(currentTargetServer + 1)) {
+
+                if ( nextServerGroup->isPassiveBackupServer() &&
+                     nextServerGroup->isServerAvailable() ) {
+
+                    nextServerGroupTarget = nextServerGroup;
+                    break;
+                }
+
+            }
+
+        }
+    }
+
+    return nextServerGroupTarget;
 }
 
 
 
 
-void ServerManager::downloadWithAnotherBackupServer(const int& serverGroupId) {
+void ServerManager::downloadWithAnotherBackupServer(ServerGroup* currentServerGroup) {
 
-    // get next server group id :
-    int nextServerId = this->getNextTargetServer(serverGroupId);
+    // get next server group :
+    ServerGroup* nextServerGroup = this->getNextTargetServer(currentServerGroup);
+
+    // get corresponding server group id :
+    int nextServerId = UtilityNamespace::NoTargetServer;
+
+    if (nextServerGroup) {
+        nextServerId = nextServerGroup->getServerGroupId();
+    }
 
     // update pending segments with this new server group id in order to be downloaded by
     // this server group (if NoTargetServer pending segments are considered as download finish) :
-    this->parent->getSegmentManager()->updatePendingSegmentsToTargetServer(serverGroupId, nextServerId);
-
-    if (nextServerId != NoTargetServer) {
-        this->tryDownloadWithServer(nextServerId);
-    }
-
-}
+    this->parent->getSegmentManager()->updatePendingSegmentsToTargetServer(currentServerGroup->getServerGroupId(), nextServerId);
 
 
-
-void ServerManager::tryDownloadWithServer(const int& nextTargetServer) {
-
-    ServerGroup* nextServerGroup = this->idServerGroupMap.value(nextTargetServer);
-
+    // notify server group that pending segments wait for it :
     if (nextServerGroup && nextServerGroup->isServerAvailable()) {
-
-        // notify server group that pending segments wait for it :
         nextServerGroup->assignDownloadToReadyClients();
     }
+
 
 }
 
@@ -149,8 +173,8 @@ bool ServerManager::areAllServersEncrypted() const {
     // current master server availability has changed ,
     foreach (ServerGroup* currentServerGroup, this->idServerGroupMap.values()) {
 
-        if (currentServerGroup->getClientsPerServerObserver()->isConnected() &&
-            !currentServerGroup->getClientsPerServerObserver()->isSslActive()) {
+        if ( currentServerGroup->getClientsPerServerObserver()->isConnected() &&
+             !currentServerGroup->getClientsPerServerObserver()->isSslActive() ) {
 
             allServersEncrypted = false;
             break;
@@ -162,9 +186,9 @@ bool ServerManager::areAllServersEncrypted() const {
 }
 
 
-int ServerManager::retrieveCumulatedDownloadSpeed(const int& nzbDownloadRowPos) const {
+quint64 ServerManager::retrieveCumulatedDownloadSpeed(const int& nzbDownloadRowPos) const {
 
-    int cumulatedDownloadSpeed = 0;
+    quint64 cumulatedDownloadSpeed = 0;
 
     // look for every servers currently downloading the same nzb item (at nzbDownloadRowPos in model)
     // in order to compute the current nzb item cumulated download speed :
@@ -187,7 +211,7 @@ int ServerManager::retrieveCumulatedDownloadSpeed(const int& nzbDownloadRowPos) 
 }
 
 
-int ServerManager::retrieveServerDownloadSpeed(const int& currentServer) const {
+quint64 ServerManager::retrieveServerDownloadSpeed(const int& currentServer) const {
 
     // retrieve average download speed for the current server :
     ServerGroup* currentServerGroup = this->idServerGroupMap.value(currentServer);
@@ -224,9 +248,9 @@ void ServerManager::masterServerAvailabilityChanges() {
     foreach (ServerGroup* currentServerGroup, this->idServerGroupMap.values()) {
 
         // look for the first available master server substitute :
-        if (currentServerGroup->isServerAvailable() &&
-            ( currentServerGroup->isMasterServer() ||
-              currentServerGroup->isFailoverBackupServer() ) ) {
+        if ( currentServerGroup->isServerAvailable() &&
+             ( currentServerGroup->isMasterServer() ||
+               currentServerGroup->isFailoverBackupServer() ) ) {
 
             newMasterServer = currentServerGroup;
             break;
@@ -234,8 +258,8 @@ void ServerManager::masterServerAvailabilityChanges() {
     }
 
     // if a new master server has been found, store it :
-    if (newMasterServer &&
-        this->currentMasterServer != newMasterServer) {
+    if ( newMasterServer &&
+         this->currentMasterServer != newMasterServer ) {
 
         this->currentMasterServer = newMasterServer;
 
