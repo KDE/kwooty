@@ -518,5 +518,3 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
     }
 
 }
-
-
