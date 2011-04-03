@@ -42,7 +42,7 @@ K_EXPORT_PLUGIN(PluginFactory("kwooty_schedulersettings"))
 
 PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& args) : KCModule(PluginFactory::componentData(), parent, args) {
 
-    // set layout config layout :
+    // set config layout :
     QHBoxLayout* layout = new QHBoxLayout(this);
     layout->setMargin(0);
 
