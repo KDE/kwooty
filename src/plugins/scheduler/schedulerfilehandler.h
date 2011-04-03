@@ -28,21 +28,21 @@
 
 namespace SchedulerNamespace {
 
-    enum DownloadLimitStatus {
-        NoLimitDownload,
-        LimitDownload,
-        DisabledDownload
-    };
+enum DownloadLimitStatus {
+    NoLimitDownload,
+    LimitDownload,
+    DisabledDownload
+};
 
 
-    // custom roles used for storing data in items :
-    enum SchedulerRoles {
-        DownloadLimitRole  = Qt::UserRole + 1
-                         };
+// custom roles used for storing data in items :
+enum SchedulerRoles {
+    DownloadLimitRole = Qt::UserRole + 1
+};
 
-    static const int HEADER_ROW_SCHEDULER = 0;
-    static const int ROW_NUMBER_SCHEDULER = 8;
-    static const int COLUMN_NUMBER_SCHEDULER = 48;
+static const int HEADER_ROW_SCHEDULER = 0;
+static const int ROW_NUMBER_SCHEDULER = 8;
+static const int COLUMN_NUMBER_SCHEDULER = 48;
 
 
 }
