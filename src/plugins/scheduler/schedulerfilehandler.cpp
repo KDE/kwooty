@@ -47,7 +47,7 @@ SchedulerFileHandler::SchedulerFileHandler() {
 
 QStandardItemModel* SchedulerFileHandler::loadModelFromFile(QObject* parent) {
 
-
+    // build scheduler model :
     QStandardItemModel* schedulerModel = new QStandardItemModel(parent);
     schedulerModel->setColumnCount(COLUMN_NUMBER_SCHEDULER);
     schedulerModel->setRowCount(ROW_NUMBER_SCHEDULER);
