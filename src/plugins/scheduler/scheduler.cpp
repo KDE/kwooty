@@ -70,7 +70,7 @@ Scheduler::~Scheduler() {
 
 void Scheduler::setupConnections() {
 
-    // when time-out occurs, check if nzb files from list can be processed
+    // when time-out occurs, check current download speed :
     connect(this->schedulerTimer,
             SIGNAL(timeout()),
             this,
@@ -179,10 +179,10 @@ void Scheduler::applySpeedLimit() {
     int serversCurrentlyDownloadingNumber = 0;
     int totalDownloadSpeed = 0;
 
-    // retrieve download speed for all avaialable servers (master + backups) :
+    // retrieve total download speed for all avaialable servers (master + backups) :
     for (int i = 0; i < serverNumber; i++) {
 
-        int serverDownloadSpeed = this->serverManager->retrieveServerDownloadSpeed(i);
+        int serverDownloadSpeed = static_cast<int>(this->serverManager->retrieveServerDownloadSpeed(i));
 
         if (serverDownloadSpeed > 0) {
             serversCurrentlyDownloadingNumber++;
