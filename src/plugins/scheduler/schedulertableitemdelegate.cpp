@@ -47,7 +47,7 @@ SchedulerTableItemDelegate::SchedulerTableItemDelegate(QObject *parent) : QStyle
 
 void SchedulerTableItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
 
-
+    // draw horizontal header :
     if (index.row() == 0) {
 
         painter->save();
@@ -65,7 +65,9 @@ void SchedulerTableItemDelegate::paint(QPainter *painter, const QStyleOptionView
 
         painter->restore();
 
-    } else {
+    }
+    // draw cell with proper background :
+    else {
 
         QStyleOptionViewItem opt = option;
 
