@@ -142,10 +142,6 @@ void ClientManagerConn::initSlot() {
              this->parent->getClientsPerServerObserver(),
              SLOT(nntpClientSpeedPerServerSlot(const SegmentInfoData)));
 
-
-
-
-
 }
 
 
