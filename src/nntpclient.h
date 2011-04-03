@@ -78,6 +78,10 @@ public:
                               ServerDisconnected
                           };
 
+    enum SegmentDownload { SegmentDownloading,
+                           SegmentDownloadFinished
+                         };
+
     NntpClient(ClientManagerConn* parent = 0);
     ~NntpClient();
     void downloadNextSegment(const SegmentData&);
@@ -129,7 +133,7 @@ private:
     bool isSocketUnconnected() const;
     bool isSocketConnected() const;
     void checkRateControlTimer();
-
+    void manageSocketBuffer(const SegmentDownload&);
 
 
 signals:
