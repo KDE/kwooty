@@ -42,7 +42,7 @@ ServerSpeedManager::ServerSpeedManager(ServerGroup* parent) : QObject(parent) {
 
 
 void ServerSpeedManager::setupConnections() {
-    // check download speed :
+    // adjust download speed :
     connect(downloadSpeedTimer, SIGNAL(timeout()), this, SLOT(adjustDownloadSpeedSlot()));
 }
 
