@@ -57,6 +57,7 @@ private:
 
     void init();
     void setupConnections();
+    void processPendingFiles();
     void processRarFilesFromDifferentGroups(const QStringList&, NzbCollectionData&);
     void processRarFilesFromSameGroup(NzbCollectionData&);
     bool isListContainsdifferentGroups(const QList<NzbFileData>&);
@@ -80,8 +81,7 @@ public slots:
 
 private slots:
     void startRepairSlot();
-    void startExtractSlot();
-    void processPendingFilesSlot();
+    void startExtractSlot();    
     void processJobSlot();
 
 
