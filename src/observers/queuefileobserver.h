@@ -46,7 +46,7 @@ public:
     QueueFileObserver(CentralWidget* parent = 0);
     UtilityNamespace::ItemStatus getFocusedItemStatus() const;
     QStandardItem* searchParentItem(const UtilityNamespace::ItemStatus);
-    ItemStatus isRetryDownloadAllowed(QStandardItem*, bool&);
+    ItemStatus isRetryDownloadAllowed(QStandardItem*, bool* = 0);
     int getFocusedProgressValue() const;
     bool areJobsFinished();
     bool haveItemsSameParent(const QList<QModelIndex>&);

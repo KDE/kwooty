@@ -261,9 +261,9 @@ bool QueueFileObserver::haveItemsSameParent(const QList<QModelIndex>& indexesLis
 
 
 
-ItemStatus QueueFileObserver::isRetryDownloadAllowed(QStandardItem* fileNameItem, bool& changeItemStatus) {
+ItemStatus QueueFileObserver::isRetryDownloadAllowed(QStandardItem* fileNameItem, bool* allowRetry) {
 
-    changeItemStatus = false;
+    bool changeItemStatus = false;
 
     // by default consider that item does not need to be downloaded again :
     ItemStatus itemStatusResetTarget = ExtractFinishedStatus;
@@ -323,6 +323,11 @@ ItemStatus QueueFileObserver::isRetryDownloadAllowed(QStandardItem* fileNameItem
         }
 
     }
+
+    if (allowRetry) {
+        *allowRetry = changeItemStatus;
+    }
+
 
     return itemStatusResetTarget;
 
