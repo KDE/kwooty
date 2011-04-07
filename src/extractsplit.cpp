@@ -34,6 +34,7 @@
 
 
 ExtractSplit::ExtractSplit(RepairDecompressThread* parent): ExtractBase(parent) {
+
     this->archiveFormat = SplitFileFormat;
 
     this->concatSplitFilesJob = new ConcatSplitFilesJob(this);
@@ -116,6 +117,7 @@ void ExtractSplit::preRepairProcessing(const NzbCollectionData& nzbCollectionDat
     QString joinFileName;
 
     this->retrieveFullPathJoinFileName(nzbCollectionData, fileSavePath, joinFileName);
+
     Utility::removeData(fileSavePath + joinFileName);
 }
 
@@ -138,6 +140,7 @@ void ExtractSplit::jobPercentSlot(int progress, QString fileNameStr) {
 
 void ExtractSplit::jobFinishSlot(int errorCode) {
 
+    kDebug() << errorCode;
     // post processing when job is complete (if no error occured during the job, job->error() == 0) :
     this->extractFinishedSlot(errorCode, QProcess::NormalExit);
 
@@ -148,8 +151,8 @@ void ExtractSplit::jobFinishSlot(int errorCode) {
 
 
 // the following methods are not used for joining splitted files job :
-QStringList ExtractSplit::createProcessArguments(const QString&, const QString&, const bool&, const QString&){return QStringList();};
-void ExtractSplit::extractUpdate(const QString&){};
-void ExtractSplit::checkIfArchivePassworded(const QString&, bool&){};
-void ExtractSplit::sendExtractProgramNotFoundNotification(){};
-QString ExtractSplit::searchExtractProgram(){return QString();};
+QStringList ExtractSplit::createProcessArguments(const QString&, const QString&, const bool&, const QString&){return QStringList();}
+void ExtractSplit::extractUpdate(const QString&){}
+void ExtractSplit::checkIfArchivePassworded(const QString&, bool&){}
+void ExtractSplit::sendExtractProgramNotFoundNotification(){}
+QString ExtractSplit::searchExtractProgram(){return QString();}
