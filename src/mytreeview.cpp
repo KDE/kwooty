@@ -435,13 +435,13 @@ void MyTreeView::selectedItemSlot() {
 
                     if (!enableRetryButton) {
                         QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
-                        this->centralWidget->getQueueFileObserver()->isRetryDownloadAllowed(nzbChildrenItem, enableRetryButton);
+                        this->centralWidget->getQueueFileObserver()->isRetryDownloadAllowed(nzbChildrenItem, &enableRetryButton);
                     }
                 }
             }
             // else enable retry button if current item is child :
             else if (!enableRetryButton){
-                this->centralWidget->getQueueFileObserver()->isRetryDownloadAllowed(stateItem, enableRetryButton);
+                this->centralWidget->getQueueFileObserver()->isRetryDownloadAllowed(stateItem, &enableRetryButton);
 
             }
 
