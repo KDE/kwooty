@@ -514,7 +514,6 @@ void CentralWidget::retryDownloadSlot() {
     foreach (QModelIndex currentModelIndex, treeView->selectionModel()->selectedRows()) {
 
         bool changeItemStatus = false;
-        bool allowRetry = false;
 
         // by default consider that item does not need to be downloaded again :
         ItemStatus itemStatusResetTarget = ExtractFinishedStatus;
@@ -528,7 +527,7 @@ void CentralWidget::retryDownloadSlot() {
             for (int i = 0; i < fileNameItem->rowCount(); i++) {
 
                 QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
-                itemStatusResetTarget = this->queueFileObserver->isRetryDownloadAllowed(nzbChildrenItem, allowRetry);
+                itemStatusResetTarget = this->queueFileObserver->isRetryDownloadAllowed(nzbChildrenItem);
 
                 if (itemStatusResetTarget != ExtractFinishedStatus) {
                     this->itemParentUpdater->getItemChildrenManager()->resetItemStatusToTarget(nzbChildrenItem, itemStatusResetTarget);
@@ -539,7 +538,7 @@ void CentralWidget::retryDownloadSlot() {
         // else current item is a child :
         else {
             // update selected nzb children segments :
-            itemStatusResetTarget = this->queueFileObserver->isRetryDownloadAllowed(fileNameItem, allowRetry);
+            itemStatusResetTarget = this->queueFileObserver->isRetryDownloadAllowed(fileNameItem);
 
             // reset current child item :
             if (itemStatusResetTarget != ExtractFinishedStatus) {
