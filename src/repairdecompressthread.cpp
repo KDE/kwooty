@@ -247,6 +247,10 @@ QStringList RepairDecompressThread::listDifferentFileBaseName(NzbCollectionData&
     nzbCollectionData.setNzbFileDataList(nzbFileDataList);
 
 
+    // sort fileBaseNameList because par2 files contained in this list may not contain the file extension
+    // as opposed to archive files. This is useful to correctly group matching par2 files and archive files together :
+    qSort(fileBaseNameList);
+
     return fileBaseNameList;
 }
 
@@ -372,6 +376,10 @@ void RepairDecompressThread::processRarFilesFromDifferentGroups(const QStringLis
                     // group nzbFileData with the same baseName :
                     groupedFileList.append(nzbFileData);
 
+                    // remove the current nzbFileData to be sure that it will not be match
+                    // another fileBaseName from fileBaseNameList :
+                    nzbFileDataList.removeOne(nzbFileData);
+
                     // if par2Files holding base name have been found, set par2BaseName :
                     if (nzbFileData.isPar2File()) {
                         par2BaseName = fileBaseName + "*";
@@ -481,7 +489,7 @@ UtilityNamespace::ArchiveFormat RepairDecompressThread::getArchiveFormatFromList
 void RepairDecompressThread::processJobSlot() {
 
     // pre-process job : group archive volumes together :
-    this->processPendingFilesSlot();
+    this->processPendingFiles();
 
     // repair and verify files :
     this->startRepairSlot();
@@ -621,7 +629,7 @@ void RepairDecompressThread::repairDecompressSlot(NzbCollectionData nzbCollectio
 
 
 
-void RepairDecompressThread::processPendingFilesSlot() {
+void RepairDecompressThread::processPendingFiles() {
 
     if (!this->filesToProcessList.isEmpty()) {
 
