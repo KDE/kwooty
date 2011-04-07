@@ -29,6 +29,7 @@
 
 
 ExtractRar::ExtractRar(RepairDecompressThread* parent) : ExtractBase(parent) {
+
     this->archiveFormat = RarFormat;
 }
 
