@@ -140,7 +140,6 @@ void ExtractSplit::jobPercentSlot(int progress, QString fileNameStr) {
 
 void ExtractSplit::jobFinishSlot(int errorCode) {
 
-    kDebug() << errorCode;
     // post processing when job is complete (if no error occured during the job, job->error() == 0) :
     this->extractFinishedSlot(errorCode, QProcess::NormalExit);
 
