@@ -14,7 +14,7 @@ Icon=view-calendar
 
 Name=Bandwidth manager
 Name[de]=Bandwidth manager
-Name[cs]=Bandwidth manager
+Name[cs]=Správce šířky pásma
 Comment=Schedule and limit bandwidth
 Comment[de]=Schedule and limit bandwidth
-Comment[cs]=Schedule and limit bandwidth
+Comment[cs]=Rozvrhnout a omezit šířku pásma
