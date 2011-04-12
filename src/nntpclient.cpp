@@ -529,7 +529,7 @@ void NntpClient::downloadSegmentFromServer() {
         this->manageSocketBuffer(SegmentDownloading);
 
         qint64 maxReadbytes = (speedLimitInBytes * this->rateControlTimer->interval()) /
-                (serverSpeedManager->getEnabledClientNumber() * 1000) + this->missingBytes;
+                              (serverSpeedManager->getEnabledClientNumber() * 1000) + this->missingBytes;
 
         chunckData = this->tcpSocket->read(maxReadbytes);
         this->missingBytes = qMax(maxReadbytes - chunckData.size(), static_cast<qint64>(0));
