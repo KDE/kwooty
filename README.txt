@@ -1,6 +1,21 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.7.0:
+--------------
+
+- Retry action added (accessible via "right click > Retry" context menu or "Downloads > Retry" menu) that allows to re set in queue files whose download/verify/extract process failed
+
+- Bandwidth management plugin added that allows to limit and schedule download speed
+
+- Active servers will now try to also download files not found by Master server (in a load balancing way if several active servers are set) instead of just being considered as missing
+
+- Basic splitted files (as name.ext.001, name.ext.002) merging process is handled (in addition of rar, zip and 7z archives)
+
+- A decoded file with a bad CRC will be notified to user (with an appropriate icon and status)
+
+
+
 Version 0.6.2:
 --------------
 
