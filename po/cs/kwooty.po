@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Pavel Fric <fripohled@blogspot.com>, 2010.
-# Pavel Fric <fripohled.blogspot.com>, 2010.
+# Pavel Fric <fripohled.blogspot.com>, 2010, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-04-11 21:47+0200\n"
-"PO-Revision-Date: 2010-11-24 18:43+0100\n"
-"Last-Translator: Pavel Fric <fripohled.blogspot.com>\n"
+"PO-Revision-Date: 2011-04-12 06:09+0200\n"
+"Last-Translator: Pavel Fric\n"
 "Language-Team: Czech <kde-i18n-de@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -233,9 +233,8 @@ msgstr ""
 " Podporuje taktéž automatickou opravu souborů a rozbalení archivů."
 
 #: src/main.cpp:39
-#, fuzzy
 msgid "Copyright (c) 2011 Xavier Lefage"
-msgstr "Autorské právo (c) 2010 Xavier Lefage"
+msgstr "Autorské právo (c) 2011 Xavier Lefage"
 
 #: src/main.cpp:42
 msgid "Xavier Lefage"
@@ -432,7 +431,7 @@ msgstr "Soubor nebyl nalezen"
 #, kde-format
 msgctxt "i.e: Decoded (bad CRC)"
 msgid "%1 (bad CRC)"
-msgstr ""
+msgstr "%1 (špatné CRC)"
 
 #: src/itemdelegate.cpp:133 src/itemdelegate.cpp:184
 #, kde-format
@@ -741,18 +740,18 @@ msgstr "%1 volné"
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:151 rc.cpp:437
 #: rc.cpp:452
 msgid "No limit"
-msgstr ""
+msgstr "Bez omezení"
 
 #: src/plugins/scheduler/preferencesscheduler.cpp:282
 #, kde-format
 msgid "Limit to %1 KiB/s"
-msgstr ""
+msgstr "Omezit na %1 KiB/s"
 
 #: src/plugins/scheduler/schedulerfilehandler.cpp:113
 #, kde-format
 msgctxt "day of week, begin time - end time"
 msgid "%1, %2 - %3"
-msgstr ""
+msgstr "%1, %2 - %3"
 
 #: src/mainwindow.cpp:147
 msgid "Clear"
@@ -844,12 +843,11 @@ msgstr "Pozastavit všechna zbývající stahování"
 
 #: src/mainwindow.cpp:278
 msgid "Retry"
-msgstr ""
+msgstr "Zkusit znovu"
 
 #: src/mainwindow.cpp:280
-#, fuzzy
 msgid "Retry to download selected rows"
-msgstr "Spustit stahování vybraných záznamů"
+msgstr "Zkusit znovu stahování vybraných záznamů"
 
 #: src/mainwindow.cpp:330
 msgid "General"
@@ -1376,29 +1374,26 @@ msgstr "Uložit heslo v KWallet"
 #. i18n: ectx: property (toolTip), widget (QLabel, DownloadLimitLabel)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:142 rc.cpp:428
 #: rc.cpp:431
-#, fuzzy
 msgid "Download limit rate"
-msgstr "Stahování dokončeno"
+msgstr "Míra omezení stahování"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:25
 #. i18n: ectx: property (text), widget (QLabel, DownloadLimitLabel)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:144 rc.cpp:434
-#, fuzzy
 msgid "Maximum download speed:"
-msgstr "Rychlost stahování: "
+msgstr "Největší rychlost stahování:"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:48
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_downloadLimitSpinBox)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:146 rc.cpp:440
-#, fuzzy
 msgid " KiB/s"
-msgstr " KiB"
+msgstr " KiB/s"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:60
 #. i18n: ectx: property (title), widget (QGroupBox, speedControlGroupBox)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:147 rc.cpp:443
 msgid "Bandwidth control"
-msgstr ""
+msgstr "Ovládání šířky pásma"
 
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:11
 #. i18n: ectx: label, entry (enablePermanentSpeedLimit), group (schedulerplugin)
@@ -1406,29 +1401,26 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_enablePermanentSpeedLimit)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:148 rc.cpp:422
 #: rc.cpp:446
-#, fuzzy
 msgid "Always limit download speed"
-msgstr "Rychlost stahování: "
+msgstr "Vždy omezit rychlost stahování:"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:73
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_enableScheduler)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:149 rc.cpp:449
-#, fuzzy
 msgid "Schedule download speed"
-msgstr "Rychlost stahování: "
+msgstr "Rozvrhnout rychlost stahování:"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:99
 #. i18n: ectx: property (text), widget (QRadioButton, downloadDisabledRadioButton)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:152 rc.cpp:455
-#, fuzzy
 msgid "Download paused"
-msgstr "Rychlost stahování: "
+msgstr "Stahování pozastaveno:"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:109
 #. i18n: ectx: property (text), widget (QRadioButton, donwloadLimitRadioButton)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:153 rc.cpp:458
 msgid "Limit to"
-msgstr ""
+msgstr "Omezit na"
 
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:22
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
@@ -1786,9 +1778,8 @@ msgstr ""
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:16
 #. i18n: ectx: label, entry (enableScheduler), group (schedulerplugin)
 #: rc.cpp:425
-#, fuzzy
 msgid "Enable scheduler"
-msgstr "Plánovač"
+msgstr "Povolit plánovač"
 
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:11
 #. i18n: ectx: label, entry (groupBoxWatch), group (watchfolderplugin)
