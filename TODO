@@ -1,13 +1,9 @@
 TODO list for next releases :
 =============================
 
-- After Decoding, set a dedicated icon for files that need to be verified (crc ko or missing parts), for yenc files only (uu have to verified in any cases due to lack of crc checking)
-
 - Compute and display verify % progression
 
 - Plugin : statistics management(download by day / month / year)
-
-- Plugin : Bandwidth throttle and scheduler
 
 - Plugin : Send mail when a job is finished (lib to write)
 
