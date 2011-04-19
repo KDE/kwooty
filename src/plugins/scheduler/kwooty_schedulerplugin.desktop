@@ -13,8 +13,8 @@ Type=Service
 Icon=view-calendar
 
 Name=Bandwidth manager
-Name[de]=Bandwidth manager
-Name[cs]=Správce šířky pásma
+Name[de]=Bandbreitenverwaltung
+name[cs]=Správce šířky pásma
 Comment=Schedule and limit bandwidth
-Comment[de]=Schedule and limit bandwidth
+Comment[de]=Planung und Begrenzung der Bandbreite
 Comment[cs]=Rozvrhnout a omezit šířku pásma

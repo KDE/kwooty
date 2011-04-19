@@ -2,21 +2,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Michael Wiescholek <Michael.Wiescholek@gmail.com>, 2010.
-# Michael Wiescholek <Michael.wiescholek@gmail.com>, 2010.
+# Michael Wiescholek <Michael.wiescholek@gmail.com>, 2010, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-04-11 21:47+0200\n"
-"PO-Revision-Date: 2010-11-07 11:24+0100\n"
-"Last-Translator: Michael Wiescholek <Michael.Wiescholek@gmail.com>\n"
+"PO-Revision-Date: 2011-04-18 15:14+0200\n"
+"Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.1\n"
+"X-Generator: Lokalize 1.2\n"
 
 #: src/widgets/serverpreferenceswidget.cpp:135
 #: src/widgets/servertabwidget.cpp:240 src/widgets/servertabwidget.cpp:259
@@ -65,8 +65,8 @@ msgid ""
 "<i>Failover:</i> supersedes former unavailable <i>Master</i> or <i>Failover</"
 "i> server, otherwise works as <i>Passive</i><br>"
 msgstr ""
-"<i>Ausfallsicherung: </i> Bei Nichterreichen des <i>Haupt-</i> oder "
-"<i>Ausfallsicherungsservers</i> wird dieser ersetzt. Bei Erreichbarkeit wird "
+"<i>Ersatz: </i> Bei Nichterreichen des <i>Haupt-</i> oder "
+"<i>Ersatz</i>servers wird dieser ersetzt. Bei Erreichbarkeit wird "
 "im <i>Passivmodus</i> heruntergeladen.<br>"
 
 #: src/widgets/serverpreferenceswidget.cpp:298
@@ -82,8 +82,8 @@ msgid ""
 "Drag and drop tabs to manage backup server priority in <i>Passive</i> and "
 "<i>Failover</i> modes"
 msgstr ""
-"Ändern der Priorität der Backupserver in den Modi <i>Passive</i> und "
-"<i>Ausfallsicherung</i>,  durch Verschieben der Registerkarten"
+"Ändern der Priorität der Backupserver in den Modi <i>Passiv</i> und "
+"<i>Ersatz</i>,  durch Verschieben der Registerkarten"
 
 #: src/widgets/serverpreferenceswidget.cpp:306
 msgid "<b>Tab renaming:</b>"
@@ -234,7 +234,6 @@ msgstr ""
 " unterstützt automatisches Reparieren und Entpacken."
 
 #: src/main.cpp:39
-#, fuzzy
 msgid "Copyright (c) 2011 Xavier Lefage"
 msgstr "Copyright (c) 2010 Xavier Lefage"
 
@@ -433,7 +432,7 @@ msgstr "Datei nicht gefunden"
 #, kde-format
 msgctxt "i.e: Decoded (bad CRC)"
 msgid "%1 (bad CRC)"
-msgstr ""
+msgstr "%1 (CRC-Fehler)"
 
 #: src/itemdelegate.cpp:133 src/itemdelegate.cpp:184
 #, kde-format
@@ -688,7 +687,7 @@ msgstr "Aktiv"
 
 #: src/utilityserverstatus.cpp:195
 msgid "Failover"
-msgstr "Ausweich"
+msgstr "Ersatz"
 
 #: src/utilityserverstatus.cpp:199
 msgid "Server Disabled"
@@ -742,18 +741,18 @@ msgstr "%1 frei"
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:151 rc.cpp:437
 #: rc.cpp:452
 msgid "No limit"
-msgstr ""
+msgstr "Keine Begrenzung"
 
 #: src/plugins/scheduler/preferencesscheduler.cpp:282
 #, kde-format
 msgid "Limit to %1 KiB/s"
-msgstr ""
+msgstr "Begrenzen auf %1 KiB/s"
 
 #: src/plugins/scheduler/schedulerfilehandler.cpp:113
 #, kde-format
 msgctxt "day of week, begin time - end time"
 msgid "%1, %2 - %3"
-msgstr ""
+msgstr "%1, %2 - %3"
 
 #: src/mainwindow.cpp:147
 msgid "Clear"
@@ -825,7 +824,7 @@ msgstr "Öffnet aktuelles Downloadverzeichnis"
 
 #: src/mainwindow.cpp:248
 msgid "Schedule system shutdown"
-msgstr "Herunterfahren aktivieren"
+msgstr "Herunterfahren planen"
 
 #: src/mainwindow.cpp:259
 msgid "Start all"
@@ -845,12 +844,11 @@ msgstr "Pausiere alle verbleibenden Downloads"
 
 #: src/mainwindow.cpp:278
 msgid "Retry"
-msgstr ""
+msgstr "Wiederholen"
 
 #: src/mainwindow.cpp:280
-#, fuzzy
 msgid "Retry to download selected rows"
-msgstr "Download der ausgewählten Einträge starten"
+msgstr "Download der ausgewählten Reihen wiederholen"
 
 #: src/mainwindow.cpp:330
 msgid "General"
@@ -966,7 +964,7 @@ msgstr "Auszuführende Aktion"
 #. i18n: ectx: property (title), widget (QGroupBox, actionGroupBox)
 #: build/src/ui_preferencesshutdown.h:146 rc.cpp:20
 msgid "Scheduler"
-msgstr "Scheduler"
+msgstr "Planer"
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:63
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_timerRadioButton)
@@ -1385,29 +1383,26 @@ msgstr "Passwort in KWallet speichern"
 #. i18n: ectx: property (toolTip), widget (QLabel, DownloadLimitLabel)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:142 rc.cpp:428
 #: rc.cpp:431
-#, fuzzy
 msgid "Download limit rate"
-msgstr "Download abgeschlossen"
+msgstr "Maximale Geschwindigkeit"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:25
 #. i18n: ectx: property (text), widget (QLabel, DownloadLimitLabel)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:144 rc.cpp:434
-#, fuzzy
 msgid "Maximum download speed:"
-msgstr "Downloadgeschw.: "
+msgstr "Maximale Downloadgeschwindigkeit:"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:48
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_downloadLimitSpinBox)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:146 rc.cpp:440
-#, fuzzy
 msgid " KiB/s"
-msgstr " KiB"
+msgstr " KiB/s"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:60
 #. i18n: ectx: property (title), widget (QGroupBox, speedControlGroupBox)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:147 rc.cpp:443
 msgid "Bandwidth control"
-msgstr ""
+msgstr "Bandbreitenkontrolle"
 
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:11
 #. i18n: ectx: label, entry (enablePermanentSpeedLimit), group (schedulerplugin)
@@ -1415,29 +1410,26 @@ msgstr ""
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_enablePermanentSpeedLimit)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:148 rc.cpp:422
 #: rc.cpp:446
-#, fuzzy
 msgid "Always limit download speed"
-msgstr "Downloadgeschw.: "
+msgstr "Download geschwindigkeit immer begrenzen"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:73
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_enableScheduler)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:149 rc.cpp:449
-#, fuzzy
 msgid "Schedule download speed"
-msgstr "Downloadgeschw.: "
+msgstr "Downloadgeschwindigkeit zeitlich einplanen"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:99
 #. i18n: ectx: property (text), widget (QRadioButton, downloadDisabledRadioButton)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:152 rc.cpp:455
-#, fuzzy
 msgid "Download paused"
-msgstr "Downloadgeschw.: "
+msgstr "Download pausieren"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:109
 #. i18n: ectx: property (text), widget (QRadioButton, donwloadLimitRadioButton)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:153 rc.cpp:458
 msgid "Limit to"
-msgstr ""
+msgstr "Begrenzen auf"
 
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:22
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
@@ -1793,9 +1785,8 @@ msgstr "Nicht herunterfahren solange Downloads pausiert sind"
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:16
 #. i18n: ectx: label, entry (enableScheduler), group (schedulerplugin)
 #: rc.cpp:425
-#, fuzzy
 msgid "Enable scheduler"
-msgstr "Scheduler"
+msgstr "Downloadplaner aktivieren"
 
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:11
 #. i18n: ectx: label, entry (groupBoxWatch), group (watchfolderplugin)
