@@ -121,8 +121,8 @@ void NntpClient::setupConnections() {
 void NntpClient::connectToHost() {
 
     // connect if this client belongs to master server or if the backup server is not disabled :
-    if (this->parent->isMasterServer() ||
-            !this->parent->isDisabledBackupServer()) {
+    if ( this->parent->isMasterServer() ||
+         !this->parent->isDisabledBackupServer() ) {
 
         // set nntpError to noError by default before connection process :
         this->updateServerAnswerStatus(ServerDisconnected);
@@ -529,7 +529,7 @@ void NntpClient::downloadSegmentFromServer() {
         this->manageSocketBuffer(SegmentDownloading);
 
         qint64 maxReadbytes = (speedLimitInBytes * this->rateControlTimer->interval()) /
-                              (serverSpeedManager->getEnabledClientNumber() * 1000) + this->missingBytes;
+                (serverSpeedManager->getEnabledClientNumber() * 1000) + this->missingBytes;
 
         chunckData = this->tcpSocket->read(maxReadbytes);
         this->missingBytes = qMax(maxReadbytes - chunckData.size(), static_cast<qint64>(0));
