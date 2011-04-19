@@ -167,11 +167,8 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
             contextMenu.addAction(actionCollection->action("pause"));
         }
 
-        if (!contextMenu.actions().isEmpty()) {
-            contextMenu.addAction(actionCollection->action("retryDownload"));
-            contextMenu.addSeparator();
-        }
-
+        contextMenu.addAction(actionCollection->action("retryDownload"));
+        contextMenu.addSeparator();
         contextMenu.addAction(actionCollection->action("remove"));
         contextMenu.addSeparator();
         contextMenu.addAction(actionCollection->action("moveTop"));
