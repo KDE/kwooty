@@ -195,9 +195,14 @@ QString SegmentDecoderUUEnc::searchPattern(QFile& segmentFile) {
             // pattern expected : "begin 644 fileName"
             QList<QByteArray> wordList =  lineArray.split(' ');
 
-            // retrieve file name :
-            if (wordList.size() == 3) {
-                fileName = wordList.at(wordList.size() - 1);
+            // retrieve file name,
+            // file name could have spaces in it, retrieve the whole file name (thanks to Nicholas !) :
+            int fileNamePos = 2;
+            if (wordList.size() > fileNamePos) {
+
+                QString fileNameFirstWord = wordList.at(fileNamePos);
+                fileName = lineArray.mid(lineArray.indexOf(fileNameFirstWord, 1));
+
             }
 
         }
