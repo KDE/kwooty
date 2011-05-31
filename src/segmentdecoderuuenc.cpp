@@ -196,12 +196,15 @@ QString SegmentDecoderUUEnc::searchPattern(QFile& segmentFile) {
             QList<QByteArray> wordList =  lineArray.split(' ');
 
             // retrieve file name,
-            // file name could have spaces in it, retrieve the whole file name (thanks to Nicholas !) :
-            int fileNamePos = 2;
-            if (wordList.size() > fileNamePos) {
+            // file name could have spaces in it, retrieve the whole file name (thanks to Nicholas Redgrave) :
+            if (wordList.size() > 2) {
 
-                QString fileNameFirstWord = wordList.at(fileNamePos);
-                fileName = lineArray.mid(lineArray.indexOf(fileNameFirstWord, 1));
+                QString modeWord = wordList.at(1);
+
+                fileName = lineArray.mid(lineArray.indexOf(modeWord) + modeWord.size());
+
+                // remove whitespace from start and end of just retrieved file name :
+                fileName = fileName.trimmed();
 
             }
 
