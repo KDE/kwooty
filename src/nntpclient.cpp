@@ -927,7 +927,7 @@ void NntpClient::answerTimeOutSlot() {
 void NntpClient::tryToReconnectSlot(){
 
     // try to connect, be sure to be unconnected before :
-    if (this->isSocketConnected()) {
+    if (this->isSocketUnConnected()) {
         this->connectToHost();
     }
 
