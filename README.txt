@@ -1,6 +1,14 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.7.1:
+--------------
+
+* Fix issue when decoding uu encoded files whose file name contains white spaces (thanks to Nicholas)
+* If message 481 from usenet server is received, try to download segment 1 minute later than considering it as not present
+* Fix bug #3361080 (and regression from 0.6.3 by the way) that could lead to server connection drop 
+
+
 Version 0.7.0:
 --------------
 
