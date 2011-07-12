@@ -55,7 +55,8 @@ public:
                         NoSuchArticleMessageId = 430,
                         NoSuchArticleNumber = 423,
                         CommandNotPerformed = 503,
-                        TransfertFailed = 436
+                        TransfertFailed = 436,
+                        AccessDenied = 481
                        };
 
     enum NntpClientStatus { ClientIdle,

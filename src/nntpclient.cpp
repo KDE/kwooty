@@ -272,6 +272,13 @@ void NntpClient::getAnswerFromServer() {
         break;
     }
 
+    case AccessDenied: {
+        // could occur if too many connection, bad credential or ssl connection is denied,
+        // request new segment with long delay (1 minute) :
+        this->retryDownloadDelayed(60);
+        break;
+    }
+
     default: {
         kDebug() << "Answer from host : " << answer << " not handled !" << "group :" << parent->getServerGroup()->getRealServerGroupId();
         // response not handled, consider that segment is not present :
