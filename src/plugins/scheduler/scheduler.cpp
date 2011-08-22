@@ -94,11 +94,15 @@ void Scheduler::setupConnections() {
 
 void Scheduler::schedulerTimerSlot() {
 
+    DownloadLimitStatus downloadLimitStatus = LimitDownload;
+
     // permanent speed limit is enabled :
     if (SchedulerSettings::enablePermanentSpeedLimit()) {
 
-        this->checkDownloadStatus(LimitDownload);
-        this->applySpeedLimit();
+        // if downloadLimitSpinBox is set to 0, it corresponds to no limit download :
+        if (SchedulerSettings::downloadLimitSpinBox() == 0) {
+            downloadLimitStatus = NoLimitDownload;
+        }
 
     }
     // speed limit is scheduled :
@@ -113,15 +117,15 @@ void Scheduler::schedulerTimerSlot() {
 
         // get corresponding download limit status :
         QStandardItem* item = this->schedulerModel->item(row, column);
-        DownloadLimitStatus downloadLimitStatus = static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
+        downloadLimitStatus = static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
 
-        // start downloads if they were previously paused :
-        this->checkDownloadStatus(downloadLimitStatus);
+    }
 
-        if (downloadLimitStatus == LimitDownload) {
-            this->applySpeedLimit();
-        }
+    // start downloads if they were previously paused :
+    this->checkDownloadStatus(downloadLimitStatus);
 
+    if (downloadLimitStatus == LimitDownload) {
+        this->applySpeedLimit();
     }
 
 }
