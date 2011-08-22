@@ -56,6 +56,8 @@ namespace UtilityNamespace
     static const QString par2FileMagicNumber = "PAR2";
 
     static const QString par2FileExt = ".par2";
+    static const QString zipFileExt = ".zip";
+    static const QString sevenZipFileExt = ".7z";
 
     static const QString repairProgram = "par2";
     static const QString rarExtractProgram = "unrar";
