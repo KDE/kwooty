@@ -153,8 +153,8 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
         nzbFileData.setDecodedFileName(decodedFileName);
 
         // add info about type of file (par2 or rar file) :
-        if (!nzbFileData.isPar2File() &&
-            !nzbFileData.isArchiveFile()) {
+        if ( !nzbFileData.isPar2File() &&
+             !nzbFileData.isArchiveFile() ) {
 
             QFile decodedFile(nzbFileData.getFileSavePath() + nzbFileData.getDecodedFileName());
             if (decodedFile.exists()) {
@@ -166,13 +166,22 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
                 if (decodedFile.peek(rarFileMagicNumber.size()) == rarFileMagicNumber) {
                     nzbFileData.setArchiveFormat(RarFormat);
                 }
-                // check if it a zip file :
-                else if (decodedFile.peek(zipFileMagicNumber.size()) == zipFileMagicNumber) {
-                    nzbFileData.setArchiveFormat(ZipOrSevenZipFormat);
-                }
-                // check if it a 7z file :
-                else if (decodedFile.peek(sevenZipFileMagicNumber.size()) == sevenZipFileMagicNumber) {
-                    nzbFileData.setArchiveFormat(ZipOrSevenZipFormat);
+                // check if it a zip or 7z file :
+                else if ( (decodedFile.peek(zipFileMagicNumber.size()) == zipFileMagicNumber) ||
+                          (decodedFile.peek(sevenZipFileMagicNumber.size()) == sevenZipFileMagicNumber) ) {
+
+
+                    QString fileExtension = QFileInfo(decodedFile).suffix().toLower();
+
+                    // set a filter to file name extension in order to not extract zipped files
+                    // that are not intended to be extracted as .jar, .war, ... files :
+                    if ( (fileExtension == UtilityNamespace::zipFileExt) ||
+                         (fileExtension == UtilityNamespace::sevenZipFileExt) ||
+                         FileOperations::isSplitFileFormat(decodedFile) ) {
+
+                        nzbFileData.setArchiveFormat(ZipOrSevenZipFormat);
+                    }
+
                 }
 
                 // check if it is a par2 file :
@@ -184,7 +193,7 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
 
                 // check if it is a splitted file :
                 else if (FileOperations::isSplitFileFormat(decodedFile)) {
-                        nzbFileData.setArchiveFormat(SplitFileFormat);
+                    nzbFileData.setArchiveFormat(SplitFileFormat);
 
                 }
 
