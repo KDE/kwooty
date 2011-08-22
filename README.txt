@@ -1,6 +1,13 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.7.2:
+--------------
+
+* Fix bug #3386546 that could lead to server connection drop if Bandwidth manager plugin was active with download limit set to "No Limit"
+* Fix bug #3390955 that unpacked zipped files format that were not intended to be (ie : .war files) 
+
+
 Version 0.7.1:
 --------------
 
