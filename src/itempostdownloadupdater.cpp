@@ -166,11 +166,9 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
                 if (decodedFile.peek(rarFileMagicNumber.size()) == rarFileMagicNumber) {
                     nzbFileData.setArchiveFormat(RarFormat);
                 }
-                // check if it a zip or 7z file :
-                else if ( (decodedFile.peek(zipFileMagicNumber.size()) == zipFileMagicNumber) ||
-                          (decodedFile.peek(sevenZipFileMagicNumber.size()) == sevenZipFileMagicNumber) ) {
 
-
+                // check if it is a zip file :
+                else if (decodedFile.peek(zipFileMagicNumber.size()) == zipFileMagicNumber) {
                     QString fileExtension = QFileInfo(decodedFile).suffix().toLower();
 
                     // set a filter to file name extension in order to not extract zipped files
@@ -182,7 +180,14 @@ void ItemPostDownloadUpdater::addFileTypeInfo(QStandardItem* fileNameItem, const
                         nzbFileData.setArchiveFormat(ZipOrSevenZipFormat);
                     }
 
+                }                
+
+                // check if it is a 7z file :
+                else if (decodedFile.peek(sevenZipFileMagicNumber.size()) == sevenZipFileMagicNumber) {
+
+                    nzbFileData.setArchiveFormat(ZipOrSevenZipFormat);
                 }
+
 
                 // check if it is a par2 file :
                 else if ( (decodedFile.peek(par2FileMagicNumber.size()) == par2FileMagicNumber) ||
