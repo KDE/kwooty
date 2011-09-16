@@ -61,10 +61,16 @@ void SegmentDecoderYEnc::decodeEncodedData(QFile& targetFile, SegmentData& curre
     }
 
     // retrieve crc32 value :
+    // some encoders could provide the following pattern : "=yend size=50 part=79 pcrc32=a4f04edb crc32=a5a1fb24"
+    // be sure to retrieve only the first crc32 value :
     bool ok;
-    QString crcPattern = "crc32=";
-    int crcValuePos = yEndArray.indexOf(crcPattern) + crcPattern.size();
-    quint32 crc32FromFile = yEndArray.mid(crcValuePos, yEndArray.size() - crcValuePos).trimmed().toLongLong(&ok, 16);
+    quint32 crc32FromFile = 0;
+    QRegExp regExp(".*p?crc32=((\\w|\\d)*).*");
+
+    // if crc32 pattern has been found :
+    if (regExp.exactMatch(yEndArray)) {
+        crc32FromFile = regExp.cap(1).toLongLong(&ok, 16);
+    }
 
 
     // get the yy encoded data :
