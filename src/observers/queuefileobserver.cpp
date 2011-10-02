@@ -26,12 +26,14 @@
 #include "centralwidget.h"
 #include "mytreeview.h"
 #include "standarditemmodel.h"
+#include "standarditemmodelquery.h"
 #include "kwootysettings.h"
 
 
 QueueFileObserver::QueueFileObserver(CentralWidget* parent) : QObject(parent) {
 
     this->downloadModel = parent->getDownloadModel();
+    this->modelQuery = parent->getModelQuery();
     this->treeView = parent->getTreeView();
 
     this->jobNotifyTimer = new QTimer(this);
@@ -56,13 +58,13 @@ void QueueFileObserver::setupConnections() {
 
     // parent status item has been updated :
     connect(this->downloadModel,
-            SIGNAL(parentStatusItemChangedSignal(QStandardItem*)),
+            SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
             this,
             SLOT(parentItemChangedSlot()));
 
     // parent status item has been updated :
     connect(this->downloadModel,
-            SIGNAL(parentStatusItemChangedSignal(QStandardItem*)),
+            SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
             this,
             SLOT(jobFinishStatusSlot(QStandardItem*)));
 
@@ -83,56 +85,6 @@ void QueueFileObserver::setupConnections() {
 
 }
 
-
-
-
-QStandardItem* QueueFileObserver::searchParentItem(const UtilityNamespace::ItemStatus itemStatus) {
-
-    QStandardItem* stateItem = 0;
-
-    // get the root model :
-    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
-
-    // get the first parent with download active :
-    for (int i = 0; i < rootItem->rowCount(); i++) {
-
-        QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
-        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
-
-
-        if (itemStatus == DownloadStatus) {
-            // check if parent status is either downloading or pausing :
-            if (Utility::isDownloadOrPausing(currentStatus)) {
-
-                stateItem = parentStateItem;
-                break;
-            }
-        }
-
-
-        else if (itemStatus == PauseStatus) {
-            // check if parent status is either in pause :
-            if (Utility::isPaused(currentStatus)) {
-
-                stateItem = parentStateItem;
-                break;
-            }
-        }
-
-        else if (itemStatus == VerifyStatus) {
-            // check if parent status is currently being post processed :
-            if (Utility::isPostDownloadProcessing(currentStatus)) {
-
-                stateItem = parentStateItem;
-                break;
-            }
-        }
-
-    }
-
-    return stateItem;
-
-}
 
 
 
@@ -201,140 +153,6 @@ JobNotifyData QueueFileObserver::retrieveJobNotifyData(QStandardItem* stateItem,
 
 
 
-bool QueueFileObserver::areJobsFinished() {
-
-    bool jobFinished = true;
-
-    // get the root model :
-    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
-
-    // for each parent item, get its current status :
-    for (int i = 0; i < rootItem->rowCount(); i++) {
-
-        QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
-        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
-
-        // check parent status activity :
-        if ( Utility::isReadyToDownload(currentStatus)       ||
-             Utility::isPausing(currentStatus)               ||
-             Utility::isDecoding(currentStatus)              ||
-             Utility::isPostDownloadProcessing(currentStatus) ) {
-
-            jobFinished = false;
-            break;
-        }
-
-        // if do not shutdown system if paused items found :
-        if ( Settings::pausedShutdown() && Utility::isPaused(currentStatus) ) {
-
-            jobFinished = false;
-            break;
-        }
-
-    }
-
-    return jobFinished;
-}
-
-
-bool QueueFileObserver::haveItemsSameParent(const QList<QModelIndex>& indexesList) {
-
-    bool sameParent = true;
-
-    // get the parent of the first selected element :
-    QModelIndex firstParentIndex = indexesList.at(0).parent();
-
-    for (int i = 1; i < indexesList.size(); i++) {
-
-        QModelIndex currentModelIndex = indexesList.at(i);
-
-        // if elements do not have the same parent :
-        if (firstParentIndex != currentModelIndex.parent()) {
-            sameParent = false;
-            break;
-        }
-    }
-
-    return sameParent;
-
-}
-
-
-
-ItemStatus QueueFileObserver::isRetryDownloadAllowed(QStandardItem* fileNameItem, bool* allowRetry) {
-
-    bool changeItemStatus = false;
-
-    // by default consider that item does not need to be downloaded again :
-    ItemStatus itemStatusResetTarget = ExtractFinishedStatus;
-
-    ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
-    //kDebug() <<  "status:" << itemStatusData.getDataStatus() << "crc:" << itemStatusData.getCrc32Match() << "decodeFinish:" << itemStatusData.isDecodeFinish() << "downloadFinish:" <<itemStatusData.isDownloadFinish();
-
-
-    ItemStatusData parentItemStatusData = itemStatusData;
-    // if current item is a child, retrieve its parent :
-    if (!downloadModel->isNzbItem(fileNameItem)) {
-        parentItemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->parent()->index());
-    }
-
-    // only allow to retry download if post download processing is not running :
-    if (!Utility::isPostDownloadProcessing(parentItemStatusData.getStatus())) {
-
-        // item has been postprocessed :
-        if (itemStatusData.getStatus() >= VerifyStatus) {
-
-            // if file has been correctly verified, do not enable "Retry button",
-            // but item have to be set to DecodeFinish status if retry action comes from parent item :
-            if (Utility::isVerifyFileCorrect(itemStatusData.getStatus())) {
-                itemStatusResetTarget = DecodeFinishStatus;
-            }
-            else if  (Utility::isPostDownloadFailed(itemStatusData.getStatus())) {
-                changeItemStatus = true;
-            }
-        }
-        // else item has been decoded :
-        else if (itemStatusData.isDecodeFinish()) {
-
-            // item is decoded and crc does not match, try to download file again :
-            if (itemStatusData.getCrc32Match() != UtilityNamespace::CrcOk) {
-                changeItemStatus = true;
-            }
-            // else crc matches and item status indicates that post processing has already been performed,
-            // item does not need to be downloaded again :
-            else if (itemStatusData.getStatus() != DecodeFinishStatus) {
-                itemStatusResetTarget = DecodeFinishStatus;
-                changeItemStatus = true;
-            }
-        }
-        // else item may have been downloaded but not decoded due to missing segments :
-        else if (itemStatusData.isDownloadFinish()) {
-
-            if ( itemStatusData.getDataStatus() == NoData ||
-                 itemStatusData.getDataStatus() == DataIncomplete ) {
-                changeItemStatus = true;
-            }
-        }
-
-        // if item have to be changed :
-        if ( changeItemStatus &&
-             itemStatusResetTarget == ExtractFinishedStatus ) {
-            itemStatusResetTarget = IdleStatus;
-        }
-
-    }
-
-    if (allowRetry) {
-        *allowRetry = changeItemStatus;
-    }
-
-
-    return itemStatusResetTarget;
-
-}
-
-
-
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
@@ -347,7 +165,7 @@ void QueueFileObserver::parentItemChangedSlot() {
     UtilityNamespace::ItemStatus currentItemStatus = this->focusedItemStatus;
 
     // search current item being downloading :
-    QStandardItem* stateItem = this->searchParentItem(DownloadStatus);
+    QStandardItem* stateItem = this->modelQuery->searchParentItem(DownloadStatus);
 
     if (stateItem) {
         currentItemStatus = DownloadStatus;
@@ -355,7 +173,7 @@ void QueueFileObserver::parentItemChangedSlot() {
     // else search current item being paused :
     else {
 
-        stateItem = this->searchParentItem(PauseStatus);
+        stateItem = this->modelQuery->searchParentItem(PauseStatus);
 
         if (stateItem) {
             currentItemStatus = PauseStatus;
@@ -460,7 +278,7 @@ void QueueFileObserver::checkJobFinishSlot() {
         // (eg : current item could be pending for verifying while a previous nzb is currently being verified),
         // then send notification :
         if ( (jobNotifyData.getDateTime().secsTo(QDateTime::currentDateTime()) > 2) &&
-             !this->searchParentItem(UtilityNamespace::VerifyStatus) ) {
+             !this->modelQuery->searchParentItem(UtilityNamespace::VerifyStatus) ) {
 
             // notifications will handle this signal :
             emit jobFinishSignal(jobNotifyData.getStatus(), jobNotifyData.getNzbFileName());

@@ -29,15 +29,17 @@
 #include <QTimer>
 
 #include "data/jobnotifydata.h"
+#include "kwooty_export.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
 class CentralWidget;
 class StandardItemModel;
+class StandardItemModelQuery;
 class MyTreeView;
 
 
-class QueueFileObserver : public QObject {
+class KWOOTY_EXPORT QueueFileObserver : public QObject {
 
     Q_OBJECT
 
@@ -45,12 +47,7 @@ public:
 
     QueueFileObserver(CentralWidget* parent = 0);
     UtilityNamespace::ItemStatus getFocusedItemStatus() const;
-    QStandardItem* searchParentItem(const UtilityNamespace::ItemStatus);
-    ItemStatus isRetryDownloadAllowed(QStandardItem*, bool* = 0);
     int getFocusedProgressValue() const;
-    bool areJobsFinished();
-    bool haveItemsSameParent(const QList<QModelIndex>&);
-
 
 
 private:
@@ -58,6 +55,7 @@ private:
     static const int MAX_LIST_SIZE = 10;
 
     StandardItemModel* downloadModel;
+    StandardItemModelQuery* modelQuery;
     MyTreeView* treeView;
     QStandardItem* parentItem;
     QTimer* jobNotifyTimer;
@@ -71,7 +69,6 @@ private:
     void checkProgressItemValue(QStandardItem*);
     JobNotifyData retrieveJobNotifyData(QStandardItem*, UtilityNamespace::ItemStatus);
     void addToList(const JobNotifyData&);
-
 
 
 signals:
