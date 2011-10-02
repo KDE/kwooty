@@ -32,8 +32,8 @@
 #include "centralwidget.h"
 #include "fileoperations.h"
 #include "standarditemmodel.h"
+#include "standarditemmodelquery.h"
 #include "mainwindow.h"
-#include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
 
 
@@ -111,12 +111,12 @@ void MyTreeView::setupConnections() {
 
 
     connect (this->centralWidget->getDownloadModel(),
-             SIGNAL(childStatusItemChangedSignal(QStandardItem*)),
+             SIGNAL(childStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
              this,
              SLOT(selectedItemSlot()));
 
     connect (this->centralWidget->getDownloadModel(),
-             SIGNAL(parentStatusItemChangedSignal(QStandardItem*)),
+             SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
              this,
              SLOT(selectedItemSlot()));
 
@@ -138,13 +138,13 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
     QStandardItem* stateItem;
 
     // search for pause parents :
-    stateItem = this->centralWidget->getQueueFileObserver()->searchParentItem(PauseStatus);
+    stateItem = this->centralWidget->getModelQuery()->searchParentItem(PauseStatus);
     if (stateItem) {
         contextMenu.addAction(actionCollection->action("startAll"));
     }
 
     // search for downloading parents :
-    stateItem = this->centralWidget->getQueueFileObserver()->searchParentItem(DownloadStatus);
+    stateItem = this->centralWidget->getModelQuery()->searchParentItem(DownloadStatus);
     if (stateItem) {
         contextMenu.addAction(actionCollection->action("pauseAll"));
     }
@@ -384,7 +384,7 @@ void MyTreeView::selectedItemSlot() {
     }
 
     else {
-        sameParents = this->centralWidget->getQueueFileObserver()->haveItemsSameParent(indexesList);
+        sameParents = this->centralWidget->getModelQuery()->haveItemsSameParent(indexesList);
         emit setMoveButtonEnabledSignal(sameParents);
     }
 
@@ -414,9 +414,9 @@ void MyTreeView::selectedItemSlot() {
             }
 
             // disable remove button when download has been accomplished :
-            if (!downloadModel->isNzbItem(stateItem) &&
-                    !Utility::isInDownloadProcess(currentStatus) &&
-                    currentStatus != UtilityNamespace::WaitForPar2IdleStatus) {
+            if ( !downloadModel->isNzbItem(stateItem) &&
+                 !Utility::isInDownloadProcess(currentStatus) &&
+                 currentStatus != UtilityNamespace::WaitForPar2IdleStatus ) {
 
                 emit setRemoveButtonEnabledSignal(false);
 
@@ -432,13 +432,13 @@ void MyTreeView::selectedItemSlot() {
 
                     if (!enableRetryButton) {
                         QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
-                        this->centralWidget->getQueueFileObserver()->isRetryDownloadAllowed(nzbChildrenItem, &enableRetryButton);
+                        this->centralWidget->getModelQuery()->isRetryDownloadAllowed(nzbChildrenItem, &enableRetryButton);
                     }
                 }
             }
             // else enable retry button if current item is child :
             else if (!enableRetryButton){
-                this->centralWidget->getQueueFileObserver()->isRetryDownloadAllowed(stateItem, &enableRetryButton);
+                this->centralWidget->getModelQuery()->isRetryDownloadAllowed(stateItem, &enableRetryButton);
 
             }
 
