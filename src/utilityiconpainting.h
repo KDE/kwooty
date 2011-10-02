@@ -29,6 +29,9 @@
 #include <QMap>
 #include <QPixmap>
 
+#include "utility.h"
+using namespace UtilityNamespace;
+
 class UtilityIconPainting : public QObject {
 
     Q_OBJECT
@@ -42,11 +45,20 @@ public:
     QPixmap blendOverLayEmblem(const QString&, const QPixmap*);
     QPixmap blendOverLayEmblem(const QString&, const QIcon&);
     QPixmap buildClearIcon(const QPixmap&);
+    QPixmap buildSemiTransparentIcon(const QPixmap&);
 
+    bool retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus&, KIcon& icon);
+    bool retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus&, KIcon& icon);
+    bool retrieveIconFromString(const QString&, KIcon& icon);
 
 private:
     static UtilityIconPainting* instance;
     QMap<QString, QPixmap> textIconMap;
+
+    QHash<int, QString> statusIconStrMap;
+    QHash<int, QString> parentStatusIconStrMap;
+    QHash<QString, KIcon> iconStrIconImageMap;
+
 
 
 
