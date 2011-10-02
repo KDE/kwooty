@@ -65,6 +65,7 @@ private:
     QMap<QString, UtilityNamespace::ItemStatus> statusEnumMap;
     QStringList par2FilesOrderedList;
     QString stdOutputLines;
+    RepairDecompressThread* parent;
     int repairStatus;
     int repairProgressValueOld;
     bool isPar2ProgramFound;
@@ -85,7 +86,6 @@ private:
 
 
 signals:
-    void updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
     void repairProcessEndedSignal(NzbCollectionData, UtilityNamespace::ItemStatus);
 
 public slots:
