@@ -297,7 +297,7 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
         if (exitStatus == QProcess::NormalExit && exitCode == QProcess::NormalExit){
 
             // notify repairDecompressThread that extraction is over :
-            emit extractProcessEndedSignal();
+            this->nzbCollectionData.setExtractTerminateStatus(ExtractSuccessStatus);
 
             this->emitFinishToArchivesWithoutErrors(ExtractSuccessStatus, PROGRESS_COMPLETE);
 
@@ -315,7 +315,6 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
             // if par2 have not been downloaded yet
             // par2 will the be downloaded and extraction of multi-set nzb will then be made at that time :
             this->nzbCollectionData.setExtractTerminateStatus(ExtractFailedStatus);
-            emit extractProcessEndedSignal(this->nzbCollectionData);
 
             this->emitFinishToArchivesWithoutErrors(ExtractFailedStatus, PROGRESS_COMPLETE);
 
@@ -324,7 +323,9 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
 
         // notify parent that extraction has finished :
         NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
-        emit updateExtractSignal(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
+        this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
+
+        emit extractProcessEndedSignal(this->nzbCollectionData);
 
         this->resetVariables();
 
@@ -353,12 +354,16 @@ void ExtractBase::passwordEnteredByUserSlot(bool passwordEntered, QString passwo
 
             // notify parent that extraction has finished :
             NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
-            emit updateExtractSignal(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
+            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
+
 
             this->resetVariables();
 
             // notify repairDecompressThread that extraction is over :
             emit extractProcessEndedSignal();
+
+
+
         }
 
     }
@@ -403,7 +408,7 @@ void ExtractBase::emitProgressToArchivesWithCurrentStatus(const UtilityNamespace
 
         if (nzbFileData.getExtractProgressionStep() == status) {
             // notify user of current file status and of its progression :
-            emit updateExtractSignal(nzbFileData.getUniqueIdentifier(), percentage, status, itemTarget);
+            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, status, itemTarget);
         }
 
     }
@@ -422,12 +427,12 @@ void ExtractBase::emitFinishToArchivesWithoutErrors(const UtilityNamespace::Item
         if (nzbFileDataStatus != ExtractBadCrcStatus) {
 
             if (nzbFileDataStatus == ExtractStatus){
-                emit updateExtractSignal(nzbFileData.getUniqueIdentifier(), percentage, status, ChildItemTarget);
+                this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, status, ChildItemTarget);
             }
         }
         else {
             // only used to send *progression %* value for files with extracting errors :
-            emit updateExtractSignal(nzbFileData.getUniqueIdentifier(), percentage, nzbFileData.getExtractProgressionStep(), ChildItemTarget);
+            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, nzbFileData.getExtractProgressionStep(), ChildItemTarget);
         }
 
     }
@@ -439,7 +444,7 @@ void ExtractBase::emitStatusToAllArchives(const int& progress, const UtilityName
     foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
 
         if (nzbFileData.isArchiveFile()) {
-            emit updateExtractSignal(nzbFileData.getUniqueIdentifier(), progress, status, target);
+            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), progress, status, target);
         }
 
     }

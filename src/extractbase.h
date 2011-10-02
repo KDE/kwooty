@@ -103,7 +103,6 @@ protected:
 
 signals:
     void extractProcessEndedSignal(NzbCollectionData = NzbCollectionData());
-    void updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
     void extractPasswordRequiredSignal(QString);
 
 
