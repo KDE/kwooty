@@ -36,6 +36,7 @@ class ClientManagerConn;
 class MyTreeView;
 class ItemParentUpdater;
 class StandardItemModel;
+class StandardItemModelQuery;
 class RepairDecompressThread;
 class SegmentsDecoderThread;
 class SegmentManager;
@@ -68,9 +69,11 @@ public:
     void handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
     void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
     int savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown, bool saveSilently = false);
+    void retryDownload(const QModelIndexList&);
 
     SegmentManager* getSegmentManager() const;
     StandardItemModel* getDownloadModel() const;
+    StandardItemModelQuery* getModelQuery() const;
     ItemParentUpdater* getItemParentUpdater() const;
     MyTreeView* getTreeView() const;
     ShutdownManager* getShutdownManager() const;
@@ -92,6 +95,7 @@ private:
     RepairDecompressThread* repairDecompressThread;
     ItemParentUpdater* itemParentUpdater;
     StandardItemModel* downloadModel;
+    StandardItemModelQuery* modelQuery;
     ClientsObserver* clientsObserver;
     FileOperations* fileOperations;
     QueueFileObserver* queueFileObserver;
@@ -116,7 +120,6 @@ signals:
     void setRemoveButtonEnabledSignal(bool);
     void recalculateNzbSizeSignal(const QModelIndex);
     void settingsChangedSignal();
-    void setIconToFileNameItemSignal(const QModelIndex);
     void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);
     void passwordEnteredByUserSignal(bool, QString password = QString());
 
