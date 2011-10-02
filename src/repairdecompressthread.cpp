@@ -96,7 +96,7 @@ void RepairDecompressThread::setupConnections() {
              this,
              SLOT(processJobSlot()));
 
-    // receive data to repair and decompress from repairDecompressSignal :
+    // receive data to repair and decompress from ItemParentUpdater :
     qRegisterMetaType<NzbCollectionData>("NzbCollectionData");
     connect (this->parent->getItemParentUpdater(),
              SIGNAL(repairDecompressSignal(NzbCollectionData)),
@@ -115,21 +115,12 @@ void RepairDecompressThread::setupConnections() {
              SLOT(repairProcessEndedSlot(NzbCollectionData, UtilityNamespace::ItemStatus)));
 
 
-    // update info about repair process :
-    connect (repair,
-             SIGNAL(updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
+
+    // update info about repair and extract process :
+    connect (this,
+             SIGNAL(updateRepairExtractSegmentSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
              this->parent->getSegmentManager(),
              SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
-
-
-    foreach (ExtractBase* extracter, this->extracterList) {
-        // update info about extract process :
-        connect (extracter,
-                 SIGNAL(updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
-                 this->parent->getSegmentManager(),
-                 SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
-    }
-
 
 }
 
@@ -481,6 +472,28 @@ UtilityNamespace::ArchiveFormat RepairDecompressThread::getArchiveFormatFromList
 }
 
 
+void RepairDecompressThread::emitProcessUpdate(QVariant parentIdentifer, int progression, UtilityNamespace::ItemStatus status, UtilityNamespace::ItemTarget itemTarget) {
+    emit updateRepairExtractSegmentSignal(parentIdentifer, progression, status, itemTarget);
+}
+
+
+void RepairDecompressThread::notifyNzbProcessEnded(const NzbCollectionData& nzbCollectionData) {
+
+    // check that nzbCollectionData processing is finished :
+    // /!\ nzbCollectionData.getNzbParentId() will be empty in case of extract processing cancelled due
+    // to passworded files. Do not go further and let the user decides what to do with this nzb content now :
+    if ( !nzbCollectionData.getNzbParentId().isEmpty() &&
+         !this->filesToRepairList.contains(nzbCollectionData) &&
+         !this->filesToExtractList.contains(nzbCollectionData) ) {
+
+        this->emitProcessUpdate(nzbCollectionData.getFirstChildUniqueIdentifier(), PROGRESS_COMPLETE, NzbProcessFinishedStatus, ParentItemTarget);
+
+
+    }
+
+}
+
+
 //==============================================================================================//
 //                                         SLOTS                                                //
 //==============================================================================================//
@@ -498,10 +511,10 @@ void RepairDecompressThread::processJobSlot() {
     this->startExtractSlot();
 
     // stop timer if there is no more pending jobs :
-    if (!this->waitForNextProcess &&
-        this->filesToRepairList.isEmpty() &&
-        this->filesToExtractList.isEmpty() &&
-        this->filesToProcessList.isEmpty() ) {
+    if ( !this->waitForNextProcess &&
+         this->filesToRepairList.isEmpty() &&
+         this->filesToExtractList.isEmpty() &&
+         this->filesToProcessList.isEmpty() ) {
 
         this->repairDecompressTimer->stop();
     }
@@ -584,6 +597,8 @@ void RepairDecompressThread::repairProcessEndedSlot(NzbCollectionData nzbCollect
         this->waitForNextProcess = false;
     }
 
+    // if repair has failed, notify that nzb processing has ended now :
+    this->notifyNzbProcessEnded(nzbCollectionDataToExtract);
 
 }
 
@@ -591,6 +606,8 @@ void RepairDecompressThread::repairProcessEndedSlot(NzbCollectionData nzbCollect
 
 
 void RepairDecompressThread::extractProcessEndedSlot(NzbCollectionData nzbCollectionData) {
+
+    bool triggerPar2Download = false;
 
     // **case of multi set nzb** => remove other nzb sets as the first extraction failed,
     // par2 files will have to be downloaded without extracting *now* the others parts of the nzb.
@@ -600,10 +617,16 @@ void RepairDecompressThread::extractProcessEndedSlot(NzbCollectionData nzbCollec
 
         // remove multi nzb-parts with the same parent ID :
         if (filesToRepairList.contains(nzbCollectionData)) {
-
             filesToRepairList.removeAll(nzbCollectionData);
-
         }
+
+        triggerPar2Download = true;
+    }
+
+
+    // if extract process has ended, notify that nzb processing is now finished :
+    if (!triggerPar2Download) {
+        this->notifyNzbProcessEnded(nzbCollectionData);
     }
 
     this->waitForNextProcess = false;
@@ -652,6 +675,8 @@ void RepairDecompressThread::processPendingFiles() {
             this->processRarFilesFromDifferentGroups(fileBaseNameList, nzbCollectionData);
         }
 
+        // processing could already be ended, notify main thread :
+        this->notifyNzbProcessEnded(nzbCollectionData);
     }
 
 }
