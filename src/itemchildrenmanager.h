@@ -53,7 +53,6 @@ signals:
 
 
 public slots:
-    void setIconToFileNameItemSlot(const QModelIndex);
     void changePar2FilesStatusSlot(const QModelIndex, UtilityNamespace::ItemStatus);
     void settingsChangedSlot();
 
