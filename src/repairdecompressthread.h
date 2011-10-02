@@ -43,6 +43,7 @@ public:
     RepairDecompressThread();
     ~RepairDecompressThread();
     CentralWidget* getCentralWidget();
+    void emitProcessUpdate(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
 
 private:
     QThread* dedicatedThread;
@@ -60,19 +61,20 @@ private:
     void processPendingFiles();
     void processRarFilesFromDifferentGroups(const QStringList&, NzbCollectionData&);
     void processRarFilesFromSameGroup(NzbCollectionData&);
+    void preRepairProcessing(const NzbCollectionData&);
+    void notifyNzbProcessEnded(const NzbCollectionData& nzbCollectionData);
     bool isListContainsdifferentGroups(const QList<NzbFileData>&);
     NzbFileData tryToGuessDecodedFileName(NzbFileData&, const QList<NzbFileData>&, const QString&);
     QStringList listDifferentFileBaseName(NzbCollectionData&);
     QString getBaseNameFromPar2(const NzbFileData&);
     QString getBaseNameFromRar(const NzbFileData&);
     UtilityNamespace::ArchiveFormat getArchiveFormatFromList(const QList<NzbFileData>&);
-    void preRepairProcessing(const NzbCollectionData&);
     ExtractBase* retrieveCorrespondingExtracter(const NzbCollectionData&);
 
 
+
 signals:
-    void updateRepairSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
-    void updateExtractSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
+    void updateRepairExtractSegmentSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
 
 public slots:
     void repairDecompressSlot(NzbCollectionData);
