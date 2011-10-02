@@ -27,11 +27,11 @@
 #include <QDateTime>
 
 #include "standarditemmodel.h"
+#include "standarditemmodelquery.h"
 #include "centralwidget.h"
 #include "notificationmanager.h"
 #include "servermanager.h"
 #include "observers/clientsobserver.h"
-#include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
 
 
@@ -152,7 +152,7 @@ void StatsInfoBuilder::updateDownloadSpeedSlot() {
     if (serverManager) {
 
         // search first current item being downloading :
-        QStandardItem* stateItem = this->parent->getQueueFileObserver()->searchParentItem(DownloadStatus);
+        QStandardItem* stateItem = this->parent->getModelQuery()->searchParentItem(DownloadStatus);
 
         // if item has been found :
         if (stateItem) {
