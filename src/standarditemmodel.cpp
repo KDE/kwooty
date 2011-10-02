@@ -21,7 +21,6 @@
 #include "standarditemmodel.h"
 
 #include "centralwidget.h"
-#include "data/itemstatusdata.h"
 #include "data/nzbfiledata.h"
 
 
@@ -132,16 +131,17 @@ void StandardItemModel::storeStatusDataToItem(QStandardItem* stateItem, const It
 
         // if state changed and is a parent, emit signal :
         if (this->isNzbItem(stateItem)) {
-            emit parentStatusItemChangedSignal(stateItem);
+            emit parentStatusItemChangedSignal(stateItem, itemStatusData);
         }
         // else emit signal if child status have changed :
         else {
-            emit childStatusItemChangedSignal(stateItem);
+            emit childStatusItemChangedSignal(stateItem, itemStatusData);
         }
 
     }
 
 }
+
 
 
 void StandardItemModel::updateNzbFileDataToItem(QStandardItem* item, const NzbFileData& nzbFileData) {
@@ -171,6 +171,21 @@ UtilityNamespace::ItemStatus StandardItemModel::getChildStatusFromNzbIndex(const
 
 }
 
+QStandardItem* StandardItemModel::getNzbItem(QStandardItem* item) {
+
+    QStandardItem* parentFileNameItem;
+
+    // if current item is a child, retrieve its parent :
+    if (!this->isNzbItem(item)) {
+        parentFileNameItem = this->getFileNameItemFromIndex(item->parent()->index());
+    }
+    else {
+        parentFileNameItem = this->getFileNameItemFromIndex(item->index());
+    }
+
+    return parentFileNameItem;
+
+}
 
 ItemStatusData StandardItemModel::getStatusDataFromIndex(const QModelIndex& index) {
 
@@ -237,10 +252,5 @@ QStandardItem* StandardItemModel::getFileNameItemFromRowNumber(const int& row) {
 
 
 bool StandardItemModel::isNzbItem(QStandardItem* item){
-
-    bool isNzb = false;
-    if (item->parent() == 0){
-        isNzb = true;
-    }
-    return isNzb;
+    return (item->parent() == 0);
 }
