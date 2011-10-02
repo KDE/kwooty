@@ -28,17 +28,21 @@ using namespace UtilityNamespace;
 class StandardItemModel;
 class NzbFileData;
 
-class ItemPostDownloadUpdater : public ItemAbstractUpdater
-{
+
+class ItemPostDownloadUpdater : public ItemAbstractUpdater {
+
 public:
+
     ItemPostDownloadUpdater(ItemParentUpdater*);
     void updateItems(const QModelIndex&, const int, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget itemTarget = BothItemsTarget);
     void addFileTypeInfo(QStandardItem*, const QString&, const bool&, const UtilityNamespace::ArticleEncodingType&);
 
 private:
+
     void updateNzbChildrenItems(const QModelIndex&, const int, const int);
     void updateDecodeItems(const QModelIndex&, const int, const UtilityNamespace::ItemStatus);
-    void updateRepairExtractItems(const QModelIndex&, const int, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget itemTarget);
+    void updateRepairExtractItems(const QModelIndex&, const int, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
+
 
 };
 
