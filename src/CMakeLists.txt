@@ -27,6 +27,7 @@ set(Kwooty_lib_SRCS
   itemabstractupdater.cpp
   itemchildrenmanager.cpp
   standarditemmodel.cpp
+  standarditemmodelquery.cpp
   segmentmanager.cpp
   mystatusbar.cpp
   mytreeview.cpp
