@@ -59,6 +59,9 @@ SOURCES += main.cpp \
     plugins/scheduler/schedulerplugin.cpp \
     plugins/scheduler/scheduler.cpp \
     plugins/scheduler/preferencesscheduler.cpp \
+    plugins/autoretry/autoretryplugin.cpp \
+    plugins/autoretry/autoretry.cpp \
+    plugins/autoretry/preferencesautoretry.cpp \
     plugins/plugin.cpp \
     plugins/pluginmanager.cpp \
     preferences/preferencesplugins.cpp \
@@ -81,7 +84,8 @@ SOURCES += main.cpp \
     jobs/concatsplitfilesjob.cpp \
     plugins/scheduler/schedulertableitemdelegate.cpp \
     plugins/scheduler/schedulerfilehandler.cpp \
-    serverspeedmanager.cpp
+    serverspeedmanager.cpp \
+    standarditemmodelquery.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -137,6 +141,9 @@ HEADERS += mainwindow.h \
     plugins/scheduler/schedulerplugin.h \
     plugins/scheduler/scheduler.h \
     plugins/scheduler/preferencesscheduler.h \
+    plugins/autoretry/autoretryplugin.h \
+    plugins/autoretry/autoretry.h \
+    plugins/autoretry/preferencesautoretry.h \
     plugins/plugin.h \
     plugins/pluginmanager.h \
     preferences/preferencesplugins.h \
@@ -160,7 +167,8 @@ HEADERS += mainwindow.h \
     jobs/concatsplitfilesjob.h \
     plugins/scheduler/schedulertableitemdelegate.h \
     plugins/scheduler/schedulerfilehandler.h \
-    serverspeedmanager.h
+    serverspeedmanager.h \
+    standarditemmodelquery.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
@@ -168,5 +176,6 @@ FORMS += centralwidget.ui \
     preferences/preferencesdisplay.ui \
     plugins/watchfolder/preferenceswatchfolder.ui \
     plugins/scheduler/preferencesscheduler.ui \
+    plugins/scheduler/preferencesautoretry.ui \
     preferences/preferencesshutdown.ui \
     preferences/serversettings.ui
