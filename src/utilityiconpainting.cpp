@@ -23,18 +23,74 @@
 
 #include <KDebug>
 #include <KIconEffect>
-#include <KIconLoader>
 
 #include <QApplication>
 #include <QPainter>
 
 #include "preferences/preferencesserver.h"
-#include "utility.h"
-using namespace UtilityNamespace;
+
+
+UtilityIconPainting::UtilityIconPainting() : QObject(qApp){
+
+
+    // build map in order to display status icon near to each child file name item :
+    statusIconStrMap.insert(DownloadStatus,            "mail-receive");
+    statusIconStrMap.insert(DownloadFinishStatus,      "mail-mark-unread");
+    statusIconStrMap.insert(IdleStatus,                "mail-mark-unread");
+    statusIconStrMap.insert(PauseStatus,               "mail-mark-unread");
+    statusIconStrMap.insert(PausingStatus,             "mail-mark-unread");
+    statusIconStrMap.insert(WaitForPar2IdleStatus,     "mail-mark-unread-new");
+    statusIconStrMap.insert(ScanStatus,                "mail-mark-unread");
+    statusIconStrMap.insert(DecodeStatus,              "mail-mark-unread");
+    statusIconStrMap.insert(DecodeFinishStatus,        "mail-mark-read");
+    statusIconStrMap.insert(DecodeErrorStatus,         "edit-delete");
+    statusIconStrMap.insert(VerifyStatus,              "mail-mark-read");
+    statusIconStrMap.insert(VerifyFoundStatus,         "dialog-ok-apply");
+    statusIconStrMap.insert(VerifyMatchStatus,         "dialog-ok-apply");
+    statusIconStrMap.insert(VerifyMissingStatus,       "edit-delete");
+    statusIconStrMap.insert(VerifyDamagedStatus,       "edit-delete");
+    statusIconStrMap.insert(RepairStatus,              "mail-mark-read");
+    statusIconStrMap.insert(RepairNotPossibleStatus,   "edit-delete");
+    statusIconStrMap.insert(RepairFailedStatus,        "edit-delete");
+    statusIconStrMap.insert(ExtractStatus,             "dialog-ok-apply");
+    statusIconStrMap.insert(ExtractBadCrcStatus,       "edit-delete");
+    statusIconStrMap.insert(ExtractSuccessStatus,      "dialog-ok-apply");
+    statusIconStrMap.insert(ExtractFailedStatus,       "edit-delete");
+
+    // build map in order to display status icon near to each parent nzb file name item :
+    parentStatusIconStrMap.insert(IdleStatus,           "go-next-view");
+    parentStatusIconStrMap.insert(PauseStatus,          "go-next-view");
+    parentStatusIconStrMap.insert(PausingStatus,        "go-next-view");
+    parentStatusIconStrMap.insert(DownloadStatus,       "go-next-view");
+    parentStatusIconStrMap.insert(VerifyFinishedStatus, "dialog-ok");
+    parentStatusIconStrMap.insert(RepairFinishedStatus, "dialog-ok");
+    parentStatusIconStrMap.insert(ExtractFinishedStatus,"dialog-ok");
+    parentStatusIconStrMap.insert(DownloadFinishStatus, "go-next-view");
 
 
 
-UtilityIconPainting::UtilityIconPainting() : QObject(qApp){}
+    // build a map to store every used icons in memory according to their names :
+    foreach (QString iconName, statusIconStrMap.values()) {
+        iconStrIconImageMap.insert(iconName, KIcon(iconName));
+    }
+
+    foreach (QString iconName, parentStatusIconStrMap.values()) {
+        iconStrIconImageMap.insert(iconName, KIcon(iconName));
+    }
+
+    iconStrIconImageMap.insert("mail-reply-list",       KIcon("mail-reply-list"));
+    iconStrIconImageMap.insert("mail-mark-important",   KIcon("mail-mark-important"));
+    iconStrIconImageMap.insert("mail-mark-important",   KIcon("mail-mark-important"));
+    iconStrIconImageMap.insert("dialog-warning",        KIcon("dialog-warning"));
+    iconStrIconImageMap.insert("dialog-cancel",         KIcon("dialog-cancel"));
+
+    // add semi-transparent effect to icon for Idle status :
+    QPixmap pixmap = KIconLoader::global()->loadIcon("go-next-view", KIconLoader::Small);
+    KIcon goNextViewTransparent(this->instance->buildSemiTransparentIcon(pixmap));
+    iconStrIconImageMap.insert("go-next-view-transparent", goNextViewTransparent);
+
+}
+
 
 UtilityIconPainting::~UtilityIconPainting() {}
 
@@ -49,6 +105,27 @@ UtilityIconPainting* UtilityIconPainting::getInstance() {
     return instance;
 
 }
+
+
+
+
+bool UtilityIconPainting::retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus& status, KIcon& icon) {
+    icon = this->iconStrIconImageMap.value(this->parentStatusIconStrMap.value(status));
+    return this->parentStatusIconStrMap.contains(status);
+}
+
+bool UtilityIconPainting::retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus& status, KIcon& icon) {
+    icon = this->iconStrIconImageMap.value(this->statusIconStrMap.value(status));
+    return this->statusIconStrMap.contains(status);
+}
+
+
+bool UtilityIconPainting::retrieveIconFromString(const QString& iconName, KIcon& icon) {
+    icon = this->iconStrIconImageMap.value(iconName);
+    return this->iconStrIconImageMap.contains(iconName);
+}
+
+
 
 
 QPixmap UtilityIconPainting::blendOverLayEmblem(const QString& overlayIconStr, const QPixmap* pixmap) {
@@ -92,6 +169,13 @@ QPixmap UtilityIconPainting::buildClearIcon(const QPixmap& sourceIcon) {
 }
 
 
+QPixmap UtilityIconPainting::buildSemiTransparentIcon(const QPixmap& sourceIcon) {
+
+    QImage clearImage = sourceIcon.toImage();
+    KIconEffect::semiTransparent(clearImage);
+    return QPixmap::fromImage(clearImage);
+
+}
 
 
 
