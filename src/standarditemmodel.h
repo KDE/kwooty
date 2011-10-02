@@ -26,6 +26,7 @@
 #include <QStandardItem>
 #include <QModelIndex>
 
+#include "data/itemstatusdata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -47,6 +48,7 @@ public:
     QStandardItem* getProgressItemFromIndex(const QModelIndex&);
     QStandardItem* getSizeItemFromIndex(const QModelIndex&);
     ItemStatusData getStatusDataFromIndex(const QModelIndex&);
+    QStandardItem* getNzbItem(QStandardItem* item);
     NzbFileData getNzbFileDataFromIndex(const QModelIndex&);
     int getProgressValueFromIndex(const QModelIndex&);
     quint64 getSizeValueFromIndex(const QModelIndex&);
@@ -67,8 +69,8 @@ private:
 
 
 signals:
-    void parentStatusItemChangedSignal(QStandardItem*);
-    void childStatusItemChangedSignal(QStandardItem*);
+    void parentStatusItemChangedSignal(QStandardItem*, ItemStatusData);
+    void childStatusItemChangedSignal(QStandardItem*, ItemStatusData);
     void parentProgressItemChangedSignal();
 
 
