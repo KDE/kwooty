@@ -21,49 +21,44 @@
 #include "itemabstractupdater.h"
 
 #include <KDebug>
-#include <KIcon>
 #include "itemparentupdater.h"
 #include "standarditemmodel.h"
 #include "kwootysettings.h"
 #include "utilityiconpainting.h"
-#include "data/itemstatusdata.h"
 #include "data/nzbfiledata.h"
 
 
 
-ItemAbstractUpdater::ItemAbstractUpdater(QObject* parent) : QObject (parent)
-{
-    // build map in order to display status icon near to file name item :
-    statusIconStrMap.insert(DownloadStatus,            "mail-receive");
-    statusIconStrMap.insert(DownloadFinishStatus,      "mail-mark-unread");
-    statusIconStrMap.insert(IdleStatus,                "mail-mark-unread");
-    statusIconStrMap.insert(PauseStatus,               "mail-mark-unread");
-    statusIconStrMap.insert(PausingStatus,             "mail-mark-unread");
-    statusIconStrMap.insert(WaitForPar2IdleStatus,     "mail-mark-unread-new");
-    statusIconStrMap.insert(ScanStatus,                "mail-mark-unread");
-    statusIconStrMap.insert(DecodeStatus,              "mail-mark-unread");
-    statusIconStrMap.insert(DecodeFinishStatus,        "mail-mark-read");
-    statusIconStrMap.insert(DecodeErrorStatus,         "edit-delete");
-    statusIconStrMap.insert(VerifyStatus,              "mail-mark-read");
-    statusIconStrMap.insert(VerifyFoundStatus,         "dialog-ok-apply");
-    statusIconStrMap.insert(VerifyMatchStatus,         "dialog-ok-apply");
-    statusIconStrMap.insert(VerifyMissingStatus,       "edit-delete");
-    statusIconStrMap.insert(VerifyDamagedStatus,       "edit-delete");
-    statusIconStrMap.insert(RepairStatus,              "mail-mark-read");
-    statusIconStrMap.insert(RepairNotPossibleStatus,   "edit-delete");
-    statusIconStrMap.insert(RepairFailedStatus,        "edit-delete");
-    statusIconStrMap.insert(ExtractStatus,             "dialog-ok-apply");
-    statusIconStrMap.insert(ExtractBadCrcStatus,       "edit-delete");
-    statusIconStrMap.insert(ExtractSuccessStatus,      "dialog-ok-apply");
-    statusIconStrMap.insert(ExtractFailedStatus,       "edit-delete");
+ItemAbstractUpdater::ItemAbstractUpdater(StandardItemModel* downloadModel, ItemHierarchy itemHierarchy) : QObject (downloadModel){
 
+    this->downloadModel = downloadModel;
+
+    // setup connection in order to display proper icon near each file name according to its current status :
+    // update icon near child file name item :
+    if (itemHierarchy == ItemAbstractUpdater::Child) {
+
+        connect (this->downloadModel,
+                 SIGNAL(childStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+                 this,
+                 SLOT(childStatusIconUpdateSlot(QStandardItem*, ItemStatusData)));
+
+    }
+    // update icon near parent file name item :
+    else if (itemHierarchy == ItemAbstractUpdater::Parent) {
+
+        connect (this->downloadModel,
+                 SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+                 this,
+                 SLOT(parentStatusIconUpdateSlot(QStandardItem*, ItemStatusData)));
+
+    }
 
 }
 
 
-ItemAbstractUpdater::ItemAbstractUpdater()
-{
-}
+
+ItemAbstractUpdater::ItemAbstractUpdater() { }
+
 
 
 void ItemAbstractUpdater::clear() {
@@ -87,125 +82,198 @@ void ItemAbstractUpdater::clear() {
 
 
 
-void ItemAbstractUpdater::countItemStatus(const int status) {
+void ItemAbstractUpdater::countItemStatus(const int& status) {
 
 
     switch (status) {
 
     case DownloadStatus: {
-            this->downloadItemNumber++;
-            break;
-        };
+        this->downloadItemNumber++;
+        break;
+    };
 
     case DownloadFinishStatus: {
-            this->downloadFinishItemNumber++;
-            break;
-        };
+        this->downloadFinishItemNumber++;
+        break;
+    };
     case IdleStatus: {
-            this->inQueueItemNumber++;
-            break;
-        };
+        this->inQueueItemNumber++;
+        break;
+    };
     case PauseStatus: {
-            this->pauseItemNumber++;
-            break;
-        };
+        this->pauseItemNumber++;
+        break;
+    };
     case PausingStatus: {
-            this->pausingItemNumber++;
-            break;
-        };
+        this->pausingItemNumber++;
+        break;
+    };
     case DecodeFinishStatus: {
-            this->decodeFinishItemNumber++;
-            break;
-        };
+        this->decodeFinishItemNumber++;
+        break;
+    };
     case DecodeErrorStatus: {
-            this->decodeErrorItemNumber++;
-            break;
-        };
+        this->decodeErrorItemNumber++;
+        break;
+    };
     case DecodeStatus: {
-            this->decodeItemNumber++;
-            break;
-        };
+        this->decodeItemNumber++;
+        break;
+    };
     case ScanStatus: {
-            this->scanItemNumber++;
-            break;
-        };
+        this->scanItemNumber++;
+        break;
+    };
     case WaitForPar2IdleStatus: {
-            this->decodeFinishItemNumber++;
-            break;
-        };
+        this->decodeFinishItemNumber++;
+        break;
+    };
 
-        // /!\ during download process the status could be ExtractSuccessStatus when following condition occurs :
-        // A multi nzb-set has been fully downloaded and par2 files were not needed (WaitForPar2IdleStatus)
-        // then extract process if directly done : 1st nzb-set is correctly extracted
-        // but extracting of 2nd nzb-set failed (due to a bad crc for eg.)
-        // par2 files are then downloaded for repairing of 2nd nzb-set.
-        // => consider previously extracted files from 1st nzb-set as decodeFinish files :
+    // /!\ during download process the status could be ExtractSuccessStatus when following condition occurs :
+    // A multi nzb-set has been fully downloaded and par2 files were not needed (WaitForPar2IdleStatus)
+    // then extract process if directly done : 1st nzb-set is correctly extracted
+    // but extracting of 2nd nzb-set failed (due to a bad crc for eg.)
+    // par2 files are then downloaded for repairing of 2nd nzb-set.
+    // => consider previously extracted files from 1st nzb-set as decodeFinish files :
     case ExtractSuccessStatus: {
-            this->decodeFinishItemNumber++;
-            break;
-        };
+        this->decodeFinishItemNumber++;
+        break;
+    };
 
     }
 
 }
 
 
+void ItemAbstractUpdater::setIcon(QStandardItem* stateItem, const QString& iconName) {
 
-void ItemAbstractUpdater::setIconToFileNameItem(const QModelIndex& index, UtilityNamespace::ItemStatus status) {
+    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
 
-    if (!this->downloadModel->isNzbItem(this->downloadModel->itemFromIndex(index))) {
+    KIcon icon;
+    bool iconFound = UtilityIconPainting::getInstance()->retrieveIconFromString(iconName, icon);
 
-        if (statusIconStrMap.contains(status)) {
+    if (iconFound) {
+        fileNameItem->setIcon(icon);
+    }
 
-            if (Utility::isDownloadFinish(status)) {
+}
 
-                // get final status :
-                ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(index);
-                if (itemStatusData.getDataStatus() == NoData) {
-                    // in this case the status is set to DecodeErrorStatus only to display the proper icon :
-                    status = DecodeErrorStatus;
-                }
-            }
+void ItemAbstractUpdater::setIcon(QStandardItem* stateItem, const UtilityNamespace::ItemStatus& status) {
 
-            // set a special icon if segment is still pending and has not been found on master server :
-            else if (Utility::isInQueue(status)) {
+    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
 
-                // get final status :
-                ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(index);
+    // if item is the parent item :
+    if (this->downloadModel->isNzbItem(fileNameItem)) {
 
-                if (itemStatusData.getDataStatus() == DataPendingBackupServer) {
+        // update its icon according to its current status :
+        KIcon icon;
+        bool iconFound = UtilityIconPainting::getInstance()->retrieveParentIconFromStatus(status, icon);
 
-                    QString iconStr = "mail-mark-unread";
-                    if (this->statusIconStrMap.value(status) == iconStr) {
+        if (iconFound) {
+            fileNameItem->setIcon(icon);
+        }
 
-                        QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
-                        fileNameItem->setIcon(KIcon("mail-reply-list"));
-                        return;
-                    }
-                }
+    }
+    // else item is the child item :
+    else {
 
-            }
-            else if (Utility::isDecodeFinish(status)) {
-                // get final status :
-                ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(index);
+        // update its icon according to its current status :
+        KIcon icon;
+        bool iconFound = UtilityIconPainting::getInstance()->retrieveChildIconFromStatus(status, icon);
 
-                if (Utility::isBadCrcForYencArticle(itemStatusData.getCrc32Match(), itemStatusData.getArticleEncodingType())) {
+        if (iconFound) {
+            fileNameItem->setIcon(icon);
+        }
 
-                    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
-                    fileNameItem->setIcon(KIcon("mail-mark-important"));
-                    return;
+    }
 
-                }
+}
 
 
-            }
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
+
+
+void ItemAbstractUpdater::parentStatusIconUpdateSlot(QStandardItem* stateItem, ItemStatusData itemStatusData) {
+
+    UtilityNamespace::ItemStatus status = itemStatusData.getStatus();
+
+    // get final status :
+    if (itemStatusData.isPostProcessFinish()) {
+
+        if (itemStatusData.getDataStatus() == DataComplete) {
 
             // get fileName item and set corresponding icon :
-            QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(index);
-            fileNameItem->setIcon(KIcon(this->statusIconStrMap.value(status)));
+            this->setIcon(stateItem, status);
+        }
+
+        else if (itemStatusData.getDataStatus() == DataIncomplete) {
+
+            // get fileName item and set corresponding icon :
+            this->setIcon(stateItem, "dialog-warning");
 
         }
+
     }
+
+    else if (Utility::isInQueue(status)) {
+        // get fileName item and set corresponding icon :
+        this->setIcon(stateItem, "go-next-view-transparent");
+    }
+
+    // get fileName item and set corresponding icon :
+    else if (Utility::isDownloadOrPausing(status)) {
+        this->setIcon(stateItem, status);
+    }
+
+    else if (Utility::isDownloadFinish(status)) {
+
+        if (itemStatusData.getDataStatus() == NoData) {
+            this->setIcon(stateItem, "dialog-cancel");
+        }
+    }
+
+}
+
+
+void ItemAbstractUpdater::childStatusIconUpdateSlot(QStandardItem* stateItem, ItemStatusData itemStatusData) {
+
+    UtilityNamespace::ItemStatus status = itemStatusData.getStatus();
+
+    if (Utility::isDownloadFinish(status)) {
+
+        // get final status :
+        if (itemStatusData.getDataStatus() == NoData) {
+            // in this case the status is set to DecodeErrorStatus only to display the proper icon :
+            status = DecodeErrorStatus;
+        }
+    }
+
+    // set a special icon if segment is still pending and has not been found on master server :
+    else if (Utility::isInQueue(status)) {
+
+        // get final status :
+        if (itemStatusData.getDataStatus() == DataPendingBackupServer) {
+            this->setIcon(stateItem, "mail-reply-list");
+            return;
+        }
+
+    }
+    else if (Utility::isDecodeFinish(status)) {
+        // get final status :
+
+        if (Utility::isBadCrcForYencArticle(itemStatusData.getCrc32Match(), itemStatusData.getArticleEncodingType())) {
+            this->setIcon(stateItem, "mail-mark-important");
+            return;
+
+        }
+
+    }
+
+    // get fileName item and set corresponding icon :
+    this->setIcon(stateItem, status);
+
 
 }
 
