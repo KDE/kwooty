@@ -26,6 +26,7 @@
 #include <QModelIndex>
 #include <QHash>
 
+#include "data/itemstatusdata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -33,20 +34,27 @@ class ItemParentUpdater;
 class StandardItemModel;
 class ItemStatusData;
 
-class ItemAbstractUpdater : public QObject
-{
 
+class ItemAbstractUpdater : public QObject {
 
     Q_OBJECT
+    Q_ENUMS(ItemHierarchy)
+
 
 public:
-    ItemAbstractUpdater(QObject* parent = 0);
+
+    enum ItemHierarchy{ Parent,
+                        Child
+                      };
+
+    ItemAbstractUpdater(StandardItemModel*, ItemHierarchy);
     ItemAbstractUpdater();
 
 protected:
+
     StandardItemModel* downloadModel;
     ItemParentUpdater* itemParentUpdater;
-    QHash<int, QString> statusIconStrMap;
+
     int downloadItemNumber;
     int progressNumber;
     int downloadFinishItemNumber;
@@ -65,8 +73,16 @@ protected:
     int pendingSegmentsOnBackupNumber;
 
     void clear();
-    void countItemStatus(const int);
-    void setIconToFileNameItem(const QModelIndex&, UtilityNamespace::ItemStatus);
+    void countItemStatus(const int&);
+    void setIcon(QStandardItem*, const UtilityNamespace::ItemStatus&);
+    void setIcon(QStandardItem*, const QString&);
+
+
+protected slots:
+
+    void parentStatusIconUpdateSlot(QStandardItem*, ItemStatusData);
+    void childStatusIconUpdateSlot(QStandardItem*, ItemStatusData);
+
 
 };
 
