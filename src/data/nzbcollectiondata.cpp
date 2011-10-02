@@ -40,6 +40,17 @@ QList<NzbFileData> NzbCollectionData::takeNzbFileDataList() {
 }
 
 
+QVariant NzbCollectionData::getFirstChildUniqueIdentifier() const{
+
+    QVariant uniqueIdentifier;
+
+    if (!this->nzbFileDataList.isEmpty()) {
+        uniqueIdentifier = this->nzbFileDataList.at(0).getUniqueIdentifier();
+    }
+    return uniqueIdentifier;
+}
+
+
 QList<NzbFileData> NzbCollectionData::getNzbFileDataList() const{
     return this->nzbFileDataList;
 }

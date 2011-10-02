@@ -35,6 +35,7 @@ public:
 
     QList<NzbFileData> takeNzbFileDataList();
     QList<NzbFileData> getNzbFileDataList() const;
+    QVariant getFirstChildUniqueIdentifier() const;
     void setNzbFileDataList(const QList<NzbFileData>&);
     void setNzbParentId(const QString&);
     QString getNzbParentId() const;
