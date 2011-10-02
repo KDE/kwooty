@@ -31,8 +31,8 @@
 
 #include "centralwidget.h"
 #include "standarditemmodel.h"
+#include "standarditemmodelquery.h"
 #include "mystatusbar.h"
-#include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
 
 
@@ -78,7 +78,7 @@ void ShutdownManager::setupConnections() {
     connect (parent->getTreeView(), SIGNAL(allRowRemovedSignal()), this, SLOT(shutdownCancelledSlot()));
 
     // enable or disable shutdown button according to nzb parent status:
-    connect(parent->getDownloadModel(), SIGNAL(parentStatusItemChangedSignal(QStandardItem*)), this, SLOT(statusItemUpdatedSlot()));
+    connect(parent->getDownloadModel(), SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)), this, SLOT(statusItemUpdatedSlot()));
 
 }
 
@@ -434,7 +434,7 @@ void ShutdownManager::shutdownCancelledSlot() {
     emit setShutdownButtonCheckedSignal(false);
 
     // if no more jobs are available, set system button as "not enabled" :
-    if (this->parent->getQueueFileObserver()->areJobsFinished()) {
+    if (this->parent->getModelQuery()->areJobsFinished()) {
         emit setShutdownButtonEnabledSignal(false);
     }
 
@@ -446,7 +446,7 @@ void ShutdownManager::shutdownCancelledSlot() {
 void ShutdownManager::statusItemUpdatedSlot() {
 
     // if activity detected, set shutdown button as enabled :
-    if (!this->parent->getQueueFileObserver()->areJobsFinished()) {
+    if (!this->parent->getModelQuery()->areJobsFinished()) {
 
         emit setShutdownButtonEnabledSignal(true);
     }
@@ -471,7 +471,7 @@ void ShutdownManager::enableSystemShutdownSlot(bool enable) {
         if (Settings::jobsRadioButton()) {
 
             // start activity polling timer :
-            if (!this->parent->getQueueFileObserver()->areJobsFinished()) {
+            if (!this->parent->getModelQuery()->areJobsFinished()) {
 
                 this->activityMonitorTimer->start(this->shutdownTimerInterval);
 
@@ -512,7 +512,7 @@ void ShutdownManager::retrieveCurrentJobsInfoSlot(){
 
     if (Settings::jobsRadioButton()) {
 
-        bool jobsFinished = this->parent->getQueueFileObserver()->areJobsFinished();
+        bool jobsFinished = this->parent->getModelQuery()->areJobsFinished();
 
         // set timer interval to lower value if jobs finished has been confirmed :
         if (jobsFinished) {
