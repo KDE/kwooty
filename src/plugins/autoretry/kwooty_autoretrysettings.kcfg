@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+		http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+	
+    <kcfgfile name="kwootyrc"/>
+    <group name="autoretryplugin">
+    
+       <entry name="groupBoxWatch" type="Bool">
+            <label>Enable folder monitoring</label>
+            <default>false</default>
+       </entry>
+	   <entry name="watchFolder" type="Url">
+            <label>watch folder</label>
+       </entry>
+	   <entry name="suppressNzbFromWatch" type="Bool">
+            <label>Suppress nzb file from watch folder when enqueued</label>
+            <default>false</default>
+       </entry>
+	   <entry name="copyNzbFromWatch" type="Bool">
+            <label>Copy nzb file in destination folder</label>
+            <default>true</default>
+        </entry>
+        
+	</group>
+</kcfg>
