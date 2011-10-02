@@ -31,10 +31,9 @@
 #include "kwootysettings.h"
 
 
-ItemChildrenManager::ItemChildrenManager(CentralWidget* parent, ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater (parent) {
+ItemChildrenManager::ItemChildrenManager(CentralWidget* parent, ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater (parent->getDownloadModel(), ItemAbstractUpdater::Child) {
 
     this->parent = parent;
-    this->downloadModel = parent->getDownloadModel();
     this->itemParentUpdater = itemParentUpdater;
 
     // set smartPar2Download setting value :
@@ -47,13 +46,6 @@ ItemChildrenManager::ItemChildrenManager(CentralWidget* parent, ItemParentUpdate
 
 
 void ItemChildrenManager::setupConnections() {
-
-    // set Icon near file name item :
-    connect (parent,
-             SIGNAL(setIconToFileNameItemSignal(const QModelIndex)),
-             this,
-             SLOT(setIconToFileNameItemSlot(const QModelIndex)));
-
 
     // parent notify that settings have been changed :
     connect (parent,
@@ -72,7 +64,6 @@ void ItemChildrenManager::setupConnections() {
              SIGNAL(downloadWaitingPar2Signal()),
              itemParentUpdater,
              SIGNAL(downloadWaitingPar2Signal()));
-
 
 }
 
@@ -148,29 +139,6 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex index) 
 //============================================================================================================//
 
 
-void ItemChildrenManager::setIconToFileNameItemSlot(const QModelIndex index) {
-
-    // for a given parent, get each children items in order to update their status icon :
-    QStandardItem* parentItem = this->downloadModel->itemFromIndex(index);
-
-    for (int i = 0; i < parentItem->rowCount(); i++) {
-
-        // get corresponding file name index :
-        QModelIndex fileNameIndex = index.child(i, FILE_NAME_COLUMN);
-
-        // get current item status :
-        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(fileNameIndex);
-        UtilityNamespace::ItemStatus status = this->downloadModel->getStatusFromStateItem(stateItem);
-
-        // set icon :
-        this->setIconToFileNameItem(fileNameIndex, status);
-
-    }
-
-}
-
-
-
 void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex index, UtilityNamespace::ItemStatus itemStatus) {
 
     // get itemStatusData :
@@ -209,9 +177,6 @@ void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex index, Uti
         }
 
         if (par2StatusChanged) {
-
-            // update par2 status icons :
-            this->setIconToFileNameItemSlot(index);
 
             // recalculate nzbSize in order get to get a proper progress computation
             // regarding if par2 have to be downloaded or not :
@@ -309,9 +274,6 @@ void ItemChildrenManager::settingsChangedSlot() {
 
             // change smart par2 status :
             this->changePar2FilesStatusSlot(parentItem->index(), itemStatus);
-
-            //  update icons :
-            this->setIconToFileNameItemSlot(parentItem->index());
 
         }
 
