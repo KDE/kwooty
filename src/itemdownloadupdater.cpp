@@ -33,10 +33,10 @@
 using namespace UtilityNamespace;
 
 
-ItemDownloadUpdater::ItemDownloadUpdater(ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater)
+ItemDownloadUpdater::ItemDownloadUpdater(ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater->getDownloadModel(), ItemAbstractUpdater::Child)
 {
     this->itemParentUpdater = itemParentUpdater;
-    this->downloadModel = itemParentUpdater->getDownloadModel();
+
 }
 
 
@@ -103,9 +103,6 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
 
     // update itemStatusData in state item :
     this->downloadModel->updateStatusDataFromIndex(parentModelIndex, itemStatusData);
-
-    // set status icon :
-    this->setIconToFileNameItem(parentModelIndex, itemStatusData.getStatus());
 
 }
 
