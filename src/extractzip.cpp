@@ -188,7 +188,7 @@ void ExtractZip::sendExtractProgramNotFoundNotification() {
 
     // notify parent that program is missing :
     NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
-    emit updateExtractSignal(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, SevenZipProgramMissing, ParentItemTarget);
+    this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, SevenZipProgramMissing, ParentItemTarget);
 
     // notify repairDecompressThread that extraction is over :
     emit extractProcessEndedSignal();
