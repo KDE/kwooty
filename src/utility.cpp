@@ -78,178 +78,120 @@ QString Utility::convertDownloadSpeedHumanReadable(const quint64 downloadSpeedIn
 
 bool Utility::isInDownloadProcess(const UtilityNamespace::ItemStatus statusItem){
 
-    bool status = false;
-
-    if ( isReadyToDownload(statusItem) ||
-         isPaused(statusItem)          ||
-         isPausing(statusItem) ) {
-
-        status = true;
-    }
-    return status;
+    return ( isReadyToDownload(statusItem) ||
+             isPaused(statusItem)          ||
+             isPausing(statusItem) );
 }
 
 
 bool Utility::isPostDownloadFailed(const UtilityNamespace::ItemStatus statusItem) {
 
-    bool status = false;
+    return ( statusItem >= DecodeErrorStatus &&
+             statusItem != ExtractSuccessStatus &&
+             statusItem != VerifyFinishedStatus );
 
-    if ( statusItem >= DecodeErrorStatus &&
-         statusItem != ExtractSuccessStatus &&
-         statusItem != VerifyFinishedStatus ) {
+}
 
-        status = true;
-    }
+bool Utility::isPostProcessFailed(const UtilityNamespace::ItemStatus statusItem) {
 
-    return status;
+    return ( statusItem == RepairNotPossibleStatus  ||
+             statusItem == RepairFailedStatus       ||
+             statusItem == ExtractFailedStatus      ||
+             statusItem == ExtractBadCrcStatus );
+
 }
 
 
 bool Utility::isVerifyFileCorrect(const UtilityNamespace::ItemStatus statusItem) {
 
-    bool status = false;
-
-    if ( statusItem == VerifyFoundStatus ||
-         statusItem == VerifyMatchStatus ) {
-
-        status = true;
-    }
-
-    return status;
-
+    return ( statusItem == VerifyFoundStatus ||
+             statusItem == VerifyMatchStatus );
 
 }
 
 
 
 bool Utility::isReadyToDownload(const UtilityNamespace::ItemStatus statusItem){
-    bool status = false;
 
-    if ( (statusItem == IdleStatus) || (statusItem == DownloadStatus)){
-        status = true;
-    }
+    return ( statusItem == IdleStatus ||
+             statusItem == DownloadStatus );
 
-    return status;
 }
 
 bool Utility::isInQueue(const UtilityNamespace::ItemStatus statusItem){
-    bool status = false;
 
-    if ( (statusItem == IdleStatus) || (statusItem == PauseStatus)){
-        status = true;
-    }
+    return ( statusItem == IdleStatus ||
+             statusItem == PauseStatus );
 
-    return status;
 }
 
 bool Utility::isDownloadOrPausing(const UtilityNamespace::ItemStatus statusItem){
-    bool status = false;
 
-    if ( statusItem == DownloadStatus ||
-         isPausing(statusItem) ) {
+    return ( statusItem == DownloadStatus ||
+             isPausing(statusItem) );
 
-        status = true;
-    }
-    return status;
 }
 
 
 
 bool Utility::isPaused(const UtilityNamespace::ItemStatus statusItem){
-    bool status = false;
 
-    if ( statusItem == PauseStatus){
-        status = true;
-    }
+    return (statusItem == PauseStatus);
 
-    return status;
 }
 
 bool Utility::isPausing(const UtilityNamespace::ItemStatus statusItem){
-    bool status = false;
 
-    if ( statusItem == PausingStatus){
-        status = true;
-    }
+    return (statusItem == PausingStatus);
 
-    return status;
 }
 
 
 bool Utility::isDecoding(const UtilityNamespace::ItemStatus statusItem){
-    bool status = false;
 
-    if ( (statusItem == DecodeStatus) || (statusItem == ScanStatus)){
-        status = true;
-    }
+    return ( statusItem == DecodeStatus ||
+             statusItem == ScanStatus);
 
-    return status;
 }
 
 bool Utility::isDecodeFinish(const UtilityNamespace::ItemStatus statusItem){
-    bool status = false;
 
-    if ( statusItem == DecodeFinishStatus){
-        status = true;
-    }
+    return (statusItem == DecodeFinishStatus);
 
-    return status;
 }
 
 
 bool Utility::isWaitingForDecode(const UtilityNamespace::ItemStatus statusItem, const UtilityNamespace::Data data){
-    bool status = false;
 
-    if ( (statusItem == DownloadFinishStatus) &&
-         (data != NoData) ) {
-
-        status = true;
-    }
-
-    return status;
+    return ( statusItem == DownloadFinishStatus &&
+             data != NoData );
 }
 
 
 
 bool Utility::isDownloadFinish(const UtilityNamespace::ItemStatus statusItem){
-    bool status = false;
 
-    if ( statusItem == DownloadFinishStatus){
-        status = true;
-    }
+    return (statusItem == DownloadFinishStatus);
 
-    return status;
 }
 
 bool Utility::isPostDownloadProcessing(const UtilityNamespace::ItemStatus statusItem){
-    bool status = false;
 
-    if ( (statusItem == VerifyStatus)  ||
-         (statusItem == RepairStatus)  ||
-         (statusItem == ExtractStatus) ) {
+    return ( statusItem == VerifyStatus  ||
+             statusItem == RepairStatus  ||
+             statusItem == ExtractStatus );
 
-        status = true;
-    }
-
-    return status;
 }
-
 
 
 bool Utility::isJobFinish(const UtilityNamespace::ItemStatus statusItem){
 
-    bool status = false;
+    return ( statusItem == DownloadFinishStatus    ||
+             statusItem == DecodeFinishStatus      ||
+             statusItem == VerifyFinishedStatus    ||
+             statusItem == RepairFinishedStatus    ||
+             statusItem == ExtractFinishedStatus );
 
-    if ( (statusItem == DownloadFinishStatus)    ||
-         (statusItem == DecodeFinishStatus)      ||
-         (statusItem == VerifyFinishedStatus)    ||
-         (statusItem == RepairFinishedStatus)    ||
-         (statusItem == ExtractFinishedStatus) ){
-
-        status = true;
-    }
-
-    return status;
 }
 
 
