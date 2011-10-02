@@ -24,6 +24,7 @@
 
 #include "centralwidget.h"
 #include "standarditemmodel.h"
+#include "standarditemmodelquery.h"
 #include "itemdownloadupdater.h"
 #include "itempostdownloadupdater.h"
 #include "itemchildrenmanager.h"
@@ -32,10 +33,9 @@
 #include "kwootysettings.h"
 
 
-ItemParentUpdater::ItemParentUpdater(CentralWidget* parent) : ItemAbstractUpdater (parent)
+ItemParentUpdater::ItemParentUpdater(CentralWidget* parent) : ItemAbstractUpdater (parent->getDownloadModel(), ItemAbstractUpdater::Parent)
 {
     this->parent = parent;
-    this->downloadModel = parent->getDownloadModel();
 
     // instanciate item updater classes :
     this->itemPostDownloadUpdater = new ItemPostDownloadUpdater(this);
@@ -62,7 +62,7 @@ StandardItemModel* ItemParentUpdater::getDownloadModel() const{
 
 
 #if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
-    CentralWidget* ItemParentUpdater::getCentraWidget() const{
+CentralWidget* ItemParentUpdater::getCentraWidget() const{
     return this->parent;
 }
 #endif
@@ -70,6 +70,7 @@ StandardItemModel* ItemParentUpdater::getDownloadModel() const{
 
 
 void ItemParentUpdater::setupConnections() {
+
 
     connect (itemDownloadUpdater,
              SIGNAL(statusBarDecrementSignal(const quint64, const int)),
@@ -143,6 +144,7 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
     }
 
 
+
 }
 
 
@@ -154,15 +156,43 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
 
 void ItemParentUpdater::updateNzbItemsPostDecode(const QModelIndex& nzbIndex, const int progression, UtilityNamespace::ItemStatus status){
 
-    // if child are being verified / repaired or extracted :
-    QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(nzbIndex);
-    this->downloadModel->updateStateItem(stateItem, status);
+    if (status != NzbProcessFinishedStatus) {
 
-    // update progression :
-    this->downloadModel->updateProgressItem(nzbIndex, progression);
+        // if child are being verified / repaired or extracted :
+        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(nzbIndex);
+        this->downloadModel->updateStateItem(stateItem, status);
 
-    // if extract failed, download par2 files if there were considered as not required :
-    this->updateItemsIfDirectExtractFailed(nzbIndex, stateItem, status);
+        // update progression :
+        this->downloadModel->updateProgressItem(nzbIndex, progression);
+
+        // if extract failed, download par2 files if there were considered as not required :
+        this->updateItemsIfDirectExtractFailed(nzbIndex, stateItem, status);
+
+    }
+    // post processing of nzb parent has been fully performed :
+    else {
+
+        bool allPostProcessingCorrect = this->parent->getModelQuery()->isAllPostProcessingCorrect(this->downloadModel->itemFromIndex(nzbIndex));
+
+        // get itemStatusData :
+        ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex);
+
+        nzbItemStatusData.setPostProcessFinish(true);
+
+        // if all post processing have been correctly performed set statusData as DataComplete :
+        if (allPostProcessingCorrect) {
+            nzbItemStatusData.setDataStatus(DataComplete);
+        }
+        else {
+            nzbItemStatusData.setDataStatus(DataIncomplete);
+        }
+
+        this->downloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
+
+
+    }
+
+
 
 }
 
