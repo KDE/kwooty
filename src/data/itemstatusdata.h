@@ -39,6 +39,8 @@ public:
     void setDownloadFinish(const bool);
     bool isDecodeFinish() const;
     void setDecodeFinish(const bool);
+    bool isPostProcessFinish() const;
+    void setPostProcessFinish(const bool);
     UtilityNamespace::CrcNotify getCrc32Match() const;
     void setCrc32Match(const UtilityNamespace::CrcNotify);
     UtilityNamespace::ArticleEncodingType getArticleEncodingType() const;
@@ -53,6 +55,7 @@ private:
     UtilityNamespace::Data data;
     bool downloadFinish;
     bool decodeFinish;
+    bool postProcessFinish;
     UtilityNamespace::CrcNotify crc32Match;
     UtilityNamespace::ArticleEncodingType articleEncodingType;
     int nextServerId;
