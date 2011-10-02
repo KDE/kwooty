@@ -32,10 +32,10 @@
 #include "fileoperations.h"
 
 
-ItemPostDownloadUpdater::ItemPostDownloadUpdater(ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater)
+ItemPostDownloadUpdater::ItemPostDownloadUpdater(ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater->getDownloadModel(), ItemAbstractUpdater::Child)
 {
     this->itemParentUpdater = itemParentUpdater;
-    this->downloadModel = itemParentUpdater->getDownloadModel();
+
 }
 
 
@@ -43,8 +43,6 @@ ItemPostDownloadUpdater::ItemPostDownloadUpdater(ItemParentUpdater* itemParentUp
 
 void ItemPostDownloadUpdater::updateItems(const QModelIndex& parentModelIndex, const int progression, const UtilityNamespace::ItemStatus status, UtilityNamespace::ItemTarget itemTarget) {
 
-    // set status icon :
-    this->setIconToFileNameItem(parentModelIndex, status);
 
     // if status comes from *decode* process :
     if (status <= ScanStatus) {
