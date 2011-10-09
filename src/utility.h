@@ -160,7 +160,7 @@ namespace UtilityNamespace
     enum Article {
         Present,
         NotPresent,
-        Unknown,
+        Unknown
     };
 
     // indicate if downloaded data are missing :

@@ -32,10 +32,7 @@
 
 using namespace UtilityNamespace;
 
-Utility::Utility()
-{
-}
-
+Utility::Utility() { }
 
 
 QString Utility::convertByteHumanReadable(const quint64 sizeInByte) {
@@ -76,7 +73,7 @@ QString Utility::convertDownloadSpeedHumanReadable(const quint64 downloadSpeedIn
 
 
 
-bool Utility::isInDownloadProcess(const UtilityNamespace::ItemStatus statusItem){
+bool Utility::isInDownloadProcess(const UtilityNamespace::ItemStatus statusItem) {
 
     return ( isReadyToDownload(statusItem) ||
              isPaused(statusItem)          ||
@@ -111,21 +108,21 @@ bool Utility::isVerifyFileCorrect(const UtilityNamespace::ItemStatus statusItem)
 
 
 
-bool Utility::isReadyToDownload(const UtilityNamespace::ItemStatus statusItem){
+bool Utility::isReadyToDownload(const UtilityNamespace::ItemStatus statusItem) {
 
     return ( statusItem == IdleStatus ||
              statusItem == DownloadStatus );
 
 }
 
-bool Utility::isInQueue(const UtilityNamespace::ItemStatus statusItem){
+bool Utility::isInQueue(const UtilityNamespace::ItemStatus statusItem) {
 
     return ( statusItem == IdleStatus ||
              statusItem == PauseStatus );
 
 }
 
-bool Utility::isDownloadOrPausing(const UtilityNamespace::ItemStatus statusItem){
+bool Utility::isDownloadOrPausing(const UtilityNamespace::ItemStatus statusItem) {
 
     return ( statusItem == DownloadStatus ||
              isPausing(statusItem) );
@@ -134,34 +131,34 @@ bool Utility::isDownloadOrPausing(const UtilityNamespace::ItemStatus statusItem)
 
 
 
-bool Utility::isPaused(const UtilityNamespace::ItemStatus statusItem){
+bool Utility::isPaused(const UtilityNamespace::ItemStatus statusItem) {
 
     return (statusItem == PauseStatus);
 
 }
 
-bool Utility::isPausing(const UtilityNamespace::ItemStatus statusItem){
+bool Utility::isPausing(const UtilityNamespace::ItemStatus statusItem) {
 
     return (statusItem == PausingStatus);
 
 }
 
 
-bool Utility::isDecoding(const UtilityNamespace::ItemStatus statusItem){
+bool Utility::isDecoding(const UtilityNamespace::ItemStatus statusItem) {
 
     return ( statusItem == DecodeStatus ||
              statusItem == ScanStatus);
 
 }
 
-bool Utility::isDecodeFinish(const UtilityNamespace::ItemStatus statusItem){
+bool Utility::isDecodeFinish(const UtilityNamespace::ItemStatus statusItem) {
 
     return (statusItem == DecodeFinishStatus);
 
 }
 
 
-bool Utility::isWaitingForDecode(const UtilityNamespace::ItemStatus statusItem, const UtilityNamespace::Data data){
+bool Utility::isWaitingForDecode(const UtilityNamespace::ItemStatus statusItem, const UtilityNamespace::Data data) {
 
     return ( statusItem == DownloadFinishStatus &&
              data != NoData );
@@ -169,13 +166,13 @@ bool Utility::isWaitingForDecode(const UtilityNamespace::ItemStatus statusItem, 
 
 
 
-bool Utility::isDownloadFinish(const UtilityNamespace::ItemStatus statusItem){
+bool Utility::isDownloadFinish(const UtilityNamespace::ItemStatus statusItem) {
 
     return (statusItem == DownloadFinishStatus);
 
 }
 
-bool Utility::isPostDownloadProcessing(const UtilityNamespace::ItemStatus statusItem){
+bool Utility::isPostDownloadProcessing(const UtilityNamespace::ItemStatus statusItem) {
 
     return ( statusItem == VerifyStatus  ||
              statusItem == RepairStatus  ||
@@ -184,7 +181,7 @@ bool Utility::isPostDownloadProcessing(const UtilityNamespace::ItemStatus status
 }
 
 
-bool Utility::isJobFinish(const UtilityNamespace::ItemStatus statusItem){
+bool Utility::isJobFinish(const UtilityNamespace::ItemStatus statusItem) {
 
     return ( statusItem == DownloadFinishStatus    ||
              statusItem == DecodeFinishStatus      ||
@@ -209,7 +206,7 @@ bool Utility::isBadCrcForYencArticle(const UtilityNamespace::CrcNotify& crcNotif
 
 }
 
-bool Utility::saveData(const QString& fileSavePath, const QString& fileName, const QByteArray& segmentData){
+bool Utility::saveData(const QString& fileSavePath, const QString& fileName, const QByteArray& segmentData) {
 
     bool isSaveSucceeded = false;
 
@@ -237,7 +234,7 @@ bool Utility::saveData(const QString& fileSavePath, const QString& fileName, con
 
 
 
-bool Utility::createFolder(const QString& fileSavePath){
+bool Utility::createFolder(const QString& fileSavePath) {
 
     bool folderExists = true;
 
@@ -251,7 +248,7 @@ bool Utility::createFolder(const QString& fileSavePath){
 }
 
 
-bool Utility::isFolderExists(const QString& fileSavePath){
+bool Utility::isFolderExists(const QString& fileSavePath) {
 
     bool folderExists = true;
     // check if the folder exists :
@@ -265,7 +262,7 @@ bool Utility::isFolderExists(const QString& fileSavePath){
 
 
 
-bool Utility::removeData(const QString& fileName){
+bool Utility::removeData(const QString& fileName) {
 
     QFile file(fileName);
     bool isFileRemoved = false;
@@ -278,7 +275,7 @@ bool Utility::removeData(const QString& fileName){
 
 
 
-QString Utility::searchExternalPrograms(const QString& programToSearch, bool& programFound){
+QString Utility::searchExternalPrograms(const QString& programToSearch, bool& programFound) {
 
     QString programPathName;
     QStringList searchPathList = Settings::searchPathList();
