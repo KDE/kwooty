@@ -307,13 +307,8 @@ void SysTray::createToolTip() {
             globalStatusValue = i18n("Pause");
         }
         // check if disconnected from server :
-        else {
-
-            int connectionNumber = this->clientsObserver->getTotalConnections();
-
-            if (connectionNumber == 0) {
+        else if (!this->clientsObserver->isConnected()){
                 globalStatusValue = i18n("Disconnected");
-            }
         }
 
         currentTip.append(Utility::buildToolTipRow(i18n("Status: "), globalStatusValue));
