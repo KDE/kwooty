@@ -30,8 +30,7 @@
 #include "preferences/preferencesserver.h"
 
 
-UtilityIconPainting::UtilityIconPainting() : QObject(qApp){
-
+UtilityIconPainting::UtilityIconPainting() : QObject(qApp) {
 
     // build map in order to display status icon near to each child file name item :
     statusIconStrMap.insert(DownloadStatus,            "mail-receive");
@@ -85,9 +84,7 @@ UtilityIconPainting::UtilityIconPainting() : QObject(qApp){
     iconStrIconImageMap.insert("dialog-cancel",         KIcon("dialog-cancel"));
 
     // add semi-transparent effect to icon for Idle status :
-    QPixmap pixmap = KIconLoader::global()->loadIcon("go-next-view", KIconLoader::Small);
-    KIcon goNextViewTransparent(this->instance->buildSemiTransparentIcon(pixmap));
-    iconStrIconImageMap.insert("go-next-view-transparent", goNextViewTransparent);
+    iconStrIconImageMap.insert("go-next-view-transparent", KIcon(this->instance->buildSemiTransparentIcon("go-next-view")));
 
 }
 
@@ -110,19 +107,25 @@ UtilityIconPainting* UtilityIconPainting::getInstance() {
 
 
 bool UtilityIconPainting::retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus& status, KIcon& icon) {
+
     icon = this->iconStrIconImageMap.value(this->parentStatusIconStrMap.value(status));
     return this->parentStatusIconStrMap.contains(status);
+
 }
 
 bool UtilityIconPainting::retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus& status, KIcon& icon) {
+
     icon = this->iconStrIconImageMap.value(this->statusIconStrMap.value(status));
     return this->statusIconStrMap.contains(status);
+
 }
 
 
 bool UtilityIconPainting::retrieveIconFromString(const QString& iconName, KIcon& icon) {
+
     icon = this->iconStrIconImageMap.value(iconName);
     return this->iconStrIconImageMap.contains(iconName);
+
 }
 
 
@@ -160,6 +163,23 @@ QPixmap UtilityIconPainting::blendOverLayEmblem(const QString& overlayIconStr, c
 }
 
 
+QPixmap UtilityIconPainting::buildGrayIcon(const QString& sourceIconStr) {
+
+    QPixmap pixmap = KIconLoader::global()->loadIcon(sourceIconStr, KIconLoader::Small);
+    return this->instance->buildGrayIcon(pixmap);
+
+}
+
+
+QPixmap UtilityIconPainting::buildGrayIcon(const QPixmap& sourceIcon) {
+
+    QImage clearImage = sourceIcon.toImage();
+    KIconEffect::toGray(clearImage, 0.60);
+    KIconEffect::deSaturate(clearImage, 1);
+    return QPixmap::fromImage(clearImage);
+
+}
+
 QPixmap UtilityIconPainting::buildClearIcon(const QPixmap& sourceIcon) {
 
     QImage clearImage = sourceIcon.toImage();
@@ -169,6 +189,13 @@ QPixmap UtilityIconPainting::buildClearIcon(const QPixmap& sourceIcon) {
 }
 
 
+QPixmap UtilityIconPainting::buildSemiTransparentIcon(const QString& sourceIconStr) {
+
+     QPixmap pixmap = KIconLoader::global()->loadIcon(sourceIconStr, KIconLoader::Small);
+     return this->instance->buildSemiTransparentIcon(pixmap);
+
+}
+
 QPixmap UtilityIconPainting::buildSemiTransparentIcon(const QPixmap& sourceIcon) {
 
     QImage clearImage = sourceIcon.toImage();
@@ -176,8 +203,6 @@ QPixmap UtilityIconPainting::buildSemiTransparentIcon(const QPixmap& sourceIcon)
     return QPixmap::fromImage(clearImage);
 
 }
-
-
 
 
 

@@ -113,7 +113,7 @@ void ServerStatusWidget::updateLabelField(QLabel* currentLabel, const QString& t
 }
 
 
-void ServerStatusWidget::updateTextPushButtonField(const int& itemIndex, const QString& text, const bool& displayIcon, const QString& connectionIconStr, const bool& displayOverlay, const QString& sslConnectionInfo) {
+void ServerStatusWidget::updateTextPushButtonField(const int& itemIndex, const QString& text, const bool& displayIcon, const ServerConnectionIcon& serverConnectionIcon, const QString& sslConnectionInfo) {
 
 
     TextPushButtonWidget* textPushButtonWidget = static_cast<TextPushButtonWidget*>(this->formLayoutRight->itemAt(itemIndex, QFormLayout::FieldRole)->widget());
@@ -122,7 +122,7 @@ void ServerStatusWidget::updateTextPushButtonField(const int& itemIndex, const Q
 
     if (displayIcon) {
         textPushButtonWidget->showIcon();
-        textPushButtonWidget->setIcon(connectionIconStr, displayOverlay);
+        textPushButtonWidget->setIcon(serverConnectionIcon);
     }
     else{
         textPushButtonWidget->hideIcon();

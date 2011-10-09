@@ -96,7 +96,7 @@ void SideBar::createSideBarWidgets() {
         int serverWidgetIndex = this->sideBarWidget->count();
         QString serverName = this->serverManager->getServerGroupById(serverWidgetIndex)->getServerData().getServerName();
 
-        this->sideBarWidget->addTab(new ServerStatusWidget(this->sideBarWidget), "weather-clear-night", serverName);
+        this->sideBarWidget->addTab(new ServerStatusWidget(this->sideBarWidget), DisconnectedIcon, serverName);
 
     }
 
@@ -171,58 +171,19 @@ void SideBar::serverStatisticsUpdateSlot(const int serverId) {
 
         ClientsPerServerObserver* clientsPerServerObserver = serverGroup->getClientsPerServerObserver();
 
-        // display tab icon according to server status :
-        QString tabConnectionIconStr = "weather-clear-night";
+        QString connection;
+        ServerConnectionIcon serverConnectionIcon = UtilityServerStatus::buildConnectionStringFromStatus(clientsPerServerObserver, connection, UtilityServerStatus::DoNotDisplayEncryptionMethod);
 
-        if (clientsPerServerObserver->isConnected()) {
-            // set connection icon :
-            tabConnectionIconStr = "applications-internet";
-
-            if (clientsPerServerObserver->isSslActive()) {
-
-                // if SSL active use another connection icon :
-                tabConnectionIconStr = "document-encrypt";
-            }
-        }
-
-
+        // if current server is downloading, display proper icon on to tab widget :
+        ServerConnectionIcon serverConnectionTabIcon = serverConnectionIcon;
         quint64 downloadSpeed = clientsPerServerObserver->getDownloadSpeed();
 
         if (downloadSpeed > 0) {
-            tabConnectionIconStr = "mail-receive";
+            serverConnectionTabIcon = ConnectedDownloadingIcon;
         }
 
-
-
-        QString connection;
-        QString connectionIconStr;
-
-        bool displayOverlay = UtilityServerStatus::buildConnectionStringFromStatus(clientsPerServerObserver, connectionIconStr, connection, UtilityServerStatus::DoNotDisplayEncryptionMethod);
-
-
-        QString tabConnectionIconMapStr = tabConnectionIconStr;
-        if (displayOverlay) {
-            tabConnectionIconMapStr.append("_withOverlay");
-        }
-
-        // if previous icon is different from the current one, update display :
-        if (serverIdConnectionIconMap.value(serverId) != tabConnectionIconMapStr) {
-
-            bool displayOverlayLocal = displayOverlay;
-
-            // if tab displays download icon, do not display overlay on it :
-            if (downloadSpeed > 0) {
-                displayOverlayLocal = false;
-            }
-
-            // update tab icon :
-            this->sideBarWidget->updateIconByIndex(serverId, tabConnectionIconStr, displayOverlayLocal);
-
-            // store icon currently displayed :
-            this->serverIdConnectionIconMap.insert(serverId, tabConnectionIconMapStr);
-
-        }
-
+        // update tab icon :
+        this->sideBarWidget->updateIconByIndex(serverId, serverConnectionTabIcon);
 
 
         // retrieve server mode according to server :
@@ -264,7 +225,7 @@ void SideBar::serverStatisticsUpdateSlot(const int serverId) {
         serverStatusWidget->updateLeftLabelField(ServerStatusWidget::FileItem, downloadFileName);
         serverStatusWidget->updateRightLabelField(ServerStatusWidget::NameItem, hostName);
         serverStatusWidget->updateRightLabelField(ServerStatusWidget::ModeItem, serverMode);
-        serverStatusWidget->updateTextPushButtonField(ServerStatusWidget::SslItem, sslStr, displayIcon, connectionIconStr, displayOverlay, sslConnectionInfo);
+        serverStatusWidget->updateTextPushButtonField(ServerStatusWidget::SslItem, sslStr, displayIcon, serverConnectionIcon, sslConnectionInfo);
 
     }
 }

@@ -22,12 +22,33 @@
 #ifndef UTILITYSERVERSTATUS_H
 #define UTILITYSERVERSTATUS_H
 
+#include <KIcon>
+
 #include "observers/clientsobserverbase.h"
+
+
+namespace UtilityServerStatusNamespace
+{
+
+// process priority :
+enum ServerConnectionIcon {
+    DisconnectedIcon,
+    ConnectedNormalIcon,
+    ConnectedEncryptedIcon,
+    ConnectedEncryptedOverlayIcon,
+    ConnectedDownloadingIcon
+};
+
+
+}
+
+using namespace UtilityServerStatusNamespace;
+
 
 class UtilityServerStatus {
 
-
 public:
+
     UtilityServerStatus();
 
     enum EncryptionMethodDisplay {
@@ -35,13 +56,16 @@ public:
         DoNotDisplayEncryptionMethod
     };
 
-    static bool buildConnectionStringFromStatus(const ClientsObserverBase*, QString&, QString&, EncryptionMethodDisplay = DisplayEncryptionMethod);
+    static KIcon getConnectionIcon(const ServerConnectionIcon&);
+    static QPixmap getConnectionPixmap(const ServerConnectionIcon&);
+    static ServerConnectionIcon buildConnectionStringFromStatus(const ClientsObserverBase*, QString&, EncryptionMethodDisplay = DisplayEncryptionMethod);
     static QString buildSslHandshakeStatus(const ClientsObserverBase*);
     static QString buildConnectionToolTip(const ClientsObserverBase*, const QString&, const QString&);
     static QString getServerModeString(UtilityNamespace::BackupServerMode);
 
 
 private:
+
 
 };
 

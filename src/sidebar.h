@@ -23,7 +23,6 @@
 #define SIDEBAR_H
 
 #include <QObject>
-#include <QHash>
 
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -52,7 +51,6 @@ private:
     ServerManager* serverManager;
     bool stateRestored;
 
-    QHash<int, QString> serverIdConnectionIconMap;
     void createSideBarWidgets();
 
 

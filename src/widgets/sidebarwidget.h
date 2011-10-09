@@ -23,6 +23,9 @@
 
 #include <KMultiTabBar>
 #include <QStackedWidget>
+#include <QHash>
+
+#include "utilityserverstatus.h"
 
 class MainWindow;
 
@@ -34,7 +37,7 @@ class SideBarWidget : public QWidget {
 public:
     SideBarWidget(QWidget*);
 
-    void addTab(QWidget*, const QString&, const QString&);
+    void addTab(QWidget*, const ServerConnectionIcon&, const QString&);
     void removeTabAndWidgetByIndex(int);
     void removeTabByWidget(QWidget*);
     void removeLast();
@@ -42,7 +45,7 @@ public:
     QWidget* widget(const int& index);
     int indexOf(QWidget*) const;
     int currentIndex() const;
-    void updateIconByIndex(const int&, const QString&, const bool&);
+    void updateIconByIndex(const int&, const ServerConnectionIcon&);
     void updateTextByIndex(const int&, const QString&);
     void updateToolTipByIndex(const int&, const QString&);
     void activeDefaultTab(const int&);
@@ -52,6 +55,7 @@ public:
 private:
     QStackedWidget* stackedWidget;
     KMultiTabBar* multiTabBar;
+    QHash<int, ServerConnectionIcon> indexServerIconMap;
 
 
 public slots:

@@ -208,10 +208,10 @@ void MyStatusBar::updateConnectionStatusSlot(){
     QString connectionIconStr;
     QString connection;  
 
-    bool displayOverlay = UtilityServerStatus::buildConnectionStringFromStatus(this->clientsObserver, connectionIconStr, connection);
+    ServerConnectionIcon serverConnectionIcon = UtilityServerStatus::buildConnectionStringFromStatus(this->clientsObserver, connection);
 
     // set icon :
-    this->connectionWidget->setIcon(connectionIconStr, displayOverlay);
+    this->connectionWidget->setIcon(serverConnectionIcon);
     // set text :
     this->connectionWidget->setText(connection);
     

@@ -45,6 +45,8 @@ TextPushButtonWidget::TextPushButtonWidget(QWidget* parent) : QWidget(parent) {
     this->hBoxLayout->setSpacing(5);
     this->hBoxLayout->setMargin(0);
 
+    this->serverConnectionIcon = DisconnectedIcon;
+
     this->setupConnections();
 
 }
@@ -70,26 +72,18 @@ void TextPushButtonWidget::hideIcon() {
 }
 
 
-void TextPushButtonWidget::setIcon(const QString& iconStr, const bool& displayOverlay) {
+void TextPushButtonWidget::setIcon(const ServerConnectionIcon& serverConnectionIcon) {
 
-    if (!iconStr.isEmpty()
-        ) {
+    // avoid useless icon drawing :
+    if (this->serverConnectionIcon != serverConnectionIcon) {
 
-        this->pushButton->setIcon(KIcon(iconStr));
-        this->iconStr = iconStr;
-    }
-
-    // if certificate is not verified display warning icon over the secure connected one :
-    if (displayOverlay) {
-
-        QPixmap finalPixmap = UtilityIconPainting::getInstance()->blendOverLayEmblem("emblem-important", this->pushButton->icon());
-
-        this->pushButton->setIcon(finalPixmap);
+        this->pushButton->setIcon(UtilityServerStatus::getConnectionIcon(serverConnectionIcon));
+        this->serverConnectionIcon = serverConnectionIcon;
 
     }
+
 
 }
-
 
 
 void TextPushButtonWidget::setText(const QString& text) {

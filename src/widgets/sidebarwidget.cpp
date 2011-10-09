@@ -55,11 +55,11 @@ SideBarWidget::SideBarWidget(QWidget* parent) : QWidget(parent) {
 }
 
 
-void SideBarWidget::addTab(QWidget* currentWidget, const QString& iconStr, const QString& label) {
+void SideBarWidget::addTab(QWidget* currentWidget, const ServerConnectionIcon& serverConnectionIcon, const QString& label) {
 
     int tabIndex = this->stackedWidget->count();
 
-    this->multiTabBar->appendTab(SmallIcon(iconStr), tabIndex, label);
+    this->multiTabBar->appendTab(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon), tabIndex, label);
     this->stackedWidget->addWidget(currentWidget);
 
     // display associated server info widget when tab has been clicked :
@@ -69,18 +69,16 @@ void SideBarWidget::addTab(QWidget* currentWidget, const QString& iconStr, const
 
 
 
-void SideBarWidget::updateIconByIndex(const int& currentIndex, const QString& iconStr, const bool& displayOverlay) {
+void SideBarWidget::updateIconByIndex(const int& currentIndex, const ServerConnectionIcon& serverConnectionIcon) {
 
-    if (displayOverlay) {
+    // avoid useless icon drawing :
+    if (this->indexServerIconMap.value(currentIndex) !=  serverConnectionIcon) {
 
-        QPixmap pixmap = UtilityIconPainting::getInstance()->blendOverLayEmblem("emblem-important", KIcon(iconStr));
-        this->multiTabBar->tab(currentIndex)->setIcon(pixmap);
+        this->multiTabBar->tab(currentIndex)->setIcon(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon));
+
+        this->indexServerIconMap.insert(currentIndex, serverConnectionIcon);
 
     }
-    else {
-        this->multiTabBar->tab(currentIndex)->setIcon(iconStr);
-    }
-
 }
 
 

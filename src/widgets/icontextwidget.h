@@ -28,6 +28,8 @@
 #include <QLabel>
 #include <QHBoxLayout>
 
+#include "utilityserverstatus.h"
+
 class IconTextWidget : public QWidget {
 
     Q_OBJECT
@@ -43,8 +45,9 @@ public:
     IconTextWidget(QWidget* parent = 0);
 
     void setIconMode(const IconMode = NormalModeIcon);
-    void setIcon(const QString&, const bool& = false);
-    void setIcon(const QString&, const QString&, const bool& = false);
+    void setIcon(const ServerConnectionIcon&);
+    void setIcon(const QString&);
+    void setIcon(const QString&, const QString&);
     void setIconOnly(const QString&, const QString& = QString());
     void setText(const QString&);
     QString getText() const;
@@ -69,6 +72,7 @@ private:
     QPixmap clearActiveIcon;
     QPixmap activeIcon;
     IconMode iconMode;
+    ServerConnectionIcon serverConnectionIcon;
     bool iconPressed;
 
     void buildClearIcon(const QPixmap&, QPixmap&);

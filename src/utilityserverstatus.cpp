@@ -18,8 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+#include <KDebug>
 #include <KLocale>
 #include "utilityserverstatus.h"
+#include "utilityiconpainting.h"
 
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -30,17 +32,62 @@ UtilityServerStatus::UtilityServerStatus() {
 }
 
 
+KIcon UtilityServerStatus::getConnectionIcon(const ServerConnectionIcon& serverConnectionIcon) {
+    return KIcon(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon));
+}
 
 
-bool UtilityServerStatus::buildConnectionStringFromStatus(const ClientsObserverBase* clientsObserver, QString& connectionIconStr, QString& connection, EncryptionMethodDisplay encryptionMethodDisplay) {
+QPixmap UtilityServerStatus::getConnectionPixmap(const ServerConnectionIcon& serverConnectionIcon) {
 
-    bool displayOverlay = false;
+    QPixmap pixmap;
+    QString iconStr;
+
+    switch (serverConnectionIcon) {
+
+    case DisconnectedIcon: case ConnectedNormalIcon: {
+        iconStr = "applications-internet";
+        break;
+    }
+
+    case ConnectedEncryptedIcon: case ConnectedEncryptedOverlayIcon: {
+        iconStr = "document-encrypt";
+        break;
+    }
+
+    case ConnectedDownloadingIcon: {
+        iconStr = "mail-receive";
+        break;
+    }
+
+    }
+
+    // if server is disconnected, build a grayed icon :
+    if (serverConnectionIcon == DisconnectedIcon) {
+        pixmap = UtilityIconPainting::getInstance()->buildGrayIcon(iconStr);
+    }
+    // if server is connected with a not trested ssl connection, add an overlay warning icon :
+    else if (serverConnectionIcon == ConnectedEncryptedOverlayIcon) {
+        pixmap = UtilityIconPainting::getInstance()->blendOverLayEmblem("emblem-important", KIcon(iconStr));
+    }
+    else {
+        pixmap = SmallIcon(iconStr);
+    }
+
+    return pixmap;
+}
+
+
+
+
+ServerConnectionIcon UtilityServerStatus::buildConnectionStringFromStatus(const ClientsObserverBase* clientsObserver, QString& connection, EncryptionMethodDisplay encryptionMethodDisplay) {
+
+    // by default consider that client is not connected to host :
+    ServerConnectionIcon serverConnectionIcon = DisconnectedIcon;
 
     int totalConnections = clientsObserver->getTotalConnections();
 
     if (totalConnections == 0) {
 
-        connectionIconStr = "weather-clear-night";
         connection = i18n("Disconnected");
 
         int nttpErrorStatus = clientsObserver->getNttpErrorStatus();
@@ -74,32 +121,33 @@ bool UtilityServerStatus::buildConnectionStringFromStatus(const ClientsObserverB
     }
     else {
         // set connection icon :
-        connectionIconStr = "applications-internet";
+        serverConnectionIcon = ConnectedNormalIcon;
+
         connection = i18n("Connected: <numid>%1</numid>", totalConnections);
 
         if (clientsObserver->isSslActive()) {
 
             // if SSL active use another connection icon :
-            connectionIconStr = "document-encrypt";
+            serverConnectionIcon = ConnectedEncryptedIcon;
 
             // display type of encryption method used by server :
             QString encryptionMethod = clientsObserver->getEncryptionMethod();
 
-            if (!encryptionMethod.isEmpty() &&
-                (encryptionMethodDisplay == DisplayEncryptionMethod) ) {
+            if ( !encryptionMethod.isEmpty() &&
+                 (encryptionMethodDisplay == DisplayEncryptionMethod) ) {
                 connection = connection + " :: " + encryptionMethod;
             }
 
             // display overlay only if connected to server with ssl connection and with certificate not verified :
             if (!clientsObserver->isCertificateVerified()) {
-                displayOverlay = true;
+                serverConnectionIcon = ConnectedEncryptedOverlayIcon;
             }
 
         }
 
     }
 
-    return displayOverlay;
+    return serverConnectionIcon;
 
 }
 
@@ -162,11 +210,11 @@ QString UtilityServerStatus::buildSslHandshakeStatus(const ClientsObserverBase* 
 
             QString errorListSeparator = "<li>";
             sslHandshakeStatus.append(i18np("(%1 error during SSL handshake): %2",
-                                    "(%1 errors during SSL handshake): %2",
-                                    sslErrorList.size(),
-                                    "<ul style=\"margin-top:0px; margin-bottom:0px;\">" +
-                                    errorListSeparator + sslErrorList.join(errorListSeparator)) +
-                              "</ul>");
+                                            "(%1 errors during SSL handshake): %2",
+                                            sslErrorList.size(),
+                                            "<ul style=\"margin-top:0px; margin-bottom:0px;\">" +
+                                            errorListSeparator + sslErrorList.join(errorListSeparator)) +
+                                            "</ul>");
         }
 
     }   
@@ -184,21 +232,21 @@ QString UtilityServerStatus::getServerModeString(UtilityNamespace::BackupServerM
     switch (backupServerMode) {
 
     case PassiveServer: {
-            serverMode = i18n("Passive");
-            break;
-        }
+        serverMode = i18n("Passive");
+        break;
+    }
     case ActiveServer: {
-            serverMode = i18n("Active");
-            break;
-        }
+        serverMode = i18n("Active");
+        break;
+    }
     case FailoverServer: {
-            serverMode = i18n("Failover");
-            break;
-        }
+        serverMode = i18n("Failover");
+        break;
+    }
     case DisabledServer: {
-            serverMode = i18n("Server Disabled");
-            break;
-        }
+        serverMode = i18n("Server Disabled");
+        break;
+    }
 
     }
 

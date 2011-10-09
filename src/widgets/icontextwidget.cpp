@@ -42,6 +42,7 @@ IconTextWidget::IconTextWidget(QWidget* parent) : QWidget(parent) {
     this->textLabel = new QLabel(this);
 
     this->iconMode = NormalModeIcon;
+    this->serverConnectionIcon = DisconnectedIcon;
 
     this->hBoxLayout = new QHBoxLayout(this);
     this->hBoxLayout->addWidget(this->iconLabel);
@@ -122,14 +123,25 @@ void IconTextWidget::mousePressEvent(QMouseEvent* event)  {
 
 
 
-void IconTextWidget::setIcon(const QString& normalIconStr, const bool& displayOverlay) {
+void IconTextWidget::setIcon(const ServerConnectionIcon& serverConnectionIcon) {
+
+    // avoid useless icon drawing :
+    if (this->serverConnectionIcon != serverConnectionIcon) {
+
+        this->iconLabel->setPixmap(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon));
+        this->serverConnectionIcon = serverConnectionIcon;
+
+    }
+
+}
+
+
+void IconTextWidget::setIcon(const QString& normalIconStr) {
 
     if (!normalIconStr.isEmpty()) {
 
         this->normalIcon = this->iconLoader->loadIcon(normalIconStr, KIconLoader::Small);
-
         this->iconLabel->setPixmap(this->normalIcon);
-
         this->clearNormalIcon = UtilityIconPainting::getInstance()->buildClearIcon(this->normalIcon);
 
     }
@@ -137,17 +149,12 @@ void IconTextWidget::setIcon(const QString& normalIconStr, const bool& displayOv
         this->iconLabel->setPixmap(QPixmap());
     }
 
-    // if certificate is not verified display warning icon over the secure connected one :
-    if (displayOverlay) {
-        this->iconLabel->setPixmap(UtilityIconPainting::getInstance()->blendOverLayEmblem("emblem-important", this->iconLabel->pixmap()));
-    }
-
 }
 
 
-void IconTextWidget::setIcon(const QString& normalIconStr, const QString& enabledIconStr, const bool& displayOverlay) {
+void IconTextWidget::setIcon(const QString& normalIconStr, const QString& enabledIconStr) {
 
-    this->setIcon(normalIconStr, displayOverlay);
+    this->setIcon(normalIconStr);
 
     if (!enabledIconStr.isEmpty()) {
 

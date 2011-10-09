@@ -44,7 +44,10 @@ public:
     QPixmap blendOverLayTopRight(const QString&, const QString&);
     QPixmap blendOverLayEmblem(const QString&, const QPixmap*);
     QPixmap blendOverLayEmblem(const QString&, const QIcon&);
+    QPixmap buildGrayIcon(const QString&);
+    QPixmap buildGrayIcon(const QPixmap&);
     QPixmap buildClearIcon(const QPixmap&);
+    QPixmap buildSemiTransparentIcon(const QString&);
     QPixmap buildSemiTransparentIcon(const QPixmap&);
 
     bool retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus&, KIcon& icon);

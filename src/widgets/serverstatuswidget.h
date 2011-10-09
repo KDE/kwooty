@@ -26,6 +26,8 @@
 #include <QFormLayout>
 #include <QLabel>
 
+#include "utilityserverstatus.h"
+
 class ServerStatusWidget : public QDockWidget {
 
     Q_OBJECT
@@ -54,7 +56,7 @@ public:
 
     void updateLeftLabelField(const int&, const QString&);
     void updateRightLabelField(const int&, const QString&);
-    void updateTextPushButtonField(const int&, const QString&,  const bool&, const QString&, const bool&, const QString&);
+    void updateTextPushButtonField(const int&, const QString&,  const bool&, const ServerConnectionIcon&, const QString&);
 
 
 private:
