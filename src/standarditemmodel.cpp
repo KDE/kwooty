@@ -36,7 +36,7 @@ StandardItemModel::StandardItemModel()
 
 QStandardItem* StandardItemModel::getParentItem(const QModelIndex& index){
 
-    QStandardItem* parentItem = NULL;
+    QStandardItem* parentItem = 0;
 
     if (index.isValid()) {
         // if the parent has been selected (a nzb item):
@@ -56,7 +56,7 @@ QStandardItem* StandardItemModel::getParentItem(const QModelIndex& index){
 
 QStandardItem* StandardItemModel::getColumnItem(const QModelIndex& index, const int column){
 
-    QStandardItem* item = NULL;
+    QStandardItem* item = 0;
 
     if (index.isValid()) {
 
