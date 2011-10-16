@@ -176,6 +176,6 @@ FORMS += centralwidget.ui \
     preferences/preferencesdisplay.ui \
     plugins/watchfolder/preferenceswatchfolder.ui \
     plugins/scheduler/preferencesscheduler.ui \
-    plugins/scheduler/preferencesautoretry.ui \
+    plugins/autoretry/preferencesautoretry.ui \
     preferences/preferencesshutdown.ui \
     preferences/serversettings.ui
