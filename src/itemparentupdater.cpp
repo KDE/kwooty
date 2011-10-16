@@ -187,6 +187,8 @@ void ItemParentUpdater::updateNzbItemsPostDecode(const QModelIndex& nzbIndex, co
             nzbItemStatusData.setDataStatus(DataIncomplete);
         }
 
+        //kDebug() << "NzbProcessFinishedStatus"  <<  nzbItemStatusData.isPostProcessFinish() <<  allPostProcessingCorrect << nzbItemStatusData.getDataStatus();
+
         this->downloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
 
 
