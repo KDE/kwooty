@@ -22,15 +22,18 @@
 #define ITEMSTATUSDATA_H
 
 #include <QStandardItem>
+
+#include "kwooty_export.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
-class ItemStatusData
-{
+class KWOOTY_EXPORT ItemStatusData {
+
 public:
     ItemStatusData();
     ~ItemStatusData();
     void init();
+    void downloadRetry(const ItemStatus& itemStatusResetTarget, const ItemTarget& = ChildItemTarget);
     void setStatus(const UtilityNamespace::ItemStatus);
     UtilityNamespace::ItemStatus getStatus() const;
     void setDataStatus(const UtilityNamespace::Data);
@@ -47,6 +50,7 @@ public:
     void setArticleEncodingType(const UtilityNamespace::ArticleEncodingType);
     int getNextServerId() const;
     void setNextServerId(const int&);
+    int getDownloadRetryCounter() const;
 
     bool operator!=(const ItemStatusData&);
 
@@ -59,6 +63,7 @@ private:
     UtilityNamespace::CrcNotify crc32Match;
     UtilityNamespace::ArticleEncodingType articleEncodingType;
     int nextServerId;
+    int downloadRetryCounter;
 
 };
 
