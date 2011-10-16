@@ -99,7 +99,12 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
             opt.text = statusTextMap.value(status);
 
             // modify text value if download contains incomplete data :
-            if (status == DownloadStatus) {
+            if (status == IdleStatus) {
+                if (itemStatusData.getDownloadRetryCounter() > 0) {
+                    opt.text = i18nc("i.e: In queue (retry)", "%1 (retry)", opt.text);
+                }
+            }
+            else if (status == DownloadStatus) {
                 if (itemStatusData.getDataStatus() == NoData) {
                     opt.text = i18n("No Data");
                 }
@@ -202,7 +207,7 @@ QSize ItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelInd
 
     QSize size = QStyledItemDelegate::sizeHint(option, index);
 
-    // increase row height is index is a parent :
+    // increase row height if index is a parent :
     if (index.parent() == QModelIndex()) {        
         size.setHeight(QFontMetricsF(option.font).height() + 2 * PARENT_ROW_PADDING);
     }
