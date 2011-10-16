@@ -109,7 +109,6 @@ void MyTreeView::setupConnections() {
              SLOT(expandedSlot(const QModelIndex&)));
 
 
-
     connect (this->centralWidget->getDownloadModel(),
              SIGNAL(childStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
              this,
@@ -227,7 +226,7 @@ void MyTreeView::moveRow(MyTreeView::MoveRowType moveRowType) {
     QList<QModelIndex> indexesList = this->selectionModel()->selectedRows();     
 
     // get parent item :
-    QStandardItem* parentItem = NULL;
+    QStandardItem* parentItem = 0;
     if (!indexesList.isEmpty()) {
         parentItem = downloadModel->getParentItem(indexesList.at(0));
     }
@@ -481,6 +480,7 @@ void MyTreeView::removeRowSlot() {
     // if selected rows has not been canceled :
     if (answer == KMessageBox::Yes) {
 
+        bool par2FilesStatuschanged = false;
         QList<int> rowList;
         QList<QModelIndex> indexesList = this->selectionModel()->selectedRows();
 
@@ -513,6 +513,9 @@ void MyTreeView::removeRowSlot() {
 
                         // item has been removed extract could fail, download Par2 files :
                         emit changePar2FilesStatusSignal(nzbItem->index(), IdleStatus);
+
+                        par2FilesStatuschanged = true;
+
                     }
                     // if the nzb item has no more child, remove it :
                     else {
@@ -522,6 +525,12 @@ void MyTreeView::removeRowSlot() {
 
                 }
             }
+        }
+
+
+        // then send signal to nntp clients to download Par2 files :
+        if (par2FilesStatuschanged) {
+            this->centralWidget->downloadWaitingPar2Slot();
         }
 
     }
