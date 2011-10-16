@@ -24,6 +24,7 @@
 
 #include <QObject>
 
+#include "kwooty_export.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -31,7 +32,7 @@ class CentralWidget;
 class StandardItemModel;
 
 
-class StandardItemModelQuery : public QObject {
+class KWOOTY_EXPORT StandardItemModelQuery : public QObject {
 
     Q_OBJECT
 
@@ -47,7 +48,6 @@ public:
 
 
 private:
-
     StandardItemModel* downloadModel;
 
 
