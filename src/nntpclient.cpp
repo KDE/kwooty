@@ -448,7 +448,7 @@ bool NntpClient::isSocketConnected() const {
 
 
 //-------------------------------------------------------------------------------------//
-//                                download mangement :                                 //
+//                                download management :                                //
 //-------------------------------------------------------------------------------------//
 
 void NntpClient::requestNewSegment() {
