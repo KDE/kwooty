@@ -27,6 +27,7 @@
 #include <QModelIndex>
 
 #include "data/itemstatusdata.h"
+#include "kwooty_export.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -34,8 +35,7 @@ class CentralWidget;
 class ItemStatusData;
 class NzbFileData;
 
-class StandardItemModel : public QStandardItemModel
-{
+class KWOOTY_EXPORT StandardItemModel : public QStandardItemModel {
 
     Q_OBJECT
 
