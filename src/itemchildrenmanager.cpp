@@ -192,12 +192,8 @@ void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex index, Uti
 
 void ItemChildrenManager::resetItemStatusToTarget(QStandardItem* fileNameItem, const ItemStatus& itemStatusResetTarget) {
 
-    ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
-
     // if current item has to be downloaded again :
     if (itemStatusResetTarget == IdleStatus) {
-
-        itemStatusData.init();
 
         QPointer<SegmentManager> segmentManager = this->parent->getSegmentManager();
 
@@ -206,21 +202,11 @@ void ItemChildrenManager::resetItemStatusToTarget(QStandardItem* fileNameItem, c
         }
 
     }
-    // else the current item has been correctly downloaded, set it status do DecodeFinishStatus
-    // in order to reenable post processing (repair/extract) :
-    else if (itemStatusResetTarget == DecodeFinishStatus) {
-        itemStatusData.setStatus(DecodeFinishStatus);
-    }
-    else {
-        kDebug() << "status target not handled :" << itemStatusResetTarget;
-    }
 
-    // set parent to decodeFinish to false in order to reenable verify process :
-    if (downloadModel->isNzbItem(fileNameItem)) {
-        itemStatusData.setDecodeFinish(false);
-    }
-
+    ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
+    itemStatusData.downloadRetry(itemStatusResetTarget, ChildItemTarget);
     this->downloadModel->updateStatusDataFromIndex(fileNameItem->index(), itemStatusData);
+
 
 }
 
@@ -240,9 +226,9 @@ void ItemChildrenManager::resetFinishedChildrenItemToDecodeFinish(QStandardItem*
              Utility::isPostDownloadFailed(nzbChildrenStatus) ) {
 
             // reset item to decode finish :
-            ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(nzbChildrenItem->index());
-            itemStatusData.setStatus(DecodeFinishStatus);
+            itemStatusData.downloadRetry(DecodeFinishStatus);
             this->downloadModel->updateStatusDataFromIndex(nzbChildrenItem->index(), itemStatusData);
+
         }
     }
 
