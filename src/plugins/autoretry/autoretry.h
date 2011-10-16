@@ -22,15 +22,7 @@
 #ifndef AUTORETRY_H
 #define AUTORETRY_H
 
-#include <KUrl>
-#include <kdirwatch.h>
-
 #include <QObject>
-#include <QStringList>
-#include <QSet>
-#include <QTimer>
-#include <QHash>
-#include <QDateTime>
 #include <QStandardItem>
 
 #include "utility.h"
@@ -51,20 +43,11 @@ public:
 
 
 private:
-    static const int MAX_LIST_SIZE = 10;
 
-    KDirWatch* kDirWatch;
     CentralWidget* centralWidget;
-    QTimer* fileCompleteTimer;
-    QStringList nzbFileList;
-    QHash<QString, QDateTime> nzbFilePathlastEnqueuedMap;
-    QSet<QString> nzbFileInAutoRetrySet;
-    QString currentWatchDir;
-    bool firstEnqueueMethod;
 
     void setupConnections();
-    QSet<QString> getNzbFileSetFromAutoRetry();
-    void appendFileToList(const QString&);
+    void retryDownload(QStandardItem*);
 
 
 signals:
@@ -75,8 +58,6 @@ public slots:
     void childStatusItemChangedSlot(QStandardItem*);
 
 private slots:
-    void watchFileSlot(const QString&);
-    void fileCompleteTimerSlot();
 
 
 };

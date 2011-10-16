@@ -49,10 +49,6 @@ KCModule(PluginFactory::componentData(), parent, args) {
     // add main kconfigskeleton :
     this->addConfig(AutoRetrySettings::self(), widget);
 
-    // set folder mode :
-    this->preferencesAutoRetryUi.kcfg_watchFolder->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
-
-
 }
 
 
