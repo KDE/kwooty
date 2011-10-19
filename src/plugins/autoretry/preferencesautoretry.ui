@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>318</width>
+    <width>353</width>
     <height>137</height>
    </rect>
   </property>
@@ -15,12 +15,12 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="margin">
-    <number>1</number>
+    <number>4</number>
    </property>
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>If Par2 repairing fails, re-download invalid files</string>
+      <string>If Par2 verifying/repairing fails, re-download damaged or missing files</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -28,7 +28,7 @@
         <item>
          <widget class="QLabel" name="retryRepairFailLabel">
           <property name="text">
-           <string>For each invalid file, limit number of retries to: </string>
+           <string>Limit number of download retries to: </string>
           </property>
          </widget>
         </item>
@@ -51,7 +51,7 @@
            <number>5</number>
           </property>
           <property name="value">
-           <number>2</number>
+           <number>1</number>
           </property>
          </widget>
         </item>
@@ -63,7 +63,7 @@
    <item row="1" column="0">
     <widget class="QGroupBox" name="groupBox_2">
      <property name="title">
-      <string>If no Par2 files, re-download corrupted (bad CRC) files</string>
+      <string>If no Par2 files, re-download each file whose CRC mismatch</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
@@ -71,7 +71,7 @@
         <item>
          <widget class="QLabel" name="retryNoPar2FilesLabel">
           <property name="text">
-           <string>For each corrupted file, limit number of retries to: </string>
+           <string>Limit number of download retries to: </string>
           </property>
          </widget>
         </item>
@@ -94,7 +94,7 @@
            <number>5</number>
           </property>
           <property name="value">
-           <number>1</number>
+           <number>2</number>
           </property>
          </widget>
         </item>

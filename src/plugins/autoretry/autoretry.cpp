@@ -76,10 +76,7 @@ void AutoRetry::parentStatusItemChangedSlot(QStandardItem* stateItem) {
     StandardItemModel* downloadModel = this->centralWidget->getDownloadModel();
     ItemStatusData itemStatusData = downloadModel->getStatusDataFromIndex(stateItem->index());
 
-
-    bool triggerRetry = false;
-
-    kDebug() <<  itemStatusData.isPostProcessFinish() << itemStatusData.getStatus() <<  itemStatusData.getDataStatus() ;
+    //kDebug() <<  itemStatusData.isPostProcessFinish() << itemStatusData.getStatus() <<  itemStatusData.getDataStatus() ;
 
     if (itemStatusData.getDownloadRetryCounter() <= AutoRetrySettings::retryRepairFail()) {
 
@@ -94,29 +91,20 @@ void AutoRetry::parentStatusItemChangedSlot(QStandardItem* stateItem) {
              itemStatusData.isPostProcessFinish() &&
              itemStatusData.getDataStatus() == DataIncomplete ) {
 
-            //kDebug() << "post process finished, retry counter :" << itemStatusData.getDownloadRetryCounter();
-            triggerRetry = true;
+            kDebug() << "post process finished, retry counter :" << itemStatusData.getDownloadRetryCounter();
 
-        }
-        // no data found, try to download files again :
-        else if ( itemStatus == DownloadFinishStatus &&
-                  itemStatusData.getDataStatus() == NoData ) {
-
-            //kDebug() << "download finished (no data), retry counter :" << itemStatusData.getDownloadRetryCounter();
-            triggerRetry = true;
-        }
-
-        if (triggerRetry) {
-
-            //kDebug() << "triggerRetry";
-            // select all rows in order to set them to paused or Idle :
             this->retryDownload(stateItem);
 
         }
+        //        // no data found, try to download files again :
+        //        else if ( itemStatus == DownloadFinishStatus &&
+        //                  itemStatusData.getDataStatus() == NoData ) {
+
+        //            //kDebug() << "download finished (no data), retry counter :" << itemStatusData.getDownloadRetryCounter();
+        //            triggerRetry = true;
+        //        }
 
     }
-
-
 
 }
 
@@ -136,7 +124,7 @@ void AutoRetry::childStatusItemChangedSlot(QStandardItem* stateItem) {
             // if nzb file does not contain any par2 files, reset in queue corrupted decoded file :
             if (!this->centralWidget->getModelQuery()->isParentContainsPar2File(stateItem)) {
 
-                //kDebug() << "Decode Finished No par2 files - RETRY!";
+                kDebug() << "Decode Finished No par2 files - RETRY!";
 
                 // select all rows in order to set them to paused or Idle :
                 this->retryDownload(stateItem);
@@ -152,7 +140,7 @@ void AutoRetry::childStatusItemChangedSlot(QStandardItem* stateItem) {
             // if nzb file does not contain any par2 files, reset in queue corrupted decoded file :
             if (!this->centralWidget->getModelQuery()->isParentContainsPar2File(stateItem)) {
 
-                //kDebug() << "Decode Finished No par2 files - RETRY!"<< itemStatusData.getDownloadRetryCounter();
+                kDebug() << "Decode Finished No par2 files - RETRY!"<< itemStatusData.getDownloadRetryCounter();
 
                 // select all rows in order to set them to paused or Idle :
                 this->retryDownload(stateItem);
@@ -173,7 +161,6 @@ void AutoRetry::retryDownload(QStandardItem* stateItem) {
     indexesList.append(stateItem->index());
 
     this->centralWidget->retryDownload(indexesList);
-    kDebug();
 
 }
 
