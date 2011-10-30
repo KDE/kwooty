@@ -110,17 +110,18 @@ void RepairDecompressThread::setupConnections() {
 
     // begin file extraction when end repair signal has been received :
     connect (repair,
-             SIGNAL(repairProcessEndedSignal(NzbCollectionData, UtilityNamespace::ItemStatus)),
+             SIGNAL(repairProcessEndedSignal(NzbCollectionData)),
              this,
-             SLOT(repairProcessEndedSlot(NzbCollectionData, UtilityNamespace::ItemStatus)));
+             SLOT(repairProcessEndedSlot(NzbCollectionData)));
 
 
 
     // update info about repair and extract process :
+    qRegisterMetaType<PostDownloadInfoData>("PostDownloadInfoData");
     connect (this,
-             SIGNAL(updateRepairExtractSegmentSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)),
+             SIGNAL(updateRepairExtractSegmentSignal(PostDownloadInfoData)),
              this->parent->getSegmentManager(),
-             SLOT(updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget)));
+             SLOT(updateRepairExtractSegmentSlot(PostDownloadInfoData)));
 
 }
 
@@ -472,8 +473,9 @@ UtilityNamespace::ArchiveFormat RepairDecompressThread::getArchiveFormatFromList
 }
 
 
-void RepairDecompressThread::emitProcessUpdate(QVariant parentIdentifer, int progression, UtilityNamespace::ItemStatus status, UtilityNamespace::ItemTarget itemTarget) {
-    emit updateRepairExtractSegmentSignal(parentIdentifer, progression, status, itemTarget);
+void RepairDecompressThread::emitProcessUpdate(const PostDownloadInfoData& repairDecompressInfoData) {
+
+    emit updateRepairExtractSegmentSignal(repairDecompressInfoData);
 }
 
 
@@ -482,12 +484,43 @@ void RepairDecompressThread::notifyNzbProcessEnded(const NzbCollectionData& nzbC
     // check that nzbCollectionData processing is finished :
     // /!\ nzbCollectionData.getNzbParentId() will be empty in case of extract processing cancelled due
     // to passworded files. Do not go further and let the user decides what to do with this nzb content now :
-    if ( !nzbCollectionData.getNzbParentId().isEmpty() &&
-         !this->filesToRepairList.contains(nzbCollectionData) &&
-         !this->filesToExtractList.contains(nzbCollectionData) ) {
+    if (!nzbCollectionData.getNzbParentId().isEmpty()) {
 
-        this->emitProcessUpdate(nzbCollectionData.getFirstChildUniqueIdentifier(), PROGRESS_COMPLETE, NzbProcessFinishedStatus, ParentItemTarget);
+        if ( !this->filesToRepairList.contains(nzbCollectionData) &&
+             !this->filesToExtractList.contains(nzbCollectionData) ) {
 
+            PostDownloadInfoData repairDecompressInfoData;
+            repairDecompressInfoData.initRepairDecompress(nzbCollectionData.getFirstChildUniqueIdentifier(), PROGRESS_COMPLETE, ExtractSuccessStatus, ParentItemTarget);
+
+            // post process is fully over, also indicate if post process is correct or not :
+            repairDecompressInfoData.setAllPostProcessingCorrect(nzbCollectionData.isAllPostProcessingCorrect());
+            repairDecompressInfoData.setPostProcessFinish(true);
+
+            this->emitProcessUpdate(repairDecompressInfoData);
+
+            // TODO : To check
+            kDebug() << "Post processing correct ? :" << nzbCollectionData.isAllPostProcessingCorrect();
+
+        }
+
+        // if post process has failed, notify of failure in other nzbCollectionData from the same nzb set :
+        this->propagatePostProcessFailureToPendingCollection(this->filesToRepairList, nzbCollectionData);
+        this->propagatePostProcessFailureToPendingCollection(this->filesToExtractList, nzbCollectionData);
+
+    }
+
+
+}
+
+void RepairDecompressThread::propagatePostProcessFailureToPendingCollection(QList<NzbCollectionData>& filesToProcessList, const NzbCollectionData& nzbCollectionData) {
+
+    if (filesToProcessList.contains(nzbCollectionData)) {
+
+        int index = filesToProcessList.indexOf(nzbCollectionData);
+        NzbCollectionData pendingNzbCollectionData = filesToProcessList.value(index);
+
+        pendingNzbCollectionData.setAllPostProcessingCorrect(nzbCollectionData.isAllPostProcessingCorrect());
+        filesToProcessList.replace(index, pendingNzbCollectionData);
 
     }
 
@@ -544,7 +577,8 @@ void RepairDecompressThread::startRepairSlot() {
         }
         else {
 
-            this->repairProcessEndedSlot(currentNzbCollectionData, RepairFinishedStatus);
+            currentNzbCollectionData.setVerifyRepairTerminateStatus(RepairFinishedStatus);
+            this->repairProcessEndedSlot(currentNzbCollectionData);
         }
 
     }
@@ -585,7 +619,9 @@ void RepairDecompressThread::startExtractSlot() {
 }
 
 
-void RepairDecompressThread::repairProcessEndedSlot(NzbCollectionData nzbCollectionDataToExtract, UtilityNamespace::ItemStatus repairStatus) {
+void RepairDecompressThread::repairProcessEndedSlot(NzbCollectionData nzbCollectionDataToExtract) {
+
+    UtilityNamespace::ItemStatus repairStatus = nzbCollectionDataToExtract.getVerifyRepairTerminateStatus();
 
     // if verify/repair ok, launch archive extraction :
     if (repairStatus == RepairFinishedStatus) {

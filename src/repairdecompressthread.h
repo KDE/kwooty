@@ -26,6 +26,7 @@
 
 #include "data/nzbfiledata.h"
 #include "data/nzbcollectiondata.h"
+#include "data/postdownloadinfodata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -43,7 +44,7 @@ public:
     RepairDecompressThread();
     ~RepairDecompressThread();
     CentralWidget* getCentralWidget();
-    void emitProcessUpdate(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
+    void emitProcessUpdate(const PostDownloadInfoData&);
 
 private:
     QThread* dedicatedThread;
@@ -63,6 +64,7 @@ private:
     void processRarFilesFromSameGroup(NzbCollectionData&);
     void preRepairProcessing(const NzbCollectionData&);
     void notifyNzbProcessEnded(const NzbCollectionData& nzbCollectionData);
+    void propagatePostProcessFailureToPendingCollection(QList<NzbCollectionData>&, const NzbCollectionData&);
     bool isListContainsdifferentGroups(const QList<NzbFileData>&);
     NzbFileData tryToGuessDecodedFileName(NzbFileData&, const QList<NzbFileData>&, const QString&);
     QStringList listDifferentFileBaseName(NzbCollectionData&);
@@ -74,11 +76,11 @@ private:
 
 
 signals:
-    void updateRepairExtractSegmentSignal(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
+    void updateRepairExtractSegmentSignal(PostDownloadInfoData);
 
 public slots:
     void repairDecompressSlot(NzbCollectionData);
-    void repairProcessEndedSlot(NzbCollectionData, UtilityNamespace::ItemStatus);
+    void repairProcessEndedSlot(NzbCollectionData);
     void extractProcessEndedSlot(NzbCollectionData);
 
 private slots:
