@@ -85,28 +85,24 @@ void AutoRetry::parentStatusItemChangedSlot(QStandardItem* stateItem) {
 
         ItemStatus itemStatus = itemStatusData.getStatus();
 
-        // post process is finished but data is incomplete, try to download corrupted parts :
-        if ( ( itemStatus == VerifyFinishedStatus ||
-               itemStatus == ExtractFinishedStatus ) &&
-             itemStatusData.isPostProcessFinish() &&
-             itemStatusData.getDataStatus() == DataIncomplete ) {
+        if ( itemStatus == VerifyFinishedStatus ||
+             itemStatus == ExtractFinishedStatus ) {
 
-            kDebug() << "post process finished, retry counter :" << itemStatusData.getDownloadRetryCounter();
+            if ( itemStatusData.isPostProcessFinish() &&
+                 !itemStatusData.areAllPostProcessingCorrect() ) {
 
-            this->retryDownload(stateItem);
+                kDebug() << "post process finished, retry counter :" << itemStatusData.getDownloadRetryCounter();
+
+                this->retryDownload(stateItem);
+
+            }
 
         }
-        //        // no data found, try to download files again :
-        //        else if ( itemStatus == DownloadFinishStatus &&
-        //                  itemStatusData.getDataStatus() == NoData ) {
-
-        //            //kDebug() << "download finished (no data), retry counter :" << itemStatusData.getDownloadRetryCounter();
-        //            triggerRetry = true;
-        //        }
 
     }
 
 }
+
 
 
 void AutoRetry::childStatusItemChangedSlot(QStandardItem* stateItem) {
@@ -124,7 +120,7 @@ void AutoRetry::childStatusItemChangedSlot(QStandardItem* stateItem) {
             // if nzb file does not contain any par2 files, reset in queue corrupted decoded file :
             if (!this->centralWidget->getModelQuery()->isParentContainsPar2File(stateItem)) {
 
-                kDebug() << "Decode Finished No par2 files - RETRY!";
+                kDebug() << "Decode Finished No par2 files - retry!";
 
                 // select all rows in order to set them to paused or Idle :
                 this->retryDownload(stateItem);
@@ -134,13 +130,12 @@ void AutoRetry::childStatusItemChangedSlot(QStandardItem* stateItem) {
         }
 
         // no data found, try to download files again :
-        else if ( itemStatusData.getStatus() == DownloadFinishStatus &&
-                  itemStatusData.getDataStatus() == NoData ) {
+        else if ( Utility::isFileNotFound(itemStatusData.getStatus(), itemStatusData.getDataStatus()) ) {
 
             // if nzb file does not contain any par2 files, reset in queue corrupted decoded file :
             if (!this->centralWidget->getModelQuery()->isParentContainsPar2File(stateItem)) {
 
-                kDebug() << "Decode Finished No par2 files - RETRY!"<< itemStatusData.getDownloadRetryCounter();
+                kDebug() << "Decode Finished No par2 files - retry!"<< itemStatusData.getDownloadRetryCounter();
 
                 // select all rows in order to set them to paused or Idle :
                 this->retryDownload(stateItem);
