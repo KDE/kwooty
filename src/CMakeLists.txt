@@ -36,6 +36,7 @@ set(Kwooty_lib_SRCS
   segmentdecoderyenc.cpp
   segmentdecoderuuenc.cpp
   repairdecompressthread.cpp
+  memorycachethread.cpp
   repair.cpp
   extractbase.cpp
   extractrar.cpp
@@ -73,6 +74,7 @@ set(Kwooty_lib_SRCS
   data/nzbcollectiondata.cpp
   data/jobnotifydata.cpp
   data/serverdata.cpp
+  data/postdownloadinfodata.cpp
   widgets/icontextwidget.cpp
   widgets/iconcapacitywidget.cpp
   widgets/serverpreferenceswidget.cpp
