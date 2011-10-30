@@ -165,33 +165,6 @@ bool StandardItemModelQuery::isParentContainsPar2File(QStandardItem* item) const
 }
 
 
-bool StandardItemModelQuery::isAllPostProcessingCorrect(QStandardItem* item) const {
-
-    bool allPostProcessingCorrect = true;
-
-    // if current item is a child, retrieve its parent :
-    QStandardItem* parentFileNameItem = this->downloadModel->getNzbItem(item);
-
-    for (int i = 0; i < parentFileNameItem->rowCount(); i++) {
-
-        QStandardItem* nzbChildrenStateItem = parentFileNameItem->child(i, STATE_COLUMN);
-        UtilityNamespace::ItemStatus status = this->downloadModel->getStatusFromStateItem(nzbChildrenStateItem);
-
-
-        if (Utility::isPostProcessFailed(status)) {
-
-            allPostProcessingCorrect = false;
-            break;
-        }
-    }
-
-    return allPostProcessingCorrect;
-
-}
-
-
-
-
 ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNameItem, bool* allowRetry) {
 
     bool changeItemStatus = false;
@@ -220,7 +193,7 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
             if (Utility::isVerifyFileCorrect(itemStatusData.getStatus())) {
                 itemStatusResetTarget = DecodeFinishStatus;
             }
-            else if  (Utility::isPostDownloadFailed(itemStatusData.getStatus())) {
+            else if (Utility::isPostDownloadFailed(itemStatusData.getStatus())) {
                 changeItemStatus = true;
             }
         }
@@ -250,6 +223,7 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
         // if item have to be changed :
         if ( changeItemStatus &&
              itemStatusResetTarget == ExtractFinishedStatus ) {
+
             itemStatusResetTarget = IdleStatus;
         }
 

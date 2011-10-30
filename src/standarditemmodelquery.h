@@ -43,7 +43,6 @@ public:
     ItemStatus isRetryDownloadAllowed(QStandardItem*, bool* = 0);
     bool haveItemsSameParent(const QList<QModelIndex>&);
     bool isParentContainsPar2File(QStandardItem*) const;
-    bool isAllPostProcessingCorrect(QStandardItem*) const;
     bool areJobsFinished();
 
 
