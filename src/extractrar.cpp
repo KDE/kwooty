@@ -174,7 +174,8 @@ void ExtractRar::sendExtractProgramNotFoundNotification() {
 
     // notify parent that program is missing :
     NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
-    this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, UnrarProgramMissing, ParentItemTarget);
+
+    this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, UnrarProgramMissing, ParentItemTarget);
 
     // notify repairDecompressThread that extraction is over :
     emit extractProcessEndedSignal();
