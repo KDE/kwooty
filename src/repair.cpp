@@ -26,6 +26,7 @@
 #include "kwootysettings.h"
 #include "repairdecompressthread.h"
 #include "data/nzbfiledata.h"
+#include "data/postdownloadinfodata.h"
 
 Repair::Repair(RepairDecompressThread* parent) : QObject(parent){
 
@@ -111,7 +112,9 @@ void Repair::launchProcess(const NzbCollectionData& nzbCollectionData){
             // try to decompress files directly :
             else {
                 //kDebug() << "No Par2 files found!";
-                emit repairProcessEndedSignal(this->nzbCollectionData, RepairFinishedStatus);
+                this->nzbCollectionData.setVerifyRepairTerminateStatus(RepairFinishedStatus);
+                emit repairProcessEndedSignal(this->nzbCollectionData);
+
                 // clear global variables :
                 this->resetVariables();
 
@@ -122,7 +125,9 @@ void Repair::launchProcess(const NzbCollectionData& nzbCollectionData){
         else {
 
             // if file save path has not been found, it is useless to launch extract process :
-            emit repairProcessEndedSignal(this->nzbCollectionData, RepairFailedStatus);
+            this->nzbCollectionData.setVerifyRepairTerminateStatus(RepairFailedStatus);
+            emit repairProcessEndedSignal(this->nzbCollectionData);
+
             // clear global variables :
             this->resetVariables();
         }
@@ -131,8 +136,11 @@ void Repair::launchProcess(const NzbCollectionData& nzbCollectionData){
     // par2 program has not been found, notify user :
     else {
         this->sendPar2ProgramNotFoundNotification();
+
         // try to decompress files directly :
-        emit repairProcessEndedSignal(this->nzbCollectionData, RepairFinishedStatus);
+        this->nzbCollectionData.setVerifyRepairTerminateStatus(RepairFinishedStatus);
+        emit repairProcessEndedSignal(this->nzbCollectionData);
+
         // clear global variables :
         this->resetVariables();
     }
@@ -141,6 +149,15 @@ void Repair::launchProcess(const NzbCollectionData& nzbCollectionData){
 
 bool Repair::isProcessing(){
     return this->isProcessingStatus;
+}
+
+
+void Repair::emitProcessUpdate(const QVariant& parentIdentifer, const int& progression, const UtilityNamespace::ItemStatus& status, const UtilityNamespace::ItemTarget& itemTarget) {
+
+    PostDownloadInfoData repairDecompressInfoData;
+    repairDecompressInfoData.initRepairDecompress(parentIdentifer, progression, status, itemTarget);
+    this->parent->emitProcessUpdate(repairDecompressInfoData);
+
 }
 
 
@@ -227,7 +244,7 @@ void Repair::repairUpdate(const QString& repairProcessOutput) {
                     (currentNzbFileData.getVerifyProgressionStep() == VerifyMissingStatus) ||
                     currentNzbFileData.isPar2File() ) {
 
-                    this->parent->emitProcessUpdate(currentNzbFileData.getUniqueIdentifier(), repairProgressValue, RepairStatus, this->getItemTarget(currentNzbFileData));
+                    this->emitProcessUpdate(currentNzbFileData.getUniqueIdentifier(), repairProgressValue, RepairStatus, this->getItemTarget(currentNzbFileData));
 
                 }
 
@@ -390,8 +407,7 @@ void Repair::repairReadyReadSlot(){
 
 void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus exitStatus){
 
-
-     //kDebug() << "exitCode" << exitCode << " exitStatus " << exitStatus;
+    //kDebug() << "exitCode" << exitCode << " exitStatus " << exitStatus;
 
     // notify nzb parent item that verification has ended :
     for (int i = 0; i < this->nzbFileDataList.size(); i++) {
@@ -401,21 +417,24 @@ void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus e
         if (nzbFileData.isPar2File()) {
 
             this->updateNzbFileDataInList(nzbFileData, VerifyFinishedStatus, i);
-            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, VerifyFinishedStatus, ParentItemTarget);
+
+            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, VerifyFinishedStatus, ParentItemTarget);
 
         }
     }
 
     // 1. exit without errors :
-    if (exitStatus == QProcess::NormalExit && exitCode == QProcess::NormalExit ){
+    if (exitStatus == QProcess::NormalExit && exitCode == QProcess::NormalExit) {
 
         if (repairStatus == Repair::RepairComplete) {
 
             foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+
                 if ( (nzbFileData.getVerifyProgressionStep() == RepairStatus) ||
                      (nzbFileData.getVerifyProgressionStep() == VerifyStatus) ) {
 
-                    this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, RepairFinishedStatus, ChildItemTarget);
+                    this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, RepairFinishedStatus, ChildItemTarget);
+
                 }
             }
 
@@ -428,14 +447,18 @@ void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus e
 
         // notify that verify/repair process has ended in order to launch extract process :
         this->nzbCollectionData.setNzbFileDataList(this->nzbFileDataList);
-        emit repairProcessEndedSignal(this->nzbCollectionData, RepairFinishedStatus);
+        this->nzbCollectionData.setVerifyRepairTerminateStatus(RepairFinishedStatus);
+
+        emit repairProcessEndedSignal(this->nzbCollectionData);
+
     }
 
     // 2. exit with errors :
     else {
-        // notify damaged / missing files that repair is not possible :
 
+        // notify damaged / missing files that repair is not possible :
         UtilityNamespace::ItemStatus errorStatus;
+
         if (repairStatus == Repair::RepairingNotPossible) {
             errorStatus = RepairNotPossibleStatus;
         }
@@ -450,13 +473,17 @@ void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus e
                  (nzbFileData.getVerifyProgressionStep() == VerifyDamagedStatus) ||
                  (nzbFileData.getVerifyProgressionStep() == VerifyStatus) )  {
 
-                this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, errorStatus, ChildItemTarget);
+                this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, errorStatus, ChildItemTarget);
+
             }
         }
 
         // notify that verify/repair process has ended in order to verify remaining pending files :
         this->nzbCollectionData.setNzbFileDataList(this->nzbFileDataList);
-        emit repairProcessEndedSignal(this->nzbCollectionData, RepairFailedStatus);
+        this->nzbCollectionData.setVerifyRepairTerminateStatus(RepairFailedStatus);
+
+        emit repairProcessEndedSignal(this->nzbCollectionData);
+
     }
 
     this->resetVariables();
@@ -474,12 +501,16 @@ void Repair::sendPar2ProgramNotFoundNotification() {
         // notify parent items that program has not been found (nzbFileData.isPar2File() allows to notify parent item) :
         if (nzbFileData.isPar2File() ) {
 
-            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, Par2ProgramMissing, ParentItemTarget);
+            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, Par2ProgramMissing, ParentItemTarget);
+
         }
     }
 
     this->nzbCollectionData.setNzbFileDataList(this->nzbFileDataList);
-    emit repairProcessEndedSignal(this->nzbCollectionData, RepairFailedStatus);
+    this->nzbCollectionData.setVerifyRepairTerminateStatus(RepairFailedStatus);
+
+    emit repairProcessEndedSignal(this->nzbCollectionData);
+
 }
 
 
@@ -502,7 +533,7 @@ void Repair::sendVerifyingFilesNotification() {
             this->updateNzbFileDataInList(nzbFileData, VerifyStatus, i);
 
             // notifty user :
-            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), 0, VerifyStatus, this->getItemTarget(nzbFileData));
+            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), 0, VerifyStatus, this->getItemTarget(nzbFileData));
 
         }
 
@@ -518,8 +549,11 @@ void Repair::sendMissingFilesNotification() {
 
     // get only item identifiers with "missing" status :
     foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+
         if (nzbFileData.getVerifyProgressionStep() == VerifyMissingStatus) {
-            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, VerifyMissingStatus, ChildItemTarget);
+
+            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, VerifyMissingStatus, ChildItemTarget);
+
         }
     }
 
@@ -549,7 +583,9 @@ void Repair::sendVerifyNotification(const QString& fileNameStr, const QString& o
 
             // missing files will only be notified to user after verify process has ended :
             if (fileStatus != VerifyMissingStatus) {
-                this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, fileStatus, ChildItemTarget);
+
+                this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, fileStatus, ChildItemTarget);
+
             }
 
             // break removed :

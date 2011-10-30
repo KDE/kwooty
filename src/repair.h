@@ -81,12 +81,13 @@ private:
     void resetVariables();
     void updateNzbFileDataInList(NzbFileData&, const UtilityNamespace::ItemStatus, const int);
     void removePar2Files();
+    void emitProcessUpdate(const QVariant&, const int&, const UtilityNamespace::ItemStatus&, const UtilityNamespace::ItemTarget&);
     QString sortPar2FilesBySize();
     UtilityNamespace::ItemTarget getItemTarget(const NzbFileData&);
 
 
 signals:
-    void repairProcessEndedSignal(NzbCollectionData, UtilityNamespace::ItemStatus);
+    void repairProcessEndedSignal(NzbCollectionData);
 
 public slots:
     void repairReadyReadSlot();
