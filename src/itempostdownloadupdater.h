@@ -27,6 +27,7 @@ using namespace UtilityNamespace;
 
 class StandardItemModel;
 class NzbFileData;
+class PostDownloadInfoData;
 
 
 class ItemPostDownloadUpdater : public ItemAbstractUpdater {
@@ -34,14 +35,15 @@ class ItemPostDownloadUpdater : public ItemAbstractUpdater {
 public:
 
     ItemPostDownloadUpdater(ItemParentUpdater*);
-    void updateItems(const QModelIndex&, const int, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget itemTarget = BothItemsTarget);
-    void addFileTypeInfo(QStandardItem*, const QString&, const bool&, const UtilityNamespace::ArticleEncodingType&);
+    void updateItems(const PostDownloadInfoData&);
+    void addFileTypeInfo(const PostDownloadInfoData&);
 
 private:
 
     void updateNzbChildrenItems(const QModelIndex&, const int, const int);
-    void updateDecodeItems(const QModelIndex&, const int, const UtilityNamespace::ItemStatus);
-    void updateRepairExtractItems(const QModelIndex&, const int, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
+    void updateDecodeItems(const PostDownloadInfoData&);
+    void updateRepairExtractItems(const PostDownloadInfoData&);
+    void updateRepairExtractParentItems(const PostDownloadInfoData&);
 
 
 };
