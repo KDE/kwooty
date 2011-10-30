@@ -24,6 +24,7 @@
 #include <QStandardItem>
 #include "utility.h"
 #include "data/segmentdata.h"
+#include "data/postdownloadinfodata.h"
 using namespace UtilityNamespace;
 
 class CentralWidget;
@@ -66,8 +67,8 @@ signals:
 public slots:
     void updateDownloadSegmentSlot(SegmentData);
     void getNextSegmentSlot(ClientManagerConn*);
-    void updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType);
-    void updateRepairExtractSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, UtilityNamespace::ItemTarget);
+    void updateDecodeSegmentSlot(PostDownloadInfoData repairDecompressInfoData);
+    void updateRepairExtractSegmentSlot(PostDownloadInfoData repairDecompressInfoData);
 
 
 private slots:
