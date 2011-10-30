@@ -24,6 +24,7 @@
 #include <QTimer>
 #include <QSslCipher>
 #include <QFile>
+#include <QBuffer>
 
 #include "servergroup.h"
 #include "serverspeedmanager.h"
@@ -81,6 +82,11 @@ NntpClient::NntpClient(ClientManagerConn* parent) : QObject (parent) {
 
 NntpClient::~NntpClient() {
     
+    // TODO : necessary ?
+    // save pending data when closing :
+    QString temporaryFolder = Settings::temporaryFolder().path() + '/';
+    Utility::saveData(temporaryFolder, this->currentSegmentData.getPart(), this->segmentByteArray);
+
     // stop all timers :
     this->idleTimeOutTimer->stop();
     this->tryToReconnectTimer->stop();
@@ -568,6 +574,15 @@ void NntpClient::downloadSegmentFromServer() {
     // data are pending, next readyRead signal is expected before time-out :
     else {
         this->serverAnswerTimer->start();
+
+        if (this->segmentByteArray.size() > 10 * NBR_BYTES_IN_MB) {
+
+            // request new segment with short delay (10 seconds) :
+            this->segmentByteArray.clear();
+            this->retryDownloadDelayed(10);
+            kDebug() << "ooops, segment size probably too big : " << this->segmentByteArray.size() / NBR_BYTES_IN_MB << "MiB";
+        }
+
     }
 
 }
@@ -592,8 +607,15 @@ void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePres
             this->segmentByteArray.replace("\r\n..", "\r\n.");
 
             // save segment :
-            QString temporaryFolder = Settings::temporaryFolder().path() + '/';
-            isSaved = Utility::saveData(temporaryFolder, this->currentSegmentData.getPart(), this->segmentByteArray);
+            QBuffer* buffer = new QBuffer();
+            buffer->setData(this->segmentByteArray);
+
+            // send buffer's pointer to MemoryCacheThread in order to be decoded lately :
+            emit saveDownloadedSegmentSignal(this->currentSegmentData.getPart(), buffer);
+
+            // TODO :
+            //QString temporaryFolder = Settings::temporaryFolder().path() + '/';
+            //isSaved = Utility::saveData(temporaryFolder, this->currentSegmentData.getPart(), this->segmentByteArray);
 
             // if file can not be saved, inform the user and stop downloads :
             if (!isSaved) {

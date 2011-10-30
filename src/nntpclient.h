@@ -145,6 +145,7 @@ signals:
     void speedPerServerSignal(const SegmentInfoData);
     void saveFileErrorSignal(const int);
     void nntpErrorPerServerSignal(const int);
+    void saveDownloadedSegmentSignal(QString, QIODevice*);
 
 
 public slots:
