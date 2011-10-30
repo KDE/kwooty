@@ -36,7 +36,7 @@ public:
 
     QString getParentUniqueIdentifier() const;
     void setParentUniqueIdentifier(const QString&);
-    UtilityNamespace::ItemStatus getStatus() const ;
+    UtilityNamespace::ItemStatus getStatus() const;
     void setStatus(const UtilityNamespace::ItemStatus&);
     QDateTime getDateTime() const;
     void setDateTime(const QDateTime&);
