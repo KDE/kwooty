@@ -29,7 +29,7 @@ using namespace UtilityNamespace;
 class CentralWidget;
 class SegmentDecoderBase;
 class SegmentData;
-
+class PostDownloadInfoData;
 
 class SegmentsDecoderThread : public QObject {
 
@@ -39,7 +39,7 @@ public:
     SegmentsDecoderThread(CentralWidget*);
     SegmentsDecoderThread();
     ~SegmentsDecoderThread();
-    void emitDecodeProgression(QVariant&, const int&, const UtilityNamespace::ItemStatus&, const QString&, const bool&, const UtilityNamespace::ArticleEncodingType&);
+    void emitDecodeProgression(const PostDownloadInfoData&);
     void emitSaveFileError();
 private:
 
@@ -58,8 +58,9 @@ private:
 
 signals:
     void updateDecodeSegmentSignal(SegmentData, int, int);
-    void updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType = ArticleEncodingUUEnc);
+    void updateDecodeSignal(PostDownloadInfoData);
     void saveFileErrorSignal(int);
+
 
 public slots:
     void decodeSegmentsSlot(NzbFileData);

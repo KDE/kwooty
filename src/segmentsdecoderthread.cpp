@@ -26,7 +26,9 @@
 #include "segmentdecoderyenc.h"
 #include "segmentdecoderuuenc.h"
 #include "itemdownloadupdater.h"
+#include "memorycachethread.h"
 #include "data/segmentdata.h"
+#include "data/postdownloadinfodata.h"
 #include "itemparentupdater.h"
 #include "segmentmanager.h"
 #include "datarestorer.h"
@@ -90,10 +92,10 @@ void SegmentsDecoderThread::setupConnections() {
              SLOT(suppressOldOrphanedSegmentsSlot()));
 
 
-    // receive data to decode from decodeSegmentsSignal :
+    // receive data to decode from decodeSegmentsFromMemoryCacheSignal :
     qRegisterMetaType<NzbFileData>("NzbFileData");
-    connect (parent->getItemParentUpdater()->getItemDownloadUpdater(),
-             SIGNAL(decodeSegmentsSignal(NzbFileData)),
+    connect (parent->getMemoryCacheThread(),
+             SIGNAL(decodeSegmentsFromMemoryCacheSignal(NzbFileData)),
              this,
              SLOT(decodeSegmentsSlot(NzbFileData)));
 
@@ -104,10 +106,11 @@ void SegmentsDecoderThread::setupConnections() {
     qRegisterMetaType<UtilityNamespace::ArticleEncodingType>("UtilityNamespace::ArticleEncodingType");
 
     // update info about decoding process :
+    qRegisterMetaType<PostDownloadInfoData>("PostDownloadInfoData");
     connect (this,
-             SIGNAL(updateDecodeSignal(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType)),
+             SIGNAL(updateDecodeSignal(PostDownloadInfoData)),
              this->parent->getSegmentManager(),
-             SLOT(updateDecodeSegmentSlot(QVariant, int, UtilityNamespace::ItemStatus, QString, bool, UtilityNamespace::ArticleEncodingType)));
+             SLOT(updateDecodeSegmentSlot(PostDownloadInfoData)));
 
 
     connect (this,
@@ -119,8 +122,8 @@ void SegmentsDecoderThread::setupConnections() {
 }
 
 
-void SegmentsDecoderThread::emitDecodeProgression(QVariant& parentIdentifer, const int& progression, const UtilityNamespace::ItemStatus& status, const QString& decodedFileName, const bool& crc32Match, const UtilityNamespace::ArticleEncodingType& articleEncodingType) {
-    emit updateDecodeSignal(parentIdentifer, progression, status, decodedFileName, crc32Match, articleEncodingType);
+void SegmentsDecoderThread::emitDecodeProgression(const PostDownloadInfoData& decodeInfoData) {
+    emit updateDecodeSignal(decodeInfoData);
 }
 
 void SegmentsDecoderThread::emitSaveFileError() {
@@ -164,7 +167,20 @@ void SegmentsDecoderThread::startDecoding() {
 
             // if fileName is empty after trying all decoders, decoding failed :
             if (fileNameStr.isEmpty()) {
-                emit updateDecodeSignal(currentFileDataToDecode.getUniqueIdentifier(), PROGRESS_COMPLETE, DecodeErrorStatus, QString(), false);
+
+                PostDownloadInfoData decodeInfoData;
+                decodeInfoData.initDecode(currentFileDataToDecode.getUniqueIdentifier(), PROGRESS_COMPLETE, DecodeErrorStatus);
+                decodeInfoData.setCrc32Match(false);
+
+                emit updateDecodeSignal(decodeInfoData);
+            }
+
+
+            // decoding is done, finally delete all pointers to data :
+            QList<SegmentData> segmentList = currentFileDataToDecode.getSegmentList();
+
+            for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
+                delete segmentList.value(segmentIndex).getIoDevice();
             }
 
 
