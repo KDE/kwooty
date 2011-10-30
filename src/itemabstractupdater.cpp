@@ -202,13 +202,13 @@ void ItemAbstractUpdater::parentStatusIconUpdateSlot(QStandardItem* stateItem, I
     // get final status :
     if (itemStatusData.isPostProcessFinish()) {
 
-        if (itemStatusData.getDataStatus() == DataComplete) {
+        if (itemStatusData.areAllPostProcessingCorrect()) {
 
             // get fileName item and set corresponding icon :
             this->setIcon(stateItem, status);
         }
 
-        else if (itemStatusData.getDataStatus() == DataIncomplete) {
+        else {
 
             // get fileName item and set corresponding icon :
             this->setIcon(stateItem, "dialog-warning");
