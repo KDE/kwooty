@@ -165,6 +165,13 @@ bool Utility::isWaitingForDecode(const UtilityNamespace::ItemStatus statusItem, 
 }
 
 
+bool Utility::isFileNotFound(const UtilityNamespace::ItemStatus statusItem, const UtilityNamespace::Data data) {
+
+    return ( statusItem == DownloadFinishStatus &&
+             data == NoData );
+}
+
+
 
 bool Utility::isDownloadFinish(const UtilityNamespace::ItemStatus statusItem) {
 

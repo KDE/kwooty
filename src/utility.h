@@ -128,7 +128,6 @@ namespace UtilityNamespace
         ExtractSuccessStatus,
         ExtractFinishedStatus,
         ExtractFailedStatus,
-        NzbProcessFinishedStatus,
         UnrarProgramMissing,
         SevenZipProgramMissing
     };
@@ -277,6 +276,11 @@ namespace UtilityNamespace
         BandwidthFull
     };
 
+    // save file behavior :
+    enum SaveFileBehavior {
+        SaveSilently,
+        SaveNotSilently
+    };
 
 
 }
@@ -305,6 +309,7 @@ public:
     static bool isDecoding(const UtilityNamespace::ItemStatus);
     static bool isDecodeFinish(const UtilityNamespace::ItemStatus);
     static bool isWaitingForDecode(const UtilityNamespace::ItemStatus, const UtilityNamespace::Data);
+    static bool isFileNotFound(const UtilityNamespace::ItemStatus, const UtilityNamespace::Data);
     static bool isPostDownloadProcessing(const UtilityNamespace::ItemStatus);
     static bool isJobFinish(const UtilityNamespace::ItemStatus);
     static bool isBadCrcForYencArticle(const UtilityNamespace::CrcNotify&, const UtilityNamespace::ArticleEncodingType&);
