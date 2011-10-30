@@ -40,10 +40,11 @@ void PostDownloadInfoData::initRepairDecompress(const QVariant& parentIdentifer,
 }
 
 
-void PostDownloadInfoData::initDecode(const int& progression, const UtilityNamespace::ItemStatus& status, const QString& decodedFileName) {
+void PostDownloadInfoData::initDecode(const QVariant& parentIdentifer, const int& progression, const UtilityNamespace::ItemStatus& status, const QString& decodedFileName) {
 
     this->init();
 
+    this->parentIdentifer = parentIdentifer;
     this->progression = progression;
     this->status = status;
     this->decodedFileName = decodedFileName;

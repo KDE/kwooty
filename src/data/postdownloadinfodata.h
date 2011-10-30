@@ -34,7 +34,7 @@ class PostDownloadInfoData {
 public:
     PostDownloadInfoData();
     void initRepairDecompress(const QVariant&, const int&, const UtilityNamespace::ItemStatus&, const UtilityNamespace::ItemTarget&);
-    void initDecode(const int&, const UtilityNamespace::ItemStatus&, const QString& = QString());
+    void initDecode(const QVariant&, const int&, const UtilityNamespace::ItemStatus&, const QString& = QString());
 
     QModelIndex getModelIndex() const;
     void setModelIndex(const QModelIndex&);
