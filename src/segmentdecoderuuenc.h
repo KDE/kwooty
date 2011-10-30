@@ -41,10 +41,10 @@ private:
                   };
 
     void decodeEncodedData(QFile&, SegmentData&, int&, const QByteArray& , bool&, bool&);
-    QString searchPattern(QFile& segmentFile);
+    QString searchPattern(QIODevice* segmentFile);
     bool decodeUUenc(const QByteArray&, QFile&, const int&);
     bool isUUEncodedLine(QByteArray&);
-    void decodeProgression(const int, UtilityNamespace::ItemStatus, const QString& decodedFileName = QString());
+    void decodeProgression(PostDownloadInfoData&);
 
 
 signals:

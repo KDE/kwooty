@@ -31,9 +31,12 @@ SegmentDecoderUUEnc::~SegmentDecoderUUEnc() {
 }
 
 
-void SegmentDecoderUUEnc::decodeProgression(const int progression, UtilityNamespace::ItemStatus status, const QString& decodedFileName) {
+void SegmentDecoderUUEnc::decodeProgression(PostDownloadInfoData& decodeInfoData) {
 
-        this->segmentsDecoderThread->emitDecodeProgression(this->parentIdentifer, progression, status, decodedFileName, this->crc32Match, ArticleEncodingUUEnc);
+    decodeInfoData.setCrc32Match(this->crc32Match);
+    decodeInfoData.setArticleEncodingType(ArticleEncodingUUEnc);
+
+    this->segmentsDecoderThread->emitDecodeProgression(decodeInfoData);
 
 }
 
@@ -108,7 +111,9 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
     }
 
     // send decoding progression :
-    this->decodeProgression(qRound((elementInList * 100 / this->segmentDataList.size()) ), DecodeStatus);
+    PostDownloadInfoData decodeInfoData;
+    decodeInfoData.initDecode(this->parentIdentifer, qRound((elementInList * 100 / this->segmentDataList.size())), DecodeStatus);
+    this->decodeProgression(decodeInfoData);
 
     return writeError;
 
@@ -177,17 +182,17 @@ bool SegmentDecoderUUEnc::isUUEncodedLine(QByteArray& currentLine) {
 
 
 
-QString SegmentDecoderUUEnc::searchPattern(QFile& segmentFile) {
+QString SegmentDecoderUUEnc::searchPattern(QIODevice* segmentFile) {
 
     QString fileName;
     bool uuEncodedDataFound = false;
 
 
-    while (!segmentFile.atEnd()) {
+    while (!segmentFile->atEnd()) {
 
         QByteArray uuNamePattern = "begin";
         QByteArray yNamePattern = "=ybegin";
-        QByteArray lineArray = segmentFile.readLine().trimmed();
+        QByteArray lineArray = segmentFile->readLine().trimmed();
 
         // if 'begin' pattern has been found, retrieve the file name :
         if (lineArray.contains(uuNamePattern) && !lineArray.contains(yNamePattern) ) {
