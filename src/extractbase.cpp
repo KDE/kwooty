@@ -323,7 +323,8 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
 
         // notify parent that extraction has finished :
         NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
-        this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
+
+        this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
 
         emit extractProcessEndedSignal(this->nzbCollectionData);
 
@@ -354,8 +355,8 @@ void ExtractBase::passwordEnteredByUserSlot(bool passwordEntered, QString passwo
 
             // notify parent that extraction has finished :
             NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
-            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
 
+            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
 
             this->resetVariables();
 
@@ -369,6 +370,17 @@ void ExtractBase::passwordEnteredByUserSlot(bool passwordEntered, QString passwo
     }
 
 }
+
+
+
+void ExtractBase::emitProcessUpdate(const QVariant& parentIdentifer, const int& progression, const UtilityNamespace::ItemStatus& status, const UtilityNamespace::ItemTarget& itemTarget) {
+
+    PostDownloadInfoData repairDecompressInfoData;
+    repairDecompressInfoData.initRepairDecompress(parentIdentifer, progression, status, itemTarget);
+    this->parent->emitProcessUpdate(repairDecompressInfoData);
+
+}
+
 
 
 
@@ -407,8 +419,10 @@ void ExtractBase::emitProgressToArchivesWithCurrentStatus(const UtilityNamespace
     foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
 
         if (nzbFileData.getExtractProgressionStep() == status) {
+
             // notify user of current file status and of its progression :
-            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, status, itemTarget);
+            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, status, itemTarget);
+
         }
 
     }
@@ -427,12 +441,16 @@ void ExtractBase::emitFinishToArchivesWithoutErrors(const UtilityNamespace::Item
         if (nzbFileDataStatus != ExtractBadCrcStatus) {
 
             if (nzbFileDataStatus == ExtractStatus){
-                this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, status, ChildItemTarget);
+
+                this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, status, ChildItemTarget);
+
             }
         }
         else {
+
             // only used to send *progression %* value for files with extracting errors :
-            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, nzbFileData.getExtractProgressionStep(), ChildItemTarget);
+            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, nzbFileData.getExtractProgressionStep(), ChildItemTarget);
+
         }
 
     }
@@ -444,7 +462,9 @@ void ExtractBase::emitStatusToAllArchives(const int& progress, const UtilityName
     foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
 
         if (nzbFileData.isArchiveFile()) {
-            this->parent->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), progress, status, target);
+
+            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), progress, status, target);
+
         }
 
     }

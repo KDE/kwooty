@@ -86,9 +86,10 @@ protected:
     void emitStatusToAllArchives(const int&, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
     void findItemAndNotifyUser(const QString& fileNameStr, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
     void removeArchiveFiles();
+    void emitProcessUpdate(const QVariant&, const int&, const UtilityNamespace::ItemStatus&, const UtilityNamespace::ItemTarget&);
     NzbFileData getFirstArchiveFileFromList() const;
     NzbFileData getFirstArchiveFileFromList(const QList<NzbFileData>&) const;
-    QString getOriginalFileName(const NzbFileData&) const ;
+    QString getOriginalFileName(const NzbFileData&) const;
 
     // virtual methods :
     virtual void removeRenamedArchiveFile(const NzbFileData&);
