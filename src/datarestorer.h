@@ -46,7 +46,7 @@ public:
 
     DataRestorer(CentralWidget* parent = 0);
     DataRestorer();
-    int saveQueueData(const& SaveFileBehavior);
+    int saveQueueData(const SaveFileBehavior&);
     void setActive(const bool);
 
 private:
@@ -70,7 +70,7 @@ private:
     void preprocessAndHandleData(const QList< QList<GlobalFileData> >&);
     void writeDataToDisk();
     int displayRestoreMessageBox() const;
-    int displaySaveMessageBox(const& SaveFileBehavior) const;
+    int displaySaveMessageBox(const SaveFileBehavior&) const;
     bool isDataToSaveExist() const;
     bool isHeaderOk(QDataStream&) const;
     void requestSuppressOldOrphanedSegments();
