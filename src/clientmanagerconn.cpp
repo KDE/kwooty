@@ -29,6 +29,7 @@
 #include "segmentmanager.h"
 #include "servermanager.h"
 #include "serverspeedmanager.h"
+#include "memorycachethread.h"
 #include "nntpclient.h"
 #include "data/segmentinfodata.h"
 #include "observers/clientsperserverobserver.h"
@@ -141,6 +142,13 @@ void ClientManagerConn::initSlot() {
              SIGNAL(speedPerServerSignal(const SegmentInfoData)),
              this->parent->getClientsPerServerObserver(),
              SLOT(nntpClientSpeedPerServerSlot(const SegmentInfoData)));
+
+
+    // save downloaded segment by the memory cache manager :
+    connect (this->nntpClient,
+             SIGNAL(saveDownloadedSegmentSignal(QString, QIODevice*)),
+             centralWidget->getMemoryCacheThread(),
+             SLOT(saveDownloadedSegmentSlot(QString, QIODevice*)));
 
 }
 
