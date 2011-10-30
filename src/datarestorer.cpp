@@ -74,7 +74,7 @@ void DataRestorer::setupConnections() {
 
 
 
-int DataRestorer::saveQueueData(const bool saveSilently) {
+int DataRestorer::saveQueueData(const SaveFileBehavior& saveFileBehavior) {
 
     int answer = KMessageBox::Yes;
 
@@ -84,7 +84,7 @@ int DataRestorer::saveQueueData(const bool saveSilently) {
         if (this->isDataToSaveExist()) {
 
             // ask question if previous pending downloads have to be restored :
-            answer = this->displaySaveMessageBox(saveSilently);
+            answer = this->displaySaveMessageBox(saveFileBehavior);
 
             // pendings downloads have to be saved :
             if (answer == KMessageBox::Yes) {
@@ -486,11 +486,11 @@ int DataRestorer::displayRestoreMessageBox() const {
 }
 
 
-int DataRestorer::displaySaveMessageBox(const bool saveSilently) const {
+int DataRestorer::displaySaveMessageBox(const SaveFileBehavior& saveFileBehavior) const {
 
     int answer = KMessageBox::Yes;
 
-    if (!saveSilently) {
+    if (saveFileBehavior == SaveNotSilently) {
 
         // ask question if confirmSaveSilently is checked:
         if (Settings::saveDownloadsMethods() == DataRestorer::WithConfirmation) {

@@ -46,7 +46,7 @@ public:
 
     DataRestorer(CentralWidget* parent = 0);
     DataRestorer();
-    int saveQueueData(const bool);
+    int saveQueueData(const& SaveFileBehavior);
     void setActive(const bool);
 
 private:
@@ -54,6 +54,7 @@ private:
     enum PendingDownloadsManagement{ WithConfirmation,
                                      Automatically
                                  };
+
 
     CentralWidget* parent;
     StandardItemModel* downloadModel;
@@ -69,7 +70,7 @@ private:
     void preprocessAndHandleData(const QList< QList<GlobalFileData> >&);
     void writeDataToDisk();
     int displayRestoreMessageBox() const;
-    int displaySaveMessageBox(const bool) const;
+    int displaySaveMessageBox(const& SaveFileBehavior) const;
     bool isDataToSaveExist() const;
     bool isHeaderOk(QDataStream&) const;
     void requestSuppressOldOrphanedSegments();
