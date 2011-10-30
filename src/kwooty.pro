@@ -85,7 +85,9 @@ SOURCES += main.cpp \
     plugins/scheduler/schedulertableitemdelegate.cpp \
     plugins/scheduler/schedulerfilehandler.cpp \
     serverspeedmanager.cpp \
-    standarditemmodelquery.cpp
+    standarditemmodelquery.cpp \
+    memorycachethread.cpp \
+    data/postdownloadinfodata.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -168,7 +170,9 @@ HEADERS += mainwindow.h \
     plugins/scheduler/schedulertableitemdelegate.h \
     plugins/scheduler/schedulerfilehandler.h \
     serverspeedmanager.h \
-    standarditemmodelquery.h
+    standarditemmodelquery.h \
+    memorycachethread.h \
+    data/postdownloadinfodata.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
