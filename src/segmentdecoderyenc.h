@@ -37,11 +37,11 @@ public:
 private:
 
     void decodeEncodedData(QFile&, SegmentData&, int&, const QByteArray& , bool&, bool&);
-    QString searchPattern(QFile&);
+    QString searchPattern(QIODevice*);
     bool decodeYenc(QByteArray&, QFile&, const int&, const quint32&, int&);
     quint32 computeCrc32Part(quint32&, unsigned char);
     QByteArray getLineByteArray(const QString&, const QByteArray&, int&);
-    void decodeProgression(const int, UtilityNamespace::ItemStatus, const QString& decodedFileName = QString());
+    void decodeProgression(PostDownloadInfoData&);
 
 
 signals:

@@ -381,28 +381,30 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData) {
 
 
 
-void SegmentManager::updateDecodeSegmentSlot(QVariant parentIdentifer, int progression, UtilityNamespace::ItemStatus status, QString decodedFileName, bool crc32Match, UtilityNamespace::ArticleEncodingType articleEncodingType) {
+void SegmentManager::updateDecodeSegmentSlot(PostDownloadInfoData decodeInfoData) {
 
     // search index in current downloading nzb :
-    QStandardItem* fileNameItem = this->searchItem(parentIdentifer, DecodeStatus);
+    QStandardItem* fileNameItem = this->searchItem(decodeInfoData.getParentIdentifer(), DecodeStatus);
 
     // if item has not been found the nzb parent item could be in pause state, search it :
     if (!fileNameItem){
-        fileNameItem = this->searchItem(parentIdentifer, PauseStatus);
+        fileNameItem = this->searchItem(decodeInfoData.getParentIdentifer(), PauseStatus);
     }
 
     // item has been found :
     if (fileNameItem){
 
-        // add info about decoded file type (par2 file or rar file) ;
-        itemParentUpdater->getItemPostDownloadUpdater()->addFileTypeInfo(fileNameItem, decodedFileName, crc32Match, articleEncodingType);
+        decodeInfoData.setModelIndex(fileNameItem->index());
+
+        // add info about decoded file type (par2 file or rar file) :
+        itemParentUpdater->getItemPostDownloadUpdater()->addFileTypeInfo(decodeInfoData);
 
         // update items :
-        itemParentUpdater->getItemPostDownloadUpdater()->updateItems(fileNameItem->index(), progression, status);
+        itemParentUpdater->getItemPostDownloadUpdater()->updateItems(decodeInfoData);
 
     }
     else {
-        kDebug() <<  "Item not found - status : " << status;
+        kDebug() <<  "Item not found - status : " << decodeInfoData.getStatus();
     }
 
 }
@@ -410,19 +412,22 @@ void SegmentManager::updateDecodeSegmentSlot(QVariant parentIdentifer, int progr
 
 
 
-void SegmentManager::updateRepairExtractSegmentSlot(QVariant parentIdentifer, int progression, UtilityNamespace::ItemStatus status, UtilityNamespace::ItemTarget itemTarget) {
+void SegmentManager::updateRepairExtractSegmentSlot(PostDownloadInfoData repairDecompressInfoData) {
 
     // search item according to its ID :
-    QStandardItem* fileNameItem = this->searchItem(parentIdentifer, RepairStatus);
+    QStandardItem* fileNameItem = this->searchItem(repairDecompressInfoData.getParentIdentifer(), RepairStatus);
 
     // if corresponding item has been found :
     if (fileNameItem){
+
+        repairDecompressInfoData.setModelIndex(fileNameItem->index());
+
         // update items :
-        itemParentUpdater->getItemPostDownloadUpdater()->updateItems(fileNameItem->index(), progression, status, itemTarget);
+        itemParentUpdater->getItemPostDownloadUpdater()->updateItems(repairDecompressInfoData);
 
     }
     else {
-        kDebug() <<  "Item not found - status : " << status;
+        kDebug() <<  "Item not found - status : " << repairDecompressInfoData.getStatus();
     }
 
 }
