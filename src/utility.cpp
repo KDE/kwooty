@@ -89,15 +89,6 @@ bool Utility::isPostDownloadFailed(const UtilityNamespace::ItemStatus statusItem
 
 }
 
-bool Utility::isPostProcessFailed(const UtilityNamespace::ItemStatus statusItem) {
-
-    return ( statusItem == RepairNotPossibleStatus  ||
-             statusItem == RepairFailedStatus       ||
-             statusItem == ExtractFailedStatus      ||
-             statusItem == ExtractBadCrcStatus );
-
-}
-
 
 bool Utility::isVerifyFileCorrect(const UtilityNamespace::ItemStatus statusItem) {
 

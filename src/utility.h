@@ -298,7 +298,6 @@ public:
     static QString convertDownloadSpeedHumanReadable(const quint64);
     static bool isInDownloadProcess(const UtilityNamespace::ItemStatus);
     static bool isPostDownloadFailed(const UtilityNamespace::ItemStatus);
-    static bool isPostProcessFailed(const UtilityNamespace::ItemStatus);
     static bool isVerifyFileCorrect(const UtilityNamespace::ItemStatus);
     static bool isReadyToDownload(const UtilityNamespace::ItemStatus);
     static bool isInQueue(const UtilityNamespace::ItemStatus);
