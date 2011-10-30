@@ -25,6 +25,7 @@
 #include "itemabstractupdater.h"
 #include "data/nzbfiledata.h"
 #include "data/nzbcollectiondata.h"
+#include "data/postdownloadinfodata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -48,7 +49,7 @@ public:
     ItemChildrenManager* getItemChildrenManager() const;
     StandardItemModel* getDownloadModel() const;
     void updateNzbItems(const QModelIndex&);
-    void updateNzbItemsPostDecode(const QModelIndex&, const int, UtilityNamespace::ItemStatus);
+    void updateNzbItemsPostDecode(const PostDownloadInfoData&);
     void recalculateNzbSize(const QModelIndex&);
 
 #if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)

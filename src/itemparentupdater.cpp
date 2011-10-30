@@ -115,7 +115,7 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
 
         ItemStatusData itemStatusData = nzbIndex.child(i, STATE_COLUMN).data(StatusRole).value<ItemStatusData>();
 
-        //  count children item status :
+        // count children item status :
         this->countGlobalItemStatus(itemStatusData);
 
         // calculate global download progression :
@@ -154,9 +154,15 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
 //                            Verify/Repair - Extract related updates                           //
 //==============================================================================================//
 
-void ItemParentUpdater::updateNzbItemsPostDecode(const QModelIndex& nzbIndex, const int progression, UtilityNamespace::ItemStatus status){
+void ItemParentUpdater::updateNzbItemsPostDecode(const PostDownloadInfoData& repairDecompressInfoData) {
 
-    if (status != NzbProcessFinishedStatus) {
+    UtilityNamespace::ItemStatus status = repairDecompressInfoData.getStatus();
+    QModelIndex nzbIndex = repairDecompressInfoData.getModelIndex();
+    int progression = repairDecompressInfoData.getProgression();
+
+
+    // post processing is currently performing, update post process status :
+    if (!repairDecompressInfoData.isPostProcessFinish()) {
 
         // if child are being verified / repaired or extracted :
         QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(nzbIndex);
@@ -172,32 +178,19 @@ void ItemParentUpdater::updateNzbItemsPostDecode(const QModelIndex& nzbIndex, co
     // post processing of nzb parent has been fully performed :
     else {
 
-        bool allPostProcessingCorrect = this->parent->getModelQuery()->isAllPostProcessingCorrect(this->downloadModel->itemFromIndex(nzbIndex));
-
         // get itemStatusData :
         ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex);
 
         nzbItemStatusData.setPostProcessFinish(true);
+        nzbItemStatusData.setAllPostProcessingCorrect(repairDecompressInfoData.areAllPostProcessingCorrect());
 
-        // if all post processing have been correctly performed set statusData as DataComplete :
-        if (allPostProcessingCorrect) {
-            nzbItemStatusData.setDataStatus(DataComplete);
-        }
-        else {
-            nzbItemStatusData.setDataStatus(DataIncomplete);
-        }
-
-        //kDebug() << "NzbProcessFinishedStatus"  <<  nzbItemStatusData.isPostProcessFinish() <<  allPostProcessingCorrect << nzbItemStatusData.getDataStatus();
+        //kDebug() << "NzbProcessFinishedStatus"  <<  nzbItemStatusData.isPostProcessFinish() <<  repairDecompressInfoData.areAllPostProcessingCorrect();
 
         this->downloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
 
-
     }
 
-
-
 }
-
 
 
 //==============================================================================================//
@@ -458,14 +451,13 @@ void ItemParentUpdater::recalculateNzbSize(const QModelIndex& nzbIndex){
 void ItemParentUpdater::countGlobalItemStatus(const ItemStatusData& itemStatusData) {
 
     // count number of files present / not present :
-    if ( itemStatusData.getDataStatus() == NoData){
+    if (itemStatusData.getDataStatus() == NoData) {
         this->articleNotFoundNumber++;
     }
 
-    if (itemStatusData.getDataStatus() != NoData){
+    if (itemStatusData.getDataStatus() != NoData) {
         this->articleFoundNumber++;
     }
-
 
     // count items status :
     this->countItemStatus(itemStatusData.getStatus());
