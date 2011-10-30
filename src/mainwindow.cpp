@@ -443,7 +443,7 @@ bool MainWindow::queryClose() {
     }
     // session manager is about to quit, just save data silently and quit :
     else {
-        centralWidget->savePendingDownloads(UtilityNamespace::ShutdownMethodUnknown, true);
+        centralWidget->savePendingDownloads(UtilityNamespace::ShutdownMethodUnknown, SaveSilently);
     }
 
     return confirmQuit;
