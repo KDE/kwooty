@@ -44,6 +44,7 @@
 #include "mainwindow.h"
 #include "notificationmanager.h"
 #include "servermanager.h"
+#include "memorycachethread.h"
 #include "observers/clientsobserver.h"
 #include "observers/queuefileobserver.h"
 #include "data/itemstatusdata.h"
@@ -76,6 +77,9 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent) {
     // save and restore pending downloads from previous session :
     dataRestorer = new DataRestorer(this);
 
+    // setup repairing and decompressing thread :
+    memoryCacheThread = new MemoryCacheThread(this);
+
     // setup segment decoder thread :
     segmentsDecoderThread = new SegmentsDecoderThread(this);
 
@@ -107,6 +111,7 @@ CentralWidget::~CentralWidget() {
 
     delete this->segmentsDecoderThread;
     delete this->repairDecompressThread;
+    delete this->memoryCacheThread;
 
 }
 
@@ -161,9 +166,9 @@ void CentralWidget::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGl
 
 
 
-int CentralWidget::savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType, bool saveSilently) {
+int CentralWidget::savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType, const SaveFileBehavior saveFileBehavior) {
 
-    int answer = dataRestorer->saveQueueData(saveSilently);
+    int answer = dataRestorer->saveQueueData(saveFileBehavior);
 
     // disable dataRestorer when shutdown is requested because the app will be closed automatically
     // data saving will be triggered and then data saving dialog box could prevent system shutdown :
@@ -422,16 +427,37 @@ void CentralWidget::retryDownload(const QModelIndexList& indexList) {
         // if current item is a nzbItem, retrieve their children :
         if (downloadModel->isNzbItem(fileNameItem)) {
 
+            // check that at least on child will have its status reset to IdleStatus for requesting a new download.
+            // It can happens (especially if user manually removes several files) that
+            // all children are reverted bask to DecodeFinishStatus with no child reset in queue.
+            // Check that this case does not happen :
+            bool childStatusConsistencyCorrect = false;
             for (int i = 0; i < fileNameItem->rowCount(); i++) {
 
                 QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
-                itemStatusResetTarget = this->modelQuery->isRetryDownloadAllowed(nzbChildrenItem);
+                if (this->modelQuery->isRetryDownloadAllowed(nzbChildrenItem) == IdleStatus) {
 
-                // if itemStatusResetTarget is different from ExtractFinishedStatus, retry download is allowed :
-                if (itemStatusResetTarget != ExtractFinishedStatus) {
+                    childStatusConsistencyCorrect = true;
+                    break;
 
-                    this->itemParentUpdater->getItemChildrenManager()->resetItemStatusToTarget(nzbChildrenItem, itemStatusResetTarget);
-                    changeItemStatus = true;
+                }
+
+            }
+            // if at leat one child item is reset to IdleStatus, then allow download retry :
+            if (childStatusConsistencyCorrect) {
+
+                for (int i = 0; i < fileNameItem->rowCount(); i++) {
+
+                    QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
+                    itemStatusResetTarget = this->modelQuery->isRetryDownloadAllowed(nzbChildrenItem);
+
+                    // if itemStatusResetTarget is different from ExtractFinishedStatus, retry download is allowed :
+                    if (itemStatusResetTarget != ExtractFinishedStatus) {
+
+                        this->itemParentUpdater->getItemChildrenManager()->resetItemStatusToTarget(nzbChildrenItem, itemStatusResetTarget);
+                        changeItemStatus = true;
+
+                    }
 
                 }
 
@@ -459,7 +485,8 @@ void CentralWidget::retryDownload(const QModelIndexList& indexList) {
         if (changeItemStatus) {
 
             ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
-            itemStatusData.downloadRetry(itemStatusResetTarget, ParentItemTarget);
+            itemStatusData.downloadRetry(IdleStatus, ParentItemTarget);
+
             this->downloadModel->updateStatusDataFromIndex(fileNameItem->index(), itemStatusData);
 
         }
@@ -531,6 +558,10 @@ DataRestorer* CentralWidget::getDataRestorer() const{
 
 ServerManager* CentralWidget::getServerManager() const{
     return this->serverManager;
+}
+
+MemoryCacheThread* CentralWidget::getMemoryCacheThread() const {
+    return this->memoryCacheThread;
 }
 
 SideBar* CentralWidget::getSideBar() const{

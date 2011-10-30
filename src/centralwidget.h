@@ -39,6 +39,7 @@ class StandardItemModel;
 class StandardItemModelQuery;
 class RepairDecompressThread;
 class SegmentsDecoderThread;
+class MemoryCacheThread;
 class SegmentManager;
 class DataRestorer;
 class ShutdownManager;
@@ -68,7 +69,7 @@ public:
     ~CentralWidget();
     void handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
     void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
-    int savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown, bool saveSilently = false);
+    int savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown, const SaveFileBehavior = SaveNotSilently);
     void retryDownload(const QModelIndexList&);
 
     SegmentManager* getSegmentManager() const;
@@ -82,6 +83,7 @@ public:
     QueueFileObserver* getQueueFileObserver() const;
     DataRestorer* getDataRestorer() const;
     ServerManager* getServerManager() const;
+    MemoryCacheThread* getMemoryCacheThread() const;
     SideBar* getSideBar() const;
 
 
@@ -93,6 +95,7 @@ private:
     ShutdownManager* shutdownManager;
     SegmentsDecoderThread* segmentsDecoderThread;
     RepairDecompressThread* repairDecompressThread;
+    MemoryCacheThread* memoryCacheThread;
     ItemParentUpdater* itemParentUpdater;
     StandardItemModel* downloadModel;
     StandardItemModelQuery* modelQuery;
