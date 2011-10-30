@@ -66,7 +66,10 @@ public:
     int getArticlePresenceOnServer() const;
 
     SegmentInfoData getSegmentInfoData() const;
-    void setSegmentInfoData(const SegmentInfoData& segmentInfoData);
+    void setSegmentInfoData(const SegmentInfoData&);
+
+    QIODevice* getIoDevice();
+    void setIoDevice(QIODevice*);
 
 
 private:
@@ -76,6 +79,7 @@ private:
     QVariant parentUniqueIdentifier;
     SegmentInfoData segmentInfoData;
     UtilityNamespace::ItemStatus status;
+    QIODevice* ioDevice;
     int elementInList;
     int serverGroupTarget;
     int progress;

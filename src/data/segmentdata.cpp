@@ -143,6 +143,16 @@ void SegmentData::setSegmentInfoData(const SegmentInfoData& segmentInfoData){
 }
 
 
+QIODevice* SegmentData::getIoDevice() {
+    return this->ioDevice;
+}
+
+void SegmentData::setIoDevice(QIODevice* ioDevice) {
+    this->ioDevice = ioDevice;
+}
+
+
+
 QDataStream& operator<<(QDataStream& out, const SegmentData& segmentData) {
 
     out << segmentData.getBytes()
