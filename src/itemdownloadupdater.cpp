@@ -226,8 +226,10 @@ void ItemDownloadUpdater::countGlobalItemStatus(const SegmentData& segmentData) 
     }
 
     if (segmentData.getServerGroupTarget() != MasterServer &&
-        Utility::isInQueue((UtilityNamespace::ItemStatus)segmentData.getStatus())) {
+        Utility::isInQueue(segmentData.getStatus())) {
+
         this->pendingSegmentsOnBackupNumber++;
+
     }
 
 
