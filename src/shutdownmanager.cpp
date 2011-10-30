@@ -558,7 +558,7 @@ void ShutdownManager::launchSystemShutdownSlot() {
     }
 
     // save potential pending data for future session restoring without asking any questions :
-    parent->savePendingDownloads(this->getChosenShutdownType(), true);
+    parent->savePendingDownloads(this->getChosenShutdownType(), SaveSilently);
 
     // shutdown is launched, set system button as "not checked" :
     emit setShutdownButtonCheckedSignal(false);
