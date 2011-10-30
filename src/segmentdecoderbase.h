@@ -24,9 +24,11 @@
 
 #include <QObject>
 #include <QFile>
+#include <QIODevice>
 
 #include "data/nzbfiledata.h"
 #include "data/segmentdata.h"
+#include "data/postdownloadinfodata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -45,9 +47,9 @@ public:
 
 
 protected:
-    virtual QString searchPattern(QFile& segmentFile) = 0;
+    virtual QString searchPattern(QIODevice*) = 0;
     virtual void decodeEncodedData(QFile&, SegmentData&, int&, const QByteArray& , bool&, bool&) = 0;
-    virtual void decodeProgression(const int, UtilityNamespace::ItemStatus, const QString& decodedFileName = QString()) = 0;
+    virtual void decodeProgression(PostDownloadInfoData& decodeInfoData) = 0;
     bool decodeSegmentFiles(QFile&);
 
     SegmentsDecoderThread* segmentsDecoderThread;

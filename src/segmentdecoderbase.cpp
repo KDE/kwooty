@@ -46,6 +46,11 @@ void SegmentDecoderBase::decodeSegments(NzbFileData currentNzbFileData, const QS
     this->crc32Match = false;
 
 
+    // decodeInfoData sent by defaut :
+    PostDownloadInfoData decodeInfoData;
+    decodeInfoData.initDecode(this->parentIdentifer, PROGRESS_COMPLETE, DecodeErrorStatus);
+
+
     QString fileSavePath = currentNzbFileData.getFileSavePath();
     if (Utility::createFolder(fileSavePath)) {
 
@@ -57,12 +62,16 @@ void SegmentDecoderBase::decodeSegments(NzbFileData currentNzbFileData, const QS
             bool encodedDataFound = this->decodeSegmentFiles(targetFile);
 
             if (encodedDataFound) {
+
                 // decoding is over, also send name of decoded file :
-                this->decodeProgression(PROGRESS_COMPLETE, DecodeFinishStatus, fileNameStr);
+                decodeInfoData.setStatus(DecodeFinishStatus);
+                decodeInfoData.setDecodedFileName(fileNameStr);
+                this->decodeProgression(decodeInfoData);
+
             }
             // no data found in any segments, notify user about issue :
             else {
-                this->decodeProgression(PROGRESS_COMPLETE, DecodeErrorStatus);
+                this->decodeProgression(decodeInfoData);
             }
 
 
@@ -72,14 +81,15 @@ void SegmentDecoderBase::decodeSegments(NzbFileData currentNzbFileData, const QS
         }
         // can not create the file :
         else {
-            this->decodeProgression(PROGRESS_COMPLETE, DecodeErrorStatus);
+            this->decodeProgression(decodeInfoData);
             kDebug() << "can not create " << fileSavePath + '/' + fileNameStr;
+
         }
 
     }
     // notify user of the issue :
     else {
-        this->decodeProgression(PROGRESS_COMPLETE, DecodeErrorStatus);
+        this->decodeProgression(decodeInfoData);
         this->segmentsDecoderThread->emitSaveFileError();
     }
 
@@ -100,7 +110,10 @@ bool SegmentDecoderBase::decodeSegmentFiles(QFile& targetFile) {
     bool writeError = false;
 
     // decoding is starting :
-    this->decodeProgression(PROGRESS_INIT, DecodeStatus);
+    PostDownloadInfoData decodeInfoData;
+    decodeInfoData.initDecode(this->parentIdentifer, PROGRESS_INIT, DecodeStatus);
+
+    this->decodeProgression(decodeInfoData);
 
     // count the number of segments with matchingCrc :
     int segmentCrc32MatchNumber = 0;
@@ -111,22 +124,27 @@ bool SegmentDecoderBase::decodeSegmentFiles(QFile& targetFile) {
         // if segment has been downloaded :
         if (currentSegment.getArticlePresenceOnServer() == Present) {
 
-            QString temporaryFolder = Settings::temporaryFolder().path() + '/';
-            QString pathNameFile = temporaryFolder + currentSegment.getPart();
-            QFile segmentFile(pathNameFile);
+            QIODevice* segmentFile = currentSegment.getIoDevice();
 
-            segmentFile.open(QIODevice::ReadOnly);
+            segmentFile->open(QIODevice::ReadOnly);
 
             // read the whole file :
-            QByteArray segmentByteArray = segmentFile.readAll();
+            QByteArray segmentByteArray = segmentFile->readAll();
 
             // decode specialisation (yenc or uuenc according to object instance) :
             this->decodeEncodedData(targetFile, currentSegment, segmentCrc32MatchNumber, segmentByteArray, encodedDataFound, writeError);
 
             // close the segment file :
-            segmentFile.close();
-            // then remove it :
-            segmentFile.remove();
+            segmentFile->close();
+
+            // check if segmentFile inherits QFile :
+            QFile* fileFromDisk = qobject_cast<QFile*>(segmentFile);
+
+            if (fileFromDisk) {
+                // then remove it :
+                fileFromDisk->remove();
+            }
+
 
         }
         // if the segment was not present on the server :
@@ -168,7 +186,11 @@ QString SegmentDecoderBase::scanSegmentFiles(const NzbFileData& currentNzbFileDa
 
     //notify item that list of files is being scanned :
     if (!this->segmentDataList.isEmpty()) {
-        this->decodeProgression(PROGRESS_INIT, ScanStatus);
+
+        PostDownloadInfoData decodeInfoData;
+        decodeInfoData.initDecode(this->parentIdentifer, PROGRESS_INIT, ScanStatus);
+        this->decodeProgression(decodeInfoData);
+
     }
 
     // scan every files to be decoded :
@@ -179,18 +201,16 @@ QString SegmentDecoderBase::scanSegmentFiles(const NzbFileData& currentNzbFileDa
         // if segment has been downloaded :
         if (currentSegment.getArticlePresenceOnServer() == Present) {
 
-            QString pathNameFile = temporaryFolder + currentSegment.getPart();
-            QFile segmentFile(pathNameFile);
-
             // open the current segment file :
-            segmentFile.open(QIODevice::ReadOnly);
+            QIODevice* ioDevice = currentSegment.getIoDevice();
+            ioDevice->open(QIODevice::ReadOnly);
 
 
              // look for file name :
-            fileName = this->searchPattern(segmentFile);
+            fileName = this->searchPattern(ioDevice);
 
             // close the current segment file :
-            segmentFile.close();
+            ioDevice->close();
 
         }
 
