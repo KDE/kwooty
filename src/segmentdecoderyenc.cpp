@@ -30,8 +30,12 @@ SegmentDecoderYEnc::~SegmentDecoderYEnc() {
 }
 
 
-void SegmentDecoderYEnc::decodeProgression(const int progression, UtilityNamespace::ItemStatus status, const QString& decodedFileName){
-    this->segmentsDecoderThread->emitDecodeProgression(this->parentIdentifer, progression, status, decodedFileName, this->crc32Match, ArticleEncodingYEnc);
+void SegmentDecoderYEnc::decodeProgression(PostDownloadInfoData& decodeInfoData){
+
+    decodeInfoData.setCrc32Match(this->crc32Match);
+    decodeInfoData.setArticleEncodingType(ArticleEncodingYEnc);
+
+    this->segmentsDecoderThread->emitDecodeProgression(decodeInfoData);
 }
 
 
@@ -177,7 +181,10 @@ bool SegmentDecoderYEnc::decodeYenc(QByteArray& captureArray, QFile& targetFile,
 
 
     // send decoding progression :
-    this->decodeProgression(qRound((elementInList * 100 / this->segmentDataList.size()) ), DecodeStatus);
+    PostDownloadInfoData decodeInfoData;
+    decodeInfoData.initDecode(this->parentIdentifer, qRound((elementInList * 100 / this->segmentDataList.size())), DecodeStatus);
+
+    this->decodeProgression(decodeInfoData);
 
     return writeError;
 
@@ -194,14 +201,14 @@ quint32 SegmentDecoderYEnc::computeCrc32Part(quint32& hash, unsigned char data) 
 
 
 
-QString SegmentDecoderYEnc::searchPattern(QFile& segmentFile) {
+QString SegmentDecoderYEnc::searchPattern(QIODevice* segmentFile) {
 
     QString fileName;
     // look for file name :
-    while (fileName.isEmpty() && !segmentFile.atEnd()) {
+    while (fileName.isEmpty() && !segmentFile->atEnd()) {
 
         QByteArray namePattern = "name=";
-        QByteArray lineArray = segmentFile.readLine();
+        QByteArray lineArray = segmentFile->readLine();
 
         // if 'name=' pattern has been found, retrieve the file name :
         if (lineArray.contains(namePattern)) {
