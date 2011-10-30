@@ -28,6 +28,8 @@ NzbCollectionData::NzbCollectionData() {
 
     this->par2FileDownloadStatus = DownloadFinishStatus;
     this->extractTerminateStatus = ExtractSuccessStatus;
+    this->verifyRepairTerminateStatus = RepairFinishedStatus;
+    this->allPostProcessingCorrect = true;
 
 }
 
@@ -54,7 +56,6 @@ QVariant NzbCollectionData::getFirstChildUniqueIdentifier() const{
 QList<NzbFileData> NzbCollectionData::getNzbFileDataList() const{
     return this->nzbFileDataList;
 }
-
 void NzbCollectionData::setNzbFileDataList(const QList<NzbFileData>& nzbFileDataList){
     this->nzbFileDataList = nzbFileDataList;
 }
@@ -63,7 +64,6 @@ void NzbCollectionData::setNzbFileDataList(const QList<NzbFileData>& nzbFileData
 void NzbCollectionData::setNzbParentId(const QString& nzbParentId){
     this->nzbParentId = nzbParentId;
 }
-
 QString NzbCollectionData::getNzbParentId() const{
     return this->nzbParentId;
 }
@@ -72,7 +72,6 @@ QString NzbCollectionData::getNzbParentId() const{
 void NzbCollectionData::setPar2FileDownloadStatus(const UtilityNamespace::ItemStatus par2FileDownloadStatus){
     this->par2FileDownloadStatus = par2FileDownloadStatus;
 }
-
 UtilityNamespace::ItemStatus NzbCollectionData::getPar2FileDownloadStatus() const {
     return this->par2FileDownloadStatus;
 }
@@ -81,7 +80,6 @@ UtilityNamespace::ItemStatus NzbCollectionData::getPar2FileDownloadStatus() cons
 void NzbCollectionData::setPar2BaseName(const QString& par2BaseName) {
     this->par2BaseName = par2BaseName;
 }
-
 QString NzbCollectionData::getPar2BaseName() const{
     return this->par2BaseName;
 }
@@ -89,11 +87,37 @@ QString NzbCollectionData::getPar2BaseName() const{
 
 void NzbCollectionData::setExtractTerminateStatus(const UtilityNamespace::ItemStatus extractTerminateStatus){
     this->extractTerminateStatus = extractTerminateStatus;
-}
 
+    if (extractTerminateStatus == ExtractFailedStatus) {
+        this->allPostProcessingCorrect = false;
+    }
+
+}
 UtilityNamespace::ItemStatus NzbCollectionData::getExtractTerminateStatus() const {
     return this->extractTerminateStatus;
 }
+
+
+void NzbCollectionData::setVerifyRepairTerminateStatus(const UtilityNamespace::ItemStatus verifyRepairTerminateStatus){
+    this->verifyRepairTerminateStatus = verifyRepairTerminateStatus;
+
+    if (verifyRepairTerminateStatus == RepairFailedStatus) {
+        this->allPostProcessingCorrect = false;
+    }
+
+}
+UtilityNamespace::ItemStatus NzbCollectionData::getVerifyRepairTerminateStatus() const {
+    return this->verifyRepairTerminateStatus;
+}
+
+
+void NzbCollectionData::setAllPostProcessingCorrect(const bool& allPostProcessingCorrect) {
+    this->allPostProcessingCorrect = allPostProcessingCorrect;
+}
+bool NzbCollectionData::isAllPostProcessingCorrect() const{
+    return this->allPostProcessingCorrect;
+}
+
 
 
 bool NzbCollectionData::operator==(const NzbCollectionData& nzbCollectionDataToCompare) {

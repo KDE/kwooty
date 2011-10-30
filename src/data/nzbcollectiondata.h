@@ -45,6 +45,11 @@ public:
     QString getPar2BaseName() const;
     void setExtractTerminateStatus(const UtilityNamespace::ItemStatus);
     UtilityNamespace::ItemStatus getExtractTerminateStatus() const;
+    void setVerifyRepairTerminateStatus(const UtilityNamespace::ItemStatus);
+    UtilityNamespace::ItemStatus getVerifyRepairTerminateStatus() const;
+    void setAllPostProcessingCorrect(const bool&);
+    bool isAllPostProcessingCorrect() const;
+
     bool operator==(const NzbCollectionData&);
 
 
@@ -53,7 +58,9 @@ private:
     QString nzbParentId;
     UtilityNamespace::ItemStatus par2FileDownloadStatus;
     UtilityNamespace::ItemStatus extractTerminateStatus;
+    UtilityNamespace::ItemStatus verifyRepairTerminateStatus;
     QString par2BaseName;
+    bool allPostProcessingCorrect;
 
 };
 
