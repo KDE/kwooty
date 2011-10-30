@@ -23,14 +23,14 @@
 #include <KDebug>
 
 
-ItemStatusData::ItemStatusData()
-{
+ItemStatusData::ItemStatusData() {
+
     this->init();
+    this->downloadRetryCounter = 0;
 }
 
 
-ItemStatusData::~ItemStatusData()
-{
+ItemStatusData::~ItemStatusData() {
 }
 
 void ItemStatusData::init() {
@@ -39,48 +39,30 @@ void ItemStatusData::init() {
     this->downloadFinish = false;
     this->decodeFinish = false;
     this->postProcessFinish = false;
+    this->allPostProcessingCorrect = false;
     this->crc32Match = CrcOk;
     this->data = DataComplete;
     this->nextServerId = UtilityNamespace::MasterServer;
-    this->downloadRetryCounter = 0;
 
 }
 
 
 void ItemStatusData::downloadRetry(const ItemStatus& itemStatusResetTarget, const ItemTarget& itemTarget) {
 
-    // when download retry is requested,
-    // always reset decodeFinish and postProcessFinish if item is parent :
-    if (itemTarget == ParentItemTarget) {
-
-        this->decodeFinish = false;
-        this->postProcessFinish = false;
-    }
+    this->init();
 
     // item has to be reset to IdleStatus, meaning that download must be performed another time :
     if (itemStatusResetTarget == IdleStatus) {
-
-        // current item is child :
-        if (itemTarget == ChildItemTarget) {
-
-            int downloadRetryCounter = this->downloadRetryCounter;
-            this->init();
-            this->downloadRetryCounter = downloadRetryCounter + 1;
-        }
-        // current item is parent, only reset the following :
-        else {
-
-            this->status = IdleStatus;
-            this->downloadFinish = false;
-            this->downloadRetryCounter++;
-        }
-
+        this->downloadRetryCounter++;
     }
     // else the current item has been correctly downloaded, set it status to DecodeFinishStatus
     // in order to reenable post processing (repair/extract) :
     else if (itemStatusResetTarget == DecodeFinishStatus) {
 
         this->status = DecodeFinishStatus;
+        this->downloadFinish = true;
+        this->decodeFinish = true;
+
     }
 
 }
@@ -118,6 +100,15 @@ bool ItemStatusData::isPostProcessFinish() const {
 void ItemStatusData::setPostProcessFinish(const bool postProcessFinish) {
     this->postProcessFinish = postProcessFinish;
 }
+
+bool ItemStatusData::areAllPostProcessingCorrect() const {
+    return this->allPostProcessingCorrect;
+}
+
+void ItemStatusData::setAllPostProcessingCorrect(const bool& allPostProcessingCorrect) {
+    this->allPostProcessingCorrect = allPostProcessingCorrect;
+}
+
 
 UtilityNamespace::CrcNotify ItemStatusData::getCrc32Match() const {
     return this->crc32Match;
