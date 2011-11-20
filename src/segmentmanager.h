@@ -59,13 +59,13 @@ private:
     StandardItemModel* downloadModel;
     ItemParentUpdater* itemParentUpdater;
 
-    bool sendNextIdleSegment(QStandardItem*, ClientManagerConn*, const SegmentInfoData&);
+    bool sendNextIdleSegment(QStandardItem*, ClientManagerConn*, SegmentInfoData);
 
 
 signals:
 
 public slots:
-    void updateDownloadSegmentSlot(SegmentData);
+    void updateDownloadSegmentSlot(SegmentData,  QString = QString());
     void getNextSegmentSlot(ClientManagerConn*);
     void updateDecodeSegmentSlot(PostDownloadInfoData repairDecompressInfoData);
     void updateRepairExtractSegmentSlot(PostDownloadInfoData repairDecompressInfoData);

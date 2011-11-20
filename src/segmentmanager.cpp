@@ -34,6 +34,7 @@
 #include "data/segmentinfodata.h"
 #include "data/nzbfiledata.h"
 #include "standarditemmodel.h"
+#include "kwootysettings.h"
 
 
 
@@ -50,7 +51,7 @@ SegmentManager::SegmentManager()
 
 
 
-bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientManagerConn* currentClientManagerConn, const SegmentInfoData& segmentInfoData){
+bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientManagerConn* currentClientManagerConn, SegmentInfoData segmentInfoData){
 
     bool itemFound = false;
 
@@ -79,6 +80,7 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
             // update parent item data :
             segmentList.replace(segmentIndex, segmentData);
             nzbFileData.setSegmentList(segmentList);
+
             this->downloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
 
             itemParentUpdater->getItemDownloadUpdater()->updateItems(fileNameItem->index(), nzbFileData);
@@ -88,6 +90,8 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
 
             // set segment info data (including nzb file name and row position)
             // in order to notify sidebar of downloaded files per server :
+            segmentInfoData.setTemporaryFileName(nzbFileData.getTemporaryFileName());
+            segmentInfoData.setDestinationFileSavePath(nzbFileData.getFileSavePath());
             segmentData.setSegmentInfoData(segmentInfoData);
 
             // send the next part to the dedicated client :
@@ -150,13 +154,23 @@ void SegmentManager::setIdleDownloadFailSegments(QStandardItem* fileNameItem) {
 
     // set post processed segments with a bad crc back to Idle :
     NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
-
     QList<SegmentData> segmentList = nzbFileData.getSegmentList();
 
     for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
 
         SegmentData currentSegment = segmentList.value(segmentIndex);
-        currentSegment.setReadyForNewServer(MasterServer);
+
+        // re-download only segments that own an incorrect crc :
+        if (QFile::exists(nzbFileData.getFileSavePath() + '/' +  nzbFileData.getDecodedFileName())) {
+
+            if ((currentSegment.getCrc32Match() != UtilityNamespace::CrcOk) ) {
+                currentSegment.setReadyForNewServer(MasterServer);
+            }
+        }
+        else {
+            currentSegment.setReadyForNewServer(MasterServer);
+        }
+
         segmentList.replace(segmentIndex, currentSegment);
 
     }
@@ -337,7 +351,7 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
 
 
 
-void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData) {
+void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, QString decodedFileName) {
 
     // search index
     QStandardItem* fileNameItem = this->searchItem(segmentData.getParentUniqueIdentifier(), DownloadStatus);
@@ -361,6 +375,11 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData) {
             // update the segmentData list :
             segmentList.replace(segmentData.getElementInList(), segmentData);
             nzbFileData.setSegmentList(segmentList);
+
+            // if decoded has been performed on the fly, update decoded file name right now :
+            if (!decodedFileName.isEmpty()) {
+                nzbFileData.setDecodedFileName(decodedFileName);
+            }
 
             // update the nzbFileData of current fileNameItem and its corresponding items :
             this->downloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
