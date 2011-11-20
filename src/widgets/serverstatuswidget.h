@@ -66,6 +66,8 @@ private:
 
     void updateLabelField(QLabel*, const QString&);
     void formatLayout(QFormLayout*);
+    void insertLeftRowFormLayout(ServerStatusWidget::RowItemsLeft, QFormLayout*, const QString&, QWidget*);
+    void insertRightRowFormLayout(ServerStatusWidget::RowItemsRight, QFormLayout*, const QString&, QWidget*);
 
 
 public slots:

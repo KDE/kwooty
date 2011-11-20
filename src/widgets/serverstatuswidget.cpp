@@ -30,6 +30,7 @@
 
 #include "sidebar.h"
 #include "widgets/textpushbuttonwidget.h"
+#include "utilityiconpainting.h"
 
 
 ServerStatusWidget::ServerStatusWidget(QWidget* parent) : QDockWidget(parent) {
@@ -46,14 +47,14 @@ ServerStatusWidget::ServerStatusWidget(QWidget* parent) : QDockWidget(parent) {
     this->formLayoutLeft = new QFormLayout(leftWidget);
     this->formatLayout(this->formLayoutLeft);
 
-    this->formLayoutLeft->insertRow(StatusItem, i18n("<b>Availability:</b>"), new QLabel(this));
-    this->formLayoutLeft->insertRow(SpeedItem, i18n("<b>Speed:</b>"), new QLabel(this));
-    this->formLayoutLeft->insertRow(VolumeItem, i18n("<b>Downloaded:</b>"), new QLabel(this));
+    this->insertLeftRowFormLayout(StatusItem, this->formLayoutLeft, i18n("Availability:"), new QLabel(this));
+    this->insertLeftRowFormLayout(SpeedItem, this->formLayoutLeft, i18n("Speed:"), new QLabel(this));
+    this->insertLeftRowFormLayout(VolumeItem, this->formLayoutLeft, i18n("Downloaded:"), new QLabel(this));
 
     // allow label size reduction in case nzb file name would be too long :
     QLabel* fileLabel = new QLabel(this);
     fileLabel->setMinimumWidth(10);
-    this->formLayoutLeft->insertRow(FileItem, i18n("<b>File:</b>"), fileLabel);
+    this->insertLeftRowFormLayout(FileItem, this->formLayoutLeft, i18n("File:"), new QLabel(this));
 
 
     // build right form :
@@ -61,10 +62,10 @@ ServerStatusWidget::ServerStatusWidget(QWidget* parent) : QDockWidget(parent) {
     this->formLayoutRight = new QFormLayout(rightWidget);
     this->formatLayout(this->formLayoutRight);
 
-    this->formLayoutRight->insertRow(NameItem, i18n("<b>Server:</b>"), new QLabel(this));
-    this->formLayoutRight->insertRow(ModeItem, i18n("<b>Mode:</b>"), new QLabel(this));
-    this->formLayoutRight->insertRow(SslItem, i18n("<b>Encryption:</b>"), new TextPushButtonWidget(this));
 
+    this->insertRightRowFormLayout(NameItem, this->formLayoutRight, i18n("Server:"), new QLabel(this));
+    this->insertRightRowFormLayout(ModeItem, this->formLayoutRight, i18n("Mode:"), new QLabel(this));
+    this->insertRightRowFormLayout(SslItem, this->formLayoutRight, i18n("Encryption:"), new TextPushButtonWidget(this));
 
     QWidget* mainWidget = new QWidget(this);
     QHBoxLayout* hBoxLayout = new QHBoxLayout(mainWidget);
@@ -77,6 +78,21 @@ ServerStatusWidget::ServerStatusWidget(QWidget* parent) : QDockWidget(parent) {
 
 
 }
+
+
+void ServerStatusWidget::insertLeftRowFormLayout(ServerStatusWidget::RowItemsLeft rowItemsLeft, QFormLayout* formLayout, const QString& text, QWidget* widget) {
+
+    formLayout->insertRow(rowItemsLeft, UtilityIconPainting::getInstance()->buildLighterTextLabel(text, this), widget);
+
+}
+
+void ServerStatusWidget::insertRightRowFormLayout(ServerStatusWidget::RowItemsRight rowItemsRight, QFormLayout* formLayout, const QString& text, QWidget* widget) {
+
+    formLayout->insertRow(rowItemsRight, UtilityIconPainting::getInstance()->buildLighterTextLabel(text, this), widget);
+
+}
+
+
 
 void ServerStatusWidget::formatLayout(QFormLayout* formLayout) {
 
