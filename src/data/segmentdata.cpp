@@ -24,6 +24,7 @@ SegmentData::SegmentData() {
     this->parentUniqueIdentifier = QVariant();
     this->elementInList = -1;
     this->status = IdleStatus;
+    this->crc32Match = CrcUnknown;
     this->segmentInfoData.reset();
 }
 
@@ -33,6 +34,7 @@ SegmentData::SegmentData(const QString& bytes, const QString& number, const QStr
     this->number = number;
     this->part = part;
     this->status = status;
+    this->crc32Match = CrcUnknown;
 
     this->serverGroupTarget = MasterServer;
     this->articlePresence = Unknown;
@@ -55,6 +57,7 @@ void SegmentData::setDownloadFinished(const int& articlePresence) {
     this->setStatus(DownloadFinishStatus);
     this->setArticlePresenceOnServer(articlePresence);
 }
+
 
 bool SegmentData::isInitialized() {
     return this->parentUniqueIdentifier != QVariant();
@@ -153,6 +156,16 @@ void SegmentData::setIoDevice(QIODevice* ioDevice) {
 
 
 
+UtilityNamespace::CrcNotify SegmentData::getCrc32Match() const {
+    return this->crc32Match;
+}
+
+void SegmentData::setCrc32Match(const UtilityNamespace::CrcNotify crc32Match) {
+    this->crc32Match = crc32Match;
+}
+
+
+
 QDataStream& operator<<(QDataStream& out, const SegmentData& segmentData) {
 
     out << segmentData.getBytes()
@@ -161,7 +174,8 @@ QDataStream& operator<<(QDataStream& out, const SegmentData& segmentData) {
         << segmentData.getElementInList()
         << (qint16)segmentData.getStatus()
         << segmentData.getProgress()
-        << segmentData.getArticlePresenceOnServer();
+        << segmentData.getArticlePresenceOnServer()
+        << (qint16)segmentData.getCrc32Match();
 
     return out;
 }
@@ -176,6 +190,7 @@ QDataStream& operator>>(QDataStream& in, SegmentData& segmentData) {
     int elementInList;
     int progress;
     int articlePresenceOnServer;
+    qint16 crc32Match;
 
     in >> bytes
        >> number
@@ -183,7 +198,8 @@ QDataStream& operator>>(QDataStream& in, SegmentData& segmentData) {
        >> elementInList
        >> status
        >> progress
-       >> articlePresenceOnServer;
+       >> articlePresenceOnServer
+       >> crc32Match;
 
 
     segmentData.setBytes(bytes);
@@ -193,6 +209,7 @@ QDataStream& operator>>(QDataStream& in, SegmentData& segmentData) {
     segmentData.setStatus((UtilityNamespace::ItemStatus)status);
     segmentData.setProgress(progress);
     segmentData.setArticlePresenceOnServer(articlePresenceOnServer);
+    segmentData.setCrc32Match((UtilityNamespace::CrcNotify)crc32Match);
     segmentData.setServerGroupTarget(MasterServer);
 
     return in;
