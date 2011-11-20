@@ -85,7 +85,9 @@ bool Utility::isPostDownloadFailed(const UtilityNamespace::ItemStatus statusItem
 
     return ( statusItem >= DecodeErrorStatus &&
              statusItem != ExtractSuccessStatus &&
-             statusItem != VerifyFinishedStatus );
+             statusItem != VerifyFinishedStatus &&
+             statusItem != DecodeFinishStatus &&
+             !Utility::isDecoding(statusItem) );
 
 }
 
@@ -121,6 +123,12 @@ bool Utility::isDownloadOrPausing(const UtilityNamespace::ItemStatus statusItem)
 }
 
 
+
+bool Utility::isPausedOrPausing(const UtilityNamespace::ItemStatus statusItem) {
+
+    return ( Utility::isPaused(statusItem) || Utility::isPausing(statusItem) );
+
+}
 
 bool Utility::isPaused(const UtilityNamespace::ItemStatus statusItem) {
 
@@ -269,6 +277,20 @@ bool Utility::removeData(const QString& fileName) {
     }
 
     return isFileRemoved;
+}
+
+
+bool Utility::rename(const QString& temporaryFileStr, const QString& destinationFileStr) {
+
+    bool success = false;
+    if (QFile::exists(temporaryFileStr)) {
+
+        QFile::remove(destinationFileStr);
+        success = QFile::rename(temporaryFileStr, destinationFileStr);
+    }
+
+    return success;
+
 }
 
 

@@ -94,7 +94,7 @@ namespace UtilityNamespace
         IdentifierRole = Qt::UserRole + 4,
         ProgressRole = Qt::UserRole + 5,
         SizeRole = Qt::UserRole + 6
-               };
+    };
 
     // item status list :
     enum ItemStatus{
@@ -138,6 +138,7 @@ namespace UtilityNamespace
         ArticleEncodingYEnc,
         ArticleEncodingUUEnc
     };
+
 
     // connection status list used by statusbar :
     enum ConnectionStatus {
@@ -197,7 +198,8 @@ namespace UtilityNamespace
     enum CrcNotify {
         CrcOk,
         CrcKo,
-        CrcKoNotified
+        CrcKoNotified,
+        CrcUnknown
     };
 
     // type of status bar file size update :
@@ -303,6 +305,7 @@ public:
     static bool isInQueue(const UtilityNamespace::ItemStatus);
     static bool isPaused(const UtilityNamespace::ItemStatus);
     static bool isPausing(const UtilityNamespace::ItemStatus);
+    static bool isPausedOrPausing(const UtilityNamespace::ItemStatus);
     static bool isDownloadOrPausing(const UtilityNamespace::ItemStatus);
     static bool isDownloadFinish(const UtilityNamespace::ItemStatus);
     static bool isDecoding(const UtilityNamespace::ItemStatus);
@@ -316,6 +319,7 @@ public:
     static bool createFolder(const QString&);
     static bool isFolderExists(const QString&);
     static bool removeData(const QString&);
+    static bool rename(const QString&, const QString&);
     static QString searchExternalPrograms(const QString&, bool&);
     static QString getSystemTimeFormat(const QString&);
     static QString buildToolTipRow(const QString&, const QString&);
