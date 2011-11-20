@@ -47,7 +47,7 @@ void ItemStatusData::init() {
 }
 
 
-void ItemStatusData::downloadRetry(const ItemStatus& itemStatusResetTarget, const ItemTarget& itemTarget) {
+void ItemStatusData::downloadRetry(const ItemStatus& itemStatusResetTarget) {
 
     this->init();
 

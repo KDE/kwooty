@@ -33,26 +33,36 @@ public:
     ItemStatusData();
     ~ItemStatusData();
     void init();
-    void downloadRetry(const ItemStatus& itemStatusResetTarget, const ItemTarget& = ChildItemTarget);
+    void downloadRetry(const ItemStatus& itemStatusResetTarget);
+    int getDownloadRetryCounter() const;
+
     void setStatus(const UtilityNamespace::ItemStatus);
     UtilityNamespace::ItemStatus getStatus() const;
+
     void setDataStatus(const UtilityNamespace::Data);
     UtilityNamespace::Data getDataStatus() const;
+
     bool isDownloadFinish() const;
     void setDownloadFinish(const bool);
+
     bool isDecodeFinish() const;
     void setDecodeFinish(const bool);
+
     bool isPostProcessFinish() const;
     void setPostProcessFinish(const bool);
+
     bool areAllPostProcessingCorrect() const;
     void setAllPostProcessingCorrect(const bool&);
+
     UtilityNamespace::CrcNotify getCrc32Match() const;
     void setCrc32Match(const UtilityNamespace::CrcNotify);
+
     UtilityNamespace::ArticleEncodingType getArticleEncodingType() const;
     void setArticleEncodingType(const UtilityNamespace::ArticleEncodingType);
+
     int getNextServerId() const;
     void setNextServerId(const int&);
-    int getDownloadRetryCounter() const;
+
 
     bool operator!=(const ItemStatusData&);
 
