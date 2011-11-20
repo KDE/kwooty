@@ -204,7 +204,7 @@ void ItemChildrenManager::resetItemStatusToTarget(QStandardItem* fileNameItem, c
     }
 
     ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
-    itemStatusData.downloadRetry(itemStatusResetTarget, ChildItemTarget);
+    itemStatusData.downloadRetry(itemStatusResetTarget);
 
     this->downloadModel->updateStatusDataFromIndex(fileNameItem->index(), itemStatusData);
 
