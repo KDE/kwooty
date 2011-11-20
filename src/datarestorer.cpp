@@ -26,12 +26,14 @@
 #include <QUuid>
 
 #include "centralwidget.h"
+#include "itemparentupdater.h"
+#include "standarditemmodel.h"
+#include "kwootysettings.h"
 #include "data/segmentdata.h"
 #include "data/nzbfiledata.h"
 #include "data/itemstatusdata.h"
 #include "data/globalfiledata.h"
-#include "standarditemmodel.h"
-#include "kwootysettings.h"
+
 
 DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent) {
 
@@ -70,6 +72,13 @@ void DataRestorer::setupConnections() {
 
     connect(dataSaverTimer, SIGNAL(timeout()), this, SLOT(saveQueueDataSilentlySlot()));
 
+    // download is finish for one nzb file, save eventual remaining downloads now :
+    connect(this->downloadModel,
+            SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+            this,
+            SLOT(parentStatusItemChangedSlot(QStandardItem*, ItemStatusData)));
+
+
 }
 
 
@@ -92,16 +101,23 @@ int DataRestorer::saveQueueData(const SaveFileBehavior& saveFileBehavior) {
                 this->writeDataToDisk();
 
             }
+            // else do not save pending downloads *and* remove previous pending downloads file :
+            else {
+                this->removePendingDataFile();
+            }
 
         }
         // there are no more pending downloads :
         else {
-            // get temporary data restore file name :
-            QString pendingDataStr = Settings::temporaryFolder().path() + '/' + UtilityNamespace::remainingDownloadsFile;
-            // no more pendings jobs, remove eventual previously saved file :
-            Utility::removeData(pendingDataStr);
+            this->removePendingDataFile();
         }
 
+    }
+
+    // option is unchecked in settings, be sure to remove the file :
+    if (!Settings::restoreDownloads()) {
+
+        this->removePendingDataFile();
     }
 
     return answer;
@@ -110,30 +126,19 @@ int DataRestorer::saveQueueData(const SaveFileBehavior& saveFileBehavior) {
 }
 
 
+void DataRestorer::removePendingDataFile() {
+
+    // no more pendings jobs, remove eventual previously saved file :
+    Utility::removeData(this->getPendingFileStr());
+
+}
+
 
 
 void DataRestorer::writeDataToDisk() {
 
     // global list of items to save :
     QList< QList<GlobalFileData> > nzbFileList;
-
-    // get temporary path :
-    QString pendingDataStr = Settings::temporaryFolder().path() + '/' + UtilityNamespace::remainingDownloadsFile;
-    QFile file(pendingDataStr);
-
-    // open the file :
-    if (!file.open(QIODevice::WriteOnly)) {
-        kDebug() << "Cannot open file for writing";
-        return;
-    }
-
-    // create the dataStream :
-    QDataStream dataStreamOut(&file);
-
-    // Write a header with a "magic number" and a version
-    dataStreamOut << (quint32)magicNumber;
-    dataStreamOut << (quint32)applicationVersion1;
-    dataStreamOut.setVersion(versionStreamMap.value(applicationVersion1));
 
 
     // get nzb items whose download is not complete :
@@ -177,16 +182,33 @@ void DataRestorer::writeDataToDisk() {
     }
 
     if (!nzbFileList.isEmpty()){
+
+        QFile file(this->getPendingFileStr());
+
+        // open the file :
+        if (!file.open(QIODevice::WriteOnly)) {
+            kDebug() << "Cannot open file for writing";
+            return;
+        }
+
+        // create the dataStream :
+        QDataStream dataStreamOut(&file);
+
+        // Write a header with a "magic number" and a version
+        dataStreamOut << (quint32)magicNumber;
+        dataStreamOut << (quint32)applicationVersion1;
+        dataStreamOut.setVersion(versionStreamMap.value(applicationVersion1));
+
         // Write the data (nzb file and its belonging files and their download status) :
         dataStreamOut << nzbFileList;
+
+        file.close();
     }
 
 
-    file.close();
+
 
 }
-
-
 
 
 bool DataRestorer::isHeaderOk(QDataStream& dataStreamIn) const {
@@ -308,7 +330,7 @@ void DataRestorer::preprocessAndHandleData(const QList< QList<GlobalFileData> >&
 
             // - case 1: if file is currently being decoded, file shall be downloaded again next time :
             if (Utility::isDecoding(itemStatus) ||
-                Utility::isWaitingForDecode(itemStatus, currentStatusData.getDataStatus())) {
+                    Utility::isWaitingForDecode(itemStatus, currentStatusData.getDataStatus())) {
                 this->resetDataForDecodingFile(currentNzbFileData, currentStatusData, currentDownloadProgress);
             }
 
@@ -374,99 +396,11 @@ void DataRestorer::setActive(const bool active) {
     this->active = active;
 }
 
-//============================================================================================================//
-//                                               SLOTS                                                        //
-//============================================================================================================//
 
-void DataRestorer::readDataFromDiskSlot() {
-
-
-    // get temporary path :
-    QString pendingDataStr = Settings::temporaryFolder().path() + '/' + UtilityNamespace::remainingDownloadsFile;
-    QFile file(pendingDataStr);
-
-    //open file in order to restore prending downloads from previous session :
-    if (file.open(QIODevice::ReadOnly)) {
-
-        QDataStream dataStreamIn(&file);
-
-        // check that header retrieved from file is matching :
-        if (this->isHeaderOk(dataStreamIn)) {
-
-            // ask question if previous pending downloads have to be restored :
-            int answer = this->displayRestoreMessageBox();
-
-            // if data have to be restored :
-            if (answer == KMessageBox::Yes) {
-
-                // retrieve saved data :
-                QList< QList<GlobalFileData> > nzbFileList;
-                dataStreamIn >> nzbFileList;
-
-                // reset some data belonging to pending items and populate treeview :
-                this->preprocessAndHandleData(nzbFileList);
-            }
-            // user did not load download pending files, remove previous segments :
-            else {
-                this->requestSuppressOldOrphanedSegments();
-            }
-
-            // remove processed file :
-            file.close();
-            file.remove();
-
-        }
-        // saved data file can not be processed, remove previous segments
-        else {
-            this->requestSuppressOldOrphanedSegments();
-        }
-
-    }
-    // if file can not be opened, remove useless downloaded segments :
-    else {
-        this->requestSuppressOldOrphanedSegments();
-    }
-
+QString DataRestorer::getPendingFileStr() const {
+    return Settings::temporaryFolder().path() + '/' + UtilityNamespace::remainingDownloadsFile;
 }
 
-
-
-
-void DataRestorer::requestSuppressOldOrphanedSegments() {
-
-    // kwooty could just have been launched from another app (with "open with...") at this stage
-    // so check that nothing new is being downloading before removing old segments :
-    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
-
-    // just check that model is empty :
-    if (rootItem->rowCount() == 0) {
-        emit suppressOldOrphanedSegmentsSignal();
-    }
-
-}
-
-
-
-void DataRestorer::saveQueueDataSilentlySlot() {
-
-    if (Settings::restoreDownloads()) {
-
-        // if pending downloads remain :
-        if (this->isDataToSaveExist()) {
-
-            this->writeDataToDisk();
-        }
-
-        else {
-            // get temporary data restore file name :
-            QString pendingDataStr = Settings::temporaryFolder().path() + '/' + UtilityNamespace::remainingDownloadsFile;
-            // no more pendings jobs, remove eventual previously saved file :
-            Utility::removeData(pendingDataStr);
-        }
-
-    }
-
-}
 
 
 int DataRestorer::displayRestoreMessageBox() const {
@@ -505,4 +439,125 @@ int DataRestorer::displaySaveMessageBox(const SaveFileBehavior& saveFileBehavior
     return answer;
 }
 
+
+
+
+void DataRestorer::requestSuppressOldOrphanedSegments() {
+
+    // kwooty could just have been launched from another app (with "open with...") at this stage
+    // so check that nothing new is being downloading before removing old segments :
+    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+
+    // just check that model is empty :
+    if (rootItem->rowCount() == 0) {
+        emit suppressOldOrphanedSegmentsSignal();
+    }
+
+}
+
+
+
+
+
+
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
+
+
+void DataRestorer::readDataFromDiskSlot() {
+
+    // get temporary path :
+    QFile file(this->getPendingFileStr());
+
+    bool removeOldFiles = false;
+
+    //open file in order to restore prending downloads from previous session :
+    if (file.open(QIODevice::ReadOnly)) {
+
+        QDataStream dataStreamIn(&file);
+
+        // check that header retrieved from file is matching :
+        if (this->isHeaderOk(dataStreamIn)) {
+
+            // ask question if previous pending downloads have to be restored :
+            int answer = this->displayRestoreMessageBox();
+
+            // if data have to be restored :
+            if (answer == KMessageBox::Yes) {
+
+                // retrieve saved data :
+                QList< QList<GlobalFileData> > nzbFileList;
+                dataStreamIn >> nzbFileList;
+
+                // reset some data belonging to pending items and populate treeview :
+                this->preprocessAndHandleData(nzbFileList);
+            }
+            // user did not load download pending files, remove previous segments :
+            else {
+                removeOldFiles = true;
+            }
+
+
+        }
+        // saved data file can not be processed, remove previous segments
+        else {
+            removeOldFiles = true;
+        }
+
+    }
+    // if file can not be opened, remove useless downloaded segments :
+    else {
+        removeOldFiles = true;
+    }
+
+
+    // close the file :
+    file.close();
+
+    if (removeOldFiles) {
+        this->requestSuppressOldOrphanedSegments();
+    }
+
+}
+
+
+
+void DataRestorer::parentStatusItemChangedSlot(QStandardItem*, ItemStatusData parentItemStatusData) {
+
+    // file download has just finished, be sure that it will not be reloaded
+    // at the next kwooty session :
+    if (Utility::isDecodeFinish(parentItemStatusData.getStatus())) {
+
+        // remove previous .dat file :
+        QFile::remove(this->getPendingFileStr());
+
+        // check if a new one shall be created if any other pending downloads :
+        this->writeDataToDisk();
+
+    }
+
+}
+
+
+
+void DataRestorer::saveQueueDataSilentlySlot() {
+
+    if (Settings::restoreDownloads()) {
+
+        // if pending downloads remain :
+        if (this->isDataToSaveExist()) {
+
+            this->writeDataToDisk();
+        }
+
+        else {
+
+            this->removePendingDataFile();
+
+        }
+
+    }
+
+}
 
