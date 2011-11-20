@@ -29,6 +29,7 @@ set(Kwooty_lib_SRCS
   standarditemmodel.cpp
   standarditemmodelquery.cpp
   segmentmanager.cpp
+  segmentbuffer.cpp
   mystatusbar.cpp
   mytreeview.cpp
   segmentsdecoderthread.cpp
@@ -36,7 +37,6 @@ set(Kwooty_lib_SRCS
   segmentdecoderyenc.cpp
   segmentdecoderuuenc.cpp
   repairdecompressthread.cpp
-  memorycachethread.cpp
   repair.cpp
   extractbase.cpp
   extractrar.cpp
