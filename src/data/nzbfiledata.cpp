@@ -53,6 +53,21 @@ void NzbFileData::setFileName(const QString& fileName) {
     this->fileName = fileName;
 }
 
+
+QString NzbFileData::getTemporaryFileName() const {
+    return this->temporaryFileName;
+}
+
+void NzbFileData::setTemporaryFileName(const QString& temporaryFileName) {
+
+    // remove '-' separator from uuid string and retrieve the first 12 characters
+    // that will be used to create the temporary file name :
+    this->temporaryFileName = temporaryFileName;
+    this->temporaryFileName = this->temporaryFileName.remove(QRegExp("[-{].")).left(12);
+
+}
+
+
 QString NzbFileData::getDecodedFileName() const {
     return this->decodedFileName;
 }
@@ -216,27 +231,29 @@ bool NzbFileData::operator<(const NzbFileData& nzbFileDataToCompare) const{
 QDataStream& operator<<(QDataStream& out, const NzbFileData& nzbFileData) {
 
     out << nzbFileData.getFileName()
-            << nzbFileData.getDecodedFileName()
-            << nzbFileData.getBaseName()
-            << nzbFileData.getNzbName()
-            << nzbFileData.getFileSavePath()
-            << nzbFileData.getGroupList()
-            << nzbFileData.getSegmentList()
-            << nzbFileData.getUniqueIdentifier()
-            << nzbFileData.getSize()
-            << nzbFileData.isPar2File()
-            << nzbFileData.isArchiveFile()
-            << (qint16)nzbFileData.getArchiveFormat();
+        << nzbFileData.getDecodedFileName()
+        << nzbFileData.getTemporaryFileName()
+        << nzbFileData.getBaseName()
+        << nzbFileData.getNzbName()
+        << nzbFileData.getFileSavePath()
+        << nzbFileData.getGroupList()
+        << nzbFileData.getSegmentList()
+        << nzbFileData.getUniqueIdentifier()
+        << nzbFileData.getSize()
+        << nzbFileData.isPar2File()
+        << nzbFileData.isArchiveFile()
+        << (qint16)nzbFileData.getArchiveFormat();
 
     return out;
 }
 
 
 
-QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData)
-{
+QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData) {
+
     QString fileName;
     QString decodedFileName;
+    QString temporaryFileName;
     QString baseName;
     QString nzbName;
     QString fileSavePath;
@@ -249,20 +266,22 @@ QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData)
     qint16 archiveFormat;
 
     in >> fileName
-            >> decodedFileName
-            >> baseName
-            >> nzbName
-            >> fileSavePath
-            >> groupList
-            >> segmentList
-            >> uniqueIdentifier
-            >> size
-            >> par2File
-            >> archiveFile
-            >> archiveFormat;
+       >> decodedFileName
+       >> temporaryFileName
+       >> baseName
+       >> nzbName
+       >> fileSavePath
+       >> groupList
+       >> segmentList
+       >> uniqueIdentifier
+       >> size
+       >> par2File
+       >> archiveFile
+       >> archiveFormat;
 
 
     nzbFileData.setFileName(fileName);
+    nzbFileData.setTemporaryFileName(temporaryFileName);
     nzbFileData.setBaseName(baseName);
     nzbFileData.setNzbName(nzbName);
     nzbFileData.setFileSavePath(fileSavePath);

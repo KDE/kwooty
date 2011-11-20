@@ -34,41 +34,62 @@ public:
     ~NzbFileData();
     QString getFileName() const;
     void setFileName(const QString& fileName);
+
     QStringList getGroupList() const;
     void setGroupList(const QStringList& groupList);
+
     QList<SegmentData> getSegmentList() const;
     void setSegmentList(const QList<SegmentData>&);
+
     quint64 getSize() const;
     void setSize(const quint64);
+
     QString getNzbName() const;
     void setNzbName(const QString&);
+
     void setBaseName(const QString&);
     QString getBaseName() const;
+
     bool match(const QString&, const QString& = QString()) ;
+
     QString getDecodedFileName() const;
     void setDecodedFileName(const QString&);
+
+    QString getTemporaryFileName() const;
+    void setTemporaryFileName(const QString&);
+
     QString getRenamedFileName() const;
     void setRenamedFileName(const QString&, const QString&);
+
     void setUniqueIdentifier(const QVariant&);
     QVariant getUniqueIdentifier() const;
+
     void setFileSavePath(const QString&);
     QString getFileSavePath() const;
+
     bool isPar2File() const;
     void setPar2File(const bool);
+
     bool isArchiveFile() const;
     void setArchiveFile(const bool);
+
     void setArchiveFormat(const UtilityNamespace::ArchiveFormat);
     UtilityNamespace::ArchiveFormat getArchiveFormat() const;
+
     void setVerifyProgressionStep(const UtilityNamespace::ItemStatus);
     UtilityNamespace::ItemStatus getVerifyProgressionStep() const;
+
     void setExtractProgressionStep(const UtilityNamespace::ItemStatus);
     UtilityNamespace::ItemStatus getExtractProgressionStep() const;
+
+
     bool operator==(const NzbFileData&);
     bool operator<(const NzbFileData&) const;
 
 private:
     QString fileName;
     QString decodedFileName;
+    QString temporaryFileName;
     QString renamedFileName;
     QStringList possibleFileNameList;
     QString baseName;
