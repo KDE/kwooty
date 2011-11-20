@@ -73,6 +73,8 @@ private:
     bool isDataToSaveExist() const;
     bool isHeaderOk(QDataStream&) const;
     void requestSuppressOldOrphanedSegments();
+    void removePendingDataFile();
+    QString getPendingFileStr() const;
 
 
 signals:
@@ -80,6 +82,7 @@ signals:
 
 
 public slots:
+    void parentStatusItemChangedSlot(QStandardItem*);
 
 
 private slots:
