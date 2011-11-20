@@ -118,7 +118,7 @@ private:
     void setupConnections();
     void getAnswerFromServer();
     void downloadSegmentFromServer();
-    void postDownloadProcess(const UtilityNamespace::Article);
+    void postDownloadProcess(UtilityNamespace::Article);
     void notifyDownloadHasFinished(const UtilityNamespace::Article);
     void sendBodyCommandToServer();
     void sendQuitCommandToServer();
@@ -145,7 +145,7 @@ signals:
     void speedPerServerSignal(const SegmentInfoData);
     void saveFileErrorSignal(const int);
     void nntpErrorPerServerSignal(const int);
-    void saveDownloadedSegmentSignal(QString, QIODevice*);
+    void saveDownloadedSegmentSignal(SegmentData);
 
 
 public slots:

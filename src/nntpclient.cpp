@@ -82,11 +82,6 @@ NntpClient::NntpClient(ClientManagerConn* parent) : QObject (parent) {
 
 NntpClient::~NntpClient() {
     
-    // TODO : necessary ?
-    // save pending data when closing :
-    QString temporaryFolder = Settings::temporaryFolder().path() + '/';
-    Utility::saveData(temporaryFolder, this->currentSegmentData.getPart(), this->segmentByteArray);
-
     // stop all timers :
     this->idleTimeOutTimer->stop();
     this->tryToReconnectTimer->stop();
@@ -580,7 +575,7 @@ void NntpClient::downloadSegmentFromServer() {
             // request new segment with short delay (10 seconds) :
             this->segmentByteArray.clear();
             this->retryDownloadDelayed(10);
-            kDebug() << "ooops, segment size probably too big : " << this->segmentByteArray.size() / NBR_BYTES_IN_MB << "MiB";
+            kDebug() << "ooops, segment size probably too big : " << Utility::convertByteHumanReadable(this->segmentByteArray.size());
         }
 
     }
@@ -598,7 +593,7 @@ void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePres
         }
 
         // consider that data will be correctly saved by default :
-        bool isSaved = true;
+        bool segmentDownloadFinished = true;
 
         // save data only if article has been found on server :
         if (articlePresence == Present) {
@@ -610,25 +605,9 @@ void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePres
             QBuffer* buffer = new QBuffer();
             buffer->setData(this->segmentByteArray);
 
-            // send buffer's pointer to MemoryCacheThread in order to be decoded lately :
-            emit saveDownloadedSegmentSignal(this->currentSegmentData.getPart(), buffer);
+            // set pointer to data to be decoder by segmentDecoderThread :
+            this->currentSegmentData.setIoDevice(buffer);
 
-            // TODO :
-            //QString temporaryFolder = Settings::temporaryFolder().path() + '/';
-            //isSaved = Utility::saveData(temporaryFolder, this->currentSegmentData.getPart(), this->segmentByteArray);
-
-            // if file can not be saved, inform the user and stop downloads :
-            if (!isSaved) {
-
-                // segment has been downloaded but not saved, proceed to roll back :
-                this->segmentDataRollBack();
-                // send save error notification :
-                emit saveFileErrorSignal(DuringDownload);
-
-                // set client in Idle status for the moment :
-                this->setConnectedClientStatus(ClientIdle);
-
-            }
         }
 
         // article has not been found, try to download it with backup servers :
@@ -642,15 +621,17 @@ void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePres
 
                 // request new pending segment for the current server :
                 this->requestNewSegment();
-                isSaved = false;
+                segmentDownloadFinished = false;
             }
 
         }
 
         // if article has been saved, set status to DownloadFinishStatus and update segment
-        if (isSaved) {
+        if (segmentDownloadFinished) {
+
             this->notifyDownloadHasFinished(articlePresence);
             this->requestNewSegment();
+
         }
 
     }
@@ -742,8 +723,15 @@ void NntpClient::notifyDownloadHasFinished(const UtilityNamespace::Article artic
     this->segmentProcessed = true;
     this->currentSegmentData.setDownloadFinished(articlePresence);
 
-    // update segmentData :
-    emit updateDownloadSegmentSignal(currentSegmentData);
+    // segment is present and download is complete :
+    if (articlePresence == Present) {
+        emit saveDownloadedSegmentSignal(this->currentSegmentData);
+
+    }
+    // else update current segment status :
+    else {
+        emit updateDownloadSegmentSignal(this->currentSegmentData);
+    }
 
 }
 
