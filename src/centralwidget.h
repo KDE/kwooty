@@ -39,7 +39,6 @@ class StandardItemModel;
 class StandardItemModelQuery;
 class RepairDecompressThread;
 class SegmentsDecoderThread;
-class MemoryCacheThread;
 class SegmentManager;
 class DataRestorer;
 class ShutdownManager;
@@ -59,9 +58,8 @@ Q_DECLARE_METATYPE (QStandardItem*)
 Q_DECLARE_METATYPE (ItemStatusData*)
 
 
-class KWOOTY_EXPORT CentralWidget : public QWidget
+class KWOOTY_EXPORT CentralWidget : public QWidget {
 
-{
     Q_OBJECT
     
 public:
@@ -83,7 +81,7 @@ public:
     QueueFileObserver* getQueueFileObserver() const;
     DataRestorer* getDataRestorer() const;
     ServerManager* getServerManager() const;
-    MemoryCacheThread* getMemoryCacheThread() const;
+    SegmentsDecoderThread* getSegmentsDecoderThread() const;
     SideBar* getSideBar() const;
 
 
@@ -95,7 +93,6 @@ private:
     ShutdownManager* shutdownManager;
     SegmentsDecoderThread* segmentsDecoderThread;
     RepairDecompressThread* repairDecompressThread;
-    MemoryCacheThread* memoryCacheThread;
     ItemParentUpdater* itemParentUpdater;
     StandardItemModel* downloadModel;
     StandardItemModelQuery* modelQuery;

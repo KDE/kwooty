@@ -44,7 +44,6 @@
 #include "mainwindow.h"
 #include "notificationmanager.h"
 #include "servermanager.h"
-#include "memorycachethread.h"
 #include "observers/clientsobserver.h"
 #include "observers/queuefileobserver.h"
 #include "data/itemstatusdata.h"
@@ -77,9 +76,6 @@ CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent) {
     // save and restore pending downloads from previous session :
     dataRestorer = new DataRestorer(this);
 
-    // setup repairing and decompressing thread :
-    memoryCacheThread = new MemoryCacheThread(this);
-
     // setup segment decoder thread :
     segmentsDecoderThread = new SegmentsDecoderThread(this);
 
@@ -111,7 +107,6 @@ CentralWidget::~CentralWidget() {
 
     delete this->segmentsDecoderThread;
     delete this->repairDecompressThread;
-    delete this->memoryCacheThread;
 
 }
 
@@ -401,7 +396,7 @@ void CentralWidget::setStartPauseDownloadAllItems(const UtilityNamespace::ItemSt
         UtilityNamespace::ItemStatus currentStatus = downloadModel->getStatusFromStateItem(stateItem);
 
         if ( ( (targetStatus == PauseStatus) && Utility::isReadyToDownload(currentStatus) ) ||
-             ( (targetStatus == IdleStatus)  && Utility::isPaused(currentStatus) )  ) {
+             ( (targetStatus == IdleStatus)  && Utility::isPausedOrPausing(currentStatus) ) ) {
             indexesList.append(currentIndex);
         }
     }
@@ -485,7 +480,7 @@ void CentralWidget::retryDownload(const QModelIndexList& indexList) {
         if (changeItemStatus) {
 
             ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
-            itemStatusData.downloadRetry(IdleStatus, ParentItemTarget);
+            itemStatusData.downloadRetry(IdleStatus);
 
             this->downloadModel->updateStatusDataFromIndex(fileNameItem->index(), itemStatusData);
 
@@ -560,8 +555,8 @@ ServerManager* CentralWidget::getServerManager() const{
     return this->serverManager;
 }
 
-MemoryCacheThread* CentralWidget::getMemoryCacheThread() const {
-    return this->memoryCacheThread;
+SegmentsDecoderThread* CentralWidget::getSegmentsDecoderThread() const {
+    return this->segmentsDecoderThread;
 }
 
 SideBar* CentralWidget::getSideBar() const{
