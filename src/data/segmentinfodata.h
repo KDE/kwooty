@@ -34,14 +34,24 @@ public:
 
     void setNzbFileName(const QString&);
     QString getNzbFileName() const;
+
+    QString getTemporaryFileName() const;
+    void setTemporaryFileName(const QString&);
+
+    QString getDestinationFileSavePath() const;
+    void setDestinationFileSavePath(const QString&);
+
     void setNzbRowModelPosition(const int&);
     int getNzbRowModelPosition() const;
+
     void setBytesDownloaded(const int&);
     int getBytesDownloaded() const;
 
 
 private:
     QString nzbFileName;
+    QString temporaryFileName;
+    QString destinationFileSavePath;
     int nzbRowModelPosition;
     int bytesDownloaded;
 
