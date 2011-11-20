@@ -23,6 +23,7 @@
 
 #include <KDebug>
 #include <KIconEffect>
+#include "kcolorutils.h"
 
 #include <QApplication>
 #include <QPainter>
@@ -239,5 +240,21 @@ QPixmap UtilityIconPainting::blendOverLayTopRight(const QString& mainIconStr, co
 
     return pixmap;
 }
+
+
+
+QLabel* UtilityIconPainting::buildLighterTextLabel(const QString& text, QWidget* parentWidget) {
+
+    QLabel* textLabel = new QLabel(text, parentWidget);
+
+    QPalette textLabelPalette = textLabel->palette();
+    QColor fgcolor = KColorUtils::tint(textLabelPalette.color(QPalette::Disabled, QPalette::WindowText), textLabelPalette.color(QPalette::Active, QPalette::WindowText), 0.6);
+    textLabelPalette.setColor(QPalette::WindowText, fgcolor);
+
+    textLabel->setPalette(textLabelPalette);
+
+    return textLabel;
+}
+
 
 

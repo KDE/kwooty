@@ -28,6 +28,7 @@
 
 #include <QMap>
 #include <QPixmap>
+#include <QLabel>
 
 #include "utility.h"
 using namespace UtilityNamespace;
@@ -49,6 +50,7 @@ public:
     QPixmap buildClearIcon(const QPixmap&);
     QPixmap buildSemiTransparentIcon(const QString&);
     QPixmap buildSemiTransparentIcon(const QPixmap&);
+    QLabel* buildLighterTextLabel(const QString&, QWidget*);
 
     bool retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus&, KIcon& icon);
     bool retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus&, KIcon& icon);
