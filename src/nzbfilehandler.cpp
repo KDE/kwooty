@@ -134,8 +134,14 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
                 nzbFileData.setSegmentList(segmentDataOrderedList);
                 // set size of the nzbFileData
                 nzbFileData.setSize(fileSize);
+
+                QString uniqueIdStr = QUuid::createUuid().toString();
                 // set unique identifier :
-                nzbFileData.setUniqueIdentifier(QVariant(QUuid::createUuid().toString()));
+                nzbFileData.setUniqueIdentifier(QVariant(uniqueIdStr));
+
+                // create a temporary file name built upon uniqueId value :
+                nzbFileData.setTemporaryFileName(uniqueIdStr);
+
                 // set download folder :
                 nzbFileData.setFileSavePath(Settings::completedFolder().path() + "/" + nzbFileData.getNzbName() + "/");
 
