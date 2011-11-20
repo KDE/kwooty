@@ -33,14 +33,15 @@ class SegmentDecoderYEnc : public SegmentDecoderBase
 public:
     SegmentDecoderYEnc(SegmentsDecoderThread*);
     ~SegmentDecoderYEnc();
+    bool decodeEncodedData(const QString&, SegmentData&, const QString&, bool&);
+    void finishDecodingJob(const NzbFileData& nzbFileData);
 
 private:
-
-    void decodeEncodedData(QFile&, SegmentData&, int&, const QByteArray& , bool&, bool&);
     QString searchPattern(QIODevice*);
-    bool decodeYenc(QByteArray&, QFile&, const int&, const quint32&, int&);
-    quint32 computeCrc32Part(quint32&, unsigned char);
+    QByteArray decodeYenc(QByteArray&, const quint32&);
     QByteArray getLineByteArray(const QString&, const QByteArray&, int&);
+    quint32 computeCrc32Part(quint32&, unsigned char);
+    qint64 getPatternValue(const QByteArray&, const QString&, const int& = 10);
     void decodeProgression(PostDownloadInfoData&);
 
 

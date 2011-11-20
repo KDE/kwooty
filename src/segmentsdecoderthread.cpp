@@ -22,11 +22,11 @@
 
 #include <KDebug>
 #include <QDir>
+#include <QBuffer>
 #include "centralwidget.h"
 #include "segmentdecoderyenc.h"
 #include "segmentdecoderuuenc.h"
 #include "itemdownloadupdater.h"
-#include "memorycachethread.h"
 #include "data/segmentdata.h"
 #include "data/postdownloadinfodata.h"
 #include "itemparentupdater.h"
@@ -66,16 +66,10 @@ SegmentsDecoderThread::~SegmentsDecoderThread() {
 void SegmentsDecoderThread::init() {
 
     // create Yenc decoder instance :
-    this->segmentDecoderList.append(new SegmentDecoderYEnc(this));
+    this->yencDecoder = new SegmentDecoderYEnc(this);
 
     // create UU decoder instance :
-    this->segmentDecoderList.append(new SegmentDecoderUUEnc(this));
-
-    // init encoder instance :
-    this->currentDecoderElement = 0;
-
-    // no decoding at startup :
-    this->currentlyDecoding = false;
+    this->uuencDecoder = new SegmentDecoderUUEnc(this);
 
     // setup connections :
     this->setupConnections();
@@ -85,19 +79,22 @@ void SegmentsDecoderThread::init() {
 
 void SegmentsDecoderThread::setupConnections() {
 
+
+    // receive data to decode from decodeSegmentsSignal :
+    qRegisterMetaType<NzbFileData>("NzbFileData");
+    qRegisterMetaType<ItemStatusData>("ItemStatusData");
+
+    connect (parent->getItemParentUpdater()->getItemDownloadUpdater(),
+             SIGNAL(decodeSegmentsSignal(NzbFileData)),
+             this,
+             SLOT(decodeSegmentsSlot(NzbFileData)));
+
+
     // suppress old segments if user have to chosen to not reload data from previous session :
     connect (parent->getDataRestorer(),
              SIGNAL(suppressOldOrphanedSegmentsSignal()),
              this,
              SLOT(suppressOldOrphanedSegmentsSlot()));
-
-
-    // receive data to decode from decodeSegmentsFromMemoryCacheSignal :
-    qRegisterMetaType<NzbFileData>("NzbFileData");
-    connect (parent->getMemoryCacheThread(),
-             SIGNAL(decodeSegmentsFromMemoryCacheSignal(NzbFileData)),
-             this,
-             SLOT(decodeSegmentsSlot(NzbFileData)));
 
 
     // update user interface about current decoding status :
@@ -119,6 +116,14 @@ void SegmentsDecoderThread::setupConnections() {
              SLOT(saveFileErrorSlot(const int)));
 
 
+    // send to centralWidget segment data update :
+    qRegisterMetaType<SegmentData>("SegmentData");
+    connect (this,
+             SIGNAL(updateDownloadSegmentSignal(SegmentData, QString)),
+             this->parent->getSegmentManager(),
+             SLOT(updateDownloadSegmentSlot(SegmentData, QString)));
+
+
 }
 
 
@@ -131,65 +136,60 @@ void SegmentsDecoderThread::emitSaveFileError() {
 }
 
 
-void SegmentsDecoderThread::startDecoding() {
-
-    // if pending segments are present and check if decoding is currently processed :
-    if (!this->currentlyDecoding) {
-
-        while (!nzbFileDataList.isEmpty()) {
-
-            // decoding begins :
-            this->currentlyDecoding = true;
-
-            // get nzbfiledata to decode from list
-            NzbFileData currentFileDataToDecode = nzbFileDataList.takeFirst();
-
-            // decode data :
-            int decoderNumber = 0;
-            QString fileNameStr;
-
-            // apply a round robin in order to select the proper decoder (YDec or UUDec) :
-            while ( fileNameStr.isEmpty() && (decoderNumber++ < this->segmentDecoderList.size()) ) {
-
-                // scan segments with the current decoder :
-                fileNameStr = this->segmentDecoderList.at(this->currentDecoderElement)->scanSegmentFiles(currentFileDataToDecode);
-
-                // if fileName is not empty, decode segments with the current decoder :
-                if (!fileNameStr.isEmpty()) {
-                    this->segmentDecoderList.at(this->currentDecoderElement)->decodeSegments(currentFileDataToDecode, fileNameStr);
-                }
-                // else scan segments with other decoder(s) at next iteration :
-                else {
-                    this->currentDecoderElement = (this->currentDecoderElement + 1) % this->segmentDecoderList.size();
-                }
-
-            }
-
-            // if fileName is empty after trying all decoders, decoding failed :
-            if (fileNameStr.isEmpty()) {
-
-                PostDownloadInfoData decodeInfoData;
-                decodeInfoData.initDecode(currentFileDataToDecode.getUniqueIdentifier(), PROGRESS_COMPLETE, DecodeErrorStatus);
-                decodeInfoData.setCrc32Match(false);
-
-                emit updateDecodeSignal(decodeInfoData);
-            }
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
 
 
-            // decoding is done, finally delete all pointers to data :
-            QList<SegmentData> segmentList = currentFileDataToDecode.getSegmentList();
+void SegmentsDecoderThread::saveDownloadedSegmentSlot(SegmentData segmentData) {
 
-            for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
-                delete segmentList.value(segmentIndex).getIoDevice();
-            }
+    // decoder is now busy :
+    emit segmentDecoderIdleSignal(false);
+
+    QString temporaryFolder = Settings::temporaryFolder().path() + '/';
+    bool writeSuccess = true;
+
+    // check if data is **yEncoded** :
+    QString decodedfileName = this->yencDecoder->scanCurrentSegment(segmentData);
+
+    // file name found, decode data on the fly :
+    if (!decodedfileName.isEmpty()) {
+
+        bool crc32Match = this->yencDecoder->decodeEncodedData(temporaryFolder, segmentData, decodedfileName, writeSuccess);
 
 
-            // decoding is over :
-            this->currentlyDecoding = false;
-
+        // by default, crc value is set to CrcUnknown :
+        if (crc32Match) {
+            segmentData.setCrc32Match(CrcOk);
         }
+        else {
+            segmentData.setCrc32Match(CrcKo);
+        }
+
+    }
+    // else, save the segment right now and decoding will try to be done at the end of file download (uuenc):
+    else {
+
+        segmentData.getIoDevice()->open(QIODevice::ReadOnly);
+        writeSuccess = Utility::saveData(temporaryFolder, segmentData.getPart(), segmentData.getIoDevice()->readAll());
+        segmentData.getIoDevice()->close();
     }
 
+    if (!writeSuccess) {
+
+        this->emitSaveFileError();
+
+        // segment saving has failed, reset current segment to Idle :
+        segmentData.setReadyForNewServer(MasterServer);
+    }
+
+    // once processed, delete pointer :
+    delete segmentData.getIoDevice();
+
+    emit updateDownloadSegmentSignal(segmentData, decodedfileName);
+
+    // decoder is ready again :
+    emit segmentDecoderIdleSignal(true);
 }
 
 
@@ -197,42 +197,32 @@ void SegmentsDecoderThread::startDecoding() {
 
 void SegmentsDecoderThread::decodeSegmentsSlot(NzbFileData nzbFileData) {
 
-    // add nzbfiledata to the queue :
-    nzbFileDataList.append(nzbFileData);
+    // if yenc decoding has already been performed :
+    if (!nzbFileData.getDecodedFileName().isEmpty()) {
 
-    this->startDecoding();
+        this->yencDecoder->finishDecodingJob(nzbFileData);
+    }
 
-}
+    else {
 
+        // check if data is **uuEncoded** :
+        QString decodedfileName = this->uuencDecoder->scanSegmentFiles(nzbFileData);
 
+        // if fileName is not empty, decode segments with uudecoder :
+        if (!decodedfileName.isEmpty()) {
 
-void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
+            this->uuencDecoder->decodeSegments(nzbFileData, decodedfileName);
+        }
 
+        // if fileName is empty after trying all decoders, decoding failed :
+        else {
 
-    // get temporary path :
-    QString tempPathStr = Settings::temporaryFolder().path();
-    QDir temporaryFolder(tempPathStr);
+            PostDownloadInfoData decodeInfoData;
+            decodeInfoData.initDecode(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, DecodeErrorStatus);
+            decodeInfoData.setCrc32Match(false);
 
-    // get file list from temporary path :
-    QStringList segmentFilelist = temporaryFolder.entryList();
+            this->emitDecodeProgression(decodeInfoData);
 
-    // if file is a previous segment, suppress it :
-    QFile currentSegment;
-    foreach (QString currentFileStr, segmentFilelist) {
-
-
-        currentSegment.setFileName(tempPathStr + "/" + currentFileStr);
-
-        if (currentSegment.exists()) {
-            // open file
-            currentSegment.open(QIODevice::ReadOnly);
-
-            // check that the file has been downloaded by this application, if this is the case suppress it :
-            if (currentSegment.peek(applicationFileOwner.size()) == applicationFileOwner) {
-                currentSegment.close();
-                currentSegment.remove();
-            }
-            currentSegment.close();
         }
 
     }
@@ -241,4 +231,55 @@ void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
 
 
 
+void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
 
+    // get temporary path :
+    QString tempPathStr = Settings::temporaryFolder().path();
+    QDir temporaryFolder(tempPathStr);
+
+    // get file list from temporary path :
+    QStringList temporaryFilelist = temporaryFolder.entryList(QDir::Files | QDir::NoDotAndDotDot);
+
+    // if file is a previous segment, suppress it :
+    QFile temporaryFile;
+    foreach (QString currentFileStr, temporaryFilelist) {
+
+        temporaryFile.setFileName(tempPathStr + "/" + currentFileStr);
+
+        if (temporaryFile.exists()) {
+
+            // open file
+            temporaryFile.open(QIODevice::ReadOnly);
+            bool removeFile = false;
+
+            // check that the file has been downloaded by this application, if this is the case suppress it :
+            if (temporaryFile.peek(applicationFileOwner.size()) == applicationFileOwner) {
+                removeFile = true;
+            }
+
+            else {
+
+                // check at the of the file if tag exists (for yenc files that are decoded on the fly) :
+                temporaryFile.seek(temporaryFile.size() - applicationFileOwner.size());
+
+                if (temporaryFile.peek(applicationFileOwner.size()) == applicationFileOwner) {
+                    removeFile = true;
+                }
+            }
+
+            if (removeFile) {
+
+                temporaryFile.close();
+                temporaryFile.remove();
+
+            }
+            else {
+                temporaryFile.close();
+            }
+
+
+        }
+
+    }
+
+}

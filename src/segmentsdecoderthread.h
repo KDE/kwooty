@@ -28,6 +28,8 @@ using namespace UtilityNamespace;
 
 class CentralWidget;
 class SegmentDecoderBase;
+class SegmentDecoderYEnc;
+class SegmentDecoderUUEnc;
 class SegmentData;
 class PostDownloadInfoData;
 
@@ -36,35 +38,43 @@ class SegmentsDecoderThread : public QObject {
     Q_OBJECT
 
 public:
+
+    enum SegmentDecoderStatus{ SegmentDecoderIdle,
+                               SegmentDecoderBusy
+                             };
+
     SegmentsDecoderThread(CentralWidget*);
     SegmentsDecoderThread();
     ~SegmentsDecoderThread();
     void emitDecodeProgression(const PostDownloadInfoData&);
     void emitSaveFileError();
-private:
 
+private:
     QThread* dedicatedThread;
     CentralWidget* parent;
-    QList<SegmentDecoderBase*> segmentDecoderList;
+    SegmentDecoderYEnc* yencDecoder;
+    SegmentDecoderUUEnc* uuencDecoder;
     QList<SegmentData> segmentDataList;
-    QList<NzbFileData> nzbFileDataList;
-    int currentDecoderElement;
-    bool currentlyDecoding;
 
     void init();
     void setupConnections();
-    void startDecoding();
+    SegmentDecoderYEnc* retrieveYencDecoder();
+    SegmentDecoderBase* retrieveProperDecoderAfterDownload(const NzbFileData&, QString&);
+    SegmentDecoderBase* retrieveProperDecoderDuringDownload(SegmentData&, QString&);
 
 
 signals:
     void updateDecodeSegmentSignal(SegmentData, int, int);
     void updateDecodeSignal(PostDownloadInfoData);
     void saveFileErrorSignal(int);
+    void updateDownloadSegmentSignal(SegmentData, QString);
+    void segmentDecoderIdleSignal(bool);
 
 
 public slots:
     void decodeSegmentsSlot(NzbFileData);
     void suppressOldOrphanedSegmentsSlot();
+    void saveDownloadedSegmentSlot(SegmentData);
 
 private slots:
 

@@ -42,15 +42,15 @@ class SegmentDecoderBase : public QObject {
 
 public:
     SegmentDecoderBase(SegmentsDecoderThread*);
-    void decodeSegments(NzbFileData, const QString&);
+
+
     QString scanSegmentFiles(const NzbFileData&);
+    QString scanCurrentSegment(SegmentData&);
 
 
 protected:
     virtual QString searchPattern(QIODevice*) = 0;
-    virtual void decodeEncodedData(QFile&, SegmentData&, int&, const QByteArray& , bool&, bool&) = 0;
     virtual void decodeProgression(PostDownloadInfoData& decodeInfoData) = 0;
-    bool decodeSegmentFiles(QFile&);
 
     SegmentsDecoderThread* segmentsDecoderThread;
     QList<SegmentData> segmentDataList;

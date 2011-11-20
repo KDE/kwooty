@@ -32,6 +32,7 @@ class SegmentDecoderUUEnc : public SegmentDecoderBase
 public:
     SegmentDecoderUUEnc(SegmentsDecoderThread*);
     ~SegmentDecoderUUEnc();
+    void decodeSegments(NzbFileData, const QString&);
 
 
 private:
@@ -45,6 +46,7 @@ private:
     bool decodeUUenc(const QByteArray&, QFile&, const int&);
     bool isUUEncodedLine(QByteArray&);
     void decodeProgression(PostDownloadInfoData&);
+    bool decodeSegmentFiles(QFile&);
 
 
 signals:
