@@ -27,9 +27,9 @@
 #include "centralwidget.h"
 #include "servergroup.h"
 #include "segmentmanager.h"
+#include "segmentbuffer.h"
 #include "servermanager.h"
 #include "serverspeedmanager.h"
-#include "memorycachethread.h"
 #include "nntpclient.h"
 #include "data/segmentinfodata.h"
 #include "observers/clientsperserverobserver.h"
@@ -103,12 +103,19 @@ void ClientManagerConn::initSlot() {
              centralWidget->getSegmentManager(),
              SLOT(getNextSegmentSlot(ClientManagerConn*)));
 
-    // send to centralWidget segment data update :
+    // send to segmentManager segment data update :
     qRegisterMetaType<SegmentData>("SegmentData");
     connect (this->nntpClient,
              SIGNAL(updateDownloadSegmentSignal(SegmentData)),
              centralWidget->getSegmentManager(),
              SLOT(updateDownloadSegmentSlot(SegmentData)));
+
+    // decode and save downloaded segment :
+    connect (this->nntpClient,
+             SIGNAL(saveDownloadedSegmentSignal(SegmentData)),
+             this->parent->getServerManager()->getSegmentBuffer(),
+             SLOT(saveDownloadedSegmentSlot(SegmentData)));
+
 
     // notify centralWidget that error occured during file save process :
     connect (this->nntpClient,
@@ -143,12 +150,6 @@ void ClientManagerConn::initSlot() {
              this->parent->getClientsPerServerObserver(),
              SLOT(nntpClientSpeedPerServerSlot(const SegmentInfoData)));
 
-
-    // save downloaded segment by the memory cache manager :
-    connect (this->nntpClient,
-             SIGNAL(saveDownloadedSegmentSignal(QString, QIODevice*)),
-             centralWidget->getMemoryCacheThread(),
-             SLOT(saveDownloadedSegmentSlot(QString, QIODevice*)));
 
 }
 
