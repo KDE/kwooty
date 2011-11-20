@@ -180,6 +180,7 @@ void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData& decode
 
     // set the name of the decoded file :
     if (!decodedFileName.isEmpty()) {
+
         nzbFileData.setDecodedFileName(decodedFileName);
 
         // add info about type of file (par2 or rar file) :
