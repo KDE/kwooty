@@ -86,8 +86,8 @@ SOURCES += main.cpp \
     plugins/scheduler/schedulerfilehandler.cpp \
     serverspeedmanager.cpp \
     standarditemmodelquery.cpp \
-    memorycachethread.cpp \
-    data/postdownloadinfodata.cpp
+    data/postdownloadinfodata.cpp \
+    segmentbuffer.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -171,8 +171,8 @@ HEADERS += mainwindow.h \
     plugins/scheduler/schedulerfilehandler.h \
     serverspeedmanager.h \
     standarditemmodelquery.h \
-    memorycachethread.h \
-    data/postdownloadinfodata.h
+    data/postdownloadinfodata.h \
+    segmentbuffer.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
@@ -183,3 +183,5 @@ FORMS += centralwidget.ui \
     plugins/autoretry/preferencesautoretry.ui \
     preferences/preferencesshutdown.ui \
     preferences/serversettings.ui
+
+
