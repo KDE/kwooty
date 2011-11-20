@@ -29,6 +29,7 @@ using namespace UtilityNamespace;
 
 class CentralWidget;
 class ServerGroup;
+class SegmentBuffer;
 
 
 class KWOOTY_EXPORT ServerManager : public QObject {
@@ -39,9 +40,10 @@ public:
     ServerManager(CentralWidget*);
     ServerGroup* getNextTargetServer(ServerGroup*);
     ServerGroup* getServerGroupById(const int&);
+    SegmentBuffer* getSegmentBuffer();
     quint64 retrieveServerDownloadSpeed(const int&) const;
-    int getServerNumber() const;
     quint64 retrieveCumulatedDownloadSpeed(const int&) const;
+    int getServerNumber() const;
     bool areAllServersEncrypted() const;
     bool currentIsFirstMasterAvailable(const ServerGroup*) const;    
     void downloadWithAnotherBackupServer(ServerGroup*);
@@ -54,6 +56,7 @@ private:
     CentralWidget* parent;
     QMap<int, ServerGroup*> idServerGroupMap;
     ServerGroup* currentMasterServer;
+    SegmentBuffer* segmentBuffer;
 
     void setupConnections();
 

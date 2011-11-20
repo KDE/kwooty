@@ -26,6 +26,7 @@
 #include "serverspeedmanager.h"
 #include "sidebar.h"
 #include "segmentmanager.h"
+#include "segmentbuffer.h"
 #include "mainwindow.h"
 #include "observers/clientsperserverobserver.h"
 #include "preferences/kconfiggrouphandler.h"
@@ -36,6 +37,10 @@ ServerManager::ServerManager(CentralWidget* parent) : QObject(parent) {
     this->parent = parent;
 
     int serverNumber = KConfigGroupHandler::getInstance()->readServerNumberSettings();
+
+    // create segment buffer to store downloaded segments ready to decoded by dedicated server :
+    this->segmentBuffer = new SegmentBuffer(this, parent);
+
 
     // create all nntp clients for all servers (master + backups) :
     for (int serverGroupId = 0; serverGroupId < serverNumber; serverGroupId++) {
@@ -79,6 +84,10 @@ int ServerManager::getServerNumber() const {
 
 ServerGroup* ServerManager::getServerGroupById(const int& index) {
     return this->idServerGroupMap.value(index);
+}
+
+SegmentBuffer* ServerManager::getSegmentBuffer() {
+    return this->segmentBuffer;
 }
 
 
