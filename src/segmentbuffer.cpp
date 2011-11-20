@@ -78,7 +78,7 @@ void SegmentBuffer::saveDownloadedSegmentSlot(SegmentData segmentData) {
 
     }
 
-    // if list has reached is max size :
+    // if list has reached its max size :
     if ( this->segmentDataList.size() >= MAX_BUFFER_SIZE &&
          !this->pauseRequested ) {
 
