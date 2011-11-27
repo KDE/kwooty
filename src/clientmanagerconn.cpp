@@ -110,12 +110,6 @@ void ClientManagerConn::initSlot() {
              centralWidget->getSegmentManager(),
              SLOT(updateDownloadSegmentSlot(SegmentData)));
 
-    // decode and save downloaded segment :
-    connect (this->nntpClient,
-             SIGNAL(saveDownloadedSegmentSignal(SegmentData)),
-             this->parent->getServerManager()->getSegmentBuffer(),
-             SLOT(saveDownloadedSegmentSlot(SegmentData)));
-
 
     // notify centralWidget that error occured during file save process :
     connect (this->nntpClient,

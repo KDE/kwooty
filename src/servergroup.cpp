@@ -24,6 +24,7 @@
 #include "servermanager.h"
 #include "serverspeedmanager.h"
 #include "segmentmanager.h"
+#include "segmentbuffer.h"
 #include "centralwidget.h"
 #include "clientmanagerconn.h"
 #include "nntpclient.h"
@@ -112,6 +113,11 @@ ServerGroup* ServerGroup::getNextTargetServer() {
 
     return this->getServerManager()->getNextTargetServer(this);
 
+}
+
+bool ServerGroup::saveSegment(const SegmentData& segmentData) {
+
+    return this->getServerManager()->getSegmentBuffer()->segmentSavingQueued(segmentData);
 }
 
 

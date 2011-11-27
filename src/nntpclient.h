@@ -112,14 +112,16 @@ private:
     bool segmentProcessed;
     int missingBytes;
 
-
+    bool notifyDownloadHasFinished(const UtilityNamespace::Article);
+    bool downloadSegmentWithBackupServer();
+    bool isSocketUnconnected() const;
+    bool isSocketConnected() const;
     void setConnectedClientStatus(const NntpClientStatus, const TimerJob = StartStopTimers);
     void connectToHost();
     void setupConnections();
     void getAnswerFromServer();
     void downloadSegmentFromServer();
     void postDownloadProcess(UtilityNamespace::Article);
-    void notifyDownloadHasFinished(const UtilityNamespace::Article);
     void sendBodyCommandToServer();
     void sendQuitCommandToServer();
     void sendUserCommandToServer();
@@ -128,11 +130,8 @@ private:
     void segmentDataRollBack();
     void requestNewSegment();
     void postProcessIfBackupServer(NewSegmentRequest = RequestNewSegment);
-    bool downloadSegmentWithBackupServer();
     void updateServerAnswerStatus(const ServerAnswerStatus);
     void retryDownloadDelayed(const int&);
-    bool isSocketUnconnected() const;
-    bool isSocketConnected() const;
     void checkRateControlTimer();
     void manageSocketBuffer(const SegmentDownload&);
 
@@ -145,7 +144,6 @@ signals:
     void speedPerServerSignal(const SegmentInfoData);
     void saveFileErrorSignal(const int);
     void nntpErrorPerServerSignal(const int);
-    void saveDownloadedSegmentSignal(SegmentData);
 
 
 public slots:

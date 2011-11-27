@@ -40,6 +40,7 @@ class SegmentBuffer : public QObject {
 
 public:
     SegmentBuffer(ServerManager*, CentralWidget*);
+    bool segmentSavingQueued(const SegmentData&);
 
 private:
 
@@ -49,20 +50,16 @@ private:
     CentralWidget* centralWidget;
     ServerManager* serverManager;
     int segmentDecoderIdle;
-    bool pauseRequested;
 
     void setupConnections();
 
 
 signals:
-
     void saveDownloadedSegmentSignal(SegmentData);
 
 
 public slots:
-
-    void saveDownloadedSegmentSlot(SegmentData);
-    void segmentDecoderIdleSlot(bool);
+    void segmentDecoderIdleSlot();
 
 
 private slots:

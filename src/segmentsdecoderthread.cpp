@@ -143,9 +143,6 @@ void SegmentsDecoderThread::emitSaveFileError() {
 
 void SegmentsDecoderThread::saveDownloadedSegmentSlot(SegmentData segmentData) {
 
-    // decoder is now busy :
-    emit segmentDecoderIdleSignal(false);
-
     QString temporaryFolder = Settings::temporaryFolder().path() + '/';
     bool writeSuccess = true;
 
@@ -189,7 +186,7 @@ void SegmentsDecoderThread::saveDownloadedSegmentSlot(SegmentData segmentData) {
     emit updateDownloadSegmentSignal(segmentData, decodedfileName);
 
     // decoder is ready again :
-    emit segmentDecoderIdleSignal(true);
+    emit segmentDecoderIdleSignal();
 }
 
 

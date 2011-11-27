@@ -536,8 +536,8 @@ void NntpClient::downloadSegmentFromServer() {
 
         this->manageSocketBuffer(SegmentDownloading);
 
-        qint64 maxReadbytes = (speedLimitInBytes * this->rateControlTimer->interval()) /
-                (serverSpeedManager->getEnabledClientNumber() * 1000) + this->missingBytes;
+        qint64 maxReadbytes = ( speedLimitInBytes * this->rateControlTimer->interval() ) /
+                              ( serverSpeedManager->getEnabledClientNumber() * 1000 ) + this->missingBytes;
 
         chunckData = this->tcpSocket->read(maxReadbytes);
         this->missingBytes = qMax(maxReadbytes - chunckData.size(), static_cast<qint64>(0));
@@ -629,8 +629,16 @@ void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePres
         // if article has been saved, set status to DownloadFinishStatus and update segment
         if (segmentDownloadFinished) {
 
-            this->notifyDownloadHasFinished(articlePresence);
-            this->requestNewSegment();
+            bool downloadNextSegmentWithDelay = this->notifyDownloadHasFinished(articlePresence);
+
+            // request new segment with short delay (variable) :
+            if (downloadNextSegmentWithDelay) {
+                this->retryDownloadDelayed(this->parent->getClientId() * 500);
+            }
+            // else request new pending segment right now :
+            else {
+                this->requestNewSegment();
+            }
 
         }
 
@@ -718,21 +726,23 @@ bool NntpClient::downloadSegmentWithBackupServer() {
 
 
 
-void NntpClient::notifyDownloadHasFinished(const UtilityNamespace::Article articlePresence) {
+bool NntpClient::notifyDownloadHasFinished(const UtilityNamespace::Article articlePresence) {
+
+    bool downloadNextSegmentWithDelay = false;
 
     this->segmentProcessed = true;
     this->currentSegmentData.setDownloadFinished(articlePresence);
 
     // segment is present and download is complete :
     if (articlePresence == Present) {
-        emit saveDownloadedSegmentSignal(this->currentSegmentData);
-
+        downloadNextSegmentWithDelay = this->parent->getServerGroup()->saveSegment(this->currentSegmentData);
     }
     // else update current segment status :
     else {
         emit updateDownloadSegmentSignal(this->currentSegmentData);
     }
 
+    return downloadNextSegmentWithDelay;
 }
 
 

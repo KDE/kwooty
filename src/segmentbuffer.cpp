@@ -33,7 +33,6 @@ SegmentBuffer::SegmentBuffer(ServerManager* parent, CentralWidget* centralWidget
     this->centralWidget = centralWidget;
 
     this->segmentDecoderIdle = true;
-    this->pauseRequested = false;
 
     this->setupConnections();
 
@@ -51,9 +50,9 @@ void SegmentBuffer::setupConnections() {
 
     // decoder thread will notify its current state (idle or busy) :
     connect (this->centralWidget->getSegmentsDecoderThread(),
-             SIGNAL(segmentDecoderIdleSignal(bool)),
+             SIGNAL(segmentDecoderIdleSignal()),
              this,
-             SLOT(segmentDecoderIdleSlot(bool)));
+             SLOT(segmentDecoderIdleSlot()));
 
 }
 
@@ -64,11 +63,14 @@ void SegmentBuffer::setupConnections() {
 //============================================================================================================//
 
 
-void SegmentBuffer::saveDownloadedSegmentSlot(SegmentData segmentData) {
+bool SegmentBuffer::segmentSavingQueued(const SegmentData& segmentData) {
 
-    // if decoder is idle, send it segment right now :
+    bool bufferFull = false;
+
+    // if decoder is idle, send segment right now :
     if (this->segmentDecoderIdle) {
 
+        this->segmentDecoderIdle = false;
         emit saveDownloadedSegmentSignal(segmentData);
     }
     // else store it to be processed lately :
@@ -79,38 +81,26 @@ void SegmentBuffer::saveDownloadedSegmentSlot(SegmentData segmentData) {
     }
 
     // if list has reached its max size :
-    if ( this->segmentDataList.size() >= MAX_BUFFER_SIZE &&
-         !this->pauseRequested ) {
+    if (this->segmentDataList.size() >= MAX_BUFFER_SIZE) {
 
-        // pause all downloads until decoder becomes ready again :
-        this->pauseRequested = true;
-        this->centralWidget->pauseAllDownloadSlot();
-
-        kDebug() << "segment buffer is full, set on pause until empty...";
+        bufferFull = true;
+        kDebug() << "segment buffer is full, request next segment with a short delay...";
     }
 
-    // if no more segments are waiting and pause was requested, restart downloads :
-    else if ( this->pauseRequested &&
-              this->segmentDataList.isEmpty() ) {
-
-        this->pauseRequested = false;
-        this->centralWidget->startAllDownloadSlot();
-    }
-
+    return bufferFull;
 
 }
 
 
-void SegmentBuffer::segmentDecoderIdleSlot(bool segmentDecoderIdle) {
+void SegmentBuffer::segmentDecoderIdleSlot() {
 
-    this->segmentDecoderIdle = segmentDecoderIdle;
+    this->segmentDecoderIdle = true;
 
-    // if decoder is now idle and segments are waiting :
-    if ( this->segmentDecoderIdle &&
-         !this->segmentDataList.isEmpty() ) {
+    // if decoder is now idle and segments are pending :
+    if (!this->segmentDataList.isEmpty()) {
 
         // send the first stored segment :
-        this->saveDownloadedSegmentSlot(this->segmentDataList.takeFirst());
+        this->segmentSavingQueued(this->segmentDataList.takeFirst());
 
     }
 

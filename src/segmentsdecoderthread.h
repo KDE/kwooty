@@ -68,7 +68,7 @@ signals:
     void updateDecodeSignal(PostDownloadInfoData);
     void saveFileErrorSignal(int);
     void updateDownloadSegmentSignal(SegmentData, QString);
-    void segmentDecoderIdleSignal(bool);
+    void segmentDecoderIdleSignal();
 
 
 public slots:

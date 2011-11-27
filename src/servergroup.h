@@ -26,6 +26,7 @@
 #include <QTimer>
 
 #include "data/serverdata.h"
+#include "data/segmentdata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -53,6 +54,7 @@ public:
     int getRealServerGroupId() const;
     ServerGroup* getNextTargetServer();
     ServerData getServerData() const;
+    bool saveSegment(const SegmentData&);
     bool canDownload(const int&) const;
     bool isServerAvailable() const;
     bool isMasterServer() const;
