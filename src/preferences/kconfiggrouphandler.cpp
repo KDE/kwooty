@@ -380,9 +380,6 @@ void KConfigGroupHandler::removePasswordEntry(KConfigGroup& configGroup) {
 }
 
 
-
-
-
 int KConfigGroupHandler::serverConnectionNumber(const int& serverId) {
 
     KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("Server_%1").arg(serverId));
@@ -436,9 +433,6 @@ bool KConfigGroupHandler::readSideBarTabOnlyDisplay() {
 }
 
 
-
-
-
 void KConfigGroupHandler::writeSideBarServerIndex(const int& index) {
 
     KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("SideBar"));
@@ -450,11 +444,8 @@ void KConfigGroupHandler::writeSideBarServerIndex(const int& index) {
 int KConfigGroupHandler::readSideBarServerIndex() {
 
     KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("SideBar"));
-    return configGroup.readEntry("sideBarServerIndex", 0);
+
+    // be sure that returned index is not negative :
+    return qMax (configGroup.readEntry("sideBarServerIndex", 0), 0);
 
 }
-
-
-
-
-

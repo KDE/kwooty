@@ -52,10 +52,15 @@ SideBarWidget* SideBar::getSideBarWidget() {
 
 void SideBar::saveState() {
 
-    // save current states to restore them in next session :
-    KConfigGroupHandler::getInstance()->writeSideBarDisplay(this->sideBarWidget->isVisible());
-    KConfigGroupHandler::getInstance()->writeSideBarTabOnlyDisplay(this->sideBarWidget->isOnlyTabDisplayed());
-    KConfigGroupHandler::getInstance()->writeSideBarServerIndex(this->sideBarWidget->currentIndex());
+    // save info anly if there is at least one current widget :
+    if (this->sideBarWidget->currentIndex() != -1) {
+
+        // save current states to restore them in next session :
+        KConfigGroupHandler::getInstance()->writeSideBarDisplay(this->sideBarWidget->isVisible());
+        KConfigGroupHandler::getInstance()->writeSideBarTabOnlyDisplay(this->sideBarWidget->isOnlyTabDisplayed());
+        KConfigGroupHandler::getInstance()->writeSideBarServerIndex(this->sideBarWidget->currentIndex());
+
+    }
 
 }
 
