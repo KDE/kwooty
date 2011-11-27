@@ -299,10 +299,6 @@ void MyStatusBar::updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace disk
 }
 
 
-
-
-
-
 void MyStatusBar::updateTimeInfoSlot(const bool parentDownloadingFound) {
     
     QString timeInfoStr;
