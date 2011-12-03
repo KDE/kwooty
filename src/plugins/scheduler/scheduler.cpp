@@ -22,6 +22,7 @@
 #include "scheduler.h"
 
 #include <KDebug>
+#include <KCMultiDialog>
 
 #include <QTime>
 #include <QDate>
@@ -43,6 +44,7 @@ Scheduler::Scheduler(SchedulerPlugin* parent) :  QObject(parent) {
 
     this->centralWidget = parent->getCore()->getCentralWidget();
     this->serverManager = parent->getCore()->getCentralWidget()->getServerManager();
+    this->statusBar = parent->getCore()->getStatusBar();
 
     // get model :
     this->schedulerModel = SchedulerFileHandler().loadModelFromFile(this);
@@ -83,59 +85,13 @@ void Scheduler::setupConnections() {
              this,
              SLOT(serverManagerSettingsChangedSlot()));
 
-}
+
+    connect (this->statusBar,
+             SIGNAL(statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity)),
+             this,
+             SLOT(statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity)));
 
 
-
-
-//============================================================================================================//
-//                                               SLOTS                                                        //
-//============================================================================================================//
-
-void Scheduler::schedulerTimerSlot() {
-
-    DownloadLimitStatus downloadLimitStatus = LimitDownload;
-
-    // permanent speed limit is enabled :
-    if (SchedulerSettings::enablePermanentSpeedLimit()) {
-
-        // if downloadLimitSpinBox is set to 0, it corresponds to no limit download :
-        if (SchedulerSettings::downloadLimitSpinBox() == 0) {
-            downloadLimitStatus = NoLimitDownload;
-        }
-
-    }
-    // speed limit is scheduled :
-    else {
-
-        // retrieve current time :
-        QTime currentTime = QTime::currentTime();
-
-        // get row and column numbers from model according to current time :
-        int column = (currentTime.hour() * 60 + currentTime.minute()) / 30;
-        int row = QDate().currentDate().dayOfWeek();
-
-        // get corresponding download limit status :
-        QStandardItem* item = this->schedulerModel->item(row, column);
-        downloadLimitStatus = static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
-
-    }
-
-    // start downloads if they were previously paused :
-    this->checkDownloadStatus(downloadLimitStatus);
-
-    if (downloadLimitStatus == LimitDownload) {
-        this->applySpeedLimit();
-    }
-
-}
-
-
-void Scheduler::serverManagerSettingsChangedSlot() {
-
-    // reset download status to full speed if server settings changed :
-    this->downloadLimitStatus = NoLimitDownload;
-    this->disableSpeedLimit();
 }
 
 
@@ -224,6 +180,85 @@ void Scheduler::applySpeedLimit() {
 void Scheduler::disableSpeedLimit() {
     this->serverManager->setBandwidthMode(BandwidthFull);
 }
+
+
+
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
+
+
+void Scheduler::statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity WidgetIdentity) {
+
+    // if double click has been done on download speed widget :
+    if (WidgetIdentity == MyStatusBar::SpeedWidgetIdentity) {
+
+        // display scheduler settings dialog page :
+        KCMultiDialog schedulerConfigDialog;
+
+        schedulerConfigDialog.setFaceType( KCMultiDialog::Plain );
+        schedulerConfigDialog.setWindowTitle(i18n("Bandwidth manager"));
+        schedulerConfigDialog.addModule("kwooty_schedulersettings");
+        schedulerConfigDialog.resize (600, 400);
+        schedulerConfigDialog.exec();
+
+        // once the page has been closed, apply new settings :
+        this->settingsChanged();
+    }
+
+}
+
+
+
+
+void Scheduler::schedulerTimerSlot() {
+
+    DownloadLimitStatus downloadLimitStatus = LimitDownload;
+
+    // permanent speed limit is enabled :
+    if (SchedulerSettings::enablePermanentSpeedLimit()) {
+
+        // if downloadLimitSpinBox is set to 0, it corresponds to no limit download :
+        if (SchedulerSettings::downloadLimitSpinBox() == 0) {
+            downloadLimitStatus = NoLimitDownload;
+        }
+
+    }
+    // speed limit is scheduled :
+    else {
+
+        // retrieve current time :
+        QTime currentTime = QTime::currentTime();
+
+        // get row and column numbers from model according to current time :
+        int column = (currentTime.hour() * 60 + currentTime.minute()) / 30;
+        int row = QDate().currentDate().dayOfWeek();
+
+        // get corresponding download limit status :
+        QStandardItem* item = this->schedulerModel->item(row, column);
+        downloadLimitStatus = static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
+
+    }
+
+    // start downloads if they were previously paused :
+    this->checkDownloadStatus(downloadLimitStatus);
+
+    if (downloadLimitStatus == LimitDownload) {
+        this->applySpeedLimit();
+    }
+
+}
+
+
+void Scheduler::serverManagerSettingsChangedSlot() {
+
+    // reset download status to full speed if server settings changed :
+    this->downloadLimitStatus = NoLimitDownload;
+    this->disableSpeedLimit();
+}
+
+
+
 
 
 void Scheduler::settingsChanged() {

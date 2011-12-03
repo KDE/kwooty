@@ -26,6 +26,7 @@
 #include <QTimer>
 #include <QStandardItemModel>
 
+#include "mystatusbar.h"
 #include "utility.h"
 #include "schedulerfilehandler.h"
 using namespace UtilityNamespace;
@@ -35,6 +36,7 @@ using namespace SchedulerNamespace;
 class CentralWidget;
 class SchedulerPlugin;
 class ServerManager;
+
 
 class Scheduler : public QObject {
 
@@ -51,8 +53,9 @@ private:
 
     QStandardItemModel* schedulerModel;
     CentralWidget* centralWidget;
-    QTimer* schedulerTimer;
     ServerManager* serverManager;
+    MyStatusBar* statusBar;
+    QTimer* schedulerTimer;
     DownloadLimitStatus downloadLimitStatus;
 
     void setupConnections();
@@ -67,6 +70,7 @@ signals:
 
 public slots:
     void serverManagerSettingsChangedSlot();
+    void statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity);
 
 private slots:
     void schedulerTimerSlot();
