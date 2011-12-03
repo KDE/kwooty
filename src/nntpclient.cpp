@@ -42,9 +42,9 @@ NntpClient::NntpClient(ClientManagerConn* parent) : QObject (parent) {
     this->tcpSocket = new QSslSocket(parent);
     this->tcpSocket->setPeerVerifyMode(QSslSocket::QueryPeer);
 
-    // set a timer to reconnect to host after 10 seconds if disconnection occurs :
+    // set a timer to reconnect to host after 20 seconds if disconnection occurs :
     this->tryToReconnectTimer = new QTimer(this);
-    this->tryToReconnectTimer->setInterval(10000);
+    this->tryToReconnectTimer->setInterval(20000);
 
     // set a timer to disconnect from host after idle activity :
     this->idleTimeOutTimer = new QTimer(this);
@@ -132,6 +132,8 @@ void NntpClient::connectToHost() {
         this->idleTimeOutTimer->stop();
         this->idleTimeOutTimer->setInterval(this->parent->getServerData().getDisconnectTimeout() * UtilityNamespace::MINUTES_TO_MILLISECONDS);
 
+        // try to reconnect if connection fails :
+        this->tryToReconnectTimer->start();
 
         QString hostName = this->parent->getServerData().getHostName();
         int port = this->parent->getServerData().getPort();
@@ -834,9 +836,7 @@ void NntpClient::connectedSlot() {
     emit connectionStatusPerServerSignal(Connected);
 
     // if reconnection succeeded by timer :
-    if (this->tryToReconnectTimer->isActive()) {
-        this->tryToReconnectTimer->stop();
-    }
+    this->tryToReconnectTimer->stop();
 
     // fetch new item :
     this->dataHasArrivedSlot();
@@ -849,7 +849,7 @@ void NntpClient::disconnectedSlot() {
 
     this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
 
-    // if disconnection comes after an socket error, notify type of error in status bar :
+    // if disconnection comes after a socket error, notify type of error in status bar :
     // (if disconnection is normal, nntpError = NoError) :
     emit nntpErrorPerServerSignal(this->nntpError);
     emit connectionStatusPerServerSignal(Disconnected);
@@ -914,7 +914,7 @@ void NntpClient::answerTimeOutSlot() {
     //kDebug() << "Host answer time out, reconnecting..., groupId : " << this->parent->getServerGroup()->getRealServerGroupId();
     this->serverAnswerTimer->stop();
 
-    this->setConnectedClientStatus(ClientIdle);
+    this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
 
     // anticipate socket error notification -> reconnect immediately :
     this->sendQuitCommandToServer();
