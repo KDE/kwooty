@@ -87,7 +87,8 @@ SOURCES += main.cpp \
     serverspeedmanager.cpp \
     standarditemmodelquery.cpp \
     data/postdownloadinfodata.cpp \
-    segmentbuffer.cpp
+    segmentbuffer.cpp \
+    widgets/statusbarwidgetbase.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -172,7 +173,8 @@ HEADERS += mainwindow.h \
     serverspeedmanager.h \
     standarditemmodelquery.h \
     data/postdownloadinfodata.h \
-    segmentbuffer.h
+    segmentbuffer.h \
+    widgets/statusbarwidgetbase.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
@@ -183,5 +185,7 @@ FORMS += centralwidget.ui \
     plugins/autoretry/preferencesautoretry.ui \
     preferences/preferencesshutdown.ui \
     preferences/serversettings.ui
+
+
 
 

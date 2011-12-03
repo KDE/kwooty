@@ -82,6 +82,7 @@ set(Kwooty_lib_SRCS
   widgets/sidebarwidget.cpp
   widgets/serverstatuswidget.cpp
   widgets/textpushbuttonwidget.cpp
+  widgets/statusbarwidgetbase.cpp
   jobs/concatsplitfilesjob.cpp
 )
 
