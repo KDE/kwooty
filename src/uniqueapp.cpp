@@ -60,7 +60,7 @@ int UniqueApp::newInstance()
     // instance already exists :
     if (this->kwootyInstance) {
 
-        KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+        KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
         // open nzb files set as argument :
         for (int i = 0; i < args->count(); i++) {
@@ -70,6 +70,8 @@ int UniqueApp::newInstance()
         }
 
         args->clear();
+
+        KUniqueApplication::newInstance();
     }
 
     return 0;
