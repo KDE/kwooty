@@ -49,7 +49,7 @@ DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent) {
     magicNumber = 0xC82F1D37;
 
     // should be upgraded everytime a change is done in data stream :
-    applicationVersion1 = 005;
+    applicationVersion1 = 006;
 
     // map kwooty serialization version and its corresponding dataStream version
     versionStreamMap.insert(applicationVersion1, QDataStream::Qt_4_4);
@@ -176,7 +176,7 @@ void DataRestorer::writeDataToDisk() {
 
     }
 
-    if (!nzbFileList.isEmpty()){
+    if (!nzbFileList.isEmpty()) {
 
         QFile file(this->getPendingFileStr());
 
@@ -189,15 +189,23 @@ void DataRestorer::writeDataToDisk() {
         // create the dataStream :
         QDataStream dataStreamOut(&file);
 
-        // Write a header with a "magic number" and a version
+        // write a header with a "magic number" and a version
         dataStreamOut << (quint32)magicNumber;
         dataStreamOut << (quint32)applicationVersion1;
         dataStreamOut.setVersion(versionStreamMap.value(applicationVersion1));
 
-        // Write the data (nzb file and its belonging files and their download status) :
-        dataStreamOut << nzbFileList;
+        // compute data checksum and write it :
+        QByteArray byteArray;
+        QDataStream dataStreamByteArray(&byteArray, QIODevice::ReadWrite);
+        dataStreamByteArray << nzbFileList;
 
+        dataStreamOut << qChecksum(byteArray.data(), byteArray.size());
+
+        // write the data (nzb file and its belonging files and their download status) :
+        file.write(byteArray);
         file.close();
+
+
     }
 
 }
@@ -421,12 +429,30 @@ void DataRestorer::readDataFromDiskSlot() {
             // if data have to be restored :
             if (answer == KMessageBox::Yes) {
 
+                // retrieve saved checksum :
+                quint16 checksumFromFile = 0;
+                dataStreamIn >> checksumFromFile;
+
                 // retrieve saved data :
                 QList< QList<GlobalFileData> > nzbFileList;
                 dataStreamIn >> nzbFileList;
 
-                // reset some data belonging to pending items and populate treeview :
-                this->preprocessAndHandleData(nzbFileList);
+                // verify checksum :
+                QByteArray byteArray;
+                QDataStream dataStreamByteArray(&byteArray, QIODevice::ReadWrite);
+                dataStreamByteArray << nzbFileList;
+                quint16 checksumCompute = qChecksum(byteArray.data(), byteArray.size());
+
+                if (checksumFromFile == checksumCompute) {
+
+                    // reset some data belonging to pending items and populate treeview :
+                    this->preprocessAndHandleData(nzbFileList);
+
+                }
+                else {
+                    kDebug() << "data can not be restored, checksum ko !!!" << checksumFromFile << checksumCompute;
+                }
+
             }
             // user did not load download pending files, remove previous segments :
             else {
