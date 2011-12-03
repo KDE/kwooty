@@ -23,7 +23,6 @@
 
 #include <KStatusBar>
 
-
 #include <QLabel>
 
 #include "utility.h"
@@ -40,6 +39,16 @@ class MyStatusBar : public KStatusBar
     Q_OBJECT
 
 public:
+
+    enum WidgetIdentity { SizeWidgetIdentity,
+                          SpeedWidgetIdentity,
+                          ConnectionWidgetIdentity,
+                          ShutdownWidgetIdentity,
+                          TimeInfoWidgetIdentity,
+                          InfoBarWidgetIdentity,
+                          IconCapacityWidgetIdentity
+                        };
+
     MyStatusBar(MainWindow* parent);
     MyStatusBar();
     IconTextWidget* getInfoBarWidget();
@@ -47,18 +56,18 @@ public:
 
 
 protected:
-    bool eventFilter(QObject*, QEvent*);
+
 
 private:
+
     ClientsObserver* clientsObserver;
-    QLabel* sizeLabel;
-    QLabel* speedLabel;
+    IconTextWidget* sizeLabel;
+    IconTextWidget* speedLabel;
     IconTextWidget* connectionWidget;
     IconTextWidget* shutdownWidget;
     IconTextWidget* timeInfoWidget;
     IconTextWidget* infoBarWidget;
     IconCapacityWidget* iconCapacityWidget;
-    QHash<QObject*, UtilityNamespace::PreferencesPage> widgetPreferencesPageMap;
 
     void setupConnections();
     void setConnectionWidget();
@@ -71,6 +80,7 @@ private:
 
 signals:
     void showSettingsSignal(UtilityNamespace::PreferencesPage);
+    void statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity);
 
 public slots:
 
@@ -80,6 +90,7 @@ public slots:
     void updateTimeInfoSlot(const bool);
     void updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace, const QString, const int);
     void statusBarShutdownInfoSlot(QString, QString);
+    void statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity);
 
 
 private slots:

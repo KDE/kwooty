@@ -53,15 +53,15 @@ MyStatusBar::MyStatusBar(MainWindow* parent) : KStatusBar(parent) {
     this->setShutdownWidget();
     
     // add capacity bar widget :
-    this->iconCapacityWidget = new IconCapacityWidget(this);
+    this->iconCapacityWidget = new IconCapacityWidget(this, IconCapacityWidgetIdentity);
     this->addPermanentWidget(this->iconCapacityWidget);
     
     // add remaining download size item :
-    this->sizeLabel = new QLabel(this);
+    this->sizeLabel = new IconTextWidget(this, SizeWidgetIdentity);
     this->addPermanentWidget(this->sizeLabel);
     
     // add download speed item :
-    this->speedLabel = new QLabel(this);
+    this->speedLabel = new IconTextWidget(this, SpeedWidgetIdentity);
     this->addPermanentWidget(this->speedLabel);
     
     // add info bar widget :
@@ -69,11 +69,6 @@ MyStatusBar::MyStatusBar(MainWindow* parent) : KStatusBar(parent) {
 
     this->setupConnections();
 
-    // this map allows access to configuration preferences page when double-clicking on widgets in the statusbar :
-    this->widgetPreferencesPageMap.insert(this->connectionWidget, ServerPage);
-    this->widgetPreferencesPageMap.insert(this->iconCapacityWidget, GeneralPage);
-    this->widgetPreferencesPageMap.insert(this->shutdownWidget, ShutdownPage);
-    
     // get current connection status, numbre of remainig files, etc... from clients observer :
     this->clientsObserver->sendFullUpdate();
     
@@ -140,7 +135,7 @@ void MyStatusBar::setupConnections() {
 
 void MyStatusBar::setConnectionWidget(){
     
-    this->connectionWidget = new IconTextWidget(this);
+    this->connectionWidget = new IconTextWidget(this, ConnectionWidgetIdentity);
     
     // add aggregated widget to the status bar :
     this->addWidget(this->connectionWidget);
@@ -154,7 +149,7 @@ void MyStatusBar::setConnectionWidget(){
 
 void MyStatusBar::setTimeInfoWidget(){
     
-    this->timeInfoWidget = new IconTextWidget(this);
+    this->timeInfoWidget = new IconTextWidget(this, TimeInfoWidgetIdentity);
     this->timeInfoWidget->setIcon("user-away");
     
     // add aggregated widget to the status bar :
@@ -165,7 +160,7 @@ void MyStatusBar::setTimeInfoWidget(){
 
 void MyStatusBar::setShutdownWidget(){
     
-    this->shutdownWidget = new IconTextWidget(this);
+    this->shutdownWidget = new IconTextWidget(this, ShutdownWidgetIdentity);
     
     // add aggregated widget to the status bar :
     this->addWidget(this->shutdownWidget);
@@ -175,9 +170,9 @@ void MyStatusBar::setShutdownWidget(){
 void MyStatusBar::setInfoBarWidget(){
 
     // add widget that will toggle info bar :
-    this->infoBarWidget = new IconTextWidget(this);
+    this->infoBarWidget = new IconTextWidget(this, InfoBarWidgetIdentity);
 
-    this->infoBarWidget->setIconMode(IconTextWidget::SwitchIcon);    
+    this->infoBarWidget->setIconMode(IconTextWidget::SwitchIcon);
     this->infoBarWidget->setIconOnly("arrow-up-double", "arrow-down-double");
 
     bool sideBarDisplay = KConfigGroupHandler::getInstance()->readSideBarDisplay();
@@ -206,7 +201,7 @@ void MyStatusBar::updateConnectionStatusSlot(){
     
     
     QString connectionIconStr;
-    QString connection;  
+    QString connection;
 
     ServerConnectionIcon serverConnectionIcon = UtilityServerStatus::buildConnectionStringFromStatus(this->clientsObserver, connection);
 
@@ -247,14 +242,14 @@ void MyStatusBar::updateFileSizeInfoSlot(const quint64 totalFiles, const quint64
     // status bar update, display number of files and remianing size :
     QString remainingFiles = i18n("Files: <numid>%1</numid> (%2)", totalFiles, Utility::convertByteHumanReadable(totalSize));
     
-    this->sizeLabel->setText(remainingFiles);
+    this->sizeLabel->setTextOnly(remainingFiles);
 }
 
 
 
 void MyStatusBar::updateDownloadSpeedInfoSlot(const QString speedInKBStr){
     
-    this->speedLabel->setText(i18n("Speed: %1", speedInKBStr));
+    this->speedLabel->setTextOnly(i18n("Speed: %1", speedInKBStr));
 }
 
 
@@ -316,7 +311,7 @@ void MyStatusBar::updateTimeInfoSlot(const bool parentDownloadingFound) {
         timeInfoToolTip.append((QString("<b>%1</b>").arg(timeLabel)));
         
         timeInfoToolTip.append("<table style='white-space: nowrap'>");
-        QString nzbNameDownloading = this->clientsObserver->getStatsInfoBuilder()->getNzbNameDownloading();        
+        QString nzbNameDownloading = this->clientsObserver->getStatsInfoBuilder()->getNzbNameDownloading();
         timeInfoToolTip.append(Utility::buildToolTipRow(QString("%1:").arg(currentTimeValue), nzbNameDownloading));
         
     }
@@ -354,26 +349,29 @@ void MyStatusBar::updateTimeInfoSlot(const bool parentDownloadingFound) {
 
 
 
-bool MyStatusBar::eventFilter(QObject* object, QEvent* event) {
+void MyStatusBar::statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity widgetIdentity) {
 
-    bool returnValue = true;
+    // access to configuration preferences page when double-clicking on widgets in the statusbar :
+    switch (widgetIdentity) {
 
-    if (event->type() == QEvent::MouseButtonDblClick) {
-
-        // search object in map :
-        if (widgetPreferencesPageMap.contains(object)) {
-
-            // if found display proper settings page :
-            const UtilityNamespace::PreferencesPage page = widgetPreferencesPageMap.value(object);
-            emit showSettingsSignal(page);
-
-        }
+    case ConnectionWidgetIdentity: {
+        emit showSettingsSignal(ServerPage);
+        break;
     }
-    else {
-        // pass the event on to the parent class :
-        returnValue = KStatusBar::eventFilter(object, event);
+    case ShutdownWidgetIdentity: {
+        emit showSettingsSignal(ShutdownPage);
+        break;
+    }
+    case IconCapacityWidgetIdentity: {
+        emit showSettingsSignal(GeneralPage);
+        break;
+    }
+    default: {
+        // notify observers that widget has been double clicked :
+        emit statusBarWidgetDblClickSignal(widgetIdentity);
+        break;
     }
 
-    return returnValue;
+    }
 
 }
