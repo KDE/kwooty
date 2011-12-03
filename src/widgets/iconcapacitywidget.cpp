@@ -26,8 +26,10 @@
 
 #include <QPixmap>
 
+#include "statusbarwidgetbase.h"
 
-IconCapacityWidget::IconCapacityWidget(QWidget* parent) : QWidget(parent) {
+
+IconCapacityWidget::IconCapacityWidget(QWidget* parent, MyStatusBar::WidgetIdentity widgetIdentity) : StatusBarWidgetBase(parent, widgetIdentity) {
 
     this->iconLoader = KIconLoader::global();
 
@@ -40,9 +42,6 @@ IconCapacityWidget::IconCapacityWidget(QWidget* parent) : QWidget(parent) {
 
     this->hBoxLayout->setSpacing(5);
     this->hBoxLayout->setMargin(0);
-
-    // installs event filter in order to display associated settings page :
-    this->installEventFilter(parent);
 
 }
 

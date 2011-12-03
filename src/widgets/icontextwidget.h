@@ -22,15 +22,14 @@
 #ifndef ICONTEXTWIDGET_H
 #define ICONTEXTWIDGET_H
 
-#include <KIconLoader>
-
 #include <QWidget>
 #include <QLabel>
-#include <QHBoxLayout>
 
 #include "utilityserverstatus.h"
+#include "statusbarwidgetbase.h"
 
-class IconTextWidget : public QWidget {
+
+class IconTextWidget : public StatusBarWidgetBase {
 
     Q_OBJECT
 
@@ -42,7 +41,7 @@ public:
         SwitchIcon
     };
 
-    IconTextWidget(QWidget* parent = 0);
+    IconTextWidget(QWidget*, MyStatusBar::WidgetIdentity);
 
     void setIconMode(const IconMode = NormalModeIcon);
     void setIcon(const ServerConnectionIcon&);
@@ -50,6 +49,7 @@ public:
     void setIcon(const QString&, const QString&);
     void setIconOnly(const QString&, const QString& = QString());
     void setText(const QString&);
+    void setTextOnly(const QString&);
     QString getText() const;
     void showIcon();
     void hideIcon();
@@ -63,10 +63,8 @@ protected:
 
 private:
 
-    KIconLoader* iconLoader;
     QLabel* iconLabel;
     QLabel* textLabel;
-    QHBoxLayout* hBoxLayout;
     QPixmap normalIcon;
     QPixmap clearNormalIcon;
     QPixmap clearActiveIcon;

@@ -31,9 +31,10 @@
 #include <QPainter>
 
 #include "utilityiconpainting.h"
+#include "statusbarwidgetbase.h"
 
 
-IconTextWidget::IconTextWidget(QWidget* parent) : QWidget(parent) {
+IconTextWidget::IconTextWidget(QWidget* parent, MyStatusBar::WidgetIdentity widgetIdentity) : StatusBarWidgetBase(parent, widgetIdentity) {
 
     this->iconLoader = KIconLoader::global();
 
@@ -51,10 +52,8 @@ IconTextWidget::IconTextWidget(QWidget* parent) : QWidget(parent) {
     this->hBoxLayout->setSpacing(5);
     this->hBoxLayout->setMargin(0);
 
-    // installs event filter in order to display associated settings page :
-    this->installEventFilter(parent);
-
 }
+
 
 
 void IconTextWidget::enterEvent(QEvent* event) {
@@ -106,8 +105,9 @@ void IconTextWidget::setIconOnly(const QString& normalIconStr, const QString& en
     this->hBoxLayout->setSpacing(0);
     this->setIcon(normalIconStr, enabledIconStr);
 
-    // remove event filter in order to catch mouse double click events :
-    this->removeEventFilter(this->parent());
+    // disconnect in order to not forward mouse double click events :
+    this->disconnect(SIGNAL(statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity)));
+
 }
 
 
@@ -186,6 +186,16 @@ void IconTextWidget::setActive(const bool& active) {
 
 
 void IconTextWidget::setText(const QString& text) {
+
+    this->textLabel->setText(text);
+}
+
+void IconTextWidget::setTextOnly(const QString& text) {
+
+    if (!this->iconLabel->isHidden()) {
+        this->hBoxLayout->setSpacing(0);
+        this->iconLabel->hide();
+    }
 
     this->textLabel->setText(text);
 }
