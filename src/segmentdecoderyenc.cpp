@@ -62,7 +62,7 @@ void SegmentDecoderYEnc::decodeEncodedData(QFile& targetFile, SegmentData& curre
 
     // retrieve crc32 value, be sure to retrieve only the first crc32 value as some
     // encoders could provide the following pattern : "=yend size=50 part=79 pcrc32=a4f04edb crc32=a5a1fb24" :
-    qint64 crc32FromFile = 0;
+    quint32 crc32FromFile = 0;
 
     QRegExp regExp(".*p?crc32=((\\w|\\d)*).*");
 
