@@ -1,6 +1,17 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.7.3:
+--------------
+
+* Fix bug #3437022: pending download restoring at start-up could be lost in certain situations
+* Fix regression #3443484: when interet connection was lost then back again, downloads were not restarting automatically
+* Fix bug #3444490: when opening nzb file(s) from file manager, the kwooty's bouncing cursor was stop only after timeout
+* Before restoring downloads at start-up, checksum of file that store queued downloads is now performed to ensure data integrity
+* Fix issue with an incorrect value stored in kwootyrc under certain circumtances and could lead to a crash at next kwooty start-up
+* Fix issue in yenc decoder that could consider correct decoded files as corrupted ('decoded (bad CRC)' status) with some yenc encoders.
+
+
 Version 0.7.2:
 --------------
 
