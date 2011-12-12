@@ -81,7 +81,7 @@ namespace UtilityNamespace
     static const double ONE_UNIT = 1;
 
     // plugin version, if changed make sure to update X-Kwooty-Plugin-Version in .desktop files accordingly :
-    static const int KWOOTY_PLUGIN_VERSION = 1;
+    static const int KWOOTY_PLUGIN_VERSION = 2;
 
     // number of maximum master and backup servers :
     static const int MAX_SERVERS = 5;
