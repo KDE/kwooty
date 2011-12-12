@@ -337,8 +337,8 @@ void DataRestorer::preprocessAndHandleData(const QList< QList<GlobalFileData> >&
 
 
             // - case 1: if file is currently being decoded, file shall be downloaded again next time :
-            if (Utility::isDecoding(itemStatus) ||
-                    Utility::isWaitingForDecode(itemStatus, currentStatusData.getDataStatus())) {
+            if ( Utility::isDecoding(itemStatus) ||
+                 Utility::isWaitingForDecode(itemStatus, currentStatusData.getDataStatus()) ) {
                 this->resetDataForDecodingFile(currentNzbFileData, currentStatusData, currentDownloadProgress);
             }
 
