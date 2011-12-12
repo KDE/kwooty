@@ -280,9 +280,17 @@ void DataRestorer::resetDataForDecodingFile(NzbFileData& currentNzbFileData, Ite
 
 void DataRestorer::resetDataForDownloadingFile(NzbFileData& currentNzbFileData, ItemStatusData& currentStatusData) {
 
+    // retrieve parent status :
+    UtilityNamespace::ItemStatus parentItemStatus = currentStatusData.getStatus();
+
     // the current item is being downloaded, set it with default values
     // (in order to set it to Idle during restoring) :
     currentStatusData.init();
+
+    // check if parent status was previously set on pause :
+    if (Utility::isPaused(parentItemStatus)) {
+        currentStatusData.setStatus(PauseStatus);
+    }
 
 
     // set corresponding segments being downloaded to Idle, keep the status of the previous downloaded ones :
@@ -298,6 +306,12 @@ void DataRestorer::resetDataForDownloadingFile(NzbFileData& currentNzbFileData, 
         if (currentSegmentData.getStatus() != DownloadFinishStatus) {
 
             currentSegmentData.setStatus(IdleStatus);
+
+            // if parent status was previously set on pause, set also current segment on pause :
+            if (Utility::isPaused(parentItemStatus)) {
+                currentSegmentData.setStatus(PauseStatus);
+            }
+
             currentSegmentData.setProgress(PROGRESS_INIT);
 
             segmentDataList.replace(i, currentSegmentData);

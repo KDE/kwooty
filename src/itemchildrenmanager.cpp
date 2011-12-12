@@ -162,7 +162,8 @@ void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex index, Uti
                 // get itemStatusData :
                 ItemStatusData childItemStatusData = this->downloadModel->getStatusDataFromIndex(childIndex);
 
-                if (!childItemStatusData.isDownloadFinish()) {
+                if ( !childItemStatusData.isDownloadFinish() &&
+                     !Utility::isPausedOrPausing(childItemStatusData.getStatus()) ) {
 
                     // set par2 item from IdleStatus to WaitForPar2IdleStatus and vice versa :
                     QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(childIndex);
