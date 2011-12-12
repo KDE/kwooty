@@ -146,7 +146,7 @@ void SegmentsDecoderThread::saveDownloadedSegmentSlot(SegmentData segmentData) {
     QString temporaryFolder = Settings::temporaryFolder().path() + '/';
     bool writeSuccess = true;
 
-    // check if data is **yEncoded** :
+    // check if data is --yEncoded-- :
     QString decodedfileName = this->yencDecoder->scanCurrentSegment(segmentData);
 
     // file name found, decode data on the fly :
@@ -180,7 +180,7 @@ void SegmentsDecoderThread::saveDownloadedSegmentSlot(SegmentData segmentData) {
         segmentData.setReadyForNewServer(MasterServer);
     }
 
-    // once processed, delete pointer :
+    // once processed, delete data pointer :
     delete segmentData.getIoDevice();
 
     emit updateDownloadSegmentSignal(segmentData, decodedfileName);
@@ -202,7 +202,7 @@ void SegmentsDecoderThread::decodeSegmentsSlot(NzbFileData nzbFileData) {
 
     else {
 
-        // check if data is **uuEncoded** :
+        // check if data is --uuEncoded-- :
         QString decodedfileName = this->uuencDecoder->scanSegmentFiles(nzbFileData);
 
         // if fileName is not empty, decode segments with uudecoder :
