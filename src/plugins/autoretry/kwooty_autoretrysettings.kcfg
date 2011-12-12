@@ -6,14 +6,13 @@
 	
     <kcfgfile name="kwootyrc"/>
     <group name="autoretryplugin">
-    
-       <entry name="retryNoPar2Files" type="Int">
-            <label>Retry download files with a bad CRC if collection does not contain any Par2 files</label>
-            <default>2</default>
-       </entry>
-	   <entry name="retryRepairFail" type="Int">
+	<entry name="retryRepairFail" type="Int">
 	    <label>Retry download missing or damaged files if Par2 verifying/repairing process has failed</label>
 	    <default>1</default>
 	</entry>
+	<entry name="retryNoPar2Files" type="Int">
+            <label>Retry download corrupted files (bad CRC) if collection does not contain any Par2 files</label>
+            <default>1</default>
+       </entry>
       </group>
 </kcfg>
