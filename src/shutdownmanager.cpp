@@ -171,16 +171,24 @@ void ShutdownManager::requestShutdown() {
     // if KDE session :
     if (this->retrieveSessionType() == ShutdownManager::Kde) {
 
-        // halt the system now :
-        bool success = KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmNo,
+        // check if shutdown has any chance of succeeding :
+        bool canShutDown = KWorkSpace::canShutDown(KWorkSpace::ShutdownConfirmNo,
                                                    KWorkSpace::ShutdownTypeHalt,
                                                    KWorkSpace::ShutdownModeForceNow);
 
 
-        // if shutdown request has failed, inform the user :
-        if (!success) {
+        // if shutdown is possible :
+        if (canShutDown) {
+
+            // halt the system now :
+            KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmNo,
+                                                       KWorkSpace::ShutdownTypeHalt,
+                                                       KWorkSpace::ShutdownModeForceNow);
+        }
+        else {
             this->displayShutdownErrorMessageBox(i18n("Shutdown has failed (session manager can not be contacted)."));
         }
+
     }
     // if GNOME session :
     else if (this->retrieveSessionType() == ShutdownManager::Gnome) {
