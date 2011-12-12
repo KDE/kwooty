@@ -498,8 +498,7 @@ void RepairDecompressThread::notifyNzbProcessEnded(const NzbCollectionData& nzbC
 
             this->emitProcessUpdate(repairDecompressInfoData);
 
-            // TODO : To check
-            kDebug() << "Post processing correct ? :" << nzbCollectionData.isAllPostProcessingCorrect();
+            //kDebug() << "Post processing correct ? :" << nzbCollectionData.isAllPostProcessingCorrect();
 
         }
 

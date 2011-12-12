@@ -1,5 +1,4 @@
 [Desktop Entry]
-Name=Automatic download retry Config Widget
 Type=Service
 X-KDE-ServiceTypes=KCModule
 X-KDE-Library=kwooty_autoretrysettings
@@ -10,3 +9,6 @@ X-KDE-PluginInfo-Email=xavier.kwooty@gmail.com
 X-KDE-PluginInfo-Version=0.1
 X-KDE-PluginInfo-License=GPL
 
+Name=Automatic download retry Configuration
+Name[de]=Automatic download retry Configuration
+name[cs]=Automatic download retry Configuration
