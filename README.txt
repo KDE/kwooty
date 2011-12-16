@@ -1,6 +1,29 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.8.0:
+--------------
+
+- New plugin: Automatic download retry. This plugin allows to download missing or corrupted files again automatically in order to improve chances to retrieve a correct file.
+
+- Improve readability for files whose "download retry" has been requested, the following status will be displayed: "In queue (Retry)"
+
+- Disk I/O reducing: Yenc segments are now on-the-fly decoded once downloaded.
+
+- The "download retry" feature now re-downloads only segments that are either missing or corrupted.
+
+- Feature request: added shortcut towards bandwidth throttle configuration by double clicking on the speed text located on bottom right in the status bar (if bandwidth manager plugin is active).
+
+- When pending downloads are restored at a new start-up, "Pause" status from previous session is now kept.
+
+- Icons next to nzb file name now notify the user to quickly check the current status of the file collection
+
+- Better constistency beetween Connections/Disconnection icons
+
+- Font color and typo of labels in sidebar have been changed to improve readability
+
+
+
 Version 0.7.3:
 --------------
 
