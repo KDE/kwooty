@@ -13,8 +13,8 @@ Type=Service
 Icon=task-recurring
 
 Name=Automatic Retry
-Name[de]=Verzeichnisbeobachtung
-Name[cs]=Sledování složek
+Name[de]=Automatic Retry
+Name[cs]=Automatic Retry
 Comment=Re-download corrupted files automatically
-Comment[de]=Überwacht ein Verzeichnis nach neuen nzb Dateien und lädt diese
-Comment[cs]=Prohledává složku kvůli souborům nzb a nahrává je
+Comment[de]=Re-download corrupted files automatically
+Comment[cs]=Re-download corrupted files automatically
