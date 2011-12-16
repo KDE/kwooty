@@ -54,7 +54,7 @@ public:
     int getRealServerGroupId() const;
     ServerGroup* getNextTargetServer();
     ServerData getServerData() const;
-    bool saveSegment(const SegmentData&);
+    int saveSegment(const SegmentData&);
     bool canDownload(const int&) const;
     bool isServerAvailable() const;
     bool isMasterServer() const;

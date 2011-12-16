@@ -33,6 +33,7 @@ SegmentBuffer::SegmentBuffer(ServerManager* parent, CentralWidget* centralWidget
     this->centralWidget = centralWidget;
 
     this->segmentDecoderIdle = true;
+    this->bufferFullCounter = 0;
 
     this->setupConnections();
 
@@ -63,9 +64,7 @@ void SegmentBuffer::setupConnections() {
 //============================================================================================================//
 
 
-bool SegmentBuffer::segmentSavingQueued(const SegmentData& segmentData) {
-
-    bool bufferFull = false;
+int SegmentBuffer::segmentSavingQueued(const SegmentData& segmentData) {
 
     // if decoder is idle, send segment right now :
     if (this->segmentDecoderIdle) {
@@ -83,11 +82,16 @@ bool SegmentBuffer::segmentSavingQueued(const SegmentData& segmentData) {
     // if list has reached its max size :
     if (this->segmentDataList.size() >= MAX_BUFFER_SIZE) {
 
-        bufferFull = true;
         kDebug() << "segment buffer is full, request next segment with a short delay...";
+        this->bufferFullCounter++;
+    }
+    else {
+        this->bufferFullCounter = 0;
     }
 
-    return bufferFull;
+
+    // next segment download will be delayed according to buffer size :
+    return this->bufferFullCounter;
 
 }
 

@@ -112,7 +112,7 @@ private:
     bool segmentProcessed;
     int missingBytes;
 
-    bool notifyDownloadHasFinished(const UtilityNamespace::Article);
+    int notifyDownloadHasFinished(const UtilityNamespace::Article);
     bool downloadSegmentWithBackupServer();
     bool isSocketUnconnected() const;
     bool isSocketConnected() const;

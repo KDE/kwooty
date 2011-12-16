@@ -115,7 +115,7 @@ ServerGroup* ServerGroup::getNextTargetServer() {
 
 }
 
-bool ServerGroup::saveSegment(const SegmentData& segmentData) {
+int ServerGroup::saveSegment(const SegmentData& segmentData) {
 
     return this->getServerManager()->getSegmentBuffer()->segmentSavingQueued(segmentData);
 }

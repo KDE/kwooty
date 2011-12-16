@@ -631,11 +631,11 @@ void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePres
         // if article has been saved, set status to DownloadFinishStatus and update segment
         if (segmentDownloadFinished) {
 
-            bool downloadNextSegmentWithDelay = this->notifyDownloadHasFinished(articlePresence);
+            int downloadNextSegmentDelaySec = this->notifyDownloadHasFinished(articlePresence);
 
             // request new segment with short delay (variable) :
-            if (downloadNextSegmentWithDelay) {
-                this->retryDownloadDelayed(this->parent->getClientId() * 500);
+            if (downloadNextSegmentDelaySec > 0) {
+                this->retryDownloadDelayed(downloadNextSegmentDelaySec);
             }
             // else request new pending segment right now :
             else {
@@ -728,23 +728,23 @@ bool NntpClient::downloadSegmentWithBackupServer() {
 
 
 
-bool NntpClient::notifyDownloadHasFinished(const UtilityNamespace::Article articlePresence) {
+int NntpClient::notifyDownloadHasFinished(const UtilityNamespace::Article articlePresence) {
 
-    bool downloadNextSegmentWithDelay = false;
+    int downloadNextSegmentDelaySec = 0;
 
     this->segmentProcessed = true;
     this->currentSegmentData.setDownloadFinished(articlePresence);
 
     // segment is present and download is complete :
     if (articlePresence == Present) {
-        downloadNextSegmentWithDelay = this->parent->getServerGroup()->saveSegment(this->currentSegmentData);
+        downloadNextSegmentDelaySec = this->parent->getServerGroup()->saveSegment(this->currentSegmentData);
     }
     // else update current segment status :
     else {
         emit updateDownloadSegmentSignal(this->currentSegmentData);
     }
 
-    return downloadNextSegmentWithDelay;
+    return downloadNextSegmentDelaySec;
 }
 
 
