@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-04-11 21:47+0200\n"
+"POT-Creation-Date: 2011-12-16 15:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: src/widgets/serverpreferenceswidget.cpp:135
 #: src/widgets/servertabwidget.cpp:240 src/widgets/servertabwidget.cpp:259
-#: src/sidebar.cpp:230 src/preferences/kconfiggrouphandler.cpp:308
+#: src/sidebar.cpp:196 src/preferences/kconfiggrouphandler.cpp:308
 msgid "Master"
 msgstr ""
 
@@ -89,35 +89,35 @@ msgstr ""
 msgid "Backup Server hints"
 msgstr ""
 
-#: src/widgets/serverstatuswidget.cpp:49
-msgid "<b>Availability:</b>"
-msgstr ""
-
 #: src/widgets/serverstatuswidget.cpp:50
-msgid "<b>Speed:</b>"
+msgid "Availability:"
 msgstr ""
 
 #: src/widgets/serverstatuswidget.cpp:51
-msgid "<b>Downloaded:</b>"
+msgid "Speed:"
 msgstr ""
 
-#: src/widgets/serverstatuswidget.cpp:56
-msgid "<b>File:</b>"
+#: src/widgets/serverstatuswidget.cpp:52
+msgid "Downloaded:"
 msgstr ""
 
-#: src/widgets/serverstatuswidget.cpp:64
-msgid "<b>Server:</b>"
-msgstr ""
-
-#: src/widgets/serverstatuswidget.cpp:65
-msgid "<b>Mode:</b>"
+#: src/widgets/serverstatuswidget.cpp:57
+msgid "File:"
 msgstr ""
 
 #: src/widgets/serverstatuswidget.cpp:66
-msgid "<b>Encryption:</b>"
+msgid "Server:"
 msgstr ""
 
-#: src/widgets/serverstatuswidget.cpp:140
+#: src/widgets/serverstatuswidget.cpp:67
+msgid "Mode:"
+msgstr ""
+
+#: src/widgets/serverstatuswidget.cpp:68
+msgid "Encryption:"
+msgstr ""
+
+#: src/widgets/serverstatuswidget.cpp:156
 msgid "Encryption Information"
 msgstr ""
 
@@ -142,26 +142,26 @@ msgstr ""
 msgid "Remove <b>%1</b> backup server ?"
 msgstr ""
 
-#: src/mystatusbar.cpp:248
+#: src/mystatusbar.cpp:243
 #, kde-format
 msgid "Files: <numid>%1</numid> (%2)"
 msgstr ""
 
-#: src/mystatusbar.cpp:257
+#: src/mystatusbar.cpp:252
 #, kde-format
 msgid "Speed: %1"
 msgstr ""
 
-#: src/mystatusbar.cpp:280 src/statsinfobuilder.cpp:415
+#: src/mystatusbar.cpp:275 src/statsinfobuilder.cpp:415
 msgid "Insufficient disk space"
 msgstr ""
 
-#: src/mystatusbar.cpp:333
+#: src/mystatusbar.cpp:324
 msgid "Total"
 msgstr ""
 
-#: src/mystatusbar.cpp:340 src/sidebar.cpp:242 src/itemdelegate.cpp:137
-#: src/itemdelegate.cpp:188
+#: src/mystatusbar.cpp:331 src/sidebar.cpp:208 src/itemdelegate.cpp:142
+#: src/itemdelegate.cpp:193
 msgid "n/a"
 msgstr ""
 
@@ -178,38 +178,38 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
-#: src/systraylegacy.cpp:315 src/utilityserverstatus.cpp:44
-#: src/systray.cpp:290
+#: src/systraylegacy.cpp:311 src/utilityserverstatus.cpp:91
+#: src/systray.cpp:286
 msgid "Disconnected"
 msgstr ""
 
-#: src/systraylegacy.cpp:319 src/systray.cpp:294
+#: src/systraylegacy.cpp:314 src/systray.cpp:289
 msgid "Status: "
 msgstr ""
 
-#: src/systraylegacy.cpp:328 src/systray.cpp:303
+#: src/systraylegacy.cpp:323 src/systray.cpp:298
 msgid "Download speed: "
 msgstr ""
 
-#: src/systraylegacy.cpp:332 src/systray.cpp:307
+#: src/systraylegacy.cpp:327 src/systray.cpp:302
 msgid "File: "
 msgstr ""
 
-#: src/systraylegacy.cpp:336 src/systray.cpp:311
+#: src/systraylegacy.cpp:331 src/systray.cpp:306
 #, kde-format
 msgctxt "download progress percent"
 msgid "<numid>%1</numid> %"
 msgstr ""
 
-#: src/systraylegacy.cpp:337 src/systray.cpp:312
+#: src/systraylegacy.cpp:332 src/systray.cpp:307
 msgid "Progress: "
 msgstr ""
 
-#: src/datarestorer.cpp:481
+#: src/datarestorer.cpp:437
 msgid "Reload pending downloads from previous session ?"
 msgstr ""
 
-#: src/datarestorer.cpp:500
+#: src/datarestorer.cpp:456
 msgid "Save pending downloads from current session ?"
 msgstr ""
 
@@ -265,7 +265,7 @@ msgstr ""
 msgid "Document to open"
 msgstr ""
 
-#: src/sidebar.cpp:250
+#: src/sidebar.cpp:216
 msgid "None"
 msgstr ""
 
@@ -273,24 +273,24 @@ msgstr ""
 msgid "*.nzb|nzb files"
 msgstr ""
 
-#: src/utility.cpp:44
+#: src/utility.cpp:41
 msgid " GiB"
 msgstr ""
 
-#: src/utility.cpp:48
+#: src/utility.cpp:45
 msgid " MiB"
 msgstr ""
 
-#: src/utility.cpp:53
+#: src/utility.cpp:50
 msgid " KiB"
 msgstr ""
 
-#: src/utility.cpp:67
+#: src/utility.cpp:64
 #, kde-format
 msgid "%1 MiB/s"
 msgstr ""
 
-#: src/utility.cpp:70
+#: src/utility.cpp:67
 #, kde-format
 msgid "<numid>%1</numid> KiB/s"
 msgstr ""
@@ -400,60 +400,66 @@ msgid "7-zip (7z or 7za) program not found !"
 msgstr ""
 
 #: src/itemdelegate.cpp:104
+#, kde-format
+msgctxt "i.e: In queue (retry)"
+msgid "%1 (retry)"
+msgstr ""
+
+#: src/itemdelegate.cpp:109
 msgid "No Data"
 msgstr ""
 
-#: src/itemdelegate.cpp:107
+#: src/itemdelegate.cpp:112
 #, kde-format
 msgctxt "i.e: Downloading... (incomplete)"
 msgid "%1 (incomplete)"
 msgstr ""
 
-#: src/itemdelegate.cpp:112
+#: src/itemdelegate.cpp:117
 msgid "File not found"
 msgstr ""
 
-#: src/itemdelegate.cpp:117
+#: src/itemdelegate.cpp:122
 #, kde-format
 msgctxt "i.e: Decoded (bad CRC)"
 msgid "%1 (bad CRC)"
 msgstr ""
 
-#: src/itemdelegate.cpp:133 src/itemdelegate.cpp:184
+#: src/itemdelegate.cpp:138 src/itemdelegate.cpp:189
 #, kde-format
 msgid "<numid>%1</numid> %"
 msgstr ""
 
-#: src/mytreeview.cpp:345
+#: src/mytreeview.cpp:341
 msgid "File Name"
 msgstr ""
 
-#: src/mytreeview.cpp:346
+#: src/mytreeview.cpp:342
 msgid "Status"
 msgstr ""
 
-#: src/mytreeview.cpp:347
+#: src/mytreeview.cpp:343
 msgid "Progress"
 msgstr ""
 
-#: src/mytreeview.cpp:348
+#: src/mytreeview.cpp:344
 msgid "Size"
 msgstr ""
 
-#: src/mytreeview.cpp:479
+#: src/mytreeview.cpp:475
 msgid "Remove selected files from queue ?"
 msgstr ""
 
-#: src/mytreeview.cpp:557
+#: src/mytreeview.cpp:563
 msgid "Remove all files from queue ?"
 msgstr ""
 
-#: src/nzbfilehandler.cpp:199
+#: src/nzbfilehandler.cpp:205
 #, kde-format
 msgid "The file <b>%1</b> can not be processed"
 msgstr ""
 
-#: src/nzbfilehandler.cpp:201
+#: src/nzbfilehandler.cpp:207
 msgid "File process error"
 msgstr ""
 
@@ -468,37 +474,37 @@ msgctxt ""
 msgid "at %1"
 msgstr ""
 
-#: src/shutdownmanager.cpp:182
+#: src/shutdownmanager.cpp:189
 msgid "Shutdown has failed (session manager can not be contacted)."
 msgstr ""
 
-#: src/shutdownmanager.cpp:339 src/mainwindow.cpp:246 src/mainwindow.cpp:346
+#: src/shutdownmanager.cpp:347 src/mainwindow.cpp:246 src/mainwindow.cpp:346
 msgid "Shutdown"
 msgstr ""
 
-#: src/shutdownmanager.cpp:344
+#: src/shutdownmanager.cpp:352
 msgid "Standby"
 msgstr ""
 
-#: src/shutdownmanager.cpp:349
+#: src/shutdownmanager.cpp:357
 msgid "Suspend to RAM"
 msgstr ""
 
-#: src/shutdownmanager.cpp:354
+#: src/shutdownmanager.cpp:362
 msgid "Suspend to disk"
 msgstr ""
 
-#: src/shutdownmanager.cpp:378
+#: src/shutdownmanager.cpp:386
 msgid "Warning"
 msgstr ""
 
-#: src/shutdownmanager.cpp:393
+#: src/shutdownmanager.cpp:401
 #, kde-format
 msgctxt "%1 = shutdown/suspend to RAM/suspend to disk"
 msgid "Kwooty is about to %1 system. Continue?"
 msgstr ""
 
-#: src/shutdownmanager.cpp:590
+#: src/shutdownmanager.cpp:598
 msgid "System shutdown type unknown, shutdown is not possible!"
 msgstr ""
 
@@ -594,83 +600,83 @@ msgstr ""
 msgid "Decoding finished"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:49
+#: src/utilityserverstatus.cpp:96
 msgid "Disconnected (Host not found)"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:53
+#: src/utilityserverstatus.cpp:100
 msgid "Disconnected (Connection refused)"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:57
+#: src/utilityserverstatus.cpp:104
 msgid "Disconnected (Closed by remote host)"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:61
+#: src/utilityserverstatus.cpp:108
 msgid "Disconnected (SSL handshake failed)"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:66
+#: src/utilityserverstatus.cpp:113
 msgid "Disconnected (Authentication required)"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:71
+#: src/utilityserverstatus.cpp:118
 msgid "Disconnected (Authentication Denied)"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:78
+#: src/utilityserverstatus.cpp:126
 #, kde-format
 msgid "Connected: <numid>%1</numid>"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:119
+#: src/utilityserverstatus.cpp:167
 #, kde-format
 msgid "Connected to %1<br>"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:124
+#: src/utilityserverstatus.cpp:172
 msgid "Connection is SSL encrypted"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:128
+#: src/utilityserverstatus.cpp:176
 #, kde-format
 msgctxt "type of ssl encryption method"
 msgid ": %1"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:137
+#: src/utilityserverstatus.cpp:185
 msgid "Connection is not encrypted"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:153
+#: src/utilityserverstatus.cpp:201
 #, kde-format
 msgid "Certificate <b>verified</b> by %1"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:156
+#: src/utilityserverstatus.cpp:204
 msgid "Certificate <b>can not be verified</b> "
 msgstr ""
 
-#: src/utilityserverstatus.cpp:164
+#: src/utilityserverstatus.cpp:212
 #, kde-format
 msgid "(%1 error during SSL handshake): %2"
 msgid_plural "(%1 errors during SSL handshake): %2"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/utilityserverstatus.cpp:187
+#: src/utilityserverstatus.cpp:235
 msgid "Passive"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:191
+#: src/utilityserverstatus.cpp:239
 msgid "Active"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:195
+#: src/utilityserverstatus.cpp:243
 msgid "Failover"
 msgstr ""
 
-#: src/utilityserverstatus.cpp:199
+#: src/utilityserverstatus.cpp:247
 msgid "Server Disabled"
 msgstr ""
 
@@ -733,6 +739,10 @@ msgstr ""
 #, kde-format
 msgctxt "day of week, begin time - end time"
 msgid "%1, %2 - %3"
+msgstr ""
+
+#: src/plugins/scheduler/scheduler.cpp:200
+msgid "Bandwidth manager"
 msgstr ""
 
 #: src/mainwindow.cpp:147
@@ -888,28 +898,28 @@ msgstr ""
 msgid "Docking in System Tray"
 msgstr ""
 
-#: src/centralwidget.cpp:598
+#: src/centralwidget.cpp:640
 msgid "download folder"
 msgstr ""
 
 #. i18n: file: src/preferences/kwootysettings.kcfg:25
 #. i18n: ectx: label, entry (temporaryFolder), group (general)
-#: src/centralwidget.cpp:601 rc.cpp:134
+#: src/centralwidget.cpp:643 rc.cpp:134
 msgid "temporary folder"
 msgstr ""
 
-#: src/centralwidget.cpp:608
+#: src/centralwidget.cpp:650
 #, kde-format
 msgid ""
 "Write error in <b>%1</b>: disk drive may be full.<br>Downloads have been "
 "suspended."
 msgstr ""
 
-#: src/centralwidget.cpp:610
+#: src/centralwidget.cpp:652
 msgid "Write error"
 msgstr ""
 
-#: src/centralwidget.cpp:626
+#: src/centralwidget.cpp:668
 #, kde-format
 msgid ""
 "The archive <b>%1</b> is password protected. <br>Please enter the password "
@@ -1006,7 +1016,7 @@ msgstr ""
 #. i18n: ectx: property (toolTip), widget (KUrlRequester, kcfg_watchFolder)
 #: build/src/ui_preferencesgeneral.h:257
 #: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:94 rc.cpp:56
-#: rc.cpp:476
+#: rc.cpp:494
 msgid "Set download folder"
 msgstr ""
 
@@ -1389,9 +1399,31 @@ msgstr ""
 msgid "Limit to"
 msgstr ""
 
+#. i18n: file: src/plugins/autoretry/preferencesautoretry.ui:23
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox)
+#: build/src/plugins/autoretry/ui_preferencesautoretry.h:124 rc.cpp:467
+msgid "If Par2 verifying/repairing fails, re-download damaged or missing files"
+msgstr ""
+
+#. i18n: file: src/plugins/autoretry/preferencesautoretry.ui:31
+#. i18n: ectx: property (text), widget (QLabel, retryRepairFailLabel)
+#. i18n: file: src/plugins/autoretry/preferencesautoretry.ui:74
+#. i18n: ectx: property (text), widget (QLabel, retryNoPar2FilesLabel)
+#: build/src/plugins/autoretry/ui_preferencesautoretry.h:125
+#: build/src/plugins/autoretry/ui_preferencesautoretry.h:127 rc.cpp:470
+#: rc.cpp:476
+msgid "Limit number of download retries to: "
+msgstr ""
+
+#. i18n: file: src/plugins/autoretry/preferencesautoretry.ui:66
+#. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
+#: build/src/plugins/autoretry/ui_preferencesautoretry.h:126 rc.cpp:473
+msgid "If no Par2 files, re-download each file whose CRC mismatch"
+msgstr ""
+
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:22
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
-#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:92 rc.cpp:473
+#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:92 rc.cpp:491
 msgid "Watch folder: "
 msgstr ""
 
@@ -1402,8 +1434,8 @@ msgstr ""
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:53
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_copyNzbFromWatch)
 #: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:97
-#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:99 rc.cpp:470
-#: rc.cpp:479 rc.cpp:482
+#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:99 rc.cpp:488
+#: rc.cpp:497 rc.cpp:500
 msgid "Copy nzb file in destination folder"
 msgstr ""
 
@@ -1414,8 +1446,8 @@ msgstr ""
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:63
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_suppressNzbFromWatch)
 #: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:101
-#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:103 rc.cpp:467
-#: rc.cpp:485 rc.cpp:488
+#: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:103 rc.cpp:485
+#: rc.cpp:503 rc.cpp:506
 msgid "Suppress nzb file from watch folder when enqueued"
 msgstr ""
 
@@ -1745,14 +1777,30 @@ msgstr ""
 msgid "Enable scheduler"
 msgstr ""
 
+#. i18n: file: src/plugins/autoretry/kwooty_autoretrysettings.kcfg:10
+#. i18n: ectx: label, entry (retryRepairFail), group (autoretryplugin)
+#: rc.cpp:461
+msgid ""
+"Retry download missing or damaged files if Par2 verifying/repairing process "
+"has failed"
+msgstr ""
+
+#. i18n: file: src/plugins/autoretry/kwooty_autoretrysettings.kcfg:14
+#. i18n: ectx: label, entry (retryNoPar2Files), group (autoretryplugin)
+#: rc.cpp:464
+msgid ""
+"Retry download corrupted files (bad CRC) if collection does not contain any "
+"Par2 files"
+msgstr ""
+
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:11
 #. i18n: ectx: label, entry (groupBoxWatch), group (watchfolderplugin)
-#: rc.cpp:461
+#: rc.cpp:479
 msgid "Enable folder monitoring"
 msgstr ""
 
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:15
 #. i18n: ectx: label, entry (watchFolder), group (watchfolderplugin)
-#: rc.cpp:464
+#: rc.cpp:482
 msgid "watch folder"
 msgstr ""
