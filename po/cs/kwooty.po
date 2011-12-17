@@ -3,13 +3,14 @@
 #
 # Pavel Fric <fripohled@blogspot.com>, 2010.
 # Pavel Fric <fripohled.blogspot.com>, 2010, 2011.
+# Pavel Fric <pavelfric@seznam.cz>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-12-16 15:50+0100\n"
-"PO-Revision-Date: 2011-04-12 06:09+0200\n"
-"Last-Translator: Pavel Fric\n"
+"PO-Revision-Date: 2011-12-17 07:44+0100\n"
+"Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-de@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -97,38 +98,32 @@ msgid "Backup Server hints"
 msgstr "Nápověda k nastavení zálohovacího serveru"
 
 #: src/widgets/serverstatuswidget.cpp:50
-#, fuzzy
 msgid "Availability:"
-msgstr "<b>Dostupnost:</b>"
+msgstr "Dostupnost:"
 
 #: src/widgets/serverstatuswidget.cpp:51
-#, fuzzy
 msgid "Speed:"
-msgstr "Rychlost: %1"
+msgstr "Rychlost:"
 
 #: src/widgets/serverstatuswidget.cpp:52
-#, fuzzy
 msgid "Downloaded:"
-msgstr "Stáhnout"
+msgstr "Staženo:"
 
 #: src/widgets/serverstatuswidget.cpp:57
-#, fuzzy
 msgid "File:"
-msgstr "Soubor: "
+msgstr "Soubor:"
 
 #: src/widgets/serverstatuswidget.cpp:66
-#, fuzzy
 msgid "Server:"
-msgstr "Serverový režim: "
+msgstr "Server:"
 
 #: src/widgets/serverstatuswidget.cpp:67
 msgid "Mode:"
-msgstr ""
+msgstr "Režim:"
 
 #: src/widgets/serverstatuswidget.cpp:68
-#, fuzzy
 msgid "Encryption:"
-msgstr "<b>Šifrování:</b>"
+msgstr "Šifrování:"
 
 #: src/widgets/serverstatuswidget.cpp:156
 msgid "Encryption Information"
@@ -423,7 +418,7 @@ msgstr "Program 7-zip (7z nebo 7za) nenalezen!"
 #, kde-format
 msgctxt "i.e: In queue (retry)"
 msgid "%1 (retry)"
-msgstr ""
+msgstr "%1 (nový pokus)"
 
 #: src/itemdelegate.cpp:109
 msgid "No Data"
@@ -766,9 +761,8 @@ msgid "%1, %2 - %3"
 msgstr "%1, %2 - %3"
 
 #: src/plugins/scheduler/scheduler.cpp:200
-#, fuzzy
 msgid "Bandwidth manager"
-msgstr "Ovládání šířky pásma"
+msgstr "Správce šířky pásma"
 
 #: src/mainwindow.cpp:147
 msgid "Clear"
@@ -1444,6 +1438,8 @@ msgstr "Omezit na"
 #: build/src/plugins/autoretry/ui_preferencesautoretry.h:124 rc.cpp:467
 msgid "If Par2 verifying/repairing fails, re-download damaged or missing files"
 msgstr ""
+"Pokud ověření/oprava Par2 selže, opětovné stahování poškozeno nebo chybí "
+"soubory"
 
 #. i18n: file: src/plugins/autoretry/preferencesautoretry.ui:31
 #. i18n: ectx: property (text), widget (QLabel, retryRepairFailLabel)
@@ -1453,13 +1449,15 @@ msgstr ""
 #: build/src/plugins/autoretry/ui_preferencesautoretry.h:127 rc.cpp:470
 #: rc.cpp:476
 msgid "Limit number of download retries to: "
-msgstr ""
+msgstr "Omezit počet nových pokusů o stažení na:"
 
 #. i18n: file: src/plugins/autoretry/preferencesautoretry.ui:66
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: build/src/plugins/autoretry/ui_preferencesautoretry.h:126 rc.cpp:473
 msgid "If no Par2 files, re-download each file whose CRC mismatch"
 msgstr ""
+"Pokud nejsou žádné soubory Par2, stáhnout znovu každý soubor, jehož CRC se "
+"neshoduje"
 
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:22
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
@@ -1827,6 +1825,8 @@ msgid ""
 "Retry download missing or damaged files if Par2 verifying/repairing process "
 "has failed"
 msgstr ""
+"Zkusit znovu stažení chybějících nebo poškozených souborů, pokud proces "
+"ověření/opravy Par2 selhal"
 
 #. i18n: file: src/plugins/autoretry/kwooty_autoretrysettings.kcfg:14
 #. i18n: ectx: label, entry (retryNoPar2Files), group (autoretryplugin)
@@ -1835,6 +1835,8 @@ msgid ""
 "Retry download corrupted files (bad CRC) if collection does not contain any "
 "Par2 files"
 msgstr ""
+"Zkusit znovu stažení poškozených souborů (špatné CRC), pokud sbírka "
+"neobsahuje žádné soubory Par2"
 
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:11
 #. i18n: ectx: label, entry (groupBoxWatch), group (watchfolderplugin)

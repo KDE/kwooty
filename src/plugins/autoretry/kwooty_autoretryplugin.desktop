@@ -14,7 +14,7 @@ Icon=task-recurring
 
 Name=Automatic Retry
 Name[de]=Automatic Retry
-Name[cs]=Automatic Retry
+Name[cs]=Nový pokus automaticky
 Comment=Re-download corrupted files automatically
 Comment[de]=Re-download corrupted files automatically
-Comment[cs]=Re-download corrupted files automatically
+Comment[cs]=Automaticky stáhnout poškozené soubory znovu
