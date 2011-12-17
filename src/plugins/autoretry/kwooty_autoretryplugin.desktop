@@ -13,8 +13,8 @@ Type=Service
 Icon=task-recurring
 
 Name=Automatic Retry
-Name[de]=Automatic Retry
+Name[de]=Automatische Downloadwiederholung
 Name[cs]=Automatic Retry
 Comment=Re-download corrupted files automatically
-Comment[de]=Re-download corrupted files automatically
+Comment[de]=Wiederholt den Download von korrupten Dateien automatisch
 Comment[cs]=Re-download corrupted files automatically

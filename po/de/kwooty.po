@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-12-16 15:50+0100\n"
-"PO-Revision-Date: 2011-04-18 15:14+0200\n"
+"PO-Revision-Date: 2011-12-17 14:28+0900\n"
 "Last-Translator: \n"
-"Language-Team: German <kde-i18n-de@kde.org>\n"
+"Language-Team: German <kde-i18n-doc@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,38 +98,32 @@ msgid "Backup Server hints"
 msgstr "Hilfe zu Backupservereinstellungen"
 
 #: src/widgets/serverstatuswidget.cpp:50
-#, fuzzy
 msgid "Availability:"
-msgstr "<b>Vebindung:</b>"
+msgstr "Verfügbarkeit:"
 
 #: src/widgets/serverstatuswidget.cpp:51
-#, fuzzy
 msgid "Speed:"
-msgstr "Geschwindigkeit: %1"
+msgstr "Geschwindigkeit:"
 
 #: src/widgets/serverstatuswidget.cpp:52
-#, fuzzy
 msgid "Downloaded:"
-msgstr "Download"
+msgstr "Heruntergeladen:"
 
 #: src/widgets/serverstatuswidget.cpp:57
-#, fuzzy
 msgid "File:"
-msgstr "Datei: "
+msgstr "Datei:"
 
 #: src/widgets/serverstatuswidget.cpp:66
-#, fuzzy
 msgid "Server:"
-msgstr "Server Modus: "
+msgstr "Server:"
 
 #: src/widgets/serverstatuswidget.cpp:67
 msgid "Mode:"
-msgstr ""
+msgstr "Modus:"
 
 #: src/widgets/serverstatuswidget.cpp:68
-#, fuzzy
 msgid "Encryption:"
-msgstr "<b>Verschlüsselung:</b>"
+msgstr "Verschlüsselung:"
 
 #: src/widgets/serverstatuswidget.cpp:156
 msgid "Encryption Information"
@@ -398,7 +392,7 @@ msgstr "Entpacke..."
 
 #: src/itemdelegate.cpp:61
 msgid "Extract failed (bad CRC)"
-msgstr " Entpacken fehlgeschlagen (bad CRC)"
+msgstr "Entpacken fehlgeschlagen (CRC-Fehler)"
 
 #: src/itemdelegate.cpp:62 src/notificationmanager.cpp:51
 msgid "Extract finished"
@@ -424,7 +418,7 @@ msgstr "7-zip (7z oder 7za) Programm nicht gefunden!"
 #, kde-format
 msgctxt "i.e: In queue (retry)"
 msgid "%1 (retry)"
-msgstr ""
+msgstr "%1. (Versuch)"
 
 #: src/itemdelegate.cpp:109
 msgid "No Data"
@@ -547,7 +541,7 @@ msgstr "Sobald alle Aufgaben erledigt sind: %1 "
 #, kde-format
 msgctxt "%1%2 = shutdown/suspend to RAM/suspend"
 msgid "Do not %1%2 if jobs are finished but paused files remain"
-msgstr "Solange Downloads pausiert sind, nicht in den Zustand %1%2 wechseln"
+msgstr "Solange Downloads pausiert sind, System nicht in den %2 versetzten"
 
 #: src/preferences/preferencesgeneral.cpp:38
 msgid "With confirmation"
@@ -767,9 +761,8 @@ msgid "%1, %2 - %3"
 msgstr "%1, %2 - %3"
 
 #: src/plugins/scheduler/scheduler.cpp:200
-#, fuzzy
 msgid "Bandwidth manager"
-msgstr "Bandbreitenkontrolle"
+msgstr "Bandbreitenverwaltung"
 
 #: src/mainwindow.cpp:147
 msgid "Clear"
@@ -841,7 +834,7 @@ msgstr "Öffnet aktuelles Downloadverzeichnis"
 
 #: src/mainwindow.cpp:248
 msgid "Schedule system shutdown"
-msgstr "Herunterfahren planen"
+msgstr "Automatisches Herunterfahren aktivieren"
 
 #: src/mainwindow.cpp:259
 msgid "Start all"
@@ -1453,6 +1446,8 @@ msgstr "Begrenzen auf"
 #: build/src/plugins/autoretry/ui_preferencesautoretry.h:124 rc.cpp:467
 msgid "If Par2 verifying/repairing fails, re-download damaged or missing files"
 msgstr ""
+"Falls reparieren/verifizieren fehlschlägt, Download von defekten oder "
+"fehlenden Dateien wiederholen"
 
 #. i18n: file: src/plugins/autoretry/preferencesautoretry.ui:31
 #. i18n: ectx: property (text), widget (QLabel, retryRepairFailLabel)
@@ -1462,13 +1457,15 @@ msgstr ""
 #: build/src/plugins/autoretry/ui_preferencesautoretry.h:127 rc.cpp:470
 #: rc.cpp:476
 msgid "Limit number of download retries to: "
-msgstr ""
+msgstr "Anzahl der Downloadversuche beschränken auf: "
 
 #. i18n: file: src/plugins/autoretry/preferencesautoretry.ui:66
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: build/src/plugins/autoretry/ui_preferencesautoretry.h:126 rc.cpp:473
 msgid "If no Par2 files, re-download each file whose CRC mismatch"
 msgstr ""
+"Falls keine Par2 Dateien vorhanden sind, wiederholen des Downloads für "
+"Dateien mit einem CRC-Fehler"
 
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:22
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
@@ -1795,7 +1792,7 @@ msgstr "Freien Speicherplatz in Statusleiste anzeigen"
 #. i18n: ectx: label, entry (shutdownMethods), group (shutdown)
 #: rc.cpp:218
 msgid "Select system shutdown method"
-msgstr "Wähle Methode zu Herunterfahren"
+msgstr "Wähle Methode zum Herunterfahren"
 
 #. i18n: file: src/preferences/kwootysettings.kcfg:154
 #. i18n: ectx: label, entry (jobsRadioButton), group (shutdown)
@@ -1819,7 +1816,7 @@ msgstr "Plane das Herunterfahren in HH:mm von jetzt an"
 #. i18n: ectx: label, entry (pausedShutdown), group (shutdown)
 #: rc.cpp:230
 msgid "Do not shutdown system if jobs are finished but paused files remain"
-msgstr "Nicht herunterfahren solange Downloads pausiert sind"
+msgstr "System nicht herunterfahren solange pausierte Dateien vorhanden sind "
 
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:16
 #. i18n: ectx: label, entry (enableScheduler), group (schedulerplugin)
@@ -1834,6 +1831,9 @@ msgid ""
 "Retry download missing or damaged files if Par2 verifying/repairing process "
 "has failed"
 msgstr ""
+"Wiederholt den Download von defekten Dateien, sobald der Par2 "
+"Reparier-/Verifiziervorgang "
+"fehlschlägt"
 
 #. i18n: file: src/plugins/autoretry/kwooty_autoretrysettings.kcfg:14
 #. i18n: ectx: label, entry (retryNoPar2Files), group (autoretryplugin)
@@ -1842,6 +1842,8 @@ msgid ""
 "Retry download corrupted files (bad CRC) if collection does not contain any "
 "Par2 files"
 msgstr ""
+"Wiederholt den Download von korrupten Dateien (CRC-Fehler), wenn keine Par2 "
+"Par2 Dateien vorhanden sind"
 
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:11
 #. i18n: ectx: label, entry (groupBoxWatch), group (watchfolderplugin)
