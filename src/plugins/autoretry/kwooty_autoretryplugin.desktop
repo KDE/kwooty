@@ -16,5 +16,5 @@ Name=Automatic Retry
 Name[de]=Automatische Downloadwiederholung
 Name[cs]=Automatic Retry
 Comment=Re-download corrupted files automatically
-Comment[de]=Wiederholt den Download von korrupten Dateien automatisch
+Comment[de]=Automatisches Wiederholen von Downloads bei defekten Dateien 
 Comment[cs]=Re-download corrupted files automatically

@@ -16,5 +16,5 @@ Name=Watch Folder
 Name[de]=Verzeichnisbeobachtung
 Name[cs]=Sledování složek
 Comment=Watch folder for nzb files and load them
-Comment[de]=Überwacht ein Verzeichnis nach neuen nzb Dateien und lädt diese
+Comment[de]=Verzeichnis auf neue nzb Dateien überwachen
 Comment[cs]=Prohledává složku kvůli souborům nzb a nahrává je

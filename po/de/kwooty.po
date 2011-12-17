@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-12-16 15:50+0100\n"
-"PO-Revision-Date: 2011-12-17 15:25+0900\n"
+"PO-Revision-Date: 2011-12-17 18:29+0900\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -535,7 +535,7 @@ msgstr "%1 in:"
 #, kde-format
 msgctxt "%1 = Shutdown/Suspend to RAM/Suspend to disk"
 msgid "%1 when all jobs are finished"
-msgstr "Sobald alle Aufgaben erledigt sind: %1 "
+msgstr "%1 Sobald alle Aufgaben fertiggestellt sind"
 
 #: src/preferences/preferencesshutdown.cpp:80
 #, kde-format
@@ -563,7 +563,7 @@ msgstr "KWallet läuft nicht"
 
 #: src/preferences/preferencesplugins.cpp:41
 msgid "General Plugins"
-msgstr "Allgemeine Plugins"
+msgstr "Allgemeine Module"
 
 #: src/preferences/preferencesprograms.cpp:36
 msgid "Low"
@@ -900,11 +900,11 @@ msgstr "Einstellungen für das Herunterfahren"
 
 #: src/mainwindow.cpp:350
 msgid "Plugins"
-msgstr "Plugins"
+msgstr "Module"
 
 #: src/mainwindow.cpp:350
 msgid "Plugins Setup"
-msgstr "Plugin Einstellungen"
+msgstr "Modul Einstellungen"
 
 #: src/mainwindow.cpp:426
 msgid ""
@@ -1422,7 +1422,7 @@ msgstr "Bandbreitenkontrolle"
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:148 rc.cpp:422
 #: rc.cpp:446
 msgid "Always limit download speed"
-msgstr "Download geschwindigkeit immer begrenzen"
+msgstr "Downloadgeschwindigkeit immer begrenzen"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:73
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_enableScheduler)
@@ -1465,8 +1465,8 @@ msgstr "Anzahl der Downloadversuche beschränken auf: "
 #: build/src/plugins/autoretry/ui_preferencesautoretry.h:126 rc.cpp:473
 msgid "If no Par2 files, re-download each file whose CRC mismatch"
 msgstr ""
-"Falls keine Par2 Dateien vorhanden sind, wiederholen des Downloads für "
-"Dateien mit einem CRC-Fehler"
+"Dateien mit einem CRC-Fehler wiederholt herunterladen, falls keine Par2 "
+"Dateien vorhanden sind."
 
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:22
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
@@ -1570,7 +1570,7 @@ msgstr "Auf und zuklappen von Downloads animieren"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateTreeView)
 #: build/src/ui_preferencesdisplay.h:133 rc.cpp:320
 msgid "Animate row expandsion/collasping"
-msgstr "Animiere das auf und zuklappen von Downloads"
+msgstr "Auf und zuklappen von Downloads animieren"
 
 #. i18n: file: src/preferences/kwootysettings.kcfg:131
 #. i18n: ectx: label, entry (alternateColors), group (display)
@@ -1584,7 +1584,7 @@ msgstr "Alternative Hintergrundfarbe für jede Zeile"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_alternateColors)
 #: build/src/ui_preferencesdisplay.h:137 rc.cpp:326
 msgid "Alternate row colors"
-msgstr "Alternative Zeilenfarben"
+msgstr "Alternative Zeilenfarben verwenden"
 
 #. i18n: file: src/preferences/serversettings.ui:33
 #. i18n: ectx: property (title), widget (QGroupBox, groupBoxConfig)
@@ -1832,9 +1832,8 @@ msgid ""
 "Retry download missing or damaged files if Par2 verifying/repairing process "
 "has failed"
 msgstr ""
-"Wiederholt den Download von defekten Dateien, sobald der Par2 "
-"Reparier-/Verifiziervorgang "
-"fehlschlägt"
+"Defekten Dateien wiederholt herunterladen, sobald der Par2 "
+"Reparier-/Verifiziervorgang fehlschlägt"
 
 #. i18n: file: src/plugins/autoretry/kwooty_autoretrysettings.kcfg:14
 #. i18n: ectx: label, entry (retryNoPar2Files), group (autoretryplugin)
