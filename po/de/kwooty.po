@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-12-16 15:50+0100\n"
-"PO-Revision-Date: 2011-12-17 14:28+0900\n"
+"PO-Revision-Date: 2011-12-17 15:25+0900\n"
 "Last-Translator: \n"
-"Language-Team: German <kde-i18n-doc@kde.org>\n"
+"Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -336,7 +336,7 @@ msgstr "Scanne..."
 
 #: src/itemdelegate.cpp:46
 msgid "Decoding..."
-msgstr "Dekodiere"
+msgstr "Dekodiere..."
 
 #: src/itemdelegate.cpp:47
 msgid "Decoded"
@@ -348,7 +348,7 @@ msgstr "Dekodierungsfehler"
 
 #: src/itemdelegate.cpp:49
 msgid "Verifying file..."
-msgstr "Verifiziere Datei"
+msgstr "Verifiziere Datei..."
 
 #: src/itemdelegate.cpp:50 src/notificationmanager.cpp:49
 msgid "Verify finished"
@@ -541,7 +541,7 @@ msgstr "Sobald alle Aufgaben erledigt sind: %1 "
 #, kde-format
 msgctxt "%1%2 = shutdown/suspend to RAM/suspend"
 msgid "Do not %1%2 if jobs are finished but paused files remain"
-msgstr "Solange Downloads pausiert sind, System nicht in den %2 versetzten"
+msgstr "Solange Downloads pausiert sind, System nicht in den %1%2 versetzten"
 
 #: src/preferences/preferencesgeneral.cpp:38
 msgid "With confirmation"
@@ -913,7 +913,8 @@ msgid ""
 "qt>"
 msgstr ""
 "<qt>Das Schließen des Hauptfensters lässt Kwooty in der Kontrollleiste "
-"weiterlaufen. Benutze <B>Beenden</B> im Menü oder in der Kontrollleiste um "
+"weiterlaufen. Benutzen Sie <B>Beenden</B> im Menü oder in der Kontrollleiste "
+"um "
 "Kwooty zu beenden.</qt>"
 
 #: src/mainwindow.cpp:428
@@ -1446,7 +1447,7 @@ msgstr "Begrenzen auf"
 #: build/src/plugins/autoretry/ui_preferencesautoretry.h:124 rc.cpp:467
 msgid "If Par2 verifying/repairing fails, re-download damaged or missing files"
 msgstr ""
-"Falls reparieren/verifizieren fehlschlägt, Download von defekten oder "
+"Falls das Reparieren/Verifizieren fehlschlägt, Download von defekten oder "
 "fehlenden Dateien wiederholen"
 
 #. i18n: file: src/plugins/autoretry/preferencesautoretry.ui:31
@@ -1661,7 +1662,7 @@ msgstr "Authentifizierung"
 #. i18n: ectx: property (text), widget (QLabel, labelLogin)
 #: build/src/ui_serversettings.h:249 rc.cpp:269
 msgid "Login:"
-msgstr "Login:"
+msgstr "Benutzername:"
 
 #. i18n: file: src/preferences/serversettings.ui:195
 #. i18n: ectx: property (toolTip), widget (QLineEdit, login)
