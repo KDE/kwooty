@@ -13,8 +13,10 @@ Type=Service
 Icon=folder-sync
 
 Name=Watch Folder
-Name[de]=Verzeichnisbeobachtung
 Name[cs]=Sledování složek
+Name[de]=Verzeichnisbeobachtung
+
 Comment=Watch folder for nzb files and load them
-Comment[de]=Verzeichnis auf neue nzb Dateien überwachen
 Comment[cs]=Prohledává složku kvůli souborům nzb a nahrává je
+Comment[de]=Verzeichnis auf neue nzb Dateien überwachen
+
