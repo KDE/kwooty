@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-12-16 15:50+0100\n"
-"PO-Revision-Date: 2011-04-18 15:14+0200\n"
+"PO-Revision-Date: 2011-12-17 18:29+0900\n"
 "Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -98,38 +98,32 @@ msgid "Backup Server hints"
 msgstr "Hilfe zu Backupservereinstellungen"
 
 #: src/widgets/serverstatuswidget.cpp:50
-#, fuzzy
 msgid "Availability:"
-msgstr "<b>Vebindung:</b>"
+msgstr "Verfügbarkeit:"
 
 #: src/widgets/serverstatuswidget.cpp:51
-#, fuzzy
 msgid "Speed:"
-msgstr "Geschwindigkeit: %1"
+msgstr "Geschwindigkeit:"
 
 #: src/widgets/serverstatuswidget.cpp:52
-#, fuzzy
 msgid "Downloaded:"
-msgstr "Download"
+msgstr "Heruntergeladen:"
 
 #: src/widgets/serverstatuswidget.cpp:57
-#, fuzzy
 msgid "File:"
-msgstr "Datei: "
+msgstr "Datei:"
 
 #: src/widgets/serverstatuswidget.cpp:66
-#, fuzzy
 msgid "Server:"
-msgstr "Server Modus: "
+msgstr "Server:"
 
 #: src/widgets/serverstatuswidget.cpp:67
 msgid "Mode:"
-msgstr ""
+msgstr "Modus:"
 
 #: src/widgets/serverstatuswidget.cpp:68
-#, fuzzy
 msgid "Encryption:"
-msgstr "<b>Verschlüsselung:</b>"
+msgstr "Verschlüsselung:"
 
 #: src/widgets/serverstatuswidget.cpp:156
 msgid "Encryption Information"
@@ -342,7 +336,7 @@ msgstr "Scanne..."
 
 #: src/itemdelegate.cpp:46
 msgid "Decoding..."
-msgstr "Dekodiere"
+msgstr "Dekodiere..."
 
 #: src/itemdelegate.cpp:47
 msgid "Decoded"
@@ -354,7 +348,7 @@ msgstr "Dekodierungsfehler"
 
 #: src/itemdelegate.cpp:49
 msgid "Verifying file..."
-msgstr "Verifiziere Datei"
+msgstr "Verifiziere Datei..."
 
 #: src/itemdelegate.cpp:50 src/notificationmanager.cpp:49
 msgid "Verify finished"
@@ -398,7 +392,7 @@ msgstr "Entpacke..."
 
 #: src/itemdelegate.cpp:61
 msgid "Extract failed (bad CRC)"
-msgstr " Entpacken fehlgeschlagen (bad CRC)"
+msgstr "Entpacken fehlgeschlagen (CRC-Fehler)"
 
 #: src/itemdelegate.cpp:62 src/notificationmanager.cpp:51
 msgid "Extract finished"
@@ -424,7 +418,7 @@ msgstr "7-zip (7z oder 7za) Programm nicht gefunden!"
 #, kde-format
 msgctxt "i.e: In queue (retry)"
 msgid "%1 (retry)"
-msgstr ""
+msgstr "%1. (Versuch)"
 
 #: src/itemdelegate.cpp:109
 msgid "No Data"
@@ -541,13 +535,13 @@ msgstr "%1 in:"
 #, kde-format
 msgctxt "%1 = Shutdown/Suspend to RAM/Suspend to disk"
 msgid "%1 when all jobs are finished"
-msgstr "Sobald alle Aufgaben erledigt sind: %1 "
+msgstr "%1 Sobald alle Aufgaben fertiggestellt sind"
 
 #: src/preferences/preferencesshutdown.cpp:80
 #, kde-format
 msgctxt "%1%2 = shutdown/suspend to RAM/suspend"
 msgid "Do not %1%2 if jobs are finished but paused files remain"
-msgstr "Solange Downloads pausiert sind, nicht in den Zustand %1%2 wechseln"
+msgstr "Solange Downloads pausiert sind, System nicht in den %1%2 versetzten"
 
 #: src/preferences/preferencesgeneral.cpp:38
 msgid "With confirmation"
@@ -569,7 +563,7 @@ msgstr "KWallet läuft nicht"
 
 #: src/preferences/preferencesplugins.cpp:41
 msgid "General Plugins"
-msgstr "Allgemeine Plugins"
+msgstr "Allgemeine Module"
 
 #: src/preferences/preferencesprograms.cpp:36
 msgid "Low"
@@ -767,9 +761,8 @@ msgid "%1, %2 - %3"
 msgstr "%1, %2 - %3"
 
 #: src/plugins/scheduler/scheduler.cpp:200
-#, fuzzy
 msgid "Bandwidth manager"
-msgstr "Bandbreitenkontrolle"
+msgstr "Bandbreitenverwaltung"
 
 #: src/mainwindow.cpp:147
 msgid "Clear"
@@ -841,7 +834,7 @@ msgstr "Öffnet aktuelles Downloadverzeichnis"
 
 #: src/mainwindow.cpp:248
 msgid "Schedule system shutdown"
-msgstr "Herunterfahren planen"
+msgstr "Automatisches Herunterfahren aktivieren"
 
 #: src/mainwindow.cpp:259
 msgid "Start all"
@@ -907,11 +900,11 @@ msgstr "Einstellungen für das Herunterfahren"
 
 #: src/mainwindow.cpp:350
 msgid "Plugins"
-msgstr "Plugins"
+msgstr "Module"
 
 #: src/mainwindow.cpp:350
 msgid "Plugins Setup"
-msgstr "Plugin Einstellungen"
+msgstr "Modul Einstellungen"
 
 #: src/mainwindow.cpp:426
 msgid ""
@@ -920,7 +913,8 @@ msgid ""
 "qt>"
 msgstr ""
 "<qt>Das Schließen des Hauptfensters lässt Kwooty in der Kontrollleiste "
-"weiterlaufen. Benutze <B>Beenden</B> im Menü oder in der Kontrollleiste um "
+"weiterlaufen. Benutzen Sie <B>Beenden</B> im Menü oder in der Kontrollleiste "
+"um "
 "Kwooty zu beenden.</qt>"
 
 #: src/mainwindow.cpp:428
@@ -1428,7 +1422,7 @@ msgstr "Bandbreitenkontrolle"
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:148 rc.cpp:422
 #: rc.cpp:446
 msgid "Always limit download speed"
-msgstr "Download geschwindigkeit immer begrenzen"
+msgstr "Downloadgeschwindigkeit immer begrenzen"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:73
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_enableScheduler)
@@ -1453,6 +1447,8 @@ msgstr "Begrenzen auf"
 #: build/src/plugins/autoretry/ui_preferencesautoretry.h:124 rc.cpp:467
 msgid "If Par2 verifying/repairing fails, re-download damaged or missing files"
 msgstr ""
+"Falls das Reparieren/Verifizieren fehlschlägt, Download von defekten oder "
+"fehlenden Dateien wiederholen"
 
 #. i18n: file: src/plugins/autoretry/preferencesautoretry.ui:31
 #. i18n: ectx: property (text), widget (QLabel, retryRepairFailLabel)
@@ -1462,13 +1458,15 @@ msgstr ""
 #: build/src/plugins/autoretry/ui_preferencesautoretry.h:127 rc.cpp:470
 #: rc.cpp:476
 msgid "Limit number of download retries to: "
-msgstr ""
+msgstr "Anzahl der Downloadversuche beschränken auf: "
 
 #. i18n: file: src/plugins/autoretry/preferencesautoretry.ui:66
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: build/src/plugins/autoretry/ui_preferencesautoretry.h:126 rc.cpp:473
 msgid "If no Par2 files, re-download each file whose CRC mismatch"
 msgstr ""
+"Dateien mit einem CRC-Fehler wiederholt herunterladen, falls keine Par2 "
+"Dateien vorhanden sind."
 
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:22
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
@@ -1572,7 +1570,7 @@ msgstr "Auf und zuklappen von Downloads animieren"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateTreeView)
 #: build/src/ui_preferencesdisplay.h:133 rc.cpp:320
 msgid "Animate row expandsion/collasping"
-msgstr "Animiere das auf und zuklappen von Downloads"
+msgstr "Auf und zuklappen von Downloads animieren"
 
 #. i18n: file: src/preferences/kwootysettings.kcfg:131
 #. i18n: ectx: label, entry (alternateColors), group (display)
@@ -1586,7 +1584,7 @@ msgstr "Alternative Hintergrundfarbe für jede Zeile"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_alternateColors)
 #: build/src/ui_preferencesdisplay.h:137 rc.cpp:326
 msgid "Alternate row colors"
-msgstr "Alternative Zeilenfarben"
+msgstr "Alternative Zeilenfarben verwenden"
 
 #. i18n: file: src/preferences/serversettings.ui:33
 #. i18n: ectx: property (title), widget (QGroupBox, groupBoxConfig)
@@ -1664,7 +1662,7 @@ msgstr "Authentifizierung"
 #. i18n: ectx: property (text), widget (QLabel, labelLogin)
 #: build/src/ui_serversettings.h:249 rc.cpp:269
 msgid "Login:"
-msgstr "Login:"
+msgstr "Benutzername:"
 
 #. i18n: file: src/preferences/serversettings.ui:195
 #. i18n: ectx: property (toolTip), widget (QLineEdit, login)
@@ -1795,7 +1793,7 @@ msgstr "Freien Speicherplatz in Statusleiste anzeigen"
 #. i18n: ectx: label, entry (shutdownMethods), group (shutdown)
 #: rc.cpp:218
 msgid "Select system shutdown method"
-msgstr "Wähle Methode zu Herunterfahren"
+msgstr "Wähle Methode zum Herunterfahren"
 
 #. i18n: file: src/preferences/kwootysettings.kcfg:154
 #. i18n: ectx: label, entry (jobsRadioButton), group (shutdown)
@@ -1819,7 +1817,7 @@ msgstr "Plane das Herunterfahren in HH:mm von jetzt an"
 #. i18n: ectx: label, entry (pausedShutdown), group (shutdown)
 #: rc.cpp:230
 msgid "Do not shutdown system if jobs are finished but paused files remain"
-msgstr "Nicht herunterfahren solange Downloads pausiert sind"
+msgstr "System nicht herunterfahren solange pausierte Dateien vorhanden sind "
 
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:16
 #. i18n: ectx: label, entry (enableScheduler), group (schedulerplugin)
@@ -1834,6 +1832,8 @@ msgid ""
 "Retry download missing or damaged files if Par2 verifying/repairing process "
 "has failed"
 msgstr ""
+"Defekten Dateien wiederholt herunterladen, sobald der Par2 "
+"Reparier-/Verifiziervorgang fehlschlägt"
 
 #. i18n: file: src/plugins/autoretry/kwooty_autoretrysettings.kcfg:14
 #. i18n: ectx: label, entry (retryNoPar2Files), group (autoretryplugin)
@@ -1842,6 +1842,8 @@ msgid ""
 "Retry download corrupted files (bad CRC) if collection does not contain any "
 "Par2 files"
 msgstr ""
+"Wiederholt den Download von korrupten Dateien (CRC-Fehler), wenn keine Par2 "
+"Par2 Dateien vorhanden sind"
 
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:11
 #. i18n: ectx: label, entry (groupBoxWatch), group (watchfolderplugin)
