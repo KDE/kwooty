@@ -283,12 +283,9 @@ QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const
 
     }
 
-
     return fileNameItem;
 
 }
-
-
 
 
 
@@ -376,7 +373,7 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, QString 
             segmentList.replace(segmentData.getElementInList(), segmentData);
             nzbFileData.setSegmentList(segmentList);
 
-            // if decoded has been performed on the fly, update decoded file name right now :
+            // if decoding has been performed on the fly, update decoded file name right now :
             if (!decodedFileName.isEmpty()) {
                 nzbFileData.setDecodedFileName(decodedFileName);
             }

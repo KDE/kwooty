@@ -20,7 +20,7 @@ Version 0.8.0:
 
 - Better constistency beetween Connections/Disconnection icons
 
-- Font color and typo of labels in sidebar have been changed to improve readability
+- Font color and style of labels in sidebar have been changed to improve readability
 
 
 
