@@ -92,8 +92,6 @@ void ItemParentUpdater::setupConnections() {
 }
 
 
-
-
 void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
 
     // variable initialisation
@@ -146,8 +144,6 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
 
 
 }
-
-
 
 
 //==============================================================================================//
@@ -272,7 +268,7 @@ ItemStatusData ItemParentUpdater::updateStatusItemDownload(ItemStatusData& nzbIt
     }
 
     // if no children are currently being downloaded :
-    else if (this->downloadItemNumber == 0 ) {
+    else if (this->downloadItemNumber == 0) {
 
         // if some children are Idle :
         if (this->inQueueItemNumber > 0) {
@@ -398,7 +394,6 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
 
         }
 
-
         // build data for repairing - extracting process :
         NzbCollectionData nzbCollectionData;
         nzbCollectionData.setNzbFileDataList(nzbFileDataList);
@@ -414,7 +409,6 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
 
     return nzbItemStatusData;
 }
-
 
 
 

@@ -115,9 +115,9 @@ ItemStatusData ItemDownloadUpdater::updateStatusNzbChildrenItem(ItemStatusData& 
     }
 
     // if some segments are being downloaded :
-    if (this->downloadItemNumber > 0 ) {
+    if (this->downloadItemNumber > 0) {
 
-        if ( this->pauseItemNumber == 0 ){
+        if ( this->pauseItemNumber == 0) {
             itemStatusData.setStatus(DownloadStatus);
         }
         else {
@@ -126,19 +126,17 @@ ItemStatusData ItemDownloadUpdater::updateStatusNzbChildrenItem(ItemStatusData& 
     }
     // if no segments are currently being downloaded :
     else {
-        if (this->inQueueItemNumber > 0 ) {
+        if (this->inQueueItemNumber > 0) {
             itemStatusData.setStatus(IdleStatus);
         }
 
-        if (this->pauseItemNumber > 0 ) {
+        if (this->pauseItemNumber > 0) {
             itemStatusData.setStatus(PauseStatus);
         }
     }
 
     return itemStatusData;
 }
-
-
 
 
 ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusData) {
@@ -150,7 +148,7 @@ ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusD
         itemStatusData.setDataStatus(DataPendingBackupServer);
     }
     // determine if current file has segments that are not present on server :
-    else if (this->downloadFinishItemNumber > 0 ) {
+    else if (this->downloadFinishItemNumber > 0) {
 
         // no segment founds on server for the current file :
         if (this->articleFoundNumber == 0) {
@@ -172,10 +170,7 @@ ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusD
 
 
 
-
-
 ItemStatusData ItemDownloadUpdater::postDownloadProcessing(const QModelIndex& index, const NzbFileData& nzbFileData, ItemStatusData& itemStatusData){
-
 
     QList<SegmentData> segmentList = nzbFileData.getSegmentList();
 
@@ -212,8 +207,6 @@ ItemStatusData ItemDownloadUpdater::postDownloadProcessing(const QModelIndex& in
 }
 
 
-
-
 void ItemDownloadUpdater::countGlobalItemStatus(const SegmentData& segmentData) {
 
     // count number of files present / not present :
@@ -231,8 +224,6 @@ void ItemDownloadUpdater::countGlobalItemStatus(const SegmentData& segmentData) 
         this->pendingSegmentsOnBackupNumber++;
 
     }
-
-
 
     // count items status :
     this->countItemStatus(segmentData.getStatus());
