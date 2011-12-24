@@ -171,6 +171,13 @@ void SegmentManager::setIdleDownloadFailSegments(QStandardItem* fileNameItem) {
             currentSegment.setReadyForNewServer(MasterServer);
         }
 
+        // this should not happen at this stage, but due to asynchronous segment saving/decoding,
+        // ensure that any segment is not currently being re-downloading, otherwise set them to Idle
+        // to be downloaded again properly :
+        if (Utility::isDownloadOrPausing(currentSegment.getStatus())) {
+            currentSegment.setReadyForNewServer(MasterServer);
+        }
+
         segmentList.replace(segmentIndex, currentSegment);
 
     }
@@ -179,7 +186,7 @@ void SegmentManager::setIdleDownloadFailSegments(QStandardItem* fileNameItem) {
     nzbFileData.setSegmentList(segmentList);
 
     this->downloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
-    this->downloadModel->updateProgressItem(fileNameItem->index(), 0);
+    this->downloadModel->updateProgressItem(fileNameItem->index(), PROGRESS_INIT);
 
     itemParentUpdater->getItemDownloadUpdater()->updateItems(fileNameItem->index(), nzbFileData);
 
@@ -357,7 +364,7 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, QString 
     if (fileNameItem) {
 
         NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
-        QList<SegmentData> segmentList = nzbFileData.getSegmentList();        
+        QList<SegmentData> segmentList = nzbFileData.getSegmentList();
 
         SegmentData previousSegmentData = segmentList.value(segmentData.getElementInList());
 
