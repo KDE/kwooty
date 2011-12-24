@@ -56,10 +56,10 @@ public:
     UtilityNamespace::ItemStatus getStatusFromStateItem(QStandardItem*) const;
     UtilityNamespace::ItemStatus getChildStatusFromNzbIndex(const QModelIndex&, int);
     QStandardItem* getFileNameItemFromRowNumber(const int&);
+    bool isNzbItem(QStandardItem*);
     void updateStateItem(QStandardItem*, const UtilityNamespace::ItemStatus);
     void updateProgressItem(const QModelIndex&, const int);
     void storeStatusDataToItem(QStandardItem*, const ItemStatusData&);
-    bool isNzbItem(QStandardItem*);
     void updateNzbFileDataToItem(QStandardItem*, const NzbFileData&);
     void updateStatusDataFromIndex(const QModelIndex&, const ItemStatusData&);
 

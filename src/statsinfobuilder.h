@@ -40,7 +40,7 @@ class StatsInfoBuilder : public QObject
 public:
     static const int SPEED_AVERAGE_SECONDS = 2;
 
-    StatsInfoBuilder(ClientsObserver* clientsObserver = 0, CentralWidget* parent = 0);
+    StatsInfoBuilder(ClientsObserver*, CentralWidget*);
     void sendFullUpdate();
     QString getTotalTimeValue() const;
     QString getCurrentTimeValue() const;
@@ -69,13 +69,13 @@ private:
     quint64 downloadSpeedCurrent;
     UtilityNamespace::FreeDiskSpace previousDiskSpaceStatus;
 
+    QString calculateArrivalTime(const quint32&);
+    QString calculateRemainingTime(const quint32&);
     void setupConnections();
     void resetVariables();
     void computeTimeInfo();
     void retrieveFreeDiskSpace();
     void retrieveQueuedFilesInfo(bool&, bool&);
-    QString calculateArrivalTime(const quint32&);
-    QString calculateRemainingTime(const quint32&);
     void computeMeanSpeed(const quint64&, quint64&);
 
 

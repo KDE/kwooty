@@ -86,7 +86,6 @@ public:
 
 
 private:
-
     MyTreeView* treeView;
     SegmentManager* segmentManager;
     DataRestorer* dataRestorer;
@@ -102,11 +101,9 @@ private:
     NotificationManager* notificationManager;
     ServerManager* serverManager;
     int saveErrorButtonCode;
-    
 
     void setDataToModel(const QList<GlobalFileData>&, const QString&);
     void addParentItem (QStandardItem*, const GlobalFileData&);
-    void updateItemsInView(QModelIndex, QModelIndex);
     void setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus);
     void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QList<QModelIndex>&);
     void statusBarFileSizeUpdate();

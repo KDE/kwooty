@@ -41,7 +41,7 @@ class SysTray : public KSystemTrayIcon
     Q_OBJECT
 
 public:
-    SysTray(MainWindow* parent = 0);
+    SysTray(MainWindow*);
     ~SysTray();
 
 private:
@@ -56,13 +56,13 @@ private:
     int oldMergePos;
     bool displayToolTip;
 
+    bool blendOverlay(const QPixmap&);
+    bool updateIconStatus(const UtilityNamespace::ItemStatus&);
     void setupConnections();
     void setupActions();
     void initPixmaps();
     void initShow();
-    bool blendOverlay(const QPixmap&);
     void updateIconProgress(const int&);
-    bool updateIconStatus(const UtilityNamespace::ItemStatus&);
     void createToolTip();
 
 signals:

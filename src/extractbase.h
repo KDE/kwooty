@@ -51,7 +51,7 @@ class ExtractBase : public QObject
     enum ArchivePasswordStatus { ArchiveCheckIfPassworded,
                                  ArchiveIsPassworded,
                                  ArchiveIsNotPassworded,
-                                 ArchivePasswordCheckEnded,
+                                 ArchivePasswordCheckEnded
                              };
 
 

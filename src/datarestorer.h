@@ -64,18 +64,19 @@ private:
     quint32 applicationVersion1;
     bool active;
 
+    QString getPendingFileStr() const;
+    int displayRestoreMessageBox() const;
+    int displaySaveMessageBox(const SaveFileBehavior&) const;
+    bool isDataToSaveExist() const;
+    bool isHeaderOk(QDataStream&) const;
     void setupConnections();
     void resetDataForDecodingFile(NzbFileData&, ItemStatusData&, int&);
     void resetDataForDownloadingFile(NzbFileData&, ItemStatusData&);
     void preprocessAndHandleData(const QList< QList<GlobalFileData> >&);
     void writeDataToDisk();
-    int displayRestoreMessageBox() const;
-    int displaySaveMessageBox(const SaveFileBehavior&) const;
-    bool isDataToSaveExist() const;
-    bool isHeaderOk(QDataStream&) const;
     void requestSuppressOldOrphanedSegments();
     void removePendingDataFile();
-    QString getPendingFileStr() const;
+
 
 
 

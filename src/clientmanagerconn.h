@@ -53,13 +53,12 @@ public:
     bool isBandwidthFull() const;
 
 
-
 private:
     NntpClient* nntpClient;
     ServerGroup* parent;
+    BandwidthClientMode bandwidthClientMode;
     int clientId;
     int connectionDelay;
-    BandwidthClientMode bandwidthClientMode;
 
 
 signals:

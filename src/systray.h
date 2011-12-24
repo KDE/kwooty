@@ -41,7 +41,7 @@ class SysTray : public KStatusNotifierItem
     Q_OBJECT
 
 public:
-    SysTray(MainWindow* parent = 0);
+    SysTray(MainWindow*);
 
 
 private:
@@ -55,13 +55,13 @@ private:
     QPixmap renderedIcon;
     int oldMergePos;
 
+    bool updateIconStatus(const UtilityNamespace::ItemStatus&);
+    bool blendOverlay(const QPixmap&);
     void setupConnections();
     void setupActions();
     void initPixmaps();
     void initShow();
     void updateIconProgress(const int&);
-    bool updateIconStatus(const UtilityNamespace::ItemStatus&);
-    bool blendOverlay(const QPixmap&);
     void createToolTip();
 
 signals:

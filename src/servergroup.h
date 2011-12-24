@@ -46,14 +46,11 @@ public:
     ServerManager* getServerManager();
     ClientsPerServerObserver* getClientsPerServerObserver();
     ServerSpeedManager* getServerSpeedManager();
-    void assignDownloadToReadyClients();
-    void disconnectAllClients();
-    void connectAllClients();
+    ServerGroup* getNextTargetServer();
+    ServerData getServerData() const;
     QList<ClientManagerConn*> getClientManagerConnList();
     int getServerGroupId() const;
     int getRealServerGroupId() const;
-    ServerGroup* getNextTargetServer();
-    ServerData getServerData() const;
     int saveSegment(const SegmentData&);
     bool canDownload(const int&) const;
     bool isServerAvailable() const;
@@ -64,6 +61,9 @@ public:
     bool isFailoverBackupServer() const;
     bool isPassiveFailover() const;
     bool isActiveFailover() const;
+    void assignDownloadToReadyClients();
+    void disconnectAllClients();
+    void connectAllClients();
 
 
 private:

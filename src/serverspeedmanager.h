@@ -66,8 +66,8 @@ private:
     SpeedManagementStatus speedManagementStatus;
     int speedTooLowCounter;
 
-    void setupConnections();
     bool disableClientForRateControl() const;
+    void setupConnections();
     void manageClientsNumber(const SpeedManagementStatus&);
     void resetVariables();
 
