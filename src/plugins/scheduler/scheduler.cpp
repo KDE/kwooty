@@ -215,17 +215,8 @@ void Scheduler::schedulerTimerSlot() {
 
     DownloadLimitStatus downloadLimitStatus = LimitDownload;
 
-    // permanent speed limit is enabled :
-    if (SchedulerSettings::enablePermanentSpeedLimit()) {
-
-        // if downloadLimitSpinBox is set to 0, it corresponds to no limit download :
-        if (SchedulerSettings::downloadLimitSpinBox() == 0) {
-            downloadLimitStatus = NoLimitDownload;
-        }
-
-    }
     // speed limit is scheduled :
-    else {
+    if (SchedulerSettings::enableScheduler()) {
 
         // retrieve current time :
         QTime currentTime = QTime::currentTime();
@@ -238,6 +229,11 @@ void Scheduler::schedulerTimerSlot() {
         QStandardItem* item = this->schedulerModel->item(row, column);
         downloadLimitStatus = static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
 
+    }
+
+    // if downloadLimitSpinBox is set to 0, it corresponds to no limit download :
+    if (SchedulerSettings::downloadLimitSpinBox() == 0) {
+        downloadLimitStatus = NoLimitDownload;
     }
 
     // start downloads if they were previously paused :
