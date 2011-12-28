@@ -22,6 +22,8 @@ Version 0.8.0:
 
 - Font color and style of labels in sidebar have been changed to improve readability
 
+* Fix compilation issue in KDE SC 4.8
+
 
 
 Version 0.7.3:
