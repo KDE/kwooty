@@ -18,7 +18,7 @@ Version 0.8.0:
 
 - Icons next to nzb file name now notify the user to quickly check the current status of the file collection
 
-- Better constistency beetween Connections/Disconnection icons
+- Better consistency between Connections/Disconnection icons
 
 - Font color and style of labels in sidebar have been changed to improve readability
 
