@@ -29,6 +29,7 @@
 
 #include "utility.h"
 #include "data/segmentdata.h"
+#include "data/itemstatusdata.h"
 using namespace UtilityNamespace;
 
 class CentralWidget;
