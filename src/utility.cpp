@@ -85,9 +85,9 @@ bool Utility::isPostDownloadFailed(const UtilityNamespace::ItemStatus statusItem
 
     return ( statusItem >= DecodeErrorStatus &&
              statusItem != ExtractSuccessStatus &&
-             statusItem != VerifyFinishedStatus &&
-             statusItem != DecodeFinishStatus &&
-             !Utility::isDecoding(statusItem) );
+            statusItem != VerifyFinishedStatus &&
+            statusItem != DecodeFinishStatus &&
+            !Utility::isDecoding(statusItem) );
 
 }
 
@@ -285,7 +285,9 @@ bool Utility::rename(const QString& temporaryFileStr, const QString& destination
     bool success = false;
     if (QFile::exists(temporaryFileStr)) {
 
-        QFile::remove(destinationFileStr);
+        if (QFile::exists(destinationFileStr)) {
+            QFile::remove(destinationFileStr);
+        }
         success = QFile::rename(temporaryFileStr, destinationFileStr);
     }
 
