@@ -53,8 +53,7 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString& temporaryFolder, Segme
     // file has already been post-processed and should be moved again in temporary folder to write decoded segment in it :
     QString temporaryFileStr = temporaryFolder + segmentData.getSegmentInfoData().getTemporaryFileName();
     QString destinationFileStr = segmentData.getSegmentInfoData().getDestinationFileSavePath() + '/' + decodedFileName;
-    Utility::rename(destinationFileStr, temporaryFileStr);
-
+    bool renamed = Utility::rename(destinationFileStr, temporaryFileStr);
 
     // check that temporary folder is already created, else create it :
     Utility::createFolder(temporaryFolder);
@@ -73,7 +72,8 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString& temporaryFolder, Segme
 
     qint64 fullSizeValue = this->getPatternValue(yBeginArray, "size=");
 
-    if (temporaryFile.size() < fullSizeValue) {
+    if ( renamed ||
+         temporaryFile.size() < fullSizeValue ) {
 
         writeSuccess = temporaryFile.resize(fullSizeValue + static_cast<qint64>(applicationFileOwner.size()));
 
@@ -311,7 +311,11 @@ void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData& nzbFileData) {
         }
 
         // move file in destination folder :
-        Utility::rename(temporaryFileStr, destinationFileStr);
+        bool success = Utility::rename(temporaryFileStr, destinationFileStr);
+
+        if (!success) {
+            kDebug() << "can not move" << temporaryFileStr << "to" << destinationFileStr;
+        }
 
         // remove kwooty tag application that should be present at the end of the temporary file :
         QFile destinationFile(destinationFileStr);
