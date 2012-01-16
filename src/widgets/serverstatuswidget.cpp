@@ -54,7 +54,7 @@ ServerStatusWidget::ServerStatusWidget(QWidget* parent) : QDockWidget(parent) {
     // allow label size reduction in case nzb file name would be too long :
     QLabel* fileLabel = new QLabel(this);
     fileLabel->setMinimumWidth(10);
-    this->insertLeftRowFormLayout(FileItem, this->formLayoutLeft, i18n("File:"), new QLabel(this));
+    this->insertLeftRowFormLayout(FileItem, this->formLayoutLeft, i18n("File:"), fileLabel);
 
 
     // build right form :
