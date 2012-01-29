@@ -51,6 +51,8 @@ public:
 
 private:
 
+    static const int NO_SPEED_LIMIT = 0;
+
     QStandardItemModel* schedulerModel;
     CentralWidget* centralWidget;
     ServerManager* serverManager;

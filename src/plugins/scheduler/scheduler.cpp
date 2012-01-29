@@ -215,11 +215,6 @@ void Scheduler::schedulerTimerSlot() {
 
     DownloadLimitStatus downloadLimitStatus = LimitDownload;
 
-    // if downloadLimitSpinBox is set to 0, it corresponds to no limit download :
-    if (SchedulerSettings::downloadLimitSpinBox() == 0) {
-        downloadLimitStatus = NoLimitDownload;
-    }
-
     // if speed limit is scheduled :
     if (SchedulerSettings::enableScheduler()) {
 
@@ -235,6 +230,15 @@ void Scheduler::schedulerTimerSlot() {
         downloadLimitStatus = static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
 
     }
+
+    // if downloadLimitSpinBox is set to 0, it corresponds to no limit download :
+    if ( SchedulerSettings::downloadLimitSpinBox() == NO_SPEED_LIMIT &&
+         downloadLimitStatus == LimitDownload ) {
+
+        downloadLimitStatus = NoLimitDownload;
+
+    }
+
 
     // start downloads if they were previously paused :
     this->checkDownloadStatus(downloadLimitStatus);
