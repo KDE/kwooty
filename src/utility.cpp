@@ -85,9 +85,9 @@ bool Utility::isPostDownloadFailed(const UtilityNamespace::ItemStatus statusItem
 
     return ( statusItem >= DecodeErrorStatus &&
              statusItem != ExtractSuccessStatus &&
-            statusItem != VerifyFinishedStatus &&
-            statusItem != DecodeFinishStatus &&
-            !Utility::isDecoding(statusItem) );
+             statusItem != VerifyFinishedStatus &&
+             statusItem != DecodeFinishStatus &&
+             !Utility::isDecoding(statusItem) );
 
 }
 
