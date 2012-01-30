@@ -23,6 +23,7 @@
 
 #include <QThread>
 #include "data/nzbfiledata.h"
+#include "data/postdownloadinfodata.h"
 #include "utility.h"
 using namespace UtilityNamespace;
 
@@ -31,7 +32,6 @@ class SegmentDecoderBase;
 class SegmentDecoderYEnc;
 class SegmentDecoderUUEnc;
 class SegmentData;
-class PostDownloadInfoData;
 
 class SegmentsDecoderThread : public QObject {
 
