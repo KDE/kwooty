@@ -1,6 +1,13 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.8.1:
+--------------
+
+* Fix regression: when nzb file name was too long, main window width was automatically increased
+* Fix bug: scheduler plugin did not pause items when requested if download limit speed was set to "No Limit"
+
+
 Version 0.8.0:
 --------------
 
