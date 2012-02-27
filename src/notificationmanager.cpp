@@ -24,7 +24,7 @@
 #include <KLocale>
 #include <KDebug>
 
-#include "centralwidget.h"
+#include "core.h"
 #include "statsinfobuilder.h"
 #include "observers/clientsobserver.h"
 #include "observers/queuefileobserver.h"
@@ -32,7 +32,7 @@
 
 
 
-NotificationManager::NotificationManager(CentralWidget* parent) : QObject(parent) {
+NotificationManager::NotificationManager(Core* parent) : QObject(parent) {
 
     this->parent = parent;
 

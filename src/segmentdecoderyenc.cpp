@@ -26,7 +26,7 @@
 #include "segmentsdecoderthread.h"
 
 
-SegmentDecoderYEnc::SegmentDecoderYEnc(SegmentsDecoderThread* parent) : SegmentDecoderBase(parent){
+SegmentDecoderYEnc::SegmentDecoderYEnc(SegmentsDecoderThread* parent) : SegmentDecoderBase(parent) {
 
 }
 

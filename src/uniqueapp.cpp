@@ -54,7 +54,6 @@ int UniqueApp::newInstance()
 
         this->mainWindow = new MainWindow();
 
-
     }
 
     // instance already exists :

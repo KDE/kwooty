@@ -29,10 +29,10 @@
 #include "data/nzbfiledata.h"
 #include "data/segmentdata.h"
 #include "data/postdownloadinfodata.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class SegmentsDecoderThread;
 
 

@@ -27,12 +27,12 @@
 #include <QHash>
 #include <QDataStream>
 
-#include "utility.h"
+#include "utilities/utility.h"
 #include "data/segmentdata.h"
 #include "data/itemstatusdata.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class StandardItemModel;
 class NzbFileData;
 class ItemStatusData;
@@ -45,19 +45,18 @@ class DataRestorer : public QObject
 
 public:
 
-    DataRestorer(CentralWidget* parent = 0);
+    enum PendingDownloadsManagement{ WithConfirmation,
+                                     Automatically
+                                 };
+
+    DataRestorer(Core*);
     DataRestorer();
     int saveQueueData(const SaveFileBehavior&);
     void setActive(const bool);
 
 private:
 
-    enum PendingDownloadsManagement{ WithConfirmation,
-                                     Automatically
-                                 };
-
-
-    CentralWidget* parent;
+    Core* parent;
     StandardItemModel* downloadModel;
     QTimer* dataSaverTimer;
     QHash<quint32, int> versionStreamMap;
@@ -66,8 +65,6 @@ private:
     bool active;
 
     QString getPendingFileStr() const;
-    int displayRestoreMessageBox() const;
-    int displaySaveMessageBox(const SaveFileBehavior&) const;
     bool isDataToSaveExist() const;
     bool isHeaderOk(QDataStream&) const;
     void setupConnections();

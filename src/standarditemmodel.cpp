@@ -20,11 +20,11 @@
 
 #include "standarditemmodel.h"
 
-#include "centralwidget.h"
+#include "core.h"
 #include "data/nzbfiledata.h"
 
 
-StandardItemModel::StandardItemModel(CentralWidget* parent) : QStandardItemModel (parent)
+StandardItemModel::StandardItemModel(Core* parent) : QStandardItemModel (parent)
 {
 }
 

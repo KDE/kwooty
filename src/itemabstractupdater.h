@@ -27,7 +27,7 @@
 #include <QHash>
 
 #include "data/itemstatusdata.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class ItemParentUpdater;

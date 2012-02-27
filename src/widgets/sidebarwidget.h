@@ -25,7 +25,7 @@
 #include <QStackedWidget>
 #include <QHash>
 
-#include "utilityserverstatus.h"
+#include "utilities/utilityserverstatus.h"
 
 class MainWindow;
 

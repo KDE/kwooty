@@ -25,7 +25,7 @@
 #include "serverspeedmanager.h"
 #include "segmentmanager.h"
 #include "segmentbuffer.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "clientmanagerconn.h"
 #include "nntpclient.h"
 #include "observers/clientsperserverobserver.h"
@@ -33,10 +33,10 @@
 #include "kwootysettings.h"
 
 
-ServerGroup::ServerGroup(ServerManager* parent, CentralWidget* centralWidget, int serverGroupId) : QObject(parent) {
+ServerGroup::ServerGroup(ServerManager* parent, Core* core, int serverGroupId) : QObject(parent) {
 
     this->serverManager = parent;
-    this->centralWidget = centralWidget;
+    this->core = core;
     this->serverGroupId = serverGroupId;
     this->serverAvailable = true;
     this->pendingSegments = false;
@@ -169,8 +169,8 @@ bool ServerGroup::canDownload(const int& serverGroupTargetId) const {
 
 
 
-CentralWidget* ServerGroup::getCentralWidget() {
-    return this->centralWidget;
+Core* ServerGroup::getCore() {
+    return this->core;
 }
 
 ServerManager* ServerGroup::getServerManager() {

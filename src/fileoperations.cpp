@@ -28,12 +28,13 @@
 #include <QFileInfo>
 #include <QRegExp>
 
-#include "centralwidget.h"
+#include "core.h"
+#include "widgets/centralwidget.h"
 #include "kwootysettings.h"
 
-FileOperations::FileOperations(CentralWidget* centralWidget) : QObject(centralWidget) {
+FileOperations::FileOperations(Core* core) : QObject(core) {
 
-    this->centralWidget = centralWidget;
+    this->core = core;
 
 }
 
@@ -42,7 +43,7 @@ void FileOperations::openFile() {
 
     bool isWrongUrl = false;
 
-    QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(KUrl(), i18n("*.nzb|nzb files"), this->centralWidget);
+    QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(KUrl(), i18n("*.nzb|nzb files"), this->core->getCentralWidget());
 
     // process selected file(s) :
     foreach (QString fileNameFromDialog, fileNameFromDialogList) {
@@ -56,15 +57,13 @@ void FileOperations::openFile() {
 
         // If url cannot be reached open an error message box
         if (isWrongUrl){
-            KMessageBox::error(this->centralWidget , KIO::NetAccess::lastErrorString());
+            KMessageBox::error(this->core->getCentralWidget() , KIO::NetAccess::lastErrorString());
         }
 
 
     }
 
 }
-
-
 
 
 void FileOperations::openFileWithFileMode(KUrl nzbUrl, UtilityNamespace::OpenFileMode openFileMode) {
@@ -76,7 +75,7 @@ void FileOperations::openFileWithFileMode(KUrl nzbUrl, UtilityNamespace::OpenFil
 
     // If url cannot be reached open an error message box
     if (isWrongUrl){
-        KMessageBox::error(this->centralWidget , KIO::NetAccess::lastErrorString());
+        KMessageBox::error(this->core->getCentralWidget(), KIO::NetAccess::lastErrorString());
     }
 
 }
@@ -87,17 +86,17 @@ void FileOperations::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenF
 
     QString downloadFile;
 
-    if(KIO::NetAccess::download(url, downloadFile, this->centralWidget)){
+    if(KIO::NetAccess::download(url, downloadFile, this->core->getCentralWidget())){
 
         QFile file(downloadFile);
 
         // Open the nzb file :
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-            KMessageBox::error(this->centralWidget , KIO::NetAccess::lastErrorString());
+            KMessageBox::error(this->core->getCentralWidget(), KIO::NetAccess::lastErrorString());
         }
 
         // add nzbFile data to the view :
-        this->centralWidget->handleNzbFile(file);
+        this->core->handleNzbFile(file);
 
         file.close();
 
@@ -129,8 +128,6 @@ void FileOperations::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenF
     }
 
 }
-
-
 
 
 bool FileOperations::isSplitFileFormat(const QFile& decodedFile) {

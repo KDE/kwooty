@@ -27,10 +27,10 @@
 #include <QString>
 #include <QHash>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 
 
 class NotificationManager : public QObject {
@@ -39,11 +39,11 @@ class NotificationManager : public QObject {
 
 
 public:
-    NotificationManager(CentralWidget* parent = 0);
+    NotificationManager(Core*);
 
 private:
 
-    CentralWidget* parent;
+    Core* parent;
     QHash<UtilityNamespace::ItemStatus, QString> finishSatusTextMap;
 
     void init();

@@ -25,7 +25,7 @@
 
 #include "clientsobserverbase.h"
 
-class CentralWidget;
+class Core;
 class StatsInfoBuilder;
 
 
@@ -35,7 +35,7 @@ class ClientsObserver : public ClientsObserverBase
 
 
 public:
-    ClientsObserver(CentralWidget* parent = 0);
+    ClientsObserver(Core*);
     StatsInfoBuilder* getStatsInfoBuilder() const;
     void fullFileSizeUpdate(const quint64, const quint64);
     void sendFullUpdate();
@@ -47,7 +47,7 @@ public:
 
 private:
 
-    CentralWidget* parent;
+    Core* parent;
     StatsInfoBuilder* statsInfoBuilder;
     quint64 totalFiles;
     quint64 totalSize;

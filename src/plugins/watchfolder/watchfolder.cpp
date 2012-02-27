@@ -29,7 +29,7 @@
 #include <QDir>
 
 #include "mainwindow.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "watchfolderplugin.h"
 #include "kwooty_watchfoldersettings.h"
 #include "fileoperations.h"
@@ -37,7 +37,7 @@
 
 WatchFolder::WatchFolder(WatchFolderPlugin* parent) :  QObject(parent) {
 
-    this->centralWidget = parent->getCore()->getCentralWidget();
+    this->core = parent->getMainWindow()->getCore();
 
     this->kDirWatch = new KDirWatch(this);
 
@@ -209,7 +209,7 @@ void WatchFolder::fileCompleteTimerSlot() {
                     }
 
                     // open the nzb file and launch download :
-                    this->centralWidget->getFileOperations()->openFileWithFileMode(KUrl(nzbFilePath), openFileMode);
+                    this->core->getFileOperations()->openFileWithFileMode(KUrl(nzbFilePath), openFileMode);
 
                     // check if .nzb has to be removed from watch folder:
                     if (WatchFolderSettings::suppressNzbFromWatch()) {

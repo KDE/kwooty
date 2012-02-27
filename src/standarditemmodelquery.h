@@ -25,10 +25,10 @@
 #include <QObject>
 
 #include "kwooty_export.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class StandardItemModel;
 
 
@@ -37,7 +37,7 @@ class KWOOTY_EXPORT StandardItemModelQuery : public QObject {
     Q_OBJECT
 
 public:
-    StandardItemModelQuery(CentralWidget*);
+    StandardItemModelQuery(Core*);
 
     QStandardItem* searchParentItem(const UtilityNamespace::ItemStatus);
     ItemStatus isRetryDownloadAllowed(QStandardItem*, bool* = 0);

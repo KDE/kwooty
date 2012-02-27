@@ -24,10 +24,10 @@
 #include <QObject>
 
 #include "kwooty_export.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class ServerGroup;
 class SegmentBuffer;
 
@@ -37,7 +37,7 @@ class KWOOTY_EXPORT ServerManager : public QObject {
     Q_OBJECT
 
 public:
-    ServerManager(CentralWidget*);
+    ServerManager(Core*);
     ServerGroup* getNextTargetServer(ServerGroup*);
     ServerGroup* getServerGroupById(const int&);
     SegmentBuffer* getSegmentBuffer();
@@ -53,7 +53,7 @@ public:
 
 
 private:
-    CentralWidget* parent;
+    Core* parent;
     QMap<int, ServerGroup*> idServerGroupMap;
     ServerGroup* currentMasterServer;
     SegmentBuffer* segmentBuffer;

@@ -28,20 +28,20 @@
 
 #include "data/nzbfiledata.h"
 #include "data/globalfiledata.h"
-#include "centralwidget.h"
+#include "core.h"
+#include "widgets/centralwidget.h"
 #include "kwootysettings.h"
-#include "utility.h"
+#include "utilities/utility.h"
 
 
 
 
-NzbFileHandler::NzbFileHandler()
-{
-
+NzbFileHandler::NzbFileHandler(Core* parent) : QObject (parent) {
+    this->parent = parent;
 }
 
 
-QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFile& file, const QString& nzbName) {
+QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString& nzbName) {
 
     
     // variables definition :
@@ -180,7 +180,7 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
 
     // if error occured display error message box :
     if(!fileSucessfulyProcessed) {
-        this->displayMessageBox(parent, file.fileName());
+        this->parent->getCentralWidget()->displayNzbHandleErrorMessageBox(file.fileName());
 
     }
     else {
@@ -191,20 +191,6 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(CentralWidget* parent, QFil
 
 
     return globalFileDataOrderedList;
-
-}
-
-
-
-
-
-void NzbFileHandler::displayMessageBox(CentralWidget* parent, const QString& fileName) {
-
-    KMessageBox::messageBox(parent,
-                            KMessageBox::Sorry,
-                            i18n("The file <b>%1</b> can not be processed",
-                                 fileName),
-                            i18n("File process error"));
 
 }
 

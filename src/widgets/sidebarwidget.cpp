@@ -30,16 +30,15 @@
 #include <QVBoxLayout>
 #include <QSplitter>
 
-#include "mystatusbar.h"
+#include "widgets/mystatusbar.h"
 #include "mainwindow.h"
-#include "utilityiconpainting.h"
+#include "utilities/utilityiconpainting.h"
 
 
 SideBarWidget::SideBarWidget(QWidget* parent) : QWidget(parent) {
 
     this->multiTabBar = new KMultiTabBar(KMultiTabBar::Top, parent);
     this->multiTabBar->setStyle(KMultiTabBar::KDEV3ICON);
-
 
     this->stackedWidget = new QStackedWidget(this);
 

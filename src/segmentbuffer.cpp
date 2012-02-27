@@ -24,13 +24,13 @@
 #include <KDebug>
 
 #include "servermanager.h"
-#include "centralwidget.h"
+#include "core.h"
 
 
-SegmentBuffer::SegmentBuffer(ServerManager* parent, CentralWidget* centralWidget) : QObject(parent) {
+SegmentBuffer::SegmentBuffer(ServerManager* parent, Core* core) : QObject(parent) {
 
     this->serverManager = parent;
-    this->centralWidget = centralWidget;
+    this->core = core;
 
     this->segmentDecoderIdle = true;
     this->bufferFullCounter = 0;
@@ -46,11 +46,11 @@ void SegmentBuffer::setupConnections() {
     // send segment to decoder thread that handles decoding and saving :
     connect (this,
              SIGNAL(saveDownloadedSegmentSignal(SegmentData)),
-             this->centralWidget->getSegmentsDecoderThread(),
+             this->core->getSegmentsDecoderThread(),
              SLOT(saveDownloadedSegmentSlot(SegmentData)));
 
     // decoder thread will notify its current state (idle or busy) :
-    connect (this->centralWidget->getSegmentsDecoderThread(),
+    connect (this->core->getSegmentsDecoderThread(),
              SIGNAL(segmentDecoderIdleSignal()),
              this,
              SLOT(segmentDecoderIdleSlot()));

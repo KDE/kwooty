@@ -23,7 +23,7 @@
 
 #include <KDebug>
 
-#include "centralwidget.h"
+#include "core.h"
 #include "servermanager.h"
 #include "servergroup.h"
 #include "statsinfobuilder.h"   
@@ -31,7 +31,7 @@
 
 
 
-ClientsObserver::ClientsObserver(CentralWidget* parent) : ClientsObserverBase(parent) {
+ClientsObserver::ClientsObserver(Core* parent) : ClientsObserverBase(parent) {
 
     this->parent = parent;
 

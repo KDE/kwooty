@@ -24,7 +24,7 @@
 #include <KDebug>
 
 #include "mainwindow.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "servermanager.h"
 #include "servergroup.h"
 #include "observers/clientsperserverobserver.h"
@@ -32,15 +32,30 @@
 #include "widgets/serverstatuswidget.h"
 #include "data/serverdata.h"
 #include "data/segmentinfodata.h"
-#include "utilityserverstatus.h"
+#include "utilities/utilityserverstatus.h"
 #include "preferences/kconfiggrouphandler.h"
 
 
 SideBar::SideBar(MainWindow* parent) : QObject(parent) {
 
+    this->core = parent->getCore();
     this->sideBarWidget = new SideBarWidget(parent);
     this->serverManager = 0;
     this->stateRestored = false;
+
+    this->serverManagerSettingsChangedSlot();
+    this->setupConnections();
+
+}
+
+
+void SideBar::setupConnections() {
+
+    // notify sidebar that settings have been changed :
+    connect (this->core->getServerManager(),
+             SIGNAL(serverManagerSettingsChangedSignal()),
+             this,
+             SLOT(serverManagerSettingsChangedSlot()), Qt::QueuedConnection);
 
 }
 
@@ -109,66 +124,7 @@ void SideBar::createSideBarWidgets() {
 
 
 
-
-//============================================================================================================//
-//                                               SLOTS                                                        //
-//============================================================================================================//
-
-
-void SideBar::activeSlot(bool active) {
-
-    this->sideBarWidget->setVisible(active);
-}
-
-
-void SideBar::serverManagerSettingsChangedSlot() {
-
-    // if servermanager instance is not yet initialized :
-    if (!this->serverManager) {
-        this->serverManager = static_cast<MainWindow*>(this->parent())->getCentralWidget()->getServerManager();
-    }
-
-    if (this->serverManager) {
-
-        // remove widgets from side bar if number of servers has been reduced :
-        if (this->serverManager->getServerNumber() < this->sideBarWidget->count()) {
-
-            while (this->serverManager->getServerNumber() < this->sideBarWidget->count()) {
-
-                this->sideBarWidget->removeLast();
-            }
-        }
-        // add widgets from side bar if number of servers has been increased :
-        else {
-            this->createSideBarWidgets();
-        }
-
-
-        // synchronize info for each server with newly settings :
-        for (int i = 0; i < this->sideBarWidget->count(); i++) {
-
-            ServerData serverData = this->serverManager->getServerGroupById(i)->getServerData();
-
-            // update text and tooltip accordingly :
-            this->sideBarWidget->updateTextByIndex(i, serverData.getServerName());
-            this->sideBarWidget->updateToolTipByIndex(i, serverData.getServerName());
-
-            this->serverStatisticsUpdateSlot(i);
-        }
-
-        // for first call, restore previous session settings :
-        if (!this->stateRestored) {
-            this->loadState();
-        }
-
-    }
-
-}
-
-
-
-
-void SideBar::serverStatisticsUpdateSlot(const int serverId) {
+void SideBar::serverStatisticsUpdate(const int serverId) {
 
     if (this->serverManager) {
 
@@ -234,6 +190,68 @@ void SideBar::serverStatisticsUpdateSlot(const int serverId) {
 
     }
 }
+
+
+
+
+
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
+
+
+void SideBar::activeSlot(bool active) {
+
+    this->sideBarWidget->setVisible(active);
+}
+
+
+void SideBar::serverManagerSettingsChangedSlot() {
+
+    // if servermanager instance is not yet initialized :
+    if (!this->serverManager) {
+        this->serverManager = static_cast<MainWindow*>(this->parent())->getCore()->getServerManager();
+    }
+
+    if (this->serverManager) {
+
+        // remove widgets from side bar if number of servers has been reduced :
+        if (this->serverManager->getServerNumber() < this->sideBarWidget->count()) {
+
+            while (this->serverManager->getServerNumber() < this->sideBarWidget->count()) {
+
+                this->sideBarWidget->removeLast();
+            }
+        }
+        // add widgets from side bar if number of servers has been increased :
+        else {
+            this->createSideBarWidgets();
+        }
+
+
+        // synchronize info for each server with newly settings :
+        for (int i = 0; i < this->sideBarWidget->count(); i++) {
+
+            ServerData serverData = this->serverManager->getServerGroupById(i)->getServerData();
+
+            // update text and tooltip accordingly :
+            this->sideBarWidget->updateTextByIndex(i, serverData.getServerName());
+            this->sideBarWidget->updateToolTipByIndex(i, serverData.getServerName());
+
+            this->serverStatisticsUpdate(i);
+        }
+
+        // for first call, restore previous session settings :
+        if (!this->stateRestored) {
+            this->loadState();
+        }
+
+    }
+
+}
+
+
+
 
 
 

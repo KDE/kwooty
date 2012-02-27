@@ -24,7 +24,7 @@
 #include "itemparentupdater.h"
 #include "standarditemmodel.h"
 #include "kwootysettings.h"
-#include "utilityiconpainting.h"
+#include "utilities/utilityiconpainting.h"
 #include "data/nzbfiledata.h"
 
 

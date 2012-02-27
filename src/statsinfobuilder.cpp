@@ -28,14 +28,14 @@
 
 #include "standarditemmodel.h"
 #include "standarditemmodelquery.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "notificationmanager.h"
 #include "servermanager.h"
 #include "observers/clientsobserver.h"
 #include "kwootysettings.h"
 
 
-StatsInfoBuilder::StatsInfoBuilder(ClientsObserver* clientsObserver, CentralWidget* parent)  : QObject(parent) {
+StatsInfoBuilder::StatsInfoBuilder(ClientsObserver* clientsObserver, Core* parent)  : QObject(parent) {
 
     this->parent = parent;
     this->clientsObserver = clientsObserver;

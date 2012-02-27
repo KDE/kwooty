@@ -24,7 +24,7 @@
 #include <KIcon>
 #include <KIconLoader>
 
-#include "utilityiconpainting.h"
+#include "utilities/utilityiconpainting.h"
 #include "serverstatuswidget.h"
 
 

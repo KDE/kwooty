@@ -28,12 +28,13 @@
 #include <QPointer>
 #include "kwooty_export.h"
 #include "plugins/pluginmanager.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class MyStatusBar;
-class MyTreeView;
 class CentralWidget;
+class MyTreeView;
+class Core;
 class SysTray;
 class PluginManager;
 class SideBar;
@@ -46,17 +47,20 @@ class KWOOTY_EXPORT MainWindow : public KXmlGuiWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = 0);
+    MainWindow(QWidget* parent = 0);
     ~MainWindow();
 
     void openFileWithFileMode(KUrl, UtilityNamespace::OpenFileMode);
     MyStatusBar* getStatusBar() const;
     SideBar* getSideBar() const;
+    Core* getCore() const;
     CentralWidget* getCentralWidget() const;
+    MyTreeView* getTreeView() const;
     QSize sizeHint() const;
 
 
 private:
+    Core* core;
     CentralWidget* centralWidget;
     MyTreeView* treeView;
     QPointer<SysTray> sysTray;
@@ -67,6 +71,7 @@ private:
     QHash<PreferencesPage, KPageWidgetItem*> preferencesPagesMap;
     bool quitSelected;
 
+    void initVariables();
     void buildLayout(QWidget*);
     void setupActions();
     bool queryClose();

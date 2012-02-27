@@ -25,9 +25,10 @@
 
 #include <QUuid>
 
-#include "centralwidget.h"
+#include "core.h"
 #include "itemparentupdater.h"
 #include "standarditemmodel.h"
+#include "widgets/centralwidget.h"
 #include "kwootysettings.h"
 #include "data/segmentdata.h"
 #include "data/nzbfiledata.h"
@@ -35,7 +36,7 @@
 #include "data/globalfiledata.h"
 
 
-DataRestorer::DataRestorer(CentralWidget* parent) : QObject (parent) {
+DataRestorer::DataRestorer(Core* parent) : QObject (parent) {
 
     this->parent = parent;
     this->downloadModel = parent->getDownloadModel();
@@ -93,7 +94,7 @@ int DataRestorer::saveQueueData(const SaveFileBehavior& saveFileBehavior) {
         if (this->isDataToSaveExist()) {
 
             // ask question if previous pending downloads have to be restored :
-            answer = this->displaySaveMessageBox(saveFileBehavior);
+            answer = this->parent->getCentralWidget()->displaySaveMessageBox(saveFileBehavior);
 
             // pendings downloads have to be saved :
             if (answer == KMessageBox::Yes) {
@@ -425,45 +426,6 @@ QString DataRestorer::getPendingFileStr() const {
 
 
 
-int DataRestorer::displayRestoreMessageBox() const {
-
-    int answer = KMessageBox::Yes;
-
-    // ask question if confirmRestoreSilently is checked:
-    if (Settings::restoreDownloadsMethods() == DataRestorer::WithConfirmation) {
-
-        answer = KMessageBox::messageBox(parent,
-                                         KMessageBox::QuestionYesNo,
-                                         i18n("Reload pending downloads from previous session ?"));
-    }
-
-    return answer;
-
-}
-
-
-int DataRestorer::displaySaveMessageBox(const SaveFileBehavior& saveFileBehavior) const {
-
-    int answer = KMessageBox::Yes;
-
-    if (saveFileBehavior == SaveNotSilently) {
-
-        // ask question if confirmSaveSilently is checked:
-        if (Settings::saveDownloadsMethods() == DataRestorer::WithConfirmation) {
-
-            answer = KMessageBox::messageBox(parent,
-                                             KMessageBox::QuestionYesNoCancel,
-                                             i18n("Save pending downloads from current session ?"));
-        }
-
-    }
-
-    return answer;
-}
-
-
-
-
 void DataRestorer::requestSuppressOldOrphanedSegments() {
 
     // kwooty could just have been launched from another app (with "open with...") at this stage
@@ -503,7 +465,7 @@ void DataRestorer::readDataFromDiskSlot() {
         if (this->isHeaderOk(dataStreamIn)) {
 
             // ask question if previous pending downloads have to be restored :
-            int answer = this->displayRestoreMessageBox();
+            int answer = this->parent->getCentralWidget()->displayRestoreMessageBox();
 
             // if data have to be restored :
             if (answer == KMessageBox::Yes) {

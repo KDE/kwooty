@@ -26,10 +26,10 @@
 #include "data/nzbfiledata.h"
 #include "data/nzbcollectiondata.h"
 #include "data/postdownloadinfodata.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class MyStatusBar;
 class ItemPostDownloadUpdater;
 class ItemDownloadUpdater;
@@ -43,7 +43,7 @@ class ItemParentUpdater : public ItemAbstractUpdater {
     Q_OBJECT
 
 public:
-    ItemParentUpdater(CentralWidget*);
+    ItemParentUpdater(Core*);
     ItemPostDownloadUpdater* getItemPostDownloadUpdater() const;
     ItemDownloadUpdater* getItemDownloadUpdater() const;
     ItemChildrenManager* getItemChildrenManager() const;
@@ -53,12 +53,12 @@ public:
     void recalculateNzbSize(const QModelIndex&);
 
 #if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
-    CentralWidget* getCentraWidget() const;
+    Core* getCore() const;
 #endif
 
 
 private:
-    CentralWidget* parent;
+    Core* parent;
     ItemPostDownloadUpdater* itemPostDownloadUpdater;
     ItemDownloadUpdater* itemDownloadUpdater;
     ItemChildrenManager* itemChildrenManager;

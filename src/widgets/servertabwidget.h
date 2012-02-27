@@ -45,7 +45,7 @@ public:
 
     // new tab name or rename tab :
     enum ServerTabNaming { CreateTab,
-                           RenameTab,
+                           RenameTab
                        };
 
     ServerTabWidget(PreferencesServer*);

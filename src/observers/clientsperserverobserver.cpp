@@ -25,7 +25,7 @@
 
 #include "servergroup.h"
 #include "sidebar.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "clientsobserver.h"
 #include "statsinfobuilder.h"
 #include "data/segmentinfodata.h"
@@ -40,15 +40,12 @@ ClientsPerServerObserver::ClientsPerServerObserver(ServerGroup* parent) : Client
     this->resetVariables();
     this->setupConnections();
 
-
 }
 
 
 void ClientsPerServerObserver::setupConnections() {
 
-    ClientsObserver* clientsObserver = this->parent->getCentralWidget()->getClientsObserver();
-    SideBar* sideBar = this->parent->getCentralWidget()->getSideBar();
-
+    ClientsObserver* clientsObserver = this->parent->getCore()->getClientsObserver();
     // send connection status (connected, deconnected) to client observer for the current server :
     connect (this,
              SIGNAL(connectionStatusSignal(const int)),
@@ -74,11 +71,10 @@ void ClientsPerServerObserver::setupConnections() {
              clientsObserver,
              SLOT(nntpClientSpeedSlot(const int)));
 
-
-    // notify sidebar that some info nntpClient info have been updated :
+    // notify sidebar that some nntpClient info have been updated :
     connect (this,
              SIGNAL(serverStatisticsUpdateSignal(const int)),
-             sideBar,
+             this->parent->getCore(),
              SLOT(serverStatisticsUpdateSlot(const int)));
 
 

@@ -33,7 +33,7 @@ class SchedulerTableItemDelegate : public QStyledItemDelegate {
     Q_OBJECT
 
 public:
-    SchedulerTableItemDelegate(QObject *parent = 0);
+    SchedulerTableItemDelegate(QObject* parent = 0);
     void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
 
 

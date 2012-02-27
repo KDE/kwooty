@@ -22,7 +22,7 @@
 
 #include <KDebug>
 #include <QFileInfo>
-#include "centralwidget.h"
+#include "core.h"
 #include "repair.h"
 #include "extractrar.h"
 #include "extractzip.h"
@@ -35,9 +35,9 @@
 RepairDecompressThread::RepairDecompressThread(){}
 
 
-RepairDecompressThread::RepairDecompressThread(CentralWidget* inParent) {
+RepairDecompressThread::RepairDecompressThread(Core* parent) {
 
-    this->parent = inParent;
+    this->parent = parent;
 
     this->init();
 
@@ -60,7 +60,7 @@ RepairDecompressThread::~RepairDecompressThread() {
 }
 
 
-CentralWidget* RepairDecompressThread::getCentralWidget() {
+Core* RepairDecompressThread::getCore() {
 
     return this->parent;
 

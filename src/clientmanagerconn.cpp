@@ -24,7 +24,7 @@
 #include <KGlobal>
 
 #include "kwootysettings.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "servergroup.h"
 #include "segmentmanager.h"
 #include "segmentbuffer.h"
@@ -46,8 +46,9 @@ ClientManagerConn::ClientManagerConn(ServerGroup* parent, int clientId, int conn
     // client identifier :
     this->clientId = clientId;
 
-
-    // start each nntpclient instance with a delay in order to not hammer the host :
+    // start each nntpclient instance with a delay in order to not hammer the host,
+    // moreover the first instance will be created *after first event loop* to be sure that the whole application
+    // has been fully started (i.e : connections with all signals/slots are ok) :
     this->connectionDelay = connectionDelay;
     QTimer::singleShot(this->connectionDelay, this, SLOT(initSlot()));
 
@@ -66,14 +67,13 @@ ServerGroup* ClientManagerConn::getServerGroup() {
 
 void ClientManagerConn::initSlot() {
 
-
-    CentralWidget* centralWidget = this->parent->getCentralWidget();
+    Core* core = this->parent->getCore();
 
     // create nntp socket :
     this->nntpClient = new NntpClient(this);
 
     // ServerGroup notify all nntpClient instances that connection settings changed :
-    connect (centralWidget,
+    connect (core,
              SIGNAL(dataHasArrivedSignal()),
              this,
              SLOT(dataHasArrivedSlot()));
@@ -100,21 +100,21 @@ void ClientManagerConn::initSlot() {
     // ask to segment manager to send a new segment to download :
     connect (this->nntpClient,
              SIGNAL(getNextSegmentSignal(ClientManagerConn*)),
-             centralWidget->getSegmentManager(),
+             core->getSegmentManager(),
              SLOT(getNextSegmentSlot(ClientManagerConn*)));
 
     // send to segmentManager segment data update :
     qRegisterMetaType<SegmentData>("SegmentData");
     connect (this->nntpClient,
              SIGNAL(updateDownloadSegmentSignal(SegmentData)),
-             centralWidget->getSegmentManager(),
+             core->getSegmentManager(),
              SLOT(updateDownloadSegmentSlot(SegmentData)));
 
 
-    // notify centralWidget that error occured during file save process :
+    // notify core that error occured during file save process :
     connect (this->nntpClient,
              SIGNAL(saveFileErrorSignal(const int)),
-             centralWidget,
+             core,
              SLOT(saveFileErrorSlot(const int)));
 
 

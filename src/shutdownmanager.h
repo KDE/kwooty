@@ -33,16 +33,15 @@ using namespace Solid::Control;
 #include <solid/powermanagement.h>
 using namespace Solid::PowerManagement;
 
-#include <KDialog>
 
 #include <QObject>
 #include <QTimer>
-#include <QPointer>
 
-#include "utility.h"
+
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 
 class ShutdownManager : public QObject {
 
@@ -57,14 +56,14 @@ public:
         Unknown
     };
 
-    ShutdownManager(CentralWidget* parent = 0);
+    ShutdownManager(Core*);
     QMap<QString, QString> retrieveIconAvailableShutdownMap();
 
 
 private:
 
-    CentralWidget* parent;
-    QPointer<KDialog> aboutToShutdownDialog;
+    Core* parent;
+
     QTimer* activityMonitorTimer;
     QTimer* launchShutdownTimer;
     QString scheduleDateTimeStr;
@@ -80,12 +79,11 @@ private:
     ShutdownManager::SessionType retrieveSessionType();
     QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods();
     QString getShutdownMethodText(UtilityNamespace::SystemShutdownType) const;
-    int displayAboutToShutdownMessageBox(const QString&);
     void systemAboutToShutdown();
     void requestSuspend(Solid::PowerManagement::SleepState);
     void requestShutdown();
     void storeSettings();
-    void displayShutdownErrorMessageBox(const QString&);
+    void handleShutdownError(const QString&);
     void updateStatusBar();
     void setupConnections();
 

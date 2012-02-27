@@ -36,9 +36,9 @@ class KWOOTY_EXPORT Plugin : public QObject, public KXMLGUIClient {
 
 public:
 
-    Plugin( const KComponentData& instance, QObject* parent );
+    Plugin(const KComponentData&, QObject*);
     void setCore(MainWindow*);
-    MainWindow* getCore();
+    MainWindow* getMainWindow();
 
     virtual void load() = 0;
     virtual void unload() = 0;

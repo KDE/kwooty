@@ -28,10 +28,10 @@
 #include <QApplication>
 
 #include "mainwindow.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "kwootysettings.h"
 #include "preferences/preferencesserver.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 

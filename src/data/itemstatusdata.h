@@ -24,7 +24,7 @@
 #include <QStandardItem>
 
 #include "kwooty_export.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class KWOOTY_EXPORT ItemStatusData {

@@ -29,7 +29,7 @@
 #include "data/serverdata.h"
 #include "kwootysettings.h"
 #include "kconfiggrouphandler.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 

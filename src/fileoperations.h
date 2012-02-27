@@ -28,9 +28,10 @@
 #include <QFile>
 #include "kwooty_export.h"
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
+class Core;
 class CentralWidget;
 
 class KWOOTY_EXPORT FileOperations : public QObject {
@@ -39,15 +40,14 @@ class KWOOTY_EXPORT FileOperations : public QObject {
 
 public:
 
-    FileOperations(CentralWidget* = 0);
+    FileOperations(Core*);
     void openFile();
     void openFileWithFileMode(KUrl, UtilityNamespace::OpenFileMode);
 
     static bool isSplitFileFormat(const QFile&);
 
 private:
-
-    CentralWidget* centralWidget;
+    Core* core;
     void openUrl(KUrl, bool&, UtilityNamespace::OpenFileMode);
 
 

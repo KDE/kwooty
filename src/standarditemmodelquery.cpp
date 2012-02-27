@@ -22,11 +22,11 @@
 #include "standarditemmodelquery.h"
 
 #include "standarditemmodel.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "kwootysettings.h"
 
 
-StandardItemModelQuery::StandardItemModelQuery(CentralWidget* parent) : QObject(parent) {
+StandardItemModelQuery::StandardItemModelQuery(Core* parent) : QObject(parent) {
 
     this->downloadModel = parent->getDownloadModel();
 

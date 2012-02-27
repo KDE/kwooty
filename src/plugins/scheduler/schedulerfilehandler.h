@@ -54,7 +54,7 @@ class SchedulerFileHandler : public QObject {
 
 
 public:
-    SchedulerFileHandler(QObject* parent);
+    SchedulerFileHandler(QObject*);
     SchedulerFileHandler();
     QStandardItemModel* loadModelFromFile(QObject*);
     void saveModelToFile(QStandardItemModel*);

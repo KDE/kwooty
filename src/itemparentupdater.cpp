@@ -22,7 +22,7 @@
 
 #include <KDebug>
 
-#include "centralwidget.h"
+#include "core.h"
 #include "standarditemmodel.h"
 #include "standarditemmodelquery.h"
 #include "itemdownloadupdater.h"
@@ -33,8 +33,8 @@
 #include "kwootysettings.h"
 
 
-ItemParentUpdater::ItemParentUpdater(CentralWidget* parent) : ItemAbstractUpdater (parent->getDownloadModel(), ItemAbstractUpdater::Parent)
-{
+ItemParentUpdater::ItemParentUpdater(Core* parent) : ItemAbstractUpdater (parent->getDownloadModel(), ItemAbstractUpdater::Parent) {
+
     this->parent = parent;
 
     // instanciate item updater classes :
@@ -62,7 +62,7 @@ StandardItemModel* ItemParentUpdater::getDownloadModel() const{
 
 
 #if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
-CentralWidget* ItemParentUpdater::getCentraWidget() const{
+Core* ItemParentUpdater::getCore() const{
     return this->parent;
 }
 #endif
@@ -76,12 +76,6 @@ void ItemParentUpdater::setupConnections() {
              SIGNAL(statusBarDecrementSignal(const quint64, const int)),
              parent->getClientsObserver(),
              SLOT(decrementSlot(const quint64, const int)));
-
-    // recalculate full nzb size when children may have been removed :
-    connect (parent,
-             SIGNAL(recalculateNzbSizeSignal(const QModelIndex)),
-             this,
-             SLOT(recalculateNzbSizeSlot(const QModelIndex)));
 
     // download par2 files if crc check failed during archive download :
     connect (this,

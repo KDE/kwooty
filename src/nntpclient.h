@@ -25,7 +25,7 @@
 #include <QSslSocket>
 #include "data/segmentdata.h"
 #include "data/segmentinfodata.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class ClientManagerConn;
@@ -83,7 +83,7 @@ public:
                            SegmentDownloadFinished
                          };
 
-    NntpClient(ClientManagerConn* parent = 0);
+    NntpClient(ClientManagerConn*);
     ~NntpClient();
     void downloadNextSegment(const SegmentData&);
     void noSegmentAvailable();

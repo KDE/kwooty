@@ -29,10 +29,11 @@
 #include <QStandardItem>
 
 #include "mainwindow.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "fileoperations.h"
 #include "servermanager.h"
 #include "servergroup.h"
+#include "actionsmanager.h"
 #include "observers/clientsperserverobserver.h"
 #include "schedulerplugin.h"
 #include "schedulerfilehandler.h"
@@ -42,9 +43,9 @@
 
 Scheduler::Scheduler(SchedulerPlugin* parent) :  QObject(parent) {
 
-    this->centralWidget = parent->getCore()->getCentralWidget();
-    this->serverManager = parent->getCore()->getCentralWidget()->getServerManager();
-    this->statusBar = parent->getCore()->getStatusBar();
+    this->core = parent->getMainWindow()->getCore();
+    this->serverManager = this->core->getServerManager();
+    this->statusBar = parent->getMainWindow()->getStatusBar();
 
     // get model :
     this->schedulerModel = SchedulerFileHandler().loadModelFromFile(this);
@@ -98,7 +99,7 @@ void Scheduler::setupConnections() {
 
 
 void Scheduler::suspendDownloads() {
-    this->centralWidget->pauseAllDownloadSlot();
+    this->core->getActionsManager()->pauseAllDownloadSlot();
 }
 
 
@@ -114,7 +115,7 @@ void Scheduler::checkDownloadStatus(const DownloadLimitStatus& downloadLimitStat
 
         // if previous status has paused downloads, its time to restart them :
         if (this->downloadLimitStatus == DisabledDownload) {
-            this->centralWidget->startAllDownloadSlot();
+            this->core->getActionsManager()->startAllDownloadSlot();
         }
 
         // then apply proper bandwidth management according to current status :

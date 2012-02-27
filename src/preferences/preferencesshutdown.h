@@ -24,14 +24,14 @@
 #include <QWidget>
 #include "ui_preferencesshutdown.h"
 
-class CentralWidget;
+class Core;
 
 class PreferencesShutdown : public QWidget, public Ui::PreferencesShutdown
 {
 
     Q_OBJECT
 public:
-    PreferencesShutdown(CentralWidget*);
+    PreferencesShutdown(Core*);
 
 private:
     void setupConnections();

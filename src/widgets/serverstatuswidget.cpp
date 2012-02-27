@@ -30,7 +30,7 @@
 
 #include "sidebar.h"
 #include "widgets/textpushbuttonwidget.h"
-#include "utilityiconpainting.h"
+#include "utilities/utilityiconpainting.h"
 
 
 ServerStatusWidget::ServerStatusWidget(QWidget* parent) : QDockWidget(parent) {

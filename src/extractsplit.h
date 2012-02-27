@@ -27,7 +27,7 @@
 #include "jobs/concatsplitfilesjob.h"
 #include "data/nzbcollectiondata.h"
 #include "extractbase.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class RepairDecompressThread;

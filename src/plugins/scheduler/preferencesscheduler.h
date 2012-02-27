@@ -41,7 +41,7 @@ class PreferencesScheduler : public KCModule {
 
 public:
 
-            PreferencesScheduler(QWidget* = 0, const QVariantList& = QVariantList());
+    PreferencesScheduler(QWidget* = 0, const QVariantList& = QVariantList());
     ~PreferencesScheduler();
 
     virtual void save();

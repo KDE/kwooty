@@ -30,7 +30,7 @@
 #include <QPixmap>
 #include <QPainter>
 
-#include "utilityiconpainting.h"
+#include "utilities/utilityiconpainting.h"
 #include "statusbarwidgetbase.h"
 
 

@@ -37,12 +37,15 @@
 #include <QtGui>
 
 #include "kwootysettings.h"
-#include "mystatusbar.h"
-#include "mytreeview.h"
-#include "centralwidget.h"
+#include "widgets/mystatusbar.h"
+#include "widgets/mytreeview.h"
+#include "widgets/centralwidget.h"
+#include "core.h"
+#include "actionbuttonsmanager.h"
 #include "shutdownmanager.h"
 #include "fileoperations.h"
 #include "sidebar.h"
+#include "actionsmanager.h"
 #include "plugins/pluginmanager.h"
 #include "preferences/kconfiggrouphandler.h"
 #include "preferences/preferencesserver.h"
@@ -61,25 +64,31 @@
 
 
 
-MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent)
-{
+MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent) {
 
-    // create the user interface :
-    QWidget* widget = new QWidget(this);
+    this->initVariables();
 
     // setup kconfig group handler :
     this->kConfigGroupHandler = new KConfigGroupHandler(this);
 
-    // setup side bar below treeview :
+    // setup central widget :
+    this->centralWidget = new CentralWidget(this);
+
+    // setup treeview :
+    this->treeView = new MyTreeView(this);
+
+    // setup core :
+    this->core = new Core(this);
+
+    // finish treeView init :
+    this->treeView->achieveInit();
+
+    // setup side bar manager :
     this->sideBar = new SideBar(this);
 
-    // setup centralWidget :
-    this->centralWidget = new CentralWidget(this);   
 
-    // get treeview instance :
-    this->treeView = this->centralWidget->getTreeView();
-
-    // build layout :
+    // create the user interface :
+    QWidget* widget = new QWidget(this);
     this->buildLayout(widget);
     this->setCentralWidget(widget);
 
@@ -110,6 +119,12 @@ MainWindow::~MainWindow(){
 
 }
 
+void MainWindow::initVariables() {
+    this->core = 0;
+    this->centralWidget = 0;
+    this->treeView = 0;
+    this->sideBar = 0;
+}
 
 
 void MainWindow::buildLayout(QWidget* widget) {
@@ -125,19 +140,34 @@ void MainWindow::buildLayout(QWidget* widget) {
 
 
 MyStatusBar* MainWindow::getStatusBar() const {
+    Q_ASSERT (this->statusBar != 0);
     return this->statusBar;
 }
 
 SideBar* MainWindow::getSideBar() const {
+    Q_ASSERT (this->sideBar != 0);
     return this->sideBar;
 }
 
-CentralWidget* MainWindow::getCentralWidget() const{
+CentralWidget* MainWindow::getCentralWidget() const {
+    Q_ASSERT (this->centralWidget != 0);
     return this->centralWidget;
 }
 
+Core* MainWindow::getCore() const{
+    Q_ASSERT (this->core != 0);
+    return this->core;
+}
+
+MyTreeView* MainWindow::getTreeView() const{
+    Q_ASSERT (this->treeView != 0);
+    return this->treeView;
+}
 
 void MainWindow::setupActions() {
+
+    ActionsManager* actionsManager = this->core->getActionsManager();
+    ActionButtonsManager* actionButtonsManager = actionsManager->getActionButtonsManager();
 
     //-------------------
     //custom Actions :
@@ -149,7 +179,7 @@ void MainWindow::setupActions() {
     clearAction->setToolTip(i18n("Remove all rows"));
     clearAction->setShortcut(Qt::CTRL + Qt::Key_W);
     actionCollection()->addAction("clear", clearAction);
-    connect(clearAction, SIGNAL(triggered(bool)), treeView, SLOT(clearSlot()));
+    connect(clearAction, SIGNAL(triggered(bool)), actionsManager, SLOT(clearSlot()));
 
     //startDownloadAction
     KAction* startDownloadAction = new KAction(this);
@@ -159,8 +189,8 @@ void MainWindow::setupActions() {
     startDownloadAction->setShortcut(Qt::CTRL + Qt::Key_S);
     startDownloadAction->setEnabled(false);
     actionCollection()->addAction("start", startDownloadAction);
-    connect(startDownloadAction, SIGNAL(triggered(bool)), centralWidget, SLOT(startDownloadSlot()));
-    connect(treeView, SIGNAL(setStartButtonEnabledSignal(bool)), startDownloadAction, SLOT(setEnabled(bool)) );
+    connect(startDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(startDownloadSlot()));
+    connect(actionButtonsManager, SIGNAL(setStartButtonEnabledSignal(bool)), startDownloadAction, SLOT(setEnabled(bool)) );
 
     //pauseDownloadAction
     KAction* pauseDownloadAction = new KAction(this);
@@ -170,8 +200,8 @@ void MainWindow::setupActions() {
     pauseDownloadAction->setShortcut(Qt::CTRL + Qt::Key_P);
     pauseDownloadAction->setEnabled(false);
     actionCollection()->addAction("pause", pauseDownloadAction);
-    connect(pauseDownloadAction, SIGNAL(triggered(bool)), centralWidget, SLOT(pauseDownloadSlot()));
-    connect(treeView, SIGNAL(setPauseButtonEnabledSignal(bool)), pauseDownloadAction, SLOT(setEnabled(bool)) );
+    connect(pauseDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(pauseDownloadSlot()));
+    connect(actionButtonsManager, SIGNAL(setPauseButtonEnabledSignal(bool)), pauseDownloadAction, SLOT(setEnabled(bool)) );
 
     //removeItemAction
     KAction* removeItemAction = new KAction(this);
@@ -181,9 +211,9 @@ void MainWindow::setupActions() {
     removeItemAction->setShortcut(Qt::Key_Delete);
     removeItemAction->setEnabled(false);
     actionCollection()->addAction("remove", removeItemAction);
-    connect(removeItemAction, SIGNAL(triggered(bool)), treeView, SLOT(removeRowSlot()));
-    connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
-    connect(treeView, SIGNAL(setRemoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
+    connect(removeItemAction, SIGNAL(triggered(bool)), actionsManager, SLOT(removeRowSlot()));
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setRemoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
 
     //moveUpAction
     KAction* moveUpAction = new KAction(this);
@@ -193,8 +223,8 @@ void MainWindow::setupActions() {
     moveUpAction->setShortcut(Qt::CTRL + Qt::Key_Up);
     moveUpAction->setEnabled(false);
     actionCollection()->addAction("moveUp", moveUpAction);
-    connect(moveUpAction, SIGNAL(triggered(bool)), treeView, SLOT(moveUpSlot()));
-    connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveUpAction, SLOT(setEnabled(bool)) );
+    connect(moveUpAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveUpSlot()));
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveUpAction, SLOT(setEnabled(bool)) );
 
     //moveToTopAction
     KAction* moveToTopAction = new KAction(this);
@@ -204,8 +234,8 @@ void MainWindow::setupActions() {
     moveToTopAction->setShortcut(Qt::CTRL + Qt::Key_PageUp);
     moveToTopAction->setEnabled(false);
     actionCollection()->addAction("moveTop", moveToTopAction);
-    connect(moveToTopAction, SIGNAL(triggered(bool)), treeView, SLOT(moveToTopSlot()));
-    connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToTopAction, SLOT(setEnabled(bool)) );
+    connect(moveToTopAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveToTopSlot()));
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToTopAction, SLOT(setEnabled(bool)) );
 
     //moveDownAction
     KAction* moveDownAction = new KAction(this);
@@ -215,8 +245,8 @@ void MainWindow::setupActions() {
     moveDownAction->setShortcut(Qt::CTRL + Qt::Key_Down);
     moveDownAction->setEnabled(false);
     actionCollection()->addAction("moveDown", moveDownAction);
-    connect(moveDownAction, SIGNAL(triggered(bool)), treeView, SLOT(moveDownSlot()));
-    connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveDownAction, SLOT(setEnabled(bool)) );
+    connect(moveDownAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveDownSlot()));
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveDownAction, SLOT(setEnabled(bool)) );
 
 
     //moveToBottomAction
@@ -227,8 +257,8 @@ void MainWindow::setupActions() {
     moveToBottomAction->setShortcut(Qt::CTRL + Qt::Key_PageDown);
     moveToBottomAction->setEnabled(false);
     actionCollection()->addAction("moveBottom", moveToBottomAction);
-    connect(moveToBottomAction, SIGNAL(triggered(bool)), treeView, SLOT(moveToBottomSlot()));
-    connect(treeView, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToBottomAction, SLOT(setEnabled(bool)) );
+    connect(moveToBottomAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveToBottomSlot()));
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToBottomAction, SLOT(setEnabled(bool)) );
 
 
     //openFolderAction
@@ -239,7 +269,7 @@ void MainWindow::setupActions() {
     openFolderAction->setShortcut(Qt::CTRL + Qt::Key_D);
     openFolderAction->setEnabled(true);
     actionCollection()->addAction("downloadFolder", openFolderAction);
-    connect(openFolderAction, SIGNAL(triggered(bool)), treeView, SLOT(openFolderSlot()));
+    connect(openFolderAction, SIGNAL(triggered(bool)), actionsManager, SLOT(openFolderSlot()));
 
     //shutdownAction
     KAction* shutdownAction = new KAction(this);
@@ -250,9 +280,9 @@ void MainWindow::setupActions() {
     shutdownAction->setEnabled(false);
     shutdownAction->setCheckable(true);
     actionCollection()->addAction("shutdown", shutdownAction);
-    connect(shutdownAction, SIGNAL(triggered(bool)), centralWidget->getShutdownManager(), SLOT(enableSystemShutdownSlot(bool)));
-    connect(centralWidget->getShutdownManager(), SIGNAL(setShutdownButtonCheckedSignal(bool)), shutdownAction, SLOT(setChecked(bool)));
-    connect(centralWidget->getShutdownManager(), SIGNAL(setShutdownButtonEnabledSignal(bool)), shutdownAction, SLOT(setEnabled(bool)) );
+    connect(shutdownAction, SIGNAL(triggered(bool)), core->getShutdownManager(), SLOT(enableSystemShutdownSlot(bool)));
+    connect(core->getShutdownManager(), SIGNAL(setShutdownButtonCheckedSignal(bool)), shutdownAction, SLOT(setChecked(bool)));
+    connect(core->getShutdownManager(), SIGNAL(setShutdownButtonEnabledSignal(bool)), shutdownAction, SLOT(setEnabled(bool)) );
 
     //startAllDownloadAction
     KAction* startAllDownloadAction = new KAction(this);
@@ -261,7 +291,7 @@ void MainWindow::setupActions() {
     startAllDownloadAction->setToolTip(i18n("Start all paused downloads"));
     startAllDownloadAction->setEnabled(true);
     actionCollection()->addAction("startAll", startAllDownloadAction);
-    connect(startAllDownloadAction, SIGNAL(triggered(bool)), centralWidget, SLOT(startAllDownloadSlot()));
+    connect(startAllDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(startAllDownloadSlot()));
 
     //pauseAllDownloadAction
     KAction* pauseAllDownloadAction = new KAction(this);
@@ -270,7 +300,7 @@ void MainWindow::setupActions() {
     pauseAllDownloadAction->setToolTip(i18n("Pause all pending downloads"));
     pauseAllDownloadAction->setEnabled(true);
     actionCollection()->addAction("pauseAll", pauseAllDownloadAction);
-    connect(pauseAllDownloadAction, SIGNAL(triggered(bool)), centralWidget, SLOT(pauseAllDownloadSlot()));
+    connect(pauseAllDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(pauseAllDownloadSlot()));
 
 
     //retryDownloadAction
@@ -281,8 +311,8 @@ void MainWindow::setupActions() {
     retryDownloadAction->setShortcut(Qt::CTRL + Qt::Key_R);
     retryDownloadAction->setEnabled(false);
     actionCollection()->addAction("retryDownload", retryDownloadAction);
-    connect(retryDownloadAction, SIGNAL(triggered(bool)), centralWidget, SLOT(retryDownloadSlot()));
-    connect(treeView, SIGNAL(setRetryButtonEnabledSignal(bool)), retryDownloadAction, SLOT(setEnabled(bool)) );
+    connect(retryDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(retryDownloadSlot()));
+    connect(actionButtonsManager, SIGNAL(setRetryButtonEnabledSignal(bool)), retryDownloadAction, SLOT(setEnabled(bool)) );
 
 
     //------------------
@@ -342,7 +372,7 @@ void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage)
         KPageWidgetItem* preferencesDisplayPage = dialog->addPage(preferencesDisplay, i18n("Display modes"), "view-choose", i18n("Setup Display Modes"));
         this->preferencesPagesMap.insert(DisplayPage, preferencesDisplayPage);
 
-        PreferencesShutdown* preferencesShutdown = new PreferencesShutdown(this->centralWidget);
+        PreferencesShutdown* preferencesShutdown = new PreferencesShutdown(this->core);
         KPageWidgetItem* preferencesShutdownPage = dialog->addPage(preferencesShutdown, i18n("Shutdown"), "system-shutdown", i18n("Setup System Shutdown"));
         this->preferencesPagesMap.insert(ShutdownPage, preferencesShutdownPage);
 
@@ -351,7 +381,7 @@ void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage)
         this->preferencesPagesMap.insert(PluginsPage, preferencesPluginsPage);
 
 
-        connect(dialog, SIGNAL(settingsChanged(const QString&)), this->centralWidget, SLOT(updateSettingsSlot()));
+        connect(dialog, SIGNAL(settingsChanged(const QString&)), this->core, SLOT(updateSettingsSlot()));
         connect(dialog, SIGNAL(settingsChanged(const QString&)), this->kConfigGroupHandler, SLOT(settingsChangedSlot()));
         connect(dialog, SIGNAL(settingsChanged(const QString&)), preferencesPrograms, SLOT(aboutToShowSettingsSlot()));
         connect(dialog, SIGNAL(settingsChanged(const QString&)), this, SLOT(systraySlot()));
@@ -381,13 +411,13 @@ QSize MainWindow::sizeHint() const {
 
 void MainWindow::openFile() {
 
-    this->centralWidget->getFileOperations()->openFile();
+    this->core->getFileOperations()->openFile();
 
 }
 
 void MainWindow::openFileWithFileMode(KUrl nzbUrl, UtilityNamespace::OpenFileMode openFileMode) {
 
-    this->centralWidget->getFileOperations()->openFileWithFileMode(nzbUrl, openFileMode);
+    this->core->getFileOperations()->openFileWithFileMode(nzbUrl, openFileMode);
 
 }
 
@@ -443,7 +473,7 @@ bool MainWindow::queryClose() {
     }
     // session manager is about to quit, just save data silently and quit :
     else {
-        centralWidget->savePendingDownloads(UtilityNamespace::ShutdownMethodUnknown, SaveSilently);
+        core->savePendingDownloads(UtilityNamespace::ShutdownMethodUnknown, SaveSilently);
     }
 
     return confirmQuit;
@@ -459,7 +489,7 @@ bool MainWindow::queryExit() {
 
 void MainWindow::askForSavingDownloads(bool& confirmQuit) {
 
-    int answer = centralWidget->savePendingDownloads();
+    int answer = core->savePendingDownloads();
 
     if (answer == KMessageBox::Cancel) {
         this->quitSelected = false;

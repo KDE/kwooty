@@ -23,18 +23,17 @@
 
 #include <KDebug>
 
-#include "centralwidget.h"
-#include "mytreeview.h"
+#include "core.h"
+#include "widgets/mytreeview.h"
 #include "standarditemmodel.h"
 #include "standarditemmodelquery.h"
 #include "kwootysettings.h"
 
 
-QueueFileObserver::QueueFileObserver(CentralWidget* parent) : QObject(parent) {
+QueueFileObserver::QueueFileObserver(Core* parent) : QObject(parent) {
 
     this->downloadModel = parent->getDownloadModel();
     this->modelQuery = parent->getModelQuery();
-    this->treeView = parent->getTreeView();
 
     this->jobNotifyTimer = new QTimer(this);
 
@@ -68,17 +67,6 @@ void QueueFileObserver::setupConnections() {
             this,
             SLOT(jobFinishStatusSlot(QStandardItem*)));
 
-    // all rows have been removed :
-    connect(this->treeView,
-            SIGNAL(allRowRemovedSignal()),
-            this,
-            SLOT(parentItemChangedSlot()));
-
-    // one or several rows have been removed :
-    connect(this->treeView,
-            SIGNAL(statusBarFileSizeUpdateSignal(StatusBarUpdateType)),
-            this,
-            SLOT(parentItemChangedSlot()));
 
     // ensure that jobs are finished after a time-out :
     connect(this->jobNotifyTimer, SIGNAL(timeout()), this, SLOT(checkJobFinishSlot()));

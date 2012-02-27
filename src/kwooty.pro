@@ -5,17 +5,16 @@ TARGET = kwooty
 TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
-    centralwidget.cpp \
+    core.cpp \
     nzbfilehandler.cpp \
     data/nzbfiledata.cpp \
     data/segmentdata.cpp \
-    utility.cpp \
+    utilities/utility.cpp \
     clientmanagerconn.cpp \
     nntpclient.cpp \
     itemdelegate.cpp \
     itemdownloadupdater.cpp \
     segmentmanager.cpp \
-    mystatusbar.cpp \
     preferences/preferencesserver.cpp \
     preferences/preferencesgeneral.cpp \
     preferences/preferencesprograms.cpp \
@@ -34,19 +33,16 @@ SOURCES += main.cpp \
     preferences/preferencesdisplay.cpp \
     preferences/preferencesshutdown.cpp \
     itemchildrenmanager.cpp \
-    mytreeview.cpp \
     shutdownmanager.cpp \
     segmentdecoderbase.cpp \
     segmentdecoderyenc.cpp \
     segmentdecoderuuenc.cpp \
     extractrar.cpp \
     extractzip.cpp \
-    widgets/icontextwidget.cpp \
     observers/clientsobserver.cpp \
     folderwatcher.cpp \
     fileoperations.cpp \
     data/nzbcollectiondata.cpp \
-    widgets/iconcapacitywidget.cpp \
     systraylegacy.cpp \
     systray.cpp \
     observers/queuefileobserver.cpp \
@@ -69,16 +65,22 @@ SOURCES += main.cpp \
     servergroup.cpp \
     preferences/kconfiggrouphandler.cpp \
     data/serverdata.cpp \
+    widgets/icontextwidget.cpp \
+    widgets/iconcapacitywidget.cpp \
     widgets/serverpreferenceswidget.cpp \
     widgets/servertabwidget.cpp \
-    utilityiconpainting.cpp \
     widgets/sidebarwidget.cpp \
     widgets/serverstatuswidget.cpp \
-    sidebar.cpp \
-    observers/clientsperserverobserver.cpp \
-    utilityserverstatus.cpp \
-    observers/clientsobserverbase.cpp \
+    widgets/statusbarwidgetbase.cpp \
     widgets/textpushbuttonwidget.cpp \
+    widgets/mytreeview.cpp \
+    widgets/centralwidget.cpp \
+    widgets/mystatusbar.cpp \
+    sidebar.cpp \
+    utilities/utilityiconpainting.cpp \
+    observers/clientsperserverobserver.cpp \
+    utilities/utilityserverstatus.cpp \
+    observers/clientsobserverbase.cpp \
     data/segmentinfodata.cpp \
     extractsplit.cpp \
     jobs/concatsplitfilesjob.cpp \
@@ -88,19 +90,19 @@ SOURCES += main.cpp \
     standarditemmodelquery.cpp \
     data/postdownloadinfodata.cpp \
     segmentbuffer.cpp \
-    widgets/statusbarwidgetbase.cpp
+    actionsmanager.cpp \
+    actionbuttonsmanager.cpp
 HEADERS += mainwindow.h \
-    centralwidget.h \
+    core.h \
     nzbfilehandler.h \
     data/nzbfiledata.h \
     data/segmentdata.h \
-    utility.h \
+    utilities/utility.h \
     clientmanagerconn.h \
     nntpclient.h \
     itemdelegate.h \
     itemdownloadupdater.h \
     segmentmanager.h \
-    mystatusbar.h \
     preferences/preferencesserver.h \
     preferences/preferencesgeneral.h \
     preferences/preferencesprograms.h \
@@ -119,19 +121,16 @@ HEADERS += mainwindow.h \
     data/globalfiledata.h \
     preferences/preferencesdisplay.h \
     itemchildrenmanager.h \
-    mytreeview.h \
     shutdownmanager.h \
     segmentdecoderbase.h \
     segmentdecoderyenc.h \
     segmentdecoderuuenc.h \
     extractrar.h \
     extractzip.h \
-    widgets/icontextwidget.h \
     observers/clientsobserver.h \
     folderwatcher.h \
     fileoperations.h \
     data/nzbcollectiondata.h \
-    widgets/iconcapacitywidget.h \
     systraylegacy.h \
     systray.h \
     observers/queuefileobserver.h \
@@ -157,14 +156,20 @@ HEADERS += mainwindow.h \
     data/serverdata.h \
     widgets/serverpreferenceswidget.h \
     widgets/servertabwidget.h \
-    utilityiconpainting.h \
     widgets/sidebarwidget.h \
     widgets/serverstatuswidget.h \
-    sidebar.h \
-    observers/clientsperserverobserver.h \
-    utilityserverstatus.h \
-    observers/clientsobserverbase.h \
+    widgets/mytreeview.h \
     widgets/textpushbuttonwidget.h \
+    widgets/statusbarwidgetbase.h \
+    widgets/iconcapacitywidget.h \
+    widgets/icontextwidget.h \
+    widgets/centralwidget.h \
+    widgets/mystatusbar.h \
+    sidebar.h \
+    utilities/utilityiconpainting.h \
+    observers/clientsperserverobserver.h \
+    utilities/utilityserverstatus.h \
+    observers/clientsobserverbase.h \
     data/segmentinfodata.h \
     extractsplit.h \
     jobs/concatsplitfilesjob.h \
@@ -174,9 +179,9 @@ HEADERS += mainwindow.h \
     standarditemmodelquery.h \
     data/postdownloadinfodata.h \
     segmentbuffer.h \
-    widgets/statusbarwidgetbase.h
-FORMS += centralwidget.ui \
-    preferences/preferencesserver.ui \
+    actionsmanager.h \
+    actionbuttonsmanager.h
+FORMS += preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
     preferences/preferencesgeneral.ui \
     preferences/preferencesdisplay.ui \

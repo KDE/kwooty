@@ -22,12 +22,12 @@
 #define SEGMENTMANAGER_H
 
 #include <QStandardItem>
-#include "utility.h"
+#include "utilities/utility.h"
 #include "data/segmentdata.h"
 #include "data/postdownloadinfodata.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class ClientManagerConn;
 class ItemParentUpdater;
 class StandardItemModel;
@@ -48,7 +48,7 @@ public:
                          };
 
 
-    SegmentManager(CentralWidget* parent = 0);
+    SegmentManager(Core*);
     SegmentManager();
     void setIdlePauseSegments(QStandardItem*, const UtilityNamespace::ItemStatus);
     void setIdleDownloadFailSegments(QStandardItem*);

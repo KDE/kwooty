@@ -22,8 +22,9 @@
 
 #include <KDebug>
 #include <QFile>
-#include "centralwidget.h"
+#include "core.h"
 #include "kwootysettings.h"
+#include "widgets/centralwidget.h"
 #include "repairdecompressthread.h"
 #include "data/nzbfiledata.h"
 
@@ -72,11 +73,11 @@ void ExtractBase::setupConnections() {
     // display dialog box when password is required for archive extraction :
     connect (this,
              SIGNAL(extractPasswordRequiredSignal(QString)),
-             parent->getCentralWidget(),
+             parent->getCore(),
              SLOT(extractPasswordRequiredSlot(QString)));
 
     // send password entered by the user :
-    connect (this->parent->getCentralWidget(),
+    connect (parent->getCore(),
              SIGNAL(passwordEnteredByUserSignal(bool, QString)),
              this,
              SLOT(passwordEnteredByUserSlot(bool, QString)));

@@ -24,14 +24,14 @@
 
 #include <QPointer>
 
-#include "centralwidget.h"
+#include "core.h"
 #include "standarditemmodel.h"
 #include "itemparentupdater.h"
 #include "segmentmanager.h"
 #include "kwootysettings.h"
 
 
-ItemChildrenManager::ItemChildrenManager(CentralWidget* parent, ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater (parent->getDownloadModel(), ItemAbstractUpdater::Child) {
+ItemChildrenManager::ItemChildrenManager(Core* parent, ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater (parent->getDownloadModel(), ItemAbstractUpdater::Child) {
 
     this->parent = parent;
     this->itemParentUpdater = itemParentUpdater;
@@ -52,12 +52,6 @@ void ItemChildrenManager::setupConnections() {
              SIGNAL(settingsChangedSignal()),
              this,
              SLOT(settingsChangedSlot()));
-
-    // enable smart par2 download for incoming nzb files :
-    connect (parent,
-             SIGNAL(changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus)),
-             this,
-             SLOT(changePar2FilesStatusSlot(const QModelIndex, UtilityNamespace::ItemStatus)));
 
     // download par2 files if crc check failed during archive download :
     connect (this,

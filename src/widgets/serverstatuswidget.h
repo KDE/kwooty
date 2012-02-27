@@ -26,7 +26,7 @@
 #include <QFormLayout>
 #include <QLabel>
 
-#include "utilityserverstatus.h"
+#include "utilities/utilityserverstatus.h"
 
 class ServerStatusWidget : public QDockWidget {
 

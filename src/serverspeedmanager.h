@@ -25,7 +25,7 @@
 #include <QObject>
 #include <QTimer>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 

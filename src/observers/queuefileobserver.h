@@ -30,10 +30,10 @@
 
 #include "data/jobnotifydata.h"
 #include "kwooty_export.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class StandardItemModel;
 class StandardItemModelQuery;
 class MyTreeView;
@@ -45,7 +45,7 @@ class KWOOTY_EXPORT QueueFileObserver : public QObject {
 
 public:
 
-    QueueFileObserver(CentralWidget* parent = 0);
+    QueueFileObserver(Core*);
     UtilityNamespace::ItemStatus getFocusedItemStatus() const;
     int getFocusedProgressValue() const;
 

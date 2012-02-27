@@ -29,8 +29,8 @@
 #include "widgets/servertabwidget.h"
 #include "kwootysettings.h"
 
-#include "utilityserverstatus.h"
-#include "utility.h"
+#include "utilities/utilityserverstatus.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 

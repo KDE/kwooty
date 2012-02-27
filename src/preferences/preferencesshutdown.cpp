@@ -23,18 +23,18 @@
 #include <KDebug>
 
 #include "shutdownmanager.h"
-#include "centralwidget.h"
-#include "utility.h"
+#include "core.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 
-PreferencesShutdown::PreferencesShutdown(CentralWidget* centralWidget) {
+PreferencesShutdown::PreferencesShutdown(Core* core) {
 
     setupUi(this);
     this->setupConnections();
 
     // add power management options :
-    QMap<QString, QString> iconAvailableShutdownMap = centralWidget->getShutdownManager()->retrieveIconAvailableShutdownMap();
+    QMap<QString, QString> iconAvailableShutdownMap = core->getShutdownManager()->retrieveIconAvailableShutdownMap();
     QMapIterator<QString, QString> mapIterator(iconAvailableShutdownMap);
 
     // build comboBox :

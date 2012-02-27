@@ -16,5 +16,7 @@ Name=Automatic Retry
 Comment=Re-download corrupted files automatically
 Name[cs]=Nový pokus automaticky
 Name[de]=Automatische Downloadwiederholung
+Name[fr]=Nouvel essai automatique
 Comment[cs]=Automaticky stáhnout poškozené soubory znovu
 Comment[de]=Automatisches Wiederholen von Downloads bei defekten Dateien 
+Comment[fr]=Retélécharge automatiquement les fichiers corrompus

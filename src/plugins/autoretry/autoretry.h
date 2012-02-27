@@ -25,10 +25,10 @@
 #include <QObject>
 #include <QStandardItem>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class AutoRetryPlugin;
 
 class AutoRetry : public QObject
@@ -44,7 +44,7 @@ public:
 
 private:
 
-    CentralWidget* centralWidget;
+    Core* core;
 
     void setupConnections();
     void retryDownload(QStandardItem*);

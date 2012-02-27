@@ -27,14 +27,15 @@
 #include "data/itemstatusdata.h"
 #include "data/nzbfiledata.h"
 #include "data/postdownloadinfodata.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "itemparentupdater.h"
 #include "standarditemmodel.h"
+#include "widgets/mytreeview.h"
 #include "fileoperations.h"
 
 
-ItemPostDownloadUpdater::ItemPostDownloadUpdater(ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater->getDownloadModel(), ItemAbstractUpdater::Child)
-{
+ItemPostDownloadUpdater::ItemPostDownloadUpdater(ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater->getDownloadModel(), ItemAbstractUpdater::Child) {
+
     this->itemParentUpdater = itemParentUpdater;
 
 }
@@ -98,8 +99,8 @@ void ItemPostDownloadUpdater::updateDecodeItems(const PostDownloadInfoData& repa
 
         // quick and dirty workaround for Qt's treeview expander bug QTBUG-7585 (should be fixed in Qt 4.6.3):
 #if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
-        if (!this->itemParentUpdater->getCentraWidget()->getTreeView()->isExpanded(parentModelIndex)) {
-            this->itemParentUpdater->getCentraWidget()->getTreeView()->setRowHidden(parentModelIndex.row(), parentModelIndex.parent(), false);
+        if (!this->itemParentUpdater->getCore()->getTreeView()->isExpanded(parentModelIndex)) {
+            this->itemParentUpdater->getCore()->getTreeView()->setRowHidden(parentModelIndex.row(), parentModelIndex.parent(), false);
         }
 #endif
 

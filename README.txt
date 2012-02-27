@@ -6,7 +6,7 @@ Version 0.8.1:
 
 * Fix regression: when nzb file name was too long, main window width was automatically increased
 * Fix bug: scheduler plugin did not pause items when requested if download limit speed was set to "No Limit"
-* Fix bug: temporary files from a cancelled nzb collection could not be removed if nzb collection was previously already downloaded
+* Fix bug: temporary files from a canceled nzb collection could not be removed if nzb collection was previously already downloaded
 
 
 Version 0.8.0:

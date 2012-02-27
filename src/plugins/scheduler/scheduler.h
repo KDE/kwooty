@@ -26,14 +26,14 @@
 #include <QTimer>
 #include <QStandardItemModel>
 
-#include "mystatusbar.h"
-#include "utility.h"
+#include "widgets/mystatusbar.h"
+#include "utilities/utility.h"
 #include "schedulerfilehandler.h"
 using namespace UtilityNamespace;
 using namespace SchedulerNamespace;
 
 
-class CentralWidget;
+class Core;
 class SchedulerPlugin;
 class ServerManager;
 
@@ -54,7 +54,7 @@ private:
     static const int NO_SPEED_LIMIT = 0;
 
     QStandardItemModel* schedulerModel;
-    CentralWidget* centralWidget;
+    Core* core;
     ServerManager* serverManager;
     MyStatusBar* statusBar;
     QTimer* schedulerTimer;

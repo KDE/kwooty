@@ -27,12 +27,12 @@
 
 #include "data/serverdata.h"
 #include "data/segmentdata.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class ClientManagerConn;
 class ServerManager;
-class CentralWidget;
+class Core;
 class ClientsPerServerObserver;
 class ServerSpeedManager;
 
@@ -41,8 +41,8 @@ class ServerGroup : public QObject {
     Q_OBJECT
 
 public:
-    ServerGroup(ServerManager*, CentralWidget*, int);
-    CentralWidget* getCentralWidget();
+    ServerGroup(ServerManager*, Core*, int);
+    Core* getCore();
     ServerManager* getServerManager();
     ClientsPerServerObserver* getClientsPerServerObserver();
     ServerSpeedManager* getServerSpeedManager();
@@ -73,7 +73,7 @@ private:
     QTimer* clientsAvailableTimer;
     QTimer* stabilityTimer;
     QList<ClientManagerConn*> clientManagerConnList;
-    CentralWidget* centralWidget;
+    Core* core;
     ServerManager* serverManager;
     ServerSpeedManager* serverSpeedManager;
     ClientsPerServerObserver* clientsPerServerObserver;

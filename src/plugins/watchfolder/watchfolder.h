@@ -32,10 +32,10 @@
 #include <QHash>
 #include <QDateTime>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class WatchFolderPlugin;
 
 class WatchFolder : public QObject
@@ -53,7 +53,7 @@ private:
     static const int MAX_LIST_SIZE = 10;
 
     KDirWatch* kDirWatch;
-    CentralWidget* centralWidget;
+    Core* core;
     QTimer* fileCompleteTimer;
     QStringList nzbFileList;
     QHash<QString, QDateTime> nzbFilePathlastEnqueuedMap;

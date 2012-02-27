@@ -28,12 +28,11 @@
 
 
 #include "data/itemstatusdata.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 
-ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent)
-{
+ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent) {
 
     // associate text to display according to item status :
     statusTextMap.insert(DownloadStatus,            i18n("Downloading..."));

@@ -21,7 +21,7 @@
 #include <KDebug>
 
 #include "servermanager.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "servergroup.h"
 #include "serverspeedmanager.h"
 #include "sidebar.h"
@@ -32,7 +32,7 @@
 #include "preferences/kconfiggrouphandler.h"
 
 
-ServerManager::ServerManager(CentralWidget* parent) : QObject(parent) {
+ServerManager::ServerManager(Core* parent) : QObject(parent) {
 
     this->parent = parent;
 
@@ -68,12 +68,6 @@ void ServerManager::setupConnections() {
              this,
              SLOT(settingsChangedSlot()));
 
-
-    // notify sidebar that settings have been changed :
-    connect (this,
-             SIGNAL(serverManagerSettingsChangedSignal()),
-             this->parent->getSideBar(),
-             SLOT(serverManagerSettingsChangedSlot()), Qt::QueuedConnection);
 }
 
 

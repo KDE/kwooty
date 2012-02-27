@@ -15,9 +15,8 @@ set(Kwooty_SRCS
 
 set(Kwooty_lib_SRCS 
   mainwindow.cpp
-  centralwidget.cpp
+  core.cpp
   nzbfilehandler.cpp
-  utility.cpp
   clientmanagerconn.cpp
   nntpclient.cpp
   itemdelegate.cpp
@@ -30,8 +29,6 @@ set(Kwooty_lib_SRCS
   standarditemmodelquery.cpp
   segmentmanager.cpp
   segmentbuffer.cpp
-  mystatusbar.cpp
-  mytreeview.cpp
   segmentsdecoderthread.cpp
   segmentdecoderbase.cpp
   segmentdecoderyenc.cpp
@@ -50,9 +47,12 @@ set(Kwooty_lib_SRCS
   servermanager.cpp
   servergroup.cpp
   serverspeedmanager.cpp
-  utilityiconpainting.cpp
-  utilityserverstatus.cpp
   sidebar.cpp
+  actionsmanager.cpp
+  actionbuttonsmanager.cpp
+  utilities/utility.cpp
+  utilities/utilityiconpainting.cpp
+  utilities/utilityserverstatus.cpp
   observers/clientsobserver.cpp
   observers/clientsperserverobserver.cpp
   observers/clientsobserverbase.cpp
@@ -75,6 +75,9 @@ set(Kwooty_lib_SRCS
   data/jobnotifydata.cpp
   data/serverdata.cpp
   data/postdownloadinfodata.cpp
+  widgets/centralwidget.cpp
+  widgets/mytreeview.cpp
+  widgets/mystatusbar.cpp
   widgets/icontextwidget.cpp
   widgets/iconcapacitywidget.cpp
   widgets/serverpreferenceswidget.cpp

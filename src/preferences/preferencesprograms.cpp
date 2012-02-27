@@ -23,7 +23,7 @@
 #include <KDebug>
 #include <QFile>
 
-#include "utility.h"
+#include "utilities/utility.h"
 #include "kwootysettings.h"
 
 PreferencesPrograms::PreferencesPrograms()

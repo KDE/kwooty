@@ -28,7 +28,7 @@
 #include "data/nzbfiledata.h"
 #include "data/postdownloadinfodata.h"
 
-Repair::Repair(RepairDecompressThread* parent) : QObject(parent){
+Repair::Repair(RepairDecompressThread* parent) : QObject(parent) {
 
     this->parent = parent;
 

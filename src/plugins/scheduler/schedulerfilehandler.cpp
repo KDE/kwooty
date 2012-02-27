@@ -30,7 +30,7 @@
 #include <QTime>
 #include <QXmlStreamWriter>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 using namespace SchedulerNamespace;
 

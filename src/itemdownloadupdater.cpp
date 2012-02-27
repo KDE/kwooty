@@ -22,19 +22,19 @@
 
 #include <KDebug>
 
-#include "centralwidget.h"
+#include "core.h"
 #include "itemparentupdater.h"
 #include "itemabstractupdater.h"
 #include "data/segmentdata.h"
 #include "data/nzbfiledata.h"
 #include "data/itemstatusdata.h"
 #include "standarditemmodel.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 
-ItemDownloadUpdater::ItemDownloadUpdater(ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater->getDownloadModel(), ItemAbstractUpdater::Child)
-{
+ItemDownloadUpdater::ItemDownloadUpdater(ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater->getDownloadModel(), ItemAbstractUpdater::Child) {
+
     this->itemParentUpdater = itemParentUpdater;
 
 }

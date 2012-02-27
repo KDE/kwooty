@@ -27,10 +27,10 @@
 #include "data/nzbfiledata.h"
 #include "data/nzbcollectiondata.h"
 #include "data/postdownloadinfodata.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class Repair;
 class ExtractBase;
 
@@ -40,16 +40,16 @@ class RepairDecompressThread : public QObject {
     Q_OBJECT
 
 public:
-    RepairDecompressThread(CentralWidget*);
+    RepairDecompressThread(Core*);
     RepairDecompressThread();
     ~RepairDecompressThread();
-    CentralWidget* getCentralWidget();
+    Core* getCore();
     void emitProcessUpdate(const PostDownloadInfoData&);
 
 private:
     QThread* dedicatedThread;
     QTimer* repairDecompressTimer;
-    CentralWidget* parent;
+    Core* parent;
     Repair* repair;
     QList<ExtractBase*> extracterList;
     QList<NzbCollectionData> filesToRepairList;

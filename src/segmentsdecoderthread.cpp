@@ -23,7 +23,7 @@
 #include <KDebug>
 #include <QDir>
 #include <QBuffer>
-#include "centralwidget.h"
+#include "core.h"
 #include "segmentdecoderyenc.h"
 #include "segmentdecoderuuenc.h"
 #include "itemdownloadupdater.h"
@@ -38,7 +38,7 @@
 SegmentsDecoderThread::SegmentsDecoderThread(){}
 
 
-SegmentsDecoderThread::SegmentsDecoderThread(CentralWidget* inParent) {
+SegmentsDecoderThread::SegmentsDecoderThread(Core* inParent) {
 
     this->parent = inParent;
 
@@ -116,7 +116,7 @@ void SegmentsDecoderThread::setupConnections() {
              SLOT(saveFileErrorSlot(const int)));
 
 
-    // send to centralWidget segment data update :
+    // send to core segment data update :
     qRegisterMetaType<SegmentData>("SegmentData");
     connect (this,
              SIGNAL(updateDownloadSegmentSignal(SegmentData, QString)),

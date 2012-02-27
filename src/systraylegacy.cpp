@@ -33,7 +33,7 @@
 #include <QPainter>
 
 #include "mainwindow.h"
-#include "centralwidget.h"
+#include "core.h"
 #include "statsinfobuilder.h"
 #include "observers/clientsobserver.h"
 #include "observers/queuefileobserver.h"
@@ -44,10 +44,10 @@ SysTray::SysTray(MainWindow* parent) : KSystemTrayIcon(parent) {
 
     this->parent = parent;
 
-    CentralWidget* centralWidget = parent->getCentralWidget();
-    this->queueFileObserver = centralWidget->getQueueFileObserver();
-    this->clientsObserver = centralWidget->getClientsObserver();
-    this->statsInfoBuilder = centralWidget->getClientsObserver()->getStatsInfoBuilder();
+    Core* core = parent->getCore();
+    this->queueFileObserver = core->getQueueFileObserver();
+    this->clientsObserver = core->getClientsObserver();
+    this->statsInfoBuilder = core->getClientsObserver()->getStatsInfoBuilder();
 
     this->oldMergePos = PROGRESS_UNKNOWN;
 

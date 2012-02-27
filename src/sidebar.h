@@ -24,10 +24,11 @@
 
 #include <QObject>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 
+class Core;
 class MainWindow;
 class SideBarWidget;
 class ServerManager;
@@ -41,17 +42,20 @@ class SideBar : public QObject {
 
 
 public:
-    SideBar(MainWindow* parent);
+    SideBar(MainWindow*);
     SideBarWidget* getSideBarWidget();
     void saveState();
     void loadState();
+    void serverStatisticsUpdate(const int);
 
 private:
+    Core* core;
     SideBarWidget* sideBarWidget;
     ServerManager* serverManager;
     bool stateRestored;
 
     void createSideBarWidgets();
+    void setupConnections();
 
 
 signals:
@@ -59,7 +63,6 @@ signals:
 
 public slots:
     void activeSlot(bool);
-    void serverStatisticsUpdateSlot(const int);
     void serverManagerSettingsChangedSlot();
 
 

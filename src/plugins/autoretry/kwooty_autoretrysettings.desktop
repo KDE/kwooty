@@ -12,3 +12,4 @@ X-KDE-PluginInfo-License=GPL
 Name=Automatic download retry Configuration
 name[cs]=Nastavení automatického nového pokusu o stažení
 Name[de]=Einstellungen zur automatischen Downloadwiederholung
+Name[fr]=Configuration de Nouvel essai automatique

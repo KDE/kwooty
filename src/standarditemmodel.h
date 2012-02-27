@@ -28,10 +28,10 @@
 
 #include "data/itemstatusdata.h"
 #include "kwooty_export.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class ItemStatusData;
 class NzbFileData;
 
@@ -40,7 +40,7 @@ class KWOOTY_EXPORT StandardItemModel : public QStandardItemModel {
     Q_OBJECT
 
 public:
-    StandardItemModel(CentralWidget* parent = 0);
+    StandardItemModel(Core*);
     StandardItemModel();
     QStandardItem* getParentItem(const QModelIndex&);
     QStandardItem* getStateItemFromIndex(const QModelIndex&);

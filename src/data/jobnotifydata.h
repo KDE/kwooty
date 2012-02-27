@@ -24,7 +24,7 @@
 
 #include <QDateTime>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class JobNotifyData

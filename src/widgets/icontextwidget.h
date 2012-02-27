@@ -25,7 +25,7 @@
 #include <QWidget>
 #include <QLabel>
 
-#include "utilityserverstatus.h"
+#include "utilities/utilityserverstatus.h"
 #include "statusbarwidgetbase.h"
 
 

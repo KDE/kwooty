@@ -45,7 +45,7 @@ void Plugin::setCore(MainWindow* core) {
 }
 
 
-MainWindow* Plugin::getCore() {
+MainWindow* Plugin::getMainWindow() {
     return this->core;
 }
 

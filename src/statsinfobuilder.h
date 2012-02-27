@@ -25,10 +25,10 @@
 #include <QObject>
 #include <QTimer>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class ClientsObserver;
 class StandardItemModel;
 
@@ -40,7 +40,7 @@ class StatsInfoBuilder : public QObject
 public:
     static const int SPEED_AVERAGE_SECONDS = 2;
 
-    StatsInfoBuilder(ClientsObserver*, CentralWidget*);
+    StatsInfoBuilder(ClientsObserver*, Core*);
     void sendFullUpdate();
     QString getTotalTimeValue() const;
     QString getCurrentTimeValue() const;
@@ -51,7 +51,7 @@ public:
 
 
 private:   
-    CentralWidget* parent;
+    Core* parent;
     ClientsObserver* clientsObserver;
     StandardItemModel* downloadModel;
     QTimer* downloadSpeedTimer;

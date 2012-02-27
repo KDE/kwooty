@@ -26,7 +26,7 @@
 #include <QVariant>
 #include <QModelIndex>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class PostDownloadInfoData {

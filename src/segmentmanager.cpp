@@ -24,7 +24,7 @@
 #include <QModelIndexList>
 #include <QModelIndex>
 
-#include "centralwidget.h"
+#include "core.h"
 #include "itemdownloadupdater.h"
 #include "itempostdownloadupdater.h"
 #include "clientmanagerconn.h"
@@ -38,10 +38,11 @@
 
 
 
-SegmentManager::SegmentManager(CentralWidget* parent) : QObject (parent)
-{
+SegmentManager::SegmentManager(Core* parent) : QObject (parent) {
+
     this->downloadModel = parent->getDownloadModel();
     this->itemParentUpdater = parent->getItemParentUpdater();
+
 }
 
 

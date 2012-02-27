@@ -24,10 +24,10 @@
 #include <QThread>
 #include "data/nzbfiledata.h"
 #include "data/postdownloadinfodata.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class SegmentDecoderBase;
 class SegmentDecoderYEnc;
 class SegmentDecoderUUEnc;
@@ -43,7 +43,7 @@ public:
                                SegmentDecoderBusy
                              };
 
-    SegmentsDecoderThread(CentralWidget*);
+    SegmentsDecoderThread(Core*);
     SegmentsDecoderThread();
     ~SegmentsDecoderThread();
     void emitDecodeProgression(const PostDownloadInfoData&);
@@ -51,7 +51,7 @@ public:
 
 private:
     QThread* dedicatedThread;
-    CentralWidget* parent;
+    Core* parent;
     SegmentDecoderYEnc* yencDecoder;
     SegmentDecoderUUEnc* uuencDecoder;
     QList<SegmentData> segmentDataList;

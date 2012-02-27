@@ -26,17 +26,22 @@
 
 
 class GlobalFileData;
-class CentralWidget;
+class Core;
 
-class NzbFileHandler
-{
+class NzbFileHandler  : public QObject {
+
+Q_OBJECT
+
 public:
 
-    QList<GlobalFileData> processNzbFile(CentralWidget*, QFile&, const QString&);
-    NzbFileHandler();
+    NzbFileHandler(Core*);
+    QList<GlobalFileData> processNzbFile(QFile&, const QString&);
 
 private:
-    void displayMessageBox(CentralWidget*, const QString&);
+    Core* parent;
+
+signals:
+    void displayMessageBoxSignal(const QString&);
     
 };
 

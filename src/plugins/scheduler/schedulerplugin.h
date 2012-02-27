@@ -27,7 +27,7 @@
 #include "scheduler.h"
 
 
-class CentralWidget;
+class Core;
 
 class SchedulerPlugin : public Plugin
 {

@@ -24,7 +24,7 @@
 #include <QStandardItem>
 
 #include "segmentinfodata.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class SegmentData {

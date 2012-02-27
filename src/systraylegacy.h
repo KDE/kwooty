@@ -26,7 +26,7 @@
 
 #include <KSystemTrayIcon>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class QueueFileObserver;

@@ -27,7 +27,7 @@
 #include <QPushButton>
 #include <QHBoxLayout>
 
-#include "utilityserverstatus.h"
+#include "utilities/utilityserverstatus.h"
 
 class TextPushButtonWidget : public QWidget {
 
@@ -37,7 +37,7 @@ class TextPushButtonWidget : public QWidget {
 
 public:
 
-    TextPushButtonWidget(QWidget* parent);
+    TextPushButtonWidget(QWidget*);
 
     void setIcon(const ServerConnectionIcon&);
     void setText(const QString&);

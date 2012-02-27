@@ -27,7 +27,7 @@
 #include "watchfolder.h"
 
 
-class CentralWidget;
+class Core;
 
 class WatchFolderPlugin : public Plugin
 {

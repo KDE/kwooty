@@ -22,7 +22,7 @@
 #define ITEMPOSTDOWNLOADUPDATER_H
 
 #include "itemabstractupdater.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class StandardItemModel;

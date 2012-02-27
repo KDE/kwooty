@@ -28,7 +28,7 @@
 
 #include <KIconLoader>
 
-#include "mystatusbar.h"
+#include "widgets/mystatusbar.h"
 
 class StatusBarWidgetBase : public QWidget {
 

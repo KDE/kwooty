@@ -24,10 +24,10 @@
 #include <QObject>
 #include <QModelIndex>
 #include "itemabstractupdater.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class ItemParentUpdater;
 
 
@@ -36,13 +36,13 @@ class ItemChildrenManager : public ItemAbstractUpdater {
     Q_OBJECT
 
 public:
-    ItemChildrenManager(CentralWidget*, ItemParentUpdater*);
+    ItemChildrenManager(Core*, ItemParentUpdater*);
     bool resetItemStatusIfExtractFail(const QModelIndex);
     void resetFinishedChildrenItemToDecodeFinish(QStandardItem*);
     void resetItemStatusToTarget(QStandardItem*, const ItemStatus&);
 
 private:
-    CentralWidget* parent;
+    Core* parent;
     bool smartPar2Download;
 
     void setupConnections();

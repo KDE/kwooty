@@ -27,7 +27,7 @@
 
 #include "plugin.h"
 #include "mainwindow.h"
-#include "centralwidget.h"
+#include "core.h"
 
 
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<SchedulerPlugin>();)

@@ -34,7 +34,7 @@ class ClientsPerServerObserver : public ClientsObserverBase
 
 
 public:
-    ClientsPerServerObserver(ServerGroup* parent);
+    ClientsPerServerObserver(ServerGroup*);
 
     quint64 getDownloadSpeed() const;
     quint64 getAverageDownloadSpeed() const;
@@ -72,7 +72,6 @@ public slots:
 
 private slots:
     void updateDownloadSpeedSlot();
-
 
 };
 

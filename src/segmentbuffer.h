@@ -27,11 +27,11 @@
 #include "segmentsdecoderthread.h"
 #include "data/segmentdata.h"
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class ServerManager;
-class CentralWidget;
+class Core;
 
 
 class SegmentBuffer : public QObject {
@@ -39,7 +39,7 @@ class SegmentBuffer : public QObject {
     Q_OBJECT
 
 public:
-    SegmentBuffer(ServerManager*, CentralWidget*);
+    SegmentBuffer(ServerManager*, Core*);
     int segmentSavingQueued(const SegmentData&);
 
 private:
@@ -47,7 +47,7 @@ private:
     static const int MAX_BUFFER_SIZE = 100;
 
     QList<SegmentData> segmentDataList;
-    CentralWidget* centralWidget;
+    Core* core;
     ServerManager* serverManager;
     int segmentDecoderIdle;
     int bufferFullCounter;

@@ -24,7 +24,7 @@
 
 #include "nzbfiledata.h"
 #include "itemstatusdata.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 

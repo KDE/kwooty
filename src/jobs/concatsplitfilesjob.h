@@ -26,7 +26,7 @@
 #include <QThread>
 
 #include "data/nzbfiledata.h"
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class ExtractSplit;

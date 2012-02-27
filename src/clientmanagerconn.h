@@ -24,7 +24,7 @@
 #include "data/segmentdata.h"
 #include "data/serverdata.h"
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class NntpClient;

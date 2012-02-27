@@ -25,7 +25,7 @@
 #include <QObject>
 #include <QStringList>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class ClientsObserverBase : public QObject
@@ -34,7 +34,7 @@ class ClientsObserverBase : public QObject
     Q_OBJECT
 public:
 
-    ClientsObserverBase(QObject* parent);
+    ClientsObserverBase(QObject*);
     int getTotalConnections() const;
     bool isCertificateVerified() const;
     int getNttpErrorStatus() const;
