@@ -1,0 +1,49 @@
+#ifndef CENTRALWIDGET_H
+#define CENTRALWIDGET_H
+
+#include <QWidget>
+
+#include <KDialog>
+#include <QPointer>
+
+#include "utilities/utility.h"
+using namespace UtilityNamespace;
+
+class MainWindow;
+
+
+class CentralWidget : public QWidget {
+
+    Q_OBJECT
+
+public:
+    CentralWidget(MainWindow*);
+
+    QString extractPasswordRequired(const QString&, bool&);
+    int displayRestoreMessageBox();
+    int displaySaveMessageBox(SaveFileBehavior);
+    int displayAboutToShutdownMessageBox(const QString&);
+    int displayRemoveAllFilesMessageBox();
+    int displayRemoveSelectedFilesMessageBox();
+    bool isDialogExisting();
+    void saveFileError(const int);
+    void displayShutdownErrorMessageBox(const QString&);
+    void closeAboutToShutdownMessageBox();
+    void displayNzbHandleErrorMessageBox(const QString&);
+
+
+private:
+    int saveErrorButtonCode;
+    QPointer<KDialog> aboutToShutdownDialog;
+
+
+signals:
+
+    
+public slots:
+
+
+    
+};
+
+#endif // CENTRALWIDGET_H
