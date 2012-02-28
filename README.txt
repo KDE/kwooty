@@ -1,6 +1,12 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.8.2:
+--------------
+
+- French translation (thanks a lot Yurienu !)
+
+
 Version 0.8.1:
 --------------
 

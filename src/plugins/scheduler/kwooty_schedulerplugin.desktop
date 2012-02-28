@@ -15,7 +15,10 @@ Icon=view-calendar
 Name=Bandwidth manager
 name[cs]=Správce šířky pásma
 Name[de]=Bandbreitenverwaltung
+Name[fr]=Gestionnaire de bande passante
+
 Comment=Schedule and limit bandwidth
 Comment[cs]=Rozvržení a omezení šířky pásma
 Comment[de]=Planung und Begrenzung der Bandbreite
+Comment[fr]=Planifie et limite la bande passante
 
