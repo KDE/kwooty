@@ -30,6 +30,7 @@
 #include <QDragEnterEvent>
 #include <QDragMoveEvent>
 
+#include "kwooty_export.h"
 
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
@@ -38,10 +39,9 @@ class Core;
 class MainWindow;
 class StandardItemModel;
 
-class MyTreeView : public QTreeView
-{
-    Q_OBJECT
+class KWOOTY_EXPORT MyTreeView : public QTreeView {
 
+    Q_OBJECT
 
 public:
     MyTreeView(MainWindow*);
@@ -51,10 +51,10 @@ public:
 private:
 
     enum MoveRowType {
-            MoveRowsUp,
-            MoveRowsDown,
-            MoveRowsTop,
-            MoveRowsBottom
+        MoveRowsUp,
+        MoveRowsDown,
+        MoveRowsTop,
+        MoveRowsBottom
     };
 
 
