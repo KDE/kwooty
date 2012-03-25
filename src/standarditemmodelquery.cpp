@@ -80,6 +80,54 @@ QStandardItem* StandardItemModelQuery::searchParentItem(const UtilityNamespace::
 
 }
 
+QList<QModelIndex> StandardItemModelQuery::retrieveDecodeFinishParentIndexList() const {
+
+    QList<QModelIndex> downloadFinishParentIndexList;
+
+    for (int i = 0; i < this->downloadModel->rowCount(); i++) {
+
+        QModelIndex parentIndex = this->downloadModel->item(i)->index();
+
+        // for earch parent item, check if download has been finished :
+        if (this->downloadModel->getStatusDataFromIndex(parentIndex).isDecodeFinish()) {
+
+            downloadFinishParentIndexList.append(parentIndex);
+
+        }
+
+    }
+
+    return downloadFinishParentIndexList;
+
+}
+
+
+QList<QModelIndex> StandardItemModelQuery::retrieveStartPauseIndexList(const UtilityNamespace::ItemStatus targetStatus) const {
+
+    // select all rows in order to set them to paused or Idle :
+    QList<QModelIndex> indexesList;
+    int rowNumber = this->downloadModel->rowCount();
+
+    for (int i = 0; i < rowNumber; i++) {
+
+        QModelIndex currentIndex = this->downloadModel->item(i)->index();
+        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(currentIndex);
+
+        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(stateItem);
+
+        if ( ( (targetStatus == PauseStatus) && Utility::isReadyToDownload(currentStatus) ) ||
+             ( (targetStatus == IdleStatus)  && Utility::isPausedOrPausing(currentStatus) ) ) {
+
+            indexesList.append(currentIndex);
+
+        }
+    }
+
+    return indexesList;
+}
+
+
+
 
 bool StandardItemModelQuery::areJobsFinished() {
 

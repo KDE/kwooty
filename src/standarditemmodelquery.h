@@ -44,6 +44,8 @@ public:
     bool haveItemsSameParent(const QList<QModelIndex>&);
     bool isParentContainsPar2File(QStandardItem*) const;
     bool areJobsFinished();
+    QList<QModelIndex> retrieveStartPauseIndexList(const UtilityNamespace::ItemStatus) const;
+    QList<QModelIndex> retrieveDecodeFinishParentIndexList() const;
 
 
 private:
