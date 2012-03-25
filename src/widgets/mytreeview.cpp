@@ -124,12 +124,14 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
 
     // search for pause parents :
     stateItem = this->getCore()->getModelQuery()->searchParentItem(PauseStatus);
+
     if (stateItem) {
         contextMenu.addAction(actionCollection->action("startAll"));
     }
 
     // search for downloading parents :
     stateItem = this->getCore()->getModelQuery()->searchParentItem(DownloadStatus);
+
     if (stateItem) {
         contextMenu.addAction(actionCollection->action("pauseAll"));
     }

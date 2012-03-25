@@ -72,7 +72,6 @@ QStandardItem* StandardItemModel::getColumnItem(const QModelIndex& index, const 
 
 
 
-
 void StandardItemModel::updateStateItem(QStandardItem* stateItem, const UtilityNamespace::ItemStatus status) {
 
     // get itemstatusdata from stateItem :

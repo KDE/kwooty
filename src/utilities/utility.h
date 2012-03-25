@@ -97,7 +97,7 @@ namespace UtilityNamespace
     };
 
     // item status list :
-    enum ItemStatus{
+    enum ItemStatus {
         IdleStatus,
         // -- from here download related enums :
         DownloadStatus,

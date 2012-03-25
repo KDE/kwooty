@@ -42,8 +42,7 @@ UniqueApp::~UniqueApp()
 
 
 
-int UniqueApp::newInstance()
-{
+int UniqueApp::newInstance() {
 
     // create a new instance :
     if (!this->kwootyInstance) {

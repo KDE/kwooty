@@ -47,7 +47,7 @@ public:
 
     enum PendingDownloadsManagement{ WithConfirmation,
                                      Automatically
-                                 };
+                                    };
 
     DataRestorer(Core*);
     DataRestorer();
