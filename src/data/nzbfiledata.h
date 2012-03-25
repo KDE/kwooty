@@ -32,11 +32,15 @@ public:
     NzbFileData();
     NzbFileData(const QString&, const QStringList&, const QList<SegmentData>&);
     ~NzbFileData();
+
     QString getFileName() const;
-    void setFileName(const QString& fileName);
+    void setFileName(const QString&);
+
+    QString getReducedFileName() const;
+    void setReducedFileName(const QString&);
 
     QStringList getGroupList() const;
-    void setGroupList(const QStringList& groupList);
+    void setGroupList(const QStringList&);
 
     QList<SegmentData> getSegmentList() const;
     void setSegmentList(const QList<SegmentData>&);
@@ -88,6 +92,7 @@ public:
 
 private:
     QString fileName;
+    QString reducedFileName;
     QString decodedFileName;
     QString temporaryFileName;
     QString renamedFileName;

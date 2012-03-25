@@ -53,6 +53,14 @@ void NzbFileData::setFileName(const QString& fileName) {
     this->fileName = fileName;
 }
 
+QString NzbFileData::getReducedFileName() const {
+    return this->reducedFileName;
+}
+
+void NzbFileData::setReducedFileName(const QString& reducedFileName) {
+    this->reducedFileName = reducedFileName;
+}
+
 
 QString NzbFileData::getTemporaryFileName() const {
     return this->temporaryFileName;
@@ -121,7 +129,6 @@ QString NzbFileData::getNzbName() const {
 void NzbFileData::setNzbName(const QString& nzbName) {
     this->nzbName = nzbName;
 }
-
 
 bool NzbFileData::isPar2File() const {
     return this->par2File;
@@ -231,6 +238,7 @@ bool NzbFileData::operator<(const NzbFileData& nzbFileDataToCompare) const{
 QDataStream& operator<<(QDataStream& out, const NzbFileData& nzbFileData) {
 
     out << nzbFileData.getFileName()
+        << nzbFileData.getReducedFileName()
         << nzbFileData.getDecodedFileName()
         << nzbFileData.getTemporaryFileName()
         << nzbFileData.getBaseName()
@@ -252,6 +260,7 @@ QDataStream& operator<<(QDataStream& out, const NzbFileData& nzbFileData) {
 QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData) {
 
     QString fileName;
+    QString reducedFileName;
     QString decodedFileName;
     QString temporaryFileName;
     QString baseName;
@@ -266,6 +275,7 @@ QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData) {
     qint16 archiveFormat;
 
     in >> fileName
+       >> reducedFileName
        >> decodedFileName
        >> temporaryFileName
        >> baseName
@@ -281,6 +291,7 @@ QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData) {
 
 
     nzbFileData.setFileName(fileName);
+    nzbFileData.setReducedFileName(reducedFileName);
     nzbFileData.setTemporaryFileName(temporaryFileName);
     nzbFileData.setBaseName(baseName);
     nzbFileData.setNzbName(nzbName);
