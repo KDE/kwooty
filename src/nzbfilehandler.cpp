@@ -78,6 +78,24 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
                 QString fileName = attributes.value("subject").toString();
                 nzbFileData.setFileName(fileName);
 
+                // try to reduce file name (remove all useless stuff to keep only the concise file name) :
+                QRegExp rx("(.*\"?)?.*\"(.*)\".*");
+
+                QString reducedFileName;
+                // if concise file name has been found :
+                if (rx.indexIn(fileName) != -1) {
+                    reducedFileName = rx.cap(2);
+                }
+
+                // if reduced file name seems to be valid :
+                if (!reducedFileName.trimmed().isEmpty()) {
+                    nzbFileData.setReducedFileName(reducedFileName);
+                }
+                // else keep the whole file name :
+                else {
+                    nzbFileData.setReducedFileName(fileName);
+                }
+
                 // identify right now par2 files from others :
                 if (fileName.contains(QRegExp("\\.par2.*(yenc)?.*", Qt::CaseInsensitive))) {
                     nzbFileData.setPar2File(true);
