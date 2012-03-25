@@ -23,10 +23,12 @@
 
 #include <KDebug>
 #include <KCMultiDialog>
+#include <KActionCollection>
 
 #include <QTime>
 #include <QDate>
 #include <QStandardItem>
+#include <QAction>
 
 #include "mainwindow.h"
 #include "core.h"
@@ -34,7 +36,10 @@
 #include "servermanager.h"
 #include "servergroup.h"
 #include "actionsmanager.h"
+#include "standarditemmodel.h"
+#include "standarditemmodelquery.h"
 #include "observers/clientsperserverobserver.h"
+#include "widgets/mytreeview.h"
 #include "schedulerplugin.h"
 #include "schedulerfilehandler.h"
 #include "kwooty_schedulersettings.h"
@@ -87,11 +92,25 @@ void Scheduler::setupConnections() {
              SLOT(serverManagerSettingsChangedSlot()));
 
 
+    // be notified when nzb data has arrived :
+    connect (this->core,
+             SIGNAL(dataAppendedSignal()),
+             this,
+             SLOT(dataAppendedSlot()));
+
+
+    // display settings when statur bar widget has been double clicked :
     connect (this->statusBar,
              SIGNAL(statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity)),
              this,
              SLOT(statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity)));
 
+
+    // allow user to bypass scheduler if start/pause actions have been manually trigered :
+    connect(this->core->getActionsManager(),
+            SIGNAL(aboutToStartPauseActionSignal(UtilityNamespace::ItemStatus)),
+            this,
+            SLOT(startPauseActionTriggeredSlot(UtilityNamespace::ItemStatus)));
 
 }
 
@@ -99,8 +118,88 @@ void Scheduler::setupConnections() {
 
 
 void Scheduler::suspendDownloads() {
-    this->core->getActionsManager()->pauseAllDownloadSlot();
+
+    this->startPauseDownloadFromList(PauseStatus);
+
 }
+
+
+void Scheduler::resumeDownloads() {
+
+    this->startPauseDownloadFromList(IdleStatus);
+
+}
+
+
+void Scheduler::startPauseDownloadFromList(UtilityNamespace::ItemStatus itemStatus) {
+
+    kDebug() << this->core->getModelQuery()->retrieveDecodeFinishParentIndexList();
+
+    // 1.first remove all indexes from list whose download is over :
+    foreach (QModelIndex decodeFinishParentIndex, this->core->getModelQuery()->retrieveDecodeFinishParentIndexList()) {
+
+        QString parentUuid = this->core->getDownloadModel()->getUuidStrFromIndex(decodeFinishParentIndex);
+
+        if (this->manuallyUuidStartPauseMap.contains(parentUuid)) {
+
+            kDebug() << "ITEM REMOVED => Download finish";
+            this->manuallyUuidStartPauseMap.remove(parentUuid);
+
+        }
+    }
+
+
+    // 2. retrieve all uuid items currently Idle to set on Pause or vice versa :
+    QList<QModelIndex> targetIndexesList;
+
+    foreach (QModelIndex index, this->core->getModelQuery()->retrieveStartPauseIndexList(itemStatus)) {
+
+        // if scheduler has to be bypassed for items manually set on pause or start :
+        if (!this->manuallyUuidStartPauseMap.contains(this->core->getDownloadModel()->getUuidStrFromIndex(index)) ) {
+
+            targetIndexesList.append(index);
+
+        }
+
+    }
+
+
+    if (!targetIndexesList.isEmpty()) {
+
+        this->core->getActionsManager()->setStartPauseDownload(itemStatus, targetIndexesList);
+
+    }
+
+
+}
+
+
+Scheduler::BypassSchedulerMethod Scheduler::retrieveItemBypassMethod(const UtilityNamespace::ItemStatus& itemStatus) const {
+
+    BypassSchedulerMethod bypassSchedulerMethod = BypassNoItems;
+
+    if (SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsPauseOrStart) {
+
+        bypassSchedulerMethod = BypassItemsPauseOrStart;
+    }
+
+    else if ( itemStatus == PauseStatus &&
+              SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsPause ) {
+
+        bypassSchedulerMethod = BypassItemsPause;
+    }
+
+    else if ( itemStatus == IdleStatus &&
+              SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsStart ) {
+
+        bypassSchedulerMethod = BypassItemsStart;
+    }
+
+    kDebug() << bypassSchedulerMethod;
+    return bypassSchedulerMethod;
+
+}
+
 
 
 void Scheduler::checkDownloadStatus(const DownloadLimitStatus& downloadLimitStatus) {
@@ -115,7 +214,7 @@ void Scheduler::checkDownloadStatus(const DownloadLimitStatus& downloadLimitStat
 
         // if previous status has paused downloads, its time to restart them :
         if (this->downloadLimitStatus == DisabledDownload) {
-            this->core->getActionsManager()->startAllDownloadSlot();
+            this->resumeDownloads();
         }
 
         // then apply proper bandwidth management according to current status :
@@ -176,6 +275,20 @@ void Scheduler::applySpeedLimit() {
 
 }
 
+DownloadLimitStatus Scheduler::getCurrentDownloadLimitStatus() {
+
+    // retrieve current time :
+    QTime currentTime = QTime::currentTime();
+
+    // get row and column numbers from model according to current time :
+    int column = (currentTime.hour() * 60 + currentTime.minute()) / 30;
+    int row = QDate().currentDate().dayOfWeek();
+
+    // get corresponding download limit status :
+    QStandardItem* item = this->schedulerModel->item(row, column);
+    return static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
+
+}
 
 
 void Scheduler::disableSpeedLimit() {
@@ -219,17 +332,7 @@ void Scheduler::schedulerTimerSlot() {
     // if speed limit is scheduled :
     if (SchedulerSettings::enableScheduler()) {
 
-        // retrieve current time :
-        QTime currentTime = QTime::currentTime();
-
-        // get row and column numbers from model according to current time :
-        int column = (currentTime.hour() * 60 + currentTime.minute()) / 30;
-        int row = QDate().currentDate().dayOfWeek();
-
-        // get corresponding download limit status :
-        QStandardItem* item = this->schedulerModel->item(row, column);
-        downloadLimitStatus = static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
-
+        downloadLimitStatus = this->getCurrentDownloadLimitStatus();
     }
 
     // if downloadLimitSpinBox is set to 0, it corresponds to no limit download :
@@ -239,7 +342,6 @@ void Scheduler::schedulerTimerSlot() {
         downloadLimitStatus = NoLimitDownload;
 
     }
-
 
     // start downloads if they were previously paused :
     this->checkDownloadStatus(downloadLimitStatus);
@@ -258,6 +360,74 @@ void Scheduler::serverManagerSettingsChangedSlot() {
     this->disableSpeedLimit();
 }
 
+
+
+void Scheduler::dataAppendedSlot() {
+
+    // new nzb has been appended and download is currently disabled,
+    // set new items to pause status right now :
+    if (SchedulerSettings::enableScheduler()) {
+
+        if (this->getCurrentDownloadLimitStatus() == DisabledDownload) {
+
+            kDebug() << "suspend";
+            this->suspendDownloads();
+
+        }
+        else {
+
+            kDebug()<< "resume";
+            this->resumeDownloads();
+
+        }
+    }
+
+}
+
+
+void Scheduler::startPauseActionTriggeredSlot(UtilityNamespace::ItemStatus targetItemStatus) {
+
+    if (SchedulerSettings::schedulerBypass()) {
+
+        // if user clicked on "Start" button :
+        if (Utility::isReadyToDownload((targetItemStatus))) {
+
+            this->addUuidToMap(targetItemStatus);
+            kDebug() << "start";
+
+        }
+        // else if user clicked on "Pause" button :
+        else if (Utility::isPaused((targetItemStatus))) {
+
+            this->addUuidToMap(targetItemStatus);
+            kDebug() << "stop";
+
+        }
+
+    }
+
+}
+
+
+void Scheduler::addUuidToMap(UtilityNamespace::ItemStatus targetItemStatus) {
+
+    BypassSchedulerMethod bypassSchedulerMethod = this->retrieveItemBypassMethod(targetItemStatus);
+
+    if (bypassSchedulerMethod != BypassNoItems) {
+
+        // retrieve uuid items selected by user to be started manually :
+        foreach (QModelIndex selectedIndex, this->core->getTreeView()->selectionModel()->selectedRows()) {
+
+            QString indexUuidStr = this->core->getDownloadModel()->getUuidStrFromIndex(selectedIndex);
+
+            //            if (!this->manuallyUuidStartPauseMap.contains(indexUuidStr)) {
+            this->manuallyUuidStartPauseMap.insert(indexUuidStr, bypassSchedulerMethod);
+            //            }
+
+        }
+    }
+
+}
 
 
 

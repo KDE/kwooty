@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QStandardItemModel>
+#include <QHash>
 
 #include "widgets/mystatusbar.h"
 #include "utilities/utility.h"
@@ -51,6 +52,13 @@ public:
 
 private:
 
+    enum BypassSchedulerMethod { BypassItemsPause,
+                                 BypassItemsStart,
+                                 BypassItemsPauseOrStart,
+                                 BypassNoItems
+                               };
+
+
     static const int NO_SPEED_LIMIT = 0;
 
     QStandardItemModel* schedulerModel;
@@ -59,11 +67,19 @@ private:
     MyStatusBar* statusBar;
     QTimer* schedulerTimer;
     DownloadLimitStatus downloadLimitStatus;
+    //QList<QString> manuallyIdleUuidList;
+    //QList<QString> manuallyPauseUuidList;
+    QHash<QString, Scheduler::BypassSchedulerMethod> manuallyUuidStartPauseMap;
 
+    DownloadLimitStatus getCurrentDownloadLimitStatus();
     void setupConnections();
     void applySpeedLimit();
     void checkDownloadStatus(const DownloadLimitStatus&);
     void suspendDownloads();
+    void resumeDownloads();
+    void addUuidToMap(UtilityNamespace::ItemStatus);
+    void startPauseDownloadFromList(UtilityNamespace::ItemStatus);
+    Scheduler::BypassSchedulerMethod retrieveItemBypassMethod(const UtilityNamespace::ItemStatus&) const;
 
 
 
@@ -76,6 +92,8 @@ public slots:
 
 private slots:
     void schedulerTimerSlot();
+    void dataAppendedSlot();
+    void startPauseActionTriggeredSlot(UtilityNamespace::ItemStatus);
 
 
 };
