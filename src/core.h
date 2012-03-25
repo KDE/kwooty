@@ -69,7 +69,9 @@ public:
     ~Core();
     void handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
     void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
+    void emitDataHasArrived();
     int savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown, const SaveFileBehavior = SaveNotSilently);
+
 
     MainWindow* getMainWindow() const;
     MyTreeView* getTreeView() const;
@@ -117,6 +119,7 @@ private:
     
 signals:
     void dataHasArrivedSignal();
+    void dataAppendedSignal();
     void settingsChangedSignal();
     void passwordEnteredByUserSignal(bool, QString password = QString());
     void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);

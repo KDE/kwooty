@@ -114,6 +114,18 @@ Core::~Core() {
 }
 
 
+void Core::emitDataHasArrived() {
+
+    // first notify that data have just be appended for pre-processing :
+    emit dataAppendedSignal();
+
+    // notify nntp clients that data is now ready to be downloaded :
+    emit dataHasArrivedSignal();
+
+}
+
+
+
 void Core::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList) {
 
     // remove .nzb extension to file name:
@@ -154,12 +166,11 @@ void Core::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileD
         }
 
         // notify nntp clients that data has arrived :
-        emit dataHasArrivedSignal();
+        this->emitDataHasArrived();
     }
 
 
 }
-
 
 
 int Core::savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType, const SaveFileBehavior saveFileBehavior) {
@@ -193,6 +204,9 @@ void Core::restoreDataFromPreviousSession(const QList<GlobalFileData>& globalFil
         this->itemParentUpdater->updateNzbItems(parentFileNameItem->index());
 
     }
+
+    // notify that data has just been restored :
+    this->emitDataHasArrived();
 
 }
 
@@ -274,9 +288,8 @@ void Core::addParentItem (QStandardItem* nzbNameItem, const GlobalFileData& curr
 
     const NzbFileData currentNzbFileData  = currentGlobalFileData.getNzbFileData();
 
-    // add the file name as parent's item :
-    QString fileName = currentNzbFileData.getFileName();
-    QStandardItem* fileNameItem = new QStandardItem(fileName);
+    // add the (consice) file name as parent's item :
+    QStandardItem* fileNameItem = new QStandardItem(currentNzbFileData.getReducedFileName());
     nzbNameItem->setChild(nzbNameItemNextRow, FILE_NAME_COLUMN, fileNameItem);
 
     QStandardItem* parentStateItem = new QStandardItem();
@@ -297,7 +310,7 @@ void Core::addParentItem (QStandardItem* nzbNameItem, const GlobalFileData& curr
     // set unique identifier :
     fileNameItem->setData(currentNzbFileData.getUniqueIdentifier(), IdentifierRole);
     // set tool tip :
-    fileNameItem->setToolTip(fileName);
+    fileNameItem->setToolTip(currentNzbFileData.getFileName());
 
     // set idle status by default :
     nzbNameItem->setChild(nzbNameItemNextRow, STATE_COLUMN, parentStateItem);
@@ -466,7 +479,7 @@ void Core::serverStatisticsUpdateSlot(const int serverId) {
 void Core::downloadWaitingPar2Slot() {
 
     this->statusBarFileSizeUpdate();
-    emit dataHasArrivedSignal();
+    this->emitDataHasArrived();
 
 }
 
