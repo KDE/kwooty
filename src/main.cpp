@@ -33,10 +33,10 @@ int main (int argc, char** argv)
 {
     KAboutData aboutData("kwooty",
                          "",
-                         ki18n("Kwooty"), "0.8.1",
+                         ki18n("Kwooty"), "0.8.2",
                          ki18n("Kwooty is a friendly nzb usenet binary downloader.\n It also supports automatic file repairing and archive extraction."),
                          KAboutData::License_GPL,
-                         ki18n("Copyright (c) 2011 Xavier Lefage"),
+                         ki18n("Copyright (c) 2012 Xavier Lefage"),
                          KLocalizedString(),
                          "http://kwooty.sourceforge.net/");
     aboutData.addAuthor(ki18n("Xavier Lefage"),ki18n("Maintainer, Lead Developer"), "xavier.kwooty@gmail.com");
@@ -60,6 +60,12 @@ int main (int argc, char** argv)
     KCmdLineArgs::addCmdLineOptions(options);
 
 
+    if (!UniqueApp::start()) {
+        fprintf(stderr, "kwooty is already running!\n");
+        return 0;
+     }
+
     UniqueApp app;
     return app.exec();
+
 }
