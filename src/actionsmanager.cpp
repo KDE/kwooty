@@ -109,14 +109,6 @@ void ActionsManager::setupConnections() {
              this->core->getItemParentUpdater()->getItemChildrenManager(),
              SLOT(changePar2FilesStatusSlot(const QModelIndex, UtilityNamespace::ItemStatus)));
 
-
-    // propate dataHasArrivedSignal to core :
-    connect (this,
-             SIGNAL(dataHasArrivedSignal()),
-             this->core,
-             SIGNAL(dataHasArrivedSignal()));
-
-
 }
 
 void ActionsManager::changePar2FilesStatus(const QModelIndex index, UtilityNamespace::ItemStatus itemStatus) {
@@ -268,30 +260,21 @@ void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus ta
 
     // reset default buttons :
     this->actionButtonsManager->selectedItemSlot();
+
+    // notify nntp clients that data is ready to be downloaded :
+    if (Utility::isReadyToDownload(targetStatus)) {
+
+        this->core->emitDataHasArrived();
+
+    }
+
 }
 
 
 
-void ActionsManager::setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus targetStatus){
+void ActionsManager::setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus targetStatus) {
 
-    // select all rows in order to set them to paused or Idle :
-    QList<QModelIndex> indexesList;
-    int rowNumber = this->downloadModel->rowCount();
-
-    for (int i = 0; i < rowNumber; i++) {
-
-        QModelIndex currentIndex = this->downloadModel->item(i)->index();
-        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(currentIndex);
-
-        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(stateItem);
-
-        if ( ( (targetStatus == PauseStatus) && Utility::isReadyToDownload(currentStatus) ) ||
-             ( (targetStatus == IdleStatus)  && Utility::isPausedOrPausing(currentStatus) ) ) {
-            indexesList.append(currentIndex);
-        }
-    }
-
-    this->setStartPauseDownload(targetStatus, indexesList);
+    this->setStartPauseDownload(targetStatus, this->modelQuery->retrieveStartPauseIndexList(targetStatus));
 
 
 }
@@ -472,6 +455,9 @@ void ActionsManager::openFolderSlot() {
 
 void ActionsManager::pauseDownloadSlot() {
 
+    // notify listeners that pause download action has just been triggered :
+    emit aboutToStartPauseActionSignal(PauseStatus);
+
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
     this->setStartPauseDownload(PauseStatus, indexesList);
 }
@@ -484,10 +470,11 @@ void ActionsManager::pauseAllDownloadSlot() {
 
 void ActionsManager::startDownloadSlot() {
 
+    // notify listeners that start download action has just been triggered :
+    emit aboutToStartPauseActionSignal(IdleStatus);
+
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
     this->setStartPauseDownload(IdleStatus, indexesList);
-
-    emit dataHasArrivedSignal();
 }
 
 void ActionsManager::startAllDownloadSlot() {
@@ -496,7 +483,6 @@ void ActionsManager::startAllDownloadSlot() {
     if (!this->core->getCentralWidget()->isDialogExisting()) {
 
         this->setStartPauseDownloadAllItems(UtilityNamespace::IdleStatus);
-        emit dataHasArrivedSignal();
 
     }
 }

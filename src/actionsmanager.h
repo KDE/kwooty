@@ -69,11 +69,12 @@ private:
 
     
 signals:
-    void dataHasArrivedSignal();
     void statusBarFileSizeUpdateSignal(StatusBarUpdateType);
     void allRowRemovedSignal();
     void recalculateNzbSizeSignal(const QModelIndex);
     void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);
+    void aboutToStartPauseActionSignal(UtilityNamespace::ItemStatus);
+
 
 public slots:
     void moveToTopSlot();
