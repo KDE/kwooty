@@ -130,6 +130,16 @@ PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& 
     this->schedulerToggledSlot(this->preferencesSchedulerUi.kcfg_enableScheduler->isChecked());
 
 
+    // init combobox manyally start/pause bypass list :
+    QStringList bypassSchedulerActionList;
+    bypassSchedulerActionList.append(i18n("Pause"));
+    bypassSchedulerActionList.append(i18n("Start"));
+    bypassSchedulerActionList.append(i18n("Pause/Start"));
+
+    this->preferencesSchedulerUi.kcfg_schedulerBypassMethods->addItems(bypassSchedulerActionList);
+
+
+
 }
 
 
