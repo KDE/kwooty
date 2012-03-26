@@ -1,5 +1,10 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
+Version 0.8.3:
+--------------
+
+- rpmlint issues fix for fedora packaging
+
 
 Version 0.8.2:
 --------------
