@@ -119,19 +119,19 @@ void Scheduler::setupConnections() {
 
 void Scheduler::suspendDownloads() {
 
-    this->startPauseDownloadFromList(PauseStatus);
+    this->startPauseDownload(PauseStatus);
 
 }
 
 
 void Scheduler::resumeDownloads() {
 
-    this->startPauseDownloadFromList(IdleStatus);
+    this->startPauseDownload(IdleStatus);
 
 }
 
 
-void Scheduler::startPauseDownloadFromList(UtilityNamespace::ItemStatus itemStatus) {
+void Scheduler::startPauseDownload(UtilityNamespace::ItemStatus itemStatus) {
 
     kDebug() << this->core->getModelQuery()->retrieveDecodeFinishParentIndexList();
 
@@ -148,21 +148,20 @@ void Scheduler::startPauseDownloadFromList(UtilityNamespace::ItemStatus itemStat
         }
     }
 
-
     // 2. retrieve all uuid items currently Idle to set on Pause or vice versa :
     QList<QModelIndex> targetIndexesList;
 
     foreach (QModelIndex index, this->core->getModelQuery()->retrieveStartPauseIndexList(itemStatus)) {
 
         // if scheduler has to be bypassed for items manually set on pause or start :
-        if (!this->manuallyUuidStartPauseMap.contains(this->core->getDownloadModel()->getUuidStrFromIndex(index)) ) {
+        if (!this->retrieveProperListFromMap(itemStatus).contains(this->core->getDownloadModel()->getUuidStrFromIndex(index)) ) {
 
             targetIndexesList.append(index);
 
+            kDebug() << this->core->getDownloadModel()->getUuidStrFromIndex(index) << itemStatus;
         }
 
     }
-
 
     if (!targetIndexesList.isEmpty()) {
 
@@ -170,12 +169,30 @@ void Scheduler::startPauseDownloadFromList(UtilityNamespace::ItemStatus itemStat
 
     }
 
+}
+
+
+QList<QString> Scheduler::retrieveProperListFromMap(const UtilityNamespace::ItemStatus& targetItemStatus) const {
+
+    QList<QString> bypassedItemList = this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart);
+
+    // if download has to triggered, search for manually paused items that shall not be started :
+    if (targetItemStatus == IdleStatus) {
+        bypassedItemList.append(this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPause));
+    }
+    // if pause has to triggered, search for manually started items that shall not be paused :
+    else if (targetItemStatus == PauseStatus) {
+        bypassedItemList.append(this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsStart));
+    }
+
+    return bypassedItemList;
 
 }
 
 
 Scheduler::BypassSchedulerMethod Scheduler::retrieveItemBypassMethod(const UtilityNamespace::ItemStatus& itemStatus) const {
 
+    // by default consider that scheduler does not bypass any items :
     BypassSchedulerMethod bypassSchedulerMethod = BypassNoItems;
 
     if (SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsPauseOrStart) {
@@ -183,12 +200,15 @@ Scheduler::BypassSchedulerMethod Scheduler::retrieveItemBypassMethod(const Utili
         bypassSchedulerMethod = BypassItemsPauseOrStart;
     }
 
+    // TODO : how to manage pause trigger when disk is full ???
+    // if items have been manually set on pause :
     else if ( itemStatus == PauseStatus &&
               SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsPause ) {
 
         bypassSchedulerMethod = BypassItemsPause;
     }
 
+    // if items have been manually set on start :
     else if ( itemStatus == IdleStatus &&
               SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsStart ) {
 
@@ -199,6 +219,37 @@ Scheduler::BypassSchedulerMethod Scheduler::retrieveItemBypassMethod(const Utili
     return bypassSchedulerMethod;
 
 }
+
+void Scheduler::initUuidStartPauseMap() {
+
+    if (SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsPause) {
+
+        foreach (QString uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsStart)) {
+            this->manuallyUuidStartPauseMap.remove(uuid);
+        }
+
+        foreach (QString uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart)) {
+            this->manuallyUuidStartPauseMap.insert(uuid, BypassItemsPause);
+
+        }
+
+    }
+
+    else if (SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsStart) {
+
+        foreach (QString uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPause)) {
+            this->manuallyUuidStartPauseMap.remove(uuid);
+        }
+
+        foreach (QString uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart)) {
+            this->manuallyUuidStartPauseMap.insert(uuid, BypassItemsStart);
+
+        }
+
+    }
+
+}
+
 
 
 
@@ -323,8 +374,6 @@ void Scheduler::statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity WidgetId
 }
 
 
-
-
 void Scheduler::schedulerTimerSlot() {
 
     DownloadLimitStatus downloadLimitStatus = LimitDownload;
@@ -382,12 +431,15 @@ void Scheduler::dataAppendedSlot() {
         }
     }
 
+    //this->downloadLimitStatus = DisabledDownload;
+
 }
 
 
 void Scheduler::startPauseActionTriggeredSlot(UtilityNamespace::ItemStatus targetItemStatus) {
 
-    if (SchedulerSettings::schedulerBypass()) {
+    if ( SchedulerSettings::enableScheduler() &&
+         SchedulerSettings::schedulerBypass() ) {
 
         // if user clicked on "Start" button :
         if (Utility::isReadyToDownload((targetItemStatus))) {
@@ -406,6 +458,8 @@ void Scheduler::startPauseActionTriggeredSlot(UtilityNamespace::ItemStatus targe
 
     }
 
+    this->serverManagerSettingsChangedSlot();
+
 }
 
 
@@ -420,6 +474,7 @@ void Scheduler::addUuidToMap(UtilityNamespace::ItemStatus targetItemStatus) {
 
             QString indexUuidStr = this->core->getDownloadModel()->getUuidStrFromIndex(selectedIndex);
 
+            kDebug() << "insert :" << indexUuidStr << bypassSchedulerMethod;
             //            if (!this->manuallyUuidStartPauseMap.contains(indexUuidStr)) {
             this->manuallyUuidStartPauseMap.insert(indexUuidStr, bypassSchedulerMethod);
             //            }
@@ -430,14 +485,20 @@ void Scheduler::addUuidToMap(UtilityNamespace::ItemStatus targetItemStatus) {
 }
 
 
-
-
 void Scheduler::settingsChanged() {
 
     // reload settings from just saved config file :
     SchedulerSettings::self()->readConfig();
 
     this->schedulerModel = SchedulerFileHandler().loadModelFromFile(this);
+
+
+//    if ( SchedulerSettings::enableScheduler() &&
+//         SchedulerSettings::schedulerBypass() ) {
+
+//        this->initUuidStartPauseMap();
+
+//    }
 
     // restart previously paused downloads after settings changes :
     this->checkDownloadStatus(NoLimitDownload);

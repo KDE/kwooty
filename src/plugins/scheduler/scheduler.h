@@ -78,8 +78,10 @@ private:
     void suspendDownloads();
     void resumeDownloads();
     void addUuidToMap(UtilityNamespace::ItemStatus);
-    void startPauseDownloadFromList(UtilityNamespace::ItemStatus);
+    void startPauseDownload(UtilityNamespace::ItemStatus);
     Scheduler::BypassSchedulerMethod retrieveItemBypassMethod(const UtilityNamespace::ItemStatus&) const;
+    QList<QString> retrieveProperListFromMap(const UtilityNamespace::ItemStatus&) const;
+    void initUuidStartPauseMap();
 
 
 
