@@ -236,6 +236,9 @@ void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType) {
 
 void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus targetStatus, const QList<QModelIndex>& indexesList){
 
+    // notify listeners that start/pause download action is about to be triggered :
+    emit startPauseAboutToBeTriggeredSignal(targetStatus);
+
     foreach (QModelIndex currentModelIndex, indexesList){
 
         // get file name item related to selected index :
@@ -267,6 +270,9 @@ void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus ta
         this->core->emitDataHasArrived();
 
     }
+
+    // notify listeners that start/pause download action has been triggered :
+    emit startPauseTriggeredSignal(targetStatus);
 
 }
 
@@ -455,9 +461,6 @@ void ActionsManager::openFolderSlot() {
 
 void ActionsManager::pauseDownloadSlot() {
 
-    // notify listeners that pause download action has just been triggered :
-    emit aboutToStartPauseActionSignal(PauseStatus);
-
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
     this->setStartPauseDownload(PauseStatus, indexesList);
 }
@@ -469,9 +472,6 @@ void ActionsManager::pauseAllDownloadSlot() {
 
 
 void ActionsManager::startDownloadSlot() {
-
-    // notify listeners that start download action has just been triggered :
-    emit aboutToStartPauseActionSignal(IdleStatus);
 
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
     this->setStartPauseDownload(IdleStatus, indexesList);

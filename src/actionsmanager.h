@@ -73,7 +73,8 @@ signals:
     void allRowRemovedSignal();
     void recalculateNzbSizeSignal(const QModelIndex);
     void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);
-    void aboutToStartPauseActionSignal(UtilityNamespace::ItemStatus);
+    void startPauseAboutToBeTriggeredSignal(UtilityNamespace::ItemStatus);
+    void startPauseTriggeredSignal(UtilityNamespace::ItemStatus);
 
 
 public slots:
