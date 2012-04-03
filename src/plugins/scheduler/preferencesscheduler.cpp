@@ -130,14 +130,15 @@ PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& 
     this->schedulerToggledSlot(this->preferencesSchedulerUi.kcfg_enableScheduler->isChecked());
 
 
-    // init combobox manyally start/pause bypass list :
-    QStringList bypassSchedulerActionList;
-    bypassSchedulerActionList.append(i18n("Pause"));
-    bypassSchedulerActionList.append(i18n("Start"));
-    bypassSchedulerActionList.append(i18n("Pause/Start"));
+    // init combobox manually start/pause bypass list :
+    this->preferencesSchedulerUi.kcfg_schedulerBypassMethods->addItem(KIcon("media-playback-pause"), i18n("Pause"));
+    this->preferencesSchedulerUi.kcfg_schedulerBypassMethods->addItem(KIcon("media-playback-start"), i18n("Start"));
+    this->preferencesSchedulerUi.kcfg_schedulerBypassMethods->addItem(KIcon("media-skip-forward"), i18n("Start or Pause"));
 
-    this->preferencesSchedulerUi.kcfg_schedulerBypassMethods->addItems(bypassSchedulerActionList);
 
+    if (this->preferencesSchedulerUi.kcfg_schedulerBypass->checkState() == Qt::Unchecked) {
+        this->preferencesSchedulerUi.kcfg_schedulerBypassMethods->setDisabled(true);
+    }
 
 
 }
@@ -171,6 +172,8 @@ void PreferencesScheduler::setupConnections() {
     connect (this->preferencesSchedulerUi.kcfg_enablePermanentSpeedLimit, SIGNAL(pressed()), this, SLOT(permanentSpeedLimitPressedSlot()));
     connect (this->preferencesSchedulerUi.kcfg_enableScheduler, SIGNAL(released()), this, SLOT(radioButtonReleasedSlot()));
     connect (this->preferencesSchedulerUi.kcfg_enablePermanentSpeedLimit, SIGNAL(released()), this, SLOT(radioButtonReleasedSlot()));
+
+    connect (this->preferencesSchedulerUi.kcfg_schedulerBypass, SIGNAL(stateChanged(int)), this, SLOT(checkBoxStateChangedSlot(int)));
 
 }
 
@@ -319,5 +322,16 @@ void PreferencesScheduler::radioButtonReleasedSlot() {
 
 }
 
+
+void PreferencesScheduler::checkBoxStateChangedSlot(int state) {
+
+    if (state == Qt::Checked) {
+        this->preferencesSchedulerUi.kcfg_schedulerBypassMethods->setEnabled(true);
+    }
+    else {
+        this->preferencesSchedulerUi.kcfg_schedulerBypassMethods->setEnabled(false);
+    }
+
+}
 
 

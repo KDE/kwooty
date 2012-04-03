@@ -72,6 +72,7 @@ private slots:
     void schedulerPressedSlot();
     void permanentSpeedLimitPressedSlot();
     void radioButtonReleasedSlot();
+    void checkBoxStateChangedSlot(int);
 
 };
 
