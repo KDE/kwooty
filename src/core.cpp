@@ -117,7 +117,7 @@ Core::~Core() {
 void Core::emitDataHasArrived() {
 
     // first notify that data have just be appended for pre-processing :
-    emit dataAppendedSignal();
+    emit dataAboutToArriveSignal();
 
     // notify nntp clients that data is now ready to be downloaded :
     emit dataHasArrivedSignal();
@@ -289,7 +289,7 @@ void Core::addParentItem (QStandardItem* nzbNameItem, const GlobalFileData& curr
     const NzbFileData currentNzbFileData  = currentGlobalFileData.getNzbFileData();
 
     // add the (consice) file name as parent's item :
-    QStandardItem* fileNameItem = new QStandardItem(currentNzbFileData.getReducedFileName());
+    QStandardItem* fileNameItem = new QStandardItem(this->getTreeView()->getDisplayedFileName(currentNzbFileData));
     nzbNameItem->setChild(nzbNameItemNextRow, FILE_NAME_COLUMN, fileNameItem);
 
     QStandardItem* parentStateItem = new QStandardItem();
