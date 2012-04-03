@@ -30,6 +30,7 @@
 #include <QDragEnterEvent>
 #include <QDragMoveEvent>
 
+#include "data/nzbfiledata.h"
 #include "kwooty_export.h"
 
 #include "utilities/utility.h"
@@ -47,6 +48,7 @@ public:
     MyTreeView(MainWindow*);
     void achieveInit();
     void setHeaderLabels();
+    QString getDisplayedFileName(const NzbFileData&) const;
 
 private:
 
@@ -59,8 +61,10 @@ private:
 
 
     MainWindow* mainWindow;
+    bool displayTinyFileName;
 
     void setupConnections();
+    void displayLongOrTinyFileName();
     StandardItemModel* getDownloadModel();
     Core* getCore();
 

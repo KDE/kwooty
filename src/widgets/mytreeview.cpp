@@ -58,6 +58,9 @@ MyTreeView::MyTreeView(MainWindow* mainWindow) : QTreeView(mainWindow->getCentra
     this->setAcceptDrops(true);
 
 
+    this->displayTinyFileName = Settings::displayTinyFileName();
+
+
 }
 
 void MyTreeView::achieveInit() {
@@ -262,10 +265,10 @@ void MyTreeView::expandedSlot(const QModelIndex& index) {
 
     // compute available space :
     int availableSpace = this->width() -
-                         this->columnWidth(PROGRESS_COLUMN) -
-                         this->columnWidth(STATE_COLUMN) -
-                         maxSizeTextSize -
-                         offset;
+            this->columnWidth(PROGRESS_COLUMN) -
+            this->columnWidth(STATE_COLUMN) -
+            maxSizeTextSize -
+            offset;
 
     // add offset (child branch + icon widths) to fileName size :
     maxFileNameSize += offset;
@@ -286,12 +289,63 @@ void MyTreeView::expandedSlot(const QModelIndex& index) {
 
 
 
+void MyTreeView::displayLongOrTinyFileName() {
+
+    if (this->displayTinyFileName != Settings::displayTinyFileName()) {
+
+        StandardItemModel* downloadModel = this->getDownloadModel();
+        // retrieve parent nzb :
+        QStandardItem* rootItem = downloadModel->invisibleRootItem();
+
+        for (int i = 0; i < downloadModel->invisibleRootItem()->rowCount(); i++) {
+
+            QStandardItem* nzbItem = rootItem->child(i);
+
+            // retrieve nzb children :
+            for (int j = 0; j < nzbItem->rowCount(); j++) {
+
+                // get corresponding file name index :
+                QStandardItem* fileNameItem = nzbItem->child(j, FILE_NAME_COLUMN);
+                NzbFileData nzbFileData = downloadModel->getNzbFileDataFromIndex(fileNameItem->index());
+
+                // display tiny or long file name according to settings :
+                fileNameItem->setText(this->getDisplayedFileName(nzbFileData));
+
+            }
+        }
+
+        this->displayTinyFileName = Settings::displayTinyFileName();
+
+    }
+
+}
+
+
+QString MyTreeView::getDisplayedFileName(const NzbFileData& currentNzbFileData) const {
+
+    QString fileName;
+
+    if (Settings::displayTinyFileName()) {
+        fileName = currentNzbFileData.getReducedFileName();
+
+    }
+    else {
+        fileName = currentNzbFileData.getFileName();
+    }
+
+    return fileName;
+
+}
+
+
+
 
 void MyTreeView::settingsChangedSlot() {
 
     // change UI related settings :
     this->setAnimated(Settings::animateTreeView());
     this->setAlternatingRowColors(Settings::alternateColors());
+    this->displayLongOrTinyFileName();
 }
 
 

@@ -135,6 +135,10 @@
             <label>Display free space information in status bar</label>
             <default>true</default>
         </entry>
+	<entry name="displayTinyFileName" type="Bool">
+            <label>Display reduced file name inside nzb collection</label>
+            <default>true</default>
+        </entry>
 	<entry name="etaRadioButton" type="Bool">
             <label>Display estimated time of arrival</label>
             <default>true</default>

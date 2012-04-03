@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>359</width>
-    <height>255</height>
+    <width>308</width>
+    <height>270</height>
    </rect>
   </property>
   <property name="toolTip">
@@ -47,6 +47,17 @@
         </property>
         <property name="text">
          <string>Display free space information</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QCheckBox" name="kcfg_displayTinyFileName">
+        <property name="toolTip">
+         <string>Remove useless content usually found in file names of a nzb collection.
+For example, a file named '[xxx - yyy] &quot;foo.bar&quot; - Yenc 1/10' will be displayed as 'foo.bar'</string>
+        </property>
+        <property name="text">
+         <string>Display tiny file names</string>
         </property>
        </widget>
       </item>
