@@ -119,7 +119,7 @@ private:
     
 signals:
     void dataHasArrivedSignal();
-    void dataAppendedSignal();
+    void dataAboutToArriveSignal();
     void settingsChangedSignal();
     void passwordEnteredByUserSignal(bool, QString password = QString());
     void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);
