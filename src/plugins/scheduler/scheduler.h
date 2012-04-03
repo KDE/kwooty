@@ -67,8 +67,6 @@ private:
     MyStatusBar* statusBar;
     QTimer* schedulerTimer;
     DownloadLimitStatus downloadLimitStatus;
-    //QList<QString> manuallyIdleUuidList;
-    //QList<QString> manuallyPauseUuidList;
     QHash<QString, Scheduler::BypassSchedulerMethod> manuallyUuidStartPauseMap;
 
     DownloadLimitStatus getCurrentDownloadLimitStatus();
@@ -77,9 +75,7 @@ private:
     void checkDownloadStatus(const DownloadLimitStatus&);
     void suspendDownloads();
     void resumeDownloads();
-    void addUuidToMap(UtilityNamespace::ItemStatus);
-    void startPauseDownload(UtilityNamespace::ItemStatus);
-    Scheduler::BypassSchedulerMethod retrieveItemBypassMethod(const UtilityNamespace::ItemStatus&) const;
+    void scheduleStartPauseDownload(UtilityNamespace::ItemStatus);
     QList<QString> retrieveProperListFromMap(const UtilityNamespace::ItemStatus&) const;
     void initUuidStartPauseMap();
 
@@ -94,9 +90,8 @@ public slots:
 
 private slots:
     void schedulerTimerSlot();
-    void dataAppendedSlot();
-    void startPauseActionTriggeredSlot(UtilityNamespace::ItemStatus);
-
+    void dataAboutToArriveSlot();
+    void startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus);
 
 };
 
