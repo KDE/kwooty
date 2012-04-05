@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>345</width>
+    <width>354</width>
     <height>318</height>
    </rect>
   </property>
@@ -113,7 +113,7 @@
          <item row="4" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QCheckBox" name="kcfg_schedulerBypass">
+            <widget class="QCheckBox" name="kcfg_bypass">
              <property name="text">
               <string>Bypass scheduler for nzb manually set on: </string>
              </property>
@@ -133,7 +133,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QComboBox" name="kcfg_schedulerBypassMethods"/>
+            <widget class="QComboBox" name="kcfg_bypassMethods"/>
            </item>
           </layout>
          </item>

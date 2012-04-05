@@ -24,12 +24,12 @@
           <max>99999</max>
         </entry>
 	
-	<entry name="schedulerBypass" type="Bool">
+	<entry name="bypass" type="Bool">
 	    <label>Bypass scheduler for items that will manually be set on Pause/Start</label>
 	    <default>false</default>
         </entry>
 	
-	<entry name="schedulerBypassMethods" type="Int">
+	<entry name="bypassMethods" type="Int">
             <label>Select scheduler bypass method</label>
 	    <default>0</default>
         </entry>

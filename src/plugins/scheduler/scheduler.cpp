@@ -124,7 +124,7 @@ void Scheduler::setupConnections() {
 
 void Scheduler::suspendDownloads() {
 
-    kDebug() << "suspendDownloads";
+    kDebug();
     this->scheduleStartPauseDownload(PauseStatus);
 
 }
@@ -132,7 +132,7 @@ void Scheduler::suspendDownloads() {
 
 void Scheduler::resumeDownloads() {
 
-    kDebug() << "resumeDownloads";
+    kDebug();
     this->scheduleStartPauseDownload(IdleStatus);
 
 }
@@ -198,7 +198,7 @@ QList<QString> Scheduler::retrieveProperListFromMap(const UtilityNamespace::Item
 
 void Scheduler::initUuidStartPauseMap() {
 
-    if (SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsPause) {
+    if (SchedulerSettings::bypassMethods() == Scheduler::BypassItemsPause) {
 
         foreach (QString uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsStart)) {
             this->manuallyUuidStartPauseMap.remove(uuid);
@@ -210,7 +210,7 @@ void Scheduler::initUuidStartPauseMap() {
         }
 
     }
-    else if (SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsStart) {
+    else if (SchedulerSettings::bypassMethods() == Scheduler::BypassItemsStart) {
 
         foreach (QString uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPause)) {
             this->manuallyUuidStartPauseMap.remove(uuid);
@@ -407,12 +407,12 @@ void Scheduler::dataAboutToArriveSlot() {
 void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus targetItemStatus) {
 
     if ( SchedulerSettings::enableScheduler() &&
-         SchedulerSettings::schedulerBypass() ) {
+         SchedulerSettings::bypass() ) {
 
         // by default consider that scheduler does not bypass any items :
         BypassSchedulerMethod bypassSchedulerMethod = BypassNoItems;
 
-        if (SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsPauseOrStart) {
+        if (SchedulerSettings::bypassMethods() == Scheduler::BypassItemsPauseOrStart) {
 
             bypassSchedulerMethod = BypassItemsPauseOrStart;
         }
@@ -420,14 +420,14 @@ void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus ta
         // TODO : how to manage pause trigger when disk is full ???
         // if items have been manually set on pause :
         else if ( targetItemStatus == PauseStatus &&
-                  SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsPause ) {
+                  SchedulerSettings::bypassMethods() == Scheduler::BypassItemsPause ) {
 
             bypassSchedulerMethod = BypassItemsPause;
         }
 
         // if items have been manually set on start :
         else if ( targetItemStatus == IdleStatus &&
-                  SchedulerSettings::schedulerBypassMethods() == Scheduler::BypassItemsStart ) {
+                  SchedulerSettings::bypassMethods() == Scheduler::BypassItemsStart ) {
 
             bypassSchedulerMethod = BypassItemsStart;
         }
@@ -462,19 +462,17 @@ void Scheduler::settingsChanged() {
 
     if (SchedulerSettings::enableScheduler()) {
 
-        if (SchedulerSettings::schedulerBypass()) {
+        if (SchedulerSettings::bypass()) {
 
             this->initUuidStartPauseMap();
 
         }
         else {
-            kDebug() << "clear";
+
             this->manuallyUuidStartPauseMap.clear();
+            kDebug() << "manuallyUuidStartPauseMap cleared";
 
             dataAboutToArriveSlot();
-            //if (this->getCurrentDownloadLimitStatus() == NoLimitDownload) {
-              //  this->downloadLimitStatus = DisabledDownload;
-            //}
 
         }
 
