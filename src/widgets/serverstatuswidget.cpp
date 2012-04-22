@@ -105,26 +105,31 @@ void ServerStatusWidget::formatLayout(QFormLayout* formLayout) {
 
 
 
-void ServerStatusWidget::updateLeftLabelField(const int& itemIndex, const QString& text) {
+void ServerStatusWidget::updateLeftLabelField(const int& itemIndex, const QString& text, const QString& toolTip) {
 
     QLabel* currentLabel = static_cast<QLabel*>(this->formLayoutLeft->itemAt(itemIndex, QFormLayout::FieldRole)->widget());
-    this->updateLabelField(currentLabel, text);
+    this->updateLabelField(currentLabel, text, toolTip);
 
 }
 
 
-void ServerStatusWidget::updateRightLabelField(const int& itemIndex, const QString& text) {
+void ServerStatusWidget::updateRightLabelField(const int& itemIndex, const QString& text, const QString& toolTip) {
 
     QLabel* currentLabel = static_cast<QLabel*>(this->formLayoutRight->itemAt(itemIndex, QFormLayout::FieldRole)->widget());
-    this->updateLabelField(currentLabel, text);
+    this->updateLabelField(currentLabel, text, toolTip);
 
 }
 
 
-void ServerStatusWidget::updateLabelField(QLabel* currentLabel, const QString& text) {
+void ServerStatusWidget::updateLabelField(QLabel* currentLabel, const QString& text, const QString& toolTip) {
 
     if (currentLabel) {
         currentLabel->setText(text);
+
+        if (!toolTip.isEmpty()) {
+            currentLabel->setToolTip(toolTip);
+        }
+
     }
 }
 

@@ -54,8 +54,8 @@ public:
 
     ServerStatusWidget(QWidget*);
 
-    void updateLeftLabelField(const int&, const QString&);
-    void updateRightLabelField(const int&, const QString&);
+    void updateLeftLabelField(const int&, const QString&, const QString& = QString());
+    void updateRightLabelField(const int&, const QString&, const QString& = QString());
     void updateTextPushButtonField(const int&, const QString&,  const bool&, const ServerConnectionIcon&, const QString&);
 
 
@@ -64,7 +64,7 @@ private:
     QFormLayout* formLayoutRight;
     QString sslConnectionInfo;
 
-    void updateLabelField(QLabel*, const QString&);
+    void updateLabelField(QLabel*, const QString&, const QString& = QString());
     void formatLayout(QFormLayout*);
     void insertLeftRowFormLayout(ServerStatusWidget::RowItemsLeft, QFormLayout*, const QString&, QWidget*);
     void insertRightRowFormLayout(ServerStatusWidget::RowItemsRight, QFormLayout*, const QString&, QWidget*);

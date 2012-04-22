@@ -137,9 +137,8 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
 
         // if current server is downloading, display proper icon on to tab widget :
         ServerConnectionIcon serverConnectionTabIcon = serverConnectionIcon;
-        quint64 downloadSpeed = clientsPerServerObserver->getDownloadSpeed();
 
-        if (downloadSpeed > 0) {
+        if (clientsPerServerObserver->isDownloading()) {
             serverConnectionTabIcon = ConnectedDownloadingIcon;
         }
 
@@ -162,7 +161,7 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
 
         // if server is currently being downloading, get the downloaded nzb name :
         QString downloadFileName = i18n("n/a");
-        if (downloadSpeed > 0) {
+        if (clientsPerServerObserver->isDownloading()) {
             downloadFileName = clientsPerServerObserver->getSegmentInfoData().getNzbFileName();
         }
 
@@ -177,11 +176,18 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
         }
 
 
+        // build speed text label :
+        quint64 downloadSpeed = clientsPerServerObserver->getDownloadSpeed();
+        quint64 effectiveMeanDownloadSpeed = clientsPerServerObserver->getEffectiveMeanDownloadSpeed();
+
+        QString speedTextLabel = QString("%1 - %2").arg(Utility::convertDownloadSpeedHumanReadable(downloadSpeed)).arg(Utility::convertDownloadSpeedHumanReadable(effectiveMeanDownloadSpeed));
+        QString speedToolTipLabel = i18n("Current download speed - Mean download speed");
+
         // update fields :
         ServerStatusWidget* serverStatusWidget = static_cast<ServerStatusWidget*>(this->sideBarWidget->widget(serverId));
 
         serverStatusWidget->updateLeftLabelField(ServerStatusWidget::StatusItem, connection);
-        serverStatusWidget->updateLeftLabelField(ServerStatusWidget::SpeedItem, Utility::convertDownloadSpeedHumanReadable(downloadSpeed));
+        serverStatusWidget->updateLeftLabelField(ServerStatusWidget::SpeedItem, speedTextLabel, speedToolTipLabel);
         serverStatusWidget->updateLeftLabelField(ServerStatusWidget::VolumeItem, Utility::convertByteHumanReadable(clientsPerServerObserver->getBytesDownloadedForCurrentSession()));
         serverStatusWidget->updateLeftLabelField(ServerStatusWidget::FileItem, downloadFileName);
         serverStatusWidget->updateRightLabelField(ServerStatusWidget::NameItem, hostName);
