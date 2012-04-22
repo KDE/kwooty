@@ -69,7 +69,7 @@ public:
     ~Core();
     void handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
     void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
-    void emitDataHasArrived();
+    void emitDataHasArrived(const QModelIndex& = QModelIndex());
     int savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown, const SaveFileBehavior = SaveNotSilently);
 
 
@@ -111,7 +111,8 @@ private:
     SegmentsDecoderThread* segmentsDecoderThread;
     RepairDecompressThread* repairDecompressThread;
 
-    void setDataToModel(const QList<GlobalFileData>&, const QString&);
+    QModelIndex setDataToModel(const QList<GlobalFileData>&, const QString&);
+
     void addParentItem (QStandardItem*, const GlobalFileData&);
     void statusBarFileSizeUpdate();
     void initFoldersSettings();
@@ -119,7 +120,7 @@ private:
     
 signals:
     void dataHasArrivedSignal();
-    void dataAboutToArriveSignal();
+    void dataAboutToArriveSignal(QModelIndex);
     void settingsChangedSignal();
     void passwordEnteredByUserSignal(bool, QString password = QString());
     void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);

@@ -27,6 +27,7 @@
 
 #include "nzbfilehandler.h"
 #include "utilities/utility.h"
+#include "utilities/utilityiconpainting.h"
 #include "kwootysettings.h"
 #include "clientmanagerconn.h"
 #include "widgets/mytreeview.h"
@@ -114,10 +115,10 @@ Core::~Core() {
 }
 
 
-void Core::emitDataHasArrived() {
+void Core::emitDataHasArrived(const QModelIndex& appendedIndex) {
 
     // first notify that data have just be appended for pre-processing :
-    emit dataAboutToArriveSignal();
+    emit dataAboutToArriveSignal(appendedIndex);
 
     // notify nntp clients that data is now ready to be downloaded :
     emit dataHasArrivedSignal();
@@ -132,10 +133,12 @@ void Core::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileD
     QFileInfo fileInfo(file.fileName());
     QString nzbName = fileInfo.completeBaseName();
 
+    bool normalNzbFileProcessing = inGlobalFileDataList.isEmpty();
+
     QList<GlobalFileData> globalFileDataList;
 
     // if list is empty it corresponds to a normal nzb file processing :
-    if (inGlobalFileDataList.isEmpty()) {
+    if (normalNzbFileProcessing) {
 
         // parse the xml file and add elements to the model :
         globalFileDataList = this->nzbFileHandler->processNzbFile(file, nzbName);
@@ -152,7 +155,12 @@ void Core::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileD
     // insert the data from file into the download model :
     if (!globalFileDataList.isEmpty()) {
 
-        this->setDataToModel(globalFileDataList, nzbName);
+        QModelIndex nzbNameIndex = this->setDataToModel(globalFileDataList, nzbName);
+
+        // if it is restauration, do not send the new appended index :
+        if (!normalNzbFileProcessing) {
+            nzbNameIndex = QModelIndex();
+        }
 
         // update the status bar :
         this->statusBarFileSizeUpdate();
@@ -165,8 +173,9 @@ void Core::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileD
             this->mainWindow->getTreeView()->setColumnWidth(FILE_NAME_COLUMN, widthInPixel);
         }
 
-        // notify nntp clients that data has arrived :
-        this->emitDataHasArrived();
+        // notify nntp clients that data has arrived :          
+        this->emitDataHasArrived(nzbNameIndex);
+
     }
 
 
@@ -212,7 +221,7 @@ void Core::restoreDataFromPreviousSession(const QList<GlobalFileData>& globalFil
 
 
 
-void Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList, const QString& nzbName){
+QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList, const QString& nzbName) {
 
     QStandardItem* nzbNameItem = new QStandardItem(nzbName);
     QStandardItem* nzbStateItem = new QStandardItem();
@@ -277,6 +286,9 @@ void Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList, const
 
     }
 
+
+    return nzbNameItem->index();
+
 }
 
 
@@ -323,6 +335,15 @@ void Core::addParentItem (QStandardItem* nzbNameItem, const GlobalFileData& curr
     // set download progression (0 by default) :
     nzbNameItem->setChild(nzbNameItemNextRow, PROGRESS_COLUMN, parentProgressItem);
     parentProgressItem->setData(qVariantFromValue(currentGlobalFileData.getProgressValue()), ProgressRole);
+
+
+    // if the current file name corresponds to a par2 file :
+    if (currentNzbFileData.isPar2File()) {
+
+        // display lighter color text :
+        UtilityIconPainting::getInstance()->displayLighterText(fileNameItem);
+
+    }
 
 }
 
