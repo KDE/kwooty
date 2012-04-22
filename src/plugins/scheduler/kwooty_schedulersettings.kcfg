@@ -23,6 +23,11 @@
 	  <min>0</min>
           <max>99999</max>
         </entry>
+
+	<entry name="pauseIncomingFiles" type="Int">
+            <label>Automatically set on Pause every incoming nzb file</label>
+	    <default>0</default>
+        </entry>        
 	
 	<entry name="bypass" type="Bool">
 	    <label>Bypass scheduler for items that will manually be set on Pause/Start</label>

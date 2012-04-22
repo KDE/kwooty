@@ -94,9 +94,9 @@ void Scheduler::setupConnections() {
 
     // be notified when nzb data has arrived :
     connect (this->core,
-             SIGNAL(dataAboutToArriveSignal()),
+             SIGNAL(dataAboutToArriveSignal(QModelIndex)),
              this,
-             SLOT(dataAboutToArriveSlot()));
+             SLOT(dataAboutToArriveSlot(QModelIndex)));
 
 
     // display settings when statur bar widget has been double clicked :
@@ -386,7 +386,7 @@ void Scheduler::serverManagerSettingsChangedSlot() {
 
 
 
-void Scheduler::dataAboutToArriveSlot() {
+void Scheduler::dataAboutToArriveSlot(QModelIndex appendedIndex) {
 
     if (SchedulerSettings::enableScheduler()) {
 
@@ -399,6 +399,18 @@ void Scheduler::dataAboutToArriveSlot() {
         else {
             this->resumeDownloads();
         }
+    }
+
+
+    // scheduler is not active but new nzb have to be set on pause :
+    else if (SchedulerSettings::pauseIncomingFiles()) {
+
+        // immediatly set the appended nzb on Pause :
+        if (appendedIndex.isValid()) {
+
+            this->core->getActionsManager()->setStartPauseDownload(PauseStatus, appendedIndex);
+        }
+
     }
 
 }
@@ -477,6 +489,7 @@ void Scheduler::settingsChanged() {
         }
 
     }
+
 
     // restart previously paused downloads after settings changes :
     this->checkDownloadStatus(NoLimitDownload);

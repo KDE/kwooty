@@ -48,7 +48,7 @@ PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& 
 
     // setup ui file :
     QWidget* widget = new QWidget(this);
-    widget->setMinimumSize(600, 400);
+    widget->setMinimumSize(600, 450);
     this->preferencesSchedulerUi.setupUi(widget);
     layout->addWidget(widget);
 
@@ -269,6 +269,9 @@ void  PreferencesScheduler::schedulerToggledSlot(bool toggled) {
         // disable groupbox and table :
         this->preferencesSchedulerUi.schedulerGroupBox->setDisabled(true);
         this->preferencesSchedulerUi.schedulerTableView->setDisabled(true);
+
+        // scheduler is disabled, pause incoming files is then allowed :
+        this->preferencesSchedulerUi.kcfg_pauseIncomingFiles->setDisabled(false);
     }
 
     // scheduler has been enabled :
@@ -278,6 +281,8 @@ void  PreferencesScheduler::schedulerToggledSlot(bool toggled) {
         this->preferencesSchedulerUi.schedulerGroupBox->setDisabled(false);
         this->preferencesSchedulerUi.schedulerTableView->setDisabled(false);
 
+        // scheduler is enabled, pause incoming files is then forbidden :
+        this->preferencesSchedulerUi.kcfg_pauseIncomingFiles->setDisabled(true);
     }
 
 }

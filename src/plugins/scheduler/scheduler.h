@@ -90,7 +90,7 @@ public slots:
 
 private slots:
     void schedulerTimerSlot();
-    void dataAboutToArriveSlot();
+    void dataAboutToArriveSlot(QModelIndex = QModelIndex());
     void startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus);
 
 };
