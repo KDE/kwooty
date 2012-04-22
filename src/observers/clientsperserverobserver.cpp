@@ -93,8 +93,10 @@ void ClientsPerServerObserver::resetVariables() {
 
     this->downloadSpeed = 0;
     this->averageDownloadSpeed = 0;
+    this->effectiveMeanDownloadSpeed = 0;
     this->segmentInfoData = SegmentInfoData();
     this->bytesDownloadedForCurrentSession = 0;
+    this->meanDownloadSpeedCounter = 0;
 
 }
 
@@ -163,6 +165,15 @@ void ClientsPerServerObserver::updateDownloadSpeedSlot() {
     // compute average download speed :
     this->averageDownloadSpeed = (this->averageDownloadSpeed + this->downloadSpeed) / 2;
 
+    // compute the effective mean download speed :
+    if (this->isDownloading()) {
+
+        this->effectiveMeanDownloadSpeed = (this->effectiveMeanDownloadSpeed * this->meanDownloadSpeedCounter + this->downloadSpeed) / (this->meanDownloadSpeedCounter + 1);
+        this->meanDownloadSpeedCounter++;
+
+    }
+
+
     // notify side bar that download speed has been updated :
     emit serverStatisticsUpdateSignal(this->parent->getRealServerGroupId());
 
@@ -176,6 +187,10 @@ bool ClientsPerServerObserver::isSslActive() const {
     return this->sslActive;
 }
 
+bool ClientsPerServerObserver::isDownloading() const {
+    return (this->downloadSpeed > 0);
+}
+
 
 quint64 ClientsPerServerObserver::getDownloadSpeed() const {
     return this->downloadSpeed;
@@ -184,6 +199,10 @@ quint64 ClientsPerServerObserver::getDownloadSpeed() const {
 
 quint64 ClientsPerServerObserver::getAverageDownloadSpeed() const {
     return this->averageDownloadSpeed;
+}
+
+quint64 ClientsPerServerObserver::getEffectiveMeanDownloadSpeed() const {
+    return this->effectiveMeanDownloadSpeed;
 }
 
 

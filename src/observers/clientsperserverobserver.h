@@ -38,9 +38,11 @@ public:
 
     quint64 getDownloadSpeed() const;
     quint64 getAverageDownloadSpeed() const;
+    quint64 getEffectiveMeanDownloadSpeed() const;
     SegmentInfoData getSegmentInfoData() const;
     quint64 getBytesDownloadedForCurrentSession() const;
     bool isSslActive() const;
+    bool isDownloading() const;
 
 
 private:
@@ -48,7 +50,9 @@ private:
     SegmentInfoData segmentInfoData;
     quint64 downloadSpeed;
     quint64 averageDownloadSpeed;
+    quint64 effectiveMeanDownloadSpeed;
     quint64 bytesDownloadedForCurrentSession;
+    quint64 meanDownloadSpeedCounter;
 
     void setupConnections();
     void resetVariables();
@@ -61,7 +65,6 @@ signals:
     void speedSignal(int);
     void nntpErrorSignal(const int);
     void serverStatisticsUpdateSignal(const int);
-
 
 public slots:
 
