@@ -203,7 +203,7 @@ void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType) {
         updatedRowNumberList.append(updatedRowNumber);
 
         this->treeView->selectionModel()->select(QItemSelection(itemRows.at(0)->index(), itemRows.at(itemRows.size() - 1)->index()),
-                                       QItemSelectionModel::Select);
+                                                 QItemSelectionModel::Select);
     }
 
 
@@ -233,13 +233,22 @@ void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType) {
 }
 
 
+void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus targetStatus, const QModelIndex& index){
+
+    QList<QModelIndex> targetIndexesList;
+    targetIndexesList.append(index);
+    this->setStartPauseDownload(targetStatus, targetIndexesList);
+
+}
+
+
 
 void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus targetStatus, const QList<QModelIndex>& indexesList){
 
     // notify listeners that start/pause download action is about to be triggered :
     emit startPauseAboutToBeTriggeredSignal(targetStatus);
 
-    foreach (QModelIndex currentModelIndex, indexesList){
+    foreach (QModelIndex currentModelIndex, indexesList) {
 
         // get file name item related to selected index :
         QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(currentModelIndex);

@@ -45,6 +45,7 @@ public:
     ActionButtonsManager* getActionButtonsManager() const;
     void setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus);
     void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QList<QModelIndex>&);
+    void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QModelIndex&);
     void retryDownload(const QModelIndexList&);
     void changePar2FilesStatus(const QModelIndex, UtilityNamespace::ItemStatus);
 
