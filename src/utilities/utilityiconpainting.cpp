@@ -23,6 +23,7 @@
 
 #include <KDebug>
 #include <KIconEffect>
+#include <KApplication>
 #include "kcolorutils.h"
 
 #include <QApplication>
@@ -257,4 +258,19 @@ QLabel* UtilityIconPainting::buildLighterTextLabel(const QString& text, QWidget*
 }
 
 
+QColor UtilityIconPainting::lighterColor(const qreal& amount) {
+
+    QPalette textLabelPalette = kapp->palette();
+    return KColorUtils::tint(textLabelPalette.color(QPalette::Disabled, QPalette::WindowText), textLabelPalette.color(QPalette::Active, QPalette::WindowText), amount);
+
+}
+
+
+void UtilityIconPainting::displayLighterText(QStandardItem* item) {
+
+    QBrush itemBrush = item->foreground();
+    itemBrush.setColor(this->lighterColor(0.4));
+    item->setForeground(itemBrush);
+
+}
 
