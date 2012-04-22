@@ -69,13 +69,7 @@ void ClientsObserverBase::setSslHandshakeParameters(const bool& sslActive, const
 
 bool ClientsObserverBase::isConnected() const {
 
-    bool connected = false;
-
-    if (this->totalConnections > 0) {
-        connected = true;
-    }
-
-    return connected;
+    return (this->totalConnections > 0);
 }
 
 
