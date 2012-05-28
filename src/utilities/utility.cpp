@@ -246,6 +246,7 @@ bool Utility::createFolder(const QString& fileSavePath) {
 
     // if the folder does not exists, create it :
     QDir directory(fileSavePath);
+
     if (!directory.exists()) {
         folderExists = directory.mkpath(fileSavePath);
     }
@@ -256,14 +257,10 @@ bool Utility::createFolder(const QString& fileSavePath) {
 
 bool Utility::isFolderExists(const QString& fileSavePath) {
 
-    bool folderExists = true;
     // check if the folder exists :
     QDir directory(fileSavePath);
-    if (!directory.exists()) {
-        folderExists = false;
-    }
 
-    return folderExists;
+    return directory.exists();
 }
 
 
