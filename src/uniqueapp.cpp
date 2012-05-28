@@ -24,6 +24,7 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 #include <KUrl>
+#include <kstartupinfo.h>
 
 #include "mainwindow.h"
 
@@ -69,7 +70,14 @@ int UniqueApp::newInstance() {
 
         args->clear();
 
-        KUniqueApplication::newInstance();
+
+        if (this->mainWindow->isVisible()) {
+            this->mainWindow->show();
+        }
+
+        KStartupInfo::setNewStartupId(this->mainWindow, this->startupId());
+
+
     }
 
     return 0;
