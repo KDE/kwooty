@@ -25,6 +25,7 @@
 #include <KMessageBox>
 #include <KProcess>
 #include <KApplication>
+#include <KStandardDirs>
 #include <kworkspace/kworkspace.h>
 
 #include <QDateTime>
@@ -165,10 +166,12 @@ void ShutdownManager::updateStatusBar() {
 
 
 void ShutdownManager::requestShutdown() {
-    
+
+    ShutdownManager::SessionType sessionType = this->retrieveSessionType();
+
     // check type of session and call proper shutdown method
     // if KDE session :
-    if (this->retrieveSessionType() == ShutdownManager::Kde) {
+    if (sessionType == ShutdownManager::Kde) {
 
         // check if shutdown has any chance of succeeding :
         bool canShutDown = KWorkSpace::canShutDown(KWorkSpace::ShutdownConfirmNo,
@@ -181,8 +184,8 @@ void ShutdownManager::requestShutdown() {
 
             // halt the system now :
             KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmNo,
-                                                       KWorkSpace::ShutdownTypeHalt,
-                                                       KWorkSpace::ShutdownModeForceNow);
+                                        KWorkSpace::ShutdownTypeHalt,
+                                        KWorkSpace::ShutdownModeForceNow);
         }
         else {
             this->handleShutdownError(i18n("Shutdown has failed (session manager can not be contacted)."));
@@ -190,15 +193,12 @@ void ShutdownManager::requestShutdown() {
 
     }
     // if GNOME session :
-    else if (this->retrieveSessionType() == ShutdownManager::Gnome) {
-
-        // list of arguments for gnome-session-save command line :
-        QStringList args;
-        args.append("--shutdown-dialog");
+    else if ( sessionType == ShutdownManager::Gnome2 ||
+              sessionType == ShutdownManager::Gnome3 ) {
 
         // halt the system now :
         KProcess* shutdowProcess = new KProcess(this);
-        shutdowProcess->setProgram(this->gnomeShutdownApplication, args);
+        shutdowProcess->setProgram(this->retrieveGnomeSessionProgram(sessionType), this->retrieveGnomeSessionArgs(sessionType));
         shutdowProcess->start();
         shutdowProcess->closeWriteChannel();
 
@@ -235,12 +235,40 @@ ShutdownManager::SessionType ShutdownManager::retrieveSessionType() {
     // check if session is a GNOME session :
     else {
         desktopSession = ::getenv("GNOME_DESKTOP_SESSION_ID");
+
+        if (desktopSession.isEmpty()) {
+            desktopSession = ::getenv("GNOME_KEYRING_CONTROL");
+        }
+
+
         if (!desktopSession.isEmpty()) {
 
-            if (QFile::exists(this->gnomeShutdownApplication)) {
-                sessionType = ShutdownManager::Gnome;
+            QString program = KStandardDirs::findExe("gnome-session");
+
+            KProcess gnomeSessionProcess;
+            gnomeSessionProcess.setProgram(program, QStringList() << "--version");
+            gnomeSessionProcess.start();
+
+            if (gnomeSessionProcess.waitForFinished()) {
+
+                bool conversionOk = false;
+                int mainVersion = gnomeSessionProcess.readAll().mid(program.size() + 1).left(1).toInt(&conversionOk);
+
+                if (conversionOk) {
+
+                    if (mainVersion == 3) {
+                        sessionType = ShutdownManager::Gnome3;
+                    }
+                    else if (mainVersion == 2) {
+                        sessionType = ShutdownManager::Gnome2;
+                    }
+
+                }
+
+                gnomeSessionProcess.closeWriteChannel();
 
             }
+
         }
     }
 
@@ -373,6 +401,41 @@ void ShutdownManager::handleShutdownError(const QString& message) {
     // uncheck shutdown button :
     this->shutdownCancelledSlot();
 
+}
+
+
+QString ShutdownManager::retrieveGnomeSessionProgram(const ShutdownManager::SessionType gnomeSessionType) {
+
+    QString programName;
+
+    if (gnomeSessionType == ShutdownManager::Gnome2) {
+        programName = "gnome-session-save";
+    }
+    else if (gnomeSessionType == ShutdownManager::Gnome3) {
+        programName = "gnome-session-quit";
+    }
+
+   return KStandardDirs::findExe(programName);
+}
+
+
+QStringList ShutdownManager::retrieveGnomeSessionArgs(const ShutdownManager::SessionType gnomeSessionType) {
+
+    QStringList args;
+
+    //TODO : maybe remove shutdown dialog for gnome sessions ... ?
+
+    // list of arguments for gnome-session-save command line :
+    if (gnomeSessionType == ShutdownManager::Gnome2) {
+        args.append("--shutdown-dialog");
+    }
+    // list of arguments for gnome-session-quit command line :
+    else if (gnomeSessionType == ShutdownManager::Gnome3) {
+        args.append("--logout");
+        args.append("--power-off");
+    }
+
+   return args;
 }
 
 

@@ -52,7 +52,8 @@ public:
     // distinguish type of desktop session in order to call proper shutdown command :
     enum SessionType {
         Kde,
-        Gnome,
+        Gnome2,
+        Gnome3,
         Unknown
     };
 
@@ -79,6 +80,8 @@ private:
     ShutdownManager::SessionType retrieveSessionType();
     QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods();
     QString getShutdownMethodText(UtilityNamespace::SystemShutdownType) const;
+    QString retrieveGnomeSessionProgram(const ShutdownManager::SessionType);
+    QStringList retrieveGnomeSessionArgs(const ShutdownManager::SessionType);
     void systemAboutToShutdown();
     void requestSuspend(Solid::PowerManagement::SleepState);
     void requestShutdown();
