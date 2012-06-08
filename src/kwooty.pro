@@ -40,7 +40,6 @@ SOURCES += main.cpp \
     extractrar.cpp \
     extractzip.cpp \
     observers/clientsobserver.cpp \
-    folderwatcher.cpp \
     fileoperations.cpp \
     data/nzbcollectiondata.cpp \
     systraylegacy.cpp \
@@ -52,6 +51,9 @@ SOURCES += main.cpp \
     plugins/watchfolder/watchfolderplugin.cpp \
     plugins/watchfolder/watchfolder.cpp \
     plugins/watchfolder/preferenceswatchfolder.cpp \
+    plugins/categories/categoriesplugin.cpp \
+    plugins/categories/categories.cpp \
+    plugins/categories/preferencescategories.cpp \
     plugins/scheduler/schedulerplugin.cpp \
     plugins/scheduler/scheduler.cpp \
     plugins/scheduler/preferencesscheduler.cpp \
@@ -91,7 +93,9 @@ SOURCES += main.cpp \
     data/postdownloadinfodata.cpp \
     segmentbuffer.cpp \
     actionsmanager.cpp \
-    actionbuttonsmanager.cpp
+    actionbuttonsmanager.cpp \
+    plugins/categories/categoriesfilehandler.cpp \
+    plugins/categories/mimedata.cpp
 HEADERS += mainwindow.h \
     core.h \
     nzbfilehandler.h \
@@ -128,7 +132,6 @@ HEADERS += mainwindow.h \
     extractrar.h \
     extractzip.h \
     observers/clientsobserver.h \
-    folderwatcher.h \
     fileoperations.h \
     data/nzbcollectiondata.h \
     systraylegacy.h \
@@ -140,6 +143,9 @@ HEADERS += mainwindow.h \
     plugins/watchfolder/watchfolderplugin.h \
     plugins/watchfolder/preferenceswatchfolder.h \
     plugins/watchfolder/watchfolder.h \
+    plugins/categories/categoriesplugin.h \
+    plugins/categories/categories.h \
+    plugins/categories/preferencescategories.h \
     plugins/scheduler/schedulerplugin.h \
     plugins/scheduler/scheduler.h \
     plugins/scheduler/preferencesscheduler.h \
@@ -180,17 +186,16 @@ HEADERS += mainwindow.h \
     data/postdownloadinfodata.h \
     segmentbuffer.h \
     actionsmanager.h \
-    actionbuttonsmanager.h
+    actionbuttonsmanager.h \
+    plugins/categories/categoriesfilehandler.h \
+    plugins/categories/mimedata.h
 FORMS += preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
     preferences/preferencesgeneral.ui \
     preferences/preferencesdisplay.ui \
     plugins/watchfolder/preferenceswatchfolder.ui \
+    plugins/categories/preferencescategories.ui \
     plugins/scheduler/preferencesscheduler.ui \
     plugins/autoretry/preferencesautoretry.ui \
     preferences/preferencesshutdown.ui \
     preferences/serversettings.ui
-
-
-
-
