@@ -22,11 +22,12 @@
 #define NZBFILEDATA_H
 
 #include "segmentdata.h"
+
+#include "kwooty_export.h"
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class NzbFileData
-{
+class KWOOTY_EXPORT NzbFileData {
 
 public:
     NzbFileData();
