@@ -50,17 +50,6 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QCheckBox" name="kcfg_displayTinyFileName">
-        <property name="toolTip">
-         <string>Remove useless content usually found in file names of a nzb collection.
-For example, a file named '[xxx - yyy] &quot;foo.bar&quot; - Yenc 1/10' will be displayed as 'foo.bar'</string>
-        </property>
-        <property name="text">
-         <string>Display tiny file names</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
@@ -70,7 +59,7 @@ For example, a file named '[xxx - yyy] &quot;foo.bar&quot; - Yenc 1/10' will be 
       <string>Miscellaneous</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
+      <item row="1" column="0">
        <widget class="QCheckBox" name="kcfg_expandTreeView">
         <property name="toolTip">
          <string>Expand treeview automatically when a .nzb file is open</string>
@@ -80,7 +69,7 @@ For example, a file named '[xxx - yyy] &quot;foo.bar&quot; - Yenc 1/10' will be 
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item row="2" column="0">
        <widget class="QCheckBox" name="kcfg_animateTreeView">
         <property name="toolTip">
          <string>Expand and collapse treeview with animation</string>
@@ -90,13 +79,24 @@ For example, a file named '[xxx - yyy] &quot;foo.bar&quot; - Yenc 1/10' will be 
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="3" column="0">
        <widget class="QCheckBox" name="kcfg_alternateColors">
         <property name="toolTip">
          <string>Alternate background color for each row</string>
         </property>
         <property name="text">
          <string>Alternate row colors</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="kcfg_displayTinyFileName">
+        <property name="toolTip">
+         <string>Remove useless content usually found in file names inside a nzb collection.
+For example, a file named '[xxx - yyy] &quot;file.ext&quot; - Yenc 1/10' will be displayed as 'file.ext'</string>
+        </property>
+        <property name="text">
+         <string>Display tiny file names</string>
         </property>
        </widget>
       </item>
