@@ -402,6 +402,10 @@ void Core::initFoldersSettings() {
 
 }
 
+QString Core::getCompletedFolder() const {
+    return Settings::completedFolder().path();
+}
+
 
 
 MainWindow* Core::getMainWindow() const {

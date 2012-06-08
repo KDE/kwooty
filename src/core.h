@@ -71,6 +71,7 @@ public:
     void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
     void emitDataHasArrived(const QModelIndex& = QModelIndex());
     int savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown, const SaveFileBehavior = SaveNotSilently);
+    QString getCompletedFolder() const;
 
 
     MainWindow* getMainWindow() const;
