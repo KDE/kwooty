@@ -34,8 +34,7 @@ SOURCES += main.cpp \
     preferences/preferencesdisplay.cpp \
     preferences/preferencesshutdown.cpp \
     itemchildrenmanager.cpp \
-    mytreeview.cpp \
-    shutdownmanager.cpp \
+    mytreeview.cpp \    
     segmentdecoderbase.cpp \
     segmentdecoderyenc.cpp \
     segmentdecoderuuenc.cpp \
@@ -88,7 +87,12 @@ SOURCES += main.cpp \
     standarditemmodelquery.cpp \
     data/postdownloadinfodata.cpp \
     segmentbuffer.cpp \
-    widgets/statusbarwidgetbase.cpp
+    widgets/statusbarwidgetbase.cpp \
+    shutdown/shutdownmanager.cpp \
+    shutdown/sessionbase.cpp \
+    shutdown/sessionkde.cpp \
+    shutdown/sessiongnome3.cpp \
+    shutdown/sessiongnome2.cpp
 HEADERS += mainwindow.h \
     centralwidget.h \
     nzbfilehandler.h \
@@ -120,7 +124,6 @@ HEADERS += mainwindow.h \
     preferences/preferencesdisplay.h \
     itemchildrenmanager.h \
     mytreeview.h \
-    shutdownmanager.h \
     segmentdecoderbase.h \
     segmentdecoderyenc.h \
     segmentdecoderuuenc.h \
@@ -174,7 +177,12 @@ HEADERS += mainwindow.h \
     standarditemmodelquery.h \
     data/postdownloadinfodata.h \
     segmentbuffer.h \
-    widgets/statusbarwidgetbase.h
+    widgets/statusbarwidgetbase.h \
+    shutdown/shutdownmanager.h \
+    shutdown/sessionbase.h \
+    shutdown/sessionkde.h \
+    shutdown/sessiongnome3.h \
+    shutdown/sessiongnome2.h
 FORMS += centralwidget.ui \
     preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
