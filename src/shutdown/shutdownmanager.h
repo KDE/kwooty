@@ -21,18 +21,6 @@
 #ifndef SHUTDOWNMANAGER_H
 #define SHUTDOWNMANAGER_H
 
-
-#include <kdeversion.h>
-#if KDE_IS_VERSION(4, 5, 82)
-// nothing to do for KDE >= 4.6
-#else
-#include <solid/control/powermanager.h>
-using namespace Solid::Control;
-#endif
-
-#include <solid/powermanagement.h>
-using namespace Solid::PowerManagement;
-
 #include <KDialog>
 
 #include <QObject>
@@ -43,6 +31,7 @@ using namespace Solid::PowerManagement;
 using namespace UtilityNamespace;
 
 class CentralWidget;
+class SessionBase;
 
 class ShutdownManager : public QObject {
 
@@ -50,25 +39,20 @@ class ShutdownManager : public QObject {
 
 public:
 
-    // distinguish type of desktop session in order to call proper shutdown command :
-    enum SessionType {
-        Kde,
-        Gnome,
-        Unknown
-    };
-
-    ShutdownManager(CentralWidget* parent = 0);
+    ShutdownManager(CentralWidget*);
     QMap<QString, QString> retrieveIconAvailableShutdownMap();
+    void displayShutdownErrorMessageBox(const QString&);
 
 
 private:
 
     CentralWidget* parent;
+    SessionBase* session;
     QPointer<KDialog> aboutToShutdownDialog;
     QTimer* activityMonitorTimer;
     QTimer* launchShutdownTimer;
     QString scheduleDateTimeStr;
-    QString gnomeShutdownApplication;
+    QString gnomeShutdownApplication;    
     int noActivityCounter;
     int shutdownTimerInterval;
     bool enableSystemShutdown;
@@ -77,15 +61,11 @@ private:
     bool pausedShutdown;
 
     UtilityNamespace::SystemShutdownType getChosenShutdownType();
-    ShutdownManager::SessionType retrieveSessionType();
-    QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods();
     QString getShutdownMethodText(UtilityNamespace::SystemShutdownType) const;
     int displayAboutToShutdownMessageBox(const QString&);
+    void retrieveSession();
     void systemAboutToShutdown();
-    void requestSuspend(Solid::PowerManagement::SleepState);
-    void requestShutdown();
     void storeSettings();
-    void displayShutdownErrorMessageBox(const QString&);
     void updateStatusBar();
     void setupConnections();
 

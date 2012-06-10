@@ -23,17 +23,21 @@
 #include <KDebug>
 #include <KJob>
 #include <KMessageBox>
-#include <KProcess>
 #include <KApplication>
-#include <kworkspace/kworkspace.h>
+#include <KStandardDirs>
 
 #include <QDateTime>
+#include <QProcess>
 
 #include "centralwidget.h"
 #include "standarditemmodel.h"
 #include "standarditemmodelquery.h"
 #include "mystatusbar.h"
 #include "kwootysettings.h"
+#include "shutdown/sessionbase.h"
+#include "shutdown/sessionkde.h"
+#include "shutdown/sessiongnome3.h"
+#include "shutdown/sessiongnome2.h"
 
 
 ShutdownManager::ShutdownManager(CentralWidget* parent) : QObject (parent) {
@@ -60,6 +64,9 @@ ShutdownManager::ShutdownManager(CentralWidget* parent) : QObject (parent) {
 
     this->setupConnections();
 
+    // retrieve type of session right now :
+    this->retrieveSession();
+
 }
 
 
@@ -83,38 +90,43 @@ void ShutdownManager::setupConnections() {
 }
 
 
-
 void ShutdownManager::systemAboutToShutdown() {
-    
-    // stop timer and reset noActivityCounter :
-    this->enableSystemShutdownSlot(false);
 
-    // shutdown system automatically in 10 seconds :
-    this->launchShutdownTimer->start(10000);
+    if (this->session) {
 
-    // get shutdown method text :
-    UtilityNamespace::SystemShutdownType systemShutdownType = this->getChosenShutdownType();
-    QString shutdownMethodText = this->getShutdownMethodText(systemShutdownType);
+        // stop timer and reset noActivityCounter :
+        this->enableSystemShutdownSlot(false);
 
-    // finally display shutdown confirmation dialog :
-    int answer = this->displayAboutToShutdownMessageBox(shutdownMethodText);
+        // shutdown system automatically in 10 seconds :
+        this->launchShutdownTimer->start(10000);
 
-    // user has confirmed shutdown, launch shutdown right now :
-    if (answer == KDialog::Yes) {
+        // text by default :
+        QString shutdownMethodText = this->getShutdownMethodText( UtilityNamespace::Shutdown);
 
-        this->launchSystemShutdownSlot();
+        // get shutdown method text :
+        UtilityNamespace::SystemShutdownType systemShutdownType = this->session->getChosenShutdownType();
+        shutdownMethodText = this->getShutdownMethodText(systemShutdownType);
+
+        // finally display shutdown confirmation dialog :
+        int answer = this->displayAboutToShutdownMessageBox(shutdownMethodText);
+
+        // user has confirmed shutdown, launch shutdown right now :
+        if (answer == KDialog::Yes) {
+
+            this->launchSystemShutdownSlot();
+        }
+        // shutdown cancelled :
+        else {
+            // stop shutdown timer if cancelled bu the user :
+            this->launchShutdownTimer->stop();
+
+            // update shutdown button (not enabled/checked) :
+            this->shutdownCancelledSlot();
+        }
+
     }
-    // shutdown cancelled :
-    else {
-        // stop shutdown timer if cancelled bu the user :
-        this->launchShutdownTimer->stop();
 
-        // update shutdown button (not enabled/checked) :
-        this->shutdownCancelledSlot();
-    }
-    
 }
-
 
 
 void ShutdownManager::storeSettings() {
@@ -132,97 +144,43 @@ void ShutdownManager::updateStatusBar() {
     QString shutdownMethodText;
     QString shutdownMethodIcon;
 
-    // if shutdown scheduler is active :
-    if (this->enableSystemShutdown) {
+    if (this->session) {
 
-        // define shutown method text :
-        if (Settings::jobsRadioButton()) {
-            shutdownMethodText = i18n("when jobs complete");
+        // if shutdown scheduler is active :
+        if (this->enableSystemShutdown) {
+
+            // define shutown method text :
+            if (Settings::jobsRadioButton()) {
+                shutdownMethodText = i18n("when jobs complete");
+            }
+
+            if (Settings::timerRadioButton()) {
+                // get scheduled shutdown time :
+                QDateTime dateTime = QDateTime::currentDateTime();
+                dateTime = dateTime.addSecs(Settings::scheduleDateTime().time().hour() * 3600 +
+                                            Settings::scheduleDateTime().time().minute() * 60);
+
+                shutdownMethodText = i18nc("shutdown time notifier in status bar, example : 'shutdown icon' at 12:56",
+                                           "at %1", dateTime.toString(Utility::getSystemTimeFormat("hh:mm")));
+            }
+
+            // define shutdown method icon :
+            QMap<QString, QString>iconAvailableShutdownMap = this->retrieveIconAvailableShutdownMap();
+            shutdownMethodIcon = iconAvailableShutdownMap.key(this->getShutdownMethodText(this->session->getChosenShutdownType()));
+
         }
 
-        if (Settings::timerRadioButton()) {
-            // get scheduled shutdown time :
-            QDateTime dateTime = QDateTime::currentDateTime();
-            dateTime = dateTime.addSecs(Settings::scheduleDateTime().time().hour() * 3600 +
-                                        Settings::scheduleDateTime().time().minute() * 60);
-
-            shutdownMethodText = i18nc("shutdown time notifier in status bar, example : 'shutdown icon' at 12:56",
-                                       "at %1", dateTime.toString(Utility::getSystemTimeFormat("hh:mm")));
-        }
-
-
-        // define shutdown method icon :
-        QMap<QString, QString>iconAvailableShutdownMap = this->retrieveIconAvailableShutdownMap();
-        shutdownMethodIcon = iconAvailableShutdownMap.key(this->getShutdownMethodText(this->getChosenShutdownType()));
-
-    }
-
-    // send info to status bar :
-    emit statusBarShutdownInfoSignal(shutdownMethodIcon ,shutdownMethodText);
-
-}
-
-
-
-
-void ShutdownManager::requestShutdown() {
-    
-    // check type of session and call proper shutdown method
-    // if KDE session :
-    if (this->retrieveSessionType() == ShutdownManager::Kde) {
-
-        // check if shutdown has any chance of succeeding :
-        bool canShutDown = KWorkSpace::canShutDown(KWorkSpace::ShutdownConfirmNo,
-                                                   KWorkSpace::ShutdownTypeHalt,
-                                                   KWorkSpace::ShutdownModeForceNow);
-
-
-        // if shutdown is possible :
-        if (canShutDown) {
-
-            // halt the system now :
-            KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmNo,
-                                                       KWorkSpace::ShutdownTypeHalt,
-                                                       KWorkSpace::ShutdownModeForceNow);
-        }
-        else {
-            this->displayShutdownErrorMessageBox(i18n("Shutdown has failed (session manager can not be contacted)."));
-        }
-
-    }
-    // if GNOME session :
-    else if (this->retrieveSessionType() == ShutdownManager::Gnome) {
-
-        // list of arguments for gnome-session-save command line :
-        QStringList args;
-        args.append("--shutdown-dialog");
-
-        // halt the system now :
-        KProcess* shutdowProcess = new KProcess(this);
-        shutdowProcess->setProgram(this->gnomeShutdownApplication, args);
-        shutdowProcess->start();
-        shutdowProcess->closeWriteChannel();
+        // send info to status bar :
+        emit statusBarShutdownInfoSignal(shutdownMethodIcon ,shutdownMethodText);
 
     }
 
 }
 
 
+void ShutdownManager::retrieveSession() {
 
-void ShutdownManager::requestSuspend(Solid::PowerManagement::SleepState suspendMethod) {
-    // requests a suspend of the system :
-#if KDE_IS_VERSION(4, 5, 82)
-    Solid::PowerManagement::requestSleep(suspendMethod, 0, 0);
-#else
-    Solid::Control::PowerManager::suspend(static_cast<Solid::Control::PowerManager::SuspendMethod>(suspendMethod))->start();
-#endif
-}
-
-
-
-ShutdownManager::SessionType ShutdownManager::retrieveSessionType() {
-
-    ShutdownManager::SessionType sessionType = ShutdownManager::Unknown;
+    this->session = 0;
 
     QString desktopSession;
 
@@ -230,112 +188,92 @@ ShutdownManager::SessionType ShutdownManager::retrieveSessionType() {
     desktopSession = ::getenv("KDE_FULL_SESSION");
     if (desktopSession.contains("true", Qt::CaseInsensitive)) {
 
-        sessionType = ShutdownManager::Kde;
+        this->session = new SessionKde(this);
     }
 
     // check if session is a GNOME session :
     else {
         desktopSession = ::getenv("GNOME_DESKTOP_SESSION_ID");
+
+        if (desktopSession.isEmpty()) {
+            desktopSession = ::getenv("GNOME_KEYRING_CONTROL");
+        }
+        if (desktopSession.isEmpty()) {
+            desktopSession = ::getenv("MATE_DESKTOP_SESSION_ID");
+        }
+
+
         if (!desktopSession.isEmpty()) {
 
-            if (QFile::exists(this->gnomeShutdownApplication)) {
-                sessionType = ShutdownManager::Gnome;
+            QString program = KStandardDirs::findExe("gnome-session");
+
+            QProcess gnomeSessionProcess;
+            gnomeSessionProcess.start(program, QStringList() << "--version");
+
+            if (gnomeSessionProcess.waitForFinished()) {
+
+                bool conversionOk = false;
+                int mainVersion = gnomeSessionProcess.readAll().mid(program.size() + 1).left(1).toInt(&conversionOk);
+
+                if (conversionOk) {
+
+                    if (mainVersion == 3) {
+                        this->session = new SessionGnome3(this);
+
+                    }
+                    else if (mainVersion == 2) {
+                        this->session = new SessionGnome2(this);
+
+                    }
+
+                }
+
+                gnomeSessionProcess.closeWriteChannel();
 
             }
+
         }
     }
-
-    //kDebug() << "desktopSession : " << desktopSession;
-
-    // return kde or gnome desktop session :
-    return sessionType;
 
 }
-
-
-UtilityNamespace::SystemShutdownType ShutdownManager::getChosenShutdownType() {
-
-    UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown;
-
-    QList<UtilityNamespace::SystemShutdownType> indexShutdownTypeList = this->retrieveAvailableShutdownMethods();
-
-    // ensure that list contains element :
-    if (indexShutdownTypeList.size() > Settings::shutdownMethods()) {
-        systemShutdownType = indexShutdownTypeList.at(Settings::shutdownMethods());
-    }
-
-    return systemShutdownType;
-
-}
-
-
-
-
-QList<UtilityNamespace::SystemShutdownType> ShutdownManager::retrieveAvailableShutdownMethods() {
-
-    QList<UtilityNamespace::SystemShutdownType> indexShutdownTypeList;
-
-    // at first add system shutdown if session has been identified as kde or gnome :
-    if (this->retrieveSessionType() != ShutdownManager::Unknown) {
-        indexShutdownTypeList.append(UtilityNamespace::Shutdown);
-    }
-
-    // then add supported sleep types by system :
-    foreach (SleepState sleepState, Solid::PowerManagement::supportedSleepStates()) {
-
-        // add standby :
-        if (sleepState == StandbyState) {
-            indexShutdownTypeList.append(UtilityNamespace::Standby);
-        }
-        // add suspend :
-        if (sleepState == SuspendState) {
-            indexShutdownTypeList.append(UtilityNamespace::Suspend);
-        }
-        // add hibernate :
-        if (sleepState == HibernateState) {
-            indexShutdownTypeList.append(UtilityNamespace::Hibernate);
-        }
-    }
-
-    return indexShutdownTypeList;
-
-}
-
 
 
 QMap<QString, QString> ShutdownManager::retrieveIconAvailableShutdownMap() {
 
     QMap<QString, QString>iconAvailableShutdownMap;
 
-    foreach (UtilityNamespace::SystemShutdownType shutdownType, this->retrieveAvailableShutdownMethods()) {
+    if (this->session) {
 
-        // add shutdown :
-        if (shutdownType == UtilityNamespace::Shutdown) {
-            iconAvailableShutdownMap.insertMulti("system-shutdown", this->getShutdownMethodText(shutdownType));
+        foreach (UtilityNamespace::SystemShutdownType shutdownType, this->session->retrieveAvailableShutdownMethods()) {
 
+            // add shutdown :
+            if (shutdownType == UtilityNamespace::Shutdown) {
+                iconAvailableShutdownMap.insertMulti("system-shutdown", this->getShutdownMethodText(shutdownType));
+
+            }
+            // add standby :
+            if (shutdownType == UtilityNamespace::Standby) {
+                iconAvailableShutdownMap.insertMulti("system-suspend", this->getShutdownMethodText(shutdownType));
+
+            }
+            // add suspend :
+            if (shutdownType == UtilityNamespace::Suspend) {
+                iconAvailableShutdownMap.insertMulti("system-suspend", this->getShutdownMethodText(shutdownType));
+
+            }
+            // add hibernate :
+            if (shutdownType == UtilityNamespace::Hibernate) {
+                iconAvailableShutdownMap.insertMulti("system-suspend-hibernate", this->getShutdownMethodText(shutdownType));
+
+
+            }
         }
-        // add standby :
-        if (shutdownType == UtilityNamespace::Standby) {
-            iconAvailableShutdownMap.insertMulti("system-suspend", this->getShutdownMethodText(shutdownType));
 
-        }
-        // add suspend :
-        if (shutdownType == UtilityNamespace::Suspend) {
-            iconAvailableShutdownMap.insertMulti("system-suspend", this->getShutdownMethodText(shutdownType));
-
-        }
-        // add hibernate :
-        if (shutdownType == UtilityNamespace::Hibernate) {
-            iconAvailableShutdownMap.insertMulti("system-suspend-hibernate", this->getShutdownMethodText(shutdownType));
-
-
-        }
     }
 
     return iconAvailableShutdownMap;
 
 }
-
 
 
 QString ShutdownManager::getShutdownMethodText(UtilityNamespace::SystemShutdownType systemShutdownType) const {
@@ -364,7 +302,6 @@ QString ShutdownManager::getShutdownMethodText(UtilityNamespace::SystemShutdownT
 
     return shutdownText;
 }
-
 
 
 void ShutdownManager::displayShutdownErrorMessageBox(const QString& message) {
@@ -411,7 +348,6 @@ int ShutdownManager::displayAboutToShutdownMessageBox(const QString& shutdownMet
 
 
 
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
@@ -451,6 +387,7 @@ void ShutdownManager::shutdownCancelledSlot() {
 
 }
 
+
 void ShutdownManager::statusItemUpdatedSlot() {
 
     // if activity detected, set shutdown button as enabled :
@@ -465,8 +402,6 @@ void ShutdownManager::statusItemUpdatedSlot() {
 
 
 }
-
-
 
 
 void ShutdownManager::enableSystemShutdownSlot(bool enable) {
@@ -514,7 +449,6 @@ void ShutdownManager::enableSystemShutdownSlot(bool enable) {
 }
 
 
-
 void ShutdownManager::retrieveCurrentJobsInfoSlot(){
 
 
@@ -555,7 +489,6 @@ void ShutdownManager::retrieveCurrentJobsInfoSlot(){
 }
 
 
-
 void ShutdownManager::launchSystemShutdownSlot() {
 
     this->launchShutdownTimer->stop();
@@ -565,42 +498,23 @@ void ShutdownManager::launchSystemShutdownSlot() {
         this->aboutToShutdownDialog->reject();
     }
 
-    // save potential pending data for future session restoring without asking any questions :
-    parent->savePendingDownloads(this->getChosenShutdownType(), SaveSilently);
+    if (this->session) {
 
-    // shutdown is launched, set system button as "not checked" :
-    emit setShutdownButtonCheckedSignal(false);
+        // save potential pending data for future session restoring without asking any questions :
+        parent->savePendingDownloads(this->session->getChosenShutdownType(), SaveSilently);
 
-    // get type of system shutdown :
-    switch (this->getChosenShutdownType()) {
 
-    case UtilityNamespace::Shutdown: {
-            this->requestShutdown();
-            break;
-        }
+        // shutdown is launched, set system button as "not checked" :
+        emit setShutdownButtonCheckedSignal(false);
 
-    case UtilityNamespace::Standby: {
-            this->requestSuspend(Solid::PowerManagement::StandbyState);
-            break;
-        }
-
-    case UtilityNamespace::Suspend: {
-            this->requestSuspend(Solid::PowerManagement::SuspendState);
-            break;
-        }
-
-    case UtilityNamespace::Hibernate: {
-            this->requestSuspend(Solid::PowerManagement::HibernateState);
-            break;
-        }
-
-    default: {
-            this->displayShutdownErrorMessageBox(i18n("System shutdown type unknown, shutdown is not possible!"));
-            break;
-        }
+        // launch system shutdown according to session used :
+        this->session->launchSystemShutdown();
 
     }
+    else {
+        kDebug() << "session has not been identified, shutdown not available !";
+    }
+
 
 }
-
 
