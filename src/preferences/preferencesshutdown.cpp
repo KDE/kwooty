@@ -22,7 +22,7 @@
 
 #include <KDebug>
 
-#include "shutdownmanager.h"
+#include "shutdown/shutdownmanager.h"
 #include "centralwidget.h"
 #include "utility.h"
 using namespace UtilityNamespace;
