@@ -24,6 +24,7 @@
 #include <KCmdLineArgs>
 #include <KDebug>
 #include <KUrl>
+#include <kstartupinfo.h>
 
 #include "mainwindow.h"
 
@@ -42,8 +43,7 @@ UniqueApp::~UniqueApp()
 
 
 
-int UniqueApp::newInstance()
-{
+int UniqueApp::newInstance() {
 
     // create a new instance :
     if (!this->kwootyInstance) {
@@ -53,7 +53,6 @@ int UniqueApp::newInstance()
         this->setWindowIcon(KIcon("kwooty"));
 
         this->mainWindow = new MainWindow();
-
 
     }
 
@@ -69,9 +68,28 @@ int UniqueApp::newInstance()
 
         }
 
-        args->clear();
+        // if kwooty has been called without arguments :
+        if (args->count() == 0) {
 
-        KUniqueApplication::newInstance();
+            // display main window if it only visible is systray :
+            if (this->mainWindow->isHidden()) {
+                this->mainWindow->show();
+            }
+        }
+
+        // if nzb files are present in arguments :
+        else {
+
+            // shown only main window if it is not only present in systray :
+            if (this->mainWindow->isVisible()) {
+                this->mainWindow->show();
+            }
+
+            args->clear();
+
+            KStartupInfo::setNewStartupId(this->mainWindow, this->startupId());
+        }
+
     }
 
     return 0;
