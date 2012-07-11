@@ -24,14 +24,16 @@
 #include <KMessageBox>
 #include <KRun>
 
+#include <QDir>
+
 #include "core.h"
 #include "actionbuttonsmanager.h"
 #include "standarditemmodel.h"
 #include "standarditemmodelquery.h"
 #include "itemparentupdater.h"
 #include "itemchildrenmanager.h"
-#include "shutdownmanager.h"
 #include "segmentmanager.h"
+#include "shutdown/shutdownmanager.h"
 #include "widgets/centralwidget.h"
 #include "widgets/mytreeview.h"
 #include "observers/queuefileobserver.h"
@@ -452,13 +454,14 @@ void ActionsManager::openFolderSlot() {
 
         QModelIndex index = indexesList.at(0);
 
-        // if parent has been selected, get its first child to retrieve file save path :
-        if ( this->downloadModel->isNzbItem(this->downloadModel->itemFromIndex(index)) ) {
+        // retrieve the file save path stored by parent item :
+        QString nzbFileSavePath = this->downloadModel->getParentFileSavePathFromIndex(index);
 
-            index = index.child(FILE_NAME_COLUMN, 0);
+        // check that file save path is really present :
+        if (QDir(nzbFileSavePath).exists()) {
+            fileSavePath = this->downloadModel->getParentFileSavePathFromIndex(index);
         }
 
-        fileSavePath = this->downloadModel->getNzbFileDataFromIndex(index).getFileSavePath();
 
     }
 
