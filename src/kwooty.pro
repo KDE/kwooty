@@ -33,7 +33,11 @@ SOURCES += main.cpp \
     preferences/preferencesdisplay.cpp \
     preferences/preferencesshutdown.cpp \
     itemchildrenmanager.cpp \
-    shutdownmanager.cpp \
+    shutdown/shutdownmanager.cpp \
+    shutdown/sessionbase.cpp \
+    shutdown/sessionkde.cpp \
+    shutdown/sessiongnome3.cpp \
+    shutdown/sessiongnome2.cpp \
     segmentdecoderbase.cpp \
     segmentdecoderyenc.cpp \
     segmentdecoderuuenc.cpp \
@@ -54,6 +58,7 @@ SOURCES += main.cpp \
     plugins/categories/categoriesplugin.cpp \
     plugins/categories/categories.cpp \
     plugins/categories/preferencescategories.cpp \
+    plugins/categories/utilitycategories.cpp \
     plugins/scheduler/schedulerplugin.cpp \
     plugins/scheduler/scheduler.cpp \
     plugins/scheduler/preferencesscheduler.cpp \
@@ -95,7 +100,8 @@ SOURCES += main.cpp \
     actionsmanager.cpp \
     actionbuttonsmanager.cpp \
     plugins/categories/categoriesfilehandler.cpp \
-    plugins/categories/mimedata.cpp
+    plugins/categories/mimedata.cpp \
+    plugins/categories/categoriesmodel.cpp
 HEADERS += mainwindow.h \
     core.h \
     nzbfilehandler.h \
@@ -125,7 +131,11 @@ HEADERS += mainwindow.h \
     data/globalfiledata.h \
     preferences/preferencesdisplay.h \
     itemchildrenmanager.h \
-    shutdownmanager.h \
+    shutdown/shutdownmanager.h \
+    shutdown/sessionbase.h \
+    shutdown/sessionkde.h \
+    shutdown/sessiongnome3.h \
+    shutdown/sessiongnome2.h \
     segmentdecoderbase.h \
     segmentdecoderyenc.h \
     segmentdecoderuuenc.h \
@@ -146,6 +156,7 @@ HEADERS += mainwindow.h \
     plugins/categories/categoriesplugin.h \
     plugins/categories/categories.h \
     plugins/categories/preferencescategories.h \
+    plugins/categories/utilitycategories.h \
     plugins/scheduler/schedulerplugin.h \
     plugins/scheduler/scheduler.h \
     plugins/scheduler/preferencesscheduler.h \
@@ -188,7 +199,8 @@ HEADERS += mainwindow.h \
     actionsmanager.h \
     actionbuttonsmanager.h \
     plugins/categories/categoriesfilehandler.h \
-    plugins/categories/mimedata.h
+    plugins/categories/mimedata.h \
+    plugins/categories/categoriesmodel.h
 FORMS += preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
     preferences/preferencesgeneral.ui \
