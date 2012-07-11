@@ -40,7 +40,6 @@
 #include "itemparentupdater.h"
 #include "itemchildrenmanager.h"
 #include "datarestorer.h"
-#include "shutdownmanager.h"
 #include "fileoperations.h"
 #include "mainwindow.h"
 #include "sidebar.h"
@@ -48,6 +47,7 @@
 #include "servermanager.h"
 #include "actionsmanager.h"
 #include "actionbuttonsmanager.h"
+#include "shutdown/shutdownmanager.h"
 #include "observers/clientsobserver.h"
 #include "observers/queuefileobserver.h"
 #include "data/itemstatusdata.h"
@@ -239,6 +239,7 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
     quint64 nzbFilesSize = 0;
     int par2FileNumber = 0;
     bool badCrc = false;
+    QString nzbFileSavePath;
 
     // add children to parent (nzbNameItem) :
     foreach (GlobalFileData currentGlobalFileData, globalFileDataList) {
@@ -259,11 +260,19 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
             badCrc = true;
         }
 
+        // retrieve the path where nzb files are saved :
+        if (nzbFileSavePath.isEmpty()) {
+            nzbFileSavePath = currentGlobalFileData.getNzbFileData().getFileSavePath();
+        }
+
     }
 
 
-    // set parent unique identifier:
+    // set parent unique identifier :
     nzbNameItem->setData(QVariant(QUuid::createUuid().toString()), IdentifierRole);
+
+    // set parent file save path :
+    this->downloadModel->updateParentFileSavePathFromIndex(nzbNameItem->index(), nzbFileSavePath);
 
     // set idle status by default :
     this->downloadModel->storeStatusDataToItem(nzbStateItem, ItemStatusData());
@@ -370,9 +379,7 @@ void Core::statusBarFileSizeUpdate() {
             // if the item is pending (Idle, Download, Paused, Pausing states), processes it :
             UtilityNamespace::ItemStatus status = downloadModel->getStatusFromStateItem(statusItem);
 
-            if ( Utility::isReadyToDownload(status) ||
-                 Utility::isPaused(status)          ||
-                 Utility::isPausing(status) )       {
+            if (Utility::isInDownloadProcess(status))  {
 
                 QStandardItem* sizeItem = nzbItem->child(j, SIZE_COLUMN);
                 size += sizeItem->data(SizeRole).toULongLong();
@@ -400,10 +407,6 @@ void Core::initFoldersSettings() {
         Settings::setTemporaryFolder(QDir::homePath() + "/kwooty/Temp");
     }
 
-}
-
-QString Core::getCompletedFolder() const {
-    return Settings::completedFolder().path();
 }
 
 
