@@ -126,6 +126,20 @@ int SideBarWidget::indexOf(QWidget* currentWidget) const {
 }
 
 
+void SideBarWidget::setDisplay(const bool& display) {
+    // keep display state there as it seems that isVisible() returns false when kwooty is iconified.
+    // This is mandatary to save and restore the correct state of this widget :
+    this->display = display;
+
+    this->setVisible(display);
+}
+
+bool SideBarWidget::isDisplayed() const {
+    return this->display;
+}
+
+
+
 void SideBarWidget::removeLast() {
 
     if (this->count() > 0) {

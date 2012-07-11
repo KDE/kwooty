@@ -45,6 +45,8 @@ public:
     QWidget* widget(const int& index);
     int indexOf(QWidget*) const;
     int currentIndex() const;
+    void setDisplay(const bool&);
+    bool isDisplayed() const;
     void updateIconByIndex(const int&, const ServerConnectionIcon&);
     void updateTextByIndex(const int&, const QString&);
     void updateToolTipByIndex(const int&, const QString&);
@@ -56,6 +58,7 @@ private:
     QStackedWidget* stackedWidget;
     KMultiTabBar* multiTabBar;
     QHash<int, ServerConnectionIcon> indexServerIconMap;
+    bool display;
 
 
 public slots:
