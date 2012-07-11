@@ -22,8 +22,8 @@
 
 #include <KDebug>
 
-#include "shutdownmanager.h"
 #include "core.h"
+#include "shutdown/shutdownmanager.h"
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
