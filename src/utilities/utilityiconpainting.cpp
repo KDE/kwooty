@@ -193,8 +193,8 @@ QPixmap UtilityIconPainting::buildClearIcon(const QPixmap& sourceIcon) {
 
 QPixmap UtilityIconPainting::buildSemiTransparentIcon(const QString& sourceIconStr) {
 
-     QPixmap pixmap = KIconLoader::global()->loadIcon(sourceIconStr, KIconLoader::Small);
-     return this->instance->buildSemiTransparentIcon(pixmap);
+    QPixmap pixmap = KIconLoader::global()->loadIcon(sourceIconStr, KIconLoader::Small);
+    return this->instance->buildSemiTransparentIcon(pixmap);
 
 }
 
@@ -233,7 +233,7 @@ QPixmap UtilityIconPainting::blendOverLayTopRight(const QString& mainIconStr, co
             p.drawPixmap(6, 0, overlayPixmap);
             p.end();
 
-             UtilityIconPainting::getInstance()->textIconMap.insert(keyStr, pixmap);
+            UtilityIconPainting::getInstance()->textIconMap.insert(keyStr, pixmap);
         }
 
     }
@@ -249,7 +249,10 @@ QLabel* UtilityIconPainting::buildLighterTextLabel(const QString& text, QWidget*
     QLabel* textLabel = new QLabel(text, parentWidget);
 
     QPalette textLabelPalette = textLabel->palette();
-    QColor fgcolor = KColorUtils::tint(textLabelPalette.color(QPalette::Disabled, QPalette::WindowText), textLabelPalette.color(QPalette::Active, QPalette::WindowText), 0.6);
+    QColor fgcolor = KColorUtils::tint(textLabelPalette.color(QPalette::Disabled, QPalette::WindowText),
+                                       textLabelPalette.color(QPalette::Active, QPalette::WindowText),
+                                       0.6);
+
     textLabelPalette.setColor(QPalette::WindowText, fgcolor);
 
     textLabel->setPalette(textLabelPalette);
@@ -261,7 +264,9 @@ QLabel* UtilityIconPainting::buildLighterTextLabel(const QString& text, QWidget*
 QColor UtilityIconPainting::lighterColor(const qreal& amount) {
 
     QPalette textLabelPalette = kapp->palette();
-    return KColorUtils::tint(textLabelPalette.color(QPalette::Disabled, QPalette::WindowText), textLabelPalette.color(QPalette::Active, QPalette::WindowText), amount);
+    return KColorUtils::tint(textLabelPalette.color(QPalette::Disabled, QPalette::WindowText),
+                             textLabelPalette.color(QPalette::Active, QPalette::WindowText),
+                             amount);
 
 }
 
