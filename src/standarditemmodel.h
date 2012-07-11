@@ -49,10 +49,12 @@ public:
     QStandardItem* getSizeItemFromIndex(const QModelIndex&);
     ItemStatusData getStatusDataFromIndex(const QModelIndex&);
     QStandardItem* getNzbItem(QStandardItem* item);
+    QStandardItem* getNzbItem(const QModelIndex&);
     NzbFileData getNzbFileDataFromIndex(const QModelIndex&);
     int getProgressValueFromIndex(const QModelIndex&);
     quint64 getSizeValueFromIndex(const QModelIndex&);
     QString getUuidStrFromIndex(const QModelIndex&);
+    QString getParentFileSavePathFromIndex(const QModelIndex&);
     UtilityNamespace::ItemStatus getStatusFromStateItem(QStandardItem*) const;
     UtilityNamespace::ItemStatus getChildStatusFromNzbIndex(const QModelIndex&, int);
     QStandardItem* getFileNameItemFromRowNumber(const int&);
@@ -62,6 +64,7 @@ public:
     void storeStatusDataToItem(QStandardItem*, const ItemStatusData&);
     void updateNzbFileDataToItem(QStandardItem*, const NzbFileData&);
     void updateStatusDataFromIndex(const QModelIndex&, const ItemStatusData&);
+    void updateParentFileSavePathFromIndex(const QModelIndex&, const QString&);
 
 
 private:

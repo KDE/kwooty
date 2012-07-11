@@ -54,7 +54,7 @@ QStandardItem* StandardItemModel::getParentItem(const QModelIndex& index){
 }
 
 
-QStandardItem* StandardItemModel::getColumnItem(const QModelIndex& index, const int column){
+QStandardItem* StandardItemModel::getColumnItem(const QModelIndex& index, const int column) {
 
     QStandardItem* item = 0;
 
@@ -170,6 +170,12 @@ UtilityNamespace::ItemStatus StandardItemModel::getChildStatusFromNzbIndex(const
 
 }
 
+QStandardItem* StandardItemModel::getNzbItem(const QModelIndex& index) {
+
+    return this->getNzbItem(this->itemFromIndex(index));
+
+}
+
 QStandardItem* StandardItemModel::getNzbItem(QStandardItem* item) {
 
     QStandardItem* parentFileNameItem;
@@ -222,6 +228,25 @@ QString StandardItemModel::getUuidStrFromIndex(const QModelIndex& index) {
     return nzbFileName->data(IdentifierRole).toString();
 
 }
+
+QString StandardItemModel::getParentFileSavePathFromIndex(const QModelIndex& index) {
+
+    QStandardItem* parentNzbFileNameItem = this->getNzbItem(index);
+    return this->getNzbFileDataFromIndex(parentNzbFileNameItem->index()).getFileSavePath();
+
+}
+
+void StandardItemModel::updateParentFileSavePathFromIndex(const QModelIndex& index, const QString& nzbFileSavePath) {
+
+    QStandardItem* parentNzbFileNameItem = this->getNzbItem(index);
+
+    NzbFileData parentNzbFileData = this->getNzbFileDataFromIndex(parentNzbFileNameItem->index());
+    parentNzbFileData.setFileSavePath(nzbFileSavePath);
+
+    this->updateNzbFileDataToItem(parentNzbFileNameItem, parentNzbFileData);
+
+}
+
 
 
 QStandardItem* StandardItemModel::getStateItemFromIndex(const QModelIndex& index) {
