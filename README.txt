@@ -1,5 +1,17 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
+Version 0.8.4:
+--------------
+
+- Fix issue #3528297 : shutdown was not working on gnome 3
+- Feature request : if kwooty has been minimized in sytem tray, keep main window hidden when a nzb is loaded 
+
+
+Version 0.8.3:
+--------------
+
+- rpmlint issues fix for fedora packaging
+
 
 Version 0.8.2:
 --------------
@@ -12,7 +24,7 @@ Version 0.8.1:
 
 * Fix regression: when nzb file name was too long, main window width was automatically increased
 * Fix bug: scheduler plugin did not pause items when requested if download limit speed was set to "No Limit"
-* Fix bug: temporary files from a canceled nzb collection could not be removed if nzb collection was previously already downloaded
+* Fix bug: temporary files from a cancelled nzb collection could not be removed if nzb collection was previously already downloaded
 
 
 Version 0.8.0:
