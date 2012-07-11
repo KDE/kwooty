@@ -22,26 +22,21 @@
 #define PREFERENCESCATEGORIES_H
 
 #include <QWidget>
+#include <QStandardItemModel>
+
 #include "ui_preferencescategories.h"
 
 #include <KCModule>
-
 #include <KPluginFactory>
 #include <KPluginLoader>
 
-#include <QStandardItemModel>
-
 #include "mimedata.h"
+
+class CategoriesModel;
 
 class PreferencesCategories : public KCModule {
 
-
     Q_OBJECT
-
-    // custom roles used for storing data in items :
-    enum CategoriesRoles{
-        MimeRole  = Qt::UserRole + 1,
-    };
 
 public:
     PreferencesCategories(QWidget* = 0, const QVariantList& = QVariantList());
@@ -51,33 +46,32 @@ public:
     virtual void load();
 
 private:
-    Ui_PreferencesCategories preferencesCategoriesUi;
-    QStandardItemModel* categoriesModel;
 
-    QStringList retrieveMainTypeList();
+    QStandardItem* getSelectedItem();
+    QStringList retrieveSelectionList(QStandardItem*);
+    QString buildGroupBoxTitle(const QString& = QString());
     void addMimeTypeToGroup(QStandardItem*);
     void setupConnections();
-    QStandardItem* getSelectedItem();
-    MimeData loadMimeData(QStandardItem*);
-    MimeData loadMimeData(const QModelIndex&);
-    void storeMimeData(QStandardItem*, MimeData);
+    void saveChanges();
 
-
+    Ui_PreferencesCategories preferencesCategoriesUi;
+    CategoriesModel* categoriesModel;
+    bool saveChangesRequested;
 
 signals:
-
 
 
 public slots:
 
 
-
 private slots:
 
-    void pushButtonAddClickSlot();
+    void toolButtonAddClickSlot();
+    void toolButtonRemoveClickSlot();
+    void toolButtonEditSubcategoryClickSlot();
     void indexActivatedSlot(const QModelIndex&);
     void urlChangedSlot(const QString&);
-
+    void categorySelectedItemSlot();
 
 };
 

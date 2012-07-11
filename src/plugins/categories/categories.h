@@ -23,17 +23,21 @@
 #define CATEGORIES_H
 
 #include <QObject>
+#include <QHash>
 #include <QStandardItem>
 #include <QStandardItemModel>
 
 #include <kio/copyjob.h>
 #include <kmimetype.h>
 
+#include "mimedata.h"
+
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class Core;
 class CategoriesPlugin;
+class CategoriesModel;
 
 class Categories : public QObject {
 
@@ -47,14 +51,35 @@ public:
 
 private:
 
-    Core* core;
-    QStandardItemModel* categoriesModel;
+    // category hierarchy :
+    enum MoveJobStatus {
+       NoMoveStatus,
+       MovingStatus,
+       MoveSuccessStatus,
+       MoveUserCanceledErrorStatus,
+       MoveDiskFullErrorStatus,
+       MoveCouldNotMkdirErrorStatus,
+       MoveInsufficientDiskSpaceErrorStatus,
+       MoveUnknownErrorStatus
+    };
 
+    KSharedPtr<KMimeType> retrieveFileMimeType(const QString&, const QString&);
+    QHash<QString, quint64> scanDownloadedFiles(const QString&);
+    QString guessMainMimeName(const QHash<QString, quint64>&);
+    bool checkDiskSpace(const MimeData&, const QString&, const QList<quint64>&);
     void setupConnections();
-    bool isDefaultMimeType(KSharedPtr<KMimeType>);
-    QStringList retrieveMimeGroups();
+    void launchMoveProcess(const MimeData&, const QString&);
+    void notifyMoveProcessing(int = UtilityNamespace::PROGRESS_UNKNOWN);
+    void launchPreProcess();
 
-
+    Core* core;
+    CategoriesModel* categoriesModel;
+    MoveJobStatus moveJobStatus;
+    QHash<int, QString> moveStatusTextMap;
+    QHash<int, QColor> moveStatusColorMap;
+    QStringList uuidItemList;
+    QString currentUuidItem;
+    bool jobProcessing;
 
 signals:
 
@@ -62,14 +87,9 @@ signals:
 public slots:
     void handleResultSlot(KJob*);
     void jobProgressionSlot(KIO::Job*);
-    void jobFinishedSlot(KJob*);
 
 private slots:
     void parentStatusItemChangedSlot(QStandardItem*);
-
-
-
-
 
 };
 

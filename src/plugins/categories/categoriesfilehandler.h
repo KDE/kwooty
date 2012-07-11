@@ -24,13 +24,9 @@
 
 #include <QObject>
 #include <QStandardItemModel>
+#include <QXmlStreamReader>
 
-
-namespace CategoriesNamespace {
-    static const int COLUMN_NUMBER_CATEGORIES = 1;
-
-}
-
+class CategoriesModel;
 
 
 class CategoriesFileHandler : public QObject {
@@ -42,11 +38,18 @@ public:
     CategoriesFileHandler(QObject*);
     CategoriesFileHandler();
     
-    QStandardItemModel* loadModelFromFile(QObject*);
+    CategoriesModel* loadModelFromFile(QObject*);
+    QStringList retrieveMainTypeList();
+    void saveModelToFile(CategoriesModel*);
+    void addListToModel(CategoriesModel*, const QStringList&);
 
 
 private:
+
     QString retrieveCategoriesFilePath();
+    QString readNextCharacters(QXmlStreamReader&);
+    bool isStartElement(QXmlStreamReader&, const QString&);
+    bool isEndElement(QXmlStreamReader&, const QString&);
 
 
 signals:

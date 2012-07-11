@@ -42,7 +42,7 @@ public:
 
 private:
 
-    Categories* watchFolder;
+    Categories* categories;
 
     void load();
     void unload();

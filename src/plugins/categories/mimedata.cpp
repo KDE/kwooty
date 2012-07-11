@@ -22,20 +22,35 @@
 #include "mimedata.h"
 #include <KDebug>
 
+MimeData::MimeData(MimeData::HierarchyCategory hierarchyCategory, const QString& mainCategory) {
+
+    this->hierarchyCategory = hierarchyCategory;
+    this->mainCategory = mainCategory;
+}
+
 MimeData::MimeData() {
 
+    kDebug() << "ooops, this constructor should not be called";
 }
 
 
-
-QString MimeData::getMimeType() const {
-    return this->mimeType;
+QString MimeData::getMainCategory() const {
+    return this->mainCategory;
 }
 
-void MimeData::setMimeType(const QString& mimeType) {
-
-    this->mimeType = mimeType;
+void MimeData::setMainCategory(const QString& mainCategory) {
+    this->mainCategory = mainCategory;
 }
+
+
+QString MimeData::getSubCategory() const {
+    return this->subCategory;
+}
+
+void MimeData::setSubCategory(const QString& subCategory) {
+    this->subCategory = subCategory;
+}
+
 
 
 QString MimeData::getPatterns() const {
@@ -53,6 +68,40 @@ QString MimeData::getMoveFolderPath() const {
 
 void MimeData::setMoveFolderPath(const QString& moveFolderPath) {
     this->moveFolderPath = moveFolderPath;
+}
+
+
+QString MimeData::getComments() const {
+    return this->comments;
+}
+
+void MimeData::setComments(const QString& comments) {
+    this->comments = comments;
+}
+
+QString MimeData::getDisplayedText() {
+
+    if (this->hierarchyCategory == MainCategory) {
+        this->displayedText = this->mainCategory;
+    }
+
+    return this->displayedText;
+}
+
+void MimeData::setDisplayedText(const QString& displayedText) {
+    this->displayedText = displayedText;
+}
+
+
+bool MimeData::isCategoryMatch(const QString& compareCategory) {
+
+    if (this->hierarchyCategory == MainCategory) {
+        return (this->mainCategory == compareCategory);
+    }
+    else {
+        return (this->subCategory == compareCategory);
+    }
+
 }
 
 

@@ -19,44 +19,35 @@
  ***************************************************************************/
 
 
-#include "categoriesplugin.h"
+#ifndef UTILITYCATEGORIES_H
+#define UTILITYCATEGORIES_H
 
-#include <KDebug>
-#include <KPluginLoader>
-#include <kgenericfactory.h>
+#include <kmimetype.h>
 
-#include "plugin.h"
-#include "mainwindow.h"
-#include "core.h"
+#include <QString>
+#include "categoriesmodel.h"
+#include "mimedata.h"
 
+class UtilityCategories {
 
-K_PLUGIN_FACTORY(PluginFactory, registerPlugin<CategoriesPlugin>();)
-K_EXPORT_PLUGIN(PluginFactory("kwooty_categoriesplugin"))
+public:
+    UtilityCategories();
 
-
-CategoriesPlugin::CategoriesPlugin(QObject* parent, const QList<QVariant>&) : Plugin(PluginFactory::componentData(), parent)
-{
-
-}
-
-
-CategoriesPlugin::~CategoriesPlugin()
-{
-
-}
-
+    static QString buildSubcategoryPattern(const QString&);
+    static QString buildMaincategoryPattern(const QString&);
+    static QString buildFullCategoryPattern(CategoriesModel*, QStandardItem*, const QString&);
+    static QString builExtensionStringFromMimeType(KSharedPtr< KMimeType>);
+    static QString buildFullCategoryPattern(const QString&, const QString&);
+    static QString buildTextToDisplay(const QString&, const QString&);
+    static QString buildTextToDisplayFromFullCategoryPattern(const QString&);
+    static void builPartialMimeData(MimeData&);
+    static QStringList retrieveMainCategoryList();
+    static QStringList retrieveFilteredMainCategoryList(CategoriesModel*);
 
 
-void CategoriesPlugin::load() {
-    this->categories = new Categories(this);
-}
+private:
+    static QString buildPattern(const QString&, const int&);
 
-void CategoriesPlugin::unload() {
-    delete this->categories;
-}
+};
 
-
-void CategoriesPlugin::configUpdated() {
-    this->categories->settingsChanged();
-}
-
+#endif // UTILITYCATEGORIES_H

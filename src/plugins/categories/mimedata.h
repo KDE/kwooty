@@ -28,12 +28,22 @@ using namespace UtilityNamespace;
 
 class MimeData {
 
-
 public:
+
+    // category hierarchy :
+    enum HierarchyCategory {
+       MainCategory,
+       SubCategory
+    };
+
+    MimeData(MimeData::HierarchyCategory, const QString& = QString());
     MimeData();
 
-    QString getMimeType() const;
-    void setMimeType(const QString&);
+    QString getMainCategory() const;
+    void setMainCategory(const QString&);
+
+    QString getSubCategory() const;
+    void setSubCategory(const QString&);
 
     void setPatterns(const QString&);
     QString getPatterns() const;
@@ -41,12 +51,24 @@ public:
     void setMoveFolderPath(const QString&);
     QString getMoveFolderPath() const;
 
+    void setComments(const QString&);
+    QString getComments() const;
+
+    void setDisplayedText(const QString&);
+    QString getDisplayedText();
+
+    bool isCategoryMatch(const QString&);
+
 
 private:
 
-    QString mimeType;
+    HierarchyCategory hierarchyCategory;
+    QString mainCategory;
+    QString subCategory;
     QString patterns;
     QString moveFolderPath;
+    QString comments;
+    QString displayedText;
 
 
 };
