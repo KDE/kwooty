@@ -37,15 +37,16 @@
 #include <QtGui>
 
 #include "kwootysettings.h"
-#include "widgets/mystatusbar.h"
-#include "widgets/mytreeview.h"
-#include "widgets/centralwidget.h"
 #include "core.h"
 #include "actionbuttonsmanager.h"
-#include "shutdownmanager.h"
 #include "fileoperations.h"
 #include "sidebar.h"
 #include "actionsmanager.h"
+#include "widgets/mystatusbar.h"
+#include "widgets/mytreeview.h"
+#include "widgets/centralwidget.h"
+#include "widgets/sidebarwidget.h"
+#include "shutdown/shutdownmanager.h"
 #include "plugins/pluginmanager.h"
 #include "preferences/kconfiggrouphandler.h"
 #include "preferences/preferencesserver.h"
@@ -54,7 +55,7 @@
 #include "preferences/preferencesdisplay.h"
 #include "preferences/preferencesshutdown.h"
 #include "preferences/preferencesplugins.h"
-#include "widgets/sidebarwidget.h"
+
 
 #ifdef HAVE_KSTATUSNOTIFIERITEM
 #include "systray.h"
