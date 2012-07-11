@@ -46,6 +46,7 @@ public:
     bool areJobsFinished();
     QList<QModelIndex> retrieveStartPauseIndexList(const UtilityNamespace::ItemStatus) const;
     QList<QModelIndex> retrieveDecodeFinishParentIndexList() const;
+    QStandardItem* retrieveParentFileNameItemFromUuid(const QString&);
 
 
 private:

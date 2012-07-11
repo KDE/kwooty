@@ -101,6 +101,24 @@ QList<QModelIndex> StandardItemModelQuery::retrieveDecodeFinishParentIndexList()
 
 }
 
+QStandardItem* StandardItemModelQuery::retrieveParentFileNameItemFromUuid(const QString& parentUuidStr) {
+
+    QStandardItem* parentFileNameItem = 0;
+
+    for (int i = 0; i < this->downloadModel->rowCount(); i++) {
+
+        if (parentUuidStr == this->downloadModel->getUuidStrFromIndex(this->downloadModel->item(i)->index())) {
+
+            parentFileNameItem = this->downloadModel->item(i);
+            break;
+        }
+
+    }
+
+    return parentFileNameItem;
+}
+
+
 
 QList<QModelIndex> StandardItemModelQuery::retrieveStartPauseIndexList(const UtilityNamespace::ItemStatus targetStatus) const {
 
