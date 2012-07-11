@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KCModule
+X-KDE-Library=kwooty_categoriessettings
+X-KDE-ParentComponents=kwooty_categoriesplugin
+X-KDE-PluginInfo-Name=kwooty_categoriessettings
+X-KDE-PluginInfo-Author=Xavier Lefage
+X-KDE-PluginInfo-Email=xavier.kwooty@gmail.com
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-License=GPL
+
+Name=File Categories
+name[cs]=File Categories
+Name[de]=File Categories
+Name[fr]=File Categories
+

@@ -1,0 +1,24 @@
+[Desktop Entry]
+X-Kwooty-Plugin-Version=2
+X-KDE-Library=kwooty_categoriesplugin
+X-KDE-PluginInfo-Author=Xavier Lefage
+X-KDE-PluginInfo-Email=xavier.kwooty@gmail.com
+X-KDE-PluginInfo-Name=kwooty_categoriesplugin
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://kwooty.sourceforge.net
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=false
+ServiceTypes=Kwooty/Plugin
+Type=Service
+Icon=folder-favorites
+
+Name=Categories
+Name[cs]=Categories
+Name[de]=Categories
+Name[fr]=Categories
+
+Comment=Transfer downloaded contents to favorite folders
+Comment[cs]=Transfer downloaded contents to favorite folders
+Comment[de]=Transfer downloaded contents to favorite folders
+Comment[fr]=Transfer downloaded contents to favorite folders
+
