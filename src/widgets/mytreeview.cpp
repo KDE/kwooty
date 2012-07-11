@@ -57,7 +57,7 @@ MyTreeView::MyTreeView(MainWindow* mainWindow) : QTreeView(mainWindow->getCentra
     this->setAnimated(Settings::animateTreeView());
     this->setAcceptDrops(true);
 
-
+    // retrieve setting about short or normal display for file names :
     this->displayTinyFileName = Settings::displayTinyFileName();
 
 
