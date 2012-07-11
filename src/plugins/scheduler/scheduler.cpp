@@ -124,7 +124,6 @@ void Scheduler::setupConnections() {
 
 void Scheduler::suspendDownloads() {
 
-    kDebug();
     this->scheduleStartPauseDownload(PauseStatus);
 
 }
@@ -132,15 +131,12 @@ void Scheduler::suspendDownloads() {
 
 void Scheduler::resumeDownloads() {
 
-    kDebug();
     this->scheduleStartPauseDownload(IdleStatus);
 
 }
 
 
 void Scheduler::scheduleStartPauseDownload(UtilityNamespace::ItemStatus itemStatus) {
-
-    kDebug() << this->core->getModelQuery()->retrieveDecodeFinishParentIndexList();
 
     // 1.first remove all indexes from list whose download is over :
     foreach (QModelIndex decodeFinishParentIndex, this->core->getModelQuery()->retrieveDecodeFinishParentIndexList()) {
@@ -149,7 +145,6 @@ void Scheduler::scheduleStartPauseDownload(UtilityNamespace::ItemStatus itemStat
 
         if (this->manuallyUuidStartPauseMap.contains(parentUuid)) {
 
-            kDebug() << "ITEM REMOVED => Download finish";
             this->manuallyUuidStartPauseMap.remove(parentUuid);
 
         }
@@ -164,7 +159,6 @@ void Scheduler::scheduleStartPauseDownload(UtilityNamespace::ItemStatus itemStat
 
             targetIndexesList.append(index);
 
-            kDebug() << this->core->getDownloadModel()->getUuidStrFromIndex(index) << itemStatus;
         }
 
     }
@@ -291,7 +285,6 @@ void Scheduler::applySpeedLimit() {
 
                 this->serverManager->setLimitServerDownloadSpeed(i, serverLimitSpeedInBytes);
 
-                //kDebug() << "serveur group : " << i << ", limited download speed : " << serverLimitSpeedInBytes / NBR_BYTES_IN_KB << " KiB/s";
             }
         }
 
@@ -452,7 +445,6 @@ void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus ta
                 // retrieve their corresponding uuid and store them :
                 QString indexUuidStr = this->core->getDownloadModel()->getUuidStrFromIndex(selectedIndex);
 
-                kDebug() << "insert :" << indexUuidStr << bypassSchedulerMethod;
                 this->manuallyUuidStartPauseMap.insert(indexUuidStr, bypassSchedulerMethod);
 
             }
@@ -482,7 +474,6 @@ void Scheduler::settingsChanged() {
         else {
 
             this->manuallyUuidStartPauseMap.clear();
-            kDebug() << "manuallyUuidStartPauseMap cleared";
 
             dataAboutToArriveSlot();
 
