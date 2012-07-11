@@ -29,26 +29,24 @@
 #include <QDateTime>
 #include <QProcess>
 
-#include "centralwidget.h"
+#include "core.h"
 #include "standarditemmodel.h"
 #include "standarditemmodelquery.h"
-#include "mystatusbar.h"
 #include "kwootysettings.h"
+#include "widgets/mystatusbar.h"
+#include "widgets/centralwidget.h"
 #include "shutdown/sessionbase.h"
 #include "shutdown/sessionkde.h"
 #include "shutdown/sessiongnome3.h"
 #include "shutdown/sessiongnome2.h"
 
 
-ShutdownManager::ShutdownManager(CentralWidget* parent) : QObject (parent) {
+ShutdownManager::ShutdownManager(Core* parent) : QObject (parent) {
     
     // variable initialisation :
     this->parent = parent;
     this->noActivityCounter = 0;
     this->enableSystemShutdown = false;
-
-    // system shutdown command for gnome desktop :
-    this->gnomeShutdownApplication = "/usr/bin/gnome-session-save";
 
     // check if system has to shudown every 10 seconds :
     this->shutdownTimerInterval = 10000;
@@ -81,9 +79,6 @@ void ShutdownManager::setupConnections() {
     // parent notify that settings have changed :
     connect (parent, SIGNAL(settingsChangedSignal()), this, SLOT(settingsChangedSlot()));
 
-    // disable shutdown scheduler if user removed all rows :
-    connect (parent->getTreeView(), SIGNAL(allRowRemovedSignal()), this, SLOT(shutdownCancelledSlot()));
-
     // enable or disable shutdown button according to nzb parent status:
     connect(parent->getDownloadModel(), SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)), this, SLOT(statusItemUpdatedSlot()));
 
@@ -108,7 +103,7 @@ void ShutdownManager::systemAboutToShutdown() {
         shutdownMethodText = this->getShutdownMethodText(systemShutdownType);
 
         // finally display shutdown confirmation dialog :
-        int answer = this->displayAboutToShutdownMessageBox(shutdownMethodText);
+        int answer = this->parent->getCentralWidget()->displayAboutToShutdownMessageBox(shutdownMethodText);
 
         // user has confirmed shutdown, launch shutdown right now :
         if (answer == KDialog::Yes) {
@@ -304,48 +299,14 @@ QString ShutdownManager::getShutdownMethodText(UtilityNamespace::SystemShutdownT
 }
 
 
-void ShutdownManager::displayShutdownErrorMessageBox(const QString& message) {
+void ShutdownManager::handleShutdownError(const QString& message) {
 
-    KMessageBox::messageBox(parent,
-                            KMessageBox::Sorry,
-                            message);
+    this->parent->getCentralWidget()->displayShutdownErrorMessageBox(message);
 
     // uncheck shutdown button :
     this->shutdownCancelledSlot();
 
 }
-
-
-int ShutdownManager::displayAboutToShutdownMessageBox(const QString& shutdownMethodText) {
-
-    // create kdialog :
-    this->aboutToShutdownDialog = new KDialog(parent, Qt::Dialog);
-    this->aboutToShutdownDialog->setCaption(i18n("Warning"));
-    this->aboutToShutdownDialog->setButtons(KDialog::Yes | KDialog::No);
-    this->aboutToShutdownDialog->setModal(true);
-
-    // display text for continue button
-    KGuiItem buttonContinue = KStandardGuiItem::cont();
-    buttonContinue.setText(shutdownMethodText);
-    this->aboutToShutdownDialog->setButtonGuiItem(KDialog::Yes, buttonContinue);
-
-    // set cancel button :
-    this->aboutToShutdownDialog->setButtonGuiItem(KDialog::No, KStandardGuiItem::cancel());
-
-    // display kmessagebox :
-    bool checkboxReturn = false;
-    QString status = i18nc("%1 = shutdown/suspend to RAM/suspend to disk",
-                           "Kwooty is about to %1 system. Continue?", shutdownMethodText.toLower());
-    return KMessageBox::createKMessageBox(this->aboutToShutdownDialog,
-                                          QMessageBox::Warning,
-                                          status,
-                                          QStringList(),
-                                          QString(),
-                                          &checkboxReturn,
-                                          KMessageBox::Notify);
-
-}
-
 
 
 //============================================================================================================//
@@ -494,9 +455,7 @@ void ShutdownManager::launchSystemShutdownSlot() {
     this->launchShutdownTimer->stop();
 
     // close dialog if shutdown has been automatically launched :
-    if (this->aboutToShutdownDialog) {
-        this->aboutToShutdownDialog->reject();
-    }
+    this->parent->getCentralWidget()->closeAboutToShutdownMessageBox();
 
     if (this->session) {
 

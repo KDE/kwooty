@@ -52,7 +52,7 @@ void SessionBase::launchSystemShutdown() {
 
 
     default: {
-        this->shutdownManager->displayShutdownErrorMessageBox(i18n("System shutdown type unknown, shutdown is not possible!"));
+        this->shutdownManager->handleShutdownError(i18n("System shutdown type unknown, shutdown is not possible!"));
         break;
     }
 

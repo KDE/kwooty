@@ -80,7 +80,7 @@ void SessionKde::requestShutdown() {
                                     KWorkSpace::ShutdownModeForceNow);
     }
     else {
-        this->shutdownManager->displayShutdownErrorMessageBox(i18n("Shutdown has failed (session manager can not be contacted)."));
+        this->shutdownManager->handleShutdownError(i18n("Shutdown has failed (session manager can not be contacted)."));
     }
 
 

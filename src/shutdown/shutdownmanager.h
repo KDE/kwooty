@@ -27,10 +27,10 @@
 #include <QTimer>
 #include <QPointer>
 
-#include "utility.h"
+#include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class CentralWidget;
+class Core;
 class SessionBase;
 
 class ShutdownManager : public QObject {
@@ -39,20 +39,17 @@ class ShutdownManager : public QObject {
 
 public:
 
-    ShutdownManager(CentralWidget*);
+    ShutdownManager(Core*);
     QMap<QString, QString> retrieveIconAvailableShutdownMap();
-    void displayShutdownErrorMessageBox(const QString&);
-
+    void handleShutdownError(const QString&);
 
 private:
 
-    CentralWidget* parent;
+    Core* parent;
     SessionBase* session;
-    QPointer<KDialog> aboutToShutdownDialog;
     QTimer* activityMonitorTimer;
     QTimer* launchShutdownTimer;
     QString scheduleDateTimeStr;
-    QString gnomeShutdownApplication;    
     int noActivityCounter;
     int shutdownTimerInterval;
     bool enableSystemShutdown;
@@ -62,7 +59,6 @@ private:
 
     UtilityNamespace::SystemShutdownType getChosenShutdownType();
     QString getShutdownMethodText(UtilityNamespace::SystemShutdownType) const;
-    int displayAboutToShutdownMessageBox(const QString&);
     void retrieveSession();
     void systemAboutToShutdown();
     void storeSettings();
