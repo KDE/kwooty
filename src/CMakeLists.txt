@@ -40,7 +40,11 @@ set(Kwooty_lib_SRCS
   extractzip.cpp
   extractsplit.cpp
   datarestorer.cpp
-  shutdownmanager.cpp
+  shutdown/shutdownmanager.cpp
+  shutdown/sessionbase.cpp
+  shutdown/sessionkde.cpp
+  shutdown/sessiongnome2.cpp
+  shutdown/sessiongnome3.cpp
   fileoperations.cpp
   statsinfobuilder.cpp
   notificationmanager.cpp
@@ -126,7 +130,7 @@ endif(NOT NEW_SOLID_POWERMANAGEMENT_FOUND)
 
 
 
-set_target_properties(kwootycore PROPERTIES VERSION 0.8.3 SOVERSION 0 )
+set_target_properties(kwootycore PROPERTIES VERSION 0.8.4 SOVERSION 0 )
 install(TARGETS kwootycore ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 kde4_add_executable(kwooty ${Kwooty_SRCS})
