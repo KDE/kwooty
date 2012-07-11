@@ -71,7 +71,7 @@ void SideBar::saveState() {
     if (this->sideBarWidget->currentIndex() != -1) {
 
         // save current states to restore them in next session :
-        KConfigGroupHandler::getInstance()->writeSideBarDisplay(this->sideBarWidget->isVisible());
+        KConfigGroupHandler::getInstance()->writeSideBarDisplay(this->sideBarWidget->isDisplayed());
         KConfigGroupHandler::getInstance()->writeSideBarTabOnlyDisplay(this->sideBarWidget->isOnlyTabDisplayed());
         KConfigGroupHandler::getInstance()->writeSideBarServerIndex(this->sideBarWidget->currentIndex());
 
@@ -208,7 +208,7 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
 
 void SideBar::activeSlot(bool active) {
 
-    this->sideBarWidget->setVisible(active);
+    this->sideBarWidget->setDisplay(active);
 }
 
 
