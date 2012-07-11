@@ -26,7 +26,7 @@
 #include <kdemacros.h>
  
 #ifndef KWOOTY_EXPORT
-# if defined(MAKE_KWOOTY_LIB)
+# if defined(MAKE_KWOOTYCORE_LIB)
    // We are building this library
 #  define KWOOTY_EXPORT KDE_EXPORT
 # else
