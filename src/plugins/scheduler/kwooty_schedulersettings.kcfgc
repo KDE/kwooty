@@ -4,6 +4,4 @@ ClassName=SchedulerSettings
 Inherits=KConfigSkeleton
 Mutators=true
 Singleton=true
-IncludeFiles=kwooty_export.h
-Visibility=KWOOTY_EXPORT
 # will create the necessary code for setting those variables
