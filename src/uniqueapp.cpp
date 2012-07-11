@@ -68,15 +68,27 @@ int UniqueApp::newInstance() {
 
         }
 
-        args->clear();
+        // if kwooty has been called without arguments :
+        if (args->count() == 0) {
 
-
-        if (this->mainWindow->isVisible()) {
-            this->mainWindow->show();
+            // display main window if it only visible is systray :
+            if (this->mainWindow->isHidden()) {
+                this->mainWindow->show();
+            }
         }
 
-        KStartupInfo::setNewStartupId(this->mainWindow, this->startupId());
+        // if nzb files are present in arguments :
+        else {
 
+            // shown only main window if it is not only present in systray :
+            if (this->mainWindow->isVisible()) {
+                this->mainWindow->show();
+            }
+
+            args->clear();
+
+            KStartupInfo::setNewStartupId(this->mainWindow, this->startupId());
+        }
 
     }
 
