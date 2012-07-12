@@ -45,7 +45,6 @@ CategoriesFileHandler::CategoriesFileHandler() {
 }
 
 
-
 CategoriesModel* CategoriesFileHandler::loadModelFromFile(QObject* parent) {
 
     // build categories model :
@@ -56,6 +55,8 @@ CategoriesModel* CategoriesFileHandler::loadModelFromFile(QObject* parent) {
     QFile categoriesFile(this->retrieveCategoriesFilePath());
     bool fileOpen = categoriesFile.open(QIODevice::ReadOnly);
     QXmlStreamReader stream (&categoriesFile);
+
+    QStringList mainCategoryList = UtilityCategories::retrieveMainCategoryList();
 
     while ( !stream.atEnd() &&
             !stream.hasError() ) {
@@ -72,72 +73,76 @@ CategoriesModel* CategoriesFileHandler::loadModelFromFile(QObject* parent) {
 
                 if (attributes.value("version").toString() != "1") {
 
-                    kDebug() << "this categories.xml version is not compatible with current kwooty version";
+                    kDebug() << "this categories.xml version is not compatible with current category plugin version";
                     break;
                 }
             }
-
-
-            // <mime> :
-            QString mime = "mime";
-            QString mimeType = "mimeType";
-            QString moveFolderPath = "moveFolderPath";
-            QString patterns = "patterns";
 
             // get group element :
             if (stream.name().toString() == "group") {
 
                 MimeData groupMimeData(MimeData::MainCategory);
-                // retrieve the name of the group :
-                groupMimeData.setMainCategory(attributes.value("name").toString());
-                // retrieve default save folder path :
-                groupMimeData.setMoveFolderPath(attributes.value("moveFolderPath").toString());
 
-                QStandardItem* groupItem = new QStandardItem(groupMimeData.getDisplayedText());
-                categoriesModel->storeMimeData(groupItem, groupMimeData);
-                categoriesModel->appendRow(groupItem);
+                // set main category :
+                QString mainCategory = attributes.value("name").toString();
 
-                // look for next <mime> :
-                if ( stream.readNextStartElement() &&
-                     stream.name() == "mime" ) {
+                if (mainCategoryList.contains(mainCategory)) {
 
-                    // check that we are inside <group> </group> :
-                    MimeData mimeData(MimeData::SubCategory, groupMimeData.getMainCategory());
+                    groupMimeData.setMainCategory(mainCategory);
 
-                    while (!this->isEndElement(stream, "group")) {
+                    QStandardItem* groupItem = new QStandardItem(groupMimeData.getDisplayedText());
+                    categoriesModel->storeMimeData(groupItem, groupMimeData);
+                    categoriesModel->appendRow(groupItem);
 
-                        if (this->isStartElement(stream, "mimeType")) {
+                    // look for next <mime> :
+                    if ( stream.readNextStartElement() &&
+                         stream.name() == "mime" ) {
 
-                            mimeData.setSubCategory(this->readNextCharacters(stream));
+                        // check that we are inside <group> </group> :
+                        MimeData mimeData(MimeData::SubCategory, groupMimeData.getMainCategory());
+
+                        while ( !this->isEndElement(stream, "group") &&
+                                !stream.atEnd() ) {
+
+                            if (this->isStartElement(stream, "mimeType")) {
+
+                                mimeData.setSubCategory(this->readNextCharacters(stream));
+                            }
+
+                            if (this->isStartElement(stream, "moveFolderPath")) {
+                                mimeData.setMoveFolderPath(this->readNextCharacters(stream));
+                            }
+
+
+                            stream.readNext();
+
+                            // if we reach </mime> :
+                            if (this->isEndElement(stream, "mime")) {
+
+                                UtilityCategories::builPartialMimeData(mimeData);
+
+                                if (!mimeData.getSubCategory().isEmpty()) {
+
+                                    QStandardItem* childCategoryItem = new QStandardItem(mimeData.getDisplayedText());
+                                    QStandardItem* childTargetItem = new QStandardItem(mimeData.getMoveFolderPath());
+
+                                    categoriesModel->storeMimeData(childCategoryItem, mimeData);
+
+                                    int row = groupItem->rowCount();
+                                    groupItem->setChild(row, CategoriesModel::ColumnCategory, childCategoryItem);
+                                    groupItem->setChild(row, CategoriesModel::ColumnTarget, childTargetItem);
+
+                                    // clear mimeData subcategory  for filling with next mime element :
+                                    mimeData.setSubCategory(QString());;
+                                }
+
+                            }
+
                         }
 
-                        if (this->isStartElement(stream, "moveFolderPath")) {
-                            mimeData.setMoveFolderPath(this->readNextCharacters(stream));
-                        }
+                    } // end of mime element
 
-
-                        stream.readNext();
-
-                        // if we reach </mime> :
-                        if (this->isEndElement(stream, "mime")) {
-
-                            UtilityCategories::builPartialMimeData(mimeData);
-
-                            QStandardItem* childCategoryItem = new QStandardItem(mimeData.getDisplayedText());
-                            QStandardItem* childTargetItem = new QStandardItem(mimeData.getMoveFolderPath());
-
-                            categoriesModel->storeMimeData(childCategoryItem, mimeData);
-
-                            int row = groupItem->rowCount();
-                            groupItem->setChild(row, CategoriesModel::ColumnCategory, childCategoryItem);
-                            groupItem->setChild(row, CategoriesModel::ColumnTarget, childTargetItem);
-
-                        }
-
-                    }
-
-                } // end of mime element
-
+                }
             } // group element not found
 
         } // not a StartElement
@@ -164,11 +169,11 @@ CategoriesModel* CategoriesFileHandler::loadModelFromFile(QObject* parent) {
     if (error) {
 
         if (categoriesModel) {
+
             delete categoriesModel;
             categoriesModel = new CategoriesModel(parent);
-        }
 
-        //categoriesModel->addParentCategoryListToModel(UtilityCategories::retrieveMainCategoryList());
+        }
 
     }
 
@@ -196,14 +201,8 @@ QString CategoriesFileHandler::readNextCharacters(QXmlStreamReader& stream) {
 }
 
 
-
-
-
-
-
 void CategoriesFileHandler::saveModelToFile(CategoriesModel* categoriesModel) {
 
-    kDebug();
     QFile categoriesFile(this->retrieveCategoriesFilePath());
     categoriesFile.open(QIODevice::WriteOnly);
 
@@ -224,7 +223,6 @@ void CategoriesFileHandler::saveModelToFile(CategoriesModel* categoriesModel) {
         // <group> :
         stream.writeStartElement("group");
         stream.writeAttribute("name", categoriesModel->getMainCategory(groupItem));
-        stream.writeAttribute("moveFolderPath", categoriesModel->loadMimeData(groupItem).getMoveFolderPath());
 
         if (groupItem->hasChildren()) {
 
@@ -255,7 +253,6 @@ void CategoriesFileHandler::saveModelToFile(CategoriesModel* categoriesModel) {
     stream.writeEndDocument();
     categoriesFile.close();
 
-
 }
 
 
@@ -263,7 +260,4 @@ void CategoriesFileHandler::saveModelToFile(CategoriesModel* categoriesModel) {
 QString CategoriesFileHandler::retrieveCategoriesFilePath() {
     return KStandardDirs::locateLocal("appdata", QString::fromLatin1("categories.xml"));
 }
-
-
-
 
