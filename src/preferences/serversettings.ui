@@ -239,7 +239,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Disconnect from server when idle after (minutes):</string>
+        <string>Disconnect from server when idle after:</string>
        </property>
       </widget>
      </item>
@@ -260,6 +260,9 @@
       <widget class="QSpinBox" name="disconnectTimeout">
        <property name="toolTip">
         <string>Disconnect from host after a period of inactivity</string>
+       </property>
+       <property name="suffix">
+        <string> min</string>
        </property>
        <property name="value">
         <number>5</number>

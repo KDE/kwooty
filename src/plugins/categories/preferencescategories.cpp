@@ -60,7 +60,7 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesCategories>();)
     layout->addWidget(widget);
 
     // set text for transfer management combo box :
-    this->preferencesCategoriesUi.kcfg_transferManagement->addItem(i18n("Automatic Renaming"));
+    this->preferencesCategoriesUi.kcfg_transferManagement->addItem(i18n("Rename automatically"));
     this->preferencesCategoriesUi.kcfg_transferManagement->addItem(i18n("Overwrite"));
 
     //set mode to folder mode :
@@ -124,7 +124,6 @@ void PreferencesCategories::load() {
 
 
 void PreferencesCategories::save() {
-    kDebug();
     CategoriesFileHandler().saveModelToFile(this->categoriesModel);
     KCModule::save();
 }
@@ -185,7 +184,6 @@ QStandardItem* PreferencesCategories::getSelectedItem() {
 void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
 
     QString mainCategory = this->categoriesModel->getMainCategory(parentItem);
-
 
     // display mimeTypeChooser dialog :
     KMimeTypeChooserDialog dialog (i18n("Mime Type Selection"),

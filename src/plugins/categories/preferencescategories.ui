@@ -121,7 +121,7 @@
      <item>
       <widget class="QLabel" name="labelExistingTransfers">
        <property name="text">
-        <string>Handle existing transfers in favorite folders: </string>
+        <string>If contents to transfer already exist in favorite folder:</string>
        </property>
       </widget>
      </item>
