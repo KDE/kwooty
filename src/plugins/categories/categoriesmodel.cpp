@@ -4,7 +4,6 @@
 
 CategoriesModel::CategoriesModel(QObject* parent) : QStandardItemModel (parent) {
 
-
 }
 
 
