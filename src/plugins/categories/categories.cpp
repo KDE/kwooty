@@ -315,7 +315,8 @@ KSharedPtr<KMimeType> Categories::retrieveFileMimeType(const QString& currentFil
     KSharedPtr<KMimeType> mimeType = KMimeType::findByUrl(KUrl(absoluteFilePath), 0, true, false);
 
     // if mime type has not been identified :
-    if (mimeType->isDefault()) {
+    if ( !mimeType.isNull() &&
+         mimeType->isDefault() ) {
 
         kDebug() << "mime type not identified !!" << mimeType->name() << mimeType->isDefault();
         kDebug() << "try to get mime type from content file :" << absoluteFilePath;
@@ -361,7 +362,8 @@ QHash<QString, quint64> Categories::scanDownloadedFiles(const QString& nzbFileSa
             KSharedPtr<KMimeType> mimeType = this->retrieveFileMimeType(currentFileStr, nzbFileSavepath);
 
             // mime type has been identified :
-            if (!mimeType->isDefault()) {
+            if ( !mimeType.isNull() &&
+                 !mimeType->isDefault() ) {
 
                 fileInfo.setFile(currentDirectory + '/' + currentFileStr);
 
