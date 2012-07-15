@@ -63,7 +63,7 @@ Categories::Categories(CategoriesPlugin* parent) :  QObject(parent) {
     this->moveStatusTextMap.insert(MovingStatus,                           i18n("Transferring..."));
     this->moveStatusTextMap.insert(MoveSuccessStatus,                      i18n("Transfer complete"));
     this->moveStatusTextMap.insert(MoveUserCanceledErrorStatus,            i18n("Transfer canceled"));
-    this->moveStatusTextMap.insert(MoveDiskFullErrorStatus,                i18n("Transfer error (disk is full"));
+    this->moveStatusTextMap.insert(MoveDiskFullErrorStatus,                i18n("Transfer error (disk is full)"));
     this->moveStatusTextMap.insert(MoveCouldNotMkdirErrorStatus,           i18n("Transfer error (target folder can not be created)"));
     this->moveStatusTextMap.insert(MoveInsufficientDiskSpaceErrorStatus,   i18n("Transfer error (insufficient disk space)"));
     this->moveStatusTextMap.insert(MoveUnknownErrorStatus,                 i18n("Transfer error"));
