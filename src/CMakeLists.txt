@@ -130,7 +130,7 @@ endif(NOT NEW_SOLID_POWERMANAGEMENT_FOUND)
 
 
 
-set_target_properties(kwootycore PROPERTIES VERSION 0.8.4 SOVERSION 0 )
+set_target_properties(kwootycore PROPERTIES VERSION 0.9.0 SOVERSION 0)
 install(TARGETS kwootycore ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 kde4_add_executable(kwooty ${Kwooty_SRCS})
