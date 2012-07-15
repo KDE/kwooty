@@ -13,12 +13,12 @@ Type=Service
 Icon=folder-favorites
 
 Name=Categories
-Name[cs]=Categories
+Name[cs]=Skupiny
 Name[de]=Categories
 Name[fr]=Categories
 
 Comment=Transfer downloaded contents to favorite folders
-Comment[cs]=Transfer downloaded contents to favorite folders
+Comment[cs]=Přesunout stažený obsah do složek s oblíbenými
 Comment[de]=Transfer downloaded contents to favorite folders
 Comment[fr]=Transfer downloaded contents to favorite folders
 

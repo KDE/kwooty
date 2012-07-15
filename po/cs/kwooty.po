@@ -1,15 +1,15 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Pavel Fric <fripohled@blogspot.com>, 2010.
-# Pavel Fric <fripohled.blogspot.com>, 2010, 2011.
-# Pavel Fric <pavelfric@seznam.cz>, 2011.
+# Pavel Fric <pavelfric@seznam.cz>, 2010.
+# Pavel Fric <pavelfric@seznam.cz>, 2010, 2011.
+# Pavel Fric <pavelfric@seznam.cz>, 2011, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-15 18:17+0200\n"
-"PO-Revision-Date: 2011-12-17 07:44+0100\n"
+"PO-Revision-Date: 2012-07-15 20:20+0200\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-de@kde.org>\n"
 "Language: cs\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.1\n"
+"X-Generator: Lokalize 1.4\n"
 
 #: src/preferences/preferencesgeneral.cpp:38
 msgid "With confirmation"
@@ -126,9 +126,8 @@ msgstr ""
 " Podporuje taktéž automatickou opravu souborů a rozbalení archivů."
 
 #: src/main.cpp:39
-#, fuzzy
 msgid "Copyright (c) 2012 Xavier Lefage"
-msgstr "Autorské právo (c) 2011 Xavier Lefage"
+msgstr "Autorské právo (c) 2012 Xavier Lefage"
 
 #: src/main.cpp:42
 msgid "Xavier Lefage"
@@ -932,9 +931,8 @@ msgid "%1, %2 - %3"
 msgstr "%1, %2 - %3"
 
 #: src/plugins/scheduler/preferencesscheduler.cpp:136
-#, fuzzy
 msgid "Start or Pause"
-msgstr "Spustit všechna stahování"
+msgstr "Spustit nebo Pozastavit"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:45
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_downloadLimitSpinBox)
@@ -958,88 +956,82 @@ msgstr "Správce šířky pásma"
 
 #: src/plugins/categories/categories.cpp:62
 msgid "Transfer not performed"
-msgstr ""
+msgstr "Přesunout neprovedené"
 
 #: src/plugins/categories/categories.cpp:63
-#, fuzzy
 msgid "Transferring..."
-msgstr "Pozastavuje se..."
+msgstr "Přesunuje se..."
 
 #: src/plugins/categories/categories.cpp:64
-#, fuzzy
 msgid "Transfer complete"
-msgstr "Oprava dokončena"
+msgstr "Přesun dokončen"
 
 #: src/plugins/categories/categories.cpp:65
 msgid "Transfer canceled"
-msgstr ""
+msgstr "Přesun zrušen"
 
 #: src/plugins/categories/categories.cpp:66
 msgid "Transfer error (disk is full)"
-msgstr ""
+msgstr "Chyba při přesunu (disk je plný)"
 
 #: src/plugins/categories/categories.cpp:67
 msgid "Transfer error (target folder can not be created)"
-msgstr ""
+msgstr "Chyba při přesunu (cílovou složku nelze vytvořit)"
 
 #: src/plugins/categories/categories.cpp:68
-#, fuzzy
 msgid "Transfer error (insufficient disk space)"
-msgstr "Nedostatek úložného prostoru na nosiči dat"
+msgstr "Chyba při přesunu (nedostatek místa na disku)"
 
 #: src/plugins/categories/categories.cpp:69
-#, fuzzy
 msgid "Transfer error"
-msgstr "Chyba při ukládání"
+msgstr "Chyba při přesunu"
 
 #: src/plugins/categories/preferencescategories.cpp:63
-#, fuzzy
 msgid "Rename automatically"
-msgstr "Automaticky"
+msgstr "Přejmenovat automaticky"
 
 #: src/plugins/categories/preferencescategories.cpp:64
 msgid "Overwrite"
-msgstr ""
+msgstr "Přepsat"
 
 #: src/plugins/categories/preferencescategories.cpp:90
 msgid "Categories"
-msgstr ""
+msgstr "Skupiny"
 
 #: src/plugins/categories/preferencescategories.cpp:91
 msgid "Target"
-msgstr ""
+msgstr "Cíl"
 
 #: src/plugins/categories/preferencescategories.cpp:98
 msgid "Add Category"
-msgstr ""
+msgstr "Přidat skupinu"
 
 #: src/plugins/categories/preferencescategories.cpp:101
-#, fuzzy
 msgid "Remove Category"
-msgstr "Odstranit všechny záznamy"
+msgstr "Odstranit skupinu"
 
 #: src/plugins/categories/preferencescategories.cpp:105
 msgid "Edit Subcategory"
-msgstr ""
+msgstr "Upravit podskupinu"
 
 #: src/plugins/categories/preferencescategories.cpp:189
 #: src/plugins/categories/preferencescategories.cpp:350
 msgid "Mime Type Selection"
-msgstr ""
+msgstr "Výběr MIME typu"
 
 #: src/plugins/categories/preferencescategories.cpp:190
 msgid "Add or Remove Subcategories"
-msgstr ""
+msgstr "Přidat nebo Odstranit podskupiny"
 
 #: src/plugins/categories/preferencescategories.cpp:325
 #, kde-format
 msgctxt "%1 = type of subcategory"
 msgid "Subcategory: %1"
-msgstr ""
+msgstr "Podskupina: %1"
 
 #: src/plugins/categories/preferencescategories.cpp:351
 msgid "Select Main Categories"
-msgstr ""
+msgstr "Vybrat hlavní skupiny"
 
 #: src/sidebar.cpp:171
 msgid "None"
@@ -1047,7 +1039,7 @@ msgstr "Žádné"
 
 #: src/sidebar.cpp:184
 msgid "Current download speed - Mean download speed"
-msgstr ""
+msgstr "Nynější rychlost stahování - Průměrná rychlost stahování"
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, PowerManagemetGroupBox)
@@ -1576,9 +1568,8 @@ msgstr "Nastavit heslo požadované serverem"
 #. i18n: file: src/preferences/serversettings.ui:242
 #. i18n: ectx: property (text), widget (QLabel, labelDisconnect)
 #: build/src/ui_serversettings.h:257 rc.cpp:420
-#, fuzzy
 msgid "Disconnect from server when idle after:"
-msgstr "Při nečinnosti serveru odpojit po (minutách):"
+msgstr "Odpojit od serveru při nečinnosti po:"
 
 #. i18n: file: src/preferences/serversettings.ui:262
 #. i18n: ectx: property (toolTip), widget (QSpinBox, disconnectTimeout)
@@ -1589,9 +1580,8 @@ msgstr "Odpojí od serveru při jeho nečinnosti po určité době nečinnosti"
 #. i18n: file: src/preferences/serversettings.ui:265
 #. i18n: ectx: property (suffix), widget (QSpinBox, disconnectTimeout)
 #: build/src/ui_serversettings.h:261 rc.cpp:426
-#, fuzzy
 msgid " min"
-msgstr "%1 minuty"
+msgstr " min"
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, actionGroupBox)
@@ -1689,13 +1679,17 @@ msgid ""
 "For example, a file named '[xxx - yyy] \"file.ext\" - Yenc 1/10' will be "
 "displayed as 'file.ext'"
 msgstr ""
+"Odstranit neužitečný obsah obvykle nalezený v názvech souborů uvnitř sbírky "
+"nzb.\n"
+"Například soubor pojmenovaný  '[xxx - yyy] \"file.ext\" - Yenc 1/10' bude "
+"zobrazen "
+"jako 'file.ext'"
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:99
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_displayTinyFileName)
 #: build/src/ui_preferencesdisplay.h:148 rc.cpp:258
-#, fuzzy
 msgid "Display tiny file names"
-msgstr "Zobrazit zbývající čas"
+msgstr "Zobrazit malé názvy souborů"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:22
 #. i18n: ectx: property (toolTip), widget (QLabel, DownloadLimitLabel)
@@ -1755,13 +1749,13 @@ msgstr "Stahování pozastaveno:"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_bypass)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:185 rc.cpp:465
 msgid "Bypass scheduler for nzb manually set on: "
-msgstr ""
+msgstr "Obejít plánovač pro nzb ručně nastavený na: "
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:162
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_pauseIncomingFiles)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:186 rc.cpp:468
 msgid "Set on Pause every incoming nzb file"
-msgstr ""
+msgstr "Nastavit na Pozastavit každý příchozí soubor nzb"
 
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:22
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
@@ -1822,15 +1816,14 @@ msgstr ""
 #. i18n: file: src/plugins/categories/preferencescategories.ui:107
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: build/src/plugins/categories/ui_preferencescategories.h:164 rc.cpp:540
-#, fuzzy
 msgid "Favorite folder: "
-msgstr "Složka k prohledání: "
+msgstr "Složka s oblíbenými: "
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:124
 #. i18n: ectx: property (text), widget (QLabel, labelExistingTransfers)
 #: build/src/plugins/categories/ui_preferencescategories.h:165 rc.cpp:543
 msgid "If contents to transfer already exist in favorite folder:"
-msgstr ""
+msgstr "Pokud obsah k přesunutí již je ve složce s oblíbenými:"
 
 #: rc.cpp:1
 msgctxt "NAME OF TRANSLATORS"
@@ -1918,7 +1911,7 @@ msgstr "Zobrazit informace o volném místu ve stavovém řádku"
 #. i18n: ectx: label, entry (displayTinyFileName), group (display)
 #: rc.cpp:348
 msgid "Display reduced file name inside nzb collection"
-msgstr ""
+msgstr "Zobrazit zmenšený název souboru uvnitř sbírky nzb"
 
 #. i18n: file: src/preferences/kwootysettings.kcfg:154
 #. i18n: ectx: label, entry (shutdownMethods), group (shutdown)
@@ -1974,20 +1967,20 @@ msgstr "Povolit plánovač"
 #. i18n: ectx: label, entry (pauseIncomingFiles), group (schedulerplugin)
 #: rc.cpp:480
 msgid "Automatically set on Pause every incoming nzb file"
-msgstr ""
+msgstr "Automaticky nastavit na Pozastavit každý příchozí soubor nzb"
 
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:33
 #. i18n: ectx: label, entry (bypass), group (schedulerplugin)
 #: rc.cpp:483
 msgid "Bypass scheduler for items that will manually be set on Pause/Start"
 msgstr ""
+"Obejít plánovač pro položky, jež budou ručně nastaveny na Pozastavit/Spustit"
 
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:38
 #. i18n: ectx: label, entry (bypassMethods), group (schedulerplugin)
 #: rc.cpp:486
-#, fuzzy
 msgid "Select scheduler bypass method"
-msgstr "Zvolte způsob vypnutí systému"
+msgstr "Vybrat způsob obejití plánovače"
 
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:11
 #. i18n: ectx: label, entry (groupBoxWatch), group (watchfolderplugin)
@@ -2024,11 +2017,12 @@ msgstr ""
 #. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:10
 #. i18n: ectx: label, entry (transferManagement), group (categoriesplugin)
 #: rc.cpp:537
-#, fuzzy
 msgid ""
 "Overwrite or rename folder to transfer if it already exists in favorite "
 "folder"
-msgstr "Přepsat existující soubory"
+msgstr ""
+"Přepsat nebo přejmenovat složku k přesunutí, pokud již je ve složce s "
+"oblíbenými"
 
 #~ msgid "<b>Speed:</b>"
 #~ msgstr "<b>Rychlostit:</b>"
