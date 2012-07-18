@@ -50,6 +50,7 @@ private:
     QStandardItem* getSelectedItem();
     QStringList retrieveSelectionList(QStandardItem*);
     QString buildGroupBoxTitle(const QString& = QString());
+    void subCategoryWidgets(const QModelIndex&);
     void addMimeTypeToGroup(QStandardItem*);
     void setupConnections();
     void saveChanges();
@@ -69,9 +70,8 @@ private slots:
     void toolButtonAddClickSlot();
     void toolButtonRemoveClickSlot();
     void toolButtonEditSubcategoryClickSlot();
-    void indexActivatedSlot(const QModelIndex&);
     void urlChangedSlot(const QString&);
-    void categorySelectedItemSlot();
+    void categoryWidgetsSlot();
 
 };
 

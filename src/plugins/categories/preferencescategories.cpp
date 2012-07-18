@@ -54,7 +54,7 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesCategories>();)
     // setup ui file :
     int defaultWidth = 500;
     QWidget* widget = new QWidget(this);
-    widget->setMinimumSize(defaultWidth, 300);
+    widget->setMinimumSize(defaultWidth, 350);
 
     this->preferencesCategoriesUi.setupUi(widget);
     layout->addWidget(widget);
@@ -135,7 +135,7 @@ void PreferencesCategories::setupConnections() {
     connect (this->preferencesCategoriesUi.mimeTreeView->selectionModel(),
              SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
              this,
-             SLOT(categorySelectedItemSlot()));
+             SLOT(categoryWidgetsSlot()));
 
     connect (this->preferencesCategoriesUi.toolButtonAdd,
              SIGNAL(clicked(bool)),
@@ -151,11 +151,6 @@ void PreferencesCategories::setupConnections() {
              SIGNAL(clicked(bool)),
              this,
              SLOT(toolButtonRemoveClickSlot()));
-
-    connect (this->preferencesCategoriesUi.mimeTreeView,
-             SIGNAL(clicked(const QModelIndex&)),
-             this,
-             SLOT(indexActivatedSlot(const QModelIndex&)));
 
     connect (this->preferencesCategoriesUi.kurlrequester,
              SIGNAL(textChanged(const QString&)),
@@ -258,7 +253,7 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
         // compare subCategories stored with subCategories selected :
         foreach (MimeData mimeDataChild, mimeDataChildList) {
 
-            // if subCategory stored is no more selected, user as deselected it :
+            // if subCategory stored is no more selected, user has deselected it :
             if (!subcategorySelectedList.contains(mimeDataChild.getSubCategory())) {
 
                 // remove it from model :
@@ -271,10 +266,10 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
         }
 
 
-        // finally expand item to display subcategories :
+        // expand item to display subcategories :
         this->preferencesCategoriesUi.mimeTreeView->setExpanded(parentItem->index(), true);
 
-        // set the first item added as automatically selected :
+        // finally set the first item added as automatically selected :
         if (!firstMimeDataToDisplay.getSubCategory().isEmpty()) {
 
             QStandardItem* subcategorySelectItem = this->categoriesModel->retrieveItemFromCategory(firstMimeDataToDisplay.getSubCategory(), parentItem);
@@ -283,9 +278,10 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
 
                 this->preferencesCategoriesUi.mimeTreeView->selectionModel()->clear();
                 this->preferencesCategoriesUi.mimeTreeView->selectionModel()->select(subcategorySelectItem->index(), QItemSelectionModel::Select | QItemSelectionModel::Rows);
+                this->preferencesCategoriesUi.mimeTreeView->scrollTo(subcategorySelectItem->index());
 
                 // display subCategory groupBox accordingly :
-                this->indexActivatedSlot(subcategorySelectItem->index());
+                this->subCategoryWidgets(subcategorySelectItem->index());
             }
         }
 
@@ -337,6 +333,25 @@ void PreferencesCategories::saveChanges() {
     }
 }
 
+void PreferencesCategories::subCategoryWidgets(const QModelIndex& activatedIndex) {
+
+    QModelIndex activatedCategoryIndex = this->categoriesModel->getCategoryItem(activatedIndex)->index();
+
+    MimeData currentMimeData = this->categoriesModel->loadMimeData(activatedCategoryIndex);
+    this->preferencesCategoriesUi.kurlrequester->setUrl(KUrl(currentMimeData.getMoveFolderPath()));
+
+
+    if (this->categoriesModel->isSelectedItemParent(activatedCategoryIndex)) {
+        this->preferencesCategoriesUi.groupBoxCategory->setDisabled(true);
+        this->preferencesCategoriesUi.groupBoxCategory->setTitle(this->buildGroupBoxTitle());
+    }
+    else {
+        this->preferencesCategoriesUi.groupBoxCategory->setEnabled(true);
+        this->preferencesCategoriesUi.groupBoxCategory->setTitle(this->buildGroupBoxTitle(currentMimeData.getComments()));
+    }
+
+}
+
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
@@ -366,8 +381,12 @@ void PreferencesCategories::toolButtonAddClickSlot() {
 
         if (selectItem) {
 
+            // set selection on first item added :
             this->preferencesCategoriesUi.mimeTreeView->selectionModel()->clear();
             this->preferencesCategoriesUi.mimeTreeView->selectionModel()->select(selectItem->index(), QItemSelectionModel::Select | QItemSelectionModel::Rows);
+
+            // then display dialog box for subCategory edit :
+            this->toolButtonEditSubcategoryClickSlot();
         }
     }
 
@@ -392,7 +411,9 @@ void PreferencesCategories::toolButtonEditSubcategoryClickSlot() {
 
             // retrieve main category item :
             if (!this->categoriesModel->isSelectedItemParent(categoryItem)) {
+
                 categoryItem = categoryItem->parent();
+
             }
 
             this->addMimeTypeToGroup(categoryItem);
@@ -421,25 +442,6 @@ void PreferencesCategories::toolButtonRemoveClickSlot() {
 }
 
 
-void PreferencesCategories::indexActivatedSlot(const QModelIndex& activatedIndex) {
-
-    QModelIndex activatedCategoryIndex = this->categoriesModel->getCategoryItem(activatedIndex)->index();
-
-    MimeData currentMimeData = this->categoriesModel->loadMimeData(activatedCategoryIndex);
-    this->preferencesCategoriesUi.kurlrequester->setUrl(KUrl(currentMimeData.getMoveFolderPath()));
-
-
-    if (this->categoriesModel->isSelectedItemParent(activatedCategoryIndex)) {
-        this->preferencesCategoriesUi.groupBoxCategory->setDisabled(true);
-        this->preferencesCategoriesUi.groupBoxCategory->setTitle(this->buildGroupBoxTitle());
-    }
-    else {
-        this->preferencesCategoriesUi.groupBoxCategory->setEnabled(true);
-        this->preferencesCategoriesUi.groupBoxCategory->setTitle(this->buildGroupBoxTitle(currentMimeData.getComments()));
-    }
-
-}
-
 
 void PreferencesCategories::urlChangedSlot(const QString& changedUrl) {
 
@@ -456,17 +458,23 @@ void PreferencesCategories::urlChangedSlot(const QString& changedUrl) {
 }
 
 
-void PreferencesCategories::categorySelectedItemSlot() {
+void PreferencesCategories::categoryWidgetsSlot() {
 
     // get selected items :
-    QList<QModelIndex> indexesList = this->preferencesCategoriesUi.mimeTreeView->selectionModel()->selectedRows();
+    QStandardItem* selectedItem = this->getSelectedItem();
 
-    if (indexesList.size() > 0) {
+    if (selectedItem) {
 
-        // main category has been selected :
-        bool mainCategorySelected = this->categoriesModel->isSelectedItemParent(indexesList.at(0));
+        QModelIndex selectedIndex = selectedItem->index();
+
+        // check if main category has been selected :
+        bool mainCategorySelected = this->categoriesModel->isSelectedItemParent(selectedIndex);
+
         this->preferencesCategoriesUi.toolButtonRemove->setEnabled(mainCategorySelected);
         this->preferencesCategoriesUi.toolButtonEditSubcategory->setEnabled(true);
+
+        // enable/disable subCatagories related widgets :
+        this->subCategoryWidgets(selectedIndex);
 
     }
     // no main category found, disable button for subCategory editing :
