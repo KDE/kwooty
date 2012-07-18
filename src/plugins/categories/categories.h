@@ -39,6 +39,7 @@ class Core;
 class CategoriesPlugin;
 class CategoriesModel;
 
+
 class Categories : public QObject {
 
     Q_OBJECT
