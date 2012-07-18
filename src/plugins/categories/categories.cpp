@@ -120,7 +120,7 @@ void Categories::launchPreProcess() {
 
         // try to guess the main mime type of the overall folder :
         QString mimeName = this->guessMainMimeName(mimeNameSizeMap);
-        kDebug() << "mime type : " << mimeName;
+        kDebug() << "mime type :" << mimeName;
 
         // if mime type has been found :
         if (!mimeName.isEmpty()) {
@@ -206,9 +206,6 @@ void Categories::launchMoveProcess(const MimeData& mimeData, const QString& nzbF
     }
     // else create a new folder name :
     else {
-
-        // get name of the folder to transfer :
-
 
         // check if this folder already exists in move folder path :
         if (QDir(moveFolderPath).exists()) {
@@ -350,8 +347,6 @@ QHash<QString, quint64> Categories::scanDownloadedFiles(const QString& nzbFileSa
 
         QString currentDirectory = dirIterator.next();
 
-        kDebug() << "### QDirIterator :" << currentDirectory;
-
         // retrieves all files from current directory :
         QStringList currentFileList = QDir(currentDirectory).entryList(QDir::Files | QDir::NoDotAndDotDot, QDir::Size);
 
@@ -375,8 +370,6 @@ QHash<QString, quint64> Categories::scanDownloadedFiles(const QString& nzbFileSa
                     kDebug() << "ooops, file does not exists :" << fileInfo.absoluteFilePath();
                 }
 
-                kDebug() << "NAME" << mimeType->name() << "SIZE" <<  mimeNameSizeMap.value(mimeType->name()) ;
-
             }
 
         }
@@ -398,8 +391,6 @@ void Categories::notifyMoveProcessing(int progress) {
     if (parentFileNameItem) {
         stateItem = this->core->getDownloadModel()->getStateItemFromIndex(parentFileNameItem->index());
     }
-
-    kDebug() << "progress" << this->moveStatusTextMap.value(this->moveJobStatus);
 
     // update state item :
     if (stateItem) {
@@ -502,8 +493,6 @@ void Categories::handleResultSlot(KJob* moveJob) {
 
 
 void Categories::jobProgressionSlot(KIO::Job* moveJob) {
-
-    kDebug() << "progress :" << moveJob->percent();
 
     this->notifyMoveProcessing(static_cast<int>(moveJob->percent()));
 }
