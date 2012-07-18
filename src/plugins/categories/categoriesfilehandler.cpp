@@ -45,6 +45,30 @@ CategoriesFileHandler::CategoriesFileHandler() {
 }
 
 
+QString CategoriesFileHandler::retrieveCategoriesFilePath() {
+    return KStandardDirs::locateLocal("appdata", QString::fromLatin1("categories.xml"));
+}
+
+
+bool CategoriesFileHandler::isStartElement(QXmlStreamReader& stream, const QString& element) {
+
+    return ( stream.tokenType() == QXmlStreamReader::StartElement &&
+             stream.name() == element );
+}
+
+bool CategoriesFileHandler::isEndElement(QXmlStreamReader& stream, const QString& element) {
+
+    return ( stream.tokenType() == QXmlStreamReader::EndElement &&
+             stream.name() == element );
+}
+
+QString CategoriesFileHandler::readNextCharacters(QXmlStreamReader& stream) {
+    stream.readNext();
+    return stream.text().toString();
+}
+
+
+
 CategoriesModel* CategoriesFileHandler::loadModelFromFile(QObject* parent) {
 
     // build categories model :
@@ -183,24 +207,6 @@ CategoriesModel* CategoriesFileHandler::loadModelFromFile(QObject* parent) {
 
 
 
-bool CategoriesFileHandler::isStartElement(QXmlStreamReader& stream, const QString& element) {
-
-    return ( stream.tokenType() == QXmlStreamReader::StartElement &&
-             stream.name() == element );
-}
-
-bool CategoriesFileHandler::isEndElement(QXmlStreamReader& stream, const QString& element) {
-
-    return ( stream.tokenType() == QXmlStreamReader::EndElement &&
-             stream.name() == element );
-}
-
-QString CategoriesFileHandler::readNextCharacters(QXmlStreamReader& stream) {
-    stream.readNext();
-    return stream.text().toString();
-}
-
-
 void CategoriesFileHandler::saveModelToFile(CategoriesModel* categoriesModel) {
 
     QFile categoriesFile(this->retrieveCategoriesFilePath());
@@ -210,7 +216,7 @@ void CategoriesFileHandler::saveModelToFile(CategoriesModel* categoriesModel) {
     stream.setAutoFormatting(true);
     stream.writeStartDocument();
 
-    // <scheduler> :
+    // <categories> :
     stream.writeStartElement("categories");
     stream.writeAttribute("application", "kwooty");
     stream.writeAttribute("version", "1");
@@ -253,11 +259,5 @@ void CategoriesFileHandler::saveModelToFile(CategoriesModel* categoriesModel) {
     stream.writeEndDocument();
     categoriesFile.close();
 
-}
-
-
-
-QString CategoriesFileHandler::retrieveCategoriesFilePath() {
-    return KStandardDirs::locateLocal("appdata", QString::fromLatin1("categories.xml"));
 }
 
