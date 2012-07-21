@@ -1,5 +1,26 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
+
+Version 0.9.0:
+--------------
+
+- New plugin: "Categories". This plugin allows to transfer downloaded contents to favorites folders defined in the plugin settings.
+
+- Scheduler plugin: bypass feature added. Scheduler can now be bypassed for items manually set on "Start" or "Pause" or both (to be configured in Scheduler settings).
+
+- Scheduler plugin: new nzb items can now automatically be set on Pause when appended (feature is enabled if "Always limit download speed" is checked).
+
+- Scheduler plugin: better download/pause behavior.
+
+- New option "Display tiny file names" in "Display Mode" settings.
+
+- Better distinction of par2 files: to improve readability, name of par2 files is displayed in gray.
+
+- The mean download speed of each server has been added nearby its current download speed in the server statistics panel (feature request).
+
+- Bug fix: maximized setting about server statistics panel was sometimes not correctly restored between kwooty's sessions.
+
+
 Version 0.8.4:
 --------------
 
