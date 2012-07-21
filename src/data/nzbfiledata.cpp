@@ -31,7 +31,7 @@ NzbFileData::NzbFileData()
 
 }
 
-NzbFileData::NzbFileData(const QString& fileName, const QStringList& groupList, const QList<SegmentData>& segmentList){
+NzbFileData::NzbFileData(const QString& fileName, const QStringList& groupList, const QList<SegmentData>& segmentList) {
 
     this->setFileName(fileName);
     this->setGroupList(groupList);
