@@ -44,11 +44,27 @@ SchedulerFileHandler::SchedulerFileHandler() {
 }
 
 
+void SchedulerFileHandler::reloadModel(QStandardItemModel* schedulerModel) {
+
+    schedulerModel->clear();
+
+    //reload model from file :
+    this->fillModel(schedulerModel);
+}
 
 QStandardItemModel* SchedulerFileHandler::loadModelFromFile(QObject* parent) {
 
     // build scheduler model :
     QStandardItemModel* schedulerModel = new QStandardItemModel(parent);
+    this->reloadModel(schedulerModel);
+
+    return schedulerModel;
+}
+
+
+
+void SchedulerFileHandler::fillModel(QStandardItemModel* schedulerModel) {
+
     schedulerModel->setColumnCount(COLUMN_NUMBER_SCHEDULER);
     schedulerModel->setRowCount(ROW_NUMBER_SCHEDULER);
 
@@ -137,9 +153,6 @@ QStandardItemModel* SchedulerFileHandler::loadModelFromFile(QObject* parent) {
             }
         }
     }
-
-
-    return schedulerModel;
 
 }
 

@@ -56,11 +56,14 @@ class SchedulerFileHandler : public QObject {
 public:
     SchedulerFileHandler(QObject*);
     SchedulerFileHandler();
+
     QStandardItemModel* loadModelFromFile(QObject*);
+    void reloadModel(QStandardItemModel*);
     void saveModelToFile(QStandardItemModel*);
 
 private:
     QString retrieveSchedulerFilePath();
+    void fillModel(QStandardItemModel*);
 
 
 signals:
