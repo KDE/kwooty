@@ -19,7 +19,6 @@
  ***************************************************************************/
 
 
-
 #include "categoriesmodel.h"
 
 #include <KDebug>
@@ -44,6 +43,13 @@ QString CategoriesModel::getMainCategory(QStandardItem* selectedItem) {
 
 QString CategoriesModel::getMainCategory(const QModelIndex& selectedIndex) {
     return this->loadMimeData(selectedIndex).getMainCategory();
+}
+
+void CategoriesModel::init() {
+
+    this->clear();
+    this->setColumnCount(2);
+
 }
 
 

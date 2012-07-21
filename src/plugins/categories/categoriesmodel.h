@@ -58,6 +58,7 @@ public:
     bool isSelectedItemParent(const QModelIndex&);
     void storeMimeData(QStandardItem*, MimeData);
     void addParentCategoryListToModel(const QStringList&);
+    void init();
 
     QStandardItem* getCategoryItem(QStandardItem*);
     QStandardItem* getCategoryItem(const QModelIndex&);
