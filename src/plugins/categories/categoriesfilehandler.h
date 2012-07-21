@@ -43,10 +43,12 @@ public:
     QStringList retrieveMainTypeList();
     void saveModelToFile(CategoriesModel*);
     void addListToModel(CategoriesModel*, const QStringList&);
+    void reloadModel(CategoriesModel*);
 
 
 private:
 
+    CategoriesModel* fillModel(CategoriesModel*);
     QString retrieveCategoriesFilePath();
     QString readNextCharacters(QXmlStreamReader&);
     bool isStartElement(QXmlStreamReader&, const QString&);

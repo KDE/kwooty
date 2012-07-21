@@ -68,13 +68,26 @@ QString CategoriesFileHandler::readNextCharacters(QXmlStreamReader& stream) {
 }
 
 
+void CategoriesFileHandler::reloadModel(CategoriesModel* categoriesModel) {
+
+    categoriesModel->init();
+
+    //reload model from file :
+    this->fillModel(categoriesModel);
+}
 
 CategoriesModel* CategoriesFileHandler::loadModelFromFile(QObject* parent) {
 
     // build categories model :
     CategoriesModel* categoriesModel = new CategoriesModel(parent);
-    // set two columns :
-    categoriesModel->setColumnCount(2);
+    this->reloadModel(categoriesModel);
+
+    return categoriesModel;
+
+}
+
+
+void CategoriesFileHandler::fillModel(CategoriesModel* categoriesModel) {
 
     QFile categoriesFile(this->retrieveCategoriesFilePath());
     bool fileOpen = categoriesFile.open(QIODevice::ReadOnly);
@@ -191,17 +204,8 @@ CategoriesModel* CategoriesFileHandler::loadModelFromFile(QObject* parent) {
 
     // if any error, fill model with init values :
     if (error) {
-
-        if (categoriesModel) {
-
-            delete categoriesModel;
-            categoriesModel = new CategoriesModel(parent);
-
-        }
-
+        categoriesModel->init();
     }
-
-    return categoriesModel;
 
 }
 
