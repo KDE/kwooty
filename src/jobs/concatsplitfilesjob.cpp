@@ -80,10 +80,6 @@ void ConcatSplitFilesJob::joinFilesSlot(QList<NzbFileData> nzbFileDataList, cons
 }
 
 
-
-
-
-
 bool ConcatSplitFilesJob::joinSplittedFiles() {
 
     bool processFailed = false;
