@@ -74,9 +74,6 @@ void QueueFileObserver::setupConnections() {
 }
 
 
-
-
-
 void QueueFileObserver::checkProgressItemValue(QStandardItem* stateItem) {
 
     if (stateItem) {
@@ -95,8 +92,6 @@ void QueueFileObserver::checkProgressItemValue(QStandardItem* stateItem) {
     }
 
 }
-
-
 
 
 int QueueFileObserver::getFocusedProgressValue() const {
@@ -252,7 +247,6 @@ void QueueFileObserver::jobFinishStatusSlot(QStandardItem* stateItem) {
     }
 
 }
-
 
 
 
