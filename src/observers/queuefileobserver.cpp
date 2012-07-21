@@ -42,6 +42,7 @@ QueueFileObserver::QueueFileObserver(Core* parent) : QObject(parent) {
     // init variables :
     this->focusedProgressValue = PROGRESS_UNKNOWN;
     this->focusedItemStatus = IdleStatus;
+    this->pluginJobRunning = false;
 
 
 }
@@ -135,7 +136,9 @@ JobNotifyData QueueFileObserver::retrieveJobNotifyData(QStandardItem* stateItem,
 }
 
 
-
+bool QueueFileObserver::isPluginJobRunning() {
+    return this->pluginJobRunning;
+}
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
@@ -279,5 +282,12 @@ void QueueFileObserver::checkJobFinishSlot() {
     if (this->jobNotifyDataList.isEmpty()) {
         this->jobNotifyTimer->stop();
     }
+
+}
+
+
+void QueueFileObserver::pluginJobRunningSlot(bool pluginJobRunning) {
+
+    this->pluginJobRunning = pluginJobRunning;
 
 }

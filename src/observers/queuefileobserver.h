@@ -48,6 +48,7 @@ public:
     QueueFileObserver(Core*);
     UtilityNamespace::ItemStatus getFocusedItemStatus() const;
     int getFocusedProgressValue() const;
+    bool isPluginJobRunning();
 
 
 private:
@@ -63,6 +64,7 @@ private:
     UtilityNamespace::ItemStatus focusedItemStatus;
     int focusedProgressValue;
     int previousProgressValue;
+    bool pluginJobRunning;
 
     void setupConnections();
 
@@ -81,6 +83,7 @@ public slots:
 
     void parentItemChangedSlot();
     void jobFinishStatusSlot(QStandardItem*);
+    void pluginJobRunningSlot(bool);
 
 
 private slots:
