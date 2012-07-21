@@ -50,8 +50,8 @@ public:
 
 
 private:
+    Core* core;
     StandardItemModel* downloadModel;
-
 
 signals:
 

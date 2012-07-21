@@ -23,12 +23,15 @@
 
 #include "standarditemmodel.h"
 #include "core.h"
+#include "mainwindow.h"
+#include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
 
 
-StandardItemModelQuery::StandardItemModelQuery(Core* parent) : QObject(parent) {
+StandardItemModelQuery::StandardItemModelQuery(Core* core) : QObject(core) {
 
-    this->downloadModel = parent->getDownloadModel();
+    this->core = core;
+    this->downloadModel = core->getDownloadModel();
 
 }
 
@@ -146,35 +149,43 @@ QList<QModelIndex> StandardItemModelQuery::retrieveStartPauseIndexList(const Uti
 
 
 
-
 bool StandardItemModelQuery::areJobsFinished() {
 
     bool jobFinished = true;
 
-    // get the root model :
-    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+    // at first check that no plugin are doing post processing :
+    if (this->core->getQueueFileObserver()->isPluginJobRunning()) {
 
-    // for each parent item, get its current status :
-    for (int i = 0; i < rootItem->rowCount(); i++) {
+        jobFinished = false;
+    }
 
-        QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
-        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
+    else {
+        // get the root model :
+        QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
 
-        // check parent status activity :
-        if ( Utility::isReadyToDownload(currentStatus)       ||
-             Utility::isPausing(currentStatus)               ||
-             Utility::isDecoding(currentStatus)              ||
-             Utility::isPostDownloadProcessing(currentStatus) ) {
+        // for each parent item, get its current status :
+        for (int i = 0; i < rootItem->rowCount(); i++) {
 
-            jobFinished = false;
-            break;
-        }
+            QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
+            UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
 
-        // if do not shutdown system if paused items found :
-        if ( Settings::pausedShutdown() && Utility::isPaused(currentStatus) ) {
+            // check parent status activity :
+            if ( Utility::isReadyToDownload(currentStatus)       ||
+                 Utility::isPausing(currentStatus)               ||
+                 Utility::isDecoding(currentStatus)              ||
+                 Utility::isPostDownloadProcessing(currentStatus) ) {
 
-            jobFinished = false;
-            break;
+                jobFinished = false;
+                break;
+            }
+
+            // if do not shutdown system if paused items found :
+            if ( Settings::pausedShutdown() && Utility::isPaused(currentStatus) ) {
+
+                jobFinished = false;
+                break;
+            }
+
         }
 
     }
@@ -248,8 +259,10 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
         parentItemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->parent()->index());
     }
 
-    // only allow to retry download if post download processing is not running :
-    if (!Utility::isPostDownloadProcessing(parentItemStatusData.getStatus())) {
+    // only allow to retry download if post download processing is not running and
+    // post processing failed for at least some items :
+    if ( !Utility::isPostDownloadProcessing(parentItemStatusData.getStatus()) &&
+         !parentItemStatusData.areAllPostProcessingCorrect() ) {
 
         // item has been postprocessed :
         if (itemStatusData.getStatus() >= VerifyStatus) {
