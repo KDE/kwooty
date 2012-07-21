@@ -1,21 +1,21 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Yurienu Amenysta <yurienu.amenysta@gmail.com>, 2012.
+# Yurienu Amenysta <yurienu@myopera.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-15 18:17+0200\n"
-"PO-Revision-Date: 2012-02-19 14:24+0100\n"
-"Last-Translator: Yurienu Amenysta <yurienu.amenysta@gmail.com>\n"
+"PO-Revision-Date: 2012-07-21 13:20+0200\n"
+"Last-Translator: Yurienu <yurienu@myopera.com>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
-"Language: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 1.2\n"
+"X-Generator: Lokalize 1.4\n"
 
 #: src/preferences/preferencesgeneral.cpp:38
 msgid "With confirmation"
@@ -125,9 +125,8 @@ msgstr ""
 "d’archives."
 
 #: src/main.cpp:39
-#, fuzzy
 msgid "Copyright (c) 2012 Xavier Lefage"
-msgstr "Copyright © 2011 Xavier Lefage"
+msgstr "Copyright © 2012 Xavier Lefage"
 
 #: src/main.cpp:42
 msgid "Xavier Lefage"
@@ -932,9 +931,8 @@ msgid "%1, %2 - %3"
 msgstr "%1, %2 - %3"
 
 #: src/plugins/scheduler/preferencesscheduler.cpp:136
-#, fuzzy
 msgid "Start or Pause"
-msgstr "Tout démarrer"
+msgstr "Démarrer ou Mettre en pause"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:45
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_downloadLimitSpinBox)
@@ -958,88 +956,82 @@ msgstr "Gestionnaire de bande passante"
 
 #: src/plugins/categories/categories.cpp:62
 msgid "Transfer not performed"
-msgstr ""
+msgstr "Transfert non effectué "
 
 #: src/plugins/categories/categories.cpp:63
-#, fuzzy
 msgid "Transferring..."
-msgstr "En pause…"
+msgstr "Transfert en cours…"
 
 #: src/plugins/categories/categories.cpp:64
-#, fuzzy
 msgid "Transfer complete"
-msgstr "Réparation terminée"
+msgstr "Transfert terminé"
 
 #: src/plugins/categories/categories.cpp:65
 msgid "Transfer canceled"
-msgstr ""
+msgstr "Transfert annulé"
 
 #: src/plugins/categories/categories.cpp:66
 msgid "Transfer error (disk is full)"
-msgstr ""
+msgstr "Erreur de transfert (le disque est plein)"
 
 #: src/plugins/categories/categories.cpp:67
 msgid "Transfer error (target folder can not be created)"
-msgstr ""
+msgstr "Erreur de transfert (le dossier de destination n’a pu être créé)"
 
 #: src/plugins/categories/categories.cpp:68
-#, fuzzy
 msgid "Transfer error (insufficient disk space)"
-msgstr "Espace disque insuffisant"
+msgstr "Erreur de transfert (espace disque insuffisant)"
 
 #: src/plugins/categories/categories.cpp:69
-#, fuzzy
 msgid "Transfer error"
-msgstr "Erreur d’écriture"
+msgstr "Erreur de transfert"
 
 #: src/plugins/categories/preferencescategories.cpp:63
-#, fuzzy
 msgid "Rename automatically"
-msgstr "Automatiquement"
+msgstr "Renommer automatiquement"
 
 #: src/plugins/categories/preferencescategories.cpp:64
 msgid "Overwrite"
-msgstr ""
+msgstr "Écraser"
 
 #: src/plugins/categories/preferencescategories.cpp:90
 msgid "Categories"
-msgstr ""
+msgstr "Catégories"
 
 #: src/plugins/categories/preferencescategories.cpp:91
 msgid "Target"
-msgstr ""
+msgstr "Destination"
 
 #: src/plugins/categories/preferencescategories.cpp:98
 msgid "Add Category"
-msgstr ""
+msgstr "Ajouter une catégorie"
 
 #: src/plugins/categories/preferencescategories.cpp:101
-#, fuzzy
 msgid "Remove Category"
-msgstr "Supprimer toutes les lignes"
+msgstr "Supprimer la catégorie"
 
 #: src/plugins/categories/preferencescategories.cpp:105
 msgid "Edit Subcategory"
-msgstr ""
+msgstr "Éditer la sous-catégorie"
 
 #: src/plugins/categories/preferencescategories.cpp:189
 #: src/plugins/categories/preferencescategories.cpp:350
 msgid "Mime Type Selection"
-msgstr ""
+msgstr "Sélection du Type MIME"
 
 #: src/plugins/categories/preferencescategories.cpp:190
 msgid "Add or Remove Subcategories"
-msgstr ""
+msgstr "Ajouter ou Supprimer une sous-catégorie"
 
 #: src/plugins/categories/preferencescategories.cpp:325
 #, kde-format
 msgctxt "%1 = type of subcategory"
 msgid "Subcategory: %1"
-msgstr ""
+msgstr "Sous-catégorie : %1"
 
 #: src/plugins/categories/preferencescategories.cpp:351
 msgid "Select Main Categories"
-msgstr ""
+msgstr "Sélectionner les Catégories Principales"
 
 #: src/sidebar.cpp:171
 msgid "None"
@@ -1048,6 +1040,7 @@ msgstr "Aucun"
 #: src/sidebar.cpp:184
 msgid "Current download speed - Mean download speed"
 msgstr ""
+"Vitesse instantanée de téléchargement — Vitesse moyenne de téléchargement"
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, PowerManagemetGroupBox)
@@ -1071,7 +1064,7 @@ msgstr "Mode d’arrêt du système :"
 #. i18n: ectx: property (title), widget (QGroupBox, actionGroupBox)
 #: build/src/ui_preferencesshutdown.h:146 rc.cpp:92
 msgid "Scheduler"
-msgstr "Plannificateur"
+msgstr "Planificateur"
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:63
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_timerRadioButton)
@@ -1583,9 +1576,8 @@ msgstr "Définir le mot de passe requis par l’hôte"
 #. i18n: file: src/preferences/serversettings.ui:242
 #. i18n: ectx: property (text), widget (QLabel, labelDisconnect)
 #: build/src/ui_serversettings.h:257 rc.cpp:420
-#, fuzzy
 msgid "Disconnect from server when idle after:"
-msgstr "Déconnecter du serveur quand inactif depuis (en minutes) :"
+msgstr "Déconnecter du serveur quand inactif depuis :"
 
 #. i18n: file: src/preferences/serversettings.ui:262
 #. i18n: ectx: property (toolTip), widget (QSpinBox, disconnectTimeout)
@@ -1596,9 +1588,8 @@ msgstr "Se déconnecter de l’hôte après une certaine période d’inactivit�
 #. i18n: file: src/preferences/serversettings.ui:265
 #. i18n: ectx: property (suffix), widget (QSpinBox, disconnectTimeout)
 #: build/src/ui_serversettings.h:261 rc.cpp:426
-#, fuzzy
 msgid " min"
-msgstr "%1 minute"
+msgstr " minute(s)"
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, actionGroupBox)
@@ -1697,13 +1688,15 @@ msgid ""
 "For example, a file named '[xxx - yyy] \"file.ext\" - Yenc 1/10' will be "
 "displayed as 'file.ext'"
 msgstr ""
+"Enlever le contenu inutile des noms de fichier d’une collection nzb.\n"
+"Par example, un fichier nommé '[xxx - yyy] \"fichier.ext\" - Yenc 1/10' sera "
+"affiché en 'fichier.ext'"
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:99
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_displayTinyFileName)
 #: build/src/ui_preferencesdisplay.h:148 rc.cpp:258
-#, fuzzy
 msgid "Display tiny file names"
-msgstr "Afficher le temps restant"
+msgstr "Afficher des noms de fichier courts"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:22
 #. i18n: ectx: property (toolTip), widget (QLabel, DownloadLimitLabel)
@@ -1763,13 +1756,13 @@ msgstr "Téléchargements en pause"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_bypass)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:185 rc.cpp:465
 msgid "Bypass scheduler for nzb manually set on: "
-msgstr ""
+msgstr "Désactiver le planificateur pour les nzb suivants : "
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:162
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_pauseIncomingFiles)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:186 rc.cpp:468
 msgid "Set on Pause every incoming nzb file"
-msgstr ""
+msgstr "Mettre en pause tous les nouveaux fichiers nzb"
 
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:22
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
@@ -1831,15 +1824,14 @@ msgstr ""
 #. i18n: file: src/plugins/categories/preferencescategories.ui:107
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: build/src/plugins/categories/ui_preferencescategories.h:164 rc.cpp:540
-#, fuzzy
 msgid "Favorite folder: "
-msgstr "Dossier à surveiller : "
+msgstr "Dossier préféré : "
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:124
 #. i18n: ectx: property (text), widget (QLabel, labelExistingTransfers)
 #: build/src/plugins/categories/ui_preferencescategories.h:165 rc.cpp:543
 msgid "If contents to transfer already exist in favorite folder:"
-msgstr ""
+msgstr "Si le contenu à transférer existe déjà dans le dossier préféré :"
 
 #: rc.cpp:1
 msgctxt "NAME OF TRANSLATORS"
@@ -1929,7 +1921,7 @@ msgstr "Afficher l’espace libre dans la barre de statut"
 #. i18n: ectx: label, entry (displayTinyFileName), group (display)
 #: rc.cpp:348
 msgid "Display reduced file name inside nzb collection"
-msgstr ""
+msgstr "Afficher des noms de fichier réduits dans les collections nzb"
 
 #. i18n: file: src/preferences/kwootysettings.kcfg:154
 #. i18n: ectx: label, entry (shutdownMethods), group (shutdown)
@@ -1985,20 +1977,20 @@ msgstr "Activer le planificateur"
 #. i18n: ectx: label, entry (pauseIncomingFiles), group (schedulerplugin)
 #: rc.cpp:480
 msgid "Automatically set on Pause every incoming nzb file"
-msgstr ""
+msgstr "Automatiquement mettre en Pause tous les nouveaux fichiers nzb"
 
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:33
 #. i18n: ectx: label, entry (bypass), group (schedulerplugin)
 #: rc.cpp:483
 msgid "Bypass scheduler for items that will manually be set on Pause/Start"
 msgstr ""
+"Désactiver le planificateur pour les nzb manuellement mis sur Pause/Démarrer"
 
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:38
 #. i18n: ectx: label, entry (bypassMethods), group (schedulerplugin)
 #: rc.cpp:486
-#, fuzzy
 msgid "Select scheduler bypass method"
-msgstr "Sélectionner la méthode d’arrêt du système"
+msgstr "Sélectionner la méthode de désactivation du planificateur"
 
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:11
 #. i18n: ectx: label, entry (groupBoxWatch), group (watchfolderplugin)
@@ -2035,8 +2027,11 @@ msgstr ""
 #. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:10
 #. i18n: ectx: label, entry (transferManagement), group (categoriesplugin)
 #: rc.cpp:537
-#, fuzzy
 msgid ""
 "Overwrite or rename folder to transfer if it already exists in favorite "
 "folder"
-msgstr "Écraser si un fichier du même nom existe"
+msgstr ""
+"Écraser ou renommer un dossier à transférer si ce dernier existe déjà dans le "
+"dossier "
+"préféré"
+
