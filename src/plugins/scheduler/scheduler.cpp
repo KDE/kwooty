@@ -461,8 +461,7 @@ void Scheduler::settingsChanged() {
     // reload settings from just saved config file :
     SchedulerSettings::self()->readConfig();
 
-    this->schedulerModel = SchedulerFileHandler().loadModelFromFile(this);
-
+    SchedulerFileHandler().reloadModel(this->schedulerModel);
 
     if (SchedulerSettings::enableScheduler()) {
 
