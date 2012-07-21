@@ -31,7 +31,7 @@
 #include <kmimetype.h>
 
 #include "mimedata.h"
-
+#include "data/itemstatusdata.h"
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
@@ -54,14 +54,14 @@ private:
 
     // category hierarchy :
     enum MoveJobStatus {
-       NoMoveStatus,
-       MovingStatus,
-       MoveSuccessStatus,
-       MoveUserCanceledErrorStatus,
-       MoveDiskFullErrorStatus,
-       MoveCouldNotMkdirErrorStatus,
-       MoveInsufficientDiskSpaceErrorStatus,
-       MoveUnknownErrorStatus
+        NoMoveStatus,
+        MovingStatus,
+        MoveSuccessStatus,
+        MoveUserCanceledErrorStatus,
+        MoveDiskFullErrorStatus,
+        MoveCouldNotMkdirErrorStatus,
+        MoveInsufficientDiskSpaceErrorStatus,
+        MoveUnknownErrorStatus
     };
 
     KSharedPtr<KMimeType> retrieveFileMimeType(const QString&, const QString&);
@@ -72,6 +72,7 @@ private:
     void launchMoveProcess(const MimeData&, const QString&);
     void notifyMoveProcessing(int = UtilityNamespace::PROGRESS_UNKNOWN);
     void launchPreProcess();
+    void setJobProcessing(const bool&);
 
     Core* core;
     CategoriesModel* categoriesModel;
@@ -83,14 +84,14 @@ private:
     bool jobProcessing;
 
 signals:
-
+    void pluginJobRunningSignal(bool);
 
 public slots:
     void handleResultSlot(KJob*);
     void jobProgressionSlot(KIO::Job*);
 
 private slots:
-    void parentStatusItemChangedSlot(QStandardItem*);
+    void parentStatusItemChangedSlot(QStandardItem*, ItemStatusData);
 
 };
 

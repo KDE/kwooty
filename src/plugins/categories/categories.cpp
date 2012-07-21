@@ -35,7 +35,7 @@
 #include "categoriesmodel.h"
 #include "standarditemmodel.h"
 #include "standarditemmodelquery.h"
-#include "data/itemstatusdata.h"
+#include "observers/queuefileobserver.h"
 #include "data/nzbfiledata.h"
 #include "utilitycategories.h"
 
@@ -51,7 +51,7 @@ Categories::Categories(CategoriesPlugin* parent) :  QObject(parent) {
     // get model :
     this->categoriesModel = CategoriesFileHandler().loadModelFromFile(this);
 
-    this->jobProcessing = false;
+    this->setJobProcessing(false);
 
     // init categories behavior :
     this->settingsChanged();
@@ -86,6 +86,10 @@ Categories::Categories(CategoriesPlugin* parent) :  QObject(parent) {
 
 Categories::~Categories() {
 
+    // if moving job is running when plugin is unselected,
+    // be sure to notify plugin manager that jobs are no more running :
+    this->uuidItemList.clear();
+    this->setJobProcessing(false);
 }
 
 
@@ -94,7 +98,13 @@ void Categories::setupConnections() {
     connect(this->core->getDownloadModel(),
             SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
             this,
-            SLOT(parentStatusItemChangedSlot(QStandardItem*)));
+            SLOT(parentStatusItemChangedSlot(QStandardItem*, ItemStatusData)));
+
+    //notify queue file observer that job is running :
+    connect(this,
+            SIGNAL(pluginJobRunningSignal(bool)),
+            this->core->getQueueFileObserver(),
+            SLOT(pluginJobRunningSlot(bool)));
 
 }
 
@@ -189,47 +199,31 @@ void Categories::launchPreProcess() {
 
 void Categories::launchMoveProcess(const MimeData& mimeData, const QString& nzbFileSavepath) {
 
-    this->jobProcessing = true;
+    this->setJobProcessing(true);
 
     // default values :
     KIO::JobFlag jobFlag = KIO::DefaultFlags;
 
-    QString folderName = QDir(nzbFileSavepath).dirName();
-    QString moveFolderPath = mimeData.getMoveFolderPath() + '/' + folderName;
+    bool automaticRename = false;
 
-    // try to create target folder :
-    Utility::createFolder(mimeData.getMoveFolderPath());
+    // check if automatic renaming has been selected :
+    if (CategoriesSettings::transferManagement() == 0) {
+        automaticRename = true;
+    }
 
     // check if folder in move folder path has to be overwritten :
-    if (CategoriesSettings::transferManagement() > 0) {
+    if (!automaticRename) {
         jobFlag = KIO::Overwrite;
-    }
-    // else create a new folder name :
-    else {
-
-        // check if this folder already exists in move folder path :
-        if (QDir(moveFolderPath).exists()) {
-
-            for (int i = 1; i < 100; i++) {
-
-                // rename folder with extension, eg : folder.1 :
-                QString candidateAbsoluteFileName = moveFolderPath + "." + QString::number(i);
-
-                if (!QDir(candidateAbsoluteFileName).exists()) {
-
-                    moveFolderPath = candidateAbsoluteFileName;
-                    break;
-                }
-            }
-        }
     }
 
     // create job :
-    KIO::CopyJob* moveJob = KIO::move(KUrl(nzbFileSavepath), KUrl(moveFolderPath), jobFlag);
+    KIO::CopyJob* moveJob = KIO::move(KUrl(nzbFileSavepath), KUrl(mimeData.getMoveFolderPath()), jobFlag);
+    moveJob->setAutoRename(automaticRename);
 
     // setup connections with job :
     connect(moveJob, SIGNAL(result(KJob*)), this, SLOT(handleResultSlot(KJob*)));
     connect(moveJob, SIGNAL(moving(KIO::Job*, const KUrl& , const KUrl&)), this, SLOT(jobProgressionSlot(KIO::Job*)));
+
 
     moveJob->start();
 
@@ -416,14 +410,32 @@ void Categories::notifyMoveProcessing(int progress) {
 }
 
 
+void Categories::setJobProcessing(const bool& jobProcessing) {
+
+    this->jobProcessing = jobProcessing;
+
+    // notify core that plugin is running a post-processing job :
+    if (!this->uuidItemList.isEmpty()) {
+
+        // if uuidItemList is not empty, a job will be launched in a short time,
+        // consider job as running from core point of view :
+        emit pluginJobRunningSignal(true);
+
+    }
+    else {
+        emit pluginJobRunningSignal(jobProcessing);
+    }
+
+}
+
+
+
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-void Categories::parentStatusItemChangedSlot(QStandardItem* stateItem) {
+void Categories::parentStatusItemChangedSlot(QStandardItem* stateItem, ItemStatusData itemStatusData) {
 
-    StandardItemModel* downloadModel = this->core->getDownloadModel();
-    ItemStatusData itemStatusData = downloadModel->getStatusDataFromIndex(stateItem->index());
 
     // if post-processing of nzb file is correct, try to move downloaded folder into target folder :
     if ( itemStatusData.isPostProcessFinish() &&
@@ -432,7 +444,7 @@ void Categories::parentStatusItemChangedSlot(QStandardItem* stateItem) {
         kDebug() << "post processing correct";
 
         // store uuid's item for asynchronous job progress notify :
-        QString uuidItem = downloadModel->getUuidStrFromIndex(stateItem->index());
+        QString uuidItem = this->core->getDownloadModel()->getUuidStrFromIndex(stateItem->index());
 
         if (!this->uuidItemList.contains(uuidItem)) {
 
@@ -483,7 +495,8 @@ void Categories::handleResultSlot(KJob* moveJob) {
     this->notifyMoveProcessing(UtilityNamespace::PROGRESS_COMPLETE);
 
     // job has ended, no more notifying have to be done :
-    this->jobProcessing = false;
+    this->setJobProcessing(false);
+
 
     // check if there is another item waiting :
     this->launchPreProcess();
@@ -503,7 +516,7 @@ void Categories::settingsChanged() {
     // reload settings from just saved config file :
     CategoriesSettings::self()->readConfig();
 
-    // reload model :
-    this->categoriesModel = CategoriesFileHandler().loadModelFromFile(this);
+    CategoriesFileHandler().reloadModel(this->categoriesModel);
+
 
 }
