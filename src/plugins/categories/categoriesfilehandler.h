@@ -48,7 +48,7 @@ public:
 
 private:
 
-    CategoriesModel* fillModel(CategoriesModel*);
+    void fillModel(CategoriesModel*);
     QString retrieveCategoriesFilePath();
     QString readNextCharacters(QXmlStreamReader&);
     bool isStartElement(QXmlStreamReader&, const QString&);
