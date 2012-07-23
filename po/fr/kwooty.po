@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-15 18:17+0200\n"
-"PO-Revision-Date: 2012-07-21 13:20+0200\n"
-"Last-Translator: Yurienu <yurienu@myopera.com>\n"
+"PO-Revision-Date: 2012-07-23 19:03+0200\n"
+"Last-Translator: krousty\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -1756,7 +1756,7 @@ msgstr "Téléchargements en pause"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_bypass)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:185 rc.cpp:465
 msgid "Bypass scheduler for nzb manually set on: "
-msgstr "Désactiver le planificateur pour les nzb suivants : "
+msgstr "Désactiver le planificateur pour les nzb manuellement mis sur :"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:162
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_pauseIncomingFiles)
@@ -2034,4 +2034,5 @@ msgstr ""
 "Écraser ou renommer un dossier à transférer si ce dernier existe déjà dans le "
 "dossier "
 "préféré"
+
 
