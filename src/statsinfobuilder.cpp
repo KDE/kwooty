@@ -384,8 +384,6 @@ QString StatsInfoBuilder::calculateRemainingTime(const quint32& remainingSeconds
 }
 
 
-
-
 void StatsInfoBuilder::retrieveFreeDiskSpace() {
 
     if (Settings::displayCapacityBar()) {
