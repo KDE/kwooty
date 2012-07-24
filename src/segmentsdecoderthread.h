@@ -39,10 +39,6 @@ class SegmentsDecoderThread : public QObject {
 
 public:
 
-    enum SegmentDecoderStatus{ SegmentDecoderIdle,
-                               SegmentDecoderBusy
-                             };
-
     SegmentsDecoderThread(Core*);
     SegmentsDecoderThread();
     ~SegmentsDecoderThread();
