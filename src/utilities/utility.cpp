@@ -24,6 +24,7 @@
 #include <KStandardDirs>
 #include <KLocale>
 #include <kio/global.h>
+#include "kdiskfreespaceinfo.h"
 
 #include <QFile>
 #include <QDir>
@@ -394,5 +395,14 @@ QStringList Utility::buildPriorityArgument(const int& processPriority, const int
 
     return niceProcessArgs;
 
+}
+
+
+bool Utility::isTemporaryFolderDiskFull() {
+    return (KDiskFreeSpaceInfo::freeSpaceInfo(Settings::temporaryFolder().path()).available() == 0);
+}
+
+bool Utility::isCompletedFolderDiskFull() {
+    return (KDiskFreeSpaceInfo::freeSpaceInfo(Settings::completedFolder().path()).available() == 0);
 }
 
