@@ -110,14 +110,6 @@ void ClientManagerConn::initSlot() {
              core->getSegmentManager(),
              SLOT(updateDownloadSegmentSlot(SegmentData)));
 
-
-    // notify core that error occured during file save process :
-    connect (this->nntpClient,
-             SIGNAL(saveFileErrorSignal(const int)),
-             core,
-             SLOT(saveFileErrorSlot(const int)));
-
-
     // send connection status (connected, deconnected) to client observer for the current server :
     connect (this->nntpClient,
              SIGNAL(connectionStatusPerServerSignal(const int)),
