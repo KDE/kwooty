@@ -131,7 +131,16 @@ void Scheduler::suspendDownloads() {
 
 void Scheduler::resumeDownloads() {
 
-    this->scheduleStartPauseDownload(IdleStatus);
+    // if start has been requested, check that disk is not full :
+    if (!Utility::isTemporaryFolderDiskFull()) {
+
+        this->scheduleStartPauseDownload(IdleStatus);
+
+    }
+    else {
+        kDebug() << "downloads remain suspended: temporary disk drive is full";
+    }
+
 
 }
 
