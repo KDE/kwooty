@@ -320,6 +320,8 @@ public:
     static bool isFolderExists(const QString&);
     static bool removeData(const QString&);
     static bool rename(const QString&, const QString&);
+    static bool isTemporaryFolderDiskFull();
+    static bool isCompletedFolderDiskFull();
     static QString searchExternalPrograms(const QString&, bool&);
     static QString getSystemTimeFormat(const QString&);
     static QString buildToolTipRow(const QString&, const QString&);
