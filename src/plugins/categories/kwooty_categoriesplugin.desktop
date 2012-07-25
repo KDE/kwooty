@@ -14,11 +14,11 @@ Icon=folder-favorites
 
 Name=Categories
 Name[cs]=Skupiny
-Name[de]=Categories
-Name[fr]=Catégories
+Name[de]=Kategorien
+Name[fr]=Categories
 
 Comment=Transfer downloaded contents to favorite folders
 Comment[cs]=Přesunout stažený obsah do složek s oblíbenými
-Comment[de]=Transfer downloaded contents to favorite folders
-Comment[fr]=Transférer le contenu téléchargé vers des dossiers préférés
+Comment[de]=Sortiert Downloads in Kategorien
+Comment[fr]=Transfer downloaded contents to favorite folders
 

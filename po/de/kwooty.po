@@ -2,21 +2,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Michael Wiescholek <Michael.Wiescholek@gmail.com>, 2010.
-# Michael Wiescholek <Michael.wiescholek@gmail.com>, 2010, 2011.
+# Michael Wiescholek <Michael.Wiescholek@gmail.com>, 2010, 2011, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-07-15 18:17+0200\n"
-"PO-Revision-Date: 2011-12-17 18:29+0900\n"
-"Last-Translator: \n"
+"PO-Revision-Date: 2012-07-25 17:39+0200\n"
+"Last-Translator: Michael Wiescholek <Michael.Wiescholek@gmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.2\n"
+"X-Generator: Lokalize 1.4\n"
 
 #: src/preferences/preferencesgeneral.cpp:38
 msgid "With confirmation"
@@ -123,7 +123,6 @@ msgstr ""
 " unterstützt automatisches Reparieren und Entpacken."
 
 #: src/main.cpp:39
-#, fuzzy
 msgid "Copyright (c) 2012 Xavier Lefage"
 msgstr "Copyright (c) 2010 Xavier Lefage"
 
@@ -207,11 +206,11 @@ msgstr "Getrennt (Server nicht gefunden)"
 
 #: src/utilities/utilityserverstatus.cpp:101
 msgid "Disconnected (Connection refused)"
-msgstr "Getrennt (Verbindung zurückgewiesen)"
+msgstr "Getrennt (Verbindung wurde zurückgewiesen)"
 
 #: src/utilities/utilityserverstatus.cpp:105
 msgid "Disconnected (Closed by remote host)"
-msgstr "Getrennt (Vom Server geschlossen)"
+msgstr "Getrennt (Verbindung vom Server geschlossen)"
 
 #: src/utilities/utilityserverstatus.cpp:109
 msgid "Disconnected (SSL handshake failed)"
@@ -791,7 +790,7 @@ msgstr "Wiederholen"
 
 #: src/mainwindow.cpp:311
 msgid "Retry to download selected rows"
-msgstr "Download der ausgewählten Reihen wiederholen"
+msgstr "Download der ausgewählten Einträge wiederholen"
 
 #: src/mainwindow.cpp:361
 msgid "General"
@@ -932,9 +931,8 @@ msgid "%1, %2 - %3"
 msgstr "%1, %2 - %3"
 
 #: src/plugins/scheduler/preferencesscheduler.cpp:136
-#, fuzzy
 msgid "Start or Pause"
-msgstr "Alle Downloads Starten"
+msgstr "Start oder Pause"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:45
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_downloadLimitSpinBox)
@@ -958,88 +956,82 @@ msgstr "Bandbreitenverwaltung"
 
 #: src/plugins/categories/categories.cpp:62
 msgid "Transfer not performed"
-msgstr ""
+msgstr "Übertragung nicht durchgeführt"
 
 #: src/plugins/categories/categories.cpp:63
-#, fuzzy
 msgid "Transferring..."
-msgstr "Wird pausiert"
+msgstr "Übertrage..."
 
 #: src/plugins/categories/categories.cpp:64
-#, fuzzy
 msgid "Transfer complete"
-msgstr "Reparatur abgeschlossen"
+msgstr "Übertragung abgeschlossen"
 
 #: src/plugins/categories/categories.cpp:65
 msgid "Transfer canceled"
-msgstr ""
+msgstr "Übertragung abgebrochen"
 
 #: src/plugins/categories/categories.cpp:66
 msgid "Transfer error (disk is full)"
-msgstr ""
+msgstr "Übertragungsfehler (Festplatte voll)"
 
 #: src/plugins/categories/categories.cpp:67
 msgid "Transfer error (target folder can not be created)"
-msgstr ""
+msgstr "Übertragungsfehler (Zielverzeichnis kann nicht erstellt werden)"
 
 #: src/plugins/categories/categories.cpp:68
-#, fuzzy
 msgid "Transfer error (insufficient disk space)"
-msgstr "Unzureichender Speicherplatz auf dem Datenträger"
+msgstr "Übertragungsfehler (Unzureichender Speicherplatz auf der Festplatte)"
 
 #: src/plugins/categories/categories.cpp:69
-#, fuzzy
 msgid "Transfer error"
-msgstr "Fehler beim Speichern"
+msgstr "Übertragungsfehler"
 
 #: src/plugins/categories/preferencescategories.cpp:63
-#, fuzzy
 msgid "Rename automatically"
-msgstr "Automatisch"
+msgstr "Automatisch umbenennen"
 
 #: src/plugins/categories/preferencescategories.cpp:64
 msgid "Overwrite"
-msgstr ""
+msgstr "Überschreiben"
 
 #: src/plugins/categories/preferencescategories.cpp:90
 msgid "Categories"
-msgstr ""
+msgstr "Kategorien"
 
 #: src/plugins/categories/preferencescategories.cpp:91
 msgid "Target"
-msgstr ""
+msgstr "Ziel"
 
 #: src/plugins/categories/preferencescategories.cpp:98
 msgid "Add Category"
-msgstr ""
+msgstr "Kategorie hinzufügen"
 
 #: src/plugins/categories/preferencescategories.cpp:101
-#, fuzzy
 msgid "Remove Category"
-msgstr "Entfernt alle Einträge"
+msgstr "Kategorie entfernen"
 
 #: src/plugins/categories/preferencescategories.cpp:105
 msgid "Edit Subcategory"
-msgstr ""
+msgstr "Unterkategorie editieren"
 
 #: src/plugins/categories/preferencescategories.cpp:189
 #: src/plugins/categories/preferencescategories.cpp:350
 msgid "Mime Type Selection"
-msgstr ""
+msgstr "Mime Typ Auswahl"
 
 #: src/plugins/categories/preferencescategories.cpp:190
 msgid "Add or Remove Subcategories"
-msgstr ""
+msgstr "Unterkategorien hinzufügen oder entfernen"
 
 #: src/plugins/categories/preferencescategories.cpp:325
 #, kde-format
 msgctxt "%1 = type of subcategory"
 msgid "Subcategory: %1"
-msgstr ""
+msgstr "Unterkategorie: %1"
 
 #: src/plugins/categories/preferencescategories.cpp:351
 msgid "Select Main Categories"
-msgstr ""
+msgstr "Hauptkategorie auswählen"
 
 #: src/sidebar.cpp:171
 msgid "None"
@@ -1048,6 +1040,7 @@ msgstr "Nichts"
 #: src/sidebar.cpp:184
 msgid "Current download speed - Mean download speed"
 msgstr ""
+"Momentane Downloadgeschwindigkeit - Durchschnittliche Downloadgeschwindigkeit"
 
 #. i18n: file: src/preferences/preferencesshutdown.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, PowerManagemetGroupBox)
@@ -1583,9 +1576,8 @@ msgstr "Vom Server benötigtes Passwort "
 #. i18n: file: src/preferences/serversettings.ui:242
 #. i18n: ectx: property (text), widget (QLabel, labelDisconnect)
 #: build/src/ui_serversettings.h:257 rc.cpp:420
-#, fuzzy
 msgid "Disconnect from server when idle after:"
-msgstr "Bei Inaktivität vom Server trennen nach (Minuten):"
+msgstr "Bei Inaktivität vom Server trennen nach:"
 
 #. i18n: file: src/preferences/serversettings.ui:262
 #. i18n: ectx: property (toolTip), widget (QSpinBox, disconnectTimeout)
@@ -1596,9 +1588,8 @@ msgstr "Trennt Verbindung zum Server nach (Min) Inaktivität"
 #. i18n: file: src/preferences/serversettings.ui:265
 #. i18n: ectx: property (suffix), widget (QSpinBox, disconnectTimeout)
 #: build/src/ui_serversettings.h:261 rc.cpp:426
-#, fuzzy
 msgid " min"
-msgstr "%1 Minute"
+msgstr " min"
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:20
 #. i18n: ectx: property (title), widget (QGroupBox, actionGroupBox)
@@ -1696,13 +1687,15 @@ msgid ""
 "For example, a file named '[xxx - yyy] \"file.ext\" - Yenc 1/10' will be "
 "displayed as 'file.ext'"
 msgstr ""
+"Entfernen von nutzlosem Inhalt die die nzb Datei entält.\n"
+"Es wird beispielsweise die Datei mit dem Namen '[xxx - yyy] \"file.ext\" - "
+"Yenc 1/10' als 'file.ext' angezeigt."
 
 #. i18n: file: src/preferences/preferencesdisplay.ui:99
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_displayTinyFileName)
 #: build/src/ui_preferencesdisplay.h:148 rc.cpp:258
-#, fuzzy
 msgid "Display tiny file names"
-msgstr "Verbleibende Zeit anzeigen"
+msgstr "Verkleinerte Dateinamen anzeigen"
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:22
 #. i18n: ectx: property (toolTip), widget (QLabel, DownloadLimitLabel)
@@ -1762,13 +1755,13 @@ msgstr "Download pausieren"
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_bypass)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:185 rc.cpp:465
 msgid "Bypass scheduler for nzb manually set on: "
-msgstr ""
+msgstr "Umgehe Bandbreitenverwaltung für Dateien die manuell gesetzt wurden: "
 
 #. i18n: file: src/plugins/scheduler/preferencesscheduler.ui:162
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_pauseIncomingFiles)
 #: build/src/plugins/scheduler/ui_preferencesscheduler.h:186 rc.cpp:468
 msgid "Set on Pause every incoming nzb file"
-msgstr ""
+msgstr "Jede hinzugefügte nzb Datei pausieren"
 
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:22
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
@@ -1829,15 +1822,14 @@ msgstr ""
 #. i18n: file: src/plugins/categories/preferencescategories.ui:107
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: build/src/plugins/categories/ui_preferencescategories.h:164 rc.cpp:540
-#, fuzzy
 msgid "Favorite folder: "
-msgstr "Zu durchsuchender Ordner: "
+msgstr "Standart Ordner: "
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:124
 #. i18n: ectx: property (text), widget (QLabel, labelExistingTransfers)
 #: build/src/plugins/categories/ui_preferencescategories.h:165 rc.cpp:543
 msgid "If contents to transfer already exist in favorite folder:"
-msgstr ""
+msgstr "Wenn zu übertragende Dateien bereits im Standardverzeichnis existiert:"
 
 #: rc.cpp:1
 msgctxt "NAME OF TRANSLATORS"
@@ -1926,7 +1918,7 @@ msgstr "Freien Speicherplatz in Statusleiste anzeigen"
 #. i18n: ectx: label, entry (displayTinyFileName), group (display)
 #: rc.cpp:348
 msgid "Display reduced file name inside nzb collection"
-msgstr ""
+msgstr "Verkleinerte Dateinamen anzeigen"
 
 #. i18n: file: src/preferences/kwootysettings.kcfg:154
 #. i18n: ectx: label, entry (shutdownMethods), group (shutdown)
@@ -1980,20 +1972,20 @@ msgstr "Downloadplaner aktivieren"
 #. i18n: ectx: label, entry (pauseIncomingFiles), group (schedulerplugin)
 #: rc.cpp:480
 msgid "Automatically set on Pause every incoming nzb file"
-msgstr ""
+msgstr "Alle eingehende nzb Dateien auf Pause setzten"
 
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:33
 #. i18n: ectx: label, entry (bypass), group (schedulerplugin)
 #: rc.cpp:483
 msgid "Bypass scheduler for items that will manually be set on Pause/Start"
 msgstr ""
+"Bandbreitenverwaltung für manuell pausierte/gestartete Downloads umgehen"
 
 #. i18n: file: src/plugins/scheduler/kwooty_schedulersettings.kcfg:38
 #. i18n: ectx: label, entry (bypassMethods), group (schedulerplugin)
 #: rc.cpp:486
-#, fuzzy
 msgid "Select scheduler bypass method"
-msgstr "Wähle Methode zum Herunterfahren"
+msgstr "Wähle Bandbreitenverwaltung Umgehungsmethode"
 
 #. i18n: file: src/plugins/watchfolder/kwooty_watchfoldersettings.kcfg:11
 #. i18n: ectx: label, entry (groupBoxWatch), group (watchfolderplugin)
@@ -2030,11 +2022,12 @@ msgstr ""
 #. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:10
 #. i18n: ectx: label, entry (transferManagement), group (categoriesplugin)
 #: rc.cpp:537
-#, fuzzy
 msgid ""
 "Overwrite or rename folder to transfer if it already exists in favorite "
 "folder"
-msgstr "Vorhandene Dateien überschreiben"
+msgstr ""
+"Vorhandener Ordner überschreiben oder umbenennen wenn er bereits im Standard "
+"Verzeichnis existiert."
 
 #~ msgid "<b>Speed:</b>"
 #~ msgstr "<b>Geschwindigkeit:</b>"
