@@ -360,14 +360,14 @@ void PreferencesCategories::subCategoryWidgets(const QModelIndex& activatedIndex
 
 void PreferencesCategories::toolButtonAddClickSlot() {
 
-    bool* ok = false;
+    bool ok = false;
 
     QStringList selectedCategories = KInputDialog::getItemList(i18n("Mime Type Selection"),
                                                                i18n("Select Main Categories"),
                                                                UtilityCategories::retrieveFilteredMainCategoryList(this->categoriesModel),
                                                                QStringList(),
                                                                true,
-                                                               ok,
+                                                               &ok,
                                                                this);
 
     // add main categories to model :
