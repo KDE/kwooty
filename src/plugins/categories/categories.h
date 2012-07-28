@@ -73,6 +73,7 @@ private:
     void notifyMoveProcessing(int = UtilityNamespace::PROGRESS_UNKNOWN);
     void launchPreProcess();
     void setJobProcessing(const bool&);
+    KIO::CopyJob* moveJobLegacy(const MimeData&, const QString&, KIO::JobFlag);
 
     Core* core;
     CategoriesModel* categoriesModel;

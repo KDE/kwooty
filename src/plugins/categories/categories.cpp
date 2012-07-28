@@ -216,9 +216,18 @@ void Categories::launchMoveProcess(const MimeData& mimeData, const QString& nzbF
         jobFlag = KIO::Overwrite;
     }
 
+    // be sure that the destination path already exists,
+    // otherwise first downloaded folder to transfer will be renamed with MoveFolderPath name :
+    Utility::createFolder(mimeData.getMoveFolderPath());
+
     // create job :
+    #if (KDE_VERSION >= 0x040700)
     KIO::CopyJob* moveJob = KIO::move(KUrl(nzbFileSavepath), KUrl(mimeData.getMoveFolderPath()), jobFlag);
     moveJob->setAutoRename(automaticRename);
+    #else
+    KIO::CopyJob* moveJob = this->moveJobLegacy(mimeData, nzbFileSavepath, jobFlag);
+    #endif
+
 
     // setup connections with job :
     connect(moveJob, SIGNAL(result(KJob*)), this, SLOT(handleResultSlot(KJob*)));
@@ -520,3 +529,36 @@ void Categories::settingsChanged() {
 
 
 }
+
+
+
+KIO::CopyJob* Categories::moveJobLegacy(const MimeData& mimeData, const QString& nzbFileSavepath, KIO::JobFlag jobFlag) {
+
+    // get name of the folder to transfer :
+    QString folderName = QDir(nzbFileSavepath).dirName();
+    QString moveFolderPath = mimeData.getMoveFolderPath() + '/' + folderName;
+
+    if (jobFlag == KIO::DefaultFlags) {
+
+        // if move folder path already exists, try to find another name :
+        if (QDir(moveFolderPath).exists()) {
+
+            for (int i = 1; i < 100; i++) {
+
+                // rename folder with extension, eg : folder.1 :
+                QString candidateAbsoluteFileName = moveFolderPath + "." + QString::number(i);
+
+                if (!QDir(candidateAbsoluteFileName).exists()) {
+
+                    moveFolderPath = candidateAbsoluteFileName;
+                    break;
+
+                }
+            }
+        }
+    }
+
+    // create job :
+     return KIO::move(KUrl(nzbFileSavepath), KUrl(moveFolderPath), jobFlag);
+}
+
