@@ -72,8 +72,11 @@ int UniqueApp::newInstance() {
         if (args->count() == 0) {
 
             // display main window if it only visible is systray :
-            if (this->mainWindow->isHidden()) {
+            if ( !this->isSessionRestored() &&
+                 !this->mainWindow->isVisible() ) {
+
                 this->mainWindow->show();
+
             }
         }
 

@@ -1,6 +1,12 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.9.1:
+--------------
+
+- Fix bug: when desktop session was restored, kwooty main window pop up while systray minimize option was enabled
+
+
 Version 0.9.0:
 --------------
 
