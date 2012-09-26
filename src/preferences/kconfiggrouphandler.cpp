@@ -449,3 +449,23 @@ int KConfigGroupHandler::readSideBarServerIndex() {
     return qMax (configGroup.readEntry("sideBarServerIndex", 0), 0);
 
 }
+
+
+//======================================================================================//
+//                              mainwindow display :                                    //
+//======================================================================================//
+bool KConfigGroupHandler::readMainWindowHiddenOnExit() {
+
+    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("MainWindow"));
+    return configGroup.readEntry("MainWindowHiddenOnExit", true);
+
+}
+
+
+void KConfigGroupHandler::writeMainWindowHiddenOnExit(const bool& hiddenOnExit) {
+
+    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("MainWindow"));
+    configGroup.writeEntry("MainWindowHiddenOnExit", hiddenOnExit);
+    configGroup.sync();
+}
+
