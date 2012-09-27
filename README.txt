@@ -1,6 +1,12 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
 
+Version 0.9.1:
+--------------
+
+- Fix bug: main window display property should now be correclty restored on next desktop login
+
+
 Version 0.9.0:
 --------------
 

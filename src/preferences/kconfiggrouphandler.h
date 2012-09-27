@@ -59,6 +59,9 @@ public:
     void writeSideBarServerIndex(const int&);
     int readSideBarServerIndex();
 
+    void writeMainWindowHiddenOnExit(const bool&);
+    bool readMainWindowHiddenOnExit();
+
 
 private:
     static KConfigGroupHandler* instance;
