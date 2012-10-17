@@ -25,10 +25,10 @@
 
 #include "mainwindow.h"
 #include "core.h"
-#include "actionsmanager.h"
 #include "standarditemmodel.h"
 #include "autoretryplugin.h"
 #include "standarditemmodelquery.h"
+#include "actions/actionsmanager.h"
 #include "data/itemstatusdata.h"
 #include "kwooty_autoretrysettings.h"
 
