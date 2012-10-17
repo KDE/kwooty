@@ -143,7 +143,7 @@ ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusD
 
     // item has not been updated, check if pending data exist :
     if ( Utility::isInQueue(itemStatusData.getStatus()) &&
-         this->pendingSegmentsOnBackupNumber > 0) {
+         this->pendingSegmentsOnBackupNumber > 0 ) {
 
         itemStatusData.setDataStatus(DataPendingBackupServer);
     }
