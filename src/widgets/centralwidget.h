@@ -25,9 +25,10 @@ public:
     int displayAboutToShutdownMessageBox(const QString&);
     int displayRemoveAllFilesMessageBox();
     int displayRemoveSelectedFilesMessageBox();
+    int displayMergeItemsMessageBox(const QString&, const QString&);
     bool isDialogExisting();
     void saveFileError(const int);
-    void displayShutdownErrorMessageBox(const QString&);
+    void displaySorryMessageBox(const QString&);
     void closeAboutToShutdownMessageBox();
     void displayNzbHandleErrorMessageBox(const QString&);
 

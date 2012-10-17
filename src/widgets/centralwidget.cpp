@@ -123,7 +123,7 @@ int CentralWidget::displaySaveMessageBox(SaveFileBehavior saveFileBehavior) {
 }
 
 
-void CentralWidget::displayShutdownErrorMessageBox(const QString& message) {
+void CentralWidget::displaySorryMessageBox(const QString& message) {
 
     KMessageBox::messageBox(this,
                             KMessageBox::Sorry,
@@ -147,6 +147,17 @@ int CentralWidget::displayRemoveSelectedFilesMessageBox() {
                                    KMessageBox::QuestionYesNo,
                                    i18n("Remove selected files from queue ?"));
 }
+
+
+int CentralWidget::displayMergeItemsMessageBox(const QString& selectedNzbFileName, const QString& targetNzbFileName) {
+
+    return KMessageBox::messageBox(this,
+                                   KMessageBox::QuestionYesNo,
+                                   i18n("Merge content of %1 into %2 ?", "<br><b>" + selectedNzbFileName + "</b><br>",
+                                                                         "<br><b>" + targetNzbFileName + "</b>"));
+
+}
+
 
 
 int CentralWidget::displayAboutToShutdownMessageBox(const QString& shutdownMethodText) {
