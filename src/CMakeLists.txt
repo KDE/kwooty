@@ -52,8 +52,9 @@ set(Kwooty_lib_SRCS
   servergroup.cpp
   serverspeedmanager.cpp
   sidebar.cpp
-  actionsmanager.cpp
-  actionbuttonsmanager.cpp
+  actions/actionsmanager.cpp
+  actions/actionbuttonsmanager.cpp
+  actions/actionmergemanager.cpp
   utilities/utility.cpp
   utilities/utilityiconpainting.cpp
   utilities/utilityserverstatus.cpp
