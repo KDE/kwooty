@@ -57,6 +57,7 @@ SOURCES += main.cpp \
     plugins/watchfolder/preferenceswatchfolder.cpp \
     plugins/categories/categoriesplugin.cpp \
     plugins/categories/categories.cpp \
+    plugins/categories/categoriesmanual.cpp \
     plugins/categories/preferencescategories.cpp \
     plugins/categories/utilitycategories.cpp \
     plugins/scheduler/schedulerplugin.cpp \
@@ -97,11 +98,12 @@ SOURCES += main.cpp \
     standarditemmodelquery.cpp \
     data/postdownloadinfodata.cpp \
     segmentbuffer.cpp \
-    actionsmanager.cpp \
-    actionbuttonsmanager.cpp \
+    actions/actionsmanager.cpp \
+    actions/actionbuttonsmanager.cpp \
     plugins/categories/categoriesfilehandler.cpp \
     plugins/categories/mimedata.cpp \
-    plugins/categories/categoriesmodel.cpp
+    plugins/categories/categoriesmodel.cpp \
+    actions/actionmergemanager.cpp
 HEADERS += mainwindow.h \
     core.h \
     nzbfilehandler.h \
@@ -155,6 +157,7 @@ HEADERS += mainwindow.h \
     plugins/watchfolder/watchfolder.h \
     plugins/categories/categoriesplugin.h \
     plugins/categories/categories.h \
+    plugins/categories/categoriesmanual.h \
     plugins/categories/preferencescategories.h \
     plugins/categories/utilitycategories.h \
     plugins/scheduler/schedulerplugin.h \
@@ -196,11 +199,12 @@ HEADERS += mainwindow.h \
     standarditemmodelquery.h \
     data/postdownloadinfodata.h \
     segmentbuffer.h \
-    actionsmanager.h \
-    actionbuttonsmanager.h \
+    actions/actionsmanager.h \
+    actions/actionbuttonsmanager.h \
     plugins/categories/categoriesfilehandler.h \
     plugins/categories/mimedata.h \
-    plugins/categories/categoriesmodel.h
+    plugins/categories/categoriesmodel.h \
+    actions/actionmergemanager.h
 FORMS += preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
     preferences/preferencesgeneral.ui \
