@@ -301,7 +301,7 @@ QString ShutdownManager::getShutdownMethodText(UtilityNamespace::SystemShutdownT
 
 void ShutdownManager::handleShutdownError(const QString& message) {
 
-    this->parent->getCentralWidget()->displayShutdownErrorMessageBox(message);
+    this->parent->getCentralWidget()->displaySorryMessageBox(message);
 
     // uncheck shutdown button :
     this->shutdownCancelledSlot();
