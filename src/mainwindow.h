@@ -51,6 +51,7 @@ public:
     ~MainWindow();
 
     void openFileWithFileMode(KUrl, UtilityNamespace::OpenFileMode);
+    QAction* getActionFromName(const QString&);
     MyStatusBar* getStatusBar() const;
     SideBar* getSideBar() const;
     Core* getCore() const;

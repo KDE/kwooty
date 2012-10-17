@@ -38,10 +38,11 @@
 
 #include "kwootysettings.h"
 #include "core.h"
-#include "actionbuttonsmanager.h"
 #include "fileoperations.h"
 #include "sidebar.h"
-#include "actionsmanager.h"
+#include "actions/actionsmanager.h"
+#include "actions/actionbuttonsmanager.h"
+#include "actions/actionmergemanager.h"
 #include "widgets/mystatusbar.h"
 #include "widgets/mytreeview.h"
 #include "widgets/centralwidget.h"
@@ -305,7 +306,6 @@ void MainWindow::setupActions() {
     actionCollection()->addAction("pauseAll", pauseAllDownloadAction);
     connect(pauseAllDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(pauseAllDownloadSlot()));
 
-
     //retryDownloadAction
     KAction* retryDownloadAction = new KAction(this);
     retryDownloadAction->setText(i18n("Retry"));
@@ -316,6 +316,27 @@ void MainWindow::setupActions() {
     actionCollection()->addAction("retryDownload", retryDownloadAction);
     connect(retryDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(retryDownloadSlot()));
     connect(actionButtonsManager, SIGNAL(setRetryButtonEnabledSignal(bool)), retryDownloadAction, SLOT(setEnabled(bool)) );
+
+    //mergeNzbAction
+    KAction* mergeNzbAction = new KAction(this);
+    mergeNzbAction->setText(i18n("Merge with..."));
+    mergeNzbAction->setIcon(KIcon("mail-message-new"));
+    mergeNzbAction->setToolTip(i18n("Merge nzb content into another nzb"));
+    mergeNzbAction->setEnabled(false);
+    actionCollection()->addAction("mergeNzb", mergeNzbAction);
+    connect(actionButtonsManager, SIGNAL(setMergeNzbButtonEnabledSignal(bool)), mergeNzbAction, SLOT(setEnabled(bool)) );
+
+    // add a submenu that will be filled dynamically :
+    QMenu* mergeSubMenu = new QMenu(this);
+    mergeNzbAction->setMenu(mergeSubMenu);
+
+    // prepare corresponding submenu :
+    connect(mergeSubMenu, SIGNAL(aboutToShow()), actionsManager->getActionMergeManager(), SLOT(mergeSubMenuAboutToShowSlot()));
+
+    // retrieve selected action from submenu :
+    connect(mergeSubMenu, SIGNAL(triggered(QAction*)), actionsManager->getActionMergeManager(), SLOT(mergeNzbActionTriggeredSlot(QAction*)));
+
+
 
 
     //------------------
@@ -338,8 +359,14 @@ void MainWindow::setupActions() {
 }
 
 
+QAction* MainWindow::getActionFromName(const QString& actionName) {
 
-void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage){
+    return actionCollection()->action(actionName);
+
+}
+
+
+void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage) {
 
     // if instance has already been created :
     if (KConfigDialog::exists("settings")) {
