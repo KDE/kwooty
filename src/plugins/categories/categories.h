@@ -38,6 +38,7 @@ using namespace UtilityNamespace;
 class Core;
 class CategoriesPlugin;
 class CategoriesModel;
+class CategoriesManual;
 
 
 class Categories : public QObject {
@@ -46,7 +47,9 @@ class Categories : public QObject {
 
 public:
     Categories(CategoriesPlugin*);
+    Core* getCore();
     ~Categories();
+    void unload();
     void settingsChanged();
 
 
@@ -77,6 +80,7 @@ private:
 
     Core* core;
     CategoriesModel* categoriesModel;
+    CategoriesManual* categoriesManual;
     MoveJobStatus moveJobStatus;
     QHash<int, QString> moveStatusTextMap;
     QHash<int, QColor> moveStatusColorMap;

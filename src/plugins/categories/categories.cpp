@@ -33,6 +33,7 @@
 #include "categoriesfilehandler.h"
 #include "categoriesplugin.h"
 #include "categoriesmodel.h"
+#include "categoriesmanual.h"
 #include "standarditemmodel.h"
 #include "standarditemmodelquery.h"
 #include "observers/queuefileobserver.h"
@@ -47,6 +48,9 @@
 Categories::Categories(CategoriesPlugin* parent) :  QObject(parent) {
 
     this->core = parent->getMainWindow()->getCore();
+
+    // allow user to manually choose transfer folder :
+    this->categoriesManual = new CategoriesManual(this);
 
     // get model :
     this->categoriesModel = CategoriesFileHandler().loadModelFromFile(this);
@@ -90,6 +94,15 @@ Categories::~Categories() {
     // be sure to notify plugin manager that jobs are no more running :
     this->uuidItemList.clear();
     this->setJobProcessing(false);
+}
+
+void Categories::unload() {
+    this->categoriesManual->unload();
+}
+
+Core* Categories::getCore() {
+    return this->core;
+
 }
 
 
@@ -163,6 +176,15 @@ void Categories::launchPreProcess() {
             }
 
         }
+
+
+        // override automatic move folder path by the one selected by the user if any :
+        if (this->categoriesManual->isManualFolderSelected(this->currentUuidItem)) {
+
+            mimeDataChildFound.setMoveFolderPath(this->categoriesManual->getMoveFolderPath(this->currentUuidItem));
+
+        }
+
 
         // prepare folder moving :
         this->moveJobStatus = NoMoveStatus;

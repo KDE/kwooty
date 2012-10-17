@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>408</width>
-    <height>297</height>
+    <width>397</width>
+    <height>340</height>
    </rect>
   </property>
   <property name="toolTip">
@@ -132,6 +132,17 @@
       <widget class="QComboBox" name="kcfg_transferManagement"/>
      </item>
     </layout>
+   </item>
+   <item row="4" column="0">
+    <widget class="QCheckBox" name="kcfg_manualFolder">
+     <property name="toolTip">
+      <string>Allow to choose a custom transfer folder by right-clicking on a selected nzb item.
+The manually choosen transfer folder will replace the automatic one.</string>
+     </property>
+     <property name="text">
+      <string>Choose transfer folder manually from context menu</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

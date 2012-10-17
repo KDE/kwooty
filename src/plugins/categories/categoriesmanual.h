@@ -19,47 +19,48 @@
  ***************************************************************************/
 
 
-#include "categoriesplugin.h"
+#ifndef CATEGORIESMANUAL_H
+#define CATEGORIESMANUAL_H
 
-#include <KDebug>
-#include <KPluginLoader>
-#include <kgenericfactory.h>
+#include <QObject>
+#include <KMenu>
+#include <QHash>
+#include "categories.h"
 
-#include "plugin.h"
-#include "mainwindow.h"
-#include "core.h"
+class Core;
+class StandardItemModel;
+class MyTreeView;
 
+class CategoriesManual : public QObject {
 
-K_PLUGIN_FACTORY(PluginFactory, registerPlugin<CategoriesPlugin>();)
-K_EXPORT_PLUGIN(PluginFactory("kwooty_categoriesplugin"))
+    Q_OBJECT
 
-
-CategoriesPlugin::CategoriesPlugin(QObject* parent, const QList<QVariant>&) : Plugin(PluginFactory::componentData(), parent)
-{
-
-}
-
-
-CategoriesPlugin::~CategoriesPlugin()
-{
-
-}
+public:
+    CategoriesManual(Categories* parent);
+    bool isManualFolderSelected(const QString&);
+    QString getMoveFolderPath(const QString&);
+    void unload();
 
 
+private:
 
-void CategoriesPlugin::load() {
-    this->categories = new Categories(this);
-}
+    void setupConnections();
+    void updateNzbFileNameToolTip(QStandardItem*, const QString& = QString());
 
-void CategoriesPlugin::unload() {
-
-    this->categories->unload();
-    delete this->categories;
-
-}
+    Core* core;
+    MyTreeView* treeView;
+    StandardItemModel* downloadModel;
+    QHash<QString, QString> uuidFolderMap;
 
 
-void CategoriesPlugin::configUpdated() {
-    this->categories->settingsChanged();
-}
+signals:
 
+
+public slots:
+    void addExternalActionSlot(KMenu*, QStandardItem*);
+    void manualTransferFolderSlot();
+
+
+};
+
+#endif // CATEGORIESMANUAL_H

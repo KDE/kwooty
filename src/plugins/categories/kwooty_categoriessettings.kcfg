@@ -10,6 +10,10 @@
             <label>Overwrite or rename folder to transfer if it already exists in favorite folder</label>
             <default>0</default>
         </entry>
+	<entry name="manualFolder" type="Bool">
+            <label>Choose custom transfer folder from context menu</label>
+            <default>false</default>
+        </entry>
 
     </group>
 </kcfg>
