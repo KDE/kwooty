@@ -30,10 +30,10 @@
 #include "core.h"
 #include "fileoperations.h"
 #include "widgets/centralwidget.h"
-#include "actionsmanager.h"
-#include "actionbuttonsmanager.h"
 #include "standarditemmodel.h"
 #include "standarditemmodelquery.h"
+#include "actions/actionbuttonsmanager.h"
+#include "actions/actionsmanager.h"
 #include "kwootysettings.h"
 
 
@@ -165,7 +165,12 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
         contextMenu.addAction(actionCollection->action("moveUp"));
         contextMenu.addAction(actionCollection->action("moveDown"));
         contextMenu.addAction(actionCollection->action("moveBottom"));
+        contextMenu.addSeparator();
+        contextMenu.addAction(actionCollection->action("mergeNzb"));
+
+        emit addExternalActionSignal(&contextMenu, item);
     }
+
 
     // if menu is not empty display it :
     if (!contextMenu.actions().isEmpty()) {
