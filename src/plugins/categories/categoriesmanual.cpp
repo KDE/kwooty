@@ -163,15 +163,15 @@ void CategoriesManual::manualTransferFolderSlot() {
         // one row should be selected when context menu action appears :
         if (!indexesList.isEmpty()) {
 
-            QStandardItem* nzbItem = this->downloadModel->getNzbItem(indexesList.at((0)));
+            QStandardItem* item = this->downloadModel->getFileNameItemFromIndex(indexesList.at(0));
 
             // first, be sure that item is a parent one (nzb) :
-            if (this->downloadModel->isNzbItem(nzbItem)) {
+            if (this->downloadModel->isNzbItem(item)) {
 
-                QString uuidIndex = this->downloadModel->getUuidStrFromIndex(nzbItem->index());
+                QString uuidIndex = this->downloadModel->getUuidStrFromIndex(item->index());
 
                 // get current file nzb save path :
-                QString startDirectory = this->downloadModel->getParentFileSavePathFromIndex(nzbItem->index());
+                QString startDirectory = this->downloadModel->getParentFileSavePathFromIndex(item->index());
 
                 // check if transfer folder has already been manually choosen :
                 QString storedDirectory = this->uuidFolderMap.value(uuidIndex);
@@ -212,7 +212,7 @@ void CategoriesManual::manualTransferFolderSlot() {
                     this->uuidFolderMap.insert(uuidIndex, directory);
 
                     // add tooltip to nzb fileName column to notify user about the selected folder :
-                    this->updateNzbFileNameToolTip(nzbItem, directory);
+                    this->updateNzbFileNameToolTip(item, directory);
 
                 }
 
