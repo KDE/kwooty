@@ -75,7 +75,8 @@ QList<QStandardItem*> ActionMergeManager::checkMergeCandidates(bool& mergeAvaila
         selectedFileNameItem = this->downloadModel->getFileNameItemFromIndex(selectedIndexList.at(0));
 
         // first, be sure that selected item is a parent one (nzb) :
-        if (this->downloadModel->isNzbItem(selectedFileNameItem)) {
+        if ( this->downloadModel->isNzbItem(selectedFileNameItem) &&
+             this->isMergeAllowed(selectedFileNameItem) ) {
 
             // get the root item :
             QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
@@ -86,21 +87,12 @@ QList<QStandardItem*> ActionMergeManager::checkMergeCandidates(bool& mergeAvaila
                 // get corresponding nzb file name item :
                 QStandardItem* fileNameItem = rootItem->child(i, FILE_NAME_COLUMN);
 
-                // get current nzb item status :
-                QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(fileNameItem->index());
-                ItemStatus itemStatus = this->downloadModel->getStatusFromStateItem(stateItem);
-
                 // merge is allowed for nzb item in download or post-process failed states :
-                if ( Utility::isInDownloadProcess(itemStatus) ||
-                     Utility::isPostDownloadFailed(itemStatus) ) {
+                if ( selectedFileNameItem != fileNameItem &&
+                     this->isMergeAllowed(fileNameItem) ) {
 
                     // append items for which merge is possible :
-                    if (selectedFileNameItem != fileNameItem) {
-
-                        fileNameItemList.append(fileNameItem);
-
-                    }
-
+                     fileNameItemList.append(fileNameItem);
                 }
 
             }
@@ -116,6 +108,21 @@ QList<QStandardItem*> ActionMergeManager::checkMergeCandidates(bool& mergeAvaila
     return fileNameItemList;
 
 }
+
+
+bool ActionMergeManager::isMergeAllowed(QStandardItem* fileNameItem) const {
+
+    // get current nzb item status :
+    QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(fileNameItem->index());
+    ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
+
+    // merge is allowed for nzb item in download or post-process failed states :
+    return ( Utility::isInDownloadProcess(itemStatusData.getStatus()) ||
+             ( itemStatusData.isPostProcessFinish() &&
+               !itemStatusData.areAllPostProcessingCorrect() ) );
+
+}
+
 
 
 

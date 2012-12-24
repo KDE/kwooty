@@ -51,8 +51,10 @@ private:
     ActionsManager* actionsManager;
     StandardItemModel* downloadModel;
 
+    bool isMergeAllowed(QStandardItem*) const;
     void setupConnections();
     void processMerge(QStandardItem*, QStandardItem*);
+
 
 
 signals:
