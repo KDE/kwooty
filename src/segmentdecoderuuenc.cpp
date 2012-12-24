@@ -236,11 +236,9 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
                     counter++;
                 }
 
-
             }
 
         }
-
 
     }
 
