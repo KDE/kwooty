@@ -137,8 +137,10 @@ ExtractBase* RepairDecompressThread::retrieveCorrespondingExtracter(const NzbCol
     foreach (ExtractBase* extracter, this->extracterList) {
 
         if (extracter->canHandleFormat(archiveFormat)) {
+
             properExtracter = extracter;
             break;
+
         }
 
     }
@@ -550,7 +552,6 @@ void RepairDecompressThread::processJobSlot() {
 
         this->repairDecompressTimer->stop();
     }
-
 
 }
 

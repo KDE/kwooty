@@ -83,7 +83,6 @@ void AutoRetry::parentStatusItemChangedSlot(QStandardItem* stateItem) {
 
         // avoid double parentStatusItemChangedSlot call by checking
         // if status has just not be set to be ready for downloading again :
-
         ItemStatus itemStatus = itemStatusData.getStatus();
 
         if ( itemStatus == VerifyFinishedStatus ||
