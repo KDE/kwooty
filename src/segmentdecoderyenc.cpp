@@ -211,7 +211,11 @@ QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray& captureArray, const quint3
     // used for crc32 computation :
     quint32 crc32Computed = 0xffffffff;
 
-    QByteArray decodeArray;
+    int dataSize = 0;
+
+    // allocate maximum possible size array :
+    char decodeArray[captureArray.size()];
+
     bool specialCharacter = false;
 
 
@@ -241,8 +245,9 @@ QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray& captureArray, const quint3
             }
 
             if (decoded) {
-                //  append decoded character :
-                decodeArray.append(decodedCharacter);
+                // append decoded character :
+                decodeArray[dataSize] = decodedCharacter;
+                dataSize++;
 
                 // compute crc32 part for this char :
                 crc32Computed = this->computeCrc32Part(crc32Computed, decodedCharacter);
@@ -261,14 +266,15 @@ QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray& captureArray, const quint3
         this->crc32Match = true;
     }
 
-    return decodeArray;
+    // return only useful data :
+    return QByteArray::fromRawData(decodeArray, dataSize);
 
 }
 
 
 
 
-quint32 SegmentDecoderYEnc::computeCrc32Part(quint32& hash, unsigned char data) {
+quint32 SegmentDecoderYEnc::computeCrc32Part(const quint32& hash, const unsigned char& data) {
     return crc::crcArray[(hash^data) & 0xff]^(hash >> 8);
 }
 

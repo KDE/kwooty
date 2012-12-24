@@ -40,7 +40,7 @@ private:
     QString searchPattern(QIODevice*);
     QByteArray decodeYenc(QByteArray&, const quint32&);
     QByteArray getLineByteArray(const QString&, const QByteArray&, int&);
-    quint32 computeCrc32Part(quint32&, unsigned char);
+    quint32 computeCrc32Part(const quint32&, const unsigned char&);
     qint64 getPatternValue(const QByteArray&, const QString&, const int& = 10);
     void decodeProgression(PostDownloadInfoData&);
 
