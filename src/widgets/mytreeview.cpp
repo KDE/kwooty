@@ -157,25 +157,37 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
             contextMenu.addAction(actionCollection->action("pause"));
         }
 
-        contextMenu.addAction(actionCollection->action("retryDownload"));
-        contextMenu.addSeparator();
-        contextMenu.addAction(actionCollection->action("remove"));
-        contextMenu.addSeparator();
-        contextMenu.addAction(actionCollection->action("moveTop"));
-        contextMenu.addAction(actionCollection->action("moveUp"));
-        contextMenu.addAction(actionCollection->action("moveDown"));
-        contextMenu.addAction(actionCollection->action("moveBottom"));
-        contextMenu.addSeparator();
-        contextMenu.addAction(actionCollection->action("mergeNzb"));
+        if (!contextMenu.isEmpty()) {
+            contextMenu.addSeparator();
+        }
 
-        emit addExternalActionSignal(&contextMenu, item);
+        // allow manual extract process from menu if auto post process disabled :
+        if (this->getCore()->getModelQuery()->isManualExtractAllowed(item)) {
+            contextMenu.addAction(actionCollection->action("manualExtract"));
+        }
+
     }
+
+
+    contextMenu.addAction(actionCollection->action("retryDownload"));
+    contextMenu.addSeparator();
+    contextMenu.addAction(actionCollection->action("remove"));
+    contextMenu.addSeparator();
+    contextMenu.addAction(actionCollection->action("moveTop"));
+    contextMenu.addAction(actionCollection->action("moveUp"));
+    contextMenu.addAction(actionCollection->action("moveDown"));
+    contextMenu.addAction(actionCollection->action("moveBottom"));
+    contextMenu.addSeparator();
+    contextMenu.addAction(actionCollection->action("mergeNzb"));
+
+    emit addExternalActionSignal(&contextMenu, item);
 
 
     // if menu is not empty display it :
     if (!contextMenu.actions().isEmpty()) {
         contextMenu.exec(event->globalPos());
     }
+
 }
 
 
