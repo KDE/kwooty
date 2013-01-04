@@ -49,6 +49,8 @@ public:
     UtilityNamespace::ItemStatus getVerifyRepairTerminateStatus() const;
     void setAllPostProcessingCorrect(const bool&);
     bool isAllPostProcessingCorrect() const;
+    bool isTriggerManualExtract() const;
+    void setTriggerManualExtract(const bool&);
 
     bool operator==(const NzbCollectionData&);
 
@@ -61,6 +63,7 @@ private:
     UtilityNamespace::ItemStatus verifyRepairTerminateStatus;
     QString par2BaseName;
     bool allPostProcessingCorrect;
+    bool triggerManualExtract;
 
 };
 

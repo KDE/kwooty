@@ -30,6 +30,7 @@ NzbCollectionData::NzbCollectionData() {
     this->extractTerminateStatus = ExtractSuccessStatus;
     this->verifyRepairTerminateStatus = RepairFinishedStatus;
     this->allPostProcessingCorrect = true;
+    this->triggerManualExtract = false;
 
 }
 
@@ -116,6 +117,15 @@ void NzbCollectionData::setAllPostProcessingCorrect(const bool& allPostProcessin
 }
 bool NzbCollectionData::isAllPostProcessingCorrect() const{
     return this->allPostProcessingCorrect;
+}
+
+
+bool NzbCollectionData::isTriggerManualExtract() const {
+    return this->triggerManualExtract;
+}
+
+void NzbCollectionData::setTriggerManualExtract(const bool& triggerManualExtract) {
+    this->triggerManualExtract = triggerManualExtract;
 }
 
 
