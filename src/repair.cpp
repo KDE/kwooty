@@ -538,6 +538,7 @@ void Repair::sendVerifyingFilesNotification() {
         }
 
     }
+
     par2File.close();
 
 }
@@ -562,6 +563,10 @@ void Repair::sendMissingFilesNotification() {
 
 
 void Repair::sendVerifyNotification(const QString& fileNameStr, const QString& originalFileNameStr, const UtilityNamespace::ItemStatus fileStatus) {
+
+    int totalArchiveFiles = 0;
+    int verifyPendingArchiveFiles = 0;
+    NzbFileData parentFileData;
 
     // search corresponding file into the list :
     for (int i = 0; i < this->nzbFileDataList.size(); i++) {
@@ -594,6 +599,36 @@ void Repair::sendVerifyNotification(const QString& fileNameStr, const QString& o
             //break;
         }
 
+        // estimate overall verifying progress according to child status :
+        if (nzbFileData.isArchiveFile()) {
+
+            totalArchiveFiles++;
+
+            if (nzbFileData.getVerifyProgressionStep() == VerifyStatus) {
+                verifyPendingArchiveFiles++;
+            }
+
+        }
+        else if ( nzbFileData.isPar2File() && !parentFileData.isPar2File() ) {
+            parentFileData = nzbFileData;
+        }
+
+
     } // end of loop
+
+
+    // notify nzb parent of overall estimated verifying progress (parentFileData.isPar2File() is used to notify parent item) :
+    if (parentFileData.isPar2File()) {
+
+        int progress = 0;
+
+        if (totalArchiveFiles > 0) {
+            progress = qMin(qRound( (totalArchiveFiles - verifyPendingArchiveFiles) * PROGRESS_COMPLETE / totalArchiveFiles ), 99) ;
+        }
+
+        // notify user :
+        this->emitProcessUpdate(parentFileData.getUniqueIdentifier(), progress, VerifyStatus, this->getItemTarget(parentFileData));
+
+    }
 
 }
