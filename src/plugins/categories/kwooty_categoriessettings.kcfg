@@ -14,6 +14,13 @@
             <label>Choose custom transfer folder from context menu</label>
             <default>false</default>
         </entry>
+	<entry name="enableDefaultTransfer" type="Bool">
+            <label>Successfully extracted files will be transfered in this folder except for files matching categories defined above</label>
+            <default>false</default>
+        </entry>
+	   <entry name="defaultTransferFolder" type="Url">
+            <label>Set default transfer folder</label>
+        </entry>
 
     </group>
 </kcfg>
