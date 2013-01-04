@@ -51,6 +51,8 @@ public:
     void updateNzbItems(const QModelIndex&);
     void updateNzbItemsPostDecode(const PostDownloadInfoData&);
     void recalculateNzbSize(const QModelIndex&);
+    void triggerPostProcessManually(const QStandardItem*);
+
 
 #if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
     Core* getCore() const;
@@ -58,6 +60,12 @@ public:
 
 
 private:
+
+    enum PostProcessBehavior {
+        ForcePostProcess,
+        DoNotForcePostProcess
+    };
+
     Core* parent;
     ItemPostDownloadUpdater* itemPostDownloadUpdater;
     ItemDownloadUpdater* itemDownloadUpdater;
@@ -68,7 +76,7 @@ private:
     ItemStatusData updateStatusItemDownload(ItemStatusData&, const int);
     ItemStatusData updateItemsDecode(ItemStatusData&, const int);
     ItemStatusData updateStatusItemDecode(ItemStatusData&, const int);
-    ItemStatusData postProcessing(ItemStatusData&, const int, const QModelIndex&);
+    ItemStatusData postProcessing(ItemStatusData&, const int, const QModelIndex&, PostProcessBehavior = DoNotForcePostProcess);
     ItemStatusData updateDataStatus(ItemStatusData&);
     quint64 calculateDownloadProgress(const QModelIndex&, const ItemStatusData&, const int);
     void countGlobalItemStatus(const ItemStatusData&);

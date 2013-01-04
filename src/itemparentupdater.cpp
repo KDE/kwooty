@@ -86,7 +86,7 @@ void ItemParentUpdater::setupConnections() {
 }
 
 
-void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex){
+void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex) {
 
     // variable initialisation
     this->clear();
@@ -341,11 +341,13 @@ quint64 ItemParentUpdater::calculateDownloadProgress(const QModelIndex& nzbIndex
 
 
 
-ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusData, const int rowNumber, const QModelIndex& nzbIndex){
+ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusData, const int rowNumber, const QModelIndex& nzbIndex, PostProcessBehavior postProcessBehavior) {
 
-    // nzb files have been decoded, it's time to repair them :
-    if ( (nzbItemStatusData.getStatus() == DecodeFinishStatus) &&
-         !nzbItemStatusData.isDecodeFinish() ) {
+    // nzb files have been decoded, it's time to repair them.
+    // Check that decode has just finished and that process has not already been performed,
+    // otherwise perform post process when manually triggered by the user :
+    if ( (postProcessBehavior == ForcePostProcess) ||
+         ((nzbItemStatusData.getStatus() == DecodeFinishStatus) && !nzbItemStatusData.isDecodeFinish()) ) {
 
         // set decode finish to true in order to emit repairing signal only once :
         nzbItemStatusData.setDecodeFinish(true);
@@ -394,7 +396,11 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
         nzbCollectionData.setPar2FileDownloadStatus(par2FileStatus);
         nzbCollectionData.setNzbParentId(this->downloadModel->getUuidStrFromIndex(nzbIndex));
 
-        //kDebug() << "UUID : " << nzbFileName->data(IdentifierRole).toString();
+        if (postProcessBehavior == ForcePostProcess) {
+            nzbCollectionData.setTriggerManualExtract(true);
+        }
+
+        //kDebug() << "UUID : " << this->downloadModel->getUuidStrFromIndex(nzbIndex);
 
         // send nzbCollectionData to repairDecompressThread class :
         emit repairDecompressSignal(nzbCollectionData);
@@ -404,6 +410,18 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
     return nzbItemStatusData;
 }
 
+
+void ItemParentUpdater::triggerPostProcessManually(const QStandardItem* nzbItem) {
+
+    ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbItem->index());
+
+    // force post processing :
+    this->postProcessing(nzbItemStatusData, nzbItem->rowCount(), nzbItem->index(), ForcePostProcess);
+
+    // store statusData :
+    this->downloadModel->updateStatusDataFromIndex(nzbItem->index(), nzbItemStatusData);
+
+}
 
 
 void ItemParentUpdater::recalculateNzbSize(const QModelIndex& nzbIndex){
