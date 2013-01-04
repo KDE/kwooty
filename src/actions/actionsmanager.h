@@ -96,6 +96,7 @@ public slots:
     void startAllDownloadSlot();
     void pauseAllDownloadSlot();
     void retryDownloadSlot();
+    void manualExtractSlot();
 
 
 };

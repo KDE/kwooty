@@ -33,6 +33,7 @@
 #include "itemparentupdater.h"
 #include "itemchildrenmanager.h"
 #include "segmentmanager.h"
+#include "servermanager.h"
 #include "shutdown/shutdownmanager.h"
 #include "widgets/centralwidget.h"
 #include "widgets/mytreeview.h"
@@ -329,7 +330,7 @@ void ActionsManager::retryDownload(const QModelIndexList& indexList) {
 
             // check that at least on child will have its status reset to IdleStatus for requesting a new download.
             // It can happens (especially if user manually removes several files) that
-            // all children are reverted bask to DecodeFinishStatus with no child reset in queue.
+            // all children are reverted back to DecodeFinishStatus with no child reset in queue.
             // Check that this case does not happen :
             bool childStatusConsistencyCorrect = false;
             for (int i = 0; i < fileNameItem->rowCount(); i++) {
@@ -393,8 +394,11 @@ void ActionsManager::retryDownload(const QModelIndexList& indexList) {
 
     }
 
-    // update status bar and notify nntp clients :
-    this->core->downloadWaitingPar2Slot();
+    // update the status bar :
+    emit statusBarFileSizeUpdateSignal(Incremental);
+
+    // reset nntp clients connection :
+    this->core->getServerManager()->resetAllServerConnection();
 
 }
 
@@ -611,3 +615,21 @@ void ActionsManager::retryDownloadSlot() {
 }
 
 
+void ActionsManager::manualExtractSlot() {
+
+    QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
+
+    // take the first selected item :
+    if (!indexesList.isEmpty()) {
+
+        QStandardItem* nzbFileItem = this->downloadModel->getNzbItem(indexesList.at(0));
+
+        if (this->modelQuery->isManualExtractAllowed(nzbFileItem)) {
+
+            this->core->getItemParentUpdater()->triggerPostProcessManually(nzbFileItem);
+
+        }
+
+    }
+
+}
