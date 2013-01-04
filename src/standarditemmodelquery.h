@@ -41,6 +41,7 @@ public:
 
     QStandardItem* searchParentItem(const UtilityNamespace::ItemStatus);
     ItemStatus isRetryDownloadAllowed(QStandardItem*, bool* = 0);
+    bool isManualExtractAllowed(QStandardItem* fileNameItem) const;
     bool haveItemsSameParent(const QList<QModelIndex>&);
     bool isParentContainsPar2File(QStandardItem*) const;
     bool areJobsFinished();

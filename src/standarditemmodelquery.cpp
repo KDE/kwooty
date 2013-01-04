@@ -318,5 +318,28 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
 }
 
 
+bool StandardItemModelQuery::isManualExtractAllowed(QStandardItem* fileNameItem) const {
+
+    bool manualExtractAllowed = false;
+
+    // check that selected item is a parent :
+    if (this->downloadModel->isNzbItem(fileNameItem)) {
+
+        ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
+
+        // if parent status is "DecodeFinish" and automatic post process is disabled,
+        // manual extract is allowed :
+        if ( nzbItemStatusData.isDecodeFinish() &&
+             (!Settings::groupBoxAutoRepair() || !Settings::groupBoxAutoDecompress()) ) {
+
+            manualExtractAllowed = true;
+        }
+
+    }
+
+    return manualExtractAllowed;
+
+}
+
 
 
