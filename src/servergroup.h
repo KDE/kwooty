@@ -64,6 +64,7 @@ public:
     void assignDownloadToReadyClients();
     void disconnectAllClients();
     void connectAllClients();
+    void resetAllClientsConnection();
 
 
 private:
@@ -91,6 +92,7 @@ signals:
     void dataHasArrivedClientReadySignal();
     void disconnectRequestSignal();
     void connectRequestSignal();
+    void resetConnectionSignal();
 
 
 public slots:

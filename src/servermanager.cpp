@@ -283,6 +283,16 @@ bool ServerManager::currentIsFirstMasterAvailable(const ServerGroup* currentServ
 }
 
 
+void ServerManager::resetAllServerConnection() {
+
+    // disconnect and reconnect all clients from all servers :
+    foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values()) {
+        nextServerGroup->resetAllClientsConnection();
+    }
+
+}
+
+
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//

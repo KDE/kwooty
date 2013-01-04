@@ -50,6 +50,7 @@ public:
     void masterServerAvailabilityChanges();
     void setLimitServerDownloadSpeed(const int&, const qint64&);
     void setBandwidthMode(const BandwidthClientMode&);
+    void resetAllServerConnection();
 
 
 private:

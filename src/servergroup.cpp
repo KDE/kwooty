@@ -285,6 +285,13 @@ void ServerGroup::connectAllClients() {
 }
 
 
+
+
+void ServerGroup::resetAllClientsConnection() {
+    emit resetConnectionSignal();
+}
+
+
 void ServerGroup::assignDownloadToReadyClients() {
 
     // do not hammer backup servers that new segments are available,
