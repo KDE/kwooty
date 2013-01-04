@@ -571,7 +571,8 @@ void RepairDecompressThread::startRepairSlot() {
         this->preRepairProcessing(currentNzbCollectionData);
 
         // verify data only if par has been found :
-        if ( !currentNzbCollectionData.getPar2BaseName().isEmpty() && (Settings::groupBoxAutoRepair()) ) {
+        if ( !currentNzbCollectionData.getPar2BaseName().isEmpty() &&
+             (Settings::groupBoxAutoRepair() || currentNzbCollectionData.isTriggerManualExtract()) ) {
 
             repair->launchProcess(currentNzbCollectionData);
         }
@@ -596,7 +597,8 @@ void RepairDecompressThread::startExtractSlot() {
         NzbCollectionData nzbCollectionDataToExtract = this->filesToExtractList.takeFirst();
 
         // extract data :
-        if (!nzbCollectionDataToExtract.getNzbFileDataList().isEmpty() && (Settings::groupBoxAutoDecompress())) {
+        if ( !nzbCollectionDataToExtract.getNzbFileDataList().isEmpty() &&
+             (Settings::groupBoxAutoDecompress() || nzbCollectionDataToExtract.isTriggerManualExtract()) ) {
 
             ExtractBase* extracter = this->retrieveCorrespondingExtracter(nzbCollectionDataToExtract);
 
