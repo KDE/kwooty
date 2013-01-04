@@ -66,6 +66,7 @@ signals:
 
 public slots:
     void dataHasArrivedSlot();
+    void resetConnectionSlot();
     void disconnectRequestSlot();
     void connectRequestSlot();
     void limitDownloadSpeedSlot(BandwidthClientMode);

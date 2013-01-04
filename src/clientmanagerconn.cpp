@@ -78,6 +78,11 @@ void ClientManagerConn::initSlot() {
              this,
              SLOT(dataHasArrivedSlot()));
 
+    // ServerGroup asked for connection reset :
+    connect (this->parent,
+             SIGNAL(resetConnectionSignal()),
+             this,
+             SLOT(resetConnectionSlot()));
 
     // ServerGroup asked for clients disconnection :
     connect (this->parent,
@@ -116,7 +121,6 @@ void ClientManagerConn::initSlot() {
              this->parent->getClientsPerServerObserver(),
              SLOT(connectionStatusPerServerSlot(const int)));
 
-
     // send type of encryption used by host with ssl connection to client observer for the current server :
     connect (this->nntpClient,
              SIGNAL(encryptionStatusPerServerSignal(const bool, const QString, const bool, const QString, const QStringList)),
@@ -147,7 +151,6 @@ void ClientManagerConn::noSegmentAvailable() {
     this->nntpClient->noSegmentAvailable();
 
 }
-
 
 
 void ClientManagerConn::processNextSegment(const SegmentData& inCurrentSegmentData){
@@ -198,8 +201,6 @@ bool ClientManagerConn::isClientReady() const {
 }
 
 
-
-
 void ClientManagerConn::setBandwidthMode(const BandwidthClientMode& bandwidthClientMode) {
 
     BandwidthClientMode bandwidthClientModeOld = this->bandwidthClientMode;
@@ -239,12 +240,34 @@ void ClientManagerConn::dataHasArrivedSlot() {
         // this slot is called each time segments have been set pending for backup servers by ServerGroup,
         // if client is currently not used for limit speed purposes (disconnected), do not go further
         // as calling dataHasArrivedSlot() will have the effect to reconnect current client again :
-         if (!this->isBandwidthNotNeeded()) {
+        if (!this->isBandwidthNotNeeded()) {
             this->nntpClient->dataHasArrivedSlot();
-         }
+        }
     }
 }
 
+
+void ClientManagerConn::resetConnectionSlot() {
+
+    // in case of retry action, reset connection between client and server to ensure that
+    // the connection was not broken :
+    if (this->nntpClient) {
+
+        if (this->nntpClient->isSocketConnected()) {
+
+            // disconnect :
+            this->disconnectRequestSlot();
+            // reconnect :
+            QTimer::singleShot(this->connectionDelay, this, SLOT(connectRequestSlot()));
+
+        }
+        else {
+            this->connectRequestSlot();
+        }
+
+    }
+
+}
 
 
 void ClientManagerConn::disconnectRequestSlot() {
