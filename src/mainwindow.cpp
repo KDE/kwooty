@@ -173,10 +173,11 @@ void MainWindow::setupActions() {
     ActionsManager* actionsManager = this->core->getActionsManager();
     ActionButtonsManager* actionButtonsManager = actionsManager->getActionButtonsManager();
 
-    //-------------------
-    //custom Actions :
-    //-------------------
-    //clearAction
+    //-----------------
+    // custom Actions :
+    //-----------------
+
+    // clearAction :
     KAction* clearAction = new KAction(this);
     clearAction->setText(i18n("Clear"));
     clearAction->setIcon(KIcon("edit-clear-list"));
@@ -185,7 +186,7 @@ void MainWindow::setupActions() {
     actionCollection()->addAction("clear", clearAction);
     connect(clearAction, SIGNAL(triggered(bool)), actionsManager, SLOT(clearSlot()));
 
-    //startDownloadAction
+    // startDownloadAction :
     KAction* startDownloadAction = new KAction(this);
     startDownloadAction->setText(i18n("Start"));
     startDownloadAction->setIcon(KIcon("media-playback-start"));
@@ -196,7 +197,7 @@ void MainWindow::setupActions() {
     connect(startDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(startDownloadSlot()));
     connect(actionButtonsManager, SIGNAL(setStartButtonEnabledSignal(bool)), startDownloadAction, SLOT(setEnabled(bool)) );
 
-    //pauseDownloadAction
+    // pauseDownloadAction :
     KAction* pauseDownloadAction = new KAction(this);
     pauseDownloadAction->setText(i18n("Pause"));
     pauseDownloadAction->setIcon(KIcon("media-playback-pause"));
@@ -207,7 +208,7 @@ void MainWindow::setupActions() {
     connect(pauseDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(pauseDownloadSlot()));
     connect(actionButtonsManager, SIGNAL(setPauseButtonEnabledSignal(bool)), pauseDownloadAction, SLOT(setEnabled(bool)) );
 
-    //removeItemAction
+    // removeItemAction :
     KAction* removeItemAction = new KAction(this);
     removeItemAction->setText(i18n("Remove"));
     removeItemAction->setIcon(KIcon("list-remove"));
@@ -219,7 +220,7 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
     connect(actionButtonsManager, SIGNAL(setRemoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
 
-    //moveUpAction
+    // moveUpAction :
     KAction* moveUpAction = new KAction(this);
     moveUpAction->setText(i18n("Up"));
     moveUpAction->setIcon(KIcon("go-up"));
@@ -230,7 +231,7 @@ void MainWindow::setupActions() {
     connect(moveUpAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveUpSlot()));
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveUpAction, SLOT(setEnabled(bool)) );
 
-    //moveToTopAction
+    // moveToTopAction :
     KAction* moveToTopAction = new KAction(this);
     moveToTopAction->setText(i18n("Top"));
     moveToTopAction->setIcon(KIcon("go-top"));
@@ -241,7 +242,7 @@ void MainWindow::setupActions() {
     connect(moveToTopAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveToTopSlot()));
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToTopAction, SLOT(setEnabled(bool)) );
 
-    //moveDownAction
+    // moveDownAction :
     KAction* moveDownAction = new KAction(this);
     moveDownAction->setText(i18n("Down"));
     moveDownAction->setIcon(KIcon("go-down"));
@@ -253,7 +254,7 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveDownAction, SLOT(setEnabled(bool)) );
 
 
-    //moveToBottomAction
+    // moveToBottomAction :
     KAction* moveToBottomAction = new KAction(this);
     moveToBottomAction->setText(i18n("Bottom"));
     moveToBottomAction->setIcon(KIcon("go-bottom"));
@@ -265,7 +266,7 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToBottomAction, SLOT(setEnabled(bool)) );
 
 
-    //openFolderAction
+    // openFolderAction :
     KAction* openFolderAction = new KAction(this);
     openFolderAction->setText(i18n("Downloads"));
     openFolderAction->setIcon(KIcon("folder-downloads"));
@@ -275,7 +276,7 @@ void MainWindow::setupActions() {
     actionCollection()->addAction("downloadFolder", openFolderAction);
     connect(openFolderAction, SIGNAL(triggered(bool)), actionsManager, SLOT(openFolderSlot()));
 
-    //shutdownAction
+    // shutdownAction :
     KAction* shutdownAction = new KAction(this);
     shutdownAction->setText(i18n("Shutdown"));
     shutdownAction->setIcon(KIcon("system-shutdown"));
@@ -288,7 +289,7 @@ void MainWindow::setupActions() {
     connect(core->getShutdownManager(), SIGNAL(setShutdownButtonCheckedSignal(bool)), shutdownAction, SLOT(setChecked(bool)));
     connect(core->getShutdownManager(), SIGNAL(setShutdownButtonEnabledSignal(bool)), shutdownAction, SLOT(setEnabled(bool)) );
 
-    //startAllDownloadAction
+    // startAllDownloadAction :
     KAction* startAllDownloadAction = new KAction(this);
     startAllDownloadAction->setText(i18n("Start all"));
     startAllDownloadAction->setIcon(KIcon("media-playback-start"));
@@ -297,7 +298,7 @@ void MainWindow::setupActions() {
     actionCollection()->addAction("startAll", startAllDownloadAction);
     connect(startAllDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(startAllDownloadSlot()));
 
-    //pauseAllDownloadAction
+    // pauseAllDownloadAction :
     KAction* pauseAllDownloadAction = new KAction(this);
     pauseAllDownloadAction->setText(i18n("Pause all"));
     pauseAllDownloadAction->setIcon(KIcon("media-playback-pause"));
@@ -306,7 +307,7 @@ void MainWindow::setupActions() {
     actionCollection()->addAction("pauseAll", pauseAllDownloadAction);
     connect(pauseAllDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(pauseAllDownloadSlot()));
 
-    //retryDownloadAction
+    // retryDownloadAction :
     KAction* retryDownloadAction = new KAction(this);
     retryDownloadAction->setText(i18n("Retry"));
     retryDownloadAction->setIcon(KIcon("edit-redo"));
@@ -317,7 +318,18 @@ void MainWindow::setupActions() {
     connect(retryDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(retryDownloadSlot()));
     connect(actionButtonsManager, SIGNAL(setRetryButtonEnabledSignal(bool)), retryDownloadAction, SLOT(setEnabled(bool)) );
 
-    //mergeNzbAction
+    // manualExtractAction :
+    KAction* manualExtractAction = new KAction(this);
+    manualExtractAction->setText(i18n("Extract"));
+    manualExtractAction->setIcon(KIcon("archive-extract"));
+    manualExtractAction->setToolTip(i18n("Manually extract selected item"));
+    manualExtractAction->setShortcut(Qt::CTRL + Qt::Key_E);
+    manualExtractAction->setEnabled(true);
+    actionCollection()->addAction("manualExtract", manualExtractAction);
+    connect(manualExtractAction, SIGNAL(triggered(bool)), actionsManager, SLOT(manualExtractSlot()));
+
+
+    // mergeNzbAction :
     KAction* mergeNzbAction = new KAction(this);
     mergeNzbAction->setText(i18n("Merge with..."));
     mergeNzbAction->setIcon(KIcon("mail-message-new"));
@@ -339,9 +351,9 @@ void MainWindow::setupActions() {
 
 
 
-    //------------------
-    //standard Actions :
-    //------------------
+    //-------------------
+    // standard Actions :
+    //-------------------
 
     // quitAction
     KStandardAction::quit(this, SLOT(quit()), actionCollection());
