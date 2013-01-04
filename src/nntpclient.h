@@ -88,6 +88,8 @@ public:
     void downloadNextSegment(const SegmentData&);
     void noSegmentAvailable();
     bool isClientReady();
+    bool isSocketUnconnected() const;
+    bool isSocketConnected() const;
     void disconnectRequestByManager();
     void connectRequestByManager();
 
@@ -114,8 +116,6 @@ private:
 
     int notifyDownloadHasFinished(const UtilityNamespace::Article);
     bool downloadSegmentWithBackupServer();
-    bool isSocketUnconnected() const;
-    bool isSocketConnected() const;
     void setConnectedClientStatus(const NntpClientStatus, const TimerJob = StartStopTimers);
     void connectToHost();
     void setupConnections();
