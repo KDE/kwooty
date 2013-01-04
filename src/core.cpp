@@ -395,7 +395,6 @@ void Core::statusBarFileSizeUpdate() {
 }
 
 
-
 void Core::initFoldersSettings() {
 
     // set default path for download and temporary folders if not filled by user :
