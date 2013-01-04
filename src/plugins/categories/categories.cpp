@@ -177,6 +177,13 @@ void Categories::launchPreProcess() {
 
         }
 
+        // if no category found, check if default transfer folder is enabled :
+        if ( mimeDataChildFound.getMoveFolderPath().isEmpty() &&
+             CategoriesSettings::enableDefaultTransfer() ) {
+
+            mimeDataChildFound.setMoveFolderPath(CategoriesSettings::defaultTransferFolder().path());
+        }
+
 
         // override automatic move folder path by the one selected by the user if any :
         if (this->categoriesManual->isManualFolderSelected(this->currentUuidItem)) {
