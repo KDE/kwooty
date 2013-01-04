@@ -72,6 +72,7 @@ private slots:
     void toolButtonEditSubcategoryClickSlot();
     void urlChangedSlot(const QString&);
     void categoryWidgetsSlot();
+    void defaultTransferValueButtonToggledSlot();
 
 };
 

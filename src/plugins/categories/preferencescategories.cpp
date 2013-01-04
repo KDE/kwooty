@@ -63,8 +63,9 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesCategories>();)
     this->preferencesCategoriesUi.kcfg_transferManagement->addItem(i18n("Rename automatically"));
     this->preferencesCategoriesUi.kcfg_transferManagement->addItem(i18n("Overwrite"));
 
-    //set mode to folder mode :
+    // set mode to folder mode :
     this->preferencesCategoriesUi.kurlrequester->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
+    this->preferencesCategoriesUi.kcfg_defaultTransferFolder->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
 
     // add main kconfigskeleton :
     this->addConfig(CategoriesSettings::self(), widget);
@@ -85,7 +86,7 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesCategories>();)
     mimeTreeView->setModel(this->categoriesModel);
     mimeTreeView->expandAll();
 
-    //set header label :
+    // set header label :
     QStringList headerLabels;
     headerLabels.append(i18n("Categories"));
     headerLabels.append(i18n("Target"));
@@ -107,6 +108,9 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesCategories>();)
 
     this->preferencesCategoriesUi.groupBoxCategory->setDisabled(true);
     this->preferencesCategoriesUi.groupBoxCategory->setTitle(this->buildGroupBoxTitle());
+
+    // enable/disable defaultTransferFolder widget accordingly :
+    this->defaultTransferValueButtonToggledSlot();
 
     this->setupConnections();
 
@@ -156,6 +160,11 @@ void PreferencesCategories::setupConnections() {
              SIGNAL(textChanged(const QString&)),
              this,
              SLOT(urlChangedSlot(const QString&)));
+
+    connect (this->preferencesCategoriesUi.kcfg_enableDefaultTransfer,
+             SIGNAL(stateChanged(int)),
+             this,
+             SLOT(defaultTransferValueButtonToggledSlot()));
 
 }
 
@@ -481,6 +490,14 @@ void PreferencesCategories::categoryWidgetsSlot() {
     else {
         this->preferencesCategoriesUi.toolButtonEditSubcategory->setEnabled(false);
     }
+
+}
+
+
+void PreferencesCategories::defaultTransferValueButtonToggledSlot() {
+
+    // enable default folder widget if enableDefaultTransfer is checked :
+    this->preferencesCategoriesUi.kcfg_defaultTransferFolder->setEnabled(this->preferencesCategoriesUi.kcfg_enableDefaultTransfer->isChecked());
 
 }
 

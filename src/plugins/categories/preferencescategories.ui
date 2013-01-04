@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>397</width>
-    <height>340</height>
+    <width>455</width>
+    <height>335</height>
    </rect>
   </property>
   <property name="toolTip">
@@ -133,14 +133,41 @@
      </item>
     </layout>
    </item>
-   <item row="4" column="0">
+   <item row="5" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QCheckBox" name="kcfg_enableDefaultTransfer">
+       <property name="toolTip">
+        <string>Successfully extracted files will be transfered in this folder except for files matching categories defined above.</string>
+       </property>
+       <property name="text">
+        <string>Default transfer folder:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KUrlRequester" name="kcfg_defaultTransferFolder">
+       <property name="toolTip">
+        <string>Set default transfer folder.</string>
+       </property>
+       <property name="filter">
+        <string notr="true"/>
+       </property>
+       <property name="clickMessage">
+        <string notr="true"/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="6" column="0">
     <widget class="QCheckBox" name="kcfg_manualFolder">
      <property name="toolTip">
       <string>Allow to choose a custom transfer folder by right-clicking on a selected nzb item.
-The manually choosen transfer folder will replace the automatic one.</string>
+The manually choosen transfer folder will replace the favorite folder or the default one.</string>
      </property>
      <property name="text">
-      <string>Choose transfer folder manually from context menu</string>
+      <string>Manually select transfer folder from context menu</string>
      </property>
     </widget>
    </item>
