@@ -6,6 +6,12 @@
 	
     <kcfgfile name="kwootyrc"/>
     <group name="categoriesplugin">
+      
+        <entry name="defineCategories" type="Bool">
+	  <label>Define categories from file types</label>
+        <default>true</default>
+	
+        </entry>
 	<entry name="transferManagement" type="Int">
             <label>Overwrite or rename folder to transfer if it already exists in favorite folder</label>
             <default>0</default>

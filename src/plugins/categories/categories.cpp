@@ -178,7 +178,8 @@ void Categories::launchPreProcess() {
         }
 
         // if no category found, check if default transfer folder is enabled :
-        if ( mimeDataChildFound.getMoveFolderPath().isEmpty() &&
+        if ( ( !CategoriesSettings::defineCategories() ||
+               mimeDataChildFound.getMoveFolderPath().isEmpty() ) &&
              CategoriesSettings::enableDefaultTransfer() ) {
 
             mimeDataChildFound.setMoveFolderPath(CategoriesSettings::defaultTransferFolder().path());
