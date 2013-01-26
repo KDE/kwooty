@@ -33,6 +33,7 @@ using namespace UtilityNamespace;
 
 class Core;
 class MyTreeView;
+class SegmentBuffer;
 class ActionsManager;
 class StandardItemModel;
 
@@ -50,10 +51,17 @@ private:
     MyTreeView* treeView;
     ActionsManager* actionsManager;
     StandardItemModel* downloadModel;
+    SegmentBuffer* segmentBuffer;
+    QString selectedItemUuid;
+    QString targetItemUuid;
+    bool mergeProcessing;
+
 
     bool isMergeAllowed(QStandardItem*) const;
     void setupConnections();
     void processMerge(QStandardItem*, QStandardItem*);
+    void updateDecodeWaitingQueue(const QString&, const QString&);
+    void displayMessage();
 
 
 
@@ -65,6 +73,10 @@ public slots:
     void mergeSubMenuAboutToShowSlot();
     void mergeNzbActionTriggeredSlot(QAction*);
     void handleResultSlot(KJob*);
+    void processMergeSlot();
+
+
+private slots:
 
 
 };
