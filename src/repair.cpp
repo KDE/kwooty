@@ -600,7 +600,14 @@ void Repair::sendVerifyNotification(const QString& fileNameStr, const QString& o
         }
 
         // estimate overall verifying progress according to child status :
-        if (nzbFileData.isArchiveFile()) {
+        if (nzbFileData.isPar2File()) {
+
+            if (!parentFileData.isPar2File()) {
+                parentFileData = nzbFileData;
+            }
+
+        }
+        else {
 
             totalArchiveFiles++;
 
@@ -608,9 +615,6 @@ void Repair::sendVerifyNotification(const QString& fileNameStr, const QString& o
                 verifyPendingArchiveFiles++;
             }
 
-        }
-        else if ( nzbFileData.isPar2File() && !parentFileData.isPar2File() ) {
-            parentFileData = nzbFileData;
         }
 
 
