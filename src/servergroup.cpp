@@ -120,6 +120,12 @@ int ServerGroup::saveSegment(const SegmentData& segmentData) {
     return this->getServerManager()->getSegmentBuffer()->segmentSavingQueued(segmentData);
 }
 
+bool ServerGroup::isBufferFull() {
+
+    return this->getServerManager()->getSegmentBuffer()->isBufferFull();
+}
+
+
 
 bool ServerGroup::canDownload(const int& serverGroupTargetId) const {
 
@@ -149,7 +155,7 @@ bool ServerGroup::canDownload(const int& serverGroupTargetId) const {
 
         // servergroup will download segments targeted for Master server and also for itself :
         if (serverGroupTargetId == MasterServer ||
-            serverGroupTargetId == ActiveBackupServer) {
+                serverGroupTargetId == ActiveBackupServer) {
 
             segmentMatch = true;
 

@@ -52,6 +52,7 @@ public:
     int getServerGroupId() const;
     int getRealServerGroupId() const;
     int saveSegment(const SegmentData&);
+    bool isBufferFull();
     bool canDownload(const int&) const;
     bool isServerAvailable() const;
     bool isMasterServer() const;
