@@ -285,6 +285,12 @@ namespace UtilityNamespace
     };
 
 
+    // maximum size of the segments buffer pending to decode :
+    enum BufferSize {
+        BufferMaxSizeMB = 52428800, // 50 MiB
+        BufferMaxSizeList = 100
+    };
+
 }
 
 
