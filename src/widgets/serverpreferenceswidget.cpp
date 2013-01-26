@@ -188,7 +188,9 @@ ServerData ServerPreferencesWidget::getData() {
     // get all settings from widgets :
     ServerData serverData;
 
+    this->serverSettingsUi->hostName->setText(this->serverSettingsUi->hostName->text().trimmed());
     serverData.setHostName(this->serverSettingsUi->hostName->text());
+
     serverData.setLogin(this->serverSettingsUi->login->text());
     serverData.setPassword(this->serverSettingsUi->password->text());
 
