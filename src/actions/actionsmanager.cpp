@@ -624,7 +624,7 @@ void ActionsManager::manualExtractSlot() {
 
         QStandardItem* nzbFileItem = this->downloadModel->getNzbItem(indexesList.at(0));
 
-        if (this->modelQuery->isManualExtractAllowed(nzbFileItem)) {
+        if (this->modelQuery->isManualRepairExtractAllowed(nzbFileItem)) {
 
             this->core->getItemParentUpdater()->triggerPostProcessManually(nzbFileItem);
 
