@@ -21,16 +21,14 @@
 
 #include "nzbcollectiondata.h"
 
-#include <KDebug>
-
-
 NzbCollectionData::NzbCollectionData() {
 
     this->par2FileDownloadStatus = DownloadFinishStatus;
     this->extractTerminateStatus = ExtractSuccessStatus;
     this->verifyRepairTerminateStatus = RepairFinishedStatus;
     this->allPostProcessingCorrect = true;
-    this->triggerManualExtract = false;
+    this->extractProcessAllowed = false;
+    this->repairProcessAllowed = false;
 
 }
 
@@ -120,14 +118,22 @@ bool NzbCollectionData::isAllPostProcessingCorrect() const{
 }
 
 
-bool NzbCollectionData::isTriggerManualExtract() const {
-    return this->triggerManualExtract;
+bool NzbCollectionData::isExtractProcessAllowed() const {
+    return this->extractProcessAllowed;
 }
 
-void NzbCollectionData::setTriggerManualExtract(const bool& triggerManualExtract) {
-    this->triggerManualExtract = triggerManualExtract;
+void NzbCollectionData::setExtractProcessAllowed(const bool& extractProcessAllowed) {
+    this->extractProcessAllowed = extractProcessAllowed;
 }
 
+
+bool NzbCollectionData::isRepairProcessAllowed() const {
+    return this->repairProcessAllowed;
+}
+
+void NzbCollectionData::setRepairProcessAllowed(const bool& repairProcessAllowed) {
+    this->repairProcessAllowed = repairProcessAllowed;
+}
 
 
 bool NzbCollectionData::operator==(const NzbCollectionData& nzbCollectionDataToCompare) {
