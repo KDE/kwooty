@@ -61,9 +61,10 @@ public:
 
 private:
 
+    // post process behavior :
     enum PostProcessBehavior {
         ForcePostProcess,
-        DoNotForcePostProcess
+        AutomaticPostProcess
     };
 
     Core* parent;
@@ -76,7 +77,7 @@ private:
     ItemStatusData updateStatusItemDownload(ItemStatusData&, const int);
     ItemStatusData updateItemsDecode(ItemStatusData&, const int);
     ItemStatusData updateStatusItemDecode(ItemStatusData&, const int);
-    ItemStatusData postProcessing(ItemStatusData&, const int, const QModelIndex&, PostProcessBehavior = DoNotForcePostProcess);
+    ItemStatusData postProcessing(ItemStatusData&, const int, const QModelIndex&, PostProcessBehavior = AutomaticPostProcess);
     ItemStatusData updateDataStatus(ItemStatusData&);
     quint64 calculateDownloadProgress(const QModelIndex&, const ItemStatusData&, const int);
     void countGlobalItemStatus(const ItemStatusData&);

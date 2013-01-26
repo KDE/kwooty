@@ -352,7 +352,6 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
         // set decode finish to true in order to emit repairing signal only once :
         nzbItemStatusData.setDecodeFinish(true);
 
-
         // by default, consider that par2 files have been downloaded :
         UtilityNamespace::ItemStatus par2FileStatus = DownloadFinishStatus;
 
@@ -396,9 +395,16 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
         nzbCollectionData.setPar2FileDownloadStatus(par2FileStatus);
         nzbCollectionData.setNzbParentId(this->downloadModel->getUuidStrFromIndex(nzbIndex));
 
-        if (postProcessBehavior == ForcePostProcess) {
-            nzbCollectionData.setTriggerManualExtract(true);
+        if (postProcessBehavior == AutomaticPostProcess) {
+            nzbCollectionData.setRepairProcessAllowed(Settings::groupBoxAutoRepair());
+            nzbCollectionData.setExtractProcessAllowed(Settings::groupBoxAutoDecompress());
         }
+        // post process has been manually triggered by user :
+        else {
+            nzbCollectionData.setRepairProcessAllowed(true);
+            nzbCollectionData.setExtractProcessAllowed(true);
+        }
+
 
         //kDebug() << "UUID : " << this->downloadModel->getUuidStrFromIndex(nzbIndex);
 
