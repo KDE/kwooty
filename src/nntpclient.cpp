@@ -458,11 +458,21 @@ void NntpClient::requestNewSegment() {
 
     if (this->serverAnswerStatus == ServerConnectedPostingOk) {
 
-        // set client ready for receiving next segment :
-        this->setConnectedClientStatus(ClientSegmentRequest);
+        if (!this->parent->getServerGroup()->isBufferFull()) {
 
-        // request a new segment :
-        emit getNextSegmentSignal(parent);
+            // set client ready for receiving next segment :
+            this->setConnectedClientStatus(ClientSegmentRequest);
+
+            // request a new segment :
+            emit getNextSegmentSignal(parent);
+
+        }
+        // buffer is full, lets time to decode pending segments,
+        // retry to download a new segment in 10 seconds :
+        else {
+            this->retryDownloadDelayed(10);
+        }
+
     }
 }
 
@@ -539,7 +549,7 @@ void NntpClient::downloadSegmentFromServer() {
         this->manageSocketBuffer(SegmentDownloading);
 
         qint64 maxReadbytes = ( speedLimitInBytes * this->rateControlTimer->interval() ) /
-                              ( serverSpeedManager->getEnabledClientNumber() * 1000 ) + this->missingBytes;
+                ( serverSpeedManager->getEnabledClientNumber() * 1000 ) + this->missingBytes;
 
         chunckData = this->tcpSocket->read(maxReadbytes);
         this->missingBytes = qMax(maxReadbytes - chunckData.size(), static_cast<qint64>(0));
@@ -609,6 +619,8 @@ void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePres
 
             // set pointer to data to be decoder by segmentDecoderThread :
             this->currentSegmentData.setIoDevice(buffer);
+            // set size of downloaded data :
+            this->currentSegmentData.setDataSize(this->segmentByteArray.size());
 
         }
 
