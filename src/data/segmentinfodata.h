@@ -29,7 +29,7 @@ class SegmentInfoData {
 
 public:
     SegmentInfoData();
-    SegmentInfoData(const QString&, const int&);
+    SegmentInfoData(const QString&, const int&, const int&);
     void reset();
 
     void setNzbFileName(const QString&);
@@ -44,6 +44,9 @@ public:
     void setNzbRowModelPosition(const int&);
     int getNzbRowModelPosition() const;
 
+    void setFileNameItemRowModelPosition(const int&);
+    int getFileNameItemRowModelPosition() const;
+
     void setBytesDownloaded(const int&);
     int getBytesDownloaded() const;
 
@@ -53,7 +56,9 @@ private:
     QString temporaryFileName;
     QString destinationFileSavePath;
     int nzbRowModelPosition;
+    int fileNameItemRowModelPosition;
     int bytesDownloaded;
+
 
 signals:
 

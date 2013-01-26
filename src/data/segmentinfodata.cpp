@@ -26,10 +26,11 @@ SegmentInfoData::SegmentInfoData() {
     this->reset();
 }
 
-SegmentInfoData::SegmentInfoData(const QString& nzbFileName, const int& nzbRowModelPosition) {
+SegmentInfoData::SegmentInfoData(const QString& nzbFileName, const int& nzbRowModelPosition, const int& fileNameItemRowModelPosition) {
 
     this->nzbFileName = nzbFileName;
     this->nzbRowModelPosition = nzbRowModelPosition;
+    this->fileNameItemRowModelPosition = fileNameItemRowModelPosition;
     this->bytesDownloaded = 0;
 
 }
@@ -41,6 +42,7 @@ void SegmentInfoData::reset() {
     this->temporaryFileName = QString();
     this->destinationFileSavePath = QString();
     this->nzbRowModelPosition = -1;
+    this->fileNameItemRowModelPosition = -1;
     this->bytesDownloaded = 0;
 }
 
@@ -78,6 +80,15 @@ void SegmentInfoData::setNzbRowModelPosition(const int& nzbRowModelPosition) {
 
 int SegmentInfoData::getNzbRowModelPosition() const {
     return this->nzbRowModelPosition;
+}
+
+
+void SegmentInfoData::setFileNameItemRowModelPosition(const int& fileNameItemRowModelPosition) {
+    this->fileNameItemRowModelPosition = fileNameItemRowModelPosition;
+}
+
+int SegmentInfoData::getFileNameItemRowModelPosition() const {
+    return this->fileNameItemRowModelPosition;
 }
 
 
