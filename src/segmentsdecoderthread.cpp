@@ -79,28 +79,12 @@ void SegmentsDecoderThread::init() {
 
 void SegmentsDecoderThread::setupConnections() {
 
-
-    // receive data to decode from decodeSegmentsSignal :
-    qRegisterMetaType<NzbFileData>("NzbFileData");
-    qRegisterMetaType<ItemStatusData>("ItemStatusData");
-
-    connect (parent->getItemParentUpdater()->getItemDownloadUpdater(),
-             SIGNAL(decodeSegmentsSignal(NzbFileData)),
-             this,
-             SLOT(decodeSegmentsSlot(NzbFileData)));
-
-
     // suppress old segments if user have to chosen to not reload data from previous session :
     connect (parent->getDataRestorer(),
              SIGNAL(suppressOldOrphanedSegmentsSignal()),
              this,
              SLOT(suppressOldOrphanedSegmentsSlot()));
 
-
-    // update user interface about current decoding status :
-    qRegisterMetaType<QVariant>("QVariant");
-    qRegisterMetaType<UtilityNamespace::ItemStatus>("UtilityNamespace::ItemStatus");
-    qRegisterMetaType<UtilityNamespace::ArticleEncodingType>("UtilityNamespace::ArticleEncodingType");
 
     // update info about decoding process :
     qRegisterMetaType<PostDownloadInfoData>("PostDownloadInfoData");
@@ -223,6 +207,10 @@ void SegmentsDecoderThread::decodeSegmentsSlot(NzbFileData nzbFileData) {
         }
 
     }
+
+
+    // decoder is ready again :
+    emit finalizeDecoderIdleSignal();
 
 }
 

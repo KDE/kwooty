@@ -65,6 +65,7 @@ signals:
     void saveFileErrorSignal(int);
     void updateDownloadSegmentSignal(SegmentData, QString);
     void segmentDecoderIdleSignal();
+    void finalizeDecoderIdleSignal();
 
 
 public slots:
