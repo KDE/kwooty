@@ -196,8 +196,10 @@ ItemStatusData ItemDownloadUpdater::postDownloadProcessing(const QModelIndex& in
 
         // before decoding check that at least one segment have been downloaded :
         if (itemStatusData.getDataStatus() != NoData) {
+
             // decode downloaded segments :
             emit decodeSegmentsSignal(nzbFileData);
+
         }
 
     }
