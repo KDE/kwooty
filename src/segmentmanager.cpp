@@ -376,7 +376,7 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
                          (currentServerId >= itemStatusData.getNextServerId()) ) {
 
                         // set nzb item row position it's child file name item row to construtor :
-                        SegmentInfoData segmentInfoData(nzbItem->text(), row, i);
+                        SegmentInfoData segmentInfoData(nzbItem->text(), nzbItem->row(), i);
                         itemFound = this->sendNextIdleSegment(fileNameItem, currentClientManagerConn, segmentInfoData);
                         
                     }
