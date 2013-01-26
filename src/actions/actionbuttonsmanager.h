@@ -57,6 +57,7 @@ signals:
     void setRemoveButtonEnabledSignal(bool);
     void setRetryButtonEnabledSignal(bool);
     void setMergeNzbButtonEnabledSignal(bool);
+    void setManualExtractActionSignal(bool);
 
     
 public slots:

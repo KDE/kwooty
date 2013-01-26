@@ -320,14 +320,14 @@ void MainWindow::setupActions() {
 
     // manualExtractAction :
     KAction* manualExtractAction = new KAction(this);
-    manualExtractAction->setText(i18n("Extract"));
+    manualExtractAction->setText(i18n("Repair and extract"));
     manualExtractAction->setIcon(KIcon("archive-extract"));
-    manualExtractAction->setToolTip(i18n("Manually extract selected item"));
+    manualExtractAction->setToolTip(i18n("Manually verify and extract selected item"));
     manualExtractAction->setShortcut(Qt::CTRL + Qt::Key_E);
-    manualExtractAction->setEnabled(true);
+    manualExtractAction->setEnabled(false);
     actionCollection()->addAction("manualExtract", manualExtractAction);
     connect(manualExtractAction, SIGNAL(triggered(bool)), actionsManager, SLOT(manualExtractSlot()));
-
+    connect(actionButtonsManager, SIGNAL(setManualExtractActionSignal(bool)), manualExtractAction, SLOT(setEnabled(bool)) );
 
     // mergeNzbAction :
     KAction* mergeNzbAction = new KAction(this);

@@ -28,7 +28,7 @@
 #include "actions/actionsmanager.h"
 #include "actions/actionmergemanager.h"
 #include "widgets/mytreeview.h"
-
+#include "kwootysettings.h"
 
 ActionButtonsManager::ActionButtonsManager(ActionsManager* actionsManager) : QObject(actionsManager) {
 
@@ -69,6 +69,7 @@ void ActionButtonsManager::selectedItemSlot() {
         emit setStartButtonEnabledSignal(false);
         emit setRetryButtonEnabledSignal(false);
         emit setMergeNzbButtonEnabledSignal(false);
+        emit setManualExtractActionSignal(false);
     }
     else {
 
@@ -103,10 +104,10 @@ void ActionButtonsManager::selectedItemSlot() {
 
                 QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(currentModelIndex);
 
-                for (int i = 0; i < fileNameItem->rowCount(); i++) {
+                for (int j = 0; j < fileNameItem->rowCount(); j++) {
 
                     if (!enableRetryButton) {
-                        QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
+                        QStandardItem* nzbChildrenItem = fileNameItem->child(j, FILE_NAME_COLUMN);
                         this->downloadModelQuery->isRetryDownloadAllowed(nzbChildrenItem, &enableRetryButton);
                     }
                 }
@@ -135,6 +136,16 @@ void ActionButtonsManager::selectedItemSlot() {
         // enable/disable nzb merging action :
         this->actionsManager->getActionMergeManager()->checkMergeCandidates(mergeAvailable);
         emit setMergeNzbButtonEnabledSignal(mergeAvailable);
+
+        // enable/disable manual extract action (available only if automatic post process has been disabled) :
+        if ( ( !Settings::groupBoxAutoDecompress() ||
+               !Settings::groupBoxAutoRepair() ) &&
+             !indexesList.isEmpty() ) {
+
+            QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(indexesList.first());
+            emit setManualExtractActionSignal(this->downloadModelQuery->isManualRepairExtractAllowed(fileNameItem));
+
+        }
 
     }
 }
