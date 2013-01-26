@@ -318,9 +318,9 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
 }
 
 
-bool StandardItemModelQuery::isManualExtractAllowed(QStandardItem* fileNameItem) const {
+bool StandardItemModelQuery::isManualRepairExtractAllowed(QStandardItem* fileNameItem) const {
 
-    bool manualExtractAllowed = false;
+    bool manualRepairExtractAllowed = false;
 
     // check that selected item is a parent :
     if (this->downloadModel->isNzbItem(fileNameItem)) {
@@ -329,17 +329,41 @@ bool StandardItemModelQuery::isManualExtractAllowed(QStandardItem* fileNameItem)
 
         // if parent status is "DecodeFinish" and automatic post process is disabled,
         // manual extract is allowed :
-        if ( nzbItemStatusData.isDecodeFinish() &&
-             (!Settings::groupBoxAutoRepair() || !Settings::groupBoxAutoDecompress()) ) {
+        if ( nzbItemStatusData.isPostProcessFinish() &&
+             nzbItemStatusData.getStatus() != ExtractFinishedStatus ) {
 
-            manualExtractAllowed = true;
+            manualRepairExtractAllowed = true;
         }
 
     }
 
-    return manualExtractAllowed;
+    return manualRepairExtractAllowed;
 
 }
 
+
+bool StandardItemModelQuery::isParentFileNameExists(const QString& nzbName) const {
+
+    bool parentFileNameExists = false;
+
+    // get the root model :
+    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+
+    // for each parent item, get its current nzb file name :
+    for (int i = 0; i < rootItem->rowCount(); i++) {
+
+        QStandardItem* parentFileNameItem = rootItem->child(i, FILE_NAME_COLUMN);
+
+        if (parentFileNameItem->text() == nzbName) {
+
+            parentFileNameExists = true;
+            break;
+        }
+
+    }
+
+    return parentFileNameExists;
+
+}
 
 

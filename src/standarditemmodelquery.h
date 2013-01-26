@@ -41,13 +41,15 @@ public:
 
     QStandardItem* searchParentItem(const UtilityNamespace::ItemStatus);
     ItemStatus isRetryDownloadAllowed(QStandardItem*, bool* = 0);
-    bool isManualExtractAllowed(QStandardItem* fileNameItem) const;
+    bool isManualRepairExtractAllowed(QStandardItem* fileNameItem) const;
     bool haveItemsSameParent(const QList<QModelIndex>&);
     bool isParentContainsPar2File(QStandardItem*) const;
+    bool isParentFileNameExists(const QString&) const;
     bool areJobsFinished();
     QList<QModelIndex> retrieveStartPauseIndexList(const UtilityNamespace::ItemStatus) const;
     QList<QModelIndex> retrieveDecodeFinishParentIndexList() const;
     QStandardItem* retrieveParentFileNameItemFromUuid(const QString&);
+
 
 
 private:
