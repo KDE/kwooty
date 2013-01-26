@@ -127,11 +127,7 @@ void Core::emitDataHasArrived(const QModelIndex& appendedIndex) {
 
 
 
-void Core::handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList) {
-
-    // remove .nzb extension to file name:
-    QFileInfo fileInfo(file.fileName());
-    QString nzbName = fileInfo.completeBaseName();
+void Core::handleNzbFile(QFile& file, const QString& nzbName, const QList<GlobalFileData>& inGlobalFileDataList) {
 
     bool normalNzbFileProcessing = inGlobalFileDataList.isEmpty();
 
@@ -203,7 +199,7 @@ void Core::restoreDataFromPreviousSession(const QList<GlobalFileData>& globalFil
     QFile nzbFile(nzbFileData.getNzbName());
 
     // populate treeView with saved data :
-    this->handleNzbFile(nzbFile, globalFileDataList);
+    this->handleNzbFile(nzbFile, nzbFileData.getNzbName(), globalFileDataList);
 
     // update parent status to the same value as previous session :
     for (int i = 0; i < this->downloadModel->rowCount(); i++) {

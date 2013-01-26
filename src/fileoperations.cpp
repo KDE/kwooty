@@ -29,6 +29,7 @@
 #include <QRegExp>
 
 #include "core.h"
+#include "standarditemmodelquery.h"
 #include "widgets/centralwidget.h"
 #include "kwootysettings.h"
 
@@ -95,18 +96,27 @@ void FileOperations::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenF
             KMessageBox::error(this->core->getCentralWidget(), KIO::NetAccess::lastErrorString());
         }
 
+        // if the current nzb file has the same name as a previous nzb file :
+        QString nzbRealBaseName = QFileInfo(file.fileName()).completeBaseName();
+        QString nzbBaseName = nzbRealBaseName;
+
+        int counter = 1;
+        while ( counter < 100 &&
+                this->core->getModelQuery()->isParentFileNameExists(nzbBaseName) ) {
+
+            // add a suffix to distinguish files between each others :
+            nzbBaseName = nzbRealBaseName + "-" + QString::number(counter++);
+
+        }
+
         // add nzbFile data to the view :
-        this->core->handleNzbFile(file);
+        this->core->handleNzbFile(file, nzbBaseName);
 
         file.close();
 
         // copy nzb file in its associated download folder if file has been open has been triggered by another app  :
         if (Settings::openWith() &&
             (openFileMode == UtilityNamespace::OpenWith)) {
-
-            //remove .nzb extension to file name :
-            QFileInfo fileInfo(file.fileName());
-            QString nzbBaseName = fileInfo.completeBaseName();
 
             // create download folder :
             QString downloadFolderPath = Settings::completedFolder().path() + '/' + nzbBaseName;

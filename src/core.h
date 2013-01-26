@@ -67,7 +67,7 @@ class KWOOTY_EXPORT Core : public QObject {
 public:
     Core(MainWindow*);
     ~Core();
-    void handleNzbFile(QFile& file, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
+    void handleNzbFile(QFile& file, const QString&, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
     void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
     void emitDataHasArrived(const QModelIndex& = QModelIndex());
     int savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown, const SaveFileBehavior = SaveNotSilently);
