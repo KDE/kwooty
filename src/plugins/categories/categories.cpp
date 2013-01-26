@@ -258,6 +258,9 @@ void Categories::launchMoveProcess(const MimeData& mimeData, const QString& nzbF
     KIO::CopyJob* moveJob = this->moveJobLegacy(mimeData, nzbFileSavepath, jobFlag);
     #endif
 
+    // ensure to not ask any question to user during move process :
+    moveJob->setAutoRename(true);
+
 
     // setup connections with job :
     connect(moveJob, SIGNAL(result(KJob*)), this, SLOT(handleResultSlot(KJob*)));
@@ -475,9 +478,9 @@ void Categories::setJobProcessing(const bool& jobProcessing) {
 
 void Categories::parentStatusItemChangedSlot(QStandardItem* stateItem, ItemStatusData itemStatusData) {
 
-
     // if post-processing of nzb file is correct, try to move downloaded folder into target folder :
-    if ( itemStatusData.isPostProcessFinish() &&
+    if ( itemStatusData.getStatus() == ExtractFinishedStatus &&
+         itemStatusData.isPostProcessFinish() &&
          itemStatusData.areAllPostProcessingCorrect() ) {
 
         kDebug() << "post processing correct";
