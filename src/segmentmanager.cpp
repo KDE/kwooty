@@ -63,7 +63,7 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
     // parse segment list to find the next idle segment :
     for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
 
-        SegmentData segmentData = segmentList.value(segmentIndex);
+        SegmentData segmentData = segmentList.at(segmentIndex);
 
         // filter Idle segments searching according to corresponding serverGroup id :
         if ( !itemFound &&
@@ -125,7 +125,7 @@ void SegmentManager::setIdlePauseSegments(QStandardItem* fileNameItem, const Uti
 
         for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
 
-            SegmentData currentSegment = segmentList.value(segmentIndex);
+            SegmentData currentSegment = segmentList.at(segmentIndex);
 
             if (currentSegment.getStatus() == IdleStatus && targetStatus == PauseStatus) {
                 currentSegment.setStatus(targetStatus);
@@ -159,7 +159,7 @@ void SegmentManager::setIdleDownloadFailSegments(QStandardItem* fileNameItem) {
 
     for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
 
-        SegmentData currentSegment = segmentList.value(segmentIndex);
+        SegmentData currentSegment = segmentList.at(segmentIndex);
 
         // re-download only segments that own an incorrect crc :
         if (QFile::exists(nzbFileData.getFileSavePath() + '/' +  nzbFileData.getDecodedFileName())) {
@@ -193,10 +193,48 @@ void SegmentManager::setIdleDownloadFailSegments(QStandardItem* fileNameItem) {
 
 }
 
+QStandardItem* SegmentManager::searchItem(const SegmentData& segmentData) {
+
+    QStandardItem* targetFileNameItem = 0;
+
+    // search item from it's previous stored position in model :
+    SegmentInfoData segmentInfoData = segmentData.getSegmentInfoData();
+
+    // get nzb item row :
+    int firstLevelRowPosition = segmentInfoData.getNzbRowModelPosition();
+
+    // get file name item row from nzb item :
+    int secondLevelRowPosition = segmentInfoData.getFileNameItemRowModelPosition();
+
+    QStandardItem* nzbItem = this->downloadModel->item(firstLevelRowPosition, FILE_NAME_COLUMN);
+
+    if (nzbItem) {
+
+        QStandardItem* fileNameItem = nzbItem->child(secondLevelRowPosition, FILE_NAME_COLUMN);
+
+        if (fileNameItem) {
+
+            // check that the item is the corresponding one by checking its uuid :
+            if (this->downloadModel->getUuidStrFromIndex(fileNameItem->index()) == segmentData.getParentUniqueIdentifier().toString()) {
+
+                targetFileNameItem = fileNameItem;
+
+            }
+        }
+    }
+
+    if (!targetFileNameItem) {
+        kDebug() << "item not found, perform deep search...";
+    }
+
+    return targetFileNameItem;
+
+}
 
 
 
-QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const UtilityNamespace::ItemStatus itemStatus){
+
+QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const UtilityNamespace::ItemStatus itemStatus) {
 
     // init fileNameItem :
     QStandardItem* fileNameItem = 0;
@@ -337,7 +375,8 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
                     if ( Utility::isReadyToDownload(currentChildStatus) &&
                          (currentServerId >= itemStatusData.getNextServerId()) ) {
 
-                        SegmentInfoData segmentInfoData(nzbItem->text(), nzbItem->row());
+                        // set nzb item row position it's child file name item row to construtor :
+                        SegmentInfoData segmentInfoData(nzbItem->text(), row, i);
                         itemFound = this->sendNextIdleSegment(fileNameItem, currentClientManagerConn, segmentInfoData);
                         
                     }
@@ -358,8 +397,13 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
 
 void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, QString decodedFileName) {
 
-    // search index
-    QStandardItem* fileNameItem = this->searchItem(segmentData.getParentUniqueIdentifier(), DownloadStatus);
+    // fast search index :
+    QStandardItem* fileNameItem = this->searchItem(segmentData);
+
+    // if not found, proceed to deep search index :
+    if (!fileNameItem) {
+         fileNameItem = this->searchItem(segmentData.getParentUniqueIdentifier(), DownloadStatus);
+    }
 
     // if corresponding item has been found :
     if (fileNameItem) {
@@ -367,7 +411,7 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, QString 
         NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
         QList<SegmentData> segmentList = nzbFileData.getSegmentList();
 
-        SegmentData previousSegmentData = segmentList.value(segmentData.getElementInList());
+        SegmentData previousSegmentData = segmentList.at(segmentData.getElementInList());
 
         // update segment only if it has not already be downloaded :
         if ( (previousSegmentData.getStatus() <= PausingStatus) &&
@@ -487,7 +531,7 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
 
                     for (int segmentIndex = 0; segmentIndex < segmentList.size(); segmentIndex++) {
 
-                        SegmentData currentSegment = segmentList.value(segmentIndex);
+                        SegmentData currentSegment = segmentList.at(segmentIndex);
 
                         // update pending segments to a new backup server target :
                         if (pendingSegments == UpdateSegments) {

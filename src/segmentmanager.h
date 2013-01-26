@@ -53,6 +53,7 @@ public:
     void setIdlePauseSegments(QStandardItem*, const UtilityNamespace::ItemStatus);
     void setIdleDownloadFailSegments(QStandardItem*);
     QStandardItem* searchItem(const QVariant&, const UtilityNamespace::ItemStatus);
+    QStandardItem* searchItem(const SegmentData&);
     void updatePendingSegmentsToTargetServer(const int&, const int&, const PendingSegments = UpdateSegments);
 
 private:
