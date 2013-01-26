@@ -38,7 +38,6 @@
 
 
 
-
 MyTreeView::MyTreeView(MainWindow* mainWindow) : QTreeView(mainWindow->getCentralWidget()) {
 
     this->mainWindow = mainWindow;
@@ -162,7 +161,8 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
         }
 
         // allow manual extract process from menu if auto post process disabled :
-        if (this->getCore()->getModelQuery()->isManualExtractAllowed(item)) {
+        if ( !Settings::groupBoxAutoDecompress() ||
+             !Settings::groupBoxAutoRepair() ) {
             contextMenu.addAction(actionCollection->action("manualExtract"));
         }
 
