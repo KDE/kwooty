@@ -25,6 +25,7 @@ SegmentData::SegmentData() {
     this->elementInList = -1;
     this->status = IdleStatus;
     this->crc32Match = CrcUnknown;
+    this->dataSize = 0;
     this->segmentInfoData.reset();
 }
 
@@ -35,6 +36,7 @@ SegmentData::SegmentData(const QString& bytes, const QString& number, const QStr
     this->part = part;
     this->status = status;
     this->crc32Match = CrcUnknown;
+    this->dataSize = 0;
 
     this->serverGroupTarget = MasterServer;
     this->articlePresence = Unknown;
@@ -154,6 +156,14 @@ void SegmentData::setIoDevice(QIODevice* ioDevice) {
     this->ioDevice = ioDevice;
 }
 
+
+int SegmentData::getDataSize() const {
+    return this->dataSize;
+}
+
+void SegmentData::setDataSize(const int& dataSize) {
+    this->dataSize = dataSize;
+}
 
 
 UtilityNamespace::CrcNotify SegmentData::getCrc32Match() const {

@@ -71,6 +71,9 @@ public:
     QIODevice* getIoDevice();
     void setIoDevice(QIODevice*);
 
+    int getDataSize() const;
+    void setDataSize(const int&);
+
     UtilityNamespace::CrcNotify getCrc32Match() const;
     void setCrc32Match(const UtilityNamespace::CrcNotify);
 
@@ -87,6 +90,7 @@ private:
     int serverGroupTarget;
     int progress;
     int articlePresence;
+    int dataSize;
     UtilityNamespace::CrcNotify crc32Match;
 
 };
