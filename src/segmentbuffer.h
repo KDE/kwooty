@@ -26,6 +26,7 @@
 
 #include "segmentsdecoderthread.h"
 #include "data/segmentdata.h"
+#include "data/nzbfiledata.h"
 
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
@@ -41,26 +42,41 @@ class SegmentBuffer : public QObject {
 public:
     SegmentBuffer(ServerManager*, Core*);
     int segmentSavingQueued(const SegmentData&);
+    void finalizeDecodeQueued(const NzbFileData&);
+    void lockFinalizeDecode();
+    void unlockFinalizeDecode();
+    QList<NzbFileData> getWaitingQueue() const;
+    void setWaitingQueue(QList<NzbFileData>&);
+    bool isfinalizeDecodeIdle() const;
+    bool isBufferFull() const;
 
 private:
 
-    static const int MAX_BUFFER_SIZE = 100;
-
     QList<SegmentData> segmentDataList;
+    QList<NzbFileData> nzbFileDataList;
     Core* core;
     ServerManager* serverManager;
-    int segmentDecoderIdle;
-    int bufferFullCounter;
+    qint64 dataSizeCounter;
+    int requestNextSegmentDelaySec;
+    bool segmentDecoderIdle;
+    bool finalizeLocked;
+    bool finalizeDecodeIdle;
+    bool bufferFull;
 
     void setupConnections();
+    void sendDataToFinalizeDecode();
 
 
 signals:
     void saveDownloadedSegmentSignal(SegmentData);
+    void decodeSegmentsSignal(NzbFileData);
+    void finalizeDecoderLockedSignal();
 
 
 public slots:
     void segmentDecoderIdleSlot();
+    void finalizeDecodeQueuedSlot(const NzbFileData&);
+    void finalizeDecoderIdleSlot();
 
 
 private slots:

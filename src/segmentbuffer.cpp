@@ -24,6 +24,8 @@
 #include <KDebug>
 
 #include "servermanager.h"
+#include "itemparentupdater.h"
+#include "itemdownloadupdater.h"
 #include "core.h"
 
 
@@ -33,7 +35,11 @@ SegmentBuffer::SegmentBuffer(ServerManager* parent, Core* core) : QObject(parent
     this->core = core;
 
     this->segmentDecoderIdle = true;
-    this->bufferFullCounter = 0;
+    this->finalizeDecodeIdle = true;
+    this->finalizeLocked = false;
+    this->bufferFull = false;
+    this->dataSizeCounter = 0;
+    this->requestNextSegmentDelaySec = 0;
 
     this->setupConnections();
 
@@ -43,11 +49,24 @@ SegmentBuffer::SegmentBuffer(ServerManager* parent, Core* core) : QObject(parent
 
 void SegmentBuffer::setupConnections() {
 
-    // send segment to decoder thread that handles decoding and saving :
+    // send segment to decoder thread that finalize decoding :
     connect (this,
              SIGNAL(saveDownloadedSegmentSignal(SegmentData)),
              this->core->getSegmentsDecoderThread(),
              SLOT(saveDownloadedSegmentSlot(SegmentData)));
+
+    // send segment to decoder thread that handles decoding and saving :
+    connect (this->core->getItemParentUpdater()->getItemDownloadUpdater(),
+             SIGNAL(decodeSegmentsSignal(NzbFileData)),
+             this,
+             SLOT(finalizeDecodeQueuedSlot(const NzbFileData&)));
+
+    // store it it the buffer until segmentDecoderThread is not idle :
+    connect (this,
+             SIGNAL(decodeSegmentsSignal(NzbFileData)),
+             this->core->getSegmentsDecoderThread(),
+             SLOT(decodeSegmentsSlot(NzbFileData)));
+
 
     // decoder thread will notify its current state (idle or busy) :
     connect (this->core->getSegmentsDecoderThread(),
@@ -55,13 +74,34 @@ void SegmentBuffer::setupConnections() {
              this,
              SLOT(segmentDecoderIdleSlot()));
 
+    // be notified when segmentDecoderThread is Idle :
+    connect (this->core->getSegmentsDecoderThread(),
+             SIGNAL(finalizeDecoderIdleSignal()),
+             this,
+             SLOT(finalizeDecoderIdleSlot()));
+
+
 }
 
+void SegmentBuffer::lockFinalizeDecode() {
+    kDebug();
+    this->finalizeLocked = true;
+}
 
+void SegmentBuffer::unlockFinalizeDecode() {
+    kDebug();
+    this->finalizeLocked = false;
+    this->sendDataToFinalizeDecode();
+}
 
-//============================================================================================================//
-//                                               SLOTS                                                        //
-//============================================================================================================//
+bool SegmentBuffer::isBufferFull() const {
+
+    if (this->bufferFull){
+        kDebug() << "buffer is full...";
+    }
+
+    return this->bufferFull;
+}
 
 
 int SegmentBuffer::segmentSavingQueued(const SegmentData& segmentData) {
@@ -75,23 +115,86 @@ int SegmentBuffer::segmentSavingQueued(const SegmentData& segmentData) {
     // else store it to be processed lately :
     else {
 
+        this->dataSizeCounter += segmentData.getDataSize();
         this->segmentDataList.append(segmentData);
 
     }
 
-    // if list has reached its max size :
-    if (this->segmentDataList.size() >= MAX_BUFFER_SIZE) {
 
-        kDebug() << "segment buffer is full, request next segment with a short delay...";
-        this->bufferFullCounter++;
+    // check if buffer can not allow more pending segments :
+    this->bufferFull = false;
+
+    if ( (this->dataSizeCounter > UtilityNamespace::BufferMaxSizeMB) ||
+         (this->segmentDataList.size() > UtilityNamespace::BufferMaxSizeList) ) {
+
+        this->bufferFull = true;
+
+    }
+
+    // request next segment to be downloaded from 1 to 30 seconds at max :
+    if (this->bufferFull) {
+
+        this->requestNextSegmentDelaySec = qMin(this->requestNextSegmentDelaySec + 1, 30);
+
+        kDebug() << "segment buffer is full, buffer size:" << Utility::convertByteHumanReadable(qAbs(this->dataSizeCounter)) << ",list size:"  << this->segmentDataList.size();
+        kDebug() << "request next segment in" << this->requestNextSegmentDelaySec << "seconds...";
+
     }
     else {
-        this->bufferFullCounter = 0;
+        this->requestNextSegmentDelaySec = 0;
     }
 
-
     // next segment download will be delayed according to buffer size :
-    return this->bufferFullCounter;
+    return this->requestNextSegmentDelaySec;
+
+}
+
+
+QList<NzbFileData> SegmentBuffer::getWaitingQueue() const {
+    return this->nzbFileDataList;
+}
+
+void SegmentBuffer::setWaitingQueue(QList<NzbFileData>& nzbFileDataList) {
+    this->nzbFileDataList = nzbFileDataList;
+}
+
+bool SegmentBuffer::isfinalizeDecodeIdle() const {
+    return this->finalizeDecodeIdle;
+}
+
+
+void SegmentBuffer::sendDataToFinalizeDecode() {
+
+    // if decoder is Idle and as not been locked by "merging items" action :
+    if ( this->finalizeDecodeIdle &&
+         !this->finalizeLocked &&
+         !this->nzbFileDataList.isEmpty() ) {
+
+        this->finalizeDecodeIdle = false;
+        emit decodeSegmentsSignal(this->nzbFileDataList.takeFirst());
+
+    }
+    // notify action merge manager that files decode finalize is suspended :
+    else if (this->finalizeLocked) {
+
+        emit finalizeDecoderLockedSignal();
+
+    }
+    else if (!this->nzbFileDataList.isEmpty()) {
+        kDebug() << "finalize decode delayed...";
+    }
+
+}
+
+//============================================================================================================//
+//                                               SLOTS                                                        //
+//============================================================================================================//
+
+void SegmentBuffer::finalizeDecodeQueuedSlot(const NzbFileData& nzbFileData) {
+
+    this->nzbFileDataList.append(nzbFileData);
+
+    this->sendDataToFinalizeDecode();
 
 }
 
@@ -104,12 +207,19 @@ void SegmentBuffer::segmentDecoderIdleSlot() {
     if (!this->segmentDataList.isEmpty()) {
 
         // send the first stored segment :
-        this->segmentSavingQueued(this->segmentDataList.takeFirst());
+        const SegmentData currentSegmentData = this->segmentDataList.takeFirst();
+        this->dataSizeCounter -= currentSegmentData.getDataSize();
+        this->segmentSavingQueued(currentSegmentData);
 
     }
 
 }
 
 
+void SegmentBuffer::finalizeDecoderIdleSlot() {
 
+    this->finalizeDecodeIdle = true;
 
+    // finish file decoding :
+    this->sendDataToFinalizeDecode();
+}
