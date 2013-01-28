@@ -46,6 +46,7 @@ public:
     QPixmap blendOverLayTopRight(const QString&, const QString&);
     QPixmap blendOverLayEmblem(const QString&, const QPixmap*);
     QPixmap blendOverLayEmblem(const QString&, const QIcon&);
+    QPixmap buildNormalIcon(const QString&);
     QPixmap buildGrayIcon(const QString&);
     QPixmap buildGrayIcon(const QPixmap&);
     QPixmap buildClearIcon(const QPixmap&);

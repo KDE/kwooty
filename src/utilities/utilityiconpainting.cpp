@@ -164,6 +164,13 @@ QPixmap UtilityIconPainting::blendOverLayEmblem(const QString& overlayIconStr, c
 
 }
 
+QPixmap UtilityIconPainting::buildNormalIcon(const QString& sourceIconStr) {
+
+    return KIconLoader::global()->loadIcon(sourceIconStr, KIconLoader::Small);
+
+}
+
+
 
 QPixmap UtilityIconPainting::buildGrayIcon(const QString& sourceIconStr) {
 
