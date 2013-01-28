@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>342</width>
-    <height>296</height>
+    <width>336</width>
+    <height>267</height>
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
@@ -27,6 +27,93 @@
      </property>
     </spacer>
    </item>
+   <item row="1" column="0">
+    <widget class="QGroupBox" name="groupBoxAuthentication">
+     <property name="toolTip">
+      <string>Set login and password if authentication is required by host</string>
+     </property>
+     <property name="title">
+      <string>Authentication</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="labelLogin">
+        <property name="text">
+         <string>Login:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="loginCheckLabel">
+        <property name="maximumSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLineEdit" name="login">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Set login required by host</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="labelPassword">
+        <property name="text">
+         <string>Password:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="password">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>Set password required by host</string>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="passwordCheckLabel">
+        <property name="maximumSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item row="0" column="0">
     <widget class="QGroupBox" name="groupBoxConfig">
      <property name="title">
@@ -41,6 +128,16 @@
        </widget>
       </item>
       <item row="0" column="1">
+       <widget class="QLabel" name="hostCheckLabel">
+        <property name="maximumSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
        <widget class="QLineEdit" name="hostName">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -60,7 +157,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="1" column="2">
        <widget class="QSpinBox" name="connectionNumber">
         <property name="toolTip">
          <string>Set the number of simultaneous connections to the nntp server</string>
@@ -83,7 +180,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="2" column="2">
        <widget class="QSpinBox" name="port">
         <property name="toolTip">
          <string>Set connection port</string>
@@ -99,17 +196,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QCheckBox" name="enableSSL">
-        <property name="toolTip">
-         <string>Enable encrypted connection</string>
-        </property>
-        <property name="text">
-         <string>Enable SSL connection</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
+      <item row="3" column="0" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <property name="sizeConstraint">
          <enum>QLayout::SetFixedSize</enum>
@@ -158,64 +245,13 @@
         </item>
        </layout>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBoxAuthentication">
-     <property name="toolTip">
-      <string>Set login and password if authentication is required by host</string>
-     </property>
-     <property name="title">
-      <string>Authentication</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="labelLogin">
-        <property name="text">
-         <string>Login:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="login">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
+      <item row="3" column="2">
+       <widget class="QCheckBox" name="enableSSL">
         <property name="toolTip">
-         <string>Set login required by host</string>
+         <string>Enable encrypted connection</string>
         </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="labelPassword">
         <property name="text">
-         <string>Password:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="password">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="toolTip">
-         <string>Set password required by host</string>
-        </property>
-        <property name="echoMode">
-         <enum>QLineEdit::Password</enum>
+         <string>Enable SSL connection</string>
         </property>
        </widget>
       </item>

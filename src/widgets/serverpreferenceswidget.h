@@ -31,6 +31,7 @@
 class PreferencesServer;
 class ServerTabWidget;
 
+
 class ServerPreferencesWidget : public QWidget {
 
     Q_OBJECT
@@ -51,11 +52,13 @@ private:
     ServerTabWidget* serverTabWidget;
     int tabIndex;
 
-
+    bool checkFormText(const QString&);
     void setupConnections();
     void setupButtons();
     void hideWidgets(const int&) ;
     void enableWidgets(const bool&);
+    void fillWarningLabel(QLabel*, const QString&);
+    void clearWarningLabel(QLabel*);
 
 
 signals:
@@ -67,6 +70,7 @@ private slots:
     void valueChangedSlot();
     void serverModeValueChangedSlot(int);
     void pushButtonInfoClickedSlot();
+    void formEditingFinishedSlot();
 
 
 

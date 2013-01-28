@@ -30,6 +30,7 @@
 #include "kwootysettings.h"
 
 #include "utilities/utilityserverstatus.h"
+#include "utilities/utilityiconpainting.h"
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
@@ -65,6 +66,9 @@ ServerPreferencesWidget::ServerPreferencesWidget(ServerTabWidget* parent,
 
     // fill previously stored data in forms :
     this->setData(tabIndex);
+
+    // finally check if fields contents contain whitespace :
+    this->formEditingFinishedSlot();
 
 }
 
@@ -123,6 +127,11 @@ void ServerPreferencesWidget::setupConnections() {
     // display information box when pushButtonInfo is clicked :
     connect (this->serverSettingsUi->pushButtonInfo, SIGNAL(clicked (bool)), this, SLOT(pushButtonInfoClickedSlot()));
 
+    // check if server name, login and password contain trailling white spaces when editing finished :
+    connect (this->serverSettingsUi->hostName, SIGNAL(editingFinished()), this, SLOT(formEditingFinishedSlot()));
+    connect (this->serverSettingsUi->login, SIGNAL(editingFinished()), this, SLOT(formEditingFinishedSlot()));
+    connect (this->serverSettingsUi->password, SIGNAL(editingFinished()), this, SLOT(formEditingFinishedSlot()));
+
 }
 
 
@@ -132,28 +141,28 @@ void ServerPreferencesWidget::setGroupBoxTitle(const int& index) {
     switch (index) {
 
     case 0: {
-            serverStr = i18n("Master");
-            break;
-        }
+        serverStr = i18n("Master");
+        break;
+    }
     case 1: {
-            serverStr = i18n("First backup");
-            break;
-        }
+        serverStr = i18n("First backup");
+        break;
+    }
     case 2: {
-            serverStr = i18n("Second backup");
-            break;
-        }
+        serverStr = i18n("Second backup");
+        break;
+    }
     case 3: {
-            serverStr = i18n("Third backup");
-            break;
-        }
+        serverStr = i18n("Third backup");
+        break;
+    }
     case 4: {
-            serverStr = i18n("Fourth backup");
-            break;
-        }
+        serverStr = i18n("Fourth backup");
+        break;
+    }
     default: {
-            break;
-        }
+        break;
+    }
 
     }
 
@@ -188,7 +197,7 @@ ServerData ServerPreferencesWidget::getData() {
     // get all settings from widgets :
     ServerData serverData;
 
-    this->serverSettingsUi->hostName->setText(this->serverSettingsUi->hostName->text().trimmed());
+    this->serverSettingsUi->hostName->setText(this->serverSettingsUi->hostName->text());
     serverData.setHostName(this->serverSettingsUi->hostName->text());
 
     serverData.setLogin(this->serverSettingsUi->login->text());
@@ -244,6 +253,25 @@ void ServerPreferencesWidget::hideWidgets(const int& tabIndex) {
 
 }
 
+bool ServerPreferencesWidget::checkFormText(const QString& text) {
+    return (text != text.trimmed());
+}
+
+void ServerPreferencesWidget::fillWarningLabel(QLabel* label, const QString& toolTip) {
+
+    label->setPixmap(UtilityIconPainting::getInstance()->buildNormalIcon("dialog-warning"));
+    label->setToolTip(toolTip);
+
+}
+
+void ServerPreferencesWidget::clearWarningLabel(QLabel* label) {
+
+    label->setToolTip(QString());
+    label->setPixmap(QPixmap());
+
+}
+
+
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
@@ -285,6 +313,33 @@ void ServerPreferencesWidget::serverModeValueChangedSlot(int serverModeIndex) {
 
 }
 
+void ServerPreferencesWidget::formEditingFinishedSlot() {
+
+    // check if host field contains whitespace :
+    if ( this->checkFormText(this->serverSettingsUi->hostName->text()) ) {
+        this->fillWarningLabel(this->serverSettingsUi->hostCheckLabel, i18n("Host field contains whitespace"));
+    }
+    else {
+        this->clearWarningLabel(this->serverSettingsUi->hostCheckLabel);
+    }
+
+    // check if host login contains whitespace :
+    if ( this->checkFormText(this->serverSettingsUi->login->text()) ) {
+        this->fillWarningLabel(this->serverSettingsUi->loginCheckLabel, i18n("Login field contains whitespace"));
+    }
+    else {
+        this->clearWarningLabel(this->serverSettingsUi->loginCheckLabel);
+    }
+
+    // check if host password contains whitespace :
+    if ( this->checkFormText(this->serverSettingsUi->password->text()) ) {
+        this->fillWarningLabel(this->serverSettingsUi->passwordCheckLabel, i18n("Password field contains whitespace"));
+    }
+    else {
+        this->clearWarningLabel(this->serverSettingsUi->passwordCheckLabel);
+    }
+
+}
 
 
 void ServerPreferencesWidget::pushButtonInfoClickedSlot() {
