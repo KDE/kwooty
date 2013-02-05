@@ -108,9 +108,9 @@ void Scheduler::setupConnections() {
 
     // allow user to bypass scheduler if start/pause actions have been manually trigered :
     connect(this->core->getActionsManager(),
-            SIGNAL(startPauseAboutToBeTriggeredSignal(UtilityNamespace::ItemStatus)),
+            SIGNAL(startPauseAboutToBeTriggeredSignal(UtilityNamespace::ItemStatus, QList<QModelIndex>)),
             this,
-            SLOT(startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus)));
+            SLOT(startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus, QList<QModelIndex>)));
 
     connect(this->core->getActionsManager(),
             SIGNAL(startPauseTriggeredSignal(UtilityNamespace::ItemStatus)),
@@ -118,7 +118,6 @@ void Scheduler::setupConnections() {
             SLOT(dataAboutToArriveSlot()));
 
 }
-
 
 
 
@@ -148,7 +147,7 @@ void Scheduler::resumeDownloads() {
 void Scheduler::scheduleStartPauseDownload(UtilityNamespace::ItemStatus itemStatus) {
 
     // 1.first remove all indexes from list whose download is over :
-    foreach (QModelIndex decodeFinishParentIndex, this->core->getModelQuery()->retrieveDecodeFinishParentIndexList()) {
+    foreach (const QModelIndex& decodeFinishParentIndex, this->core->getModelQuery()->retrieveDecodeFinishParentIndexList()) {
 
         QString parentUuid = this->core->getDownloadModel()->getUuidStrFromIndex(decodeFinishParentIndex);
 
@@ -161,7 +160,7 @@ void Scheduler::scheduleStartPauseDownload(UtilityNamespace::ItemStatus itemStat
 
     // 2. retrieve all uuid items currently Idle to set on Pause or vice versa :
     QList<QModelIndex> targetIndexesList;
-    foreach (QModelIndex index, this->core->getModelQuery()->retrieveStartPauseIndexList(itemStatus)) {
+    foreach (const QModelIndex& index, this->core->getModelQuery()->retrieveStartPauseIndexList(itemStatus)) {
 
         // if bypass is enabled and items have not been manually set on start/pause :
         if (!this->retrieveProperListFromMap(itemStatus).contains(this->core->getDownloadModel()->getUuidStrFromIndex(index)) ) {
@@ -203,11 +202,11 @@ void Scheduler::initUuidStartPauseMap() {
 
     if (SchedulerSettings::bypassMethods() == Scheduler::BypassItemsPause) {
 
-        foreach (QString uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsStart)) {
+        foreach (const QString& uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsStart)) {
             this->manuallyUuidStartPauseMap.remove(uuid);
         }
 
-        foreach (QString uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart)) {
+        foreach (const QString& uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart)) {
             this->manuallyUuidStartPauseMap.insert(uuid, BypassItemsPause);
 
         }
@@ -215,11 +214,11 @@ void Scheduler::initUuidStartPauseMap() {
     }
     else if (SchedulerSettings::bypassMethods() == Scheduler::BypassItemsStart) {
 
-        foreach (QString uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPause)) {
+        foreach (const QString& uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPause)) {
             this->manuallyUuidStartPauseMap.remove(uuid);
         }
 
-        foreach (QString uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart)) {
+        foreach (const QString& uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart)) {
             this->manuallyUuidStartPauseMap.insert(uuid, BypassItemsStart);
 
         }
@@ -227,8 +226,6 @@ void Scheduler::initUuidStartPauseMap() {
     }
 
 }
-
-
 
 
 void Scheduler::checkDownloadStatus(const DownloadLimitStatus& downloadLimitStatus) {
@@ -302,6 +299,7 @@ void Scheduler::applySpeedLimit() {
 
 
 }
+
 
 DownloadLimitStatus Scheduler::getCurrentDownloadLimitStatus() {
 
@@ -418,7 +416,7 @@ void Scheduler::dataAboutToArriveSlot(QModelIndex appendedIndex) {
 }
 
 
-void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus targetItemStatus) {
+void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus targetItemStatus, QList<QModelIndex> targetIndexesList) {
 
     if ( SchedulerSettings::enableScheduler() &&
          SchedulerSettings::bypass() ) {
@@ -431,7 +429,6 @@ void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus ta
             bypassSchedulerMethod = BypassItemsPauseOrStart;
         }
 
-        // TODO : how to manage pause trigger when disk is full ???
         // if items have been manually set on pause :
         else if ( targetItemStatus == PauseStatus &&
                   SchedulerSettings::bypassMethods() == Scheduler::BypassItemsPause ) {
@@ -449,7 +446,7 @@ void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus ta
         if (bypassSchedulerMethod != BypassNoItems) {
 
             // retrieve items selected by user :
-            foreach (QModelIndex selectedIndex, this->core->getTreeView()->selectionModel()->selectedRows()) {
+            foreach (const QModelIndex& selectedIndex, targetIndexesList) {
 
                 // retrieve their corresponding uuid and store them :
                 QString indexUuidStr = this->core->getDownloadModel()->getUuidStrFromIndex(selectedIndex);
@@ -461,8 +458,6 @@ void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus ta
     }
 
 }
-
-
 
 
 void Scheduler::settingsChanged() {
@@ -494,5 +489,3 @@ void Scheduler::settingsChanged() {
     this->checkDownloadStatus(NoLimitDownload);
 
 }
-
-
