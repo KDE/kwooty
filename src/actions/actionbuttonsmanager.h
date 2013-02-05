@@ -53,7 +53,9 @@ private:
 signals:
     void setMoveButtonEnabledSignal(bool);
     void setPauseButtonEnabledSignal(bool);
+    void setPauseAllButtonEnabledSignal(bool);
     void setStartButtonEnabledSignal(bool);
+    void setStartAllButtonEnabledSignal(bool);
     void setRemoveButtonEnabledSignal(bool);
     void setRetryButtonEnabledSignal(bool);
     void setMergeNzbButtonEnabledSignal(bool);

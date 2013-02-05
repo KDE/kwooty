@@ -130,12 +130,33 @@ void ActionButtonsManager::selectedItemSlot() {
             emit setStartButtonEnabledSignal(enableStartButton);
         }
 
+
+
+        // enable/disable "start all" / "pause all" buttons :
+        bool downloadItemsFound = false;
+        bool pauseItemsFound = false;
+
+        if (this->downloadModelQuery->searchParentItem(DownloadStatus)) {
+            downloadItemsFound = true;
+        }
+        if (this->downloadModelQuery->searchParentItem(PauseStatus)) {
+            pauseItemsFound = true;
+        }
+
+        emit setStartAllButtonEnabledSignal(pauseItemsFound);
+        emit setPauseAllButtonEnabledSignal(downloadItemsFound);
+
+
+
         // enable/disable retry action :
         emit setRetryButtonEnabledSignal(enableRetryButton);
+
+
 
         // enable/disable nzb merging action :
         this->actionsManager->getActionMergeManager()->checkMergeCandidates(mergeAvailable);
         emit setMergeNzbButtonEnabledSignal(mergeAvailable);
+
 
         // enable/disable manual extract action (available only if automatic post process has been disabled) :
         if ( ( !Settings::groupBoxAutoDecompress() ||

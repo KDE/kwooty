@@ -297,6 +297,7 @@ void MainWindow::setupActions() {
     startAllDownloadAction->setEnabled(true);
     actionCollection()->addAction("startAll", startAllDownloadAction);
     connect(startAllDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(startAllDownloadSlot()));
+    connect(actionButtonsManager, SIGNAL(setStartAllButtonEnabledSignal(bool)), startAllDownloadAction, SLOT(setEnabled(bool)) );
 
     // pauseAllDownloadAction :
     KAction* pauseAllDownloadAction = new KAction(this);
@@ -306,6 +307,7 @@ void MainWindow::setupActions() {
     pauseAllDownloadAction->setEnabled(true);
     actionCollection()->addAction("pauseAll", pauseAllDownloadAction);
     connect(pauseAllDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(pauseAllDownloadSlot()));
+    connect(actionButtonsManager, SIGNAL(setPauseAllButtonEnabledSignal(bool)), pauseAllDownloadAction, SLOT(setEnabled(bool)) );
 
     // retryDownloadAction :
     KAction* retryDownloadAction = new KAction(this);
