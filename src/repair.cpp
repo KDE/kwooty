@@ -101,7 +101,6 @@ void Repair::launchProcess(const NzbCollectionData& nzbCollectionData){
                 args.append(fileSavePath + nzbCollectionData.getPar2BaseName());
 
                 //kDebug() << "ARGS :" << args;
-                this->repairProcess->setTextModeEnabled(true);
                 this->repairProcess->setOutputChannelMode(KProcess::MergedChannels);
                 this->repairProcess->setNextOpenMode(QIODevice::ReadOnly | QIODevice::Unbuffered);
                 this->repairProcess->setProgram(args);
@@ -169,7 +168,7 @@ QString Repair::sortPar2FilesBySize(){
     QString fileSavePath;
     QMap<quint64, QString> sizePar2fileMap;
 
-    foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
 
         QString currentFileName = nzbFileData.getDecodedFileName();
 
@@ -236,7 +235,7 @@ void Repair::repairUpdate(const QString& repairProcessOutput) {
         // emit signal only if progress value has changed :
         if (this->repairProgressValueOld != repairProgressValue) {
 
-            foreach (NzbFileData currentNzbFileData, this->nzbFileDataList) {
+            foreach (const NzbFileData& currentNzbFileData, this->nzbFileDataList) {
 
                 // notify missing and damaged children of their repairing status
                 // and notify nzb parent item of overall children progression repairing :
@@ -324,7 +323,7 @@ void Repair::repairReadyReadSlot(){
     QStringList lines = this->stdOutputLines.split("\n");
 
     // process each lines received :
-    foreach (QString line, lines) {
+    foreach (const QString& line, lines) {
 
         if (!line.isEmpty()) {
 
@@ -467,7 +466,7 @@ void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus e
         }
 
 
-        foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+        foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
 
             if ( (nzbFileData.getVerifyProgressionStep() == VerifyMissingStatus) ||
                  (nzbFileData.getVerifyProgressionStep() == VerifyDamagedStatus) ||
@@ -497,7 +496,7 @@ void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus e
 
 void Repair::sendPar2ProgramNotFoundNotification() {
 
-    foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
         // notify parent items that program has not been found (nzbFileData.isPar2File() allows to notify parent item) :
         if (nzbFileData.isPar2File() ) {
 
@@ -549,7 +548,7 @@ void Repair::sendVerifyingFilesNotification() {
 void Repair::sendMissingFilesNotification() {
 
     // get only item identifiers with "missing" status :
-    foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
 
         if (nzbFileData.getVerifyProgressionStep() == VerifyMissingStatus) {
 

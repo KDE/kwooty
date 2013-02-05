@@ -121,7 +121,6 @@ void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, Extr
 
         //kDebug() << "ARGS :" << this->extractProgramPath <<args;
 
-        this->extractProcess->setTextModeEnabled(true);
         this->extractProcess->setOutputChannelMode(KProcess::MergedChannels);
         this->extractProcess->setNextOpenMode(QIODevice::ReadWrite | QIODevice::Unbuffered);
         this->extractProcess->setProgram(args);
@@ -200,7 +199,7 @@ void ExtractBase::resetVariables(){
 
 void ExtractBase::removeArchiveFiles(){
 
-    foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
 
         if (nzbFileData.getExtractProgressionStep() == ExtractStatus) {
 
@@ -417,7 +416,7 @@ void ExtractBase::findItemAndNotifyUser(const QString& fileNameStr, const Utilit
 
 void ExtractBase::emitProgressToArchivesWithCurrentStatus(const UtilityNamespace::ItemStatus status, const UtilityNamespace::ItemTarget itemTarget,  const int percentage) {
 
-    foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
 
         if (nzbFileData.getExtractProgressionStep() == status) {
 
@@ -434,7 +433,7 @@ void ExtractBase::emitProgressToArchivesWithCurrentStatus(const UtilityNamespace
 
 void ExtractBase::emitFinishToArchivesWithoutErrors(const UtilityNamespace::ItemStatus status, const int percentage) {
 
-    foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
 
         UtilityNamespace::ItemStatus nzbFileDataStatus = nzbFileData.getExtractProgressionStep();
 
@@ -460,7 +459,7 @@ void ExtractBase::emitFinishToArchivesWithoutErrors(const UtilityNamespace::Item
 
 void ExtractBase::emitStatusToAllArchives(const int& progress, const UtilityNamespace::ItemStatus status, const UtilityNamespace::ItemTarget target) {
 
-    foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
 
         if (nzbFileData.isArchiveFile()) {
 
