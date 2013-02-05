@@ -136,7 +136,8 @@ namespace UtilityNamespace
     // type of article encoding :
     enum ArticleEncodingType {
         ArticleEncodingYEnc,
-        ArticleEncodingUUEnc
+        ArticleEncodingUUEnc,
+        ArticleEncodingUnknown
     };
 
 
@@ -287,8 +288,8 @@ namespace UtilityNamespace
 
     // maximum size of the segments buffer pending to decode :
     enum BufferSize {
-        BufferMaxSizeMB = 52428800, // 50 MiB
-        BufferMaxSizeList = 100
+        BufferMaxSizeMB = 104857600, // 100 MiB
+        BufferMaxSizeList = 1000
     };
 
 }
