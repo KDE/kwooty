@@ -152,7 +152,7 @@ void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType) {
     // remove selected indexes from model
     QMap< int, QList<QStandardItem*> > itemRowsMap;
 
-    foreach (QModelIndex index, indexesList) {
+    foreach (const QModelIndex& index, indexesList) {
 
         int rowNumber = index.row();
         QList<QStandardItem*> rowItems = parentItem->takeRow(rowNumber);
@@ -168,7 +168,7 @@ void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType) {
     QList<int> updatedRowNumberList;
 
     // then replace removed indexes to the proper position :
-    foreach (int currentRow , rowNumberList) {
+    foreach (const int& currentRow, rowNumberList) {
 
         QList<QStandardItem*> itemRows = itemRowsMap.value(currentRow);
 
@@ -262,9 +262,9 @@ void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus ta
 void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus targetStatus, const QList<QModelIndex>& indexesList){
 
     // notify listeners that start/pause download action is about to be triggered :
-    emit startPauseAboutToBeTriggeredSignal(targetStatus);
+    emit startPauseAboutToBeTriggeredSignal(targetStatus, indexesList);
 
-    foreach (QModelIndex currentModelIndex, indexesList) {
+    foreach (const QModelIndex& currentModelIndex, indexesList) {
 
         // get file name item related to selected index :
         QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(currentModelIndex);
@@ -307,7 +307,6 @@ void ActionsManager::setStartPauseDownloadAllItems(const UtilityNamespace::ItemS
 
     this->setStartPauseDownload(targetStatus, this->modelQuery->retrieveStartPauseIndexList(targetStatus));
 
-
 }
 
 
@@ -315,7 +314,7 @@ void ActionsManager::retryDownload(const QModelIndexList& indexList) {
 
     ItemParentUpdater* itemParentUpdater = this->core->getItemParentUpdater();
 
-    foreach (QModelIndex currentModelIndex, indexList) {
+    foreach (const QModelIndex& currentModelIndex, indexList) {
 
         bool changeItemStatus = false;
 
@@ -582,8 +581,10 @@ void ActionsManager::openFolderSlot() {
 void ActionsManager::pauseDownloadSlot() {
 
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
-    this->setStartPauseDownload(PauseStatus, indexesList);
+    this->setStartPauseDownload(UtilityNamespace::PauseStatus, indexesList);
+
 }
+
 
 void ActionsManager::pauseAllDownloadSlot() {
     this->setStartPauseDownloadAllItems(UtilityNamespace::PauseStatus);
@@ -595,6 +596,7 @@ void ActionsManager::startDownloadSlot() {
 
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
     this->setStartPauseDownload(IdleStatus, indexesList);
+
 }
 
 

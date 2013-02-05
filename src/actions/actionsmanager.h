@@ -79,7 +79,7 @@ signals:
     void allRowRemovedSignal();
     void recalculateNzbSizeSignal(const QModelIndex);
     void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);
-    void startPauseAboutToBeTriggeredSignal(UtilityNamespace::ItemStatus);
+    void startPauseAboutToBeTriggeredSignal(UtilityNamespace::ItemStatus, QList<QModelIndex>);
     void startPauseTriggeredSignal(UtilityNamespace::ItemStatus);
 
 
