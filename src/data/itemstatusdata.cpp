@@ -27,6 +27,7 @@ ItemStatusData::ItemStatusData() {
 
     this->init();
     this->downloadRetryCounter = 0;
+    this->articleEncodingType = UtilityNamespace::ArticleEncodingUnknown;
 }
 
 
