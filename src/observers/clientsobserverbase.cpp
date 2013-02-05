@@ -31,6 +31,7 @@ void ClientsObserverBase::resetVariables() {
     this->totalBytesDownloaded = 0;
     this->totalConnections = 0;
     this->sslActive = false;
+    this->certificateVerified = false;
     this->sslErrors = QStringList();
     this->nttpErrorStatus = NoError;
 
