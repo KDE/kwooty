@@ -613,15 +613,6 @@ void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePres
             // replace new lines starting with double periods by a simple one (RFC 977)
             this->segmentByteArray.replace("\r\n..", "\r\n.");
 
-            // save segment :
-            QBuffer* buffer = new QBuffer();
-            buffer->setData(this->segmentByteArray);
-
-            // set pointer to data to be decoder by segmentDecoderThread :
-            this->currentSegmentData.setIoDevice(buffer);
-            // set size of downloaded data :
-            this->currentSegmentData.setDataSize(this->segmentByteArray.size());
-
         }
 
         // article has not been found, try to download it with backup servers :
@@ -749,6 +740,14 @@ int NntpClient::notifyDownloadHasFinished(const UtilityNamespace::Article articl
 
     // segment is present and download is complete :
     if (articlePresence == Present) {
+
+        // set pointer to data to be decoder by segmentDecoderThread :
+        QBuffer* buffer = new QBuffer();
+        buffer->setData(this->segmentByteArray);
+
+        this->currentSegmentData.setIoDevice(buffer);
+        this->currentSegmentData.setDataSize(this->segmentByteArray.size());
+
         downloadNextSegmentDelaySec = this->parent->getServerGroup()->saveSegment(this->currentSegmentData);
     }
     // else update current segment status :
