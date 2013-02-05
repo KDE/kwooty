@@ -116,6 +116,22 @@ void StandardItemModel::updateStatusDataFromIndex(const QModelIndex& index, cons
 
 
 
+void StandardItemModel::initStatusDataToItem(QStandardItem* stateItem, const ItemStatusData& itemStatusData) {
+
+    // convenience method to force signal to be emitted upon first data storage :
+    this->storeStatusDataToItem(stateItem, itemStatusData);
+
+    if (this->isNzbItem(stateItem)) {
+        emit parentStatusItemChangedSignal(stateItem, itemStatusData);
+    }
+    else {
+        emit childStatusItemChangedSignal(stateItem, itemStatusData);
+    }
+
+}
+
+
+
 void StandardItemModel::storeStatusDataToItem(QStandardItem* stateItem, const ItemStatusData& itemStatusData) {
 
     // get itemstatusdata from stateItem :
