@@ -209,7 +209,7 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
 
     QList<QByteArray> uuEncodedLines = captureArray.split('\n');
 
-    foreach(QByteArray uuLine, uuEncodedLines) {
+    foreach (QByteArray uuLine, uuEncodedLines) {
 
         uuLine = uuLine.trimmed();
 
@@ -298,7 +298,7 @@ bool SegmentDecoderUUEnc::isUUEncodedLine(QByteArray& currentLine) {
     // if line match previous criteria, check that all characters belong to uuencode character table :
     if (uuEncodedLine) {
 
-        foreach (char currentChar, currentLine) {
+        foreach (const char& currentChar, currentLine) {
 
             // if characters are out of scope, this is not a uuEncoded line :
             if ( (currentChar < ' ') ||
@@ -315,9 +315,7 @@ bool SegmentDecoderUUEnc::isUUEncodedLine(QByteArray& currentLine) {
 
     return uuEncodedLine;
 
-
 }
-
 
 
 QString SegmentDecoderUUEnc::searchPattern(QIODevice* segmentFile) {

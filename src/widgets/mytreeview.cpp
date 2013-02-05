@@ -210,7 +210,7 @@ void MyTreeView::dropEvent(QDropEvent* event) {
         // get urls of dropped files :
         QList<QUrl> urlList = mimeData->urls();
 
-        foreach (KUrl nzbUrl, urlList) {
+        foreach (const KUrl& nzbUrl, urlList) {
 
             // filter by .nzb extension :
             if (nzbUrl.url().endsWith(".nzb", Qt::CaseInsensitive)) {

@@ -227,7 +227,7 @@ void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
 
     // if file is a previous segment, suppress it :
     QFile temporaryFile;
-    foreach (QString currentFileStr, temporaryFilelist) {
+    foreach (const QString& currentFileStr, temporaryFilelist) {
 
         temporaryFile.setFileName(tempPathStr + "/" + currentFileStr);
 

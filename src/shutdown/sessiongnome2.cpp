@@ -41,7 +41,7 @@ QList<UtilityNamespace::SystemShutdownType> SessionGnome2::retrieveAvailableShut
     indexShutdownTypeList.append(UtilityNamespace::Shutdown);
 
     // then add supported sleep types by system :
-    foreach (SleepState sleepState, Solid::PowerManagement::supportedSleepStates()) {
+    foreach (const SleepState& sleepState, Solid::PowerManagement::supportedSleepStates()) {
 
         // add standby :
         if (sleepState == StandbyState) {

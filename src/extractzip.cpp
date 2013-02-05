@@ -149,7 +149,7 @@ void ExtractZip::extractUpdate(const QString& line) {
         this->extractProgressValue = PROGRESS_COMPLETE;
 
         // set each file currently as "Extracting" to "Bad Crc" status :
-        foreach (NzbFileData nzbFileData, this->nzbFileDataList) {
+        foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
             this->findItemAndNotifyUser(nzbFileData.getDecodedFileName(), ExtractBadCrcStatus, ChildItemTarget);
         }
 

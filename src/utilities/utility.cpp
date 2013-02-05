@@ -302,7 +302,7 @@ QString Utility::searchExternalPrograms(const QString& programToSearch, bool& pr
 
     QStringList programsWithDifferentNames = programToSearch.split(";");
 
-    foreach (QString currentProgramName, programsWithDifferentNames) {
+    foreach (const QString& currentProgramName, programsWithDifferentNames) {
 
         foreach (QString searchPath, searchPathList) {
 

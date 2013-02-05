@@ -69,7 +69,7 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
     QList<SegmentData> segmentList = nzbFileData.getSegmentList();
 
     // get progression and status of all segments :
-    foreach (SegmentData currentSegmentData, segmentList) {
+    foreach (const SegmentData& currentSegmentData, segmentList) {
 
         // calculate progression :
         totalProgress += currentSegmentData.getProgress();

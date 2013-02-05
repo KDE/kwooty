@@ -239,7 +239,7 @@ QMap<QString, QString> ShutdownManager::retrieveIconAvailableShutdownMap() {
 
     if (this->session) {
 
-        foreach (UtilityNamespace::SystemShutdownType shutdownType, this->session->retrieveAvailableShutdownMethods()) {
+        foreach (const UtilityNamespace::SystemShutdownType& shutdownType, this->session->retrieveAvailableShutdownMethods()) {
 
             // add shutdown :
             if (shutdownType == UtilityNamespace::Shutdown) {

@@ -238,7 +238,7 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
     QString nzbFileSavePath;
 
     // add children to parent (nzbNameItem) :
-    foreach (GlobalFileData currentGlobalFileData, globalFileDataList) {
+    foreach (const GlobalFileData& currentGlobalFileData, globalFileDataList) {
 
         // populate children :
         this->addParentItem(nzbNameItem, currentGlobalFileData);
@@ -263,7 +263,6 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
 
     }
 
-
     // set parent unique identifier :
     nzbNameItem->setData(QVariant(QUuid::createUuid().toString()), IdentifierRole);
 
@@ -271,7 +270,7 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
     this->downloadModel->updateParentFileSavePathFromIndex(nzbNameItem->index(), nzbFileSavePath);
 
     // set idle status by default :
-    this->downloadModel->storeStatusDataToItem(nzbStateItem, ItemStatusData());
+    this->downloadModel->initStatusDataToItem(nzbStateItem, ItemStatusData());
 
     // set size :
     nzbSizeItem->setData(qVariantFromValue(nzbFilesSize), SizeRole);
@@ -290,7 +289,6 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
         this->actionsManager->changePar2FilesStatus(nzbNameItem->index(), WaitForPar2IdleStatus);
 
     }
-
 
     return nzbNameItem->index();
 
@@ -331,7 +329,7 @@ void Core::addParentItem (QStandardItem* nzbNameItem, const GlobalFileData& curr
 
     // set idle status by default :
     nzbNameItem->setChild(nzbNameItemNextRow, STATE_COLUMN, parentStateItem);
-    this->downloadModel->storeStatusDataToItem(parentStateItem, currentGlobalFileData.getItemStatusData());
+    this->downloadModel->initStatusDataToItem(parentStateItem, currentGlobalFileData.getItemStatusData());
 
     // set size :
     nzbNameItem->setChild(nzbNameItemNextRow, SIZE_COLUMN, parentSizeItem);

@@ -168,7 +168,7 @@ bool RepairDecompressThread::isListContainsdifferentGroups(const QList<NzbFileDa
     QSet<QString> baseNamePar2Set;
     QSet<QString> baseNameRarSet;
 
-    foreach (NzbFileData nzbFileData, nzbFileDataList) {
+    foreach (const NzbFileData& nzbFileData, nzbFileDataList) {
 
         if (nzbFileData.isPar2File()) {
             QString parBaseName = this->getBaseNameFromPar2(nzbFileData);
@@ -300,7 +300,7 @@ NzbFileData RepairDecompressThread::tryToGuessDecodedFileName(NzbFileData& targe
 
     QString builtFileName;
 
-    foreach(NzbFileData currentNzbFileData, nzbFileDataList) {
+    foreach (const NzbFileData& currentNzbFileData, nzbFileDataList) {
 
         // search a decoded file name containing the rarbase name pattern :
         if (currentNzbFileData.isArchiveFile() && currentNzbFileData.getDecodedFileName().contains(fileBaseName)){
@@ -337,12 +337,12 @@ void RepairDecompressThread::processRarFilesFromDifferentGroups(const QStringLis
 
         QList<NzbFileData> nzbFileDataList = nzbCollectionData.takeNzbFileDataList();
 
-        foreach(QString fileBaseName, fileBaseNameList) {
+        foreach (const QString& fileBaseName, fileBaseNameList) {
 
             QList<NzbFileData> groupedFileList;
             QString par2BaseName;
 
-            foreach(NzbFileData nzbFileData, nzbFileDataList) {
+            foreach (NzbFileData nzbFileData, nzbFileDataList) {
 
                 // the file is missing if the decoded file name is empty :
                 if (nzbFileData.getDecodedFileName().isEmpty()  && !nzbFileData.isPar2File()) {
@@ -398,7 +398,7 @@ void RepairDecompressThread::processRarFilesFromSameGroup(NzbCollectionData& nzb
 
     // get file base name for rar file :
     QString rarBaseName;
-    foreach (NzbFileData nzbFileData, nzbFileDataList) {
+    foreach (const NzbFileData& nzbFileData, nzbFileDataList) {
 
         if (nzbFileData.isArchiveFile()) {
             rarBaseName = this->getBaseNameFromRar(nzbFileData);

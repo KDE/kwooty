@@ -74,7 +74,7 @@ QList<NzbFileData> ExtractSplit::retrieveSplitFilesOnly(const QString& fileSaveP
 
     QList<NzbFileData> nzbFileDataFilteredList;
 
-    foreach (NzbFileData currentNzbFileData, this->nzbCollectionData.getNzbFileDataList()) {
+    foreach (const NzbFileData& currentNzbFileData, this->nzbCollectionData.getNzbFileDataList()) {
 
         // get current file :
         QFile currentSplitFile(fileSavePath + currentNzbFileData.getDecodedFileName());

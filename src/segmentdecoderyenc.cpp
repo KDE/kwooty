@@ -219,7 +219,7 @@ QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray& captureArray, const quint3
     bool specialCharacter = false;
 
 
-    foreach (char encodedCharacter, captureArray) {
+    foreach (const char& encodedCharacter, captureArray) {
 
         // decode char :
         if (encodedCharacter != '\r' && encodedCharacter != '\n') {
@@ -299,7 +299,7 @@ void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData& nzbFileData) {
     if (Utility::createFolder(nzbFileData.getFileSavePath())) {
 
         // check crc value for each segment :
-        foreach(SegmentData segmentData, nzbFileData.getSegmentList()) {
+        foreach (const SegmentData& segmentData, nzbFileData.getSegmentList()) {
 
             // if article is not present on server or computed crc is not matching,
             // the global crc for the file is considered as incorrect :

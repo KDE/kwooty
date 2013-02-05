@@ -71,11 +71,11 @@ UtilityIconPainting::UtilityIconPainting() : QObject(qApp) {
 
 
     // build a map to store every used icons in memory according to their names :
-    foreach (QString iconName, statusIconStrMap.values()) {
+    foreach (const QString& iconName, statusIconStrMap.values()) {
         iconStrIconImageMap.insert(iconName, KIcon(iconName));
     }
 
-    foreach (QString iconName, parentStatusIconStrMap.values()) {
+    foreach (const QString& iconName, parentStatusIconStrMap.values()) {
         iconStrIconImageMap.insert(iconName, KIcon(iconName));
     }
 

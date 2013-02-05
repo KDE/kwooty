@@ -93,7 +93,7 @@ bool CategoriesModel::isDuplicateSubCategory(QStandardItem* selectedItem, const 
 
 void CategoriesModel::addParentCategoryListToModel(const QStringList& categoryList) {
 
-    foreach (QString parentType, categoryList) {
+    foreach (const QString& parentType, categoryList) {
 
         bool categoryInserted = false;
 

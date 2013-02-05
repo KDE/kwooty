@@ -183,7 +183,7 @@ void WatchFolder::fileCompleteTimerSlot() {
     QStringList pendingFileList;
 
     // check if nzb files contained is the list are complete :
-    foreach(QString nzbFilePath, this->nzbFileList) {
+    foreach (const QString& nzbFilePath, this->nzbFileList) {
 
         bool fileEnqueued = false;
 

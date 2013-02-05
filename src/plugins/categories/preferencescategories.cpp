@@ -206,7 +206,7 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
     // dialog has not been canceled, do process :
     if (dialog.exec() == KDialog::Accepted) {
 
-        foreach (QString mimeType, dialog.chooser()->mimeTypes()) {
+        foreach (const QString& mimeType, dialog.chooser()->mimeTypes()) {
 
             QString subCategory = UtilityCategories::buildSubcategoryPattern(mimeType);
 
@@ -216,7 +216,7 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
         }
 
 
-        foreach (QString subCategorySelected, subcategorySelectedList) {
+        foreach (const QString& subCategorySelected, subcategorySelectedList) {
 
             if (!this->categoriesModel->isDuplicateSubCategory(parentItem, subCategorySelected)) {
 
@@ -260,7 +260,7 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
         QList<MimeData> mimeDataChildList = this->categoriesModel->retrieveMimeDataListFromItem(categoryItem);
 
         // compare subCategories stored with subCategories selected :
-        foreach (MimeData mimeDataChild, mimeDataChildList) {
+        foreach (const MimeData& mimeDataChild, mimeDataChildList) {
 
             // if subCategory stored is no more selected, user has deselected it :
             if (!subcategorySelectedList.contains(mimeDataChild.getSubCategory())) {

@@ -50,7 +50,7 @@ void PluginManager::loadPlugins() {
 
     KConfigGroup kConfigGroup = KGlobal::config()->group("Plugins");
 
-    foreach(KPluginInfo currentPluginInfo, this->pluginInfoList) {
+    foreach (const KPluginInfo& currentPluginInfo, this->pluginInfoList) {
 
         // look in config file if the plugin have to be loaded :
         QString entryReadStr = kConfigGroup.readEntry(QString("%1Enabled").arg(currentPluginInfo.pluginName()), "");
@@ -142,7 +142,7 @@ void PluginManager::unloadCurrentPlugin(const KPluginInfo& currentPluginInfo) {
 void PluginManager::configCommittedSlot(const QByteArray& componentName) {
 
     // look for plugin whose config has been updated :
-    foreach(Plugin* currentPlugin, this->loadedInfoPluginMap.values()) {
+    foreach (Plugin* currentPlugin, this->loadedInfoPluginMap.values()) {
 
         // corresponding plugin has been found :
         if (componentName == currentPlugin->componentData().componentName()) {

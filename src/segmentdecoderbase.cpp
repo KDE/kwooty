@@ -54,7 +54,7 @@ QString SegmentDecoderBase::scanSegmentFiles(const NzbFileData& currentNzbFileDa
     }
 
     // scan every files to be decoded :
-    foreach (SegmentData currentSegment, this->segmentDataList) {
+    foreach (const SegmentData& currentSegment, this->segmentDataList) {
 
         QString temporaryFolder = Settings::temporaryFolder().path() + '/';
 

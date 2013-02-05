@@ -185,7 +185,7 @@ void ActionMergeManager::processMerge(QStandardItem* selectedFileNameItem, QStan
     // append eventual nzb files to files to be moved :
     if (selectedFileSavePath != targetFileSavePath) {
 
-        foreach (QString nzbFile, QDir(selectedFileSavePath).entryList(QStringList() << "*.nzb", QDir::Files)) {
+        foreach (const QString& nzbFile, QDir(selectedFileSavePath).entryList(QStringList() << "*.nzb", QDir::Files)) {
             sourceFileList.append(selectedFileSavePath + '/' + nzbFile);
         }
     }
@@ -266,7 +266,7 @@ void ActionMergeManager::mergeSubMenuAboutToShowSlot() {
     // build new appropriate menu :
     if (mergeAvailable) {
 
-        foreach (QStandardItem* fileNameItem, fileNameItemList) {
+        foreach (const QStandardItem* fileNameItem, fileNameItemList) {
 
             QAction* currentAction = mergeSubMenu->addAction(fileNameItem->text());
 

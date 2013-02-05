@@ -163,7 +163,7 @@ void Categories::launchPreProcess() {
                 QList<MimeData> mimeDataChildList = this->categoriesModel->retrieveMimeDataListFromItem(categoryItem);
 
                 // compare subcategories stored with guessed subcategory :
-                foreach (MimeData mimeDataChild, mimeDataChildList) {
+                foreach (const MimeData& mimeDataChild, mimeDataChildList) {
 
                     // if subCategory has been found :
                     if (subCategory == mimeDataChild.getSubCategory()) {
@@ -298,7 +298,7 @@ bool Categories::checkDiskSpace(const MimeData& mimeData, const QString& nzbFile
     // compute the total size of files to be moved :
     quint64 totalSizeToMove = 0;
 
-    foreach (quint64 currentSize, sizeList) {
+    foreach (const quint64& currentSize, sizeList) {
         totalSizeToMove += currentSize;
     }
 
@@ -388,7 +388,7 @@ QHash<QString, quint64> Categories::scanDownloadedFiles(const QString& nzbFileSa
 
         // get mime type of each file :
         QFileInfo fileInfo;
-        foreach (QString currentFileStr, currentFileList) {
+        foreach (const QString& currentFileStr, currentFileList) {
 
             KSharedPtr<KMimeType> mimeType = this->retrieveFileMimeType(currentFileStr, nzbFileSavepath);
 

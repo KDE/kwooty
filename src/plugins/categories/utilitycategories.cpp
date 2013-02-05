@@ -142,7 +142,7 @@ QStringList UtilityCategories::retrieveMainCategoryList() {
 
     QStringList parentTypeList;
 
-    foreach (KSharedPtr<KMimeType> mimeType,  KMimeType::allMimeTypes()) {
+    foreach (const KSharedPtr<KMimeType>& mimeType,  KMimeType::allMimeTypes()) {
 
         QStringList tempList = mimeType->name().split("/");
 

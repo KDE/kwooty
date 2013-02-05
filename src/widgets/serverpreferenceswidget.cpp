@@ -93,7 +93,7 @@ void ServerPreferencesWidget::setupButtons() {
     // set icon and text for server mode combo box :
     QMap<int, QString> comboBoxIconTextMap = this->serverTabWidget->getComboBoxIconTextMap();
 
-    foreach(QString iconStr, comboBoxIconTextMap.values()) {
+    foreach (const QString& iconStr, comboBoxIconTextMap.values()) {
 
         QString serverModeStr = UtilityServerStatus::getServerModeString((UtilityNamespace::BackupServerMode)comboBoxIconTextMap.key(iconStr));
         this->serverSettingsUi->comboBoxServerMode->addItem(KIcon(iconStr), serverModeStr);

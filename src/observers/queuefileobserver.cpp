@@ -257,7 +257,7 @@ void QueueFileObserver::checkJobFinishSlot() {
 
     QList<JobNotifyData> pendingJobList;
 
-    foreach(JobNotifyData jobNotifyData, this->jobNotifyDataList) {
+    foreach (const JobNotifyData& jobNotifyData, this->jobNotifyDataList) {
 
         // if status of item did not changed after few seconds and that there is no verifing or extracting processed
         // (eg : current item could be pending for verifying while a previous nzb is currently being verified),
