@@ -136,10 +136,13 @@ void ActionButtonsManager::selectedItemSlot() {
         bool downloadItemsFound = false;
         bool pauseItemsFound = false;
 
-        if (this->downloadModelQuery->searchParentItem(DownloadStatus)) {
+        if ( this->downloadModelQuery->searchParentItemDownloadOrPausing() ||
+             this->downloadModelQuery->searchParentItemIdle() ) {
+
             downloadItemsFound = true;
         }
-        if (this->downloadModelQuery->searchParentItem(PauseStatus)) {
+
+        if (this->downloadModelQuery->searchParentItemPause()) {
             pauseItemsFound = true;
         }
 

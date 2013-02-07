@@ -151,7 +151,7 @@ void QueueFileObserver::parentItemChangedSlot() {
     UtilityNamespace::ItemStatus currentItemStatus = this->focusedItemStatus;
 
     // search current item being downloading :
-    QStandardItem* stateItem = this->modelQuery->searchParentItem(DownloadStatus);
+    QStandardItem* stateItem = this->modelQuery->searchParentItemDownloadOrPausing();
 
     if (stateItem) {
         currentItemStatus = DownloadStatus;
@@ -159,7 +159,7 @@ void QueueFileObserver::parentItemChangedSlot() {
     // else search current item being paused :
     else {
 
-        stateItem = this->modelQuery->searchParentItem(PauseStatus);
+        stateItem = this->modelQuery->searchParentItemPause();
 
         if (stateItem) {
             currentItemStatus = PauseStatus;
@@ -263,7 +263,7 @@ void QueueFileObserver::checkJobFinishSlot() {
         // (eg : current item could be pending for verifying while a previous nzb is currently being verified),
         // then send notification :
         if ( (jobNotifyData.getDateTime().secsTo(QDateTime::currentDateTime()) > 2) &&
-             !this->modelQuery->searchParentItem(UtilityNamespace::VerifyStatus) ) {
+             !this->modelQuery->searchParentItemPostDownloadProcessing() ) {
 
             // notifications will handle this signal :
             emit jobFinishSignal(jobNotifyData.getStatus(), jobNotifyData.getNzbFileName());

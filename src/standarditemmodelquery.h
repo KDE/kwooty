@@ -37,9 +37,13 @@ class KWOOTY_EXPORT StandardItemModelQuery : public QObject {
     Q_OBJECT
 
 public:
+
     StandardItemModelQuery(Core*);
 
-    QStandardItem* searchParentItem(const UtilityNamespace::ItemStatus);
+    QStandardItem* searchParentItemIdle();
+    QStandardItem* searchParentItemDownloadOrPausing();
+    QStandardItem* searchParentItemPause();
+    QStandardItem* searchParentItemPostDownloadProcessing();
     ItemStatus isRetryDownloadAllowed(QStandardItem*, bool* = 0);
     bool isManualRepairExtractAllowed(QStandardItem* fileNameItem) const;
     bool haveItemsSameParent(const QList<QModelIndex>&);
@@ -53,8 +57,19 @@ public:
 
 
 private:
+
+    // status to search from parent items :
+    enum SearchItemStatus {
+        SearchItemIdle,
+        SearchItemDownloadOrPausing,
+        SearchItemPause,
+        SearchItemPostDownloadProcessing
+    };
+
     Core* core;
     StandardItemModel* downloadModel;
+
+    QStandardItem* searchParentItem(const SearchItemStatus&);
 
 signals:
 

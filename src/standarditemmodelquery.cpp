@@ -36,7 +36,7 @@ StandardItemModelQuery::StandardItemModelQuery(Core* core) : QObject(core) {
 }
 
 
-QStandardItem* StandardItemModelQuery::searchParentItem(const UtilityNamespace::ItemStatus itemStatus) {
+QStandardItem* StandardItemModelQuery::searchParentItem(const SearchItemStatus& searchItemStatus) {
 
     QStandardItem* stateItem = 0;
 
@@ -49,8 +49,17 @@ QStandardItem* StandardItemModelQuery::searchParentItem(const UtilityNamespace::
         QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
         UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
 
+        if (searchItemStatus == SearchItemIdle) {
 
-        if (itemStatus == DownloadStatus) {
+            // check if parent status is idle :
+            if (currentStatus == UtilityNamespace::IdleStatus) {
+
+                stateItem = parentStateItem;
+                break;
+            }
+        }
+        else if (searchItemStatus == SearchItemDownloadOrPausing) {
+
             // check if parent status is either downloading or pausing :
             if (Utility::isDownloadOrPausing(currentStatus)) {
 
@@ -58,8 +67,8 @@ QStandardItem* StandardItemModelQuery::searchParentItem(const UtilityNamespace::
                 break;
             }
         }
+        else if (searchItemStatus == SearchItemPause) {
 
-        else if (itemStatus == PauseStatus) {
             // check if parent status is either in pause :
             if (Utility::isPaused(currentStatus)) {
 
@@ -67,8 +76,8 @@ QStandardItem* StandardItemModelQuery::searchParentItem(const UtilityNamespace::
                 break;
             }
         }
+        else if (searchItemStatus == SearchItemPostDownloadProcessing) {
 
-        else if (itemStatus == VerifyStatus) {
             // check if parent status is currently being post processed :
             if (Utility::isPostDownloadProcessing(currentStatus)) {
 
@@ -82,6 +91,27 @@ QStandardItem* StandardItemModelQuery::searchParentItem(const UtilityNamespace::
     return stateItem;
 
 }
+
+
+QStandardItem* StandardItemModelQuery::searchParentItemIdle() {
+    return this->searchParentItem(SearchItemIdle);
+}
+
+QStandardItem* StandardItemModelQuery::searchParentItemDownloadOrPausing() {
+    return this->searchParentItem(SearchItemDownloadOrPausing);
+}
+
+QStandardItem* StandardItemModelQuery::searchParentItemPause() {
+    return this->searchParentItem(SearchItemPause);
+}
+
+QStandardItem* StandardItemModelQuery::searchParentItemPostDownloadProcessing() {
+    return this->searchParentItem(SearchItemPostDownloadProcessing);
+}
+
+
+
+
 
 QList<QModelIndex> StandardItemModelQuery::retrieveDecodeFinishParentIndexList() const {
 

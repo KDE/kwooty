@@ -152,7 +152,7 @@ void StatsInfoBuilder::updateDownloadSpeedSlot() {
     if (serverManager) {
 
         // search first current item being downloading :
-        QStandardItem* stateItem = this->parent->getModelQuery()->searchParentItem(DownloadStatus);
+        QStandardItem* stateItem = this->parent->getModelQuery()->searchParentItemDownloadOrPausing();
 
         // if item has been found :
         if (stateItem) {
