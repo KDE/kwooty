@@ -294,7 +294,7 @@ void MainWindow::setupActions() {
     startAllDownloadAction->setText(i18n("Start all"));
     startAllDownloadAction->setIcon(KIcon("media-playback-start"));
     startAllDownloadAction->setToolTip(i18n("Start all paused downloads"));
-    startAllDownloadAction->setEnabled(true);
+    startAllDownloadAction->setEnabled(false);
     actionCollection()->addAction("startAll", startAllDownloadAction);
     connect(startAllDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(startAllDownloadSlot()));
     connect(actionButtonsManager, SIGNAL(setStartAllButtonEnabledSignal(bool)), startAllDownloadAction, SLOT(setEnabled(bool)) );
@@ -304,7 +304,7 @@ void MainWindow::setupActions() {
     pauseAllDownloadAction->setText(i18n("Pause all"));
     pauseAllDownloadAction->setIcon(KIcon("media-playback-pause"));
     pauseAllDownloadAction->setToolTip(i18n("Pause all pending downloads"));
-    pauseAllDownloadAction->setEnabled(true);
+    pauseAllDownloadAction->setEnabled(false);
     actionCollection()->addAction("pauseAll", pauseAllDownloadAction);
     connect(pauseAllDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(pauseAllDownloadSlot()));
     connect(actionButtonsManager, SIGNAL(setPauseAllButtonEnabledSignal(bool)), pauseAllDownloadAction, SLOT(setEnabled(bool)) );
