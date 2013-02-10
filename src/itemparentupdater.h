@@ -83,7 +83,7 @@ private:
     void countGlobalItemStatus(const ItemStatusData&);
     void setupConnections();
     bool updatePar2ItemsIfCrcFailed(ItemStatusData&, const int rowNumber, const QModelIndex&);
-    void updateItemsIfDirectExtractFailed(const QModelIndex, QStandardItem*, UtilityNamespace::ItemStatus);
+    void updateItemsIfDirectExtractFailed(const QModelIndex, UtilityNamespace::ItemStatus);
 
 signals:
 

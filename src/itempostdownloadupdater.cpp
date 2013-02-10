@@ -84,15 +84,16 @@ void ItemPostDownloadUpdater::updateDecodeItems(const PostDownloadInfoData& repa
     // set progress to item :
     this->downloadModel->updateProgressItem(parentModelIndex, progression);
 
-    // retrieve current progression and status related items :
-    QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(parentModelIndex);
-
     // set status to items :
-    this->downloadModel->updateStateItem(stateItem, status);
+    this->downloadModel->updateStateItem(parentModelIndex, status);
 
 
     // move item to bottom of the list when decoding is finished :
     if (progression == PROGRESS_COMPLETE) {
+
+        // retrieve state item :
+        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(parentModelIndex);
+
         QStandardItem* nzbItem = stateItem->parent();
         nzbItem->appendRow(nzbItem->takeRow(stateItem->row()));
 
@@ -122,14 +123,11 @@ void ItemPostDownloadUpdater::updateRepairExtractItems(const PostDownloadInfoDat
     UtilityNamespace::ItemTarget itemTarget = repairDecompressInfoData.getItemTarget();
 
 
-    // retrieve current progression and status related items :
-    QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(parentModelIndex);
-
     // update child and parent items :
     if (itemTarget == UtilityNamespace::BothItemsTarget) {
 
         // update item status :
-        this->downloadModel->updateStateItem(stateItem, status);
+        this->downloadModel->updateStateItem(parentModelIndex, status);
         // set progress to item :
         this->downloadModel->updateProgressItem(parentModelIndex, progression);
 
@@ -141,7 +139,7 @@ void ItemPostDownloadUpdater::updateRepairExtractItems(const PostDownloadInfoDat
     else if (itemTarget == UtilityNamespace::ChildItemTarget) {
 
         // update item status :
-        this->downloadModel->updateStateItem(stateItem, status);
+        this->downloadModel->updateStateItem(parentModelIndex, status);
 
         // set progress to item :
         this->downloadModel->updateProgressItem(parentModelIndex, progression);

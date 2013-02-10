@@ -155,14 +155,13 @@ void ItemParentUpdater::updateNzbItemsPostDecode(const PostDownloadInfoData& rep
     if (!repairDecompressInfoData.isPostProcessFinish()) {
 
         // if child are being verified / repaired or extracted :
-        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(nzbIndex);
-        this->downloadModel->updateStateItem(stateItem, status);
+        this->downloadModel->updateStateItem(nzbIndex, status);
 
         // update progression :
         this->downloadModel->updateProgressItem(nzbIndex, progression);
 
         // if extract failed, download par2 files if there were considered as not required :
-        this->updateItemsIfDirectExtractFailed(nzbIndex, stateItem, status);
+        this->updateItemsIfDirectExtractFailed(nzbIndex, status);
 
     }
     // post processing of nzb parent has been fully performed :
@@ -515,7 +514,7 @@ bool ItemParentUpdater::updatePar2ItemsIfCrcFailed(ItemStatusData& nzbItemStatus
 }
 
 
-void ItemParentUpdater::updateItemsIfDirectExtractFailed(const QModelIndex nzbIndex, QStandardItem* stateItem, UtilityNamespace::ItemStatus status) {
+void ItemParentUpdater::updateItemsIfDirectExtractFailed(const QModelIndex nzbIndex, UtilityNamespace::ItemStatus status) {
 
     if ( (status == ExtractFinishedStatus) &&
          Settings::smartPar2Download() ) {
@@ -525,7 +524,7 @@ void ItemParentUpdater::updateItemsIfDirectExtractFailed(const QModelIndex nzbIn
         if (par2NotDownloaded) {
 
             // set nzbItem to IdleStatus in order to enable par2 file downloads :
-            this->downloadModel->updateStateItem(stateItem, IdleStatus);
+            this->downloadModel->updateStateItem(nzbIndex, IdleStatus);
 
             // set decodeFinish to false in order to allow post download process another time
             // and store statusData :
