@@ -482,7 +482,7 @@ void SegmentManager::updateRepairExtractSegmentSlot(PostDownloadInfoData repairD
     QStandardItem* fileNameItem = this->searchItem(repairDecompressInfoData.getParentIdentifer(), RepairStatus);
 
     // if corresponding item has been found :
-    if (fileNameItem){
+    if (fileNameItem) {
 
         repairDecompressInfoData.setModelIndex(fileNameItem->index());
 
