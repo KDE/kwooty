@@ -153,8 +153,8 @@ int CentralWidget::displayMergeItemsMessageBox(const QString& selectedNzbFileNam
 
     return KMessageBox::messageBox(this,
                                    KMessageBox::QuestionYesNo,
-                                   i18n("Merge content of %1 into %2 ?", "<br><b>" + selectedNzbFileName + "</b><br>",
-                                                                         "<br><b>" + targetNzbFileName + "</b>"));
+                                   i18n("Merge content of %1 into %2 ?", "<br>'" + selectedNzbFileName + "'<br>",
+                                                                         "<br>'" + targetNzbFileName + "'"));
 
 }
 
