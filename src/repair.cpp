@@ -523,11 +523,13 @@ void Repair::sendVerifyingFilesNotification() {
     QByteArray par2ByteArray = par2File.readAll();
 
     for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+
         NzbFileData nzbFileData = this->nzbFileDataList.at(i);
 
         // notify that items are verifying (nzbFileData.isPar2File() allows to notify parent item) :
         if ( par2ByteArray.contains(nzbFileData.getDecodedFileName().toAscii())  ||
              nzbFileData.isPar2File() ) {
+
             // update list :
             this->updateNzbFileDataInList(nzbFileData, VerifyStatus, i);
 
@@ -635,3 +637,4 @@ void Repair::sendVerifyNotification(const QString& fileNameStr, const QString& o
     }
 
 }
+
