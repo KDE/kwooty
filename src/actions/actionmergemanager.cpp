@@ -243,6 +243,12 @@ void ActionMergeManager::updateDecodeWaitingQueue(const QString& selectedFileSav
 }
 
 
+void ActionMergeManager::displayMessage() {
+
+    this->core->getCentralWidget()->displaySorryMessageBox(i18n("Merge can not be performed anymore"));
+
+}
+
 
 
 //============================================================================================================//
@@ -280,7 +286,6 @@ void ActionMergeManager::mergeSubMenuAboutToShowSlot() {
 }
 
 
-
 void ActionMergeManager::processMergeSlot() {
 
     if (!this->mergeProcessing) {
@@ -310,7 +315,6 @@ void ActionMergeManager::processMergeSlot() {
     }
 
 }
-
 
 
 void ActionMergeManager::mergeNzbActionTriggeredSlot(QAction* subMenuAction) {
@@ -377,13 +381,6 @@ void ActionMergeManager::mergeNzbActionTriggeredSlot(QAction* subMenuAction) {
     }
 
 }
-
-void ActionMergeManager::displayMessage() {
-
-    this->core->getCentralWidget()->displaySorryMessageBox(i18n("Merge can not be performed anymore"));
-
-}
-
 
 
 void ActionMergeManager::handleResultSlot(KJob* moveJob) {
