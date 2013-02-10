@@ -267,7 +267,7 @@ QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray& captureArray, const quint3
     }
 
     // return only useful data :
-    return QByteArray(decodeArray);
+    return QByteArray(decodeArray, dataSize);
 
 }
 
