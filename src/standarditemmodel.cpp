@@ -72,7 +72,10 @@ QStandardItem* StandardItemModel::getColumnItem(const QModelIndex& index, const 
 
 
 
-void StandardItemModel::updateStateItem(QStandardItem* stateItem, const UtilityNamespace::ItemStatus status) {
+void StandardItemModel::updateStateItem(const QModelIndex& index, const UtilityNamespace::ItemStatus status) {
+
+    // retrieve current progression and status related items :
+    QStandardItem* stateItem = this->getStateItemFromIndex(index);
 
     // get itemstatusdata from stateItem :
     ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
