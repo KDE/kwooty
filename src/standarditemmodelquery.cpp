@@ -110,9 +110,6 @@ QStandardItem* StandardItemModelQuery::searchParentItemPostDownloadProcessing() 
 }
 
 
-
-
-
 QList<QModelIndex> StandardItemModelQuery::retrieveDecodeFinishParentIndexList() const {
 
     QList<QModelIndex> downloadFinishParentIndexList;
@@ -395,5 +392,3 @@ bool StandardItemModelQuery::isParentFileNameExists(const QString& nzbName) cons
     return parentFileNameExists;
 
 }
-
-
