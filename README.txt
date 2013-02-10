@@ -1,5 +1,29 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
+Version 1.0.0:
+--------------
+
+- Nzb merging feature: if an nzb item is known by user as being incomplete (e.g: missing archives or no par2 files), nzb content can be merged with another item that owns the missing files
+
+- Manual extract can be performed via context menu when post download process options have been disabled in settings (feature request #3565812)
+
+- Categories plugin: added option that allows to manually choose a transfer folder from context menu
+
+- Categories plugin: availability to choose a default transfer folder for all pending downloads
+
+- When download retry is performed, all connections to servers are reestablished in order to ensure that there are no broken connections before retrying downloads
+
+- Segment data cache management enhanced in order to not get any memory contention in case of extremely low disk write speed (Fix bug #3601043)
+
+- In server settings, a warning icon will appear near "Host", "Login" and "Password" fields if leading or trailing white-space have been detected, in order to notify user about
+ potential connection issues
+
+- Par2 verifying progress percent is now estimated
+
+- "Start all" / "Pause all" buttons are now properly enabled or disabled according to global download status
+
+- Several code optimizations
+
 
 Version 0.9.1:
 --------------
