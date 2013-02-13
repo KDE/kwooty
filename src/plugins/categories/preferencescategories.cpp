@@ -41,9 +41,9 @@
 
 
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesCategories>();)
-        K_EXPORT_PLUGIN(PluginFactory("kwooty_categoriessettings"))
+K_EXPORT_PLUGIN(PluginFactory("kwooty_categoriessettings"))
 
-        PreferencesCategories::PreferencesCategories(QWidget* parent, const QVariantList& args) : KCModule(PluginFactory::componentData(), parent, args) {
+PreferencesCategories::PreferencesCategories(QWidget* parent, const QVariantList& args) : KCModule(PluginFactory::componentData(), parent, args) {
 
     this->saveChangesRequested = false;
 
