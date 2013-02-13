@@ -88,8 +88,8 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesCategories>();)
 
     // set header label :
     QStringList headerLabels;
-    headerLabels.append(i18n("Categories"));
-    headerLabels.append(i18n("Target"));
+    headerLabels.append(i18n("Category"));
+    headerLabels.append(i18n("Folder"));
 
     this->categoriesModel->setHorizontalHeaderLabels(headerLabels);
     // resize columns in order that each column occupy half of the treeview width :
@@ -372,7 +372,7 @@ void PreferencesCategories::toolButtonAddClickSlot() {
     bool ok = false;
 
     QStringList selectedCategories = KInputDialog::getItemList(i18n("Mime Type Selection"),
-                                                               i18n("Select Main Categories"),
+                                                               i18n("Select Main Category"),
                                                                UtilityCategories::retrieveFilteredMainCategoryList(this->categoriesModel),
                                                                QStringList(),
                                                                true,

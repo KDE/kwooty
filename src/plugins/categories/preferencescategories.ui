@@ -161,7 +161,7 @@ The manually choosen transfer folder will replace the favorite folder or the def
      <item>
       <widget class="QLabel" name="labelExistingTransfers">
        <property name="text">
-        <string>If contents to transfer already exist in favorite folder:</string>
+        <string>If files already exist in transfer folder:</string>
        </property>
       </widget>
      </item>
