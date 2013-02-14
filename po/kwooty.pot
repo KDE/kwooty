@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-15 18:17+0200\n"
+"POT-Creation-Date: 2013-02-14 22:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr ""
 
 #: src/preferences/kconfiggrouphandler.cpp:308
 #: src/widgets/servertabwidget.cpp:240 src/widgets/servertabwidget.cpp:259
-#: src/widgets/serverpreferenceswidget.cpp:135 src/sidebar.cpp:151
+#: src/widgets/serverpreferenceswidget.cpp:144 src/sidebar.cpp:151
 msgid "Master"
 msgstr ""
 
@@ -160,28 +160,28 @@ msgstr ""
 msgid "Document to open"
 msgstr ""
 
-#: src/fileoperations.cpp:46
+#: src/fileoperations.cpp:47
 msgid "*.nzb|nzb files"
 msgstr ""
 
-#: src/utilities/utility.cpp:41
+#: src/utilities/utility.cpp:42
 msgid " GiB"
 msgstr ""
 
-#: src/utilities/utility.cpp:45
+#: src/utilities/utility.cpp:46
 msgid " MiB"
 msgstr ""
 
-#: src/utilities/utility.cpp:50
+#: src/utilities/utility.cpp:51
 msgid " KiB"
 msgstr ""
 
-#: src/utilities/utility.cpp:64
+#: src/utilities/utility.cpp:65
 #, kde-format
 msgid "%1 MiB/s"
 msgstr ""
 
-#: src/utilities/utility.cpp:67
+#: src/utilities/utility.cpp:68
 #, kde-format
 msgid "<numid>%1</numid> KiB/s"
 msgstr ""
@@ -291,6 +291,10 @@ msgstr ""
 msgid "Extract finished"
 msgstr ""
 
+#: src/actions/actionmergemanager.cpp:248
+msgid "Merge can not be performed anymore"
+msgstr ""
+
 #: src/itemdelegate.cpp:38
 msgid "Downloading..."
 msgstr ""
@@ -303,7 +307,7 @@ msgstr ""
 msgid "In queue"
 msgstr ""
 
-#: src/itemdelegate.cpp:41 src/systraylegacy.cpp:307 src/mainwindow.cpp:198
+#: src/itemdelegate.cpp:41 src/systraylegacy.cpp:307 src/mainwindow.cpp:202
 #: src/plugins/scheduler/preferencesscheduler.cpp:134 src/systray.cpp:282
 msgid "Pause"
 msgstr ""
@@ -421,7 +425,7 @@ msgstr ""
 
 #: src/itemdelegate.cpp:141 src/itemdelegate.cpp:192
 #: src/widgets/mystatusbar.cpp:331
-#: src/plugins/categories/preferencescategories.cpp:322 src/sidebar.cpp:163
+#: src/plugins/categories/preferencescategories.cpp:327 src/sidebar.cpp:163
 msgid "n/a"
 msgstr ""
 
@@ -455,19 +459,19 @@ msgstr ""
 msgid "Progress: "
 msgstr ""
 
-#: src/widgets/mytreeview.cpp:218
+#: src/widgets/mytreeview.cpp:230
 msgid "File Name"
 msgstr ""
 
-#: src/widgets/mytreeview.cpp:219
+#: src/widgets/mytreeview.cpp:231
 msgid "Status"
 msgstr ""
 
-#: src/widgets/mytreeview.cpp:220
+#: src/widgets/mytreeview.cpp:232
 msgid "Progress"
 msgstr ""
 
-#: src/widgets/mytreeview.cpp:221
+#: src/widgets/mytreeview.cpp:233
 msgid "Size"
 msgstr ""
 
@@ -525,10 +529,15 @@ msgid "Remove selected files from queue ?"
 msgstr ""
 
 #: src/widgets/centralwidget.cpp:156
+#, kde-format
+msgid "Merge content of %1 into %2 ?"
+msgstr ""
+
+#: src/widgets/centralwidget.cpp:167
 msgid "Warning"
 msgstr ""
 
-#: src/widgets/centralwidget.cpp:171
+#: src/widgets/centralwidget.cpp:182
 #, kde-format
 msgctxt "%1 = shutdown/suspend to RAM/suspend to disk"
 msgid "Kwooty is about to %1 system. Continue?"
@@ -565,7 +574,7 @@ msgstr ""
 msgid "Speed: %1"
 msgstr ""
 
-#: src/widgets/mystatusbar.cpp:275 src/statsinfobuilder.cpp:415
+#: src/widgets/mystatusbar.cpp:275 src/statsinfobuilder.cpp:413
 msgid "Insufficient disk space"
 msgstr ""
 
@@ -573,68 +582,80 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:139
+#: src/widgets/serverpreferenceswidget.cpp:148
 msgid "First backup"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:143
+#: src/widgets/serverpreferenceswidget.cpp:152
 msgid "Second backup"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:147
+#: src/widgets/serverpreferenceswidget.cpp:156
 msgid "Third backup"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:151
+#: src/widgets/serverpreferenceswidget.cpp:160
 msgid "Fourth backup"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:160
+#: src/widgets/serverpreferenceswidget.cpp:169
 #, kde-format
 msgid "%1 server configuration"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:293
+#: src/widgets/serverpreferenceswidget.cpp:320
+msgid "Host field contains white-space"
+msgstr ""
+
+#: src/widgets/serverpreferenceswidget.cpp:328
+msgid "Login field contains white-space"
+msgstr ""
+
+#: src/widgets/serverpreferenceswidget.cpp:336
+msgid "Password field contains white-space"
+msgstr ""
+
+#: src/widgets/serverpreferenceswidget.cpp:350
 msgid "<b>Backup Server Mode:</b>"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:295
+#: src/widgets/serverpreferenceswidget.cpp:352
 msgid "<i>Passive:</i> downloads only files not found on Master server<br>"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:296
+#: src/widgets/serverpreferenceswidget.cpp:353
 msgid "<i>Active:</i> downloads files simultaneously with Master server<br>"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:297
+#: src/widgets/serverpreferenceswidget.cpp:354
 msgid ""
 "<i>Failover:</i> supersedes former unavailable <i>Master</i> or <i>Failover</"
 "i> server, otherwise works as <i>Passive</i><br>"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:298
+#: src/widgets/serverpreferenceswidget.cpp:355
 msgid "<i>Server Disabled:</i> server not used"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:301
+#: src/widgets/serverpreferenceswidget.cpp:358
 msgid "<b>Server priority:</b>"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:303
+#: src/widgets/serverpreferenceswidget.cpp:360
 msgid ""
 "Drag and drop tabs to manage backup server priority in <i>Passive</i> and "
 "<i>Failover</i> modes"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:306
+#: src/widgets/serverpreferenceswidget.cpp:363
 msgid "<b>Tab renaming:</b>"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:308
+#: src/widgets/serverpreferenceswidget.cpp:365
 msgid "Double click on current tab for server renaming"
 msgstr ""
 
-#: src/widgets/serverpreferenceswidget.cpp:312
+#: src/widgets/serverpreferenceswidget.cpp:369
 msgid "Backup Server hints"
 msgstr ""
 
@@ -670,161 +691,177 @@ msgstr ""
 msgid "Encryption Information"
 msgstr ""
 
-#: src/mainwindow.cpp:178
+#: src/mainwindow.cpp:182
 msgid "Clear"
 msgstr ""
 
-#: src/mainwindow.cpp:180
+#: src/mainwindow.cpp:184
 msgid "Remove all rows"
 msgstr ""
 
-#: src/mainwindow.cpp:187 src/plugins/scheduler/preferencesscheduler.cpp:135
+#: src/mainwindow.cpp:191 src/plugins/scheduler/preferencesscheduler.cpp:135
 msgid "Start"
 msgstr ""
 
-#: src/mainwindow.cpp:189
+#: src/mainwindow.cpp:193
 msgid "Start download of selected rows"
 msgstr ""
 
-#: src/mainwindow.cpp:200
+#: src/mainwindow.cpp:204
 msgid "Pause download of selected rows"
 msgstr ""
 
-#: src/mainwindow.cpp:209
+#: src/mainwindow.cpp:213
 msgid "Remove"
 msgstr ""
 
-#: src/mainwindow.cpp:211
+#: src/mainwindow.cpp:215
 msgid "Remove all selected rows"
 msgstr ""
 
-#: src/mainwindow.cpp:221
+#: src/mainwindow.cpp:225
 msgid "Up"
 msgstr ""
 
-#: src/mainwindow.cpp:223
+#: src/mainwindow.cpp:227
 msgid "Go up all selected rows"
 msgstr ""
 
-#: src/mainwindow.cpp:232
+#: src/mainwindow.cpp:236
 msgid "Top"
 msgstr ""
 
-#: src/mainwindow.cpp:234
+#: src/mainwindow.cpp:238
 msgid "Move all selected rows to the top of the list"
 msgstr ""
 
-#: src/mainwindow.cpp:243
+#: src/mainwindow.cpp:247
 msgid "Down"
 msgstr ""
 
-#: src/mainwindow.cpp:245
+#: src/mainwindow.cpp:249
 msgid "Go down all selected rows"
 msgstr ""
 
-#: src/mainwindow.cpp:255
+#: src/mainwindow.cpp:259
 msgid "Bottom"
 msgstr ""
 
-#: src/mainwindow.cpp:257
+#: src/mainwindow.cpp:261
 msgid "Move all selected rows to the bottom of the list"
 msgstr ""
 
-#: src/mainwindow.cpp:267
+#: src/mainwindow.cpp:271
 msgid "Downloads"
 msgstr ""
 
-#: src/mainwindow.cpp:269
+#: src/mainwindow.cpp:273
 msgid "Open current download folder"
 msgstr ""
 
-#: src/mainwindow.cpp:277 src/mainwindow.cpp:377
+#: src/mainwindow.cpp:281 src/mainwindow.cpp:420
 #: src/shutdown/shutdownmanager.cpp:280
 msgid "Shutdown"
 msgstr ""
 
-#: src/mainwindow.cpp:279
+#: src/mainwindow.cpp:283
 msgid "Schedule system shutdown"
 msgstr ""
 
-#: src/mainwindow.cpp:290
+#: src/mainwindow.cpp:294
 msgid "Start all"
 msgstr ""
 
-#: src/mainwindow.cpp:292
+#: src/mainwindow.cpp:296
 msgid "Start all paused downloads"
 msgstr ""
 
-#: src/mainwindow.cpp:299
+#: src/mainwindow.cpp:304
 msgid "Pause all"
 msgstr ""
 
-#: src/mainwindow.cpp:301
+#: src/mainwindow.cpp:306
 msgid "Pause all pending downloads"
 msgstr ""
 
-#: src/mainwindow.cpp:309
+#: src/mainwindow.cpp:314
 msgid "Retry"
 msgstr ""
 
-#: src/mainwindow.cpp:311
+#: src/mainwindow.cpp:316
 msgid "Retry to download selected rows"
 msgstr ""
 
-#: src/mainwindow.cpp:361
+#: src/mainwindow.cpp:325
+msgid "Repair and extract"
+msgstr ""
+
+#: src/mainwindow.cpp:327
+msgid "Manually verify and extract selected item"
+msgstr ""
+
+#: src/mainwindow.cpp:336
+msgid "Merge with..."
+msgstr ""
+
+#: src/mainwindow.cpp:338
+msgid "Merge nzb content into another nzb"
+msgstr ""
+
+#: src/mainwindow.cpp:404
 msgid "General"
 msgstr ""
 
-#: src/mainwindow.cpp:361
+#: src/mainwindow.cpp:404
 msgid "General Setup"
 msgstr ""
 
-#: src/mainwindow.cpp:365
+#: src/mainwindow.cpp:408
 msgid "Connection"
 msgstr ""
 
-#: src/mainwindow.cpp:365
+#: src/mainwindow.cpp:408
 msgid "Setup Server Connection"
 msgstr ""
 
 #. i18n: file: src/preferences/preferencesprograms.ui:21
 #. i18n: ectx: attribute (title), widget (QWidget, programsTab)
-#: src/mainwindow.cpp:369 build/src/ui_preferencesprograms.h:324 rc.cpp:119
+#: src/mainwindow.cpp:412 build/src/ui_preferencesprograms.h:324 rc.cpp:119
 msgid "Programs"
 msgstr ""
 
-#: src/mainwindow.cpp:369
+#: src/mainwindow.cpp:412
 msgid "Setup External Programs"
 msgstr ""
 
-#: src/mainwindow.cpp:373
+#: src/mainwindow.cpp:416
 msgid "Display modes"
 msgstr ""
 
-#: src/mainwindow.cpp:373
+#: src/mainwindow.cpp:416
 msgid "Setup Display Modes"
 msgstr ""
 
-#: src/mainwindow.cpp:377
+#: src/mainwindow.cpp:420
 msgid "Setup System Shutdown"
 msgstr ""
 
-#: src/mainwindow.cpp:381
+#: src/mainwindow.cpp:424
 msgid "Plugins"
 msgstr ""
 
-#: src/mainwindow.cpp:381
+#: src/mainwindow.cpp:424
 msgid "Plugins Setup"
 msgstr ""
 
-#: src/mainwindow.cpp:457
+#: src/mainwindow.cpp:500
 msgid ""
 "<qt>Closing the main window will keep Kwooty running in the System Tray. Use "
 "<B>Quit</B> from the menu or the Kwooty tray icon to exit the application.</"
 "qt>"
 msgstr ""
 
-#: src/mainwindow.cpp:459
+#: src/mainwindow.cpp:502
 msgid "Docking in System Tray"
 msgstr ""
 
@@ -861,7 +898,7 @@ msgstr[1] ""
 msgid "less than 1 minute"
 msgstr ""
 
-#: src/statsinfobuilder.cpp:420
+#: src/statsinfobuilder.cpp:418
 #, kde-format
 msgctxt "free disk space available"
 msgid "%1 free"
@@ -898,7 +935,7 @@ msgstr ""
 msgid "System shutdown type unknown, shutdown is not possible!"
 msgstr ""
 
-#: src/plugins/scheduler/schedulerfilehandler.cpp:113
+#: src/plugins/scheduler/schedulerfilehandler.cpp:129
 #, kde-format
 msgctxt "day of week, begin time - end time"
 msgid "%1, %2 - %3"
@@ -924,39 +961,53 @@ msgstr ""
 msgid "Limit to %1 KiB/s"
 msgstr ""
 
-#: src/plugins/scheduler/scheduler.cpp:333
+#: src/plugins/scheduler/scheduler.cpp:340
 msgid "Bandwidth manager"
 msgstr ""
 
-#: src/plugins/categories/categories.cpp:62
-msgid "Transfer not performed"
+#: src/plugins/categories/categoriesmanual.cpp:45
+msgid "Transfer folder..."
 msgstr ""
 
-#: src/plugins/categories/categories.cpp:63
-msgid "Transferring..."
+#: src/plugins/categories/categoriesmanual.cpp:47
+#: src/plugins/categories/categoriesmanual.cpp:186
+msgid "Select transfer folder"
 msgstr ""
 
-#: src/plugins/categories/categories.cpp:64
-msgid "Transfer complete"
-msgstr ""
-
-#: src/plugins/categories/categories.cpp:65
-msgid "Transfer canceled"
+#: src/plugins/categories/categoriesmanual.cpp:119
+#, kde-format
+msgid "Transfer folder: %1"
 msgstr ""
 
 #: src/plugins/categories/categories.cpp:66
-msgid "Transfer error (disk is full)"
+msgid "Transfer not performed"
 msgstr ""
 
 #: src/plugins/categories/categories.cpp:67
-msgid "Transfer error (target folder can not be created)"
+msgid "Transferring..."
 msgstr ""
 
 #: src/plugins/categories/categories.cpp:68
-msgid "Transfer error (insufficient disk space)"
+msgid "Transfer complete"
 msgstr ""
 
 #: src/plugins/categories/categories.cpp:69
+msgid "Transfer canceled"
+msgstr ""
+
+#: src/plugins/categories/categories.cpp:70
+msgid "Transfer error (disk is full)"
+msgstr ""
+
+#: src/plugins/categories/categories.cpp:71
+msgid "Transfer error (target folder can not be created)"
+msgstr ""
+
+#: src/plugins/categories/categories.cpp:72
+msgid "Transfer error (insufficient disk space)"
+msgstr ""
+
+#: src/plugins/categories/categories.cpp:73
 msgid "Transfer error"
 msgstr ""
 
@@ -968,43 +1019,43 @@ msgstr ""
 msgid "Overwrite"
 msgstr ""
 
-#: src/plugins/categories/preferencescategories.cpp:90
-msgid "Categories"
-msgstr ""
-
 #: src/plugins/categories/preferencescategories.cpp:91
-msgid "Target"
+msgid "Category"
 msgstr ""
 
-#: src/plugins/categories/preferencescategories.cpp:98
+#: src/plugins/categories/preferencescategories.cpp:92
+msgid "Folder"
+msgstr ""
+
+#: src/plugins/categories/preferencescategories.cpp:99
 msgid "Add Category"
 msgstr ""
 
-#: src/plugins/categories/preferencescategories.cpp:101
+#: src/plugins/categories/preferencescategories.cpp:102
 msgid "Remove Category"
 msgstr ""
 
-#: src/plugins/categories/preferencescategories.cpp:105
+#: src/plugins/categories/preferencescategories.cpp:106
 msgid "Edit Subcategory"
 msgstr ""
 
-#: src/plugins/categories/preferencescategories.cpp:189
-#: src/plugins/categories/preferencescategories.cpp:350
+#: src/plugins/categories/preferencescategories.cpp:193
+#: src/plugins/categories/preferencescategories.cpp:374
 msgid "Mime Type Selection"
 msgstr ""
 
-#: src/plugins/categories/preferencescategories.cpp:190
+#: src/plugins/categories/preferencescategories.cpp:194
 msgid "Add or Remove Subcategories"
 msgstr ""
 
-#: src/plugins/categories/preferencescategories.cpp:325
+#: src/plugins/categories/preferencescategories.cpp:330
 #, kde-format
 msgctxt "%1 = type of subcategory"
 msgid "Subcategory: %1"
 msgstr ""
 
-#: src/plugins/categories/preferencescategories.cpp:351
-msgid "Select Main Categories"
+#: src/plugins/categories/preferencescategories.cpp:375
+msgid "Select Main Category"
 msgstr ""
 
 #: src/sidebar.cpp:171
@@ -1435,116 +1486,116 @@ msgid "Confirmation dialogs"
 msgstr ""
 
 #. i18n: file: src/preferences/serversettings.ui:33
-#. i18n: ectx: property (title), widget (QGroupBox, groupBoxConfig)
-#: build/src/ui_serversettings.h:227 rc.cpp:372
-msgid "Master server configuration"
-msgstr ""
-
-#. i18n: file: src/preferences/serversettings.ui:39
-#. i18n: ectx: property (text), widget (QLabel, labelHost)
-#: build/src/ui_serversettings.h:228 rc.cpp:375
-msgid "Host:"
-msgstr ""
-
-#. i18n: file: src/preferences/serversettings.ui:52
-#. i18n: ectx: property (toolTip), widget (QLineEdit, hostName)
-#: build/src/ui_serversettings.h:230 rc.cpp:378
-msgid "Set host address"
-msgstr ""
-
-#. i18n: file: src/preferences/serversettings.ui:59
-#. i18n: ectx: property (text), widget (QLabel, labelConnections)
-#: build/src/ui_serversettings.h:232 rc.cpp:381
-msgid "Number of connections:"
-msgstr ""
-
-#. i18n: file: src/preferences/serversettings.ui:66
-#. i18n: ectx: property (toolTip), widget (QSpinBox, connectionNumber)
-#: build/src/ui_serversettings.h:234 rc.cpp:384
-msgid "Set the number of simultaneous connections to the nntp server"
-msgstr ""
-
-#. i18n: file: src/preferences/serversettings.ui:82
-#. i18n: ectx: property (text), widget (QLabel, labelPort)
-#: build/src/ui_serversettings.h:236 rc.cpp:387
-msgid "Port:"
-msgstr ""
-
-#. i18n: file: src/preferences/serversettings.ui:89
-#. i18n: ectx: property (toolTip), widget (QSpinBox, port)
-#: build/src/ui_serversettings.h:238 rc.cpp:390
-msgid "Set connection port"
-msgstr ""
-
-#. i18n: file: src/preferences/serversettings.ui:105
-#. i18n: ectx: property (toolTip), widget (QCheckBox, enableSSL)
-#: build/src/ui_serversettings.h:241 rc.cpp:393
-msgid "Enable encrypted connection"
-msgstr ""
-
-#. i18n: file: src/preferences/serversettings.ui:108
-#. i18n: ectx: property (text), widget (QCheckBox, enableSSL)
-#: build/src/ui_serversettings.h:243 rc.cpp:396
-msgid "Enable SSL connection"
-msgstr ""
-
-#. i18n: file: src/preferences/serversettings.ui:120
-#. i18n: ectx: property (text), widget (QLabel, labelServerMode)
-#: build/src/ui_serversettings.h:244 rc.cpp:399
-msgid "Server Mode: "
-msgstr ""
-
-#. i18n: file: src/preferences/serversettings.ui:167
 #. i18n: ectx: property (toolTip), widget (QGroupBox, groupBoxAuthentication)
-#: build/src/ui_serversettings.h:246 rc.cpp:402
+#: build/src/ui_serversettings.h:249 rc.cpp:372
 msgid "Set login and password if authentication is required by host"
 msgstr ""
 
-#. i18n: file: src/preferences/serversettings.ui:170
+#. i18n: file: src/preferences/serversettings.ui:36
 #. i18n: ectx: property (title), widget (QGroupBox, groupBoxAuthentication)
-#: build/src/ui_serversettings.h:248 rc.cpp:405
+#: build/src/ui_serversettings.h:251 rc.cpp:375
 msgid "Authentication"
 msgstr ""
 
-#. i18n: file: src/preferences/serversettings.ui:182
+#. i18n: file: src/preferences/serversettings.ui:48
 #. i18n: ectx: property (text), widget (QLabel, labelLogin)
-#: build/src/ui_serversettings.h:249 rc.cpp:408
+#: build/src/ui_serversettings.h:252 rc.cpp:378
 msgid "Login:"
 msgstr ""
 
-#. i18n: file: src/preferences/serversettings.ui:195
+#. i18n: file: src/preferences/serversettings.ui:74
 #. i18n: ectx: property (toolTip), widget (QLineEdit, login)
-#: build/src/ui_serversettings.h:251 rc.cpp:411
+#: build/src/ui_serversettings.h:255 rc.cpp:381
 msgid "Set login required by host"
 msgstr ""
 
-#. i18n: file: src/preferences/serversettings.ui:202
+#. i18n: file: src/preferences/serversettings.ui:81
 #. i18n: ectx: property (text), widget (QLabel, labelPassword)
-#: build/src/ui_serversettings.h:253 rc.cpp:414
+#: build/src/ui_serversettings.h:257 rc.cpp:384
 msgid "Password:"
 msgstr ""
 
-#. i18n: file: src/preferences/serversettings.ui:215
+#. i18n: file: src/preferences/serversettings.ui:94
 #. i18n: ectx: property (toolTip), widget (QLineEdit, password)
-#: build/src/ui_serversettings.h:255 rc.cpp:417
+#: build/src/ui_serversettings.h:259 rc.cpp:387
 msgid "Set password required by host"
 msgstr ""
 
-#. i18n: file: src/preferences/serversettings.ui:242
+#. i18n: file: src/preferences/serversettings.ui:120
+#. i18n: ectx: property (title), widget (QGroupBox, groupBoxConfig)
+#: build/src/ui_serversettings.h:262 rc.cpp:390
+msgid "Master server configuration"
+msgstr ""
+
+#. i18n: file: src/preferences/serversettings.ui:126
+#. i18n: ectx: property (text), widget (QLabel, labelHost)
+#: build/src/ui_serversettings.h:263 rc.cpp:393
+msgid "Host:"
+msgstr ""
+
+#. i18n: file: src/preferences/serversettings.ui:149
+#. i18n: ectx: property (toolTip), widget (QLineEdit, hostName)
+#: build/src/ui_serversettings.h:265 rc.cpp:396
+msgid "Set host address"
+msgstr ""
+
+#. i18n: file: src/preferences/serversettings.ui:156
+#. i18n: ectx: property (text), widget (QLabel, labelConnections)
+#: build/src/ui_serversettings.h:267 rc.cpp:399
+msgid "Number of connections:"
+msgstr ""
+
+#. i18n: file: src/preferences/serversettings.ui:163
+#. i18n: ectx: property (toolTip), widget (QSpinBox, connectionNumber)
+#: build/src/ui_serversettings.h:269 rc.cpp:402
+msgid "Set the number of simultaneous connections to the nntp server"
+msgstr ""
+
+#. i18n: file: src/preferences/serversettings.ui:179
+#. i18n: ectx: property (text), widget (QLabel, labelPort)
+#: build/src/ui_serversettings.h:271 rc.cpp:405
+msgid "Port:"
+msgstr ""
+
+#. i18n: file: src/preferences/serversettings.ui:186
+#. i18n: ectx: property (toolTip), widget (QSpinBox, port)
+#: build/src/ui_serversettings.h:273 rc.cpp:408
+msgid "Set connection port"
+msgstr ""
+
+#. i18n: file: src/preferences/serversettings.ui:207
+#. i18n: ectx: property (text), widget (QLabel, labelServerMode)
+#: build/src/ui_serversettings.h:275 rc.cpp:411
+msgid "Server Mode: "
+msgstr ""
+
+#. i18n: file: src/preferences/serversettings.ui:251
+#. i18n: ectx: property (toolTip), widget (QCheckBox, enableSSL)
+#: build/src/ui_serversettings.h:277 rc.cpp:414
+msgid "Enable encrypted connection"
+msgstr ""
+
+#. i18n: file: src/preferences/serversettings.ui:254
+#. i18n: ectx: property (text), widget (QCheckBox, enableSSL)
+#: build/src/ui_serversettings.h:279 rc.cpp:417
+msgid "Enable SSL connection"
+msgstr ""
+
+#. i18n: file: src/preferences/serversettings.ui:278
 #. i18n: ectx: property (text), widget (QLabel, labelDisconnect)
-#: build/src/ui_serversettings.h:257 rc.cpp:420
+#: build/src/ui_serversettings.h:280 rc.cpp:420
 msgid "Disconnect from server when idle after:"
 msgstr ""
 
-#. i18n: file: src/preferences/serversettings.ui:262
+#. i18n: file: src/preferences/serversettings.ui:298
 #. i18n: ectx: property (toolTip), widget (QSpinBox, disconnectTimeout)
-#: build/src/ui_serversettings.h:259 rc.cpp:423
+#: build/src/ui_serversettings.h:282 rc.cpp:423
 msgid "Disconnect from host after a period of inactivity"
 msgstr ""
 
-#. i18n: file: src/preferences/serversettings.ui:265
+#. i18n: file: src/preferences/serversettings.ui:301
 #. i18n: ectx: property (suffix), widget (QSpinBox, disconnectTimeout)
-#: build/src/ui_serversettings.h:261 rc.cpp:426
+#: build/src/ui_serversettings.h:284 rc.cpp:426
 msgid " min"
 msgstr ""
 
@@ -1769,16 +1820,63 @@ msgstr ""
 msgid "If no Par2 files, re-download each file whose CRC mismatch"
 msgstr ""
 
-#. i18n: file: src/plugins/categories/preferencescategories.ui:107
+#. i18n: file: src/plugins/categories/preferencescategories.ui:20
+#. i18n: ectx: property (title), widget (QGroupBox, kcfg_defineCategories)
+#: build/src/plugins/categories/ui_preferencescategories.h:197 rc.cpp:552
+msgid "Associate file types with transfer folders"
+msgstr ""
+
+#. i18n: file: src/plugins/categories/preferencescategories.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: build/src/plugins/categories/ui_preferencescategories.h:164 rc.cpp:540
+#: build/src/plugins/categories/ui_preferencescategories.h:201 rc.cpp:555
 msgid "Favorite folder: "
 msgstr ""
 
-#. i18n: file: src/plugins/categories/preferencescategories.ui:124
+#. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:24
+#. i18n: ectx: label, entry (enableDefaultTransfer), group (categoriesplugin)
+#. i18n: file: src/plugins/categories/preferencescategories.ui:126
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_enableDefaultTransfer)
+#: build/src/plugins/categories/ui_preferencescategories.h:203 rc.cpp:546
+#: rc.cpp:558
+msgid ""
+"Successfully extracted files will be transferred in this folder except for "
+"files matching categories defined above"
+msgstr ""
+
+#. i18n: file: src/plugins/categories/preferencescategories.ui:129
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_enableDefaultTransfer)
+#: build/src/plugins/categories/ui_preferencescategories.h:205 rc.cpp:561
+msgid "Default transfer folder:"
+msgstr ""
+
+#. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:28
+#. i18n: ectx: label, entry (defaultTransferFolder), group (categoriesplugin)
+#. i18n: file: src/plugins/categories/preferencescategories.ui:136
+#. i18n: ectx: property (toolTip), widget (KUrlRequester, kcfg_defaultTransferFolder)
+#: build/src/plugins/categories/ui_preferencescategories.h:207 rc.cpp:549
+#: rc.cpp:564
+msgid "Set default transfer folder"
+msgstr ""
+
+#. i18n: file: src/plugins/categories/preferencescategories.ui:152
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_manualFolder)
+#: build/src/plugins/categories/ui_preferencescategories.h:210 rc.cpp:567
+msgid ""
+"Allow to choose a custom transfer folder by right-clicking on a nzb item.\n"
+"The manually chosen transfer folder will replace the favorite folder or the "
+"default one"
+msgstr ""
+
+#. i18n: file: src/plugins/categories/preferencescategories.ui:155
+#. i18n: ectx: property (text), widget (QCheckBox, kcfg_manualFolder)
+#: build/src/plugins/categories/ui_preferencescategories.h:213 rc.cpp:571
+msgid "Manually select transfer folder from context menu"
+msgstr ""
+
+#. i18n: file: src/plugins/categories/preferencescategories.ui:164
 #. i18n: ectx: property (text), widget (QLabel, labelExistingTransfers)
-#: build/src/plugins/categories/ui_preferencescategories.h:165 rc.cpp:543
-msgid "If contents to transfer already exist in favorite folder:"
+#: build/src/plugins/categories/ui_preferencescategories.h:214 rc.cpp:574
+msgid "If files already exist in transfer folder:"
 msgstr ""
 
 #: rc.cpp:1
@@ -1905,7 +2003,7 @@ msgstr ""
 msgid "Download"
 msgstr ""
 
-#. i18n: file: src/kwootyui.rc:31
+#. i18n: file: src/kwootyui.rc:33
 #. i18n: ectx: ToolBar (mainToolBar)
 #: rc.cpp:432
 msgid "Main Toolbar"
@@ -1963,10 +2061,22 @@ msgid ""
 "Par2 files"
 msgstr ""
 
-#. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:10
-#. i18n: ectx: label, entry (transferManagement), group (categoriesplugin)
+#. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:11
+#. i18n: ectx: label, entry (defineCategories), group (categoriesplugin)
 #: rc.cpp:537
+msgid "Define categories from file types"
+msgstr ""
+
+#. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:16
+#. i18n: ectx: label, entry (transferManagement), group (categoriesplugin)
+#: rc.cpp:540
 msgid ""
 "Overwrite or rename folder to transfer if it already exists in favorite "
 "folder"
+msgstr ""
+
+#. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:20
+#. i18n: ectx: label, entry (manualFolder), group (categoriesplugin)
+#: rc.cpp:543
+msgid "Choose custom transfer folder from context menu"
 msgstr ""
