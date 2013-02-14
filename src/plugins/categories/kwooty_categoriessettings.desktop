@@ -6,7 +6,7 @@ X-KDE-ParentComponents=kwooty_categoriesplugin
 X-KDE-PluginInfo-Name=kwooty_categoriessettings
 X-KDE-PluginInfo-Author=Xavier Lefage
 X-KDE-PluginInfo-Email=xavier.kwooty@gmail.com
-X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Version=0.2
 X-KDE-PluginInfo-License=GPL
 
 Name=File Categories
