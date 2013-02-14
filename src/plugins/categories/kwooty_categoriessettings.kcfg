@@ -21,7 +21,7 @@
             <default>false</default>
         </entry>
 	<entry name="enableDefaultTransfer" type="Bool">
-            <label>Successfully extracted files will be transfered in this folder except for files matching categories defined above</label>
+            <label>Successfully extracted files will be transferred in this folder except for files matching categories defined above</label>
             <default>false</default>
         </entry>
 	   <entry name="defaultTransferFolder" type="Url">

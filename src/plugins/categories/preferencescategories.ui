@@ -123,7 +123,7 @@
      <item>
       <widget class="QCheckBox" name="kcfg_enableDefaultTransfer">
        <property name="toolTip">
-        <string>Successfully extracted files will be transfered in this folder except for files matching categories defined above</string>
+        <string>Successfully extracted files will be transferred in this folder except for files matching categories defined above</string>
        </property>
        <property name="text">
         <string>Default transfer folder:</string>
@@ -148,8 +148,8 @@
    <item row="2" column="0">
     <widget class="QCheckBox" name="kcfg_manualFolder">
      <property name="toolTip">
-      <string>Allow to choose a custom transfer folder by right-clicking on a selected nzb item.
-The manually choosen transfer folder will replace the favorite folder or the default one</string>
+      <string>Allow to choose a custom transfer folder by right-clicking on a nzb item.
+The manually chosen transfer folder will replace the favorite folder or the default one</string>
      </property>
      <property name="text">
       <string>Manually select transfer folder from context menu</string>
