@@ -315,25 +315,25 @@ void ServerPreferencesWidget::serverModeValueChangedSlot(int serverModeIndex) {
 
 void ServerPreferencesWidget::formEditingFinishedSlot() {
 
-    // check if host field contains whitespace :
+    // check if host field contains white-space :
     if ( this->checkFormText(this->serverSettingsUi->hostName->text()) ) {
-        this->fillWarningLabel(this->serverSettingsUi->hostCheckLabel, i18n("Host field contains whitespace"));
+        this->fillWarningLabel(this->serverSettingsUi->hostCheckLabel, i18n("Host field contains white-space"));
     }
     else {
         this->clearWarningLabel(this->serverSettingsUi->hostCheckLabel);
     }
 
-    // check if host login contains whitespace :
+    // check if host login contains white-space :
     if ( this->checkFormText(this->serverSettingsUi->login->text()) ) {
-        this->fillWarningLabel(this->serverSettingsUi->loginCheckLabel, i18n("Login field contains whitespace"));
+        this->fillWarningLabel(this->serverSettingsUi->loginCheckLabel, i18n("Login field contains white-space"));
     }
     else {
         this->clearWarningLabel(this->serverSettingsUi->loginCheckLabel);
     }
 
-    // check if host password contains whitespace :
+    // check if host password contains white-space :
     if ( this->checkFormText(this->serverSettingsUi->password->text()) ) {
-        this->fillWarningLabel(this->serverSettingsUi->passwordCheckLabel, i18n("Password field contains whitespace"));
+        this->fillWarningLabel(this->serverSettingsUi->passwordCheckLabel, i18n("Password field contains white-space"));
     }
     else {
         this->clearWarningLabel(this->serverSettingsUi->passwordCheckLabel);
