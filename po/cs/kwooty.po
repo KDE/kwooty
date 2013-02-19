@@ -3,13 +3,13 @@
 #
 # Pavel Fric <pavelfric@seznam.cz>, 2010.
 # Pavel Fric <pavelfric@seznam.cz>, 2010, 2011.
-# Pavel Fric <pavelfric@seznam.cz>, 2011, 2012.
+# Pavel Fric <pavelfric@seznam.cz>, 2011, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-02-14 22:33+0100\n"
-"PO-Revision-Date: 2012-07-15 20:20+0200\n"
+"PO-Revision-Date: 2013-02-19 11:37+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-de@kde.org>\n"
 "Language: cs\n"
@@ -304,9 +304,8 @@ msgid "Extract finished"
 msgstr "Rozbalení dokončeno"
 
 #: src/actions/actionmergemanager.cpp:248
-#, fuzzy
 msgid "Merge can not be performed anymore"
-msgstr "Přesunout neprovedené"
+msgstr "Sloučení už nelze provést"
 
 #: src/itemdelegate.cpp:38
 msgid "Downloading..."
@@ -548,7 +547,7 @@ msgstr "Odstranit vybrané soubory z řady čekajících?"
 #: src/widgets/centralwidget.cpp:156
 #, kde-format
 msgid "Merge content of %1 into %2 ?"
-msgstr ""
+msgstr "Sloučit obsah %1 do %2 ?"
 
 #: src/widgets/centralwidget.cpp:167
 msgid "Warning"
@@ -622,15 +621,15 @@ msgstr "Nastavení serveru %1"
 
 #: src/widgets/serverpreferenceswidget.cpp:320
 msgid "Host field contains white-space"
-msgstr ""
+msgstr "Pole hostitele obsahuje mezeru"
 
 #: src/widgets/serverpreferenceswidget.cpp:328
 msgid "Login field contains white-space"
-msgstr ""
+msgstr "Pole přihlášení obsahuje mezeru"
 
 #: src/widgets/serverpreferenceswidget.cpp:336
 msgid "Password field contains white-space"
-msgstr ""
+msgstr "Pole hesla obsahuje mezeru"
 
 #: src/widgets/serverpreferenceswidget.cpp:350
 msgid "<b>Backup Server Mode:</b>"
@@ -818,19 +817,19 @@ msgstr "Zkusit znovu stahování vybraných záznamů"
 
 #: src/mainwindow.cpp:325
 msgid "Repair and extract"
-msgstr ""
+msgstr "Opravit a rozbalit"
 
 #: src/mainwindow.cpp:327
 msgid "Manually verify and extract selected item"
-msgstr ""
+msgstr "Ručně prověřit a rozbalit vybranou položku"
 
 #: src/mainwindow.cpp:336
 msgid "Merge with..."
-msgstr ""
+msgstr "Sloučit s..."
 
 #: src/mainwindow.cpp:338
 msgid "Merge nzb content into another nzb"
-msgstr ""
+msgstr "Sloučit obsah nzb do jiného nzb"
 
 #: src/mainwindow.cpp:404
 msgid "General"
@@ -993,24 +992,22 @@ msgid "Bandwidth manager"
 msgstr "Správce šířky pásma"
 
 #: src/plugins/categories/categoriesmanual.cpp:45
-#, fuzzy
 msgid "Transfer folder..."
-msgstr "Přesunuje se..."
+msgstr "Dočasná složka..."
 
 #: src/plugins/categories/categoriesmanual.cpp:47
 #: src/plugins/categories/categoriesmanual.cpp:186
-#, fuzzy
 msgid "Select transfer folder"
-msgstr "Nastavit dočasnou složku"
+msgstr "Vybrat dočasnou složku"
 
 #: src/plugins/categories/categoriesmanual.cpp:119
-#, fuzzy, kde-format
+#, kde-format
 msgid "Transfer folder: %1"
-msgstr "Dočasná složka: "
+msgstr "Dočasná složka: %1"
 
 #: src/plugins/categories/categories.cpp:66
 msgid "Transfer not performed"
-msgstr "Přesunout neprovedené"
+msgstr "Přesun neproveden"
 
 #: src/plugins/categories/categories.cpp:67
 msgid "Transferring..."
@@ -1049,14 +1046,12 @@ msgid "Overwrite"
 msgstr "Přepsat"
 
 #: src/plugins/categories/preferencescategories.cpp:91
-#, fuzzy
 msgid "Category"
-msgstr "Přidat skupinu"
+msgstr "Skupina"
 
 #: src/plugins/categories/preferencescategories.cpp:92
-#, fuzzy
 msgid "Folder"
-msgstr "Složky"
+msgstr "Složka"
 
 #: src/plugins/categories/preferencescategories.cpp:99
 msgid "Add Category"
@@ -1086,9 +1081,8 @@ msgid "Subcategory: %1"
 msgstr "Podskupina: %1"
 
 #: src/plugins/categories/preferencescategories.cpp:375
-#, fuzzy
 msgid "Select Main Category"
-msgstr "Vybrat hlavní skupiny"
+msgstr "Vybrat hlavní skupinu"
 
 #: src/sidebar.cpp:171
 msgid "None"
@@ -1873,7 +1867,7 @@ msgstr ""
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_defineCategories)
 #: build/src/plugins/categories/ui_preferencescategories.h:197 rc.cpp:552
 msgid "Associate file types with transfer folders"
-msgstr ""
+msgstr "Přiřadit typy souborů k dočasným složkám"
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label)
@@ -1891,13 +1885,14 @@ msgid ""
 "Successfully extracted files will be transferred in this folder except for "
 "files matching categories defined above"
 msgstr ""
+"Úspěšně rozbalené soubory budou přesunuty do této složky kromě "
+"souborů odpovídajících skupinám vymezených výše"
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:129
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_enableDefaultTransfer)
 #: build/src/plugins/categories/ui_preferencescategories.h:205 rc.cpp:561
-#, fuzzy
 msgid "Default transfer folder:"
-msgstr "Nastavit dočasnou složku"
+msgstr "Výchozí dočasná složka:"
 
 #. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:28
 #. i18n: ectx: label, entry (defaultTransferFolder), group (categoriesplugin)
@@ -1905,9 +1900,8 @@ msgstr "Nastavit dočasnou složku"
 #. i18n: ectx: property (toolTip), widget (KUrlRequester, kcfg_defaultTransferFolder)
 #: build/src/plugins/categories/ui_preferencescategories.h:207 rc.cpp:549
 #: rc.cpp:564
-#, fuzzy
 msgid "Set default transfer folder"
-msgstr "Nastavit dočasnou složku"
+msgstr "Nastavit výchozí dočasnou složku"
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:152
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_manualFolder)
@@ -1917,19 +1911,22 @@ msgid ""
 "The manually chosen transfer folder will replace the favorite folder or the "
 "default one"
 msgstr ""
+"Povolit výběr vlastní dočasnou složku klepnutím pravým tlačítkem myši na "
+"položku nzb.\n"
+"Ručně vybraná dočasná složka nahradí složku s oblíbenými nebo výchozí "
+"složku"
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:155
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_manualFolder)
 #: build/src/plugins/categories/ui_preferencescategories.h:213 rc.cpp:571
 msgid "Manually select transfer folder from context menu"
-msgstr ""
+msgstr "Vybrat dočasnou složku ručně v nabídce"
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:164
 #. i18n: ectx: property (text), widget (QLabel, labelExistingTransfers)
 #: build/src/plugins/categories/ui_preferencescategories.h:214 rc.cpp:574
-#, fuzzy
 msgid "If files already exist in transfer folder:"
-msgstr "Pokud obsah k přesunutí již je ve složce s oblíbenými:"
+msgstr "Pokud soubory již jsou v dočasné složce:"
 
 #: rc.cpp:1
 msgctxt "NAME OF TRANSLATORS"
@@ -2124,7 +2121,7 @@ msgstr ""
 #. i18n: ectx: label, entry (defineCategories), group (categoriesplugin)
 #: rc.cpp:537
 msgid "Define categories from file types"
-msgstr ""
+msgstr "Vymezit skupiny z typů souborů"
 
 #. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:16
 #. i18n: ectx: label, entry (transferManagement), group (categoriesplugin)
@@ -2140,7 +2137,7 @@ msgstr ""
 #. i18n: ectx: label, entry (manualFolder), group (categoriesplugin)
 #: rc.cpp:543
 msgid "Choose custom transfer folder from context menu"
-msgstr ""
+msgstr "Vybrat vlastní dočasnou složku v nabídce"
 
 #~ msgid "Categories"
 #~ msgstr "Skupiny"
