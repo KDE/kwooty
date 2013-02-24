@@ -544,7 +544,7 @@ msgstr "Markierte Dateien aus Warteschlange Entfernen?"
 #: src/widgets/centralwidget.cpp:156
 #, kde-format
 msgid "Merge content of %1 into %2 ?"
-msgstr "Inhalt von %1 in %2 zusammenfügen ?"
+msgstr "Inhalt von %1 und %2 zusammenfügen ?"
 
 #: src/widgets/centralwidget.cpp:167
 msgid "Warning"
@@ -823,7 +823,7 @@ msgstr "Manuelles verifizieren und entpacken des ausgewählten Eintrags"
 
 #: src/mainwindow.cpp:336
 msgid "Merge with..."
-msgstr "Füge zusammen..."
+msgstr "Zusammenfügen mit..."
 
 #: src/mainwindow.cpp:338
 msgid "Merge nzb content into another nzb"
