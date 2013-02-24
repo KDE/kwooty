@@ -2,21 +2,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Michael Wiescholek <Michael.Wiescholek@gmail.com>, 2010.
-# Michael Wiescholek <Michael.Wiescholek@gmail.com>, 2010, 2011, 2012.
+# Michael Wiescholek <Michael.Wiescholek@gmail.com>, 2010, 2011, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-02-14 22:33+0100\n"
-"PO-Revision-Date: 2012-07-25 17:39+0200\n"
-"Last-Translator: Michael Wiescholek <Michael.Wiescholek@gmail.com>\n"
+"PO-Revision-Date: 2013-02-21 21:51+0100\n"
+"Last-Translator: \n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.4\n"
+"X-Generator: Lokalize 1.5\n"
 
 #: src/preferences/preferencesgeneral.cpp:38
 msgid "With confirmation"
@@ -301,9 +301,8 @@ msgid "Extract finished"
 msgstr "Entpacken abgeschlossen"
 
 #: src/actions/actionmergemanager.cpp:248
-#, fuzzy
 msgid "Merge can not be performed anymore"
-msgstr "Übertragung nicht durchgeführt"
+msgstr "Ein Zusammenfügen kann nicht mehr durchgeführt werden"
 
 #: src/itemdelegate.cpp:38
 msgid "Downloading..."
@@ -545,7 +544,7 @@ msgstr "Markierte Dateien aus Warteschlange Entfernen?"
 #: src/widgets/centralwidget.cpp:156
 #, kde-format
 msgid "Merge content of %1 into %2 ?"
-msgstr ""
+msgstr "Inhalt von %1 in %2 zusammenfügen ?"
 
 #: src/widgets/centralwidget.cpp:167
 msgid "Warning"
@@ -619,15 +618,15 @@ msgstr "Konfiguration %1 Server"
 
 #: src/widgets/serverpreferenceswidget.cpp:320
 msgid "Host field contains white-space"
-msgstr ""
+msgstr "Eintrag im Feld Server enthält Leerzeichen"
 
 #: src/widgets/serverpreferenceswidget.cpp:328
 msgid "Login field contains white-space"
-msgstr ""
+msgstr "Eintrag im Feld Benutzer enthält Leerzeichen"
 
 #: src/widgets/serverpreferenceswidget.cpp:336
 msgid "Password field contains white-space"
-msgstr ""
+msgstr "Eintrag im Feld Passwort enthält Leerzeichen"
 
 #: src/widgets/serverpreferenceswidget.cpp:350
 msgid "<b>Backup Server Mode:</b>"
@@ -816,19 +815,19 @@ msgstr "Download der ausgewählten Einträge wiederholen"
 
 #: src/mainwindow.cpp:325
 msgid "Repair and extract"
-msgstr ""
+msgstr "Reparieren und entpacken"
 
 #: src/mainwindow.cpp:327
 msgid "Manually verify and extract selected item"
-msgstr ""
+msgstr "Manuelles verifizieren und entpacken des ausgewählten Eintrags"
 
 #: src/mainwindow.cpp:336
 msgid "Merge with..."
-msgstr ""
+msgstr "Füge zusammen..."
 
 #: src/mainwindow.cpp:338
 msgid "Merge nzb content into another nzb"
-msgstr ""
+msgstr "Füge den Inhalt einer nzb mit einer anderen zusammen"
 
 #: src/mainwindow.cpp:404
 msgid "General"
@@ -993,20 +992,18 @@ msgid "Bandwidth manager"
 msgstr "Bandbreitenverwaltung"
 
 #: src/plugins/categories/categoriesmanual.cpp:45
-#, fuzzy
 msgid "Transfer folder..."
-msgstr "Übertrage..."
+msgstr "Download Verzeichnis..."
 
 #: src/plugins/categories/categoriesmanual.cpp:47
 #: src/plugins/categories/categoriesmanual.cpp:186
-#, fuzzy
 msgid "Select transfer folder"
-msgstr "Temporäres Verzeichnis festlegen"
+msgstr "Download Verzeichnis auswählen"
 
 #: src/plugins/categories/categoriesmanual.cpp:119
-#, fuzzy, kde-format
+#, kde-format
 msgid "Transfer folder: %1"
-msgstr "Temporäres Verzeichnis: "
+msgstr "Download Verzeichnis: %1"
 
 #: src/plugins/categories/categories.cpp:66
 msgid "Transfer not performed"
@@ -1049,14 +1046,12 @@ msgid "Overwrite"
 msgstr "Überschreiben"
 
 #: src/plugins/categories/preferencescategories.cpp:91
-#, fuzzy
 msgid "Category"
-msgstr "Kategorie hinzufügen"
+msgstr "Kategorie"
 
 #: src/plugins/categories/preferencescategories.cpp:92
-#, fuzzy
 msgid "Folder"
-msgstr "Verzeichnisse"
+msgstr "Verzeichnis"
 
 #: src/plugins/categories/preferencescategories.cpp:99
 msgid "Add Category"
@@ -1086,7 +1081,6 @@ msgid "Subcategory: %1"
 msgstr "Unterkategorie: %1"
 
 #: src/plugins/categories/preferencescategories.cpp:375
-#, fuzzy
 msgid "Select Main Category"
 msgstr "Hauptkategorie auswählen"
 
@@ -1538,7 +1532,7 @@ msgstr "Bestätigungsdialoge"
 #. i18n: ectx: property (toolTip), widget (QGroupBox, groupBoxAuthentication)
 #: build/src/ui_serversettings.h:249 rc.cpp:372
 msgid "Set login and password if authentication is required by host"
-msgstr "Setzt Login und Passwort, wenn Server Authentifikation verlangt"
+msgstr "Benutzername und Passwort, falls Server Authentifikation verlangt"
 
 #. i18n: file: src/preferences/serversettings.ui:36
 #. i18n: ectx: property (title), widget (QGroupBox, groupBoxAuthentication)
@@ -1550,13 +1544,13 @@ msgstr "Authentifizierung"
 #. i18n: ectx: property (text), widget (QLabel, labelLogin)
 #: build/src/ui_serversettings.h:252 rc.cpp:378
 msgid "Login:"
-msgstr "Benutzername:"
+msgstr "Benutzer:"
 
 #. i18n: file: src/preferences/serversettings.ui:74
 #. i18n: ectx: property (toolTip), widget (QLineEdit, login)
 #: build/src/ui_serversettings.h:255 rc.cpp:381
 msgid "Set login required by host"
-msgstr "Vom Server benötigter Login Name"
+msgstr "Vom Server benötigter Benutzername"
 
 #. i18n: file: src/preferences/serversettings.ui:81
 #. i18n: ectx: property (text), widget (QLabel, labelPassword)
@@ -1824,7 +1818,7 @@ msgstr "Jede hinzugefügte nzb Datei pausieren"
 #. i18n: ectx: property (text), widget (QLabel, labelWatchFolder)
 #: build/src/plugins/watchfolder/ui_preferenceswatchfolder.h:92 rc.cpp:489
 msgid "Watch folder: "
-msgstr "Zu durchsuchender Ordner: "
+msgstr "Zu durchsuchendes Verzeichnis: "
 
 #. i18n: file: src/plugins/watchfolder/preferenceswatchfolder.ui:50
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_copyNzbFromWatch)
@@ -1880,13 +1874,13 @@ msgstr ""
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_defineCategories)
 #: build/src/plugins/categories/ui_preferencescategories.h:197 rc.cpp:552
 msgid "Associate file types with transfer folders"
-msgstr ""
+msgstr "Verknüpfe Dateitypen mit "
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:106
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: build/src/plugins/categories/ui_preferencescategories.h:201 rc.cpp:555
 msgid "Favorite folder: "
-msgstr "Standart Ordner: "
+msgstr "Bevorzugtes Verzeichnis: "
 
 #. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:24
 #. i18n: ectx: label, entry (enableDefaultTransfer), group (categoriesplugin)
@@ -1898,13 +1892,15 @@ msgid ""
 "Successfully extracted files will be transferred in this folder except for "
 "files matching categories defined above"
 msgstr ""
+"Erfolgreich entpackte Dateien werden in dieses Verzeichnis kopiert. Davon "
+"ausgenommen sind Dateien, "
+"die die oben konfigurierten Kategorien entsprechen"
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:129
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_enableDefaultTransfer)
 #: build/src/plugins/categories/ui_preferencescategories.h:205 rc.cpp:561
-#, fuzzy
 msgid "Default transfer folder:"
-msgstr "Temporäres Verzeichnis festlegen"
+msgstr "Standard Downdload Verzeichnis:"
 
 #. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:28
 #. i18n: ectx: label, entry (defaultTransferFolder), group (categoriesplugin)
@@ -1912,9 +1908,8 @@ msgstr "Temporäres Verzeichnis festlegen"
 #. i18n: ectx: property (toolTip), widget (KUrlRequester, kcfg_defaultTransferFolder)
 #: build/src/plugins/categories/ui_preferencescategories.h:207 rc.cpp:549
 #: rc.cpp:564
-#, fuzzy
 msgid "Set default transfer folder"
-msgstr "Temporäres Verzeichnis festlegen"
+msgstr "Standard Download Verzeichnis festlegen"
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:152
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_manualFolder)
@@ -1924,19 +1919,23 @@ msgid ""
 "The manually chosen transfer folder will replace the favorite folder or the "
 "default one"
 msgstr ""
+"Erlaubt das Auswählen eines benutzerdefinierten Download Verzeichnisses durch "
+"Rechtsklick auf einen nzb Eintrag.\\ "
+"Das manuell ausgewählte Verzeichnis ersetzt den Bevorzugten oder das Standard "
+"Verzeichnis."
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:155
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_manualFolder)
 #: build/src/plugins/categories/ui_preferencescategories.h:213 rc.cpp:571
 msgid "Manually select transfer folder from context menu"
-msgstr ""
+msgstr "Manuelles Auswählen des Download Verzeichnisses aus dem Kontextmenüs"
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:164
 #. i18n: ectx: property (text), widget (QLabel, labelExistingTransfers)
 #: build/src/plugins/categories/ui_preferencescategories.h:214 rc.cpp:574
-#, fuzzy
 msgid "If files already exist in transfer folder:"
-msgstr "Wenn zu übertragende Dateien bereits im Standardverzeichnis existiert:"
+msgstr ""
+"Wenn die zu übertragenden Dateien bereits im Download Verzeichnis existiert:"
 
 #: rc.cpp:1
 msgctxt "NAME OF TRANSLATORS"
@@ -2130,7 +2129,7 @@ msgstr ""
 #. i18n: ectx: label, entry (defineCategories), group (categoriesplugin)
 #: rc.cpp:537
 msgid "Define categories from file types"
-msgstr ""
+msgstr "Bestimmung der Kategorien anhand des Dateityps"
 
 #. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:16
 #. i18n: ectx: label, entry (transferManagement), group (categoriesplugin)
@@ -2139,7 +2138,8 @@ msgid ""
 "Overwrite or rename folder to transfer if it already exists in favorite "
 "folder"
 msgstr ""
-"Vorhandener Ordner überschreiben oder umbenennen wenn er bereits im Standard "
+"Vorhandenes Verzeichnis überschreiben oder umbenennen wenn er bereits im "
+"Standard "
 "Verzeichnis existiert."
 
 #. i18n: file: src/plugins/categories/kwooty_categoriessettings.kcfg:20
@@ -2147,6 +2147,7 @@ msgstr ""
 #: rc.cpp:543
 msgid "Choose custom transfer folder from context menu"
 msgstr ""
+"Auswahl eines benutzerdefinierten Download Verzeichnisses aus dem Kontextmenüs"
 
 #~ msgid "Categories"
 #~ msgstr "Kategorien"
