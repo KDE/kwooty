@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project (Kwooty)
 
+set(KDE_MIN_VERSION "4.6.0")
 find_package(KDE4 REQUIRED)
 find_package(KDE4Workspace REQUIRED)
 include(KDE4Defaults)

@@ -1,6 +1,6 @@
 Requirements to build the project:
 ==================================
-Kwooty requires KDE >= 4.2.
+Kwooty requires KDE >= 4.6.
 
 - cmake
 - gcc
@@ -37,7 +37,7 @@ Names of packages could be different according to the distribution used,
 you could find below the list of packages to install in order to build Kwooty on
 several distributions :
 
-1. OpenSuse 11.1 (make sure your KDE version is >=4.2, visit http://en.opensuse.org/KDE/Repositories if you wish to upgrade KDE in order to compile kwooty):
+1. OpenSuse 11.1 (make sure your KDE version is >=4.6, visit http://en.opensuse.org/KDE/Repositories if you wish to upgrade KDE in order to compile kwooty):
 cmake (>=2.6)
 gcc
 gcc-c++
