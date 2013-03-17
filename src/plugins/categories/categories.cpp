@@ -207,7 +207,8 @@ void Categories::launchPreProcess() {
                 this->notifyMoveProcessing(UtilityNamespace::PROGRESS_INIT);
 
                 // update file save path in nzb parent item in order to get "Downloads" action from tool bar get into it :
-                downloadModel->updateParentFileSavePathFromIndex(parentFileNameItem->index(), mimeDataChildFound.getMoveFolderPath());
+                QString newDownloadFolder = mimeDataChildFound.getMoveFolderPath() + '/' + QDir(nzbFileSavepath).dirName();
+                downloadModel->updateParentFileSavePathFromIndex(parentFileNameItem->index(), newDownloadFolder);
 
                 // mime type has been identified, downloaded files can be moved to target folder :
                 this->launchMoveProcess(mimeDataChildFound, nzbFileSavepath);
@@ -258,8 +259,8 @@ void Categories::launchMoveProcess(const MimeData& mimeData, const QString& nzbF
     KIO::CopyJob* moveJob = this->moveJobLegacy(mimeData, nzbFileSavepath, jobFlag);
     #endif
 
-    // ensure to not ask any question to user during move process :
-    moveJob->setAutoRename(true);
+    // ensure to not ask any question to user during move process (disable interactive mode) :
+    moveJob->setUiDelegate(0);
 
 
     // setup connections with job :

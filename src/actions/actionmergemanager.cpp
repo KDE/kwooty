@@ -173,10 +173,7 @@ void ActionMergeManager::processMerge(QStandardItem* selectedFileNameItem, QStan
         if ( currentFileInfo.isFile() &&
              currentFileInfo.exists() ) {
 
-            // file may already exist, do not add it if this is the case :
-            if (!QFileInfo(targetFileSavePath + '/' + childNzbFileData.getDecodedFileName()).exists()) {
-                sourceFileList.append(currentFileInfo.filePath());
-            }
+            sourceFileList.append(currentFileInfo.filePath());
 
         }
 
@@ -195,8 +192,9 @@ void ActionMergeManager::processMerge(QStandardItem* selectedFileNameItem, QStan
 
     // then move already decoded files into target download folder :
     KIO::CopyJob* moveJob = KIO::move(sourceFileList, KUrl(targetFileSavePath), KIO::Overwrite);
-    moveJob->setAutoRename(false);
-    moveJob->setAutoSkip(true);
+
+    // make job non-interactive :
+    moveJob->setUiDelegate(0);
 
     // setup connections with job :
     connect(moveJob, SIGNAL(result(KJob*)), this, SLOT(handleResultSlot(KJob*)));
