@@ -21,7 +21,8 @@
 #include "nzbfilehandler.h"
 
 #include <KDebug>
-#include <KMessageBox>
+#include <KStringHandler>
+
 #include <QXmlStreamReader>
 #include <QXmlStreamAttributes>
 #include <QUuid>
@@ -41,13 +42,22 @@ NzbFileHandler::NzbFileHandler(Core* parent) : QObject (parent) {
 }
 
 
+
+bool natualSortingOrderLessThan(const GlobalFileData& globalFileData1, const GlobalFileData& globalFileData2) {
+
+  return KStringHandler::naturalCompare(globalFileData1.getNzbFileData().getFileName(), globalFileData2.getNzbFileData().getFileName()) < 0;
+
+}
+
+
+
 QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString& nzbName) {
 
     
     // variables definition :
     QMap<int, SegmentData> segmentMap;
-    QMap<QString, GlobalFileData> globalFileDataNameMap;
-    QMap<QString, GlobalFileData> globalPar2DataNameMap;
+    QList<GlobalFileData> globalFileDataList;
+    QList<GlobalFileData> globalPar2DataList;
 
     NzbFileData nzbFileData;
     quint32 elementInList = 0;
@@ -170,11 +180,11 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
 
                 // add the nzbFileData to the data map excepted par2 files :
                 if (!nzbFileData.isPar2File()) {
-                    globalFileDataNameMap.insert(nzbFileData.getFileName(), GlobalFileData(nzbFileData));
+                    globalFileDataList.append(GlobalFileData(nzbFileData));
                 }
                 // add par2 files only in another map :
                 else {
-                    globalPar2DataNameMap.insert(nzbFileData.getFileName(), GlobalFileData(nzbFileData));
+                    globalPar2DataList.append(GlobalFileData(nzbFileData));
                 }
 
                 // clear variables :    
@@ -207,8 +217,20 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
 
     }
     else {
-        globalFileDataOrderedList.append(globalFileDataNameMap.values());
-        globalFileDataOrderedList.append(globalPar2DataNameMap.values());
+
+        //qSort(globalFileDataList.begin(), globalFileDataList.end(), natualSortingOrderLessThan);
+        qSort(globalFileDataList.begin(), globalFileDataList.end(), natualSortingOrderLessThan);
+        qSort(globalPar2DataList.begin(), globalPar2DataList.end(), natualSortingOrderLessThan);
+
+
+        foreach (GlobalFileData globalFileData,globalFileDataList)  {
+            kDebug() << globalFileData.getNzbFileData().getFileName();
+
+        }
+
+
+        globalFileDataOrderedList.append(globalFileDataList);
+        globalFileDataOrderedList.append(globalPar2DataList);
 
     }
 

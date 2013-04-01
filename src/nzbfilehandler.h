@@ -40,6 +40,7 @@ public:
 private:
     Core* parent;
 
+
 signals:
     void displayMessageBoxSignal(const QString&);
     
