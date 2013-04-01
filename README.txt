@@ -3,8 +3,8 @@ Kwooty, a friendly newsgroup binary downloader for KDE 4.
 Version 1.0.1:
 --------------
 
-- KDE version minimim requirement switched from 4.7 to 4.6
-- Fix bug: when transfer has been done by Category plugin, "Downloads" button will now jump into the proper folder
+- Lower mandatatory KDE version from 4.7 to 4.6 to build kwooty
+- Fix bug: when successfully downloaded folder was transferred into favorite folder by Category plugin, "Downloads" button would jump into favorite folder instead on jumping into the proper child folder
 
 
 Version 1.0.0:
