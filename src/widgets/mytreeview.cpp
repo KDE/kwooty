@@ -174,6 +174,7 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
     contextMenu.addAction(actionCollection->action("moveBottom"));
     contextMenu.addSeparator();
     contextMenu.addAction(actionCollection->action("mergeNzb"));
+    contextMenu.addAction(actionCollection->action("renameNzb"));
 
     emit addExternalActionSignal(&contextMenu, item);
 
