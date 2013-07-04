@@ -77,7 +77,7 @@ QList<NzbFileData> ExtractSplit::retrieveSplitFilesOnly(const QString& fileSaveP
     foreach (const NzbFileData& currentNzbFileData, this->nzbCollectionData.getNzbFileDataList()) {
 
         // get current file :
-        QFile currentSplitFile(fileSavePath + currentNzbFileData.getDecodedFileName());
+        QFile currentSplitFile( Utility::buildFullPath(fileSavePath, currentNzbFileData.getDecodedFileName()) );
 
         // check if it is a splitted file (check for .001, .002, etc... pattern) :
         if (FileOperations::isSplitFileFormat(currentSplitFile)) {
@@ -96,7 +96,7 @@ void ExtractSplit::retrieveFullPathJoinFileName(const NzbCollectionData& nzbColl
 
     // get archive saved path :
     fileSavePath = currentNzbFileData.getFileSavePath();
-    joinFileName = QFileInfo(fileSavePath + currentNzbFileData.getDecodedFileName()).completeBaseName();
+    joinFileName = QFileInfo(Utility::buildFullPath(fileSavePath, currentNzbFileData.getDecodedFileName())).completeBaseName();
 
 }
 
@@ -118,7 +118,7 @@ void ExtractSplit::preRepairProcessing(const NzbCollectionData& nzbCollectionDat
 
     this->retrieveFullPathJoinFileName(nzbCollectionData, fileSavePath, joinFileName);
 
-    Utility::removeData(fileSavePath + joinFileName);
+    Utility::removeData( Utility::buildFullPath(fileSavePath, joinFileName) );
 }
 
 

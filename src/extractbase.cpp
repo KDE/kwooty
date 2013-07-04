@@ -204,7 +204,7 @@ void ExtractBase::removeArchiveFiles(){
         if (nzbFileData.getExtractProgressionStep() == ExtractStatus) {
 
             // removed decoded file name :
-            QString fullPathFileName = nzbFileData.getFileSavePath() + nzbFileData.getDecodedFileName();
+            QString fullPathFileName = Utility::buildFullPath(nzbFileData.getFileSavePath(), nzbFileData.getDecodedFileName());
             Utility::removeData(fullPathFileName);
 
             // par2 may have rewrote repaired file names with ".1" ext, try to remove them :
@@ -221,7 +221,7 @@ void ExtractBase::removeRenamedArchiveFile(const NzbFileData& nzbFileData) {
     // if file has been renamed, par2 may have created the archive with the original name suppress it :
     if (!nzbFileData.getRenamedFileName().isEmpty()) {
 
-        QString fullPathFileName = nzbFileData.getFileSavePath() + nzbFileData.getRenamedFileName();
+        QString fullPathFileName = Utility::buildFullPath(nzbFileData.getFileSavePath(), nzbFileData.getRenamedFileName());
         Utility::removeData(fullPathFileName);
 
     }

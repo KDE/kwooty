@@ -45,7 +45,7 @@ CategoriesManual::CategoriesManual(Categories* categories) : QObject(categories)
     manualTransferFolderAction->setText(i18n("Transfer folder..."));
     manualTransferFolderAction->setIcon(KIcon("folder-favorites"));
     manualTransferFolderAction->setToolTip(i18n("Select transfer folder"));
-    manualTransferFolderAction->setShortcut(Qt::CTRL + Qt::Key_M);
+    manualTransferFolderAction->setShortcut(Qt::CTRL + Qt::Key_F);
     manualTransferFolderAction->setEnabled(true);
     manualTransferFolderAction->setCheckable(false);
 
@@ -104,6 +104,16 @@ bool CategoriesManual::isManualFolderSelected(const QString& currentUuidItem) {
 }
 
 
+bool CategoriesManual::isActionAllowed(QStandardItem* item) const {
+
+    ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(item->index());
+
+    // if post process is not finished yet, allow to manually select transfert folder :
+    return !itemStatusData.isPostProcessFinish();
+
+}
+
+
 QString CategoriesManual::getMoveFolderPath(const QString& currentUuidItem) {
 
     return this->uuidFolderMap.take(currentUuidItem);
@@ -134,14 +144,12 @@ void CategoriesManual::addExternalActionSlot(KMenu* contextMenu, QStandardItem* 
     // think about displaying them always in the same order.
 
     // if item is a nzb item :
-    if ( CategoriesSettings::manualFolder() &&
-         item &&
+    if ( item &&
+         CategoriesSettings::manualFolder() &&
          this->downloadModel->isNzbItem(item) ) {
 
-        ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(item->index());
-
         // if post process is not finished yet, allow to manually select transfert folder :
-        if (!itemStatusData.isPostProcessFinish()) {
+        if (this->isActionAllowed(item)) {
 
             contextMenu->addSeparator();
             contextMenu->addAction(this->core->getMainWindow()->actionCollection()->action("chooseFavoriteFolder"));
@@ -166,7 +174,8 @@ void CategoriesManual::manualTransferFolderSlot() {
             QStandardItem* item = this->downloadModel->getFileNameItemFromIndex(indexesList.at(0));
 
             // first, be sure that item is a parent one (nzb) :
-            if (this->downloadModel->isNzbItem(item)) {
+            if ( this->downloadModel->isNzbItem(item) &&
+                 this->isActionAllowed(item) ) {
 
                 QString uuidIndex = this->downloadModel->getUuidStrFromIndex(item->index());
 

@@ -164,7 +164,7 @@ void WatchFolder::watchFileSlot(const QString& filePath) {
 
         foreach (const QString& nzbFile, newNzbFiles) {
 
-            QString nzbfilePath = WatchFolderSettings::watchFolder().path() + "/" +  nzbFile;
+            QString nzbfilePath = Utility::buildFullPath(WatchFolderSettings::watchFolder().path(), nzbFile);
             this->appendFileToList(nzbfilePath);
 
         }

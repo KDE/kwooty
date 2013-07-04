@@ -98,7 +98,7 @@ void Repair::launchProcess(const NzbCollectionData& nzbCollectionData){
                 args.append(this->par2ProgramPath);
                 args.append("r");
                 args.append(this->par2FilesOrderedList.at(0));
-                args.append(fileSavePath + nzbCollectionData.getPar2BaseName());
+                args.append( Utility::buildFullPath(fileSavePath, nzbCollectionData.getPar2BaseName()) );
 
                 //kDebug() << "ARGS :" << args;
                 this->repairProcess->setOutputChannelMode(KProcess::MergedChannels);
@@ -177,7 +177,7 @@ QString Repair::sortPar2FilesBySize(){
 
             // check that file exists :
             fileSavePath = nzbFileData.getFileSavePath();
-            QString currentFileNamePath = fileSavePath + currentFileName;
+            QString currentFileNamePath = Utility::buildFullPath(fileSavePath, currentFileName);
             QFile currentPar2File(currentFileNamePath);
 
             // add file size and it's path to map :
@@ -289,7 +289,7 @@ void Repair::removePar2Files(){
 
         if (nzbFileData.isPar2File()){
 
-            Utility::removeData(nzbFileData.getFileSavePath() + nzbFileData.getDecodedFileName());
+            Utility::removeData(Utility::buildFullPath(nzbFileData.getFileSavePath(), nzbFileData.getDecodedFileName()));
         }
     }
 }

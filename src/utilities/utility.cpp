@@ -223,7 +223,7 @@ bool Utility::saveData(const QString& fileSavePath, const QString& fileName, con
     if (isSaveSucceeded) {
 
         // open file in write mode :
-        QFile file(fileSavePath + "/" + fileName);
+        QFile file( Utility::buildFullPath(fileSavePath, fileName) );
         isSaveSucceeded = file.open(QIODevice::WriteOnly);
 
         if (isSaveSucceeded) {
@@ -311,11 +311,11 @@ QString Utility::searchExternalPrograms(const QString& programToSearch, bool& pr
                 searchPath.chop(1);
             }
 
-            QFile ProgramFile(searchPath + "/" + currentProgramName);
+            QFile ProgramFile(Utility::buildFullPath(searchPath, currentProgramName));
 
             if (ProgramFile.exists()) {
 
-                programPathName = searchPath + "/" + currentProgramName;
+                programPathName = Utility::buildFullPath(searchPath, currentProgramName);
 
                 programFound = true;
 
@@ -347,6 +347,11 @@ QString Utility::getSystemTimeFormat(const QString& dateFormat) {
     return properDateFormat;
 }
 
+
+QString Utility::buildFullPath(const QString& path, const QString& fileName) {
+
+    return (path + '/' + fileName);
+}
 
 
 QString Utility::buildToolTipRow(const QString& label, const QString& value) {

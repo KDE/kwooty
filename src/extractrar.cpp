@@ -45,7 +45,7 @@ QStringList ExtractRar::createProcessArguments(const QString& archiveName, const
     if (this->archivePasswordStatus == ExtractBase::ArchiveCheckIfPassworded) {
         args.append("l");
         args.append("-p-");
-        args.append(fileSavePath + archiveName);
+        args.append(Utility::buildFullPath(fileSavePath, archiveName));
     }
     // second pass : extract archive with or without a password :
     else {
@@ -75,7 +75,7 @@ QStringList ExtractRar::createProcessArguments(const QString& archiveName, const
             }
         }
 
-        args.append(fileSavePath + archiveName);
+        args.append(Utility::buildFullPath(fileSavePath, archiveName));
         args.append(fileSavePath);
 
     }

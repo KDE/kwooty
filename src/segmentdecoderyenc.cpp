@@ -51,14 +51,14 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString& temporaryFolder, Segme
     // /!\ be sure that destination file has not already been moved in target folder.
     // this can happen only when a retry action has been performed :
     // file has already been post-processed and should be moved again in temporary folder to write decoded segment in it :
-    QString temporaryFileStr = temporaryFolder + segmentData.getSegmentInfoData().getTemporaryFileName();
-    QString destinationFileStr = segmentData.getSegmentInfoData().getDestinationFileSavePath() + '/' + decodedFileName;
+    QString temporaryFileStr = Utility::buildFullPath( temporaryFolder, segmentData.getSegmentInfoData().getTemporaryFileName() );
+    QString destinationFileStr = Utility::buildFullPath( segmentData.getSegmentInfoData().getDestinationFileSavePath(), decodedFileName );
     bool renamed = Utility::rename(destinationFileStr, temporaryFileStr);
 
     // check that temporary folder is already created, else create it :
     Utility::createFolder(temporaryFolder);
 
-    QFile temporaryFile(temporaryFolder + segmentData.getSegmentInfoData().getTemporaryFileName());
+    QFile temporaryFile( Utility::buildFullPath(temporaryFolder, segmentData.getSegmentInfoData().getTemporaryFileName()) );
     temporaryFile.open(QIODevice::ReadWrite);
 
     // retrieve data to decode :
@@ -292,8 +292,8 @@ void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData& nzbFileData) {
     decodeInfoData.initDecode(this->parentIdentifer, PROGRESS_COMPLETE, DecodeErrorStatus);
 
     // move decoded file to destination folder :
-    QString temporaryFileStr = Settings::temporaryFolder().path() + '/' + nzbFileData.getTemporaryFileName();
-    QString destinationFileStr = nzbFileData.getFileSavePath() + '/' + nzbFileData.getDecodedFileName();
+    QString temporaryFileStr = Utility::buildFullPath(Settings::temporaryFolder().path(), nzbFileData.getTemporaryFileName());
+    QString destinationFileStr = Utility::buildFullPath(nzbFileData.getFileSavePath(), nzbFileData.getDecodedFileName());
 
     // check if exists or create the destination folder :
     if (Utility::createFolder(nzbFileData.getFileSavePath())) {

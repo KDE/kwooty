@@ -162,7 +162,7 @@ void SegmentManager::setIdleDownloadFailSegments(QStandardItem* fileNameItem) {
         SegmentData currentSegment = segmentList.at(segmentIndex);
 
         // re-download only segments that own an incorrect crc :
-        if (QFile::exists(nzbFileData.getFileSavePath() + '/' +  nzbFileData.getDecodedFileName())) {
+        if (QFile::exists( Utility::buildFullPath(nzbFileData.getFileSavePath(), nzbFileData.getDecodedFileName())) ) {
 
             if ((currentSegment.getCrc32Match() != UtilityNamespace::CrcOk) ) {
                 currentSegment.setReadyForNewServer(MasterServer);

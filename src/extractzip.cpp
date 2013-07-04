@@ -49,7 +49,7 @@ QStringList ExtractZip::createProcessArguments(const QString& archiveName, const
     if (this->archivePasswordStatus == ExtractBase::ArchiveCheckIfPassworded) {
         args.append("l");
         args.append("-slt");
-        args.append(fileSavePath + archiveName);
+        args.append( Utility::buildFullPath(fileSavePath, archiveName) );
     }
     // second pass : extract archive with or without a password :
     else {
@@ -86,7 +86,7 @@ QStringList ExtractZip::createProcessArguments(const QString& archiveName, const
         // set output directory :
         args.append("-o" + fileSavePath);
 
-        args.append(fileSavePath + archiveName);
+        args.append( Utility::buildFullPath(fileSavePath,archiveName) );
 
 
     }

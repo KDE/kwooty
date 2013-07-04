@@ -254,12 +254,13 @@ QString StandardItemModel::getParentFileSavePathFromIndex(const QModelIndex& ind
 
 }
 
-void StandardItemModel::updateParentFileSavePathFromIndex(const QModelIndex& index, const QString& nzbFileSavePath) {
+
+void StandardItemModel::updateParentFileSavePathFromIndex(const QModelIndex& index, const NzbFileData& nzbFileData) {
 
     QStandardItem* parentNzbFileNameItem = this->getNzbItem(index);
 
     NzbFileData parentNzbFileData = this->getNzbFileDataFromIndex(parentNzbFileNameItem->index());
-    parentNzbFileData.setFileSavePath(nzbFileSavePath);
+    parentNzbFileData.updateFileSavePath(nzbFileData);
 
     this->updateNzbFileDataToItem(parentNzbFileNameItem, parentNzbFileData);
 

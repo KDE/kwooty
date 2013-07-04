@@ -31,6 +31,7 @@
 #include "servermanager.h"
 #include "serverspeedmanager.h"
 #include "nntpclient.h"
+#include "nntpsocket.h"
 #include "data/segmentinfodata.h"
 #include "observers/clientsperserverobserver.h"
 #include "preferences/kconfiggrouphandler.h"
@@ -253,7 +254,7 @@ void ClientManagerConn::resetConnectionSlot() {
     // the connection was not broken :
     if (this->nntpClient) {
 
-        if (this->nntpClient->isSocketConnected()) {
+        if (this->nntpClient->getTcpSocket()->isSocketConnected()) {
 
             // disconnect :
             this->disconnectRequestSlot();

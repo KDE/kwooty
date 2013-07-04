@@ -56,12 +56,10 @@ QString SegmentDecoderBase::scanSegmentFiles(const NzbFileData& currentNzbFileDa
     // scan every files to be decoded :
     foreach (const SegmentData& currentSegment, this->segmentDataList) {
 
-        QString temporaryFolder = Settings::temporaryFolder().path() + '/';
-
         // if segment has been downloaded :
         if (currentSegment.getArticlePresenceOnServer() == Present) {
 
-            QString pathNameFile = temporaryFolder + currentSegment.getPart();
+            QString pathNameFile = Utility::buildFullPath(Settings::temporaryFolder().path(), currentSegment.getPart());
             QFile segmentFile(pathNameFile);
 
             // open the current segment file :

@@ -331,6 +331,7 @@ public:
     static bool isCompletedFolderDiskFull();
     static QString searchExternalPrograms(const QString&, bool&);
     static QString getSystemTimeFormat(const QString&);
+    static QString buildFullPath(const QString&, const QString&);
     static QString buildToolTipRow(const QString&, const QString&);
     static QStringList buildPriorityArgument(const int&, const int&);
     

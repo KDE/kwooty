@@ -176,7 +176,7 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
                 nzbFileData.setTemporaryFileName(uniqueIdStr);
 
                 // set download folder :
-                nzbFileData.setFileSavePath(Settings::completedFolder().path() + '/' + nzbFileData.getNzbName() + '/');
+                nzbFileData.setDownloadFolderPath(Settings::completedFolder().path());
 
                 // add the nzbFileData to the data map excepted par2 files :
                 if (!nzbFileData.isPar2File()) {

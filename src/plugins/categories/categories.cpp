@@ -136,7 +136,8 @@ void Categories::launchPreProcess() {
 
 
         // retrieve downloaded folder path :
-        QString nzbFileSavepath = downloadModel->getParentFileSavePathFromIndex(parentFileNameItem->index());
+        NzbFileData parentNzbFileData = downloadModel->getNzbFileDataFromIndex(parentFileNameItem->index());
+        QString nzbFileSavepath = parentNzbFileData.getFileSavePath();
 
         // retrieve all mime types and the corresponding sizes of files :
         QHash<QString, quint64> mimeNameSizeMap = this->scanDownloadedFiles(nzbFileSavepath);
@@ -207,8 +208,8 @@ void Categories::launchPreProcess() {
                 this->notifyMoveProcessing(UtilityNamespace::PROGRESS_INIT);
 
                 // update file save path in nzb parent item in order to get "Downloads" action from tool bar get into it :
-                QString newDownloadFolder = mimeDataChildFound.getMoveFolderPath() + '/' + QDir(nzbFileSavepath).dirName();
-                downloadModel->updateParentFileSavePathFromIndex(parentFileNameItem->index(), newDownloadFolder);
+                parentNzbFileData.setDownloadFolderPath(mimeDataChildFound.getMoveFolderPath());
+                downloadModel->updateParentFileSavePathFromIndex(parentFileNameItem->index(), parentNzbFileData);
 
                 // mime type has been identified, downloaded files can be moved to target folder :
                 this->launchMoveProcess(mimeDataChildFound, nzbFileSavepath);
@@ -343,7 +344,7 @@ bool Categories::checkDiskSpace(const MimeData& mimeData, const QString& nzbFile
 
 KSharedPtr<KMimeType> Categories::retrieveFileMimeType(const QString& currentFileStr, const QString& nzbFileSavepath) {
 
-    QString absoluteFilePath = nzbFileSavepath + '/' + currentFileStr;
+    QString absoluteFilePath = Utility::buildFullPath(nzbFileSavepath, currentFileStr);
 
     // try to get mime type by file name :
     KSharedPtr<KMimeType> mimeType = KMimeType::findByUrl(KUrl(absoluteFilePath), 0, true, false);
@@ -397,7 +398,7 @@ QHash<QString, quint64> Categories::scanDownloadedFiles(const QString& nzbFileSa
             if ( !mimeType.isNull() &&
                  !mimeType->isDefault() ) {
 
-                fileInfo.setFile(currentDirectory + '/' + currentFileStr);
+                fileInfo.setFile(Utility::buildFullPath(currentDirectory, currentFileStr));
 
                 // add size of files with the same mime type :
                 mimeNameSizeMap.insert(mimeType->name(),
@@ -570,7 +571,7 @@ KIO::CopyJob* Categories::moveJobLegacy(const MimeData& mimeData, const QString&
 
     // get name of the folder to transfer :
     QString folderName = QDir(nzbFileSavepath).dirName();
-    QString moveFolderPath = mimeData.getMoveFolderPath() + '/' + folderName;
+    QString moveFolderPath = Utility::buildFullPath(mimeData.getMoveFolderPath(), folderName);
 
     if (jobFlag == KIO::DefaultFlags) {
 

@@ -235,7 +235,7 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
     quint64 nzbFilesSize = 0;
     int par2FileNumber = 0;
     bool badCrc = false;
-    QString nzbFileSavePath;
+    NzbFileData nzbFileData;
 
     // add children to parent (nzbNameItem) :
     foreach (const GlobalFileData& currentGlobalFileData, globalFileDataList) {
@@ -257,8 +257,8 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
         }
 
         // retrieve the path where nzb files are saved :
-        if (nzbFileSavePath.isEmpty()) {
-            nzbFileSavePath = currentGlobalFileData.getNzbFileData().getFileSavePath();
+        if (nzbFileData.getFileSavePath().isEmpty()) {
+            nzbFileData = currentGlobalFileData.getNzbFileData();
         }
 
     }
@@ -267,7 +267,7 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
     nzbNameItem->setData(QVariant(QUuid::createUuid().toString()), IdentifierRole);
 
     // set parent file save path :
-    this->downloadModel->updateParentFileSavePathFromIndex(nzbNameItem->index(), nzbFileSavePath);
+    this->downloadModel->updateParentFileSavePathFromIndex(nzbNameItem->index(), nzbFileData);
 
     // set idle status by default :
     this->downloadModel->initStatusDataToItem(nzbStateItem, ItemStatusData());
@@ -393,11 +393,11 @@ void Core::initFoldersSettings() {
 
     // set default path for download and temporary folders if not filled by user :
     if (Settings::completedFolder().path().isEmpty()) {
-        Settings::setCompletedFolder(QDir::homePath() + "/kwooty/Download");
+        Settings::setCompletedFolder(Utility::buildFullPath(QDir::homePath(), "kwooty/Download"));
     }
 
     if (Settings::temporaryFolder().path().isEmpty()) {
-        Settings::setTemporaryFolder(QDir::homePath() + "/kwooty/Temp");
+        Settings::setTemporaryFolder(Utility::buildFullPath(QDir::homePath(), "kwooty/Temp"));
     }
 
 }

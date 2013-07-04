@@ -62,7 +62,7 @@ void SegmentDecoderUUEnc::decodeSegments(NzbFileData currentNzbFileData, const Q
     QString fileSavePath = currentNzbFileData.getFileSavePath();
     if (Utility::createFolder(fileSavePath)) {
 
-        QFile targetFile(fileSavePath + '/' + fileNameStr);
+        QFile targetFile(Utility::buildFullPath(fileSavePath, fileNameStr));
         // open target file into write mode :
         if (targetFile.open(QIODevice::WriteOnly)) {
 
@@ -90,7 +90,7 @@ void SegmentDecoderUUEnc::decodeSegments(NzbFileData currentNzbFileData, const Q
         // can not create the file :
         else {
             this->decodeProgression(decodeInfoData);
-            kDebug() << "can not create " << fileSavePath + '/' + fileNameStr;
+            kDebug() << "can not create " << Utility::buildFullPath(fileSavePath, fileNameStr);
 
         }
 
@@ -132,8 +132,7 @@ bool SegmentDecoderUUEnc::decodeSegmentFiles(QFile& targetFile) {
         // if segment has been downloaded :
         if (currentSegment.getArticlePresenceOnServer() == Present) {
 
-            QString temporaryFolder = Settings::temporaryFolder().path() + '/';
-            QString pathNameFile = temporaryFolder + currentSegment.getPart();
+            QString pathNameFile = Utility::buildFullPath(Settings::temporaryFolder().path(), currentSegment.getPart());
             QFile segmentFile(pathNameFile);
 
             segmentFile.open(QIODevice::ReadOnly);

@@ -46,6 +46,7 @@ private:
 
     void setupConnections();
     void updateNzbFileNameToolTip(QStandardItem*, const QString& = QString());
+    bool isActionAllowed(QStandardItem*) const;
 
     Core* core;
     MyTreeView* treeView;

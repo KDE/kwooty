@@ -90,6 +90,7 @@ void SegmentBuffer::lockFinalizeDecode() {
 
 void SegmentBuffer::unlockFinalizeDecode() {
     kDebug();
+
     this->finalizeLocked = false;
     this->sendDataToFinalizeDecode();
 }
@@ -102,6 +103,26 @@ bool SegmentBuffer::isBufferFull() const {
 
     return this->bufferFull;
 }
+
+
+void SegmentBuffer::updateDecodeWaitingQueue(const NzbFileData& selectedNzbFileData, const NzbFileData& targetNzbFileData) {
+
+    for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+
+        NzbFileData currentNzbFileData = this->nzbFileDataList.at(i);
+
+        if (currentNzbFileData.getFileSavePath() == selectedNzbFileData.getFileSavePath()) {
+
+            currentNzbFileData.updateFileSavePath(targetNzbFileData);
+            this->nzbFileDataList.replace(i, currentNzbFileData);
+
+            kDebug() << "pending files to decode updated";
+        }
+
+    }
+
+}
+
 
 
 int SegmentBuffer::segmentSavingQueued(const SegmentData& segmentData) {
@@ -149,14 +170,6 @@ int SegmentBuffer::segmentSavingQueued(const SegmentData& segmentData) {
 
 }
 
-
-QList<NzbFileData> SegmentBuffer::getWaitingQueue() const {
-    return this->nzbFileDataList;
-}
-
-void SegmentBuffer::setWaitingQueue(QList<NzbFileData>& nzbFileDataList) {
-    this->nzbFileDataList = nzbFileDataList;
-}
 
 bool SegmentBuffer::isfinalizeDecodeIdle() const {
     return this->finalizeDecodeIdle;

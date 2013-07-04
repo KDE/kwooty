@@ -65,7 +65,7 @@ public:
     void initStatusDataToItem(QStandardItem*, const ItemStatusData&);
     void updateNzbFileDataToItem(QStandardItem*, const NzbFileData&);
     void updateStatusDataFromIndex(const QModelIndex&, const ItemStatusData&);
-    void updateParentFileSavePathFromIndex(const QModelIndex&, const QString&);
+    void updateParentFileSavePathFromIndex(const QModelIndex&, const NzbFileData&);
 
 
 private:

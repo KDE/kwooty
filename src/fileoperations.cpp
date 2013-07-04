@@ -119,12 +119,12 @@ void FileOperations::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenF
             (openFileMode == UtilityNamespace::OpenWith)) {
 
             // create download folder :
-            QString downloadFolderPath = Settings::completedFolder().path() + '/' + nzbBaseName;
+            QString downloadFolderPath = Utility::buildFullPath(Settings::completedFolder().path(), nzbBaseName);
             Utility::createFolder(downloadFolderPath);
 
             // copy nzb file in created download folder :
-            file.copy(downloadFolderPath + '/' + url.fileName());
-            QFile::setPermissions(downloadFolderPath + '/' + url.fileName(), QFile::ReadOwner | QFile::WriteOwner);
+            file.copy( Utility::buildFullPath(downloadFolderPath, url.fileName()) );
+            QFile::setPermissions( Utility::buildFullPath(downloadFolderPath, url.fileName() ), QFile::ReadOwner | QFile::WriteOwner);
 
         }
 

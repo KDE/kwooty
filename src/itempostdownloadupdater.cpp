@@ -186,7 +186,7 @@ void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData& decode
         if ( !nzbFileData.isPar2File() &&
              !nzbFileData.isArchiveFile() ) {
 
-            QFile decodedFile(nzbFileData.getFileSavePath() + nzbFileData.getDecodedFileName());
+            QFile decodedFile(Utility::buildFullPath(nzbFileData.getFileSavePath(), nzbFileData.getDecodedFileName()));
             if (decodedFile.exists()) {
 
                 decodedFile.open(QIODevice::ReadOnly);

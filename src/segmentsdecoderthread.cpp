@@ -127,7 +127,7 @@ void SegmentsDecoderThread::emitSaveFileError() {
 
 void SegmentsDecoderThread::saveDownloadedSegmentSlot(SegmentData segmentData) {
 
-    QString temporaryFolder = Settings::temporaryFolder().path() + '/';
+    QString temporaryFolder = Settings::temporaryFolder().path();
     bool writeSuccess = true;
 
     // check if data is --yEncoded-- :
@@ -229,7 +229,7 @@ void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
     QFile temporaryFile;
     foreach (const QString& currentFileStr, temporaryFilelist) {
 
-        temporaryFile.setFileName(tempPathStr + "/" + currentFileStr);
+        temporaryFile.setFileName( Utility::buildFullPath(tempPathStr, currentFileStr) );
 
         if (temporaryFile.exists()) {
 

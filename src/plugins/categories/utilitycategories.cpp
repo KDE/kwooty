@@ -75,7 +75,7 @@ QString UtilityCategories::buildFullCategoryPattern(CategoriesModel* categoriesM
 
 QString UtilityCategories::buildFullCategoryPattern(const QString& category, const QString& subcategory) {
 
-    return QString(category + "/" + subcategory);
+    return QString(Utility::buildFullPath(category, subcategory));
 }
 
 

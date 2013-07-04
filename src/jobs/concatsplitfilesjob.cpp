@@ -86,7 +86,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
     int fileProcessedNumber = 0;
 
     // retrieve and open joined file :
-    QFile joinFile(this->fileSavePath + this->joinFileName);
+    QFile joinFile( Utility::buildFullPath(this->fileSavePath, this->joinFileName) );
 
     // check if file already exists :
     bool joinFileExists = joinFile.exists();
@@ -101,7 +101,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
         // get current archive name :
         QString archiveName = currentNzbFileData.getDecodedFileName();
 
-        QString fullPathArchiveName = this->fileSavePath + archiveName;
+        QString fullPathArchiveName = Utility::buildFullPath(this->fileSavePath, archiveName);
 
         // if file already exists, it means that it has been created during repair processing.
         // in that case target file is already joined and this process does not have to be done :

@@ -45,10 +45,9 @@ public:
     void finalizeDecodeQueued(const NzbFileData&);
     void lockFinalizeDecode();
     void unlockFinalizeDecode();
-    QList<NzbFileData> getWaitingQueue() const;
-    void setWaitingQueue(QList<NzbFileData>&);
     bool isfinalizeDecodeIdle() const;
     bool isBufferFull() const;
+    void updateDecodeWaitingQueue(const NzbFileData&, const NzbFileData&);
 
 private:
 
