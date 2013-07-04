@@ -36,6 +36,7 @@ class StandardItemModel;
 class StandardItemModelQuery;
 class ActionButtonsManager;
 class ActionMergeManager;
+class ActionRenameManager;
 
 class KWOOTY_EXPORT ActionsManager : public QObject {
 
@@ -46,6 +47,7 @@ public:
     Core* getCore() const;
     ActionButtonsManager* getActionButtonsManager() const;
     ActionMergeManager* getActionMergeManager() const;
+    ActionRenameManager* getActionRenameManager() const;
     void setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus);
     void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QList<QModelIndex>&);
     void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QModelIndex&);
@@ -72,6 +74,7 @@ private:
     StandardItemModelQuery* modelQuery;
     ActionMergeManager* actionMergeManager;
     ActionButtonsManager* actionButtonsManager;
+    ActionRenameManager* actionRenameManager;
 
     
 signals:

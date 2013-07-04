@@ -28,6 +28,7 @@
 
 #include <kio/copyjob.h>
 
+#include "data/nzbfiledata.h"
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
@@ -47,22 +48,26 @@ public:
     QList<QStandardItem*> checkMergeCandidates(bool&);
 
 private:
+
+    enum ActionMergeStep {
+        ActionMergeRequested,
+        ActionMergeProcessing,
+        ActionMergeIdle
+    };
+
     Core* core;
     MyTreeView* treeView;
+    SegmentBuffer* segmentBuffer;
     ActionsManager* actionsManager;
     StandardItemModel* downloadModel;
-    SegmentBuffer* segmentBuffer;
     QString selectedItemUuid;
     QString targetItemUuid;
-    bool mergeProcessing;
-
+    ActionMergeStep actionMergeStep;
 
     bool isMergeAllowed(QStandardItem*) const;
     void setupConnections();
     void processMerge(QStandardItem*, QStandardItem*);
-    void updateDecodeWaitingQueue(const QString&, const QString&);
     void displayMessage();
-
 
 
 signals:

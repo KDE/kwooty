@@ -39,6 +39,7 @@
 #include "widgets/mytreeview.h"
 #include "observers/queuefileobserver.h"
 #include "actions/actionmergemanager.h"
+#include "actions/actionrenamemanager.h"
 #include "kwootysettings.h"
 
 
@@ -55,6 +56,9 @@ ActionsManager::ActionsManager(Core* core) : QObject (core) {
     // create action merge manager :
     this->actionMergeManager = new ActionMergeManager(this);
 
+    // create action merge manager :
+    this->actionRenameManager = new ActionRenameManager(this);
+
     this->setupConnections();
 
 }
@@ -66,6 +70,10 @@ ActionButtonsManager* ActionsManager::getActionButtonsManager() const {
 
 ActionMergeManager* ActionsManager::getActionMergeManager() const {
     return this->actionMergeManager;
+}
+
+ActionRenameManager* ActionsManager::getActionRenameManager() const {
+    return this->actionRenameManager;
 }
 
 Core* ActionsManager::getCore() const {
@@ -566,9 +574,8 @@ void ActionsManager::openFolderSlot() {
 
         // check that file save path is really present :
         if (QDir(nzbFileSavePath).exists()) {
-            fileSavePath = this->downloadModel->getParentFileSavePathFromIndex(index);
+            fileSavePath = nzbFileSavePath;
         }
-
 
     }
 

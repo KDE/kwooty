@@ -47,7 +47,7 @@ ActionMergeManager::ActionMergeManager(ActionsManager* actionsManager) : QObject
     this->treeView = this->core->getTreeView();
     this->downloadModel = this->core->getDownloadModel();
     this->segmentBuffer = this->core->getServerManager()->getSegmentBuffer();
-    this->mergeProcessing = false;
+    this->actionMergeStep = ActionMergeIdle;
 
     this->setupConnections();
 }
@@ -70,21 +70,24 @@ void ActionMergeManager::setupConnections() {
 }
 
 
+
 QList<QStandardItem*> ActionMergeManager::checkMergeCandidates(bool& mergeAvailable) {
 
     mergeAvailable = false;
-
     QStandardItem* selectedFileNameItem = 0;
     QList<QStandardItem*> fileNameItemList;
 
     // get selected rows :
     QList<QModelIndex> selectedIndexList = this->treeView->selectionModel()->selectedRows();
 
-    // merge is allowed for only one selected row :
-    if ( selectedIndexList.size() == 1 &&
-         !this->mergeProcessing ) {
-
+    if (selectedIndexList.size() == 1) {
         selectedFileNameItem = this->downloadModel->getFileNameItemFromIndex(selectedIndexList.at(0));
+    }
+
+
+    // merge is allowed for only one selected row :
+    if ( selectedFileNameItem &&
+         this->actionMergeStep == ActionMergeIdle ) {
 
         // first, be sure that selected item is a parent one (nzb) :
         if ( this->downloadModel->isNzbItem(selectedFileNameItem) &&
@@ -139,14 +142,17 @@ bool ActionMergeManager::isMergeAllowed(QStandardItem* fileNameItem) const {
 
 void ActionMergeManager::processMerge(QStandardItem* selectedFileNameItem, QStandardItem* targetFileNameItem) {
 
-    this->mergeProcessing = true;
+    this->actionMergeStep = ActionMergeProcessing;
 
     // get download folder from selected and target items :
-    QString selectedFileSavePath = this->downloadModel->getNzbFileDataFromIndex(selectedFileNameItem->child(0)->index()).getFileSavePath();
-    QString targetFileSavePath = this->downloadModel->getNzbFileDataFromIndex(targetFileNameItem->child(0)->index()).getFileSavePath();
+    NzbFileData selectedNzbFileData = this->downloadModel->getNzbFileDataFromIndex(selectedFileNameItem->child(0)->index());
+    NzbFileData targetNzbFileData = this->downloadModel->getNzbFileDataFromIndex(targetFileNameItem->child(0)->index());
+
+    QString selectedFileSavePath = selectedNzbFileData.getFileSavePath();
+    QString targetFileSavePath = targetNzbFileData.getFileSavePath();
 
     // update files with same parent waiting to be decoded with the target path :
-    this->updateDecodeWaitingQueue(selectedFileSavePath, targetFileSavePath);
+    this->segmentBuffer->updateDecodeWaitingQueue(selectedNzbFileData, targetNzbFileData);
 
 
     KUrl::List sourceFileList;
@@ -161,14 +167,14 @@ void ActionMergeManager::processMerge(QStandardItem* selectedFileNameItem, QStan
         NzbFileData childNzbFileData = this->downloadModel->getNzbFileDataFromIndex(childFileNameItem->index());
 
         // then update its file save path :
-        childNzbFileData.setFileSavePath(targetFileSavePath);
+        childNzbFileData.updateFileSavePath(targetNzbFileData);
         this->downloadModel->updateNzbFileDataToItem(childFileNameItem, childNzbFileData);
 
         // then move the whole row :
         targetFileNameItem->appendRow(selectedFileNameItem->takeRow(0));
 
         // list downloaded files from selected item in order to move them in the target download folder :
-        QFileInfo currentFileInfo(selectedFileSavePath + '/' + childNzbFileData.getDecodedFileName());
+        QFileInfo currentFileInfo(Utility::buildFullPath(selectedFileSavePath, childNzbFileData.getDecodedFileName()));
 
         if ( currentFileInfo.isFile() &&
              currentFileInfo.exists() ) {
@@ -183,7 +189,7 @@ void ActionMergeManager::processMerge(QStandardItem* selectedFileNameItem, QStan
     if (selectedFileSavePath != targetFileSavePath) {
 
         foreach (const QString& nzbFile, QDir(selectedFileSavePath).entryList(QStringList() << "*.nzb", QDir::Files)) {
-            sourceFileList.append(selectedFileSavePath + '/' + nzbFile);
+            sourceFileList.append(Utility::buildFullPath(selectedFileSavePath, nzbFile));
         }
     }
 
@@ -216,33 +222,9 @@ void ActionMergeManager::processMerge(QStandardItem* selectedFileNameItem, QStan
 }
 
 
-
-
-void ActionMergeManager::updateDecodeWaitingQueue(const QString& selectedFileSavePath, const QString& targetFileSavePath) {
-
-    QList<NzbFileData> waitingQueue = this->segmentBuffer->getWaitingQueue();
-
-    for (int i = 0; i < waitingQueue.size(); i++) {
-
-        NzbFileData currentNzbFileData = waitingQueue.at(i);
-
-        if (currentNzbFileData.getFileSavePath() == selectedFileSavePath) {
-
-            currentNzbFileData.setFileSavePath(targetFileSavePath);
-            waitingQueue.replace(i, currentNzbFileData);
-
-            kDebug() << "pending files to decode updated";
-        }
-
-    }
-
-    this->segmentBuffer->setWaitingQueue(waitingQueue);
-
-}
-
-
 void ActionMergeManager::displayMessage() {
 
+    this->actionMergeStep = ActionMergeIdle;
     this->core->getCentralWidget()->displaySorryMessageBox(i18n("Merge can not be performed anymore"));
 
 }
@@ -284,9 +266,10 @@ void ActionMergeManager::mergeSubMenuAboutToShowSlot() {
 }
 
 
+
 void ActionMergeManager::processMergeSlot() {
 
-    if (!this->mergeProcessing) {
+    if (this->actionMergeStep == ActionMergeRequested) {
 
         this->segmentBuffer->lockFinalizeDecode();
 
@@ -347,7 +330,8 @@ void ActionMergeManager::mergeNzbActionTriggeredSlot(QAction* subMenuAction) {
         targetFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(targetUuid);
 
         // if selected and target items have been found, merge is possible :
-        if ( selectedFileNameItem &&
+        if ( this->actionMergeStep == ActionMergeIdle &&
+             selectedFileNameItem &&
              targetFileNameItem &&
              selectedFileNameItem->rowCount() > 0 &&
              targetFileNameItem->rowCount() > 0 ) {
@@ -361,6 +345,7 @@ void ActionMergeManager::mergeNzbActionTriggeredSlot(QAction* subMenuAction) {
                 this->targetItemUuid = this->downloadModel->getUuidStrFromIndex(targetFileNameItem->index());
 
                 // process to item merging :
+                this->actionMergeStep = ActionMergeRequested;
                 this->processMergeSlot();
 
             }
@@ -401,7 +386,7 @@ void ActionMergeManager::handleResultSlot(KJob* moveJob) {
     }
 
     // job is finished :
-    this->mergeProcessing = false;
+    this->actionMergeStep = ActionMergeIdle;
 
 }
 
