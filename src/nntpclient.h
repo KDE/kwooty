@@ -22,42 +22,44 @@
 #define NNTPCLIENT_H
 
 #include <QObject>
-#include <QSslSocket>
+#include <QAbstractSocket>
+
 #include "data/segmentdata.h"
 #include "data/segmentinfodata.h"
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
 class ClientManagerConn;
+class NntpSocket;
 
 class NntpClient : public QObject
 {
 
     Q_OBJECT
     Q_ENUMS(ServerAnswer)
-    Q_ENUMS(NntpClientStatus)
-    Q_ENUMS(NewSegmentRequest)
-    Q_ENUMS(TimerJob)
+            Q_ENUMS(NntpClientStatus)
+            Q_ENUMS(NewSegmentRequest)
+            Q_ENUMS(TimerJob)
 
 public:
 
-    enum ServerAnswer { PasswordRequested = 381,
-                        AuthenticationAccepted = 281,
-                        BodyArticleFollows = 222,
-                        GroupSeleted = 211,
-                        QuitFromServer = 205,
-                        ServerIsReadyPosting = 200,
-                        ServerIsReadyNoPosting = 201,
-                        AuthenticationDenied = 502,
-                        IdleTimeout = 400,
-                        AuthenticationRequired = 480,
-                        AuthenticationRejected = 482,
-                        NoSuchArticleMessageId = 430,
-                        NoSuchArticleNumber = 423,
-                        CommandNotPerformed = 503,
-                        TransfertFailed = 436,
-                        AccessDenied = 481
-                       };
+            enum ServerAnswer { PasswordRequested = 381,
+                                AuthenticationAccepted = 281,
+                                BodyArticleFollows = 222,
+                                GroupSeleted = 211,
+                                QuitFromServer = 205,
+                                ServerIsReadyPosting = 200,
+                                ServerIsReadyNoPosting = 201,
+                                AuthenticationDenied = 502,
+                                IdleTimeout = 400,
+                                AuthenticationRequired = 480,
+                                AuthenticationRejected = 482,
+                                NoSuchArticleMessageId = 430,
+                                NoSuchArticleNumber = 423,
+                                CommandNotPerformed = 503,
+                                TransfertFailed = 436,
+                                AccessDenied = 481
+                                           };
 
     enum NntpClientStatus { ClientIdle,
                             ClientDownload,
@@ -79,61 +81,42 @@ public:
                               ServerDisconnected
                           };
 
-    enum SegmentDownload { SegmentDownloading,
-                           SegmentDownloadFinished
-                         };
 
     NntpClient(ClientManagerConn*);
     ~NntpClient();
     void downloadNextSegment(const SegmentData&);
     void noSegmentAvailable();
     bool isClientReady();
-    bool isSocketUnconnected() const;
-    bool isSocketConnected() const;
     void disconnectRequestByManager();
     void connectRequestByManager();
+    NntpSocket* getTcpSocket();
 
 
 private:
     static const int MAX_CONNECTING_LOOP = 5;
 
     ClientManagerConn* parent;
-    QSslSocket* tcpSocket;
+    NntpSocket* tcpSocket;
     QByteArray segmentByteArray;
-    QTimer* tryToReconnectTimer;
-    QTimer* idleTimeOutTimer;
-    QTimer* serverAnswerTimer;
-    QTimer* rateControlTimer;
     SegmentData currentSegmentData;
     NntpClient::NntpClientStatus clientStatus;
     NntpClient::ServerAnswerStatus serverAnswerStatus;
     int nntpError;
     int connectingLoopCounter;
     bool authenticationDenied;
-    bool certificateVerified;
     bool segmentProcessed;
-    int missingBytes;
 
     int notifyDownloadHasFinished(const UtilityNamespace::Article);
     bool downloadSegmentWithBackupServer();
     void setConnectedClientStatus(const NntpClientStatus, const TimerJob = StartStopTimers);
-    void connectToHost();
     void setupConnections();
     void getAnswerFromServer();
-    void downloadSegmentFromServer();
     void postDownloadProcess(UtilityNamespace::Article);
-    void sendBodyCommandToServer();
-    void sendQuitCommandToServer();
-    void sendUserCommandToServer();
-    void sendPasswordCommandToServer();
-    void sendCommand(const QString&);
     void segmentDataRollBack();
     void requestNewSegment();
     void postProcessIfBackupServer(NewSegmentRequest = RequestNewSegment);
     void updateServerAnswerStatus(const ServerAnswerStatus);
     void retryDownloadDelayed(const int&);
-    void checkRateControlTimer();
-    void manageSocketBuffer(const SegmentDownload&);
 
 
 signals:
@@ -147,19 +130,17 @@ signals:
 
 public slots:
     void dataHasArrivedSlot();
-    void answerTimeOutSlot();
-    void idleTimeOutSlot();
 
 
 private slots:
+    void connectToHostSlot();
     void readyReadSlot();
     void connectedSlot();    
     void errorSlot(QAbstractSocket::SocketError);
     void disconnectedSlot();
-    void tryToReconnectSlot();
-    void socketEncryptedSlot();
-    void peerVerifyErrorSlot();
-    void rateControlSlot();
+    void socketEncryptedInfoSlot(bool, QString, QString, QStringList);
+    void downloadSegmentFromServerSlot();
+    void answerTimeOutSlot();
 
 };
 
