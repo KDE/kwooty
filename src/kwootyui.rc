@@ -16,15 +16,15 @@
 	   <Separator/>
 	   <Action name="remove"/>
 	   <Separator/>
-	   <Action name="moveDown"/>
-	   <Action name="moveUp"/>
-	   <Separator/>
-	   <Action name="moveBottom"/>
 	   <Action name="moveTop"/> 
+	   <Action name="moveUp"/>
+	   <Action name="moveDown"/>
+	   <Action name="moveBottom"/>
 	   <Separator/>
 	   <Action name="downloadFolder"/>
 	   <Separator/>
            <Action name="mergeNzb"/>
+	   <Action name="renameNzb"/>
 	   <Separator/>
 	   <Action name="shutdown"/>
     </Menu>   
