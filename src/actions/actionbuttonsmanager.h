@@ -59,6 +59,7 @@ signals:
     void setRemoveButtonEnabledSignal(bool);
     void setRetryButtonEnabledSignal(bool);
     void setMergeNzbButtonEnabledSignal(bool);
+    void setRenameNzbButtonEnabledSignal(bool);
     void setManualExtractActionSignal(bool);
 
     

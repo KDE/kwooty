@@ -27,6 +27,7 @@
 #include "standarditemmodelquery.h"
 #include "actions/actionsmanager.h"
 #include "actions/actionmergemanager.h"
+#include "actions/actionrenamemanager.h"
 #include "widgets/mytreeview.h"
 #include "kwootysettings.h"
 
@@ -48,6 +49,7 @@ void ActionButtonsManager::selectedItemSlot() {
     bool enablePauseButton = false;
     bool enableRetryButton = false;
     bool mergeAvailable = false;
+    bool renameAvailable = false;
 
     // get selected items :
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
@@ -69,6 +71,7 @@ void ActionButtonsManager::selectedItemSlot() {
         emit setStartButtonEnabledSignal(false);
         emit setRetryButtonEnabledSignal(false);
         emit setMergeNzbButtonEnabledSignal(false);
+        emit setRenameNzbButtonEnabledSignal(false);
         emit setManualExtractActionSignal(false);
     }
     else {
@@ -112,7 +115,7 @@ void ActionButtonsManager::selectedItemSlot() {
                     }
                 }
             }
-            // else enable retry button if current item is child :
+            // else enable retry button if current item is a child :
             else if (!enableRetryButton){
                 this->downloadModelQuery->isRetryDownloadAllowed(stateItem, &enableRetryButton);
 
@@ -150,15 +153,18 @@ void ActionButtonsManager::selectedItemSlot() {
         emit setPauseAllButtonEnabledSignal(downloadItemsFound);
 
 
-
         // enable/disable retry action :
         emit setRetryButtonEnabledSignal(enableRetryButton);
-
 
 
         // enable/disable nzb merging action :
         this->actionsManager->getActionMergeManager()->checkMergeCandidates(mergeAvailable);
         emit setMergeNzbButtonEnabledSignal(mergeAvailable);
+
+
+        // enable/disable nzb renaming action :
+        this->actionsManager->getActionRenameManager()->checkRenameCandidates(renameAvailable);
+        emit setRenameNzbButtonEnabledSignal(renameAvailable);
 
 
         // enable/disable manual extract action (available only if automatic post process has been disabled) :
