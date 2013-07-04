@@ -92,6 +92,7 @@ private slots:
     void openFile();
     void showSettings(UtilityNamespace::PreferencesPage = UtilityNamespace::GeneralPage);
     void quit();
+    void toggleShowMenuBar();
 
 };
 

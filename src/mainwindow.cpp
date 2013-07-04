@@ -32,6 +32,7 @@
 #include <KActionCollection>
 #include <KSaveFile>
 #include <KDebug>
+#include <KMenuBar>
 
 #include <QTextStream>
 #include <QtGui>
@@ -43,6 +44,7 @@
 #include "actions/actionsmanager.h"
 #include "actions/actionbuttonsmanager.h"
 #include "actions/actionmergemanager.h"
+#include "actions/actionrenamemanager.h"
 #include "widgets/mystatusbar.h"
 #include "widgets/mytreeview.h"
 #include "widgets/centralwidget.h"
@@ -111,7 +113,7 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent) {
 
     // hide main window when session is restored and systray icon is checked, else show main window :
     if ( !(kapp->isSessionRestored() && Settings::sysTray()) ||
-          (kapp->isSessionRestored() && !this->kConfigGroupHandler->readMainWindowHiddenOnExit()) ) {
+         (kapp->isSessionRestored() && !this->kConfigGroupHandler->readMainWindowHiddenOnExit()) ) {
 
         this->show();
     }
@@ -351,20 +353,34 @@ void MainWindow::setupActions() {
     connect(mergeSubMenu, SIGNAL(triggered(QAction*)), actionsManager->getActionMergeManager(), SLOT(mergeNzbActionTriggeredSlot(QAction*)));
 
 
+    // renameNzbAction :
+    KAction* renameNzbAction = new KAction(this);
+    renameNzbAction->setText(i18n("Rename..."));
+    renameNzbAction->setIcon(KIcon("edit-rename"));
+    renameNzbAction->setToolTip(i18n("Rename nzb and its corresponding download folder"));
+    renameNzbAction->setShortcut(Qt::Key_F2);
+    renameNzbAction->setEnabled(false);
+    actionCollection()->addAction("renameNzb", renameNzbAction);
+    connect(renameNzbAction, SIGNAL(triggered(bool)), actionsManager->getActionRenameManager(), SLOT(renameNzbActionSlot()));
+    connect(actionButtonsManager, SIGNAL(setRenameNzbButtonEnabledSignal(bool)), renameNzbAction, SLOT(setEnabled(bool)) );
+
 
 
     //-------------------
     // standard Actions :
     //-------------------
 
-    // quitAction
+    // quit action :
     KStandardAction::quit(this, SLOT(quit()), actionCollection());
 
-    // openAction
+    // open action :
     KStandardAction::open(this, SLOT(openFile()), actionCollection());
 
-    // SettingsAction
+    // settings action :
     KStandardAction::preferences(this, SLOT(showSettings()), actionCollection());
+
+    // shown menuBar action :
+    KStandardAction::showMenubar(this, SLOT(toggleShowMenuBar()), actionCollection());
 
 
     setupGUI();
@@ -452,6 +468,18 @@ QSize MainWindow::sizeHint() const {
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
+
+void MainWindow::toggleShowMenuBar() {
+
+    if (this->menuBar()->isVisible()) {
+        this->menuBar()->hide();
+    }
+    else {
+        this->menuBar()->show();
+    }
+}
+
+
 
 void MainWindow::openFile() {
 
