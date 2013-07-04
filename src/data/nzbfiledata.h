@@ -69,7 +69,10 @@ public:
     void setUniqueIdentifier(const QVariant&);
     QVariant getUniqueIdentifier() const;
 
-    void setFileSavePath(const QString&);
+    void setDownloadFolderPath(const QString&);
+    QString getDownloadFolderPath() const;
+
+    void updateFileSavePath(const NzbFileData&);
     QString getFileSavePath() const;
 
     bool isPar2File() const;
@@ -100,7 +103,7 @@ private:
     QStringList possibleFileNameList;
     QString baseName;
     QString nzbName;
-    QString fileSavePath;
+    QString downloadFolderPath;
     QStringList groupList;
     QList<SegmentData> segmentList;
     QVariant uniqueIdentifier;

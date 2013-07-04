@@ -185,11 +185,29 @@ void NzbFileData::setSize(const quint64 size) {
 }
 
 QString NzbFileData::getFileSavePath() const {
-    return this->fileSavePath;
+
+    QString fileSavePath;
+
+    if (!this->downloadFolderPath.isEmpty() && !this->nzbName.isEmpty()) {
+        fileSavePath = Utility::buildFullPath(this->downloadFolderPath, this->nzbName);
+    }
+    return fileSavePath;
+
 }
 
-void NzbFileData::setFileSavePath(const QString& fileSavePath){
-    this->fileSavePath = fileSavePath;
+void NzbFileData::updateFileSavePath(const NzbFileData& targetNzbFileData) {
+
+    this->downloadFolderPath = targetNzbFileData.getDownloadFolderPath();
+    this->nzbName = targetNzbFileData.getNzbName();
+}
+
+
+QString NzbFileData::getDownloadFolderPath() const {
+    return this->downloadFolderPath;
+}
+
+void NzbFileData::setDownloadFolderPath(const QString& downloadFolderPath){
+    this->downloadFolderPath = downloadFolderPath;
 }
 
 void NzbFileData::setBaseName(const QString& baseName){
@@ -238,19 +256,19 @@ bool NzbFileData::operator<(const NzbFileData& nzbFileDataToCompare) const{
 QDataStream& operator<<(QDataStream& out, const NzbFileData& nzbFileData) {
 
     out << nzbFileData.getFileName()
-        << nzbFileData.getReducedFileName()
-        << nzbFileData.getDecodedFileName()
-        << nzbFileData.getTemporaryFileName()
-        << nzbFileData.getBaseName()
-        << nzbFileData.getNzbName()
-        << nzbFileData.getFileSavePath()
-        << nzbFileData.getGroupList()
-        << nzbFileData.getSegmentList()
-        << nzbFileData.getUniqueIdentifier()
-        << nzbFileData.getSize()
-        << nzbFileData.isPar2File()
-        << nzbFileData.isArchiveFile()
-        << (qint16)nzbFileData.getArchiveFormat();
+            << nzbFileData.getReducedFileName()
+            << nzbFileData.getDecodedFileName()
+            << nzbFileData.getTemporaryFileName()
+            << nzbFileData.getBaseName()
+            << nzbFileData.getNzbName()
+            << nzbFileData.getDownloadFolderPath()
+            << nzbFileData.getGroupList()
+            << nzbFileData.getSegmentList()
+            << nzbFileData.getUniqueIdentifier()
+            << nzbFileData.getSize()
+            << nzbFileData.isPar2File()
+            << nzbFileData.isArchiveFile()
+            << (qint16)nzbFileData.getArchiveFormat();
 
     return out;
 }
@@ -265,7 +283,7 @@ QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData) {
     QString temporaryFileName;
     QString baseName;
     QString nzbName;
-    QString fileSavePath;
+    QString downloadFolderPath;
     QStringList groupList;
     QList<SegmentData> segmentList;
     QVariant uniqueIdentifier;
@@ -275,19 +293,19 @@ QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData) {
     qint16 archiveFormat;
 
     in >> fileName
-       >> reducedFileName
-       >> decodedFileName
-       >> temporaryFileName
-       >> baseName
-       >> nzbName
-       >> fileSavePath
-       >> groupList
-       >> segmentList
-       >> uniqueIdentifier
-       >> size
-       >> par2File
-       >> archiveFile
-       >> archiveFormat;
+            >> reducedFileName
+            >> decodedFileName
+            >> temporaryFileName
+            >> baseName
+            >> nzbName
+            >> downloadFolderPath
+            >> groupList
+            >> segmentList
+            >> uniqueIdentifier
+            >> size
+            >> par2File
+            >> archiveFile
+            >> archiveFormat;
 
 
     nzbFileData.setFileName(fileName);
@@ -295,7 +313,7 @@ QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData) {
     nzbFileData.setTemporaryFileName(temporaryFileName);
     nzbFileData.setBaseName(baseName);
     nzbFileData.setNzbName(nzbName);
-    nzbFileData.setFileSavePath(fileSavePath);
+    nzbFileData.setDownloadFolderPath(downloadFolderPath);
     nzbFileData.setGroupList(groupList);
     nzbFileData.setSegmentList(segmentList);
     nzbFileData.setUniqueIdentifier(uniqueIdentifier);
