@@ -103,7 +103,9 @@ SOURCES += main.cpp \
     plugins/categories/categoriesfilehandler.cpp \
     plugins/categories/mimedata.cpp \
     plugins/categories/categoriesmodel.cpp \
-    actions/actionmergemanager.cpp
+    actions/actionmergemanager.cpp \
+    nntpsocket.cpp \
+    actions/actionrenamemanager.cpp
 HEADERS += mainwindow.h \
     core.h \
     nzbfilehandler.h \
@@ -204,7 +206,9 @@ HEADERS += mainwindow.h \
     plugins/categories/categoriesfilehandler.h \
     plugins/categories/mimedata.h \
     plugins/categories/categoriesmodel.h \
-    actions/actionmergemanager.h
+    actions/actionmergemanager.h \
+    nntpsocket.h \
+    actions/actionrenamemanager.h
 FORMS += preferences/preferencesserver.ui \
     preferences/preferencesprograms.ui \
     preferences/preferencesgeneral.ui \
