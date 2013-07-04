@@ -52,7 +52,7 @@ DataRestorer::DataRestorer(Core* parent) : QObject (parent) {
     magicNumber = 0xC82F1D37;
 
     // should be upgraded everytime a change is done in data stream :
-    applicationVersion1 = 8;
+    applicationVersion1 = 9;
 
     // map kwooty serialization version and its corresponding dataStream version
     versionStreamMap.insert(applicationVersion1, QDataStream::Qt_4_4);
@@ -421,7 +421,7 @@ void DataRestorer::setActive(const bool active) {
 
 
 QString DataRestorer::getPendingFileStr() const {
-    return Settings::temporaryFolder().path() + '/' + UtilityNamespace::remainingDownloadsFile;
+    return Utility::buildFullPath(Settings::temporaryFolder().path(), UtilityNamespace::remainingDownloadsFile);
 }
 
 
