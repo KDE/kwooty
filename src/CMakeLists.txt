@@ -18,6 +18,7 @@ set(Kwooty_lib_SRCS
   core.cpp
   nzbfilehandler.cpp
   clientmanagerconn.cpp
+  nntpsocket.cpp
   nntpclient.cpp
   itemdelegate.cpp
   itemdownloadupdater.cpp
@@ -55,6 +56,7 @@ set(Kwooty_lib_SRCS
   actions/actionsmanager.cpp
   actions/actionbuttonsmanager.cpp
   actions/actionmergemanager.cpp
+  actions/actionrenamemanager.cpp
   utilities/utility.cpp
   utilities/utilityiconpainting.cpp
   utilities/utilityserverstatus.cpp
