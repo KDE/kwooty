@@ -45,6 +45,7 @@
 #include "actions/actionbuttonsmanager.h"
 #include "actions/actionmergemanager.h"
 #include "actions/actionrenamemanager.h"
+#include "actions/actionfiledeletemanager.h"
 #include "widgets/mystatusbar.h"
 #include "widgets/mytreeview.h"
 #include "widgets/centralwidget.h"
@@ -117,6 +118,9 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent) {
 
         this->show();
     }
+
+    // notify that initialization has been fully performed :
+    emit startupCompleteSignal();
 
 }
 
@@ -222,6 +226,18 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
     connect(actionButtonsManager, SIGNAL(setRemoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
 
+    // removeItemDeleteFileAction :
+    KAction* removeItemDeleteFileAction = new KAction(this);
+    removeItemDeleteFileAction->setText(i18n("Remove data"));
+    removeItemDeleteFileAction->setIcon(KIcon("edit-delete"));
+    removeItemDeleteFileAction->setToolTip(i18n("Remove all selected rows and respective downloaded contents"));
+    removeItemDeleteFileAction->setShortcut(Qt::SHIFT | Qt::Key_Delete);
+    removeItemDeleteFileAction->setEnabled(false);
+    actionCollection()->addAction("removeItemDeleteFile", removeItemDeleteFileAction);
+    connect(removeItemDeleteFileAction, SIGNAL(triggered(bool)), actionsManager->getActionFileDeleteManager(), SLOT(actionTriggeredSlot()));
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemDeleteFileAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setRemoveDeleteFileButtonEnabledSignal(bool)), removeItemDeleteFileAction, SLOT(setEnabled(bool)) );
+
     // moveUpAction :
     KAction* moveUpAction = new KAction(this);
     moveUpAction->setText(i18n("Up"));
@@ -255,7 +271,6 @@ void MainWindow::setupActions() {
     connect(moveDownAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveDownSlot()));
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveDownAction, SLOT(setEnabled(bool)) );
 
-
     // moveToBottomAction :
     KAction* moveToBottomAction = new KAction(this);
     moveToBottomAction->setText(i18n("Bottom"));
@@ -266,7 +281,6 @@ void MainWindow::setupActions() {
     actionCollection()->addAction("moveBottom", moveToBottomAction);
     connect(moveToBottomAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveToBottomSlot()));
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToBottomAction, SLOT(setEnabled(bool)) );
-
 
     // openFolderAction :
     KAction* openFolderAction = new KAction(this);
@@ -350,7 +364,7 @@ void MainWindow::setupActions() {
     connect(mergeSubMenu, SIGNAL(aboutToShow()), actionsManager->getActionMergeManager(), SLOT(mergeSubMenuAboutToShowSlot()));
 
     // retrieve selected action from submenu :
-    connect(mergeSubMenu, SIGNAL(triggered(QAction*)), actionsManager->getActionMergeManager(), SLOT(mergeNzbActionTriggeredSlot(QAction*)));
+    connect(mergeSubMenu, SIGNAL(triggered(QAction*)), actionsManager->getActionMergeManager(), SLOT(actionTriggeredSlot(QAction*)));
 
 
     // renameNzbAction :
@@ -361,7 +375,7 @@ void MainWindow::setupActions() {
     renameNzbAction->setShortcut(Qt::Key_F2);
     renameNzbAction->setEnabled(false);
     actionCollection()->addAction("renameNzb", renameNzbAction);
-    connect(renameNzbAction, SIGNAL(triggered(bool)), actionsManager->getActionRenameManager(), SLOT(renameNzbActionSlot()));
+    connect(renameNzbAction, SIGNAL(triggered(bool)), actionsManager->getActionRenameManager(), SLOT(actionTriggeredSlot()));
     connect(actionButtonsManager, SIGNAL(setRenameNzbButtonEnabledSignal(bool)), renameNzbAction, SLOT(setEnabled(bool)) );
 
 

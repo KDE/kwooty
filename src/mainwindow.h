@@ -83,6 +83,7 @@ private:
 signals:
     void aboutToShowSettingsSignal();
     void savePendingDownloadsSignal();
+    void startupCompleteSignal();
 
 public slots:
     void systraySlot();
