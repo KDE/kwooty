@@ -15,6 +15,7 @@
 	   <Action name="retryDownload"/>
 	   <Separator/>
 	   <Action name="remove"/>
+	   <Action name="removeItemDeleteFile"/>
 	   <Separator/>
 	   <Action name="moveTop"/> 
 	   <Action name="moveUp"/>
