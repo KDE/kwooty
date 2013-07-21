@@ -22,24 +22,10 @@
 #ifndef ACTIONMERGEMANAGER_H
 #define ACTIONMERGEMANAGER_H
 
-#include <QObject>
-#include <QAction>
-#include <QStandardItem>
-
-#include <kio/copyjob.h>
-
-#include "data/nzbfiledata.h"
-#include "utilities/utility.h"
-using namespace UtilityNamespace;
-
-class Core;
-class MyTreeView;
-class SegmentBuffer;
-class ActionsManager;
-class StandardItemModel;
+#include "actionfilemanagerbase.h"
 
 
-class ActionMergeManager : public QObject {
+class ActionMergeManager : public ActionFileManagerBase {
 
     Q_OBJECT
 
@@ -49,25 +35,13 @@ public:
 
 private:
 
-    enum ActionMergeStep {
-        ActionMergeRequested,
-        ActionMergeProcessing,
-        ActionMergeIdle
-    };
-
-    Core* core;
-    MyTreeView* treeView;
-    SegmentBuffer* segmentBuffer;
-    ActionsManager* actionsManager;
-    StandardItemModel* downloadModel;
     QString selectedItemUuid;
     QString targetItemUuid;
-    ActionMergeStep actionMergeStep;
 
     bool isMergeAllowed(QStandardItem*) const;
-    void setupConnections();
     void processMerge(QStandardItem*, QStandardItem*);
-    void displayMessage();
+    void launchProcess();
+    void setupConnections();
 
 
 signals:
@@ -76,10 +50,9 @@ signals:
 
 public slots:
     void mergeSubMenuAboutToShowSlot();
-    void mergeNzbActionTriggeredSlot(QAction*);
+    void actionTriggeredSlot();
+    void actionTriggeredSlot(QAction*);
     void handleResultSlot(KJob*);
-    void processMergeSlot();
-
 
 private slots:
 

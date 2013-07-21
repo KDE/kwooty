@@ -21,35 +21,22 @@
 
 #include "actionmergemanager.h"
 
-#include <KMessageBox>
-#include <KDebug>
 #include <KActionCollection>
 #include <KAction>
+#include <KMessageBox>
+#include <KIO/CopyJob>
 
 #include <QDir>
 
-#include "core.h"
-#include "mainwindow.h"
-#include "actionsmanager.h"
-#include "standarditemmodel.h"
-#include "itemparentupdater.h"
-#include "servermanager.h"
-#include "segmentbuffer.h"
 #include "standarditemmodelquery.h"
-#include "widgets/mytreeview.h"
-#include "widgets/centralwidget.h"
+#include "itemparentupdater.h"
 
 
-ActionMergeManager::ActionMergeManager(ActionsManager* actionsManager) : QObject(actionsManager) {
 
-    this->actionsManager = actionsManager;
-    this->core = actionsManager->getCore();
-    this->treeView = this->core->getTreeView();
-    this->downloadModel = this->core->getDownloadModel();
-    this->segmentBuffer = this->core->getServerManager()->getSegmentBuffer();
-    this->actionMergeStep = ActionMergeIdle;
+ActionMergeManager::ActionMergeManager(ActionsManager* actionsManager) : ActionFileManagerBase(actionsManager) {
 
     this->setupConnections();
+
 }
 
 
@@ -60,12 +47,6 @@ void ActionMergeManager::setupConnections() {
              SIGNAL(recalculateNzbSizeSignal(const QModelIndex)),
              this->core->getItemParentUpdater(),
              SLOT(recalculateNzbSizeSlot(const QModelIndex)));
-
-    // process to merge when segment buffer notifies that lock is enabled :
-    connect (this->segmentBuffer,
-             SIGNAL(finalizeDecoderLockedSignal()),
-             this,
-             SLOT(processMergeSlot()));
 
 }
 
@@ -87,7 +68,7 @@ QList<QStandardItem*> ActionMergeManager::checkMergeCandidates(bool& mergeAvaila
 
     // merge is allowed for only one selected row :
     if ( selectedFileNameItem &&
-         this->actionMergeStep == ActionMergeIdle ) {
+         this->actionFileStep == ActionFileIdle ) {
 
         // first, be sure that selected item is a parent one (nzb) :
         if ( this->downloadModel->isNzbItem(selectedFileNameItem) &&
@@ -139,10 +120,28 @@ bool ActionMergeManager::isMergeAllowed(QStandardItem* fileNameItem) const {
 }
 
 
+void ActionMergeManager::launchProcess() {
+
+    QStandardItem* selectedFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->selectedItemUuid);
+    QStandardItem* targetFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->targetItemUuid);
+
+    if ( selectedFileNameItem &&
+         targetFileNameItem ) {
+
+        // process to item merging :
+        this->processMerge(selectedFileNameItem, targetFileNameItem);
+    }
+
+    else {
+        this->displayMessage(i18n("Merge can not be performed anymore"));
+    }
+
+}
+
 
 void ActionMergeManager::processMerge(QStandardItem* selectedFileNameItem, QStandardItem* targetFileNameItem) {
 
-    this->actionMergeStep = ActionMergeProcessing;
+    this->actionFileStep = ActionFileProcessing;
 
     // get download folder from selected and target items :
     NzbFileData selectedNzbFileData = this->downloadModel->getNzbFileDataFromIndex(selectedFileNameItem->child(0)->index());
@@ -222,14 +221,6 @@ void ActionMergeManager::processMerge(QStandardItem* selectedFileNameItem, QStan
 }
 
 
-void ActionMergeManager::displayMessage() {
-
-    this->actionMergeStep = ActionMergeIdle;
-    this->core->getCentralWidget()->displaySorryMessageBox(i18n("Merge can not be performed anymore"));
-
-}
-
-
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
@@ -266,39 +257,9 @@ void ActionMergeManager::mergeSubMenuAboutToShowSlot() {
 }
 
 
+void ActionMergeManager::actionTriggeredSlot() { }
 
-void ActionMergeManager::processMergeSlot() {
-
-    if (this->actionMergeStep == ActionMergeRequested) {
-
-        this->segmentBuffer->lockFinalizeDecode();
-
-        if (this->segmentBuffer->isfinalizeDecodeIdle()) {
-
-            QStandardItem* selectedFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->selectedItemUuid);
-            QStandardItem* targetFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->targetItemUuid);
-
-            if ( selectedFileNameItem &&
-                 targetFileNameItem ) {
-
-                // process to item merging :
-                this->processMerge(selectedFileNameItem, targetFileNameItem);
-            }
-
-            else {
-                this->displayMessage();
-            }
-
-            this->segmentBuffer->unlockFinalizeDecode();
-
-        }
-
-    }
-
-}
-
-
-void ActionMergeManager::mergeNzbActionTriggeredSlot(QAction* subMenuAction) {
+void ActionMergeManager::actionTriggeredSlot(QAction* subMenuAction) {
 
     bool mergeAvailable = false;
 
@@ -330,7 +291,7 @@ void ActionMergeManager::mergeNzbActionTriggeredSlot(QAction* subMenuAction) {
         targetFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(targetUuid);
 
         // if selected and target items have been found, merge is possible :
-        if ( this->actionMergeStep == ActionMergeIdle &&
+        if ( this->actionFileStep == ActionFileIdle &&
              selectedFileNameItem &&
              targetFileNameItem &&
              selectedFileNameItem->rowCount() > 0 &&
@@ -345,8 +306,8 @@ void ActionMergeManager::mergeNzbActionTriggeredSlot(QAction* subMenuAction) {
                 this->targetItemUuid = this->downloadModel->getUuidStrFromIndex(targetFileNameItem->index());
 
                 // process to item merging :
-                this->actionMergeStep = ActionMergeRequested;
-                this->processMergeSlot();
+                this->actionFileStep = ActionFileRequested;
+                this->processFileSlot();
 
             }
 
@@ -360,7 +321,7 @@ void ActionMergeManager::mergeNzbActionTriggeredSlot(QAction* subMenuAction) {
 
     // merge is no more available, display a message to user :
     if (!mergeAvailable) {
-        this->displayMessage();
+        this->displayMessage(i18n("Merge can not be performed anymore"));
     }
 
 }
@@ -386,7 +347,7 @@ void ActionMergeManager::handleResultSlot(KJob* moveJob) {
     }
 
     // job is finished :
-    this->actionMergeStep = ActionMergeIdle;
+    this->actionFileStep = ActionFileIdle;
 
 }
 
