@@ -55,8 +55,10 @@ set(Kwooty_lib_SRCS
   sidebar.cpp
   actions/actionsmanager.cpp
   actions/actionbuttonsmanager.cpp
+  actions/actionfilemanagerbase.cpp
   actions/actionmergemanager.cpp
   actions/actionrenamemanager.cpp
+  actions/actionfiledeletemanager.cpp
   utilities/utility.cpp
   utilities/utilityiconpainting.cpp
   utilities/utilityserverstatus.cpp
