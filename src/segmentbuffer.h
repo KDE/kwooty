@@ -48,6 +48,8 @@ public:
     bool isfinalizeDecodeIdle() const;
     bool isBufferFull() const;
     void updateDecodeWaitingQueue(const NzbFileData&, const NzbFileData&);
+    void removeDataFromDecodeWaitingQueue(const NzbFileData&);
+
 
 private:
 

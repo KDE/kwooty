@@ -104,6 +104,25 @@ bool SegmentBuffer::isBufferFull() const {
     return this->bufferFull;
 }
 
+void SegmentBuffer::removeDataFromDecodeWaitingQueue(const NzbFileData& selectedNzbFileData) {
+
+    QList<NzbFileData> nzbFileDataTempList;
+    for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+
+        NzbFileData currentNzbFileData = this->nzbFileDataList.at(i);
+
+        if (currentNzbFileData.getFileSavePath() != selectedNzbFileData.getFileSavePath()) {
+
+            nzbFileDataTempList.append(currentNzbFileData);
+            kDebug() << "pending files to decode updated";
+        }
+
+    }
+
+    this->nzbFileDataList = nzbFileDataTempList;
+}
+
+
 
 void SegmentBuffer::updateDecodeWaitingQueue(const NzbFileData& selectedNzbFileData, const NzbFileData& targetNzbFileData) {
 
