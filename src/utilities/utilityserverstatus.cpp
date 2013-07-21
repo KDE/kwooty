@@ -45,7 +45,7 @@ QPixmap UtilityServerStatus::getConnectionPixmap(const ServerConnectionIcon& ser
 
     switch (serverConnectionIcon) {
 
-    case DisconnectedIcon: case ConnectedNormalIcon: {
+    case InitIcon: case DisconnectedIcon: case ConnectedNormalIcon: {
         iconStr = "applications-internet";
         break;
     }
@@ -66,7 +66,7 @@ QPixmap UtilityServerStatus::getConnectionPixmap(const ServerConnectionIcon& ser
     if (serverConnectionIcon == DisconnectedIcon) {
         pixmap = UtilityIconPainting::getInstance()->buildGrayIcon(iconStr);
     }
-    // if server is connected with a not trested ssl connection, add an overlay warning icon :
+    // if server is connected with a not trusted ssl connection, add an overlay warning icon :
     else if (serverConnectionIcon == ConnectedEncryptedOverlayIcon) {
         pixmap = UtilityIconPainting::getInstance()->blendOverLayEmblem("emblem-important", KIcon(iconStr));
     }
@@ -121,6 +121,7 @@ ServerConnectionIcon UtilityServerStatus::buildConnectionStringFromStatus(const 
 
     }
     else {
+
         // set connection icon :
         serverConnectionIcon = ConnectedNormalIcon;
 
@@ -136,12 +137,16 @@ ServerConnectionIcon UtilityServerStatus::buildConnectionStringFromStatus(const 
 
             if ( !encryptionMethod.isEmpty() &&
                  (encryptionMethodDisplay == DisplayEncryptionMethod) ) {
+
                 connection = connection + " :: " + encryptionMethod;
+
             }
 
             // display overlay only if connected to server with ssl connection and with certificate not verified :
             if (!clientsObserver->isCertificateVerified()) {
+
                 serverConnectionIcon = ConnectedEncryptedOverlayIcon;
+
             }
 
         }

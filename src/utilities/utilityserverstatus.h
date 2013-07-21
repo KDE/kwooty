@@ -32,6 +32,7 @@ namespace UtilityServerStatusNamespace
 
 // process priority :
 enum ServerConnectionIcon {
+    InitIcon,
     DisconnectedIcon,
     ConnectedNormalIcon,
     ConnectedEncryptedIcon,
