@@ -26,6 +26,7 @@
 #include <QUuid>
 
 #include "core.h"
+#include "mainwindow.h"
 #include "itemparentupdater.h"
 #include "standarditemmodel.h"
 #include "widgets/centralwidget.h"
@@ -59,19 +60,22 @@ DataRestorer::DataRestorer(Core* parent) : QObject (parent) {
 
     this->setupConnections();
 
-    // wait 1 second, time to get several nntp instances created, before restoring pending data :
-    if (Settings::restoreDownloads()) {
-        QTimer::singleShot(500, this, SLOT(readDataFromDiskSlot()));
-    }
-
-
-
 }
 
 
 void DataRestorer::setupConnections() {
 
-    connect(dataSaverTimer, SIGNAL(timeout()), this, SLOT(saveQueueDataSilentlySlot()));
+    // initialisation is finished, restore pending data from previous session :
+    connect(this->parent->getMainWindow(),
+            SIGNAL(startupCompleteSignal()),
+            this,
+            SLOT(readDataFromDiskSlot()));
+
+    // save data queue every 5 minutes :
+    connect(dataSaverTimer,
+            SIGNAL(timeout()),
+            this,
+            SLOT(saveQueueDataSilentlySlot()));
 
     // download is finish for one nzb file, save eventual remaining downloads now :
     connect(this->downloadModel,
@@ -451,79 +455,69 @@ void DataRestorer::requestSuppressOldOrphanedSegments() {
 
 void DataRestorer::readDataFromDiskSlot() {
 
-    // get temporary path :
-    QFile file(this->getPendingFileStr());
+    bool removeOldFiles = true;
 
-    bool removeOldFiles = false;
+    if (Settings::restoreDownloads()) {
 
-    //open file in order to restore prending downloads from previous session :
-    if (file.open(QIODevice::ReadOnly)) {
+        // get temporary path :
+        QFile file(this->getPendingFileStr());
 
-        QDataStream dataStreamIn(&file);
+        //open file in order to restore prending downloads from previous session :
+        if (file.open(QIODevice::ReadOnly)) {
 
-        // check that header retrieved from file is matching :
-        if (this->isHeaderOk(dataStreamIn)) {
+            QDataStream dataStreamIn(&file);
 
-            // ask question if previous pending downloads have to be restored :
-            int answer = this->parent->getCentralWidget()->displayRestoreMessageBox();
+            // check that header retrieved from file is matching :
+            if (this->isHeaderOk(dataStreamIn)) {
 
-            // if data have to be restored :
-            if (answer == KMessageBox::Yes) {
+                // ask question if previous pending downloads have to be restored :
+                int answer = this->parent->getCentralWidget()->displayRestoreMessageBox();
 
-                // retrieve saved checksum :
-                quint16 checksumFromFile = 0;
-                dataStreamIn >> checksumFromFile;
+                // if data have to be restored :
+                if (answer == KMessageBox::Yes) {
 
-                // retrieve saved data :
-                QList< QList<GlobalFileData> > nzbFileList;
-                dataStreamIn >> nzbFileList;
+                    // retrieve saved checksum :
+                    quint16 checksumFromFile = 0;
+                    dataStreamIn >> checksumFromFile;
 
-                // verify checksum :
-                QByteArray byteArray;
-                QDataStream dataStreamByteArray(&byteArray, QIODevice::ReadWrite);
-                dataStreamByteArray << nzbFileList;
-                quint16 checksumCompute = qChecksum(byteArray.data(), byteArray.size());
+                    // retrieve saved data :
+                    QList< QList<GlobalFileData> > nzbFileList;
+                    dataStreamIn >> nzbFileList;
 
-                if (checksumFromFile == checksumCompute) {
+                    // verify checksum :
+                    QByteArray byteArray;
+                    QDataStream dataStreamByteArray(&byteArray, QIODevice::ReadWrite);
+                    dataStreamByteArray << nzbFileList;
+                    quint16 checksumCompute = qChecksum(byteArray.data(), byteArray.size());
 
-                    // reset some data belonging to pending items and populate treeview :
-                    this->preprocessAndHandleData(nzbFileList);
+                    if (checksumFromFile == checksumCompute) {
+
+                        removeOldFiles = false;
+                        // reset some data belonging to pending items and populate treeview :
+                        this->preprocessAndHandleData(nzbFileList);
+
+                    }
+                    else {
+                        kDebug() << "data can not be restored, checksum ko !!!" << checksumFromFile << checksumCompute;
+                    }
 
                 }
-                else {
-                    kDebug() << "data can not be restored, checksum ko !!!" << checksumFromFile << checksumCompute;
-                }
-
 
             }
-            // user did not load download pending files, remove previous segments :
-            else {
-                removeOldFiles = true;
-            }
-
 
         }
-        // saved data file can not be processed, remove previous segments
-        else {
-            removeOldFiles = true;
-        }
+
+        // close the file :
+        file.close();
 
     }
-    // if file can not be opened, remove useless downloaded segments :
-    else {
-        removeOldFiles = true;
-    }
-
-
-    // close the file :
-    file.close();
 
     if (removeOldFiles) {
         this->requestSuppressOldOrphanedSegments();
     }
 
-}
 
+}
 
 
 void DataRestorer::parentStatusItemChangedSlot(QStandardItem*, ItemStatusData parentItemStatusData) {
