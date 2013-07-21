@@ -133,7 +133,7 @@ void MyStatusBar::setupConnections() {
 
 
 
-void MyStatusBar::setConnectionWidget(){
+void MyStatusBar::setConnectionWidget() {
     
     this->connectionWidget = new IconTextWidget(this, ConnectionWidgetIdentity);
     
@@ -147,7 +147,7 @@ void MyStatusBar::setConnectionWidget(){
 }
 
 
-void MyStatusBar::setTimeInfoWidget(){
+void MyStatusBar::setTimeInfoWidget() {
     
     this->timeInfoWidget = new IconTextWidget(this, TimeInfoWidgetIdentity);
     this->timeInfoWidget->setIcon("user-away");
@@ -158,7 +158,7 @@ void MyStatusBar::setTimeInfoWidget(){
 }
 
 
-void MyStatusBar::setShutdownWidget(){
+void MyStatusBar::setShutdownWidget() {
     
     this->shutdownWidget = new IconTextWidget(this, ShutdownWidgetIdentity);
     
@@ -167,7 +167,7 @@ void MyStatusBar::setShutdownWidget(){
     
 }
 
-void MyStatusBar::setInfoBarWidget(){
+void MyStatusBar::setInfoBarWidget() {
 
     // add widget that will toggle info bar :
     this->infoBarWidget = new IconTextWidget(this, InfoBarWidgetIdentity);
@@ -184,7 +184,7 @@ void MyStatusBar::setInfoBarWidget(){
 }
 
 
-IconTextWidget* MyStatusBar::getInfoBarWidget(){
+IconTextWidget* MyStatusBar::getInfoBarWidget() {
     return this->infoBarWidget;
 }
 
@@ -197,12 +197,9 @@ void MyStatusBar::statusBarShutdownInfoSlot(QString iconStr, QString text) {
 }
 
 
-void MyStatusBar::updateConnectionStatusSlot(){
-    
-    
-    QString connectionIconStr;
-    QString connection;
+void MyStatusBar::updateConnectionStatusSlot() {
 
+    QString connection;
     ServerConnectionIcon serverConnectionIcon = UtilityServerStatus::buildConnectionStringFromStatus(this->clientsObserver, connection);
 
     // set icon :
@@ -247,7 +244,7 @@ void MyStatusBar::updateFileSizeInfoSlot(const quint64 totalFiles, const quint64
 
 
 
-void MyStatusBar::updateDownloadSpeedInfoSlot(const QString speedInKBStr){
+void MyStatusBar::updateDownloadSpeedInfoSlot(const QString speedInKBStr) {
     
     this->speedLabel->setTextOnly(i18n("Speed: %1", speedInKBStr));
 }
