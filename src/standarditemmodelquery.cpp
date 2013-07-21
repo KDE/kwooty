@@ -175,8 +175,12 @@ QList<QModelIndex> StandardItemModelQuery::retrieveStartPauseIndexList(const Uti
 }
 
 
+bool StandardItemModelQuery::isRootModelEmpty() const {
+    return (!this->downloadModel->invisibleRootItem()->hasChildren());
+}
 
-bool StandardItemModelQuery::areJobsFinished() {
+
+bool StandardItemModelQuery::areJobsFinished() const {
 
     bool jobFinished = true;
 
@@ -226,18 +230,24 @@ bool StandardItemModelQuery::haveItemsSameParent(const QList<QModelIndex>& index
 
     bool sameParent = true;
 
-    // get the parent of the first selected element :
-    QModelIndex firstParentIndex = indexesList.at(0).parent();
+    if (!indexesList.isEmpty()) {
 
-    for (int i = 1; i < indexesList.size(); i++) {
+        // get the parent of the first selected element :
+        QModelIndex firstParentIndex = indexesList.at(0).parent();
 
-        QModelIndex currentModelIndex = indexesList.at(i);
+        for (int i = 1; i < indexesList.size(); i++) {
 
-        // if elements do not have the same parent :
-        if (firstParentIndex != currentModelIndex.parent()) {
-            sameParent = false;
-            break;
+            QModelIndex currentModelIndex = indexesList.at(i);
+
+            // if elements do not have the same parent :
+            if (firstParentIndex != currentModelIndex.parent()) {
+                sameParent = false;
+                break;
+            }
         }
+    }
+    else {
+        sameParent = false;
     }
 
     return sameParent;
