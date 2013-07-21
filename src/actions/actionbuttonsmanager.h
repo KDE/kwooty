@@ -61,6 +61,7 @@ signals:
     void setMergeNzbButtonEnabledSignal(bool);
     void setRenameNzbButtonEnabledSignal(bool);
     void setManualExtractActionSignal(bool);
+    void setRemoveDeleteFileButtonEnabledSignal(bool);
 
     
 public slots:

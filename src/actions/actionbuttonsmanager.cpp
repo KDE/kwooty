@@ -101,6 +101,13 @@ void ActionButtonsManager::selectedItemSlot() {
 
             }
 
+            // do not allow data removing during post porcessing :
+            if (Utility::isPostDownloadProcessing(currentStatus)) {
+
+                emit setRemoveDeleteFileButtonEnabledSignal(false);
+
+            }
+
 
             // enable retry button if current item is parent :
             if (this->downloadModel->isNzbItem(stateItem)) {
