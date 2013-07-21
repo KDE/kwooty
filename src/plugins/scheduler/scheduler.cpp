@@ -351,27 +351,33 @@ void Scheduler::statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity WidgetId
 
 void Scheduler::schedulerTimerSlot() {
 
-    DownloadLimitStatus downloadLimitStatus = LimitDownload;
+    // do not perform any actions if model is empty as no download can be requested at that time :
+    if (!this->core->getModelQuery()->isRootModelEmpty()) {
 
-    // if speed limit is scheduled :
-    if (SchedulerSettings::enableScheduler()) {
+        DownloadLimitStatus downloadLimitStatus = LimitDownload;
 
-        downloadLimitStatus = this->getCurrentDownloadLimitStatus();
-    }
+        // if speed limit is scheduled :
+        if (SchedulerSettings::enableScheduler()) {
 
-    // if downloadLimitSpinBox is set to 0, it corresponds to no limit download :
-    if ( SchedulerSettings::downloadLimitSpinBox() == NO_SPEED_LIMIT &&
-         downloadLimitStatus == LimitDownload ) {
+            downloadLimitStatus = this->getCurrentDownloadLimitStatus();
 
-        downloadLimitStatus = NoLimitDownload;
+        }
 
-    }
+        // if downloadLimitSpinBox is set to 0, it corresponds to no limit download :
+        if ( SchedulerSettings::downloadLimitSpinBox() == NO_SPEED_LIMIT &&
+             downloadLimitStatus == LimitDownload ) {
 
-    // start downloads if they were previously paused :
-    this->checkDownloadStatus(downloadLimitStatus);
+            downloadLimitStatus = NoLimitDownload;
 
-    if (downloadLimitStatus == LimitDownload) {
-        this->applySpeedLimit();
+        }
+
+        // start downloads if they were previously paused :
+        this->checkDownloadStatus(downloadLimitStatus);
+
+        if (downloadLimitStatus == LimitDownload) {
+            this->applySpeedLimit();
+        }
+
     }
 
 }
