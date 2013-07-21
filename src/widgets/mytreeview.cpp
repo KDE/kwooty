@@ -167,6 +167,7 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
     contextMenu.addAction(actionCollection->action("retryDownload"));
     contextMenu.addSeparator();
     contextMenu.addAction(actionCollection->action("remove"));
+    contextMenu.addAction(actionCollection->action("removeItemDeleteFile"));
     contextMenu.addSeparator();
     contextMenu.addAction(actionCollection->action("moveTop"));
     contextMenu.addAction(actionCollection->action("moveUp"));
