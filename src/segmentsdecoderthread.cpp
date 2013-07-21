@@ -252,16 +252,11 @@ void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
                 }
             }
 
+            temporaryFile.close();
+
             if (removeFile) {
-
-                temporaryFile.close();
                 temporaryFile.remove();
-
             }
-            else {
-                temporaryFile.close();
-            }
-
 
         }
 
