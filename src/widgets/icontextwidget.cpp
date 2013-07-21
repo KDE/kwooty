@@ -43,7 +43,7 @@ IconTextWidget::IconTextWidget(QWidget* parent, MyStatusBar::WidgetIdentity widg
     this->textLabel = new QLabel(this);
 
     this->iconMode = NormalModeIcon;
-    this->serverConnectionIcon = DisconnectedIcon;
+    this->serverConnectionIcon = InitIcon;
 
     this->hBoxLayout = new QHBoxLayout(this);
     this->hBoxLayout->addWidget(this->iconLabel);
