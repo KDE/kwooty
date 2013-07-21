@@ -22,22 +22,10 @@
 #ifndef ACTIONRENAMEMANAGER_H
 #define ACTIONRENAMEMANAGER_H
 
-#include <QObject>
-#include <QStandardItem>
-
-#include <kio/copyjob.h>
-
-#include "utilities/utility.h"
-using namespace UtilityNamespace;
-
-class Core;
-class SegmentBuffer;
-class ActionsManager;
-class StandardItemModel;
-class MyTreeView;
+#include "actionfilemanagerbase.h"
 
 
-class ActionRenameManager : public QObject {
+class ActionRenameManager : public ActionFileManagerBase {
 
     Q_OBJECT
 
@@ -45,38 +33,21 @@ public:
     ActionRenameManager(ActionsManager*);
     void checkRenameCandidates(bool&);
 
-
 private:
 
-    enum ActionRenameStep {
-        ActionRenameRequested,
-        ActionRenameProcessing,
-        ActionRenameIdle
-    };
-
-    Core* core;
-    MyTreeView* treeView;
-    SegmentBuffer* segmentBuffer;
-    ActionsManager* actionsManager;
-    StandardItemModel* downloadModel;
     QString input;
     QString selectedItemUuid;
-    ActionRenameStep actionRenameStep;
 
-    void setupConnections();
-    void processRename(QStandardItem*);
-    void displayMessage(const QString&);
     bool validateNewFolderName(QStandardItem*) const;
     bool isRenameAllowed(QStandardItem*) const;
-
+    void processRename(QStandardItem*);
+    void launchProcess();
 
 signals:
 
 
 public slots:
-
-    void processRenameSlot();
-    void renameNzbActionSlot();
+    void actionTriggeredSlot();
     void handleResultSlot(KJob*);
 
 };

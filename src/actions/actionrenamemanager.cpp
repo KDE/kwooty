@@ -21,41 +21,14 @@
 
 #include "actionrenamemanager.h"
 
-#include <KDebug>
-#include <KAction>
 #include <KInputDialog>
+#include <KIO/CopyJob>
 
-#include "core.h"
-#include "mainwindow.h"
-#include "actionsmanager.h"
-#include "standarditemmodel.h"
 #include "standarditemmodelquery.h"
-#include "servermanager.h"
-#include "segmentbuffer.h"
-#include "widgets/mytreeview.h"
-#include "widgets/centralwidget.h"
 
 
-ActionRenameManager::ActionRenameManager(ActionsManager* actionsManager) : QObject(actionsManager) {
 
-    this->actionsManager = actionsManager;
-    this->core = actionsManager->getCore();
-    this->treeView = this->core->getTreeView();
-    this->downloadModel = this->core->getDownloadModel();
-    this->segmentBuffer = this->core->getServerManager()->getSegmentBuffer();
-    this->actionRenameStep = ActionRenameIdle;
-
-    this->setupConnections();
-}
-
-
-void ActionRenameManager::setupConnections() {
-
-    // process to renaming when segment buffer notifies that lock is enabled :
-    connect (this->segmentBuffer,
-             SIGNAL(finalizeDecoderLockedSignal()),
-             this,
-             SLOT(processRenameSlot()));
+ActionRenameManager::ActionRenameManager(ActionsManager* actionsManager) : ActionFileManagerBase(actionsManager) {
 
 }
 
@@ -75,7 +48,7 @@ void ActionRenameManager::checkRenameCandidates(bool& renameAvailable) {
 
     // rename is allowed for only one selected row :
     if ( selectedFileNameItem &&
-         this->actionRenameStep == ActionRenameIdle ) {
+         this->actionFileStep == ActionFileIdle ) {
 
         // first, be sure that selected item is a parent one (nzb) :
         if ( this->downloadModel->isNzbItem(selectedFileNameItem) &&
@@ -130,9 +103,27 @@ bool ActionRenameManager::validateNewFolderName(QStandardItem* selectedFileNameI
 }
 
 
+void ActionRenameManager::launchProcess() {
+
+    QStandardItem* selectedFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->selectedItemUuid);
+
+    if ( selectedFileNameItem &&
+         this->isRenameAllowed(selectedFileNameItem) ) {
+
+        // process to item renaming :
+        this->processRename(selectedFileNameItem);
+    }
+
+    else {
+        this->displayMessage(i18n("Rename can not be performed"));
+    }
+
+}
+
+
 void ActionRenameManager::processRename(QStandardItem* selectedFileNameItem) {
 
-    this->actionRenameStep = ActionRenameProcessing;
+    this->actionFileStep = ActionFileProcessing;
 
     // retrieve the file save path stored by parent item :
     NzbFileData selectedNzbFileDataOld = this->downloadModel->getNzbFileDataFromIndex(this->downloadModel->getNzbItem(selectedFileNameItem)->index());
@@ -183,21 +174,13 @@ void ActionRenameManager::processRename(QStandardItem* selectedFileNameItem) {
 }
 
 
-void ActionRenameManager::displayMessage(const QString& message) {
-
-    this->actionRenameStep = ActionRenameIdle;
-    this->core->getCentralWidget()->displaySorryMessageBox(message);
-
-}
-
-
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
 
-void ActionRenameManager::renameNzbActionSlot() {
+void ActionRenameManager::actionTriggeredSlot() {
 
     // retrieve selected item and item corresponding to the action :
     QStandardItem* selectedFileNameItem = 0;
@@ -215,7 +198,7 @@ void ActionRenameManager::renameNzbActionSlot() {
     }
 
     // if selected and target items have been found, merge is possible :
-    if ( this->actionRenameStep == ActionRenameIdle &&
+    if ( this->actionFileStep == ActionFileIdle &&
          selectedFileNameItem &&
          selectedFileNameItem->rowCount() > 0) {
 
@@ -228,8 +211,8 @@ void ActionRenameManager::renameNzbActionSlot() {
 
                 this->selectedItemUuid = this->downloadModel->getUuidStrFromIndex(selectedFileNameItem->index());
 
-                this->actionRenameStep = ActionRenameRequested;
-                this->processRenameSlot();
+                this->actionFileStep = ActionFileRequested;
+                this->processFileSlot();
 
             }
             else {
@@ -248,36 +231,6 @@ void ActionRenameManager::renameNzbActionSlot() {
 }
 
 
-void ActionRenameManager::processRenameSlot() {
-
-    if (this->actionRenameStep == ActionRenameRequested) {
-
-        this->segmentBuffer->lockFinalizeDecode();
-
-        if (this->segmentBuffer->isfinalizeDecodeIdle()) {
-
-            QStandardItem* selectedFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->selectedItemUuid);
-
-            if ( selectedFileNameItem &&
-                 this->isRenameAllowed(selectedFileNameItem) ) {
-
-                // process to item renaming :
-                this->processRename(selectedFileNameItem);
-            }
-
-            else {
-                this->displayMessage(i18n("Rename can not be performed"));
-            }
-
-            this->segmentBuffer->unlockFinalizeDecode();
-
-        }
-
-    }
-
-}
-
-
 void ActionRenameManager::handleResultSlot(KJob* moveJob) {
 
     // if job is succeed :
@@ -286,7 +239,7 @@ void ActionRenameManager::handleResultSlot(KJob* moveJob) {
     }
 
     // job is finished :
-    this->actionRenameStep = ActionRenameIdle;
+    this->actionFileStep = ActionFileIdle;
 
 }
 
