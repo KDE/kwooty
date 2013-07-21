@@ -25,6 +25,7 @@
 
 #include <QSslCipher>
 #include "clientmanagerconn.h"
+#include "data/serverdata.h"
 
 
 NntpSocket::NntpSocket(ClientManagerConn* parent) : QSslSocket(parent) {
@@ -55,6 +56,9 @@ NntpSocket::NntpSocket(ClientManagerConn* parent) : QSslSocket(parent) {
 
     this->setupConnections();
 
+    // notify status bar that SSL is disabled by default :
+    emit encryptionStatusPerServerSignal(false);
+
 }
 
 NntpSocket::~NntpSocket() {
@@ -76,7 +80,6 @@ void NntpSocket::stopAllTimers() {
 
 void NntpSocket::abort() {
 
-    // TODO : Verifier que stopAllTimers est bien approprié pour tous les appels !!
     this->stopAllTimers();
     QSslSocket::abort();
 }
@@ -102,7 +105,6 @@ void NntpSocket::setupConnections() {
     connect (this, SIGNAL(peerVerifyError(const QSslError&)), this, SLOT(peerVerifyErrorSlot()));
 
 }
-
 
 
 bool NntpSocket::isSocketUnconnected() const {
@@ -134,7 +136,7 @@ void NntpSocket::dataReadPending() {
 
 void NntpSocket::dataReadComplete() {
 
-    // if segment data has been fully transfered and connection is encrypted :
+    // if segment data has been fully transferred and connection is encrypted :
     if (this->isEncrypted()) {
 
         // reset buffer settings :
@@ -165,7 +167,10 @@ int NntpSocket::readAnswer() {
 
 
 void NntpSocket::connected() {
+
     this->tryToReconnectTimer->stop();
+    this->idleTimeOutTimer->start();
+
 }
 
 
@@ -188,34 +193,38 @@ void NntpSocket::retryDownloadDelayed() {
 }
 
 
-void NntpSocket::connectToHostEncrypted(const QString& hostName, quint16 port, OpenMode mode) {
 
-    // by default, consider that certificate has been verified.
-    // It could be set to false if peerVerifyErrorSlot() is raised :
-    this->certificateVerified = true;
+void NntpSocket::connectToHost() {
 
-    this->idleTimeOutTimer->stop();
-    this->idleTimeOutTimer->setInterval(this->parent->getServerData().getDisconnectTimeout() * UtilityNamespace::MINUTES_TO_MILLISECONDS);
+    if (this->isSocketUnconnected()) {
 
-    // try to reconnect if connection fails :
-    this->tryToReconnectTimer->start();
+        this->idleTimeOutTimer->stop();
+        this->idleTimeOutTimer->setInterval(this->parent->getServerData().getDisconnectTimeout() * UtilityNamespace::MINUTES_TO_MILLISECONDS);
 
-    QSslSocket::connectToHostEncrypted(hostName, port, mode);
+        // try to reconnect if connection fails :
+        this->tryToReconnectTimer->start();
 
+        ServerData serverData = this->parent->getServerData();
+
+        if (serverData.isEnableSSL()) {
+
+            // by default, consider that certificate has been verified.
+            // It could be set to false if peerVerifyErrorSlot() is raised :
+            this->certificateVerified = true;
+            QSslSocket::connectToHostEncrypted(serverData.getHostName(), serverData.getPort(), ReadWrite);
+
+        }
+        else {
+
+            QSslSocket::connectToHost(serverData.getHostName(), serverData.getPort(), ReadWrite);
+            // SSL is disabled :
+            emit encryptionStatusPerServerSignal(false);
+
+        }
+
+    }
 }
 
-
-void NntpSocket::connectToHost(const QString& hostName, quint16 port, OpenMode mode) {
-
-    this->idleTimeOutTimer->stop();
-    this->idleTimeOutTimer->setInterval(this->parent->getServerData().getDisconnectTimeout() * UtilityNamespace::MINUTES_TO_MILLISECONDS);
-
-    // try to reconnect if connection fails :
-    this->tryToReconnectTimer->start();
-
-    QSslSocket::connectToHost(hostName, port, mode);
-
-}
 
 
 void NntpSocket::notifyClientStatus(NntpClient::NntpClientStatus nntpClientStatus, NntpClient::TimerJob timerJob) {
@@ -228,19 +237,23 @@ void NntpSocket::notifyClientStatus(NntpClient::NntpClientStatus nntpClientStatu
 
             if (!idleTimeOutTimer->isActive()) {
                 idleTimeOutTimer->start();
+
             }
         }
+
         else {
+
             // client is connected and working, stop timers :
             if (idleTimeOutTimer->isActive()) {
                 idleTimeOutTimer->stop();
             }
+
             if (tryToReconnectTimer->isActive()) {
                 tryToReconnectTimer->stop();
             }
         }
-    }
 
+    }
 
 }
 
@@ -248,6 +261,7 @@ void NntpSocket::notifyClientStatus(NntpClient::NntpClientStatus nntpClientStatu
 QByteArray NntpSocket::readAll() {
 
     this->dataReadArrived();
+
     return QSslSocket::readAll();
 
 }
@@ -259,6 +273,7 @@ QByteArray NntpSocket::readChunck(const qint64& speedLimitInBytes, const int& en
 
     this->manageBuffer(NntpSocket::SegmentDownloading);
 
+    // compute maximum byte to fetch :
     qint64 maxReadbytes = ( speedLimitInBytes * this->rateControlTimer->interval() ) / ( enabledClientNumber * 1000 ) + this->missingBytes;
     QByteArray chunckData = this->read(maxReadbytes);
 
@@ -270,6 +285,7 @@ QByteArray NntpSocket::readChunck(const qint64& speedLimitInBytes, const int& en
 
 void NntpSocket::checkRateControlTimer() {
 
+    // bandwidth control has been disabled :
     if ( this->parent->isBandwidthFull() &&
          this->rateControlTimer->isActive() ) {
 
@@ -277,6 +293,7 @@ void NntpSocket::checkRateControlTimer() {
         this->rateControlTimer->stop();
 
     }
+    // bandwidth control has been enabled :
     else if ( this->parent->isBandwidthLimited() &&
               !this->rateControlTimer->isActive() ) {
 
@@ -309,7 +326,6 @@ void NntpSocket::manageBuffer(const SegmentDownload& segmentDownload) {
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
-
 
 void NntpSocket::tryToReconnectSlot() {
 
@@ -382,7 +398,8 @@ void NntpSocket::socketEncryptedSlot() {
     }
 
     // SSL connection is active, send also encryption method used by host :
-    emit socketEncryptedInfoSignal(this->certificateVerified, this->sessionCipher().encryptionMethod(), issuerOrgranisation, sslErrors);
+    emit encryptionStatusPerServerSignal(true, this->sessionCipher().encryptionMethod(), this->certificateVerified, issuerOrgranisation, sslErrors);
+
 }
 
 

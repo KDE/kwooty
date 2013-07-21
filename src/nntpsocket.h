@@ -44,6 +44,7 @@ public:
                            SegmentDownloadFinished
                        };
 
+
     NntpSocket(ClientManagerConn* parent);
     ~NntpSocket();
     bool isSocketUnconnected() const;
@@ -52,9 +53,8 @@ public:
     void sendQuitCommandToServer();
     void sendUserCommandToServer(const QString&);
     void sendPasswordCommandToServer(const QString&);
-    void connectToHostEncrypted(const QString&, quint16, OpenMode = ReadWrite);
-    void connectToHost(const QString&, quint16, OpenMode = ReadWrite);
     void tryToReconnect();
+    void connectToHost();
     void connected();
     void abort();
     void retryDownloadDelayed();
@@ -72,23 +72,24 @@ public:
 private:
 
     ClientManagerConn* parent;
-
     QTimer* tryToReconnectTimer;
     QTimer* idleTimeOutTimer;
     QTimer* serverAnswerTimer;
     QTimer* rateControlTimer;
+    int missingBytes;
     bool certificateVerified;
+
     void setupConnections();
     void stopAllTimers();
     void sendCommand(const QString&);
     void dataReadArrived();
-    int missingBytes;
 
 
 signals:
     void downloadSegmentFromServerSignal();
     void answerTimeOutSignal();
     void socketEncryptedInfoSignal(bool, QString, QString, QStringList);
+    void encryptionStatusPerServerSignal(const bool, const QString = QString(), const bool = false, const QString = QString(), const QStringList = QStringList());
     void tryToReconnectSignal();
 
 
@@ -101,6 +102,7 @@ public slots:
 private slots:
     void socketEncryptedSlot();
     void peerVerifyErrorSlot();
+
 };
 
 #endif // NNTPSOCKET_H
