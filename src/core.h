@@ -94,7 +94,6 @@ public:
 
 private:
     MainWindow* mainWindow;
-    MyTreeView* treeView;
     DataRestorer* dataRestorer;
     ServerManager* serverManager;
     ActionsManager* actionsManager;

@@ -165,11 +165,14 @@ void Core::handleNzbFile(QFile& file, const QString& nzbName, const QList<Global
         int widthInPixel = this->mainWindow->getTreeView()->fontMetrics().width(nzbName) + 100;
 
         // if column width is lower than current width, ajust it :
-        if (this->mainWindow->getTreeView()->columnWidth(FILE_NAME_COLUMN) < widthInPixel) {
-            this->mainWindow->getTreeView()->setColumnWidth(FILE_NAME_COLUMN, widthInPixel);
+        if (this->getTreeView()->columnWidth(FILE_NAME_COLUMN) < widthInPixel) {
+            this->getTreeView()->setColumnWidth(FILE_NAME_COLUMN, widthInPixel);
         }
 
-        // notify nntp clients that data has arrived :          
+        // select the row newly appended :
+        this->getTreeView()->selectionModel()->select(nzbNameIndex, QItemSelectionModel::Clear | QItemSelectionModel::Select | QItemSelectionModel::Rows);
+
+        // notify nntp clients that data has arrived :
         this->emitDataHasArrived(nzbNameIndex);
 
     }
