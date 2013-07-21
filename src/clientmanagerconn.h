@@ -40,17 +40,20 @@ public:
     ~ClientManagerConn();
     NntpClient* getNntpClient();
     ServerGroup* getServerGroup();
-    void processNextSegment(const SegmentData&);
-    void noSegmentAvailable();
     ServerData getServerData() const;
     int getClientId() const;
+    int getConnectionDelay() const;
     bool isClientReady() const;
     bool isMasterServer() const;
     bool isDisabledBackupServer() const;
-    void setBandwidthMode(const BandwidthClientMode&);
     bool isBandwidthNotNeeded() const;
     bool isBandwidthLimited() const;
     bool isBandwidthFull() const;
+    void noSegmentAvailable();
+    void processNextSegment(const SegmentData&);
+    void setBandwidthMode(const BandwidthClientMode&);
+    void handleFirstConnection();
+
 
 
 private:
@@ -70,6 +73,7 @@ public slots:
     void disconnectRequestSlot();
     void connectRequestSlot();
     void limitDownloadSpeedSlot(BandwidthClientMode);
+    void startupCompleteSlot();
 
 private slots:
     void initSlot();

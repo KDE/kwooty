@@ -37,49 +37,49 @@ class NntpClient : public QObject
 
     Q_OBJECT
     Q_ENUMS(ServerAnswer)
-            Q_ENUMS(NntpClientStatus)
-            Q_ENUMS(NewSegmentRequest)
-            Q_ENUMS(TimerJob)
+    Q_ENUMS(NntpClientStatus)
+    Q_ENUMS(NewSegmentRequest)
+    Q_ENUMS(TimerJob)
 
 public:
 
-            enum ServerAnswer { PasswordRequested = 381,
-                                AuthenticationAccepted = 281,
-                                BodyArticleFollows = 222,
-                                GroupSeleted = 211,
-                                QuitFromServer = 205,
-                                ServerIsReadyPosting = 200,
-                                ServerIsReadyNoPosting = 201,
-                                AuthenticationDenied = 502,
-                                IdleTimeout = 400,
-                                AuthenticationRequired = 480,
-                                AuthenticationRejected = 482,
-                                NoSuchArticleMessageId = 430,
-                                NoSuchArticleNumber = 423,
-                                CommandNotPerformed = 503,
-                                TransfertFailed = 436,
-                                AccessDenied = 481
-                                           };
+    enum ServerAnswer { PasswordRequested = 381,
+                        AuthenticationAccepted = 281,
+                        BodyArticleFollows = 222,
+                        GroupSeleted = 211,
+                        QuitFromServer = 205,
+                        ServerIsReadyPosting = 200,
+                        ServerIsReadyNoPosting = 201,
+                        AuthenticationDenied = 502,
+                        IdleTimeout = 400,
+                        AuthenticationRequired = 480,
+                        AuthenticationRejected = 482,
+                        NoSuchArticleMessageId = 430,
+                        NoSuchArticleNumber = 423,
+                        CommandNotPerformed = 503,
+                        TransfertFailed = 436,
+                        AccessDenied = 481
+                      };
 
     enum NntpClientStatus { ClientIdle,
                             ClientDownload,
                             ClientSegmentRequest
-                        };
+                          };
 
     enum NewSegmentRequest { RequestNewSegment,
                              DoNotRequestNewSegment
-                         };
+                           };
 
     enum TimerJob { StartStopTimers,
                     DoNotTouchTimers
-                };
+                  };
 
     enum ServerAnswerStatus { ServerFirstAnswerNotSent,
                               ServerFirstAnswerSent,
                               ServerConnectedPostingOk,
                               ServerDisconnectedPostingOk,
                               ServerDisconnected
-                          };
+                            };
 
 
     NntpClient(ClientManagerConn*);
@@ -123,7 +123,6 @@ signals:
     void getNextSegmentSignal(ClientManagerConn*);
     void updateDownloadSegmentSignal(SegmentData);
     void connectionStatusPerServerSignal(int);
-    void encryptionStatusPerServerSignal(const bool, const QString = QString(), const bool = false, const QString = QString(), const QStringList = QStringList());
     void speedPerServerSignal(const SegmentInfoData);
     void nntpErrorPerServerSignal(const int);
 
@@ -135,10 +134,9 @@ public slots:
 private slots:
     void connectToHostSlot();
     void readyReadSlot();
-    void connectedSlot();    
+    void connectedSlot();
     void errorSlot(QAbstractSocket::SocketError);
     void disconnectedSlot();
-    void socketEncryptedInfoSlot(bool, QString, QString, QStringList);
     void downloadSegmentFromServerSlot();
     void answerTimeOutSlot();
 

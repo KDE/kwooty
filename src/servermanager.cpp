@@ -19,12 +19,14 @@
  ***************************************************************************/
 
 #include <KDebug>
+#include <KApplication>
 
 #include "servermanager.h"
 #include "core.h"
 #include "servergroup.h"
 #include "serverspeedmanager.h"
 #include "sidebar.h"
+#include "standarditemmodelquery.h"
 #include "segmentmanager.h"
 #include "segmentbuffer.h"
 #include "mainwindow.h"
@@ -51,7 +53,6 @@ ServerManager::ServerManager(Core* parent) : QObject(parent) {
     this->currentMasterServer = this->idServerGroupMap.value(MasterServer);
 
     this->setupConnections();
-
 
     // notify sidebar that servergroups have been created :
     emit serverManagerSettingsChangedSignal();
@@ -82,6 +83,11 @@ ServerGroup* ServerManager::getServerGroupById(const int& index) {
 
 SegmentBuffer* ServerManager::getSegmentBuffer() {
     return this->segmentBuffer;
+}
+
+
+bool ServerManager::isSessionRestoredNoJobs() const {
+    return (this->parent->getModelQuery()->isRootModelEmpty() && kapp->isSessionRestored());
 }
 
 
@@ -144,26 +150,30 @@ ServerGroup* ServerManager::getNextTargetServer(ServerGroup* currentServerGroup)
 
 void ServerManager::downloadWithAnotherBackupServer(ServerGroup* currentServerGroup) {
 
-    // get next server group :
-    ServerGroup* nextServerGroup = this->getNextTargetServer(currentServerGroup);
+    // check that there is at least one pending download in order to not connect clients uselessly :
+    if ( !this->parent->getModelQuery()->isRootModelEmpty() ) {
 
-    // get corresponding server group id :
-    int nextServerId = UtilityNamespace::NoTargetServer;
+        // get next server group :
+        ServerGroup* nextServerGroup = this->getNextTargetServer(currentServerGroup);
 
-    if (nextServerGroup) {
-        nextServerId = nextServerGroup->getServerGroupId();
+        // get corresponding server group id :
+        int nextServerId = UtilityNamespace::NoTargetServer;
+
+        if (nextServerGroup) {
+            nextServerId = nextServerGroup->getServerGroupId();
+        }
+
+        // update pending segments with this new server group id in order to be downloaded by
+        // this server group (if NoTargetServer pending segments are considered as download finish) :
+        this->parent->getSegmentManager()->updatePendingSegmentsToTargetServer(currentServerGroup->getServerGroupId(), nextServerId);
+
+
+        // notify server group that pending segments wait for it :
+        if (nextServerGroup && nextServerGroup->isServerAvailable()) {
+            nextServerGroup->assignDownloadToReadyClients();
+        }
+
     }
-
-    // update pending segments with this new server group id in order to be downloaded by
-    // this server group (if NoTargetServer pending segments are considered as download finish) :
-    this->parent->getSegmentManager()->updatePendingSegmentsToTargetServer(currentServerGroup->getServerGroupId(), nextServerId);
-
-
-    // notify server group that pending segments wait for it :
-    if (nextServerGroup && nextServerGroup->isServerAvailable()) {
-        nextServerGroup->assignDownloadToReadyClients();
-    }
-
 
 }
 

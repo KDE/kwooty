@@ -42,8 +42,9 @@ ServerGroup::ServerGroup(ServerManager* parent, Core* core, int serverGroupId) :
     this->pendingSegments = false;
     this->stabilityCounter = 0;
 
-    // retrieve server settings :
-    this->serverData = KConfigGroupHandler::getInstance()->readServerSettings(this->serverGroupId);
+    // retrieve server settings *without* password (if stored by kwallet it may be asked to access wallet, so ask question only when first server connection is required) :
+    this->serverData = KConfigGroupHandler::getInstance()->readServerSettings(this->serverGroupId, KConfigGroupHandler::DoNotReadPasswordData);
+    this->passwordRetrieved = false;
 
     // create observer for clients specific to this server instance :
     this->clientsPerServerObserver = new ClientsPerServerObserver(this);
@@ -126,6 +127,17 @@ bool ServerGroup::isBufferFull() {
 }
 
 
+void ServerGroup::readDataWithPassword() {
+
+    if (!this->passwordRetrieved) {
+
+        this->serverData = KConfigGroupHandler::getInstance()->readServerSettings(this->serverGroupId);
+        this->passwordRetrieved = true;
+
+    }
+
+}
+
 
 bool ServerGroup::canDownload(const int& serverGroupTargetId) const {
 
@@ -155,7 +167,7 @@ bool ServerGroup::canDownload(const int& serverGroupTargetId) const {
 
         // servergroup will download segments targeted for Master server and also for itself :
         if (serverGroupTargetId == MasterServer ||
-                serverGroupTargetId == ActiveBackupServer) {
+            serverGroupTargetId == ActiveBackupServer) {
 
             segmentMatch = true;
 

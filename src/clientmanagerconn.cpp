@@ -25,10 +25,11 @@
 
 #include "kwootysettings.h"
 #include "core.h"
+#include "mainwindow.h"
 #include "servergroup.h"
+#include "servermanager.h"
 #include "segmentmanager.h"
 #include "segmentbuffer.h"
-#include "servermanager.h"
 #include "serverspeedmanager.h"
 #include "nntpclient.h"
 #include "nntpsocket.h"
@@ -51,7 +52,11 @@ ClientManagerConn::ClientManagerConn(ServerGroup* parent, int clientId, int conn
     // moreover the first instance will be created *after first event loop* to be sure that the whole application
     // has been fully started (i.e : connections with all signals/slots are ok) :
     this->connectionDelay = connectionDelay;
-    QTimer::singleShot(this->connectionDelay, this, SLOT(initSlot()));
+
+    // create nntp socket :
+    this->nntpClient = new NntpClient(this);
+
+    this->initSlot();
 
 }
 
@@ -70,8 +75,10 @@ void ClientManagerConn::initSlot() {
 
     Core* core = this->parent->getCore();
 
-    // create nntp socket :
-    this->nntpClient = new NntpClient(this);
+    connect (core->getMainWindow(),
+             SIGNAL(startupCompleteSignal()),
+             this,
+             SLOT(startupCompleteSlot()));
 
     // ServerGroup notify all nntpClient instances that connection settings changed :
     connect (core,
@@ -123,7 +130,7 @@ void ClientManagerConn::initSlot() {
              SLOT(connectionStatusPerServerSlot(const int)));
 
     // send type of encryption used by host with ssl connection to client observer for the current server :
-    connect (this->nntpClient,
+    connect (this->nntpClient->getTcpSocket(),
              SIGNAL(encryptionStatusPerServerSignal(const bool, const QString, const bool, const QString, const QStringList)),
              this->parent->getClientsPerServerObserver(),
              SLOT(encryptionStatusPerServerSlot(const bool, const QString, const bool, const QString, const QStringList)));
@@ -166,10 +173,13 @@ NntpClient* ClientManagerConn::getNntpClient() {
 
 
 int ClientManagerConn::getClientId() const {
-    return clientId;
+    return this->clientId;
 }
 
 
+int ClientManagerConn::getConnectionDelay() const {
+    return this->connectionDelay;
+}
 
 ServerData ClientManagerConn::getServerData() const {
     return this->parent->getServerData();
@@ -185,6 +195,12 @@ bool ClientManagerConn::isDisabledBackupServer() const {
 }
 
 
+void ClientManagerConn::handleFirstConnection() {
+
+    // read data with password in order to open kwallet dialog box (if needed)
+    // only when the first connection to server is performed :
+    this->parent->readDataWithPassword();
+}
 
 
 bool ClientManagerConn::isClientReady() const {
@@ -192,7 +208,7 @@ bool ClientManagerConn::isClientReady() const {
     bool clientReady = false;
 
     if (this->nntpClient &&
-        this->nntpClient->isClientReady()) {
+            this->nntpClient->isClientReady()) {
 
         clientReady = true;
     }
@@ -208,7 +224,9 @@ void ClientManagerConn::setBandwidthMode(const BandwidthClientMode& bandwidthCli
     this->bandwidthClientMode = bandwidthClientMode;
 
     if (this->bandwidthClientMode != bandwidthClientModeOld) {
+
         this->dataHasArrivedSlot();
+
     }
 
 }
@@ -232,19 +250,25 @@ bool ClientManagerConn::isBandwidthFull() const {
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
+void ClientManagerConn::startupCompleteSlot() {
+
+    // when startup is complete, do not connect to servers if session has been restored
+    // and there is nothing to download :
+    if (!this->parent->getServerManager()->isSessionRestoredNoJobs()) {
+        QTimer::singleShot(this->connectionDelay, this, SLOT(connectRequestSlot()));
+    }
+
+}
+
 void ClientManagerConn::dataHasArrivedSlot() {
 
-    // due to delay instanciation,
-    // be sure that the instance has been really created before requesting segments to download :
-    if (this->nntpClient) {
-
-        // this slot is called each time segments have been set pending for backup servers by ServerGroup,
-        // if client is currently not used for limit speed purposes (disconnected), do not go further
-        // as calling dataHasArrivedSlot() will have the effect to reconnect current client again :
-        if (!this->isBandwidthNotNeeded()) {
-            this->nntpClient->dataHasArrivedSlot();
-        }
+    // this slot is called each time segments have been set pending for backup servers by ServerGroup,
+    // if client is currently not used for limit speed purposes (disconnected), do not go further
+    // as calling dataHasArrivedSlot() will have the effect to reconnect current client again :
+    if (!this->isBandwidthNotNeeded()) {
+        this->nntpClient->dataHasArrivedSlot();
     }
+
 }
 
 
@@ -252,20 +276,16 @@ void ClientManagerConn::resetConnectionSlot() {
 
     // in case of retry action, reset connection between client and server to ensure that
     // the connection was not broken :
-    if (this->nntpClient) {
+    if (this->nntpClient->getTcpSocket()->isSocketConnected()) {
 
-        if (this->nntpClient->getTcpSocket()->isSocketConnected()) {
+        // disconnect :
+        this->disconnectRequestSlot();
+        // reconnect :
+        QTimer::singleShot(this->connectionDelay, this, SLOT(connectRequestSlot()));
 
-            // disconnect :
-            this->disconnectRequestSlot();
-            // reconnect :
-            QTimer::singleShot(this->connectionDelay, this, SLOT(connectRequestSlot()));
-
-        }
-        else {
-            this->connectRequestSlot();
-        }
-
+    }
+    else {
+        this->connectRequestSlot();
     }
 
 }

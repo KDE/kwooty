@@ -37,12 +37,18 @@ class KConfigGroupHandler : public QObject {
     Q_OBJECT
 
 public:
+
+    enum PasswordData {
+        ReadPasswordData,
+        DoNotReadPasswordData
+    };
+
     KConfigGroupHandler(MainWindow*);
     ~KConfigGroupHandler();
 
     static KConfigGroupHandler* getInstance();
 
-    ServerData readServerSettings(const int&);
+    ServerData readServerSettings(const int&, const PasswordData& = ReadPasswordData);
     void writeServerSettings(const int&, ServerData);
     void removeServerSettings(const int&);
 
@@ -75,7 +81,7 @@ private:
     QString readPassword(const int&, KConfigGroup&);
     void writePassword(const int&, KConfigGroup&, const QString&);
     void removePasswordEntry(KConfigGroup&);
-    ServerData fillServerData(const int&, KConfigGroup&);
+    ServerData fillServerData(const int&, KConfigGroup&, const PasswordData&);
 
 
 public slots:

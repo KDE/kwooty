@@ -66,6 +66,7 @@ public:
     void disconnectAllClients();
     void connectAllClients();
     void resetAllClientsConnection();
+    void readDataWithPassword();
 
 
 private:
@@ -83,6 +84,7 @@ private:
     int stabilityCounter;
     bool serverAvailable;
     bool pendingSegments;
+    bool passwordRetrieved;
 
     void createNntpClients();
     void setupConnections();

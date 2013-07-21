@@ -254,7 +254,7 @@ void KConfigGroupHandler::writePassword(const int& serverId, KConfigGroup& confi
 //======================================================================================//
 
 
-ServerData KConfigGroupHandler::readServerSettings(const int& serverId) {
+ServerData KConfigGroupHandler::readServerSettings(const int& serverId, const PasswordData& passwordData) {
 
     KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("Server_%1").arg(serverId));
 
@@ -269,8 +269,8 @@ ServerData KConfigGroupHandler::readServerSettings(const int& serverId) {
     }
 
 
-    // read data from cofing file and kwallet :
-    ServerData serverData = this->fillServerData(serverId, configGroup);
+    // read data from config file and kwallet :
+    ServerData serverData = this->fillServerData(serverId, configGroup, passwordData);
 
 
     // remove previous kwooty version server group if any :
@@ -284,7 +284,7 @@ ServerData KConfigGroupHandler::readServerSettings(const int& serverId) {
 }
 
 
-ServerData KConfigGroupHandler::fillServerData(const int& serverId, KConfigGroup& configGroup) {
+ServerData KConfigGroupHandler::fillServerData(const int& serverId, KConfigGroup& configGroup, const PasswordData& passwordData) {
 
     ServerData serverData;
 
@@ -300,7 +300,9 @@ ServerData KConfigGroupHandler::fillServerData(const int& serverId, KConfigGroup
     serverData.setServerModeIndex(configGroup.readEntry("serverModeIndex", 0));
 
     // read password with Kwallet or kconfig file :
-    serverData.setPassword(this->readPassword(serverId, configGroup));
+    if (passwordData == ReadPasswordData) {
+        serverData.setPassword(this->readPassword(serverId, configGroup));
+    }
 
     // if this is the first kwooty launch, config file is new and server name will be empty
     // set serverName to Master for first Id :

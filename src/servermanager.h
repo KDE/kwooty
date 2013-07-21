@@ -37,6 +37,7 @@ class KWOOTY_EXPORT ServerManager : public QObject {
     Q_OBJECT
 
 public:
+
     ServerManager(Core*);
     ServerGroup* getNextTargetServer(ServerGroup*);
     ServerGroup* getServerGroupById(const int&);
@@ -45,7 +46,8 @@ public:
     quint64 retrieveCumulatedDownloadSpeed(const int&) const;
     int getServerNumber() const;
     bool areAllServersEncrypted() const;
-    bool currentIsFirstMasterAvailable(const ServerGroup*) const;    
+    bool isSessionRestoredNoJobs() const;
+    bool currentIsFirstMasterAvailable(const ServerGroup*) const;
     void downloadWithAnotherBackupServer(ServerGroup*);
     void masterServerAvailabilityChanges();
     void setLimitServerDownloadSpeed(const int&, const qint64&);

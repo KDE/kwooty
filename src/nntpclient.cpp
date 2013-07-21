@@ -46,16 +46,11 @@ NntpClient::NntpClient(ClientManagerConn* parent) : QObject (parent) {
     this->nntpError = NoError;
     this->updateServerAnswerStatus(ServerDisconnected);
 
+    // set client status to IdleStatus by default :
+    this->clientStatus = ClientIdle;
+
     // set up connections with tcpSocket :
     this->setupConnections();
-
-    // set client status to IdleStatus by default :
-    this->setConnectedClientStatus(ClientIdle);
-
-    this->connectToHostSlot();
-
-    // notify status bar that SSL is disabled by default :
-    emit encryptionStatusPerServerSignal(false);
 
 }
 
@@ -80,7 +75,6 @@ void NntpClient::setupConnections() {
     connect (this->tcpSocket, SIGNAL(answerTimeOutSignal()), this, SLOT(answerTimeOutSlot()));
     connect (this->tcpSocket, SIGNAL(downloadSegmentFromServerSignal()), this, SLOT(downloadSegmentFromServerSlot()));
     connect (this->tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorSlot(QAbstractSocket::SocketError)));
-    connect (this->tcpSocket, SIGNAL(socketEncryptedInfoSignal(bool, QString, QString, QStringList)), this, SLOT(socketEncryptedInfoSlot(bool, QString, QString, QStringList)));
 
 }
 
@@ -95,24 +89,14 @@ void NntpClient::connectToHostSlot() {
     if ( this->parent->isMasterServer() ||
          !this->parent->isDisabledBackupServer() ) {
 
+        this->parent->handleFirstConnection();
+
         // set nntpError to noError by default before connection process :
         this->updateServerAnswerStatus(ServerDisconnected);
         this->nntpError = NoError;
         this->connectingLoopCounter = 0;
 
-        QString hostName = this->parent->getServerData().getHostName();
-        int port = this->parent->getServerData().getPort();
-
-        if (this->parent->getServerData().isEnableSSL()) {
-
-            this->tcpSocket->connectToHostEncrypted(hostName, port);
-        }
-        else {
-
-            this->tcpSocket->connectToHost(hostName, port);
-            // SSL is disabled :
-            emit encryptionStatusPerServerSignal(false);
-        }
+        this->tcpSocket->connectToHost();
 
     }
 
@@ -658,7 +642,7 @@ int NntpClient::notifyDownloadHasFinished(const UtilityNamespace::Article articl
     // segment is present and download is complete :
     if (articlePresence == Present) {
 
-        // set pointer to data to be decoder by segmentDecoderThread :
+        // set pointer to data to be decoded by segmentDecoderThread :
         QBuffer* buffer = new QBuffer();
         buffer->setData(this->segmentByteArray);
 
@@ -801,14 +785,6 @@ void NntpClient::errorSlot(QAbstractSocket::SocketError socketError) {
         // disconnection will occur after this slot, notify error only when disconnect occurs :
         this->nntpError = SslHandshakeFailed;
     }
-
-}
-
-
-void NntpClient::socketEncryptedInfoSlot(bool certificateVerified, QString encryptionMethod, QString issuerOrgranisation, QStringList sslErrors) {
-
-    // SSL connection is active, send also encryption method used by host :
-    emit encryptionStatusPerServerSignal(true, encryptionMethod, certificateVerified, issuerOrgranisation, sslErrors);
 
 }
 
