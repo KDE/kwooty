@@ -37,6 +37,7 @@ class StandardItemModelQuery;
 class ActionButtonsManager;
 class ActionMergeManager;
 class ActionRenameManager;
+class ActionFileDeleteManager;
 
 class KWOOTY_EXPORT ActionsManager : public QObject {
 
@@ -48,11 +49,13 @@ public:
     ActionButtonsManager* getActionButtonsManager() const;
     ActionMergeManager* getActionMergeManager() const;
     ActionRenameManager* getActionRenameManager() const;
+    ActionFileDeleteManager* getActionFileDeleteManager() const;
     void setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus);
     void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QList<QModelIndex>&);
     void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QModelIndex&);
     void retryDownload(const QModelIndexList&);
     void changePar2FilesStatus(const QModelIndex, UtilityNamespace::ItemStatus);
+    void removeRow(const QList<QModelIndex>&);
 
 
 private:
@@ -75,6 +78,7 @@ private:
     ActionMergeManager* actionMergeManager;
     ActionButtonsManager* actionButtonsManager;
     ActionRenameManager* actionRenameManager;
+    ActionFileDeleteManager* actionFileDeleteManager;
 
     
 signals:

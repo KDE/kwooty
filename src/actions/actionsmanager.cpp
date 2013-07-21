@@ -40,6 +40,7 @@
 #include "observers/queuefileobserver.h"
 #include "actions/actionmergemanager.h"
 #include "actions/actionrenamemanager.h"
+#include "actions/actionfiledeletemanager.h"
 #include "kwootysettings.h"
 
 
@@ -59,6 +60,9 @@ ActionsManager::ActionsManager(Core* core) : QObject (core) {
     // create action merge manager :
     this->actionRenameManager = new ActionRenameManager(this);
 
+    // create action file delete manager :
+    this->actionFileDeleteManager = new ActionFileDeleteManager(this);
+
     this->setupConnections();
 
 }
@@ -74,6 +78,10 @@ ActionMergeManager* ActionsManager::getActionMergeManager() const {
 
 ActionRenameManager* ActionsManager::getActionRenameManager() const {
     return this->actionRenameManager;
+}
+
+ActionFileDeleteManager* ActionsManager::getActionFileDeleteManager() const {
+    return this->actionFileDeleteManager;
 }
 
 Core* ActionsManager::getCore() const {
@@ -410,6 +418,74 @@ void ActionsManager::retryDownload(const QModelIndexList& indexList) {
 }
 
 
+void ActionsManager::removeRow(const QList<QModelIndex>& indexesList) {
+
+    bool par2FilesStatuschanged = false;
+    QList<int> rowList;
+
+
+    //stores rows in a list
+    for (int i = 0; i < indexesList.size(); i++) {
+        rowList.append(indexesList.at(i).row());
+    }
+
+    qSort(rowList.begin(), rowList.end(), qGreater<int>());
+
+
+    for (int i = 0; i < indexesList.size(); i++) {
+
+        QModelIndex currentModelIndex = indexesList.at(i);
+        if (currentModelIndex.isValid()) {
+
+            // if the parent has been selected (a nzb item):
+            if (currentModelIndex.parent() == QModelIndex()) {
+                this->downloadModel->removeRow(rowList.at(i));
+            }
+            // else files of the parent (nzb item) has been selected :
+            else {
+                QStandardItem* nzbItem = this->downloadModel->itemFromIndex(currentModelIndex.parent());
+                nzbItem->removeRow(rowList.at(i));
+
+                if (nzbItem->rowCount() > 0) {
+
+                    // set nzb parent row up to date :
+                    emit recalculateNzbSizeSignal(nzbItem->index());
+
+                    // item has been removed extract could fail, download Par2 files :
+                    this->changePar2FilesStatus(nzbItem->index(), IdleStatus);
+
+                    par2FilesStatuschanged = true;
+
+                }
+                // if the nzb item has no more child, remove it :
+                else {
+                    this->downloadModel->invisibleRootItem()->removeRow(nzbItem->row());
+
+                }
+
+            }
+        }
+    }
+
+
+    // then send signal to nntp clients to download Par2 files :
+    if (par2FilesStatuschanged) {
+        this->core->downloadWaitingPar2Slot();
+    }
+
+
+    // disable shutdown if all rows have been removed by the user :
+    if (this->downloadModel->invisibleRootItem()->rowCount() == 0) {
+        // disable shutdown scheduler :
+        emit allRowRemovedSignal();
+    }
+
+    // update the status bar :
+    emit statusBarFileSizeUpdateSignal(Incremental);
+
+
+}
+
 
 
 //============================================================================================================//
@@ -486,72 +562,10 @@ void ActionsManager::removeRowSlot() {
     // if selected rows has not been canceled :
     if (answer == KMessageBox::Yes) {
 
-        bool par2FilesStatuschanged = false;
-        QList<int> rowList;
-        QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
+        this->removeRow(this->treeView->selectionModel()->selectedRows());
 
-        //stores rows in a list
-        for (int i = 0; i < indexesList.size(); i++) {
-            rowList.append(indexesList.at(i).row());
-        }
-
-        qSort(rowList.begin(), rowList.end(), qGreater<int>());
-
-
-        for (int i = 0; i < indexesList.size(); i++) {
-
-            QModelIndex currentModelIndex = indexesList.at(i);
-            if (currentModelIndex.isValid()) {
-
-                // if the parent has been selected (a nzb item):
-                if (currentModelIndex.parent() == QModelIndex()) {
-                    this->downloadModel->removeRow(rowList.at(i));
-                }
-                // else files of the parent (nzb item) has been selected :
-                else {
-                    QStandardItem* nzbItem = this->downloadModel->itemFromIndex(currentModelIndex.parent());
-                    nzbItem->removeRow(rowList.at(i));
-
-                    if (nzbItem->rowCount() > 0) {
-
-                        // set nzb parent row up to date :
-                        emit recalculateNzbSizeSignal(nzbItem->index());
-
-                        // item has been removed extract could fail, download Par2 files :
-                        this->changePar2FilesStatus(nzbItem->index(), IdleStatus);
-
-                        par2FilesStatuschanged = true;
-
-                    }
-                    // if the nzb item has no more child, remove it :
-                    else {
-                        this->downloadModel->invisibleRootItem()->removeRow(nzbItem->row());
-
-                    }
-
-                }
-            }
-        }
-
-
-        // then send signal to nntp clients to download Par2 files :
-        if (par2FilesStatuschanged) {
-            this->core->downloadWaitingPar2Slot();
-        }
 
     }
-
-
-    // disable shutdown if all rows have been removed by the user :
-    if (this->downloadModel->invisibleRootItem()->rowCount() == 0) {
-        // disable shutdown scheduler :
-        emit allRowRemovedSignal();
-    }
-
-    // update the status bar :
-    emit statusBarFileSizeUpdateSignal(Incremental);
-
-
 }
 
 
