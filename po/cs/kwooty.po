@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-14 22:33+0100\n"
+"POT-Creation-Date: 2013-08-03 12:44+0200\n"
 "PO-Revision-Date: 2013-02-19 11:37+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-de@kde.org>\n"
@@ -37,7 +37,7 @@ msgstr ""
 msgid "KWallet is not running"
 msgstr "KWallet neběží"
 
-#: src/preferences/kconfiggrouphandler.cpp:308
+#: src/preferences/kconfiggrouphandler.cpp:310
 #: src/widgets/servertabwidget.cpp:240 src/widgets/servertabwidget.cpp:259
 #: src/widgets/serverpreferenceswidget.cpp:144 src/sidebar.cpp:151
 msgid "Master"
@@ -227,59 +227,59 @@ msgstr "Odpojeno (vyžadováno ověření pravosti)"
 msgid "Disconnected (Authentication Denied)"
 msgstr "Odpojeno (ověření pravosti odmítnuto)"
 
-#: src/utilities/utilityserverstatus.cpp:127
+#: src/utilities/utilityserverstatus.cpp:128
 #, kde-format
 msgid "Connected: <numid>%1</numid>"
 msgstr "Připojeno: <numid>%1</numid>"
 
-#: src/utilities/utilityserverstatus.cpp:168
+#: src/utilities/utilityserverstatus.cpp:173
 #, kde-format
 msgid "Connected to %1<br>"
 msgstr "Připojeno k %1<br>"
 
-#: src/utilities/utilityserverstatus.cpp:173
+#: src/utilities/utilityserverstatus.cpp:178
 msgid "Connection is SSL encrypted"
 msgstr "Spojení je zašifrováno SSL"
 
-#: src/utilities/utilityserverstatus.cpp:177
+#: src/utilities/utilityserverstatus.cpp:182
 #, kde-format
 msgctxt "type of ssl encryption method"
 msgid ": %1"
 msgstr ": %1"
 
-#: src/utilities/utilityserverstatus.cpp:186
+#: src/utilities/utilityserverstatus.cpp:191
 msgid "Connection is not encrypted"
 msgstr "Spojení není zašifrováno"
 
-#: src/utilities/utilityserverstatus.cpp:202
+#: src/utilities/utilityserverstatus.cpp:207
 #, kde-format
 msgid "Certificate <b>verified</b> by %1"
 msgstr "Osvědčení <b>ověřeno</b> %1"
 
-#: src/utilities/utilityserverstatus.cpp:205
+#: src/utilities/utilityserverstatus.cpp:210
 msgid "Certificate <b>can not be verified</b> "
 msgstr "Osvědčení <b>nelze ověřit</b>"
 
-#: src/utilities/utilityserverstatus.cpp:213
+#: src/utilities/utilityserverstatus.cpp:218
 #, kde-format
 msgid "(%1 error during SSL handshake): %2"
 msgid_plural "(%1 errors during SSL handshake): %2"
 msgstr[0] "(%1 chyby během podání ruky SSL): %2"
 msgstr[1] "(%1 chyb během podání ruky SSL): %2"
 
-#: src/utilities/utilityserverstatus.cpp:236
+#: src/utilities/utilityserverstatus.cpp:241
 msgid "Passive"
 msgstr "Nečinný"
 
-#: src/utilities/utilityserverstatus.cpp:240
+#: src/utilities/utilityserverstatus.cpp:245
 msgid "Active"
 msgstr "Činný"
 
-#: src/utilities/utilityserverstatus.cpp:244
+#: src/utilities/utilityserverstatus.cpp:249
 msgid "Failover"
 msgstr "Zajištění proti výpadku"
 
-#: src/utilities/utilityserverstatus.cpp:248
+#: src/utilities/utilityserverstatus.cpp:253
 msgid "Server Disabled"
 msgstr "Server vypnut"
 
@@ -303,7 +303,29 @@ msgstr "Oprava dokončena"
 msgid "Extract finished"
 msgstr "Rozbalení dokončeno"
 
-#: src/actions/actionmergemanager.cpp:248
+#: src/actions/actionrenamemanager.cpp:118
+#: src/actions/actionrenamemanager.cpp:231
+#, fuzzy
+msgid "Rename can not be performed"
+msgstr "Sloučení už nelze provést"
+
+#: src/actions/actionrenamemanager.cpp:205
+#, fuzzy
+msgid "Rename Folder"
+msgstr "Přejmenovat server"
+
+#: src/actions/actionrenamemanager.cpp:206
+#, kde-format
+msgctxt "@label:textbox"
+msgid "Rename the folder %1 to:"
+msgstr ""
+
+#: src/actions/actionrenamemanager.cpp:222
+msgid "Name already exists"
+msgstr ""
+
+#: src/actions/actionmergemanager.cpp:136
+#: src/actions/actionmergemanager.cpp:324
 msgid "Merge can not be performed anymore"
 msgstr "Sloučení už nelze provést"
 
@@ -319,7 +341,7 @@ msgstr "Hotovo"
 msgid "In queue"
 msgstr "V čekací řadě"
 
-#: src/itemdelegate.cpp:41 src/systraylegacy.cpp:307 src/mainwindow.cpp:202
+#: src/itemdelegate.cpp:41 src/systraylegacy.cpp:307 src/mainwindow.cpp:208
 #: src/plugins/scheduler/preferencesscheduler.cpp:134 src/systray.cpp:282
 msgid "Pause"
 msgstr "Pozastavit"
@@ -436,7 +458,7 @@ msgid "<numid>%1</numid> %"
 msgstr "<numid>%1</numid> %"
 
 #: src/itemdelegate.cpp:141 src/itemdelegate.cpp:192
-#: src/widgets/mystatusbar.cpp:331
+#: src/widgets/mystatusbar.cpp:328
 #: src/plugins/categories/preferencescategories.cpp:327 src/sidebar.cpp:163
 msgid "n/a"
 msgstr "N/A"
@@ -471,19 +493,19 @@ msgstr "<numid>%1</numid> %"
 msgid "Progress: "
 msgstr "Postup: "
 
-#: src/widgets/mytreeview.cpp:230
+#: src/widgets/mytreeview.cpp:232
 msgid "File Name"
 msgstr "Název souboru"
 
-#: src/widgets/mytreeview.cpp:231
+#: src/widgets/mytreeview.cpp:233
 msgid "Status"
 msgstr "Stav"
 
-#: src/widgets/mytreeview.cpp:232
+#: src/widgets/mytreeview.cpp:234
 msgid "Progress"
 msgstr "Postup"
 
-#: src/widgets/mytreeview.cpp:233
+#: src/widgets/mytreeview.cpp:235
 msgid "Size"
 msgstr "Velikost"
 
@@ -545,15 +567,16 @@ msgid "Remove selected files from queue ?"
 msgstr "Odstranit vybrané soubory z řady čekajících?"
 
 #: src/widgets/centralwidget.cpp:156
-#, kde-format
+#, fuzzy, kde-format
+msgctxt "@label:textbox"
 msgid "Merge content of %1 into %2 ?"
 msgstr "Sloučit obsah %1 do %2 ?"
 
-#: src/widgets/centralwidget.cpp:167
+#: src/widgets/centralwidget.cpp:168
 msgid "Warning"
 msgstr "Varování"
 
-#: src/widgets/centralwidget.cpp:182
+#: src/widgets/centralwidget.cpp:183
 #, kde-format
 msgctxt "%1 = shutdown/suspend to RAM/suspend to disk"
 msgid "Kwooty is about to %1 system. Continue?"
@@ -580,21 +603,21 @@ msgstr "Přejmenovat server:"
 msgid "Remove <b>%1</b> backup server ?"
 msgstr "Odstranit<b>%1</b> zálohovací server?"
 
-#: src/widgets/mystatusbar.cpp:243
+#: src/widgets/mystatusbar.cpp:240
 #, kde-format
 msgid "Files: <numid>%1</numid> (%2)"
 msgstr "Soubory: <numid>%1</numid> (%2)"
 
-#: src/widgets/mystatusbar.cpp:252
+#: src/widgets/mystatusbar.cpp:249
 #, kde-format
 msgid "Speed: %1"
 msgstr "Rychlost: %1"
 
-#: src/widgets/mystatusbar.cpp:275 src/statsinfobuilder.cpp:413
+#: src/widgets/mystatusbar.cpp:272 src/statsinfobuilder.cpp:413
 msgid "Insufficient disk space"
 msgstr "Nedostatek úložného prostoru na nosiči dat"
 
-#: src/widgets/mystatusbar.cpp:324
+#: src/widgets/mystatusbar.cpp:321
 msgid "Total"
 msgstr "Celkem"
 
@@ -714,170 +737,189 @@ msgstr "Šifrování:"
 msgid "Encryption Information"
 msgstr "Informace k šifrování"
 
-#: src/mainwindow.cpp:182
+#: src/mainwindow.cpp:188
 msgid "Clear"
 msgstr "Smazat všechny záznamy"
 
-#: src/mainwindow.cpp:184
+#: src/mainwindow.cpp:190
 msgid "Remove all rows"
 msgstr "Odstranit všechny záznamy"
 
-#: src/mainwindow.cpp:191 src/plugins/scheduler/preferencesscheduler.cpp:135
+#: src/mainwindow.cpp:197 src/plugins/scheduler/preferencesscheduler.cpp:135
 msgid "Start"
 msgstr "Spustit"
 
-#: src/mainwindow.cpp:193
+#: src/mainwindow.cpp:199
 msgid "Start download of selected rows"
 msgstr "Spustit stahování vybraných záznamů"
 
-#: src/mainwindow.cpp:204
+#: src/mainwindow.cpp:210
 msgid "Pause download of selected rows"
 msgstr "Pozastavit stahování vybraných záznamů"
 
-#: src/mainwindow.cpp:213
+#: src/mainwindow.cpp:219
 msgid "Remove"
 msgstr "Odstranit"
 
-#: src/mainwindow.cpp:215
+#: src/mainwindow.cpp:221
 msgid "Remove all selected rows"
 msgstr "Odstranit všechny vybrané záznamy"
 
-#: src/mainwindow.cpp:225
+#: src/mainwindow.cpp:231
+#, fuzzy
+msgid "Remove data"
+msgstr "Odstranit"
+
+#: src/mainwindow.cpp:233
+#, fuzzy
+msgid "Remove all selected rows and respective downloaded contents"
+msgstr "Posunout všechny vybrané záznamy v seznamu zcela dolů"
+
+#: src/mainwindow.cpp:243
 msgid "Up"
 msgstr "Nahoru"
 
-#: src/mainwindow.cpp:227
+#: src/mainwindow.cpp:245
 msgid "Go up all selected rows"
 msgstr "Posunout všechny vybrané záznamy nahoru"
 
-#: src/mainwindow.cpp:236
+#: src/mainwindow.cpp:254
 msgid "Top"
 msgstr "Zcela nahoru"
 
-#: src/mainwindow.cpp:238
+#: src/mainwindow.cpp:256
 msgid "Move all selected rows to the top of the list"
 msgstr "Posunout všechny vybrané záznamy v seznamu zcela nahoru"
 
-#: src/mainwindow.cpp:247
+#: src/mainwindow.cpp:265
 msgid "Down"
 msgstr "Dolů"
 
-#: src/mainwindow.cpp:249
+#: src/mainwindow.cpp:267
 msgid "Go down all selected rows"
 msgstr "Posunout všechny vybrané záznamy dolů"
 
-#: src/mainwindow.cpp:259
+#: src/mainwindow.cpp:276
 msgid "Bottom"
 msgstr "Zcela dolů"
 
-#: src/mainwindow.cpp:261
+#: src/mainwindow.cpp:278
 msgid "Move all selected rows to the bottom of the list"
 msgstr "Posunout všechny vybrané záznamy v seznamu zcela dolů"
 
-#: src/mainwindow.cpp:271
+#: src/mainwindow.cpp:287
 msgid "Downloads"
 msgstr "Stáhnout"
 
-#: src/mainwindow.cpp:273
+#: src/mainwindow.cpp:289
 msgid "Open current download folder"
 msgstr "Otevřít nynější složku pro stahování"
 
-#: src/mainwindow.cpp:281 src/mainwindow.cpp:420
+#: src/mainwindow.cpp:297 src/mainwindow.cpp:450
 #: src/shutdown/shutdownmanager.cpp:280
 msgid "Shutdown"
 msgstr "Vypnutí"
 
-#: src/mainwindow.cpp:283
+#: src/mainwindow.cpp:299
 msgid "Schedule system shutdown"
 msgstr "Rozvrhnout vypnutí systému"
 
-#: src/mainwindow.cpp:294
+#: src/mainwindow.cpp:310
 msgid "Start all"
 msgstr "Spustit všechna stahování"
 
-#: src/mainwindow.cpp:296
+#: src/mainwindow.cpp:312
 msgid "Start all paused downloads"
 msgstr "Spustit všechna pozastavená stahování"
 
-#: src/mainwindow.cpp:304
+#: src/mainwindow.cpp:320
 msgid "Pause all"
 msgstr "Pozastavit všechna stahování"
 
-#: src/mainwindow.cpp:306
+#: src/mainwindow.cpp:322
 msgid "Pause all pending downloads"
 msgstr "Pozastavit všechna zbývající stahování"
 
-#: src/mainwindow.cpp:314
+#: src/mainwindow.cpp:330
 msgid "Retry"
 msgstr "Zkusit znovu"
 
-#: src/mainwindow.cpp:316
+#: src/mainwindow.cpp:332
 msgid "Retry to download selected rows"
 msgstr "Zkusit znovu stahování vybraných záznamů"
 
-#: src/mainwindow.cpp:325
+#: src/mainwindow.cpp:341
 msgid "Repair and extract"
 msgstr "Opravit a rozbalit"
 
-#: src/mainwindow.cpp:327
+#: src/mainwindow.cpp:343
 msgid "Manually verify and extract selected item"
 msgstr "Ručně prověřit a rozbalit vybranou položku"
 
-#: src/mainwindow.cpp:336
+#: src/mainwindow.cpp:352
 msgid "Merge with..."
 msgstr "Sloučit s..."
 
-#: src/mainwindow.cpp:338
+#: src/mainwindow.cpp:354
 msgid "Merge nzb content into another nzb"
 msgstr "Sloučit obsah nzb do jiného nzb"
 
-#: src/mainwindow.cpp:404
+#: src/mainwindow.cpp:372
+msgid "Rename..."
+msgstr ""
+
+#: src/mainwindow.cpp:374
+#, fuzzy
+msgid "Rename nzb and its corresponding download folder"
+msgstr "Otevřít nynější složku pro stahování"
+
+#: src/mainwindow.cpp:434
 msgid "General"
 msgstr "Obecné"
 
-#: src/mainwindow.cpp:404
+#: src/mainwindow.cpp:434
 msgid "General Setup"
 msgstr "Obecná nastavení"
 
-#: src/mainwindow.cpp:408
+#: src/mainwindow.cpp:438
 msgid "Connection"
 msgstr "Spojení"
 
-#: src/mainwindow.cpp:408
+#: src/mainwindow.cpp:438
 msgid "Setup Server Connection"
 msgstr "Nastavení spojení serveru"
 
 #. i18n: file: src/preferences/preferencesprograms.ui:21
 #. i18n: ectx: attribute (title), widget (QWidget, programsTab)
-#: src/mainwindow.cpp:412 build/src/ui_preferencesprograms.h:324 rc.cpp:119
+#: src/mainwindow.cpp:442 build/src/ui_preferencesprograms.h:324 rc.cpp:119
 msgid "Programs"
 msgstr "Programy"
 
-#: src/mainwindow.cpp:412
+#: src/mainwindow.cpp:442
 msgid "Setup External Programs"
 msgstr "Nastavení pro vnější programy"
 
-#: src/mainwindow.cpp:416
+#: src/mainwindow.cpp:446
 msgid "Display modes"
 msgstr "Režimy zobrazení"
 
-#: src/mainwindow.cpp:416
+#: src/mainwindow.cpp:446
 msgid "Setup Display Modes"
 msgstr "Nastavení pro režimy zobrazení"
 
-#: src/mainwindow.cpp:420
+#: src/mainwindow.cpp:450
 msgid "Setup System Shutdown"
 msgstr "Nastavení pro vypnutí systému"
 
-#: src/mainwindow.cpp:424
+#: src/mainwindow.cpp:454
 msgid "Plugins"
 msgstr "Přídavné moduly"
 
-#: src/mainwindow.cpp:424
+#: src/mainwindow.cpp:454
 msgid "Plugins Setup"
 msgstr "Nastavení pro přídavné moduly"
 
-#: src/mainwindow.cpp:500
+#: src/mainwindow.cpp:542
 msgid ""
 "<qt>Closing the main window will keep Kwooty running in the System Tray. Use "
 "<B>Quit</B> from the menu or the Kwooty tray icon to exit the application.</"
@@ -887,7 +929,7 @@ msgstr ""
 "panelu. Použijte <B>Ukončit</B> v nabídce nebo v oznamovací oblasti k "
 "ukončeníprogramu Kwooty.</qt>"
 
-#: src/mainwindow.cpp:502
+#: src/mainwindow.cpp:544
 msgid "Docking in System Tray"
 msgstr "Ukotvení v oznamovací části panelu"
 
@@ -996,11 +1038,11 @@ msgid "Transfer folder..."
 msgstr "Dočasná složka..."
 
 #: src/plugins/categories/categoriesmanual.cpp:47
-#: src/plugins/categories/categoriesmanual.cpp:186
+#: src/plugins/categories/categoriesmanual.cpp:195
 msgid "Select transfer folder"
 msgstr "Vybrat dočasnou složku"
 
-#: src/plugins/categories/categoriesmanual.cpp:119
+#: src/plugins/categories/categoriesmanual.cpp:129
 #, kde-format
 msgid "Transfer folder: %1"
 msgstr "Dočasná složka: %1"
@@ -1885,8 +1927,8 @@ msgid ""
 "Successfully extracted files will be transferred in this folder except for "
 "files matching categories defined above"
 msgstr ""
-"Úspěšně rozbalené soubory budou přesunuty do této složky kromě "
-"souborů odpovídajících skupinám vymezených výše"
+"Úspěšně rozbalené soubory budou přesunuty do této složky kromě souborů "
+"odpovídajících skupinám vymezených výše"
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:129
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_enableDefaultTransfer)
@@ -1913,8 +1955,7 @@ msgid ""
 msgstr ""
 "Povolit výběr vlastní dočasnou složku klepnutím pravým tlačítkem myši na "
 "položku nzb.\n"
-"Ručně vybraná dočasná složka nahradí složku s oblíbenými nebo výchozí "
-"složku"
+"Ručně vybraná dočasná složka nahradí složku s oblíbenými nebo výchozí složku"
 
 #. i18n: file: src/plugins/categories/preferencescategories.ui:155
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_manualFolder)
@@ -2054,7 +2095,7 @@ msgstr ""
 msgid "Download"
 msgstr "Stáhnout"
 
-#. i18n: file: src/kwootyui.rc:33
+#. i18n: file: src/kwootyui.rc:34
 #. i18n: ectx: ToolBar (mainToolBar)
 #: rc.cpp:432
 msgid "Main Toolbar"

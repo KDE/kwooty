@@ -1,12 +1,12 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Yurienu Amenysta <yurienu@myopera.com>, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-14 22:33+0100\n"
+"POT-Creation-Date: 2013-08-03 12:44+0200\n"
 "PO-Revision-Date: 2013-02-18 22:25+0100\n"
 "Last-Translator: Yurienu <yurienu@myopera.com>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
@@ -35,7 +35,7 @@ msgstr ""
 msgid "KWallet is not running"
 msgstr "KWallet n’est pas en fonctionnement"
 
-#: src/preferences/kconfiggrouphandler.cpp:308
+#: src/preferences/kconfiggrouphandler.cpp:310
 #: src/widgets/servertabwidget.cpp:240 src/widgets/servertabwidget.cpp:259
 #: src/widgets/serverpreferenceswidget.cpp:144 src/sidebar.cpp:151
 msgid "Master"
@@ -226,59 +226,59 @@ msgstr "Déconnecté (authentification requise)"
 msgid "Disconnected (Authentication Denied)"
 msgstr "Déconnecté (authentification refusée)"
 
-#: src/utilities/utilityserverstatus.cpp:127
+#: src/utilities/utilityserverstatus.cpp:128
 #, kde-format
 msgid "Connected: <numid>%1</numid>"
 msgstr "Connecté : <numid>%1</numid>"
 
-#: src/utilities/utilityserverstatus.cpp:168
+#: src/utilities/utilityserverstatus.cpp:173
 #, kde-format
 msgid "Connected to %1<br>"
 msgstr "Connecté à %1<br>"
 
-#: src/utilities/utilityserverstatus.cpp:173
+#: src/utilities/utilityserverstatus.cpp:178
 msgid "Connection is SSL encrypted"
 msgstr "La connexion est chiffrée en SSL"
 
-#: src/utilities/utilityserverstatus.cpp:177
+#: src/utilities/utilityserverstatus.cpp:182
 #, kde-format
 msgctxt "type of ssl encryption method"
 msgid ": %1"
 msgstr " : %1"
 
-#: src/utilities/utilityserverstatus.cpp:186
+#: src/utilities/utilityserverstatus.cpp:191
 msgid "Connection is not encrypted"
 msgstr "La connexion n’est pas chiffrée"
 
-#: src/utilities/utilityserverstatus.cpp:202
+#: src/utilities/utilityserverstatus.cpp:207
 #, kde-format
 msgid "Certificate <b>verified</b> by %1"
 msgstr "Certificat <b>validé</b> par %1"
 
-#: src/utilities/utilityserverstatus.cpp:205
+#: src/utilities/utilityserverstatus.cpp:210
 msgid "Certificate <b>can not be verified</b> "
 msgstr "Le certificat <b>ne peut être validé</b> "
 
-#: src/utilities/utilityserverstatus.cpp:213
+#: src/utilities/utilityserverstatus.cpp:218
 #, kde-format
 msgid "(%1 error during SSL handshake): %2"
 msgid_plural "(%1 errors during SSL handshake): %2"
 msgstr[0] "(Erreur %1 lors de la négociation SSL) : %2"
 msgstr[1] ""
 
-#: src/utilities/utilityserverstatus.cpp:236
+#: src/utilities/utilityserverstatus.cpp:241
 msgid "Passive"
 msgstr "Passif"
 
-#: src/utilities/utilityserverstatus.cpp:240
+#: src/utilities/utilityserverstatus.cpp:245
 msgid "Active"
 msgstr "Actif"
 
-#: src/utilities/utilityserverstatus.cpp:244
+#: src/utilities/utilityserverstatus.cpp:249
 msgid "Failover"
 msgstr "Reprise"
 
-#: src/utilities/utilityserverstatus.cpp:248
+#: src/utilities/utilityserverstatus.cpp:253
 msgid "Server Disabled"
 msgstr "Serveur désactivé"
 
@@ -302,7 +302,29 @@ msgstr "Réparation terminée"
 msgid "Extract finished"
 msgstr "Extraction terminée"
 
-#: src/actions/actionmergemanager.cpp:248
+#: src/actions/actionrenamemanager.cpp:118
+#: src/actions/actionrenamemanager.cpp:231
+#, fuzzy
+msgid "Rename can not be performed"
+msgstr "La fusion ne peut plus être effectuée désormais"
+
+#: src/actions/actionrenamemanager.cpp:205
+#, fuzzy
+msgid "Rename Folder"
+msgstr "Renommer le serveur"
+
+#: src/actions/actionrenamemanager.cpp:206
+#, kde-format
+msgctxt "@label:textbox"
+msgid "Rename the folder %1 to:"
+msgstr ""
+
+#: src/actions/actionrenamemanager.cpp:222
+msgid "Name already exists"
+msgstr ""
+
+#: src/actions/actionmergemanager.cpp:136
+#: src/actions/actionmergemanager.cpp:324
 msgid "Merge can not be performed anymore"
 msgstr "La fusion ne peut plus être effectuée désormais"
 
@@ -318,7 +340,7 @@ msgstr "Terminé"
 msgid "In queue"
 msgstr "En attente"
 
-#: src/itemdelegate.cpp:41 src/systraylegacy.cpp:307 src/mainwindow.cpp:202
+#: src/itemdelegate.cpp:41 src/systraylegacy.cpp:307 src/mainwindow.cpp:208
 #: src/plugins/scheduler/preferencesscheduler.cpp:134 src/systray.cpp:282
 msgid "Pause"
 msgstr "En pause"
@@ -435,7 +457,7 @@ msgid "<numid>%1</numid> %"
 msgstr "<numid>%1</numid> %"
 
 #: src/itemdelegate.cpp:141 src/itemdelegate.cpp:192
-#: src/widgets/mystatusbar.cpp:331
+#: src/widgets/mystatusbar.cpp:328
 #: src/plugins/categories/preferencescategories.cpp:327 src/sidebar.cpp:163
 msgid "n/a"
 msgstr "N/A"
@@ -470,19 +492,19 @@ msgstr "<numid>%1</numid> %"
 msgid "Progress: "
 msgstr "Avancement : "
 
-#: src/widgets/mytreeview.cpp:230
+#: src/widgets/mytreeview.cpp:232
 msgid "File Name"
 msgstr "Nom de fichier"
 
-#: src/widgets/mytreeview.cpp:231
+#: src/widgets/mytreeview.cpp:233
 msgid "Status"
 msgstr "Statut"
 
-#: src/widgets/mytreeview.cpp:232
+#: src/widgets/mytreeview.cpp:234
 msgid "Progress"
 msgstr "Avancement"
 
-#: src/widgets/mytreeview.cpp:233
+#: src/widgets/mytreeview.cpp:235
 msgid "Size"
 msgstr "Taille"
 
@@ -544,15 +566,16 @@ msgid "Remove selected files from queue ?"
 msgstr "Supprimer les fichiers sélectionnés de la file d’attente ?"
 
 #: src/widgets/centralwidget.cpp:156
-#, kde-format
+#, fuzzy, kde-format
+msgctxt "@label:textbox"
 msgid "Merge content of %1 into %2 ?"
 msgstr "Fusionner le contenu de %1 avec %2 ?"
 
-#: src/widgets/centralwidget.cpp:167
+#: src/widgets/centralwidget.cpp:168
 msgid "Warning"
 msgstr "Attention"
 
-#: src/widgets/centralwidget.cpp:182
+#: src/widgets/centralwidget.cpp:183
 #, kde-format
 msgctxt "%1 = shutdown/suspend to RAM/suspend to disk"
 msgid "Kwooty is about to %1 system. Continue?"
@@ -579,21 +602,21 @@ msgstr "Renommez le serveur :"
 msgid "Remove <b>%1</b> backup server ?"
 msgstr "Supprimer le serveur secondaire <b>%1</b> ?"
 
-#: src/widgets/mystatusbar.cpp:243
+#: src/widgets/mystatusbar.cpp:240
 #, kde-format
 msgid "Files: <numid>%1</numid> (%2)"
 msgstr "Fichiers : <numid>%1</numid> (%2)"
 
-#: src/widgets/mystatusbar.cpp:252
+#: src/widgets/mystatusbar.cpp:249
 #, kde-format
 msgid "Speed: %1"
 msgstr "Vitesse : %1"
 
-#: src/widgets/mystatusbar.cpp:275 src/statsinfobuilder.cpp:413
+#: src/widgets/mystatusbar.cpp:272 src/statsinfobuilder.cpp:413
 msgid "Insufficient disk space"
 msgstr "Espace disque insuffisant"
 
-#: src/widgets/mystatusbar.cpp:324
+#: src/widgets/mystatusbar.cpp:321
 msgid "Total"
 msgstr "Total"
 
@@ -714,170 +737,189 @@ msgstr "Chiffrement :"
 msgid "Encryption Information"
 msgstr "Informations sur le chiffrement"
 
-#: src/mainwindow.cpp:182
+#: src/mainwindow.cpp:188
 msgid "Clear"
 msgstr "Effacer"
 
-#: src/mainwindow.cpp:184
+#: src/mainwindow.cpp:190
 msgid "Remove all rows"
 msgstr "Supprimer toutes les lignes"
 
-#: src/mainwindow.cpp:191 src/plugins/scheduler/preferencesscheduler.cpp:135
+#: src/mainwindow.cpp:197 src/plugins/scheduler/preferencesscheduler.cpp:135
 msgid "Start"
 msgstr "Démarrer"
 
-#: src/mainwindow.cpp:193
+#: src/mainwindow.cpp:199
 msgid "Start download of selected rows"
 msgstr "Démarrer le téléchargement des lignes sélectionnées"
 
-#: src/mainwindow.cpp:204
+#: src/mainwindow.cpp:210
 msgid "Pause download of selected rows"
 msgstr "Mettre en pause les lignes sélectionnées"
 
-#: src/mainwindow.cpp:213
+#: src/mainwindow.cpp:219
 msgid "Remove"
 msgstr "Supprimer"
 
-#: src/mainwindow.cpp:215
+#: src/mainwindow.cpp:221
 msgid "Remove all selected rows"
 msgstr "Supprimer toutes les lignes sélectionnées"
 
-#: src/mainwindow.cpp:225
+#: src/mainwindow.cpp:231
+#, fuzzy
+msgid "Remove data"
+msgstr "Supprimer"
+
+#: src/mainwindow.cpp:233
+#, fuzzy
+msgid "Remove all selected rows and respective downloaded contents"
+msgstr "Descendre toutes les lignes sélectionnées à la fin"
+
+#: src/mainwindow.cpp:243
 msgid "Up"
 msgstr "Monter"
 
-#: src/mainwindow.cpp:227
+#: src/mainwindow.cpp:245
 msgid "Go up all selected rows"
 msgstr "Monter toutes les lignes sélectionnées"
 
-#: src/mainwindow.cpp:236
+#: src/mainwindow.cpp:254
 msgid "Top"
 msgstr "Début"
 
-#: src/mainwindow.cpp:238
+#: src/mainwindow.cpp:256
 msgid "Move all selected rows to the top of the list"
 msgstr "Monter toutes les lignes sélectionnées au début"
 
-#: src/mainwindow.cpp:247
+#: src/mainwindow.cpp:265
 msgid "Down"
 msgstr "Descendre"
 
-#: src/mainwindow.cpp:249
+#: src/mainwindow.cpp:267
 msgid "Go down all selected rows"
 msgstr "Descendre toutes les lignes sélectionnées"
 
-#: src/mainwindow.cpp:259
+#: src/mainwindow.cpp:276
 msgid "Bottom"
 msgstr "Fin"
 
-#: src/mainwindow.cpp:261
+#: src/mainwindow.cpp:278
 msgid "Move all selected rows to the bottom of the list"
 msgstr "Descendre toutes les lignes sélectionnées à la fin"
 
-#: src/mainwindow.cpp:271
+#: src/mainwindow.cpp:287
 msgid "Downloads"
 msgstr "Téléchargements"
 
-#: src/mainwindow.cpp:273
+#: src/mainwindow.cpp:289
 msgid "Open current download folder"
 msgstr "Ouvrir le dossier de téléchargement actuel"
 
-#: src/mainwindow.cpp:281 src/mainwindow.cpp:420
+#: src/mainwindow.cpp:297 src/mainwindow.cpp:450
 #: src/shutdown/shutdownmanager.cpp:280
 msgid "Shutdown"
 msgstr "Éteindre"
 
-#: src/mainwindow.cpp:283
+#: src/mainwindow.cpp:299
 msgid "Schedule system shutdown"
 msgstr "Programmer l’arrêt du système"
 
-#: src/mainwindow.cpp:294
+#: src/mainwindow.cpp:310
 msgid "Start all"
 msgstr "Tout démarrer"
 
-#: src/mainwindow.cpp:296
+#: src/mainwindow.cpp:312
 msgid "Start all paused downloads"
 msgstr "Démarrer tous les téléchargements en pause"
 
-#: src/mainwindow.cpp:304
+#: src/mainwindow.cpp:320
 msgid "Pause all"
 msgstr "Tout mettre en pause"
 
-#: src/mainwindow.cpp:306
+#: src/mainwindow.cpp:322
 msgid "Pause all pending downloads"
 msgstr "Mettre en pause la liste de téléchargements"
 
-#: src/mainwindow.cpp:314
+#: src/mainwindow.cpp:330
 msgid "Retry"
 msgstr "Réessayer"
 
-#: src/mainwindow.cpp:316
+#: src/mainwindow.cpp:332
 msgid "Retry to download selected rows"
 msgstr "Réessayer de télécharger les lignes sélectionnées"
 
-#: src/mainwindow.cpp:325
+#: src/mainwindow.cpp:341
 msgid "Repair and extract"
 msgstr "Réparer et extraire"
 
-#: src/mainwindow.cpp:327
+#: src/mainwindow.cpp:343
 msgid "Manually verify and extract selected item"
 msgstr "Vérifier manuellement et extraire l’élément sélectionné"
 
-#: src/mainwindow.cpp:336
+#: src/mainwindow.cpp:352
 msgid "Merge with..."
 msgstr "Fusionner avec…"
 
-#: src/mainwindow.cpp:338
+#: src/mainwindow.cpp:354
 msgid "Merge nzb content into another nzb"
 msgstr "Fusionner le contenu du nzb avec un autre nzb"
 
-#: src/mainwindow.cpp:404
+#: src/mainwindow.cpp:372
+msgid "Rename..."
+msgstr ""
+
+#: src/mainwindow.cpp:374
+#, fuzzy
+msgid "Rename nzb and its corresponding download folder"
+msgstr "Ouvrir le dossier de téléchargement actuel"
+
+#: src/mainwindow.cpp:434
 msgid "General"
 msgstr "Général"
 
-#: src/mainwindow.cpp:404
+#: src/mainwindow.cpp:434
 msgid "General Setup"
 msgstr "Configuration générale"
 
-#: src/mainwindow.cpp:408
+#: src/mainwindow.cpp:438
 msgid "Connection"
 msgstr "Connexion"
 
-#: src/mainwindow.cpp:408
+#: src/mainwindow.cpp:438
 msgid "Setup Server Connection"
 msgstr "Configurer la connexion au serveur"
 
 #. i18n: file: src/preferences/preferencesprograms.ui:21
 #. i18n: ectx: attribute (title), widget (QWidget, programsTab)
-#: src/mainwindow.cpp:412 build/src/ui_preferencesprograms.h:324 rc.cpp:119
+#: src/mainwindow.cpp:442 build/src/ui_preferencesprograms.h:324 rc.cpp:119
 msgid "Programs"
 msgstr "Programmes"
 
-#: src/mainwindow.cpp:412
+#: src/mainwindow.cpp:442
 msgid "Setup External Programs"
 msgstr "Configurer les programmes externes"
 
-#: src/mainwindow.cpp:416
+#: src/mainwindow.cpp:446
 msgid "Display modes"
 msgstr "Affichage"
 
-#: src/mainwindow.cpp:416
+#: src/mainwindow.cpp:446
 msgid "Setup Display Modes"
 msgstr "Configurer les modes d’affichage"
 
-#: src/mainwindow.cpp:420
+#: src/mainwindow.cpp:450
 msgid "Setup System Shutdown"
 msgstr "Configurer l’arrêt du système"
 
-#: src/mainwindow.cpp:424
+#: src/mainwindow.cpp:454
 msgid "Plugins"
 msgstr "Modules"
 
-#: src/mainwindow.cpp:424
+#: src/mainwindow.cpp:454
 msgid "Plugins Setup"
 msgstr "Configurer les modules"
 
-#: src/mainwindow.cpp:500
+#: src/mainwindow.cpp:542
 msgid ""
 "<qt>Closing the main window will keep Kwooty running in the System Tray. Use "
 "<B>Quit</B> from the menu or the Kwooty tray icon to exit the application.</"
@@ -887,7 +929,7 @@ msgstr ""
 "Utilisez <b>Quitter</b> dans le menu ou l’icône système pour arrêter "
 "l’application.</qt>"
 
-#: src/mainwindow.cpp:502
+#: src/mainwindow.cpp:544
 msgid "Docking in System Tray"
 msgstr "Réduire dans la barre des tâches"
 
@@ -996,11 +1038,11 @@ msgid "Transfer folder..."
 msgstr "Dossier de transfert…"
 
 #: src/plugins/categories/categoriesmanual.cpp:47
-#: src/plugins/categories/categoriesmanual.cpp:186
+#: src/plugins/categories/categoriesmanual.cpp:195
 msgid "Select transfer folder"
 msgstr "Sélectionner le dossier de transfert"
 
-#: src/plugins/categories/categoriesmanual.cpp:119
+#: src/plugins/categories/categoriesmanual.cpp:129
 #, kde-format
 msgid "Transfer folder: %1"
 msgstr "Dossier de transfert : %1"
@@ -2065,7 +2107,7 @@ msgstr ""
 msgid "Download"
 msgstr "Téléchargements"
 
-#. i18n: file: src/kwootyui.rc:33
+#. i18n: file: src/kwootyui.rc:34
 #. i18n: ectx: ToolBar (mainToolBar)
 #: rc.cpp:432
 msgid "Main Toolbar"
