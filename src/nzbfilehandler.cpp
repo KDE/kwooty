@@ -21,7 +21,6 @@
 #include "nzbfilehandler.h"
 
 #include <KDebug>
-#include <KStringHandler>
 
 #include <QXmlStreamReader>
 #include <QXmlStreamAttributes>
@@ -43,9 +42,9 @@ NzbFileHandler::NzbFileHandler(Core* parent) : QObject (parent) {
 
 
 
-bool natualSortingOrderLessThan(const GlobalFileData& globalFileData1, const GlobalFileData& globalFileData2) {
+bool sortingOrderLessThan(const GlobalFileData& globalFileData1, const GlobalFileData& globalFileData2) {
 
-  return KStringHandler::naturalCompare(globalFileData1.getNzbFileData().getFileName(), globalFileData2.getNzbFileData().getFileName()) < 0;
+  return (globalFileData1.getNzbFileData().getFileName() < globalFileData2.getNzbFileData().getFileName());
 
 }
 
@@ -218,16 +217,8 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
     }
     else {
 
-        //qSort(globalFileDataList.begin(), globalFileDataList.end(), natualSortingOrderLessThan);
-        qSort(globalFileDataList.begin(), globalFileDataList.end(), natualSortingOrderLessThan);
-        qSort(globalPar2DataList.begin(), globalPar2DataList.end(), natualSortingOrderLessThan);
-
-
-        foreach (GlobalFileData globalFileData,globalFileDataList)  {
-            kDebug() << globalFileData.getNzbFileData().getFileName();
-
-        }
-
+        qSort(globalFileDataList.begin(), globalFileDataList.end(), sortingOrderLessThan);
+        qSort(globalPar2DataList.begin(), globalPar2DataList.end(), sortingOrderLessThan);
 
         globalFileDataOrderedList.append(globalFileDataList);
         globalFileDataOrderedList.append(globalPar2DataList);
