@@ -48,53 +48,60 @@ int UniqueApp::newInstance() {
     // create a new instance :
     if (!this->kwootyInstance) {
 
-        this->kwootyInstance = true;
-
         this->setWindowIcon(KIcon("kwooty"));
-
+        this->kwootyInstance = true;
         this->mainWindow = new MainWindow();
 
     }
 
     // instance already exists :
-    if (this->kwootyInstance) {
+    if ( this->kwootyInstance ){
 
-        KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+        if (this->mainWindow ) {
 
-        // open nzb files set as argument :
-        for (int i = 0; i < args->count(); i++) {
+            KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
-            this->mainWindow->openFileWithFileMode(args->url(i), UtilityNamespace::OpenWith);
+            // open nzb files set as argument :
+            for (int i = 0; i < args->count(); i++) {
 
-        }
-
-        // if kwooty has been called without arguments :
-        if (args->count() == 0) {
-
-            // display main window if it only visible is systray :
-            if ( !this->isSessionRestored() &&
-                 !this->mainWindow->isVisible() ) {
-
-                this->mainWindow->show();
+                this->mainWindow->openFileWithFileMode(args->url(i), UtilityNamespace::OpenWith);
 
             }
-        }
 
-        // if nzb files are present in arguments :
+            // if kwooty has been called without arguments :
+            if (args->count() == 0) {
+
+                // display main window if it only visible is systray :
+                if ( !this->isSessionRestored() &&
+                     !this->mainWindow->isVisible() ) {
+
+                    this->mainWindow->show();
+
+                }
+            }
+
+            // if nzb files are present in arguments :
+            else {
+
+                // shown only main window if it is not only present in systray :
+                if (this->mainWindow->isVisible()) {
+                    this->mainWindow->show();
+                }
+
+                args->clear();
+
+                KStartupInfo::setNewStartupId(this->mainWindow, this->startupId());
+            }
+
+        }
+        // main window may not exist yet if for instance kwallet promps the user to open the wallet :
         else {
-
-            // shown only main window if it is not only present in systray :
-            if (this->mainWindow->isVisible()) {
-                this->mainWindow->show();
-            }
-
-            args->clear();
-
-            KStartupInfo::setNewStartupId(this->mainWindow, this->startupId());
+            kDebug() << "mainWindow not ready yet !";
         }
 
     }
 
     return 0;
 }
+
 
