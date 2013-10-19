@@ -81,6 +81,8 @@ QStringList ExtractRar::createProcessArguments(const QString& archiveName, const
     }
 
 
+    kDebug() << args;
+
     return args;
 
 
@@ -162,8 +164,14 @@ void ExtractRar::checkIfArchivePassworded(const QString& currentLine, bool& pass
     }
 
     // search this pattern in order to know that next line indicate if archive is passworded or not :
-    if (currentLine.contains("------------------")){
+    QString unrar4PasswordPattern = "------------------";
+    QString unrar5PasswordPattern = "----------- ---------";
+
+    if ( currentLine.contains(unrar4PasswordPattern) ||
+         currentLine.contains(unrar5PasswordPattern) ) {
+
         passwordCheckIsNextLine = true;
+
     }
 
 }
