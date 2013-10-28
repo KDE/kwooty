@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-08-03 12:44+0200\n"
-"PO-Revision-Date: 2013-02-19 11:37+0100\n"
+"PO-Revision-Date: 2013-10-28 09:56+0100\n"
 "Last-Translator: Pavel Fric <pavelfric@seznam.cz>\n"
 "Language-Team: Czech <kde-i18n-de@kde.org>\n"
 "Language: cs\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.4\n"
+"X-Generator: Lokalize 1.5\n"
 
 #: src/preferences/preferencesgeneral.cpp:38
 msgid "With confirmation"
@@ -305,24 +305,22 @@ msgstr "Rozbalení dokončeno"
 
 #: src/actions/actionrenamemanager.cpp:118
 #: src/actions/actionrenamemanager.cpp:231
-#, fuzzy
 msgid "Rename can not be performed"
-msgstr "Sloučení už nelze provést"
+msgstr "Přejmenování nelze provést"
 
 #: src/actions/actionrenamemanager.cpp:205
-#, fuzzy
 msgid "Rename Folder"
-msgstr "Přejmenovat server"
+msgstr "Přejmenovat složku"
 
 #: src/actions/actionrenamemanager.cpp:206
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Rename the folder %1 to:"
-msgstr ""
+msgstr "Přejmenovat složku %1 na:"
 
 #: src/actions/actionrenamemanager.cpp:222
 msgid "Name already exists"
-msgstr ""
+msgstr "Název již existuje"
 
 #: src/actions/actionmergemanager.cpp:136
 #: src/actions/actionmergemanager.cpp:324
@@ -567,10 +565,10 @@ msgid "Remove selected files from queue ?"
 msgstr "Odstranit vybrané soubory z řady čekajících?"
 
 #: src/widgets/centralwidget.cpp:156
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "@label:textbox"
 msgid "Merge content of %1 into %2 ?"
-msgstr "Sloučit obsah %1 do %2 ?"
+msgstr "Sloučit obsah %1 do %2?"
 
 #: src/widgets/centralwidget.cpp:168
 msgid "Warning"
@@ -766,14 +764,12 @@ msgid "Remove all selected rows"
 msgstr "Odstranit všechny vybrané záznamy"
 
 #: src/mainwindow.cpp:231
-#, fuzzy
 msgid "Remove data"
-msgstr "Odstranit"
+msgstr "Odstranit data"
 
 #: src/mainwindow.cpp:233
-#, fuzzy
 msgid "Remove all selected rows and respective downloaded contents"
-msgstr "Posunout všechny vybrané záznamy v seznamu zcela dolů"
+msgstr "Posunout všechny vybrané záznamy a příslušný stažený obsah"
 
 #: src/mainwindow.cpp:243
 msgid "Up"
@@ -866,12 +862,11 @@ msgstr "Sloučit obsah nzb do jiného nzb"
 
 #: src/mainwindow.cpp:372
 msgid "Rename..."
-msgstr ""
+msgstr "Přejmenovat..."
 
 #: src/mainwindow.cpp:374
-#, fuzzy
 msgid "Rename nzb and its corresponding download folder"
-msgstr "Otevřít nynější složku pro stahování"
+msgstr "Přejmenovat nzb a její odpovídající složku pro stahování"
 
 #: src/mainwindow.cpp:434
 msgid "General"
@@ -2230,3 +2225,4 @@ msgstr "Vybrat vlastní dočasnou složku v nabídce"
 
 #~ msgid "Defines the timeout period of inactivity"
 #~ msgstr "Definiert die Inaktivität Periode"
+
