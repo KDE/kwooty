@@ -1,14 +1,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-# Yurienu Amenysta <yurienu@myopera.com>, 2012, 2013.
+#
+# Julien Papasian <julien.papasian@gmail.com>, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-08-03 12:44+0200\n"
-"PO-Revision-Date: 2013-02-18 22:25+0100\n"
-"Last-Translator: Yurienu <yurienu@myopera.com>\n"
+"PO-Revision-Date: 2013-11-04 00:41+0100\n"
+"Last-Translator: Julien Papasian <julien.papasian@gmail.com>\n"
 "Language-Team: French <kde-i18n-doc@kde.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -304,24 +304,22 @@ msgstr "Extraction terminée"
 
 #: src/actions/actionrenamemanager.cpp:118
 #: src/actions/actionrenamemanager.cpp:231
-#, fuzzy
 msgid "Rename can not be performed"
-msgstr "La fusion ne peut plus être effectuée désormais"
+msgstr "Le renommage ne peut être effectué"
 
 #: src/actions/actionrenamemanager.cpp:205
-#, fuzzy
 msgid "Rename Folder"
-msgstr "Renommer le serveur"
+msgstr "Renommer le dossier"
 
 #: src/actions/actionrenamemanager.cpp:206
 #, kde-format
 msgctxt "@label:textbox"
 msgid "Rename the folder %1 to:"
-msgstr ""
+msgstr "Renommer le dossier %1 en :"
 
 #: src/actions/actionrenamemanager.cpp:222
 msgid "Name already exists"
-msgstr ""
+msgstr "Le nom existe déjà"
 
 #: src/actions/actionmergemanager.cpp:136
 #: src/actions/actionmergemanager.cpp:324
@@ -566,7 +564,7 @@ msgid "Remove selected files from queue ?"
 msgstr "Supprimer les fichiers sélectionnés de la file d’attente ?"
 
 #: src/widgets/centralwidget.cpp:156
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "@label:textbox"
 msgid "Merge content of %1 into %2 ?"
 msgstr "Fusionner le contenu de %1 avec %2 ?"
@@ -766,14 +764,12 @@ msgid "Remove all selected rows"
 msgstr "Supprimer toutes les lignes sélectionnées"
 
 #: src/mainwindow.cpp:231
-#, fuzzy
 msgid "Remove data"
-msgstr "Supprimer"
+msgstr "Supprimer les données"
 
 #: src/mainwindow.cpp:233
-#, fuzzy
 msgid "Remove all selected rows and respective downloaded contents"
-msgstr "Descendre toutes les lignes sélectionnées à la fin"
+msgstr "Supprimer toutes les lignes sélectionnées et leurs contenus respectifs"
 
 #: src/mainwindow.cpp:243
 msgid "Up"
@@ -866,12 +862,11 @@ msgstr "Fusionner le contenu du nzb avec un autre nzb"
 
 #: src/mainwindow.cpp:372
 msgid "Rename..."
-msgstr ""
+msgstr "Renommer…"
 
 #: src/mainwindow.cpp:374
-#, fuzzy
 msgid "Rename nzb and its corresponding download folder"
-msgstr "Ouvrir le dossier de téléchargement actuel"
+msgstr "Renommer le nzb et son dossier de téléchargement correspondant"
 
 #: src/mainwindow.cpp:434
 msgid "General"
