@@ -5,7 +5,7 @@ Version 1.1.0:
 
 - Nzb row and corresponding data folder renaming with "F2" shortcut
 
-- Nzb row and corresponding data folder deletion by hitting "SHIT+DEL" keyboard shortcut
+- Nzb row and corresponding data folder deletion by hitting "SHIFT+DEL" keyboard shortcut
 
 - "Show/hide" menu bar action added and available from "CTRL+M" shortcut
 
