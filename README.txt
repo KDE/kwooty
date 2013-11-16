@@ -1,5 +1,21 @@
 Kwooty, a friendly newsgroup binary downloader for KDE 4.
 
+Version 1.1.0:
+--------------
+
+- Nzb row and corresponding data folder renaming with "F2" shortcut
+
+- Nzb row and corresponding data folder deletion by hitting "SHIT+DEL" keyboard shortcut
+
+- "Show/hide" menu bar action added and available from "CTRL+M" shortcut
+
+- If there is no pending download, do not connect to servers when kwooty is launched from desktop session restoration 
+
+- Kwallet querying for server password is now performed after kwooty as been fully started
+
+- Unrar 5 support
+
+
 Version 1.0.1:
 --------------
 
