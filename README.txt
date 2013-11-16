@@ -11,7 +11,7 @@ Version 1.1.0:
 
 - If there is no pending download, do not connect to servers when kwooty is launched from desktop session restoration 
 
-- Kwallet querying for server password is now performed after kwooty as been fully started
+- Kwallet querying for server password is now performed after kwooty has been fully started
 
 - Unrar 5 support
 
@@ -19,7 +19,7 @@ Version 1.1.0:
 Version 1.0.1:
 --------------
 
-- Lower mandatatory KDE version from 4.7 to 4.6 to build kwooty
+- Lower mandatory KDE version from 4.7 to 4.6 to build kwooty
 - Fix bug: when successfully downloaded folder was transferred into favorite folder by Category plugin, "Downloads" button would jump into favorite folder instead on jumping into the proper child folder
 
 
