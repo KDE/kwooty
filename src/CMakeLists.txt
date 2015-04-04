@@ -143,7 +143,8 @@ target_link_libraries(kwooty ${KDE4_KDEUI_LIBS} kwootycore )
 
 
 install(TARGETS kwooty DESTINATION ${BIN_INSTALL_DIR})
-install(FILES kwootyui.rc kwooty.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kwooty)
+install(FILES kwootyui.rc DESTINATION ${DATA_INSTALL_DIR}/kwooty)
+install(FILES kwooty.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kwooty)
 install(FILES preferences/kwootysettings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 install(FILES kwooty.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES kwootyplugin.desktop DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
