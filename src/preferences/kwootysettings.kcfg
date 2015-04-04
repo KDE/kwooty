@@ -66,7 +66,7 @@
 
     <group name="programs">
         <entry name="groupBoxAutoRepair" type="Bool">
-            <label>Automatically verif and repair downloaded files</label>
+            <label>Automatically verify and repair downloaded files</label>
             <default>true</default>
         </entry>
           <entry name="groupBoxAutoDecompress" type="Bool">

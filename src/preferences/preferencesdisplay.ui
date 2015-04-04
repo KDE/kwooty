@@ -75,7 +75,7 @@
          <string>Expand and collapse treeview with animation</string>
         </property>
         <property name="text">
-         <string>Animate row expandsion/collasping</string>
+         <string>Animate row expansion/collapsing</string>
         </property>
        </widget>
       </item>
