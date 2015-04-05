@@ -13,6 +13,14 @@ Type=Service
 Icon=folder-favorites
 
 Name=Categories
+Name[de]=Kategorien
+Name[nl]=Categorieën
+Name[pl]=Kategorie
+Name[uk]=Категорії
+Name[x-test]=xxCategoriesxx
 
 Comment=Transfer downloaded contents to favorite folders
+Comment[pl]=Przenieś pobrane pliki do ulubionych katalogów
+Comment[uk]=Перенести отримані дані до улюблених каталогів
+Comment[x-test]=xxTransfer downloaded contents to favorite foldersxx
 

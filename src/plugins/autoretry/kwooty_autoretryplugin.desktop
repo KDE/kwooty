@@ -13,4 +13,13 @@ Type=Service
 Icon=task-recurring
 
 Name=Automatic Retry
+Name[de]=Automatisch versuchen
+Name[nl]=Automatisch opnieuw proberen
+Name[pl]=Samoczynne ponowienie
+Name[uk]=Автоматичні повторні спроби
+Name[x-test]=xxAutomatic Retryxx
 Comment=Re-download corrupted files automatically
+Comment[de]=Defekte Dateien automatisch wieder herunterladen
+Comment[pl]=Samoczynnie wznów pobieranie uszkodzonego pliku
+Comment[uk]=Автоматично повторно отримувати файли, якщо виявлено пошкодження
+Comment[x-test]=xxRe-download corrupted files automaticallyxx

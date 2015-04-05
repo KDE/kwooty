@@ -1,12 +1,26 @@
 [Global]
 IconName=kwooty
 Comment=Kwooty
+Comment[de]=Kwooty
+Comment[nl]=Kwooty
+Comment[pl]=Kwooty
+Comment[uk]=Kwooty
+Comment[x-test]=xxKwootyxx
 
 [Event/jobFinished]
 Name=Job Finished
+Name[nl]=Job voltooid
+Name[pl]=Ukończono zadanie
+Name[uk]=Завдання виконано
+Name[x-test]=xxJob Finishedxx
 Action=Popup
 
 [Event/insufficientDiskSpace]
 Name=Insufficient Disk Space
+Name[de]=Unzureichender Plattenplatz
+Name[nl]=Onvoldoende schijfruimte
+Name[pl]=Brak wystarczającej przestrzeni na dysku
+Name[uk]=Недостатньо місця на диску
+Name[x-test]=xxInsufficient Disk Spacexx
 Action=Popup
 Persistent=True

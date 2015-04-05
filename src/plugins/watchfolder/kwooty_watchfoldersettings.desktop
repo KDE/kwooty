@@ -10,5 +10,8 @@ X-KDE-PluginInfo-Version=0.1
 X-KDE-PluginInfo-License=GPL
 
 Name=Watch folder Configuration
+Name[pl]=Ustawienia katalogu obserwowanego
+Name[uk]=Налаштування спостереження за текою
+Name[x-test]=xxWatch folder Configurationxx
 name[cs]=Nastavení sledování složek
 

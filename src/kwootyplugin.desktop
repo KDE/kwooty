@@ -3,6 +3,11 @@ Type=ServiceType
 X-KDE-ServiceType=Kwooty/Plugin
 X-KDE-Derived=KPluginInfo
 Name=Kwooty Plugin
+Name[de]=Kwooty-Modul
+Name[nl]=Kwooty-plug-in
+Name[pl]=Wtyczka Kwooty
+Name[uk]=Додаток Kwooty
+Name[x-test]=xxKwooty Pluginxx
 # Defines the plugin version that will be loaded :
 [PropertyDef::X-Kwooty-Plugin-Version]
 Type=int
