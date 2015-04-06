@@ -2,17 +2,17 @@ include_directories(${KWOOTY_INCLUDES})
 
 # plugin target :
 set(kwooty_schedulerplugin_PART_SRCS schedulerplugin.cpp scheduler.cpp schedulerfilehandler.cpp)
-kde4_add_kcfg_files(kwooty_schedulerplugin_PART_SRCS kwooty_schedulersettings.kcfgc)
-kde4_add_plugin(kwooty_schedulerplugin ${kwooty_schedulerplugin_PART_SRCS})
-target_link_libraries(kwooty_schedulerplugin ${KDE4_KIO_LIBS} kwootycore ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS})
+kconfig_add_kcfg_files(kwooty_schedulerplugin_PART_SRCS kwooty_schedulersettings.kcfgc)
+add_library(kwooty_schedulerplugin MODULE ${kwooty_schedulerplugin_PART_SRCS})
+target_link_libraries(kwooty_schedulerplugin KF5::KIOCore kwootycore  )
 
 
 # plugin config target :
 set(kwooty_schedulersettings_PART_SRCS preferencesscheduler.cpp schedulertableitemdelegate.cpp schedulerfilehandler.cpp)
-kde4_add_ui_files(kwooty_schedulersettings_PART_SRCS preferencesscheduler.ui)
-kde4_add_kcfg_files(kwooty_schedulersettings_PART_SRCS kwooty_schedulersettings.kcfgc)
-kde4_add_plugin(kwooty_schedulersettings ${kwooty_schedulersettings_PART_SRCS})
-target_link_libraries(kwooty_schedulersettings ${KDE4_KIO_LIBS} kwootycore ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS})
+ki18n_wrap_ui(kwooty_schedulersettings_PART_SRCS preferencesscheduler.ui)
+kconfig_add_kcfg_files(kwooty_schedulersettings_PART_SRCS kwooty_schedulersettings.kcfgc)
+add_library(kwooty_schedulersettings MODULE ${kwooty_schedulersettings_PART_SRCS})
+target_link_libraries(kwooty_schedulersettings KF5::KIOCore kwootycore  )
 
 
 install(TARGETS kwooty_schedulersettings kwooty_schedulerplugin DESTINATION ${PLUGIN_INSTALL_DIR})

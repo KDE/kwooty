@@ -2,17 +2,17 @@ include_directories(${KWOOTY_INCLUDES})
 
 # plugin target :
 set(kwooty_autoretryplugin_PART_SRCS autoretryplugin.cpp autoretry.cpp)
-kde4_add_kcfg_files(kwooty_autoretryplugin_PART_SRCS kwooty_autoretrysettings.kcfgc)
-kde4_add_plugin(kwooty_autoretryplugin ${kwooty_autoretryplugin_PART_SRCS})
-target_link_libraries(kwooty_autoretryplugin ${KDE4_KIO_LIBS} kwootycore ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS})
+kconfig_add_kcfg_files(kwooty_autoretryplugin_PART_SRCS kwooty_autoretrysettings.kcfgc)
+add_library(kwooty_autoretryplugin MODULE ${kwooty_autoretryplugin_PART_SRCS})
+target_link_libraries(kwooty_autoretryplugin KF5::KIOCore kwootycore  )
 
 
 # plugin config target :
 set(kwooty_autoretrysettings_PART_SRCS preferencesautoretry.cpp)
-kde4_add_ui_files(kwooty_autoretrysettings_PART_SRCS preferencesautoretry.ui)
-kde4_add_kcfg_files(kwooty_autoretrysettings_PART_SRCS kwooty_autoretrysettings.kcfgc)
-kde4_add_plugin(kwooty_autoretrysettings ${kwooty_autoretrysettings_PART_SRCS})
-target_link_libraries(kwooty_autoretrysettings ${KDE4_KIO_LIBS} kwootycore ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS})
+ki18n_wrap_ui(kwooty_autoretrysettings_PART_SRCS preferencesautoretry.ui)
+kconfig_add_kcfg_files(kwooty_autoretrysettings_PART_SRCS kwooty_autoretrysettings.kcfgc)
+add_library(kwooty_autoretrysettings MODULE ${kwooty_autoretrysettings_PART_SRCS})
+target_link_libraries(kwooty_autoretrysettings KF5::KIOCore kwootycore  )
 
 
 install(TARGETS kwooty_autoretrysettings kwooty_autoretryplugin DESTINATION ${PLUGIN_INSTALL_DIR})

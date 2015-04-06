@@ -1,4 +1,4 @@
-include_directories( ${KDE4_INCLUDES} ${KDE4WORKSPACE_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
+include_directories(  ${KDE4WORKSPACE_INCLUDE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR} )
 
 set(KWOOTY_INCLUDES
   ${CMAKE_CURRENT_SOURCE_DIR}/plugins/
@@ -106,7 +106,7 @@ endif(KSTATUSNOTIFIERITEM_FOUND)
 
 
 
-kde4_add_ui_files(  Kwooty_lib_SRCS
+ki18n_wrap_ui(  Kwooty_lib_SRCS
 		    preferences/preferencesserver.ui
 		    preferences/preferencesgeneral.ui
 		    preferences/preferencesprograms.ui
@@ -114,16 +114,16 @@ kde4_add_ui_files(  Kwooty_lib_SRCS
 		    preferences/preferencesshutdown.ui
 		    preferences/serversettings.ui
 		 )
-kde4_add_kcfg_files(Kwooty_lib_SRCS preferences/kwootysettings.kcfgc)
+kconfig_add_kcfg_files(Kwooty_lib_SRCS preferences/kwootysettings.kcfgc)
 
 
-kde4_add_library(kwootycore SHARED ${Kwooty_lib_SRCS})
+add_library(kwootycore SHARED ${Kwooty_lib_SRCS})
 
 target_link_libraries(kwootycore
-		      ${KDE4_KDECORE_LIBS}
-		      ${KDE4_KIO_LIBS}
-		      ${KDE4_KUTILS_LIBS}
-		      ${KDE4_SOLID_LIBS}
+		      KF5::KDELibs4Support
+		      KF5::KIOCore
+		      
+		      
 		      ${KDE4WORKSPACE_KWORKSPACE_LIBS}
   )
 
@@ -138,13 +138,13 @@ endif(NOT NEW_SOLID_POWERMANAGEMENT_FOUND)
 set_target_properties(kwootycore PROPERTIES VERSION 1.1.0 SOVERSION 0)
 install(TARGETS kwootycore ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-kde4_add_executable(kwooty ${Kwooty_SRCS})
-target_link_libraries(kwooty ${KDE4_KDEUI_LIBS} kwootycore )
+add_executable(kwooty ${Kwooty_SRCS})
+target_link_libraries(kwooty  kwootycore )
 
 
 install(TARGETS kwooty DESTINATION ${BIN_INSTALL_DIR})
 install(FILES kwootyui.rc DESTINATION ${DATA_INSTALL_DIR}/kwooty)
-install(FILES kwooty.notifyrc DESTINATION ${DATA_INSTALL_DIR}/kwooty)
+install(FILES kwooty.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR})
 install(FILES preferences/kwootysettings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 install(FILES kwooty.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES kwootyplugin.desktop DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
