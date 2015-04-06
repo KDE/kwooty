@@ -20,6 +20,19 @@ include(KDECompilerSettings)
 include(ECMAddAppIcon)
 
 
+set(KF5_VERSION "5.7.0")
+find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5NotifyConfig ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Service ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KCMUtils ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5DocTools REQUIRED)
+
+
+add_subdirectory(src)
+
 #set(KDE_MIN_VERSION "4.6.0")
 #find_package(KDE4 REQUIRED)
 #find_package(KDE4Workspace REQUIRED)

@@ -122,8 +122,8 @@ add_library(kwootycore SHARED ${Kwooty_lib_SRCS})
 target_link_libraries(kwootycore
 		      KF5::KDELibs4Support
 		      KF5::KIOCore
-		      
-		      
+                      KF5::Wallet
+                      KF5::KCMUtils
 		      ${KDE4WORKSPACE_KWORKSPACE_LIBS}
   )
 
