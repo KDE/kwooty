@@ -26,7 +26,7 @@
 #include <QObject>
 #include <kxmlguiclient.h>
 #include "kwooty_export.h"
-
+class KComponentData;
 class MainWindow;
 
 

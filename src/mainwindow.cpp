@@ -36,7 +36,7 @@
 
 #include <QTextStream>
 #include <QtGui>
-
+#include <QDesktopWidget>
 #include "kwootysettings.h"
 #include "core.h"
 #include "fileoperations.h"

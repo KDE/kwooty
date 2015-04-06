@@ -380,7 +380,7 @@ void NntpSocket::peerVerifyErrorSlot() {
 
 void NntpSocket::socketEncryptedSlot() {
 
-    QString issuerOrgranisation = "Unknown";
+    QStringList issuerOrgranisation = QStringList() <<  "Unknown";
 
     // retrieve peer certificate :
     QSslCertificate sslCertificate = this->peerCertificate();
