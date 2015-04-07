@@ -20,8 +20,6 @@
 
 #include "itemstatusdata.h"
 
-#include <KDebug>
-
 
 ItemStatusData::ItemStatusData() {
 

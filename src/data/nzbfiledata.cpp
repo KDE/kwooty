@@ -20,7 +20,6 @@
 
 
 #include "nzbfiledata.h"
-#include <KDebug>
 
 NzbFileData::NzbFileData()
 {
