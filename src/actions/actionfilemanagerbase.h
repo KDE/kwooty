@@ -28,7 +28,6 @@
 #include <kjob.h>
 
 #include "kwooty_debug.h"
-#include <KAction>
 
 #include "core.h"
 #include "mainwindow.h"

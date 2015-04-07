@@ -22,7 +22,6 @@
 #include "actionmergemanager.h"
 
 #include <KActionCollection>
-#include <KAction>
 #include <KMessageBox>
 #include <KIO/CopyJob>
 #include <KLocalizedString>
