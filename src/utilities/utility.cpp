@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "utility.h"
-
+#include <KGlobal>
 #include <KDebug>
 #include <KStandardDirs>
 #include <KLocale>

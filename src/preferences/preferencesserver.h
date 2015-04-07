@@ -24,7 +24,7 @@
 #include <QWidget>
 
 #include <KConfigDialog>
-
+#include <KDialog>
 #include "ui_serversettings.h"
 #include "ui_preferencesserver.h"
 

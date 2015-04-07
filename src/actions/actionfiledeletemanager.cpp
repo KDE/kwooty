@@ -108,7 +108,7 @@ void ActionFileDeleteManager::removeRowDeleteFile() {
     KIO::Job* job = KIO::del(selectedUrlsCheck);
 
     if (job->ui()) {
-        job->ui()->setWindow(this->treeView);
+        //PORT KF5 job->ui()->setWindow(this->treeView);
     }
 
     connect(job, SIGNAL(result(KJob*)), this, SLOT(handleResultSlot(KJob*)));
