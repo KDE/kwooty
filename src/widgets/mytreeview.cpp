@@ -21,7 +21,7 @@
 #include "mytreeview.h"
 
 #include <KDebug>
-#include <KMenu>
+#include <QMenu>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <KIconLoader>
@@ -120,7 +120,7 @@ void MyTreeView::setupConnections() {
 
 void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
 
-    KMenu contextMenu(this);
+    QMenu contextMenu(this);
     KActionCollection* actionCollection = this->mainWindow->actionCollection();
 
 

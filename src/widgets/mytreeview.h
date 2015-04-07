@@ -22,7 +22,7 @@
 #define MYTREEVIEW_H
 
 #include <KUrl>
-#include <KMenu>
+#include <QMenu>
 
 #include <QTreeView>
 #include <QModelIndex>
@@ -40,7 +40,7 @@ using namespace UtilityNamespace;
 class Core;
 class MainWindow;
 class StandardItemModel;
-class KMenu;
+class QMenu;
 
 class KWOOTY_EXPORT MyTreeView : public QTreeView {
 
@@ -78,7 +78,7 @@ protected:
     void dropEvent(QDropEvent*);
 
 signals:
-    void addExternalActionSignal(KMenu*, QStandardItem*);
+    void addExternalActionSignal(QMenu*, QStandardItem*);
 
 
 public slots:

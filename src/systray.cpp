@@ -27,7 +27,7 @@
 #include <KIconLoader>
 #include <KActionCollection>
 #include <KIconEffect>
-#include <KMenu>
+#include <QMenu>
 
 #include <QToolTip>
 #include <QPainter>
