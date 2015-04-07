@@ -26,7 +26,6 @@
 #include "data/nzbfiledata.h"
 #include "itemabstractupdater.h"
 
-class StandardItemModel;
 class ItemStatusData;
 class SegmentData;
 

@@ -27,7 +27,6 @@
 #include "scheduler.h"
 
 
-class Core;
 
 class SchedulerPlugin : public Plugin
 {

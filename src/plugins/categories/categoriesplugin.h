@@ -27,7 +27,6 @@
 #include "categories.h"
 
 
-class Core;
 
 class CategoriesPlugin : public Plugin
 {

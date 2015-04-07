@@ -30,7 +30,6 @@
 using namespace UtilityNamespace;
 
 class Core;
-class MyStatusBar;
 class ItemPostDownloadUpdater;
 class ItemDownloadUpdater;
 class ItemStatusData;

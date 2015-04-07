@@ -27,7 +27,6 @@
 
 #include "utilities/utilityserverstatus.h"
 
-class MainWindow;
 
 
 class SideBarWidget : public QWidget {

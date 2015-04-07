@@ -32,7 +32,6 @@
 using namespace UtilityNamespace;
 
 class Core;
-class CentralWidget;
 
 class KWOOTY_EXPORT FileOperations : public QObject {
 

@@ -32,7 +32,6 @@ class Core;
 class MainWindow;
 class SideBarWidget;
 class ServerManager;
-class ServerStatusWidget;
 
 
 class SideBar : public QObject {

@@ -25,8 +25,6 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class StandardItemModel;
-class NzbFileData;
 class PostDownloadInfoData;
 
 

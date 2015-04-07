@@ -27,7 +27,6 @@
 #include "autoretry.h"
 
 
-class Core;
 
 class AutoRetryPlugin : public Plugin
 {

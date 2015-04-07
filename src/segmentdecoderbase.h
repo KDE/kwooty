@@ -32,7 +32,6 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class Core;
 class SegmentsDecoderThread;
 
 

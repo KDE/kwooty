@@ -27,7 +27,6 @@
 #include <QXmlStreamReader>
 
 class CategoriesModel;
-class MimeData;
 
 
 class CategoriesFileHandler : public QObject {

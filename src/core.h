@@ -31,7 +31,6 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class ClientManagerConn;
 class MyTreeView;
 class CentralWidget;
 class ItemParentUpdater;
@@ -51,7 +50,6 @@ class NotificationManager;
 class ServerManager;
 class SideBar;
 class ActionsManager;
-class NzbFileData;
 class ItemStatusData;
 
 

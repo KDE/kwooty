@@ -27,7 +27,6 @@
 #include "watchfolder.h"
 
 
-class Core;
 
 class WatchFolderPlugin : public Plugin
 {
