@@ -21,7 +21,7 @@
 #include "utilityserverstatus.h"
 
 #include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include "utilityiconpainting.h"
 #include "utility.h"

@@ -21,7 +21,7 @@
 
 #include "notificationmanager.h"
 
-#include <KLocale>
+#include <KLocalizedString>
 #include <KDebug>
 
 #include "core.h"

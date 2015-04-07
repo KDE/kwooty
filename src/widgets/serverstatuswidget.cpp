@@ -23,7 +23,7 @@
 
 #include <KDebug>
 #include <KMessageBox>
-#include <KLocale>
+#include <KLocalizedString>
 
 #include <QHBoxLayout>
 #include <QPushButton>

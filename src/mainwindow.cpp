@@ -22,7 +22,7 @@
 
 #include <KApplication>
 #include <QAction>
-#include <KLocale>
+#include <KLocalizedString>
 #include <KActionCollection>
 #include <KStandardAction>
 #include <KConfigDialog>

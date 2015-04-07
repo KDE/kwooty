@@ -22,7 +22,7 @@
 #include <KGlobal>
 #include <KDebug>
 #include <KStandardDirs>
-#include <KLocale>
+#include <KLocalizedString>
 #include <kio/global.h>
 #include "kdiskfreespaceinfo.h"
 
