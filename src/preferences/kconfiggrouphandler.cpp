@@ -79,7 +79,7 @@ void KConfigGroupHandler::settingsChangedSlot() {
             // set old value right now :
             this->useKwallet = !Settings::useKwallet();
 
-            KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("Server_%1").arg(serverId));
+            KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
 
             // read password from plain text or kwallet :
             QString password = this->readPassword(serverId, configGroup);
@@ -256,7 +256,7 @@ void KConfigGroupHandler::writePassword(const int& serverId, KConfigGroup& confi
 
 ServerData KConfigGroupHandler::readServerSettings(const int& serverId, const PasswordData& passwordData) {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("Server_%1").arg(serverId));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
 
     // if KConfigGroup is invalid, it may be the first launch from a previous kwooty version
     // try get previous settings :
@@ -264,7 +264,7 @@ ServerData KConfigGroupHandler::readServerSettings(const int& serverId, const Pa
 
     if ((serverId == MasterServer) && !configGroup.exists()) {
 
-        configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("server"));
+        configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("server"));
         firstLaunchFromPreviousVersion = true;
     }
 
@@ -318,7 +318,7 @@ ServerData KConfigGroupHandler::fillServerData(const int& serverId, KConfigGroup
 
 void KConfigGroupHandler::writeServerSettings(const int& serverId, ServerData serverData) {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("Server_%1").arg(serverId));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
 
     configGroup.writeEntry("serverId", serverData.getServerId());
     configGroup.writeEntry("serverName", serverData.getServerName());
@@ -342,7 +342,7 @@ void KConfigGroupHandler::writeServerSettings(const int& serverId, ServerData se
 
 void KConfigGroupHandler::writeServerNumberSettings(const int& serverNumber) {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("NumberOfServers"));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("NumberOfServers"));
     configGroup.writeEntry("serverNumber", serverNumber);
     configGroup.sync();
 }
@@ -350,7 +350,7 @@ void KConfigGroupHandler::writeServerNumberSettings(const int& serverNumber) {
 
 int KConfigGroupHandler::readServerNumberSettings() {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("NumberOfServers"));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("NumberOfServers"));
     int serverNumber = configGroup.readEntry("serverNumber", 1);
 
     return qMin(UtilityNamespace::MAX_SERVERS, serverNumber);
@@ -360,7 +360,7 @@ int KConfigGroupHandler::readServerNumberSettings() {
 
 void KConfigGroupHandler::removeServerSettings(const int& serverId) {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("Server_%1").arg(serverId));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
 
     if (configGroup.exists()) {
         configGroup.deleteGroup();
@@ -384,7 +384,7 @@ void KConfigGroupHandler::removePasswordEntry(KConfigGroup& configGroup) {
 
 int KConfigGroupHandler::serverConnectionNumber(const int& serverId) {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("Server_%1").arg(serverId));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
     return configGroup.readEntry("connectionNumber", 4);
 
 }
@@ -392,7 +392,7 @@ int KConfigGroupHandler::serverConnectionNumber(const int& serverId) {
 
 QString KConfigGroupHandler::tabName(const int& serverId, const QString& tabText) {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("Server_%1").arg(serverId));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
     return configGroup.readEntry("serverName", tabText);
 }
 
@@ -405,7 +405,7 @@ QString KConfigGroupHandler::tabName(const int& serverId, const QString& tabText
 
 void KConfigGroupHandler::writeSideBarDisplay(const bool& display) {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("SideBar"));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
     configGroup.writeEntry("sideBarDisplay", display);
     configGroup.sync();
 }
@@ -413,7 +413,7 @@ void KConfigGroupHandler::writeSideBarDisplay(const bool& display) {
 
 bool KConfigGroupHandler::readSideBarDisplay() {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("SideBar"));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
     return configGroup.readEntry("sideBarDisplay", false);
 
 }
@@ -421,7 +421,7 @@ bool KConfigGroupHandler::readSideBarDisplay() {
 
 void KConfigGroupHandler::writeSideBarTabOnlyDisplay(const bool& tabOnlyDisplay) {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("SideBar"));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
     configGroup.writeEntry("sideBarTabOnlyDisplay", tabOnlyDisplay);
     configGroup.sync();
 }
@@ -429,7 +429,7 @@ void KConfigGroupHandler::writeSideBarTabOnlyDisplay(const bool& tabOnlyDisplay)
 
 bool KConfigGroupHandler::readSideBarTabOnlyDisplay() {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("SideBar"));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
     return configGroup.readEntry("sideBarTabOnlyDisplay", false);
 
 }
@@ -437,7 +437,7 @@ bool KConfigGroupHandler::readSideBarTabOnlyDisplay() {
 
 void KConfigGroupHandler::writeSideBarServerIndex(const int& index) {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("SideBar"));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
     configGroup.writeEntry("sideBarServerIndex", index);
     configGroup.sync();
 }
@@ -445,7 +445,7 @@ void KConfigGroupHandler::writeSideBarServerIndex(const int& index) {
 
 int KConfigGroupHandler::readSideBarServerIndex() {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("SideBar"));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
 
     // be sure that returned index is not negative :
     return qMax (configGroup.readEntry("sideBarServerIndex", 0), 0);
@@ -458,7 +458,7 @@ int KConfigGroupHandler::readSideBarServerIndex() {
 //======================================================================================//
 bool KConfigGroupHandler::readMainWindowHiddenOnExit() {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("MainWindow"));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("MainWindow"));
     return configGroup.readEntry("MainWindowHiddenOnExit", true);
 
 }
@@ -466,7 +466,7 @@ bool KConfigGroupHandler::readMainWindowHiddenOnExit() {
 
 void KConfigGroupHandler::writeMainWindowHiddenOnExit(const bool& hiddenOnExit) {
 
-    KConfigGroup configGroup = KConfigGroup(KGlobal::config(), QString::fromLatin1("MainWindow"));
+    KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("MainWindow"));
     configGroup.writeEntry("MainWindowHiddenOnExit", hiddenOnExit);
     configGroup.sync();
 }

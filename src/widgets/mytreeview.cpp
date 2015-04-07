@@ -23,8 +23,9 @@
 #include <KDebug>
 #include <KMenu>
 #include <KActionCollection>
-
-
+#include <KLocalizedString>
+#include <KIconLoader>
+#include <QMimeData>
 #include "itemdelegate.h"
 #include "mainwindow.h"
 #include "core.h"

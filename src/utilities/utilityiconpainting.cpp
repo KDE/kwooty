@@ -72,13 +72,13 @@ UtilityIconPainting::UtilityIconPainting() : QObject(qApp) {
 
     // build a map to store every used icons in memory according to their names :
     foreach (const QString& iconName, statusIconStrMap.values()) {
-        iconStrIconImageMap.insert(iconName, KIcon(iconName));
+        //PORT KF5 iconStrIconImageMap.insert(iconName, KIcon(iconName));
     }
 
     foreach (const QString& iconName, parentStatusIconStrMap.values()) {
-        iconStrIconImageMap.insert(iconName, KIcon(iconName));
+        //PORT KF5 iconStrIconImageMap.insert(iconName, KIcon(iconName));
     }
-
+#if 0 //PORT KF5
     iconStrIconImageMap.insert("mail-reply-list",       KIcon("mail-reply-list"));
     iconStrIconImageMap.insert("mail-mark-important",   KIcon("mail-mark-important"));
     iconStrIconImageMap.insert("mail-mark-important",   KIcon("mail-mark-important"));
@@ -87,7 +87,7 @@ UtilityIconPainting::UtilityIconPainting() : QObject(qApp) {
 
     // add semi-transparent effect to icon for Idle status :
     iconStrIconImageMap.insert("go-next-view-transparent", KIcon(this->instance->buildSemiTransparentIcon("go-next-view")));
-
+#endif
 }
 
 
@@ -110,14 +110,14 @@ UtilityIconPainting* UtilityIconPainting::getInstance() {
 
 bool UtilityIconPainting::retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus& status, KIcon& icon) {
 
-    icon = this->iconStrIconImageMap.value(this->parentStatusIconStrMap.value(status));
+    //PORT KF5 icon = this->iconStrIconImageMap.value(this->parentStatusIconStrMap.value(status));
     return this->parentStatusIconStrMap.contains(status);
 
 }
 
 bool UtilityIconPainting::retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus& status, KIcon& icon) {
 
-    icon = this->iconStrIconImageMap.value(this->statusIconStrMap.value(status));
+    //PORT KF5 icon = this->iconStrIconImageMap.value(this->statusIconStrMap.value(status));
     return this->statusIconStrMap.contains(status);
 
 }
@@ -125,7 +125,7 @@ bool UtilityIconPainting::retrieveChildIconFromStatus(const UtilityNamespace::It
 
 bool UtilityIconPainting::retrieveIconFromString(const QString& iconName, KIcon& icon) {
 
-    icon = this->iconStrIconImageMap.value(iconName);
+    //PORT KF5 icon = this->iconStrIconImageMap.value(iconName);
     return this->iconStrIconImageMap.contains(iconName);
 
 }

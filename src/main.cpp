@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include <KUniqueApplication>
-#include <KAboutData>
+#include <K4AboutData>
 #include <KCmdLineArgs>
 #include <KUrl>
 #include <KIcon>
@@ -31,11 +31,11 @@
 
 int main (int argc, char** argv)
 {
-    KAboutData aboutData("kwooty",
+    K4AboutData aboutData("kwooty",
                          "",
                          ki18n("Kwooty"), "1.1.0",
                          ki18n("Kwooty is a friendly nzb usenet binary downloader.\n It also supports automatic file repairing and archive extraction."),
-                         KAboutData::License_GPL,
+                         K4AboutData::License_GPL,
                          ki18n("Copyright (c) 2012 Xavier Lefage"),
                          KLocalizedString(),
                          "http://kwooty.sourceforge.net/");

@@ -23,7 +23,7 @@
 #include <KAboutData>
 #include <KIcon>
 #include <KDebug>
-
+#include <KLocalizedString>
 #include <QHBoxLayout>
 
 #include "mainwindow.h"

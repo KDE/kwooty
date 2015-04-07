@@ -27,6 +27,7 @@
 #include <KIconLoader>
 #include <KActionCollection>
 #include <KIconEffect>
+#include <KLocalizedString>
 
 #include <QMenu>
 #include <QToolTip>
@@ -192,12 +193,12 @@ bool SysTray::updateIconStatus(const UtilityNamespace::ItemStatus& itemStatus) {
 
     case UtilityNamespace::DownloadStatus:{
 
-            icon = KIcon("mail-receive");
+            //PORT KF5 icon = KIcon("mail-receive");
             break;
         }
 
     case UtilityNamespace::PauseStatus: {
-            icon = KIcon("media-playback-pause");
+            //PORT KF5 icon = KIcon("media-playback-pause");
             break;
         }
 

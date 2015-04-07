@@ -254,7 +254,7 @@ void WatchFolder::fileCompleteTimerSlot() {
 void WatchFolder::settingsChanged() {
 
     // reload settings from just saved config file :
-    WatchFolderSettings::self()->readConfig();
+    WatchFolderSettings::self()->load();
 
 
     // if directory to watch has been changed, update it :

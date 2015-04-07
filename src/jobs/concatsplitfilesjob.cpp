@@ -140,7 +140,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
         }
 
         // emit progress percentage :
-        int progress = qRound(fileProcessedNumber * PROGRESS_COMPLETE / this->nzbFileDataList.size());
+        int progress = qRound((double)(fileProcessedNumber * PROGRESS_COMPLETE / this->nzbFileDataList.size()));
         emit progressPercentSignal(progress, archiveName);
 
     }

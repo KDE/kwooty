@@ -21,7 +21,7 @@
 #include "preferencesshutdown.h"
 
 #include <KDebug>
-
+#include <KIcon>
 #include "core.h"
 #include "shutdown/shutdownmanager.h"
 #include "utilities/utility.h"

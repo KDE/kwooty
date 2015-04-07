@@ -163,7 +163,7 @@ void AutoRetry::retryDownload(QStandardItem* stateItem) {
 void AutoRetry::settingsChanged() {
 
     // reload settings from just saved config file :
-    AutoRetrySettings::self()->readConfig();
+    AutoRetrySettings::self()->load();
 
 }
 

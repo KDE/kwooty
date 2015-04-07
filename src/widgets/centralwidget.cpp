@@ -2,6 +2,7 @@
 
 #include <KMessageBox>
 #include <KPasswordDialog>
+#include <KLocalizedString>
 
 #include "mainwindow.h"
 #include "datarestorer.h"
@@ -163,6 +164,7 @@ int CentralWidget::displayMergeItemsMessageBox(const QString& selectedNzbFileNam
 
 int CentralWidget::displayAboutToShutdownMessageBox(const QString& shutdownMethodText) {
 
+#if 0 //PORT KF5
     // create kdialog :
     this->aboutToShutdownDialog = new KDialog(this, Qt::Dialog);
     this->aboutToShutdownDialog->setCaption(i18n("Warning"));
@@ -188,7 +190,9 @@ int CentralWidget::displayAboutToShutdownMessageBox(const QString& shutdownMetho
                                           QString(),
                                           &checkboxReturn,
                                           KMessageBox::Notify);
-
+#else
+   return 0;
+#endif
 }
 
 

@@ -469,7 +469,7 @@ void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus ta
 void Scheduler::settingsChanged() {
 
     // reload settings from just saved config file :
-    SchedulerSettings::self()->readConfig();
+    SchedulerSettings::self()->load();
 
     SchedulerFileHandler().reloadModel(this->schedulerModel);
 

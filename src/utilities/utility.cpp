@@ -339,7 +339,7 @@ QString Utility::getSystemTimeFormat(const QString& dateFormat) {
     QString properDateFormat = dateFormat;
 
     // set time format to am/pm format if used by system :
-    if (KGlobal::locale()->use12Clock()) {
+    if (KLocale::global()->use12Clock()) {
 
         properDateFormat.append(" ap");
     }

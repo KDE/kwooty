@@ -25,7 +25,7 @@
 #include <KDebug>
 #include <KSharedConfig>
 #include <kpluginfactory.h>
-
+#include <KLocalizedString>
 #include <QVBoxLayout>
 
 #include "plugins/pluginmanager.h"

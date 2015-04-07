@@ -25,7 +25,7 @@
 
 #include <kpluginselector.h>
 #include <KConfigDialog>
-
+#include <KDialog>
 #include <QWidget>
 
 

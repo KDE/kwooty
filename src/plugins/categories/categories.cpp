@@ -558,7 +558,7 @@ void Categories::jobProgressionSlot(KIO::Job* moveJob) {
 void Categories::settingsChanged() {
 
     // reload settings from just saved config file :
-    CategoriesSettings::self()->readConfig();
+    CategoriesSettings::self()->load();
 
     CategoriesFileHandler().reloadModel(this->categoriesModel);
 

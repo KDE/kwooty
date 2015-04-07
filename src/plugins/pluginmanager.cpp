@@ -48,7 +48,7 @@ PluginManager::~PluginManager() {
 void PluginManager::loadPlugins() {
 
 
-    KConfigGroup kConfigGroup = KGlobal::config()->group("Plugins");
+    KConfigGroup kConfigGroup = KSharedConfig::openConfig()->group("Plugins");
 
     foreach (const KPluginInfo& currentPluginInfo, this->pluginInfoList) {
 
@@ -143,7 +143,7 @@ void PluginManager::configCommittedSlot(const QByteArray& componentName) {
 
     // look for plugin whose config has been updated :
     foreach (Plugin* currentPlugin, this->loadedInfoPluginMap.values()) {
-
+#if 0 //PORT KF5
         // corresponding plugin has been found :
         if (componentName == currentPlugin->componentData().componentName()) {
 
@@ -151,7 +151,7 @@ void PluginManager::configCommittedSlot(const QByteArray& componentName) {
             currentPlugin->configUpdated();
             break;
         }
-
+#endif
     }
 
 }

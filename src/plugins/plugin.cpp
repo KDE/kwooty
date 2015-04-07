@@ -34,7 +34,7 @@ Plugin::Plugin(const KComponentData& instance, QObject* parent): QObject(parent)
 {
 
     //kDebug() << instance.componentName();
-    this->setComponentData(instance);
+    //PORT KF5 this->setComponentData(instance);
 
 }
 
