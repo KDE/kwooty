@@ -21,7 +21,7 @@
 #include "mainwindow.h"
 
 #include <KApplication>
-#include <KAction>
+#include <QAction>
 #include <KLocale>
 #include <KActionCollection>
 #include <KStandardAction>
@@ -184,18 +184,18 @@ void MainWindow::setupActions() {
     //-----------------
 
     // clearAction :
-    KAction* clearAction = new KAction(this);
+    QAction * clearAction = new QAction(this);
     clearAction->setText(i18n("Clear"));
-    clearAction->setIcon(KIcon("edit-clear-list"));
+    clearAction->setIcon(QIcon::fromTheme("edit-clear-list"));
     clearAction->setToolTip(i18n("Remove all rows"));
     clearAction->setShortcut(Qt::CTRL + Qt::Key_W);
     actionCollection()->addAction("clear", clearAction);
     connect(clearAction, SIGNAL(triggered(bool)), actionsManager, SLOT(clearSlot()));
 
     // startDownloadAction :
-    KAction* startDownloadAction = new KAction(this);
+    QAction * startDownloadAction = new QAction(this);
     startDownloadAction->setText(i18n("Start"));
-    startDownloadAction->setIcon(KIcon("media-playback-start"));
+    startDownloadAction->setIcon(QIcon::fromTheme("media-playback-start"));
     startDownloadAction->setToolTip(i18n("Start download of selected rows"));
     startDownloadAction->setShortcut(Qt::CTRL + Qt::Key_S);
     startDownloadAction->setEnabled(false);
@@ -204,9 +204,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setStartButtonEnabledSignal(bool)), startDownloadAction, SLOT(setEnabled(bool)) );
 
     // pauseDownloadAction :
-    KAction* pauseDownloadAction = new KAction(this);
+    QAction * pauseDownloadAction = new QAction(this);
     pauseDownloadAction->setText(i18n("Pause"));
-    pauseDownloadAction->setIcon(KIcon("media-playback-pause"));
+    pauseDownloadAction->setIcon(QIcon::fromTheme("media-playback-pause"));
     pauseDownloadAction->setToolTip(i18n("Pause download of selected rows"));
     pauseDownloadAction->setShortcut(Qt::CTRL + Qt::Key_P);
     pauseDownloadAction->setEnabled(false);
@@ -215,9 +215,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setPauseButtonEnabledSignal(bool)), pauseDownloadAction, SLOT(setEnabled(bool)) );
 
     // removeItemAction :
-    KAction* removeItemAction = new KAction(this);
+    QAction * removeItemAction = new QAction(this);
     removeItemAction->setText(i18n("Remove"));
-    removeItemAction->setIcon(KIcon("list-remove"));
+    removeItemAction->setIcon(QIcon::fromTheme("list-remove"));
     removeItemAction->setToolTip(i18n("Remove all selected rows"));
     removeItemAction->setShortcut(Qt::Key_Delete);
     removeItemAction->setEnabled(false);
@@ -227,9 +227,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setRemoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
 
     // removeItemDeleteFileAction :
-    KAction* removeItemDeleteFileAction = new KAction(this);
+    QAction * removeItemDeleteFileAction = new QAction(this);
     removeItemDeleteFileAction->setText(i18n("Remove data"));
-    removeItemDeleteFileAction->setIcon(KIcon("edit-delete"));
+    removeItemDeleteFileAction->setIcon(QIcon::fromTheme("edit-delete"));
     removeItemDeleteFileAction->setToolTip(i18n("Remove all selected rows and respective downloaded contents"));
     removeItemDeleteFileAction->setShortcut(Qt::SHIFT | Qt::Key_Delete);
     removeItemDeleteFileAction->setEnabled(false);
@@ -239,9 +239,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setRemoveDeleteFileButtonEnabledSignal(bool)), removeItemDeleteFileAction, SLOT(setEnabled(bool)) );
 
     // moveUpAction :
-    KAction* moveUpAction = new KAction(this);
+    QAction * moveUpAction = new QAction(this);
     moveUpAction->setText(i18n("Up"));
-    moveUpAction->setIcon(KIcon("go-up"));
+    moveUpAction->setIcon(QIcon::fromTheme("go-up"));
     moveUpAction->setToolTip(i18n("Go up all selected rows"));
     moveUpAction->setShortcut(Qt::CTRL + Qt::Key_Up);
     moveUpAction->setEnabled(false);
@@ -250,9 +250,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveUpAction, SLOT(setEnabled(bool)) );
 
     // moveToTopAction :
-    KAction* moveToTopAction = new KAction(this);
+    QAction * moveToTopAction = new QAction(this);
     moveToTopAction->setText(i18n("Top"));
-    moveToTopAction->setIcon(KIcon("go-top"));
+    moveToTopAction->setIcon(QIcon::fromTheme("go-top"));
     moveToTopAction->setToolTip(i18n("Move all selected rows to the top of the list"));
     moveToTopAction->setShortcut(Qt::CTRL + Qt::Key_PageUp);
     moveToTopAction->setEnabled(false);
@@ -261,9 +261,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToTopAction, SLOT(setEnabled(bool)) );
 
     // moveDownAction :
-    KAction* moveDownAction = new KAction(this);
+    QAction * moveDownAction = new QAction(this);
     moveDownAction->setText(i18n("Down"));
-    moveDownAction->setIcon(KIcon("go-down"));
+    moveDownAction->setIcon(QIcon::fromTheme("go-down"));
     moveDownAction->setToolTip(i18n("Go down all selected rows"));
     moveDownAction->setShortcut(Qt::CTRL + Qt::Key_Down);
     moveDownAction->setEnabled(false);
@@ -272,9 +272,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveDownAction, SLOT(setEnabled(bool)) );
 
     // moveToBottomAction :
-    KAction* moveToBottomAction = new KAction(this);
+    QAction * moveToBottomAction = new QAction(this);
     moveToBottomAction->setText(i18n("Bottom"));
-    moveToBottomAction->setIcon(KIcon("go-bottom"));
+    moveToBottomAction->setIcon(QIcon::fromTheme("go-bottom"));
     moveToBottomAction->setToolTip(i18n("Move all selected rows to the bottom of the list"));
     moveToBottomAction->setShortcut(Qt::CTRL + Qt::Key_PageDown);
     moveToBottomAction->setEnabled(false);
@@ -283,9 +283,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToBottomAction, SLOT(setEnabled(bool)) );
 
     // openFolderAction :
-    KAction* openFolderAction = new KAction(this);
+    QAction * openFolderAction = new QAction(this);
     openFolderAction->setText(i18n("Downloads"));
-    openFolderAction->setIcon(KIcon("folder-downloads"));
+    openFolderAction->setIcon(QIcon::fromTheme("folder-downloads"));
     openFolderAction->setToolTip(i18n("Open current download folder"));
     openFolderAction->setShortcut(Qt::CTRL + Qt::Key_D);
     openFolderAction->setEnabled(true);
@@ -293,9 +293,9 @@ void MainWindow::setupActions() {
     connect(openFolderAction, SIGNAL(triggered(bool)), actionsManager, SLOT(openFolderSlot()));
 
     // shutdownAction :
-    KAction* shutdownAction = new KAction(this);
+    QAction * shutdownAction = new QAction(this);
     shutdownAction->setText(i18n("Shutdown"));
-    shutdownAction->setIcon(KIcon("system-shutdown"));
+    shutdownAction->setIcon(QIcon::fromTheme("system-shutdown"));
     shutdownAction->setToolTip(i18n("Schedule system shutdown"));
     shutdownAction->setShortcut(Qt::CTRL + Qt::Key_T);
     shutdownAction->setEnabled(false);
@@ -306,9 +306,9 @@ void MainWindow::setupActions() {
     connect(core->getShutdownManager(), SIGNAL(setShutdownButtonEnabledSignal(bool)), shutdownAction, SLOT(setEnabled(bool)) );
 
     // startAllDownloadAction :
-    KAction* startAllDownloadAction = new KAction(this);
+    QAction * startAllDownloadAction = new QAction(this);
     startAllDownloadAction->setText(i18n("Start all"));
-    startAllDownloadAction->setIcon(KIcon("media-playback-start"));
+    startAllDownloadAction->setIcon(QIcon::fromTheme("media-playback-start"));
     startAllDownloadAction->setToolTip(i18n("Start all paused downloads"));
     startAllDownloadAction->setEnabled(false);
     actionCollection()->addAction("startAll", startAllDownloadAction);
@@ -316,9 +316,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setStartAllButtonEnabledSignal(bool)), startAllDownloadAction, SLOT(setEnabled(bool)) );
 
     // pauseAllDownloadAction :
-    KAction* pauseAllDownloadAction = new KAction(this);
+    QAction * pauseAllDownloadAction = new QAction(this);
     pauseAllDownloadAction->setText(i18n("Pause all"));
-    pauseAllDownloadAction->setIcon(KIcon("media-playback-pause"));
+    pauseAllDownloadAction->setIcon(QIcon::fromTheme("media-playback-pause"));
     pauseAllDownloadAction->setToolTip(i18n("Pause all pending downloads"));
     pauseAllDownloadAction->setEnabled(false);
     actionCollection()->addAction("pauseAll", pauseAllDownloadAction);
@@ -326,9 +326,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setPauseAllButtonEnabledSignal(bool)), pauseAllDownloadAction, SLOT(setEnabled(bool)) );
 
     // retryDownloadAction :
-    KAction* retryDownloadAction = new KAction(this);
+    QAction * retryDownloadAction = new QAction(this);
     retryDownloadAction->setText(i18n("Retry"));
-    retryDownloadAction->setIcon(KIcon("edit-redo"));
+    retryDownloadAction->setIcon(QIcon::fromTheme("edit-redo"));
     retryDownloadAction->setToolTip(i18n("Retry to download selected rows"));
     retryDownloadAction->setShortcut(Qt::CTRL + Qt::Key_R);
     retryDownloadAction->setEnabled(false);
@@ -337,9 +337,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setRetryButtonEnabledSignal(bool)), retryDownloadAction, SLOT(setEnabled(bool)) );
 
     // manualExtractAction :
-    KAction* manualExtractAction = new KAction(this);
+    QAction * manualExtractAction = new QAction(this);
     manualExtractAction->setText(i18n("Repair and extract"));
-    manualExtractAction->setIcon(KIcon("archive-extract"));
+    manualExtractAction->setIcon(QIcon::fromTheme("archive-extract"));
     manualExtractAction->setToolTip(i18n("Manually verify and extract selected item"));
     manualExtractAction->setShortcut(Qt::CTRL + Qt::Key_E);
     manualExtractAction->setEnabled(false);
@@ -348,9 +348,9 @@ void MainWindow::setupActions() {
     connect(actionButtonsManager, SIGNAL(setManualExtractActionSignal(bool)), manualExtractAction, SLOT(setEnabled(bool)) );
 
     // mergeNzbAction :
-    KAction* mergeNzbAction = new KAction(this);
+    QAction * mergeNzbAction = new QAction(this);
     mergeNzbAction->setText(i18n("Merge with..."));
-    mergeNzbAction->setIcon(KIcon("mail-message-new"));
+    mergeNzbAction->setIcon(QIcon::fromTheme("mail-message-new"));
     mergeNzbAction->setToolTip(i18n("Merge nzb content into another nzb"));
     mergeNzbAction->setEnabled(false);
     actionCollection()->addAction("mergeNzb", mergeNzbAction);
@@ -368,9 +368,9 @@ void MainWindow::setupActions() {
 
 
     // renameNzbAction :
-    KAction* renameNzbAction = new KAction(this);
+    QAction * renameNzbAction = new QAction(this);
     renameNzbAction->setText(i18n("Rename..."));
-    renameNzbAction->setIcon(KIcon("edit-rename"));
+    renameNzbAction->setIcon(QIcon::fromTheme("edit-rename"));
     renameNzbAction->setToolTip(i18n("Rename nzb and its corresponding download folder"));
     renameNzbAction->setShortcut(Qt::Key_F2);
     renameNzbAction->setEnabled(false);

@@ -23,7 +23,7 @@
 
 #include <KDebug>
 #include <KColorScheme>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 #include <KActionCollection>
 #include <KIconEffect>
@@ -168,12 +168,12 @@ bool SysTray::updateIconStatus(const UtilityNamespace::ItemStatus& itemStatus) {
 
     case UtilityNamespace::DownloadStatus:{
 
-            icon = KIcon("mail-receive");
+            icon = QIcon::fromTheme("mail-receive");
             break;
         }
 
     case UtilityNamespace::PauseStatus: {
-            icon = KIcon("media-playback-pause");
+            icon = QIcon::fromTheme("media-playback-pause");
             break;
         }
 

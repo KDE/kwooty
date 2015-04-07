@@ -22,7 +22,7 @@
 #include <K4AboutData>
 #include <KCmdLineArgs>
 #include <KUrl>
-#include <KIcon>
+#include <QIcon>
 #include <KDebug>
 
 #include "uniqueapp.h"

@@ -20,7 +20,7 @@
 
 #include "uniqueapp.h"
 
-#include <KIcon>
+#include <QIcon>
 #include <KCmdLineArgs>
 #include <KDebug>
 #include <KUrl>
@@ -48,7 +48,7 @@ int UniqueApp::newInstance() {
     // create a new instance :
     if (!this->kwootyInstance) {
 
-        this->setWindowIcon(KIcon("kwooty"));
+        this->setWindowIcon(QIcon::fromTheme("kwooty"));
         this->kwootyInstance = true;
         this->mainWindow = new MainWindow();
 

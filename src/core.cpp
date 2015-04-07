@@ -21,7 +21,7 @@
 #include "core.h"
 
 #include <KDebug>
-#include <KIcon>
+#include <QIcon>
 #include <KPasswordDialog>
 #include <QtGui>
 
