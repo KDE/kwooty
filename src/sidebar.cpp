@@ -22,7 +22,7 @@
 #include "sidebar.h"
 
 #include <KDebug>
-
+#include <KLocalizedString>
 #include "mainwindow.h"
 #include "core.h"
 #include "servermanager.h"

@@ -24,7 +24,7 @@
 #include <KFileDialog>
 #include <KMessageBox>
 #include <KIO/NetAccess>
-
+#include <KLocalizedString>
 #include <QFileInfo>
 #include <QRegExp>
 

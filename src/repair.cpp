@@ -628,7 +628,7 @@ void Repair::sendVerifyNotification(const QString& fileNameStr, const QString& o
         int progress = 0;
 
         if (totalArchiveFiles > 0) {
-            progress = qMin(qRound( (totalArchiveFiles - verifyPendingArchiveFiles) * PROGRESS_COMPLETE / totalArchiveFiles ), 99) ;
+            progress = qMin(qRound( (double)(totalArchiveFiles - verifyPendingArchiveFiles) * PROGRESS_COMPLETE / totalArchiveFiles ), 99) ;
         }
 
         // notify user :

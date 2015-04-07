@@ -32,6 +32,7 @@
 #include "preferences/kconfiggrouphandler.h"
 #include "kwootysettings.h"
 
+#include <KDebug>
 
 ServerGroup::ServerGroup(ServerManager* parent, Core* core, int serverGroupId) : QObject(parent) {
 

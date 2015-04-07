@@ -23,7 +23,7 @@
 
 #include <KDebug>
 #include "kdiskfreespaceinfo.h"
-
+#include <KLocalizedString>
 #include <QDateTime>
 
 #include "standarditemmodel.h"
@@ -293,7 +293,7 @@ void StatsInfoBuilder::computeTimeInfo() {
             quint64 nzbSize = this->downloadModel->getSizeValueFromIndex(this->parentStateIndex);
 
             // compute *current* remaining download time (sec) :
-            quint32 currentRemainingTimeSec = qRound(nzbSize * (PROGRESS_COMPLETE - downloadProgress) / (this->meanDownloadSpeedCurrent * PROGRESS_COMPLETE ));
+            quint32 currentRemainingTimeSec = qRound((double)(nzbSize * (PROGRESS_COMPLETE - downloadProgress) / (this->meanDownloadSpeedCurrent * PROGRESS_COMPLETE )));
 
             // calculate Estimated Time of Arrival :
             if (Settings::etaRadioButton()) {
@@ -315,7 +315,7 @@ void StatsInfoBuilder::computeTimeInfo() {
             // compute *total* remaining download time (sec) only if other pending parents have been found :
             if (parentQueuedFound) {
 
-                quint32 totalRemainingTimeSec = qRound(this->clientsObserver->getTotalSize() / this->meanDownloadSpeedTotal);
+                quint32 totalRemainingTimeSec = qRound((double)(this->clientsObserver->getTotalSize() / this->meanDownloadSpeedTotal));
 
                 // calculate Estimated Time of Arrival :
                 if (Settings::etaRadioButton()) {

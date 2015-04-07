@@ -25,7 +25,7 @@
 #include <KAction>
 #include <KMessageBox>
 #include <KIO/CopyJob>
-
+#include <KLocalizedString>
 #include <QDir>
 
 #include "standarditemmodelquery.h"

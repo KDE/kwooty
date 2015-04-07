@@ -249,7 +249,7 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
 
     // send decoding progression :
     PostDownloadInfoData decodeInfoData;
-    decodeInfoData.initDecode(this->parentIdentifer, qRound((elementInList * 100 / this->segmentDataList.size())), DecodeStatus);
+    decodeInfoData.initDecode(this->parentIdentifer, qRound(((double)(elementInList * 100) / (double)(this->segmentDataList.size()))), DecodeStatus);
     this->decodeProgression(decodeInfoData);
 
     return writeError;

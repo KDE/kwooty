@@ -398,7 +398,8 @@ void NntpSocket::socketEncryptedSlot() {
     }
 
     // SSL connection is active, send also encryption method used by host :
-    emit encryptionStatusPerServerSignal(true, this->sessionCipher().encryptionMethod(), this->certificateVerified, issuerOrgranisation, sslErrors);
+    //KF5 fix issuerOrgranisatio was QString in kde4, is a QStringList in kf5/qt5
+    emit encryptionStatusPerServerSignal(true, this->sessionCipher().encryptionMethod(), this->certificateVerified, issuerOrgranisation.first(), sslErrors);
 
 }
 

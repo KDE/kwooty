@@ -22,6 +22,7 @@
 #include "actionrenamemanager.h"
 
 #include <KInputDialog>
+#include <KLocalizedString>
 #include <KIO/CopyJob>
 
 #include "standarditemmodelquery.h"
