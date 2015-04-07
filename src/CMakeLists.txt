@@ -119,6 +119,7 @@ kconfig_add_kcfg_files(Kwooty_lib_SRCS preferences/kwootysettings.kcfgc)
 
 
 add_library(kwootycore SHARED ${Kwooty_lib_SRCS})
+generate_export_header(kwootycore BASE_NAME kwooty)
 
 target_link_libraries(kwootycore
 		      KF5::KDELibs4Support
