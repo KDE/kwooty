@@ -15,9 +15,9 @@ add_library(kwooty_autoretrysettings MODULE ${kwooty_autoretrysettings_PART_SRCS
 target_link_libraries(kwooty_autoretrysettings KF5::KIOCore kwootycore  )
 
 
-install(TARGETS kwooty_autoretrysettings kwooty_autoretryplugin DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES kwooty_autoretrysettings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
-install(FILES kwooty_autoretrysettings.desktop kwooty_autoretryplugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(TARGETS kwooty_autoretrysettings kwooty_autoretryplugin DESTINATION ${KDE_INSTALL_PLUGINDIR})
+install(FILES kwooty_autoretrysettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
+install(FILES kwooty_autoretrysettings.desktop kwooty_autoretryplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 
 
 

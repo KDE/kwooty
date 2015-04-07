@@ -15,9 +15,9 @@ add_library(kwooty_watchfoldersettings MODULE ${kwooty_watchfoldersettings_PART_
 target_link_libraries(kwooty_watchfoldersettings KF5::KIOCore kwootycore  )
 
 
-install(TARGETS kwooty_watchfoldersettings kwooty_watchfolderplugin DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES kwooty_watchfoldersettings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
-install(FILES kwooty_watchfoldersettings.desktop kwooty_watchfolderplugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(TARGETS kwooty_watchfoldersettings kwooty_watchfolderplugin DESTINATION ${KDE_INSTALL_PLUGINDIR})
+install(FILES kwooty_watchfoldersettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
+install(FILES kwooty_watchfoldersettings.desktop kwooty_watchfolderplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 
 
 

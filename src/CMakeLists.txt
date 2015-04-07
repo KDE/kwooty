@@ -137,15 +137,15 @@ endif(NOT NEW_SOLID_POWERMANAGEMENT_FOUND)
 
 
 set_target_properties(kwootycore PROPERTIES VERSION 1.1.0 SOVERSION 0)
-install(TARGETS kwootycore ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kwootycore ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} )
 
 add_executable(kwooty ${Kwooty_SRCS})
 target_link_libraries(kwooty  kwootycore )
 
 
-install(TARGETS kwooty DESTINATION ${BIN_INSTALL_DIR})
-install(FILES kwootyui.rc DESTINATION ${DATA_INSTALL_DIR}/kwooty)
-install(FILES kwooty.notifyrc DESTINATION ${KNOTIFYRC_INSTALL_DIR})
-install(FILES preferences/kwootysettings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
-install(FILES kwooty.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-install(FILES kwootyplugin.desktop DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
+install(TARGETS kwooty DESTINATION ${KDE_INSTALL_BINDIR})
+install(FILES kwootyui.rc DESTINATION ${KDE_INSTALL_DATADIR}/kwooty)
+install(FILES kwooty.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR})
+install(FILES preferences/kwootysettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
+install(FILES kwooty.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES kwootyplugin.desktop DESTINATION  ${KDE_INSTALL_KSERVICETYPES5DIR} )

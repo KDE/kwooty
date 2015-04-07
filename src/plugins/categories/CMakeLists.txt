@@ -22,9 +22,9 @@ add_library(kwooty_categoriessettings MODULE ${kwooty_categoriessettings_PART_SR
 target_link_libraries(kwooty_categoriessettings KF5::KIOCore kwootycore  )
 
 
-install(TARGETS kwooty_categoriessettings kwooty_categoriesplugin DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES kwooty_categoriessettings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
-install(FILES kwooty_categoriessettings.desktop kwooty_categoriesplugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(TARGETS kwooty_categoriessettings kwooty_categoriesplugin DESTINATION ${KDE_INSTALL_PLUGINDIR})
+install(FILES kwooty_categoriessettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
+install(FILES kwooty_categoriessettings.desktop kwooty_categoriesplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 
 
 

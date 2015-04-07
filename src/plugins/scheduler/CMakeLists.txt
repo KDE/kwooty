@@ -15,9 +15,9 @@ add_library(kwooty_schedulersettings MODULE ${kwooty_schedulersettings_PART_SRCS
 target_link_libraries(kwooty_schedulersettings KF5::KIOCore kwootycore  )
 
 
-install(TARGETS kwooty_schedulersettings kwooty_schedulerplugin DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES kwooty_schedulersettings.kcfg DESTINATION ${KCFG_INSTALL_DIR})
-install(FILES kwooty_schedulersettings.desktop kwooty_schedulerplugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(TARGETS kwooty_schedulersettings kwooty_schedulerplugin DESTINATION ${KDE_INSTALL_PLUGINDIR})
+install(FILES kwooty_schedulersettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
+install(FILES kwooty_schedulersettings.desktop kwooty_schedulerplugin.desktop DESTINATION ${KDE_INSTALL_KSERVICES5DIR})
 
 
 
