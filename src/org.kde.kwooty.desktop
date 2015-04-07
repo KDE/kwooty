@@ -17,3 +17,4 @@ Exec=kwooty
 Type=Application
 Categories=Qt;KDE;Network;News;
 Terminal=false
+X-DBUS-ServiceName=org.kde.kwooty
