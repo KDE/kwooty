@@ -21,7 +21,7 @@
 
 #include "queuefileobserver.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "core.h"
 #include "widgets/mytreeview.h"

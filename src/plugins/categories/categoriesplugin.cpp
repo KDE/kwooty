@@ -21,7 +21,7 @@
 
 #include "categoriesplugin.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KPluginLoader>
 #include <kgenericfactory.h>
 

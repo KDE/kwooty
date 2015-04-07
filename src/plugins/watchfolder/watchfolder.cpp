@@ -21,7 +21,7 @@
 
 #include "watchfolder.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <kdirwatch.h>
 #include <klocale.h>
 

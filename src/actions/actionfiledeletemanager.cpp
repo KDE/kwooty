@@ -184,7 +184,7 @@ void ActionFileDeleteManager::actionTriggeredSlot() {
 void ActionFileDeleteManager::handleResultSlot(KJob* job) {
 
     if (job->error() == 0) {
-        kDebug () << "file delete job finished";
+        qCDebug(KWOOTY_LOG) << "file delete job finished";
     }
 
     // job is finished :

@@ -31,7 +31,7 @@
 #include <KMessageBox>
 #include <KActionCollection>
 #include <KSaveFile>
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KMenuBar>
 
 #include <QTextStream>

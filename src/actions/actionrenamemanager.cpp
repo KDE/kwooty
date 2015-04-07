@@ -239,7 +239,7 @@ void ActionRenameManager::handleResultSlot(KJob* moveJob) {
 
     // if job is succeed :
     if (moveJob->error() == 0) {
-        kDebug() << "job renaming ok";
+        qCDebug(KWOOTY_LOG) << "job renaming ok";
     }
 
     // job is finished :

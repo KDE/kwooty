@@ -20,7 +20,7 @@
 
 #include "repairdecompressthread.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <QFileInfo>
 #include "core.h"
 #include "repair.h"
@@ -324,7 +324,7 @@ NzbFileData RepairDecompressThread::tryToGuessDecodedFileName(NzbFileData& targe
 
     }
 
-    //kDebug() << "tryToGuessDecodedFileName from : " << targetNzbFileData.getFileName() << "BUILT NAME : " << builtFileName;
+    //qCDebug(KWOOTY_LOG) << "tryToGuessDecodedFileName from : " << targetNzbFileData.getFileName() << "BUILT NAME : " << builtFileName;
     return targetNzbFileData;
 
 }
@@ -489,7 +489,7 @@ void RepairDecompressThread::notifyNzbProcessEnded(const NzbCollectionData& nzbC
 
             this->emitProcessUpdate(repairDecompressInfoData);
 
-            //kDebug() << "Post processing correct ? :" << nzbCollectionData.isAllPostProcessingCorrect();
+            //qCDebug(KWOOTY_LOG) << "Post processing correct ? :" << nzbCollectionData.isAllPostProcessingCorrect();
 
         }
 
@@ -690,7 +690,7 @@ void RepairDecompressThread::processPendingFiles() {
             // get each baseName list :
             QStringList fileBaseNameList = this->listDifferentFileBaseName(nzbCollectionData);
 
-            //kDebug() << "fileBaseNameList" << fileBaseNameList;
+            //qCDebug(KWOOTY_LOG) << "fileBaseNameList" << fileBaseNameList;
 
             // group files together according to their names in order to verify them :
             this->processRarFilesFromDifferentGroups(fileBaseNameList, nzbCollectionData);

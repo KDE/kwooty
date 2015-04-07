@@ -21,7 +21,7 @@
 
 #include "servertabwidget.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KIcon>
 #include <KInputDialog>
 #include <KMessageBox>

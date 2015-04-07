@@ -27,7 +27,7 @@
 
 #include <kjob.h>
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KAction>
 
 #include "core.h"

@@ -20,7 +20,7 @@
 
 #include "preferencesshutdown.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KIcon>
 #include "core.h"
 #include "shutdown/shutdownmanager.h"

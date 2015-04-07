@@ -21,7 +21,7 @@
 
 #include "statsinfobuilder.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include "kdiskfreespaceinfo.h"
 #include <KLocalizedString>
 #include <QDateTime>

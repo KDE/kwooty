@@ -287,7 +287,7 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
     ItemStatus itemStatusResetTarget = ExtractFinishedStatus;
 
     ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
-    //kDebug() <<  "status:" << itemStatusData.getDataStatus() << "crc:" << itemStatusData.getCrc32Match() << "decodeFinish:" << itemStatusData.isDecodeFinish() << "downloadFinish:" <<itemStatusData.isDownloadFinish();
+    //qCDebug(KWOOTY_LOG) <<  "status:" << itemStatusData.getDataStatus() << "crc:" << itemStatusData.getCrc32Match() << "decodeFinish:" << itemStatusData.isDecodeFinish() << "downloadFinish:" <<itemStatusData.isDownloadFinish();
 
 
     ItemStatusData parentItemStatusData = itemStatusData;

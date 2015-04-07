@@ -22,7 +22,7 @@
 #include "notificationmanager.h"
 
 #include <KLocalizedString>
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "core.h"
 #include "statsinfobuilder.h"

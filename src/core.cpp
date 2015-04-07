@@ -20,7 +20,7 @@
 
 #include "core.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <QIcon>
 #include <KPasswordDialog>
 #include <QtGui>

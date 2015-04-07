@@ -20,7 +20,7 @@
 
 #include "utilityserverstatus.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KLocalizedString>
 
 #include "utilityiconpainting.h"
@@ -109,7 +109,7 @@ ServerConnectionIcon UtilityServerStatus::buildConnectionStringFromStatus(const 
             connection = i18n("Disconnected (SSL handshake failed)");
         }
 
-        //kDebug() << "nttpErrorStatus = " << nttpErrorStatus;
+        //qCDebug(KWOOTY_LOG) << "nttpErrorStatus = " << nttpErrorStatus;
         if (nttpErrorStatus == AuthenticationNeeded) {
             connection = i18n("Disconnected (Authentication required)");
         }

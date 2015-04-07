@@ -21,7 +21,7 @@
 
 #include "utilityiconpainting.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KIconEffect>
 #include <KApplication>
 #include "kcolorutils.h"

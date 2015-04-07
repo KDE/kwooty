@@ -22,7 +22,7 @@
 #include "kconfiggrouphandler.h"
 
 #include <KGlobal>
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KMessageBox>
 
 #include <QApplication>

@@ -21,7 +21,7 @@
 
 #include "pluginmanager.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KComponentData>
 #include <KServiceTypeTrader>
 
@@ -69,7 +69,7 @@ void PluginManager::loadPlugins() {
 
         }
 
-        //kDebug() << "plugin enabled ? :" << pluginEnable;
+        //qCDebug(KWOOTY_LOG) << "plugin enabled ? :" << pluginEnable;
 
         // load plugin :
         if (pluginEnable && !this->loadedInfoPluginMap.contains(currentPluginInfo)) {
@@ -95,7 +95,7 @@ void PluginManager::loadCurrentPlugin(const KPluginInfo& currentPluginInfo) {
 
         if (plugin) {
 
-            //kDebug() << "Load plugin:" << currentPluginInfo.service()->name();
+            //qCDebug(KWOOTY_LOG) << "Load plugin:" << currentPluginInfo.service()->name();
 
             // give full access to plugin :
             plugin->setCore(this->core);
@@ -107,13 +107,13 @@ void PluginManager::loadCurrentPlugin(const KPluginInfo& currentPluginInfo) {
 
 
         } else {
-            kDebug() << "Plugin can not be created:" << currentPluginInfo.service()->library();
+            qCDebug(KWOOTY_LOG) << "Plugin can not be created:" << currentPluginInfo.service()->library();
         }
 
     }
     // factory is null :
     else {
-        kDebug() << "KPluginFactory could not load the plugin:" << currentPluginInfo.service()->library();
+        qCDebug(KWOOTY_LOG) << "KPluginFactory could not load the plugin:" << currentPluginInfo.service()->library();
 
     }
 

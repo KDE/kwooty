@@ -23,7 +23,7 @@
 #include <KCmdLineArgs>
 #include <KUrl>
 #include <QIcon>
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "uniqueapp.h"
 #include "mainwindow.h"

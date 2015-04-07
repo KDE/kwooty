@@ -21,14 +21,14 @@
 
 #include "sessionkde.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KJob>
 //#include <kworkspace/kworkspace.h>
 
 
 SessionKde::SessionKde(ShutdownManager* parent) : SessionBase(parent) {
 
-    kDebug();
+    qCDebug(KWOOTY_LOG);
 
 }
 

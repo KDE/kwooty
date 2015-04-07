@@ -20,7 +20,7 @@
 
 #include "itempostdownloadupdater.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include <QFileInfo>
 

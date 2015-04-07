@@ -20,7 +20,7 @@
 
 #include "itemparentupdater.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "core.h"
 #include "standarditemmodel.h"
@@ -173,7 +173,7 @@ void ItemParentUpdater::updateNzbItemsPostDecode(const PostDownloadInfoData& rep
         nzbItemStatusData.setPostProcessFinish(true);
         nzbItemStatusData.setAllPostProcessingCorrect(repairDecompressInfoData.areAllPostProcessingCorrect());
 
-        //kDebug() << "NzbProcessFinishedStatus"  <<  nzbItemStatusData.isPostProcessFinish() <<  repairDecompressInfoData.areAllPostProcessingCorrect();
+        //qCDebug(KWOOTY_LOG) << "NzbProcessFinishedStatus"  <<  nzbItemStatusData.isPostProcessFinish() <<  repairDecompressInfoData.areAllPostProcessingCorrect();
 
         this->downloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
 
@@ -405,7 +405,7 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
         }
 
 
-        //kDebug() << "UUID : " << this->downloadModel->getUuidStrFromIndex(nzbIndex);
+        //qCDebug(KWOOTY_LOG) << "UUID : " << this->downloadModel->getUuidStrFromIndex(nzbIndex);
 
         // send nzbCollectionData to repairDecompressThread class :
         emit repairDecompressSignal(nzbCollectionData);

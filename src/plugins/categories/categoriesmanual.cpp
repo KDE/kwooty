@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KFileDialog>
 #include <KAction>
 #include <KActionCollection>

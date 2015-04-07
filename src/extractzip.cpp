@@ -21,7 +21,7 @@
 
 #include "extractzip.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <QFileInfo>
 
 #include "repairdecompressthread.h"
@@ -140,7 +140,7 @@ void ExtractZip::extractUpdate(const QString& line) {
     if (line.contains("Wrong password")) {
 
         this->archivePasswordStatus = ExtractBase::ArchiveIsPassworded;
-        kDebug() << "password incorrect";
+        qCDebug(KWOOTY_LOG) << "password incorrect";
     }
 
     // search current processed archive :

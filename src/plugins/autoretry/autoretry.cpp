@@ -21,7 +21,7 @@
 
 #include "autoretry.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "mainwindow.h"
 #include "core.h"
@@ -77,7 +77,7 @@ void AutoRetry::parentStatusItemChangedSlot(QStandardItem* stateItem) {
     StandardItemModel* downloadModel = this->core->getDownloadModel();
     ItemStatusData itemStatusData = downloadModel->getStatusDataFromIndex(stateItem->index());
 
-    //kDebug() <<  itemStatusData.isPostProcessFinish() << itemStatusData.getStatus() <<  itemStatusData.getDataStatus() ;
+    //qCDebug(KWOOTY_LOG) <<  itemStatusData.isPostProcessFinish() << itemStatusData.getStatus() <<  itemStatusData.getDataStatus() ;
 
     if (itemStatusData.getDownloadRetryCounter() <= AutoRetrySettings::retryRepairFail()) {
 
@@ -91,7 +91,7 @@ void AutoRetry::parentStatusItemChangedSlot(QStandardItem* stateItem) {
             if ( itemStatusData.isPostProcessFinish() &&
                  !itemStatusData.areAllPostProcessingCorrect() ) {
 
-                kDebug() << "post process finished, retry counter :" << itemStatusData.getDownloadRetryCounter();
+                qCDebug(KWOOTY_LOG) << "post process finished, retry counter :" << itemStatusData.getDownloadRetryCounter();
 
                 this->retryDownload(stateItem);
 
@@ -120,7 +120,7 @@ void AutoRetry::childStatusItemChangedSlot(QStandardItem* stateItem) {
             // if nzb file does not contain any par2 files, reset in queue corrupted decoded file :
             if (!this->core->getModelQuery()->isParentContainsPar2File(stateItem)) {
 
-                kDebug() << "Decode Finished No par2 files - retry!";
+                qCDebug(KWOOTY_LOG) << "Decode Finished No par2 files - retry!";
 
                 // select all rows in order to set them to paused or Idle :
                 this->retryDownload(stateItem);
@@ -135,7 +135,7 @@ void AutoRetry::childStatusItemChangedSlot(QStandardItem* stateItem) {
             // if nzb file does not contain any par2 files, reset in queue corrupted decoded file :
             if (!this->core->getModelQuery()->isParentContainsPar2File(stateItem)) {
 
-                kDebug() << "Decode Finished No par2 files - retry!"<< itemStatusData.getDownloadRetryCounter();
+                qCDebug(KWOOTY_LOG) << "Decode Finished No par2 files - retry!"<< itemStatusData.getDownloadRetryCounter();
 
                 // select all rows in order to set them to paused or Idle :
                 this->retryDownload(stateItem);

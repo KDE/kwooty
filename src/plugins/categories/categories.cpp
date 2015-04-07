@@ -21,7 +21,7 @@
 
 #include "categories.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <klocale.h>
 #include "kdiskfreespaceinfo.h"
 
@@ -144,7 +144,7 @@ void Categories::launchPreProcess() {
 
         // try to guess the main mime type of the overall folder :
         QString mimeName = this->guessMainMimeName(mimeNameSizeMap);
-        kDebug() << "mime type :" << mimeName;
+        qCDebug(KWOOTY_LOG) << "mime type :" << mimeName;
 
         // if mime type has been found :
         if (!mimeName.isEmpty()) {
@@ -158,7 +158,7 @@ void Categories::launchPreProcess() {
             // if main category has been defined :
             if (categoryItem) {
 
-                kDebug() << "main category :" << mainCategory;
+                qCDebug(KWOOTY_LOG) << "main category :" << mainCategory;
 
                 // retrrieve all subcategory data :
                 QList<MimeData> mimeDataChildList = this->categoriesModel->retrieveMimeDataListFromItem(categoryItem);
@@ -313,7 +313,7 @@ bool Categories::checkDiskSpace(const MimeData& mimeData, const QString& nzbFile
     if ( KDiskFreeSpaceInfo::freeSpaceInfo(nzbFileSavepath).mountPoint() ==
          KDiskFreeSpaceInfo::freeSpaceInfo(mimeData.getMoveFolderPath()).mountPoint() ) {
 
-        kDebug() << "same mount point :" << KDiskFreeSpaceInfo::freeSpaceInfo(nzbFileSavepath).mountPoint();
+        qCDebug(KWOOTY_LOG) << "same mount point :" << KDiskFreeSpaceInfo::freeSpaceInfo(nzbFileSavepath).mountPoint();
 
         // be sure that there is at least minimum free disk space available during move process :
         if (availableFreeDiskSpace > totalSizeToMove / 100) {
@@ -323,7 +323,7 @@ bool Categories::checkDiskSpace(const MimeData& mimeData, const QString& nzbFile
     }
     else {
 
-        kDebug() << "different mount point :" << KDiskFreeSpaceInfo::freeSpaceInfo(nzbFileSavepath).mountPoint() << KDiskFreeSpaceInfo::freeSpaceInfo(mimeData.getMoveFolderPath()).mountPoint();
+        qCDebug(KWOOTY_LOG) << "different mount point :" << KDiskFreeSpaceInfo::freeSpaceInfo(nzbFileSavepath).mountPoint() << KDiskFreeSpaceInfo::freeSpaceInfo(mimeData.getMoveFolderPath()).mountPoint();
 
         // if the mount point is different, check that at least all total size to move is available on target :
         if ( availableFreeDiskSpace > (totalSizeToMove + totalSizeToMove / 100) ) {
@@ -331,7 +331,7 @@ bool Categories::checkDiskSpace(const MimeData& mimeData, const QString& nzbFile
 
         }
         else {
-            kDebug() << "not enough free space" << availableFreeDiskSpace << totalSizeToMove;
+            qCDebug(KWOOTY_LOG) << "not enough free space" << availableFreeDiskSpace << totalSizeToMove;
         }
 
     }
@@ -353,8 +353,8 @@ KSharedPtr<KMimeType> Categories::retrieveFileMimeType(const QString& currentFil
     if ( !mimeType.isNull() &&
          mimeType->isDefault() ) {
 
-        kDebug() << "mime type not identified !!" << mimeType->name() << mimeType->isDefault();
-        kDebug() << "try to get mime type from content file :" << absoluteFilePath;
+        qCDebug(KWOOTY_LOG) << "mime type not identified !!" << mimeType->name() << mimeType->isDefault();
+        qCDebug(KWOOTY_LOG) << "try to get mime type from content file :" << absoluteFilePath;
 
         QFile currentFile(absoluteFilePath);
         currentFile.open(QIODevice::ReadOnly);
@@ -405,7 +405,7 @@ QHash<QString, quint64> Categories::scanDownloadedFiles(const QString& nzbFileSa
                                        mimeNameSizeMap.value(mimeType->name()) + static_cast<quint64>(qAbs(fileInfo.size())));
 
                 if (!fileInfo.exists()) {
-                    kDebug() << "ooops, file does not exists :" << fileInfo.absoluteFilePath();
+                    qCDebug(KWOOTY_LOG) << "ooops, file does not exists :" << fileInfo.absoluteFilePath();
                 }
 
             }
@@ -485,7 +485,7 @@ void Categories::parentStatusItemChangedSlot(QStandardItem* stateItem, ItemStatu
          itemStatusData.isPostProcessFinish() &&
          itemStatusData.areAllPostProcessingCorrect() ) {
 
-        kDebug() << "post processing correct";
+        qCDebug(KWOOTY_LOG) << "post processing correct";
 
         // store uuid's item for asynchronous job progress notify :
         QString uuidItem = this->core->getDownloadModel()->getUuidStrFromIndex(stateItem->index());
@@ -530,7 +530,7 @@ void Categories::handleResultSlot(KJob* moveJob) {
     }
 
     if (error > 0) {
-        kDebug() << "move job error :" << moveJob->errorText();
+        qCDebug(KWOOTY_LOG) << "move job error :" << moveJob->errorText();
     }
     else {
         this->moveJobStatus = MoveSuccessStatus;

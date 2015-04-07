@@ -20,7 +20,7 @@
 
 
 #include "mimedata.h"
-#include <KDebug>
+#include "kwooty_debug.h"
 
 MimeData::MimeData(MimeData::HierarchyCategory hierarchyCategory, const QString& mainCategory) {
 
@@ -30,7 +30,7 @@ MimeData::MimeData(MimeData::HierarchyCategory hierarchyCategory, const QString&
 
 MimeData::MimeData() {
 
-    kDebug() << "ooops, this constructor should not be called";
+    qCDebug(KWOOTY_LOG) << "ooops, this constructor should not be called";
 }
 
 

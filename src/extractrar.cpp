@@ -21,7 +21,7 @@
 
 #include "extractrar.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "repairdecompressthread.h"
 #include "kwootysettings.h"
@@ -81,7 +81,7 @@ QStringList ExtractRar::createProcessArguments(const QString& archiveName, const
     }
 
 
-    kDebug() << args;
+    qCDebug(KWOOTY_LOG) << args;
 
     return args;
 
@@ -111,7 +111,7 @@ void ExtractRar::extractUpdate(const QString& line) {
     else if (line.contains("password incorrect")) {
 
         this->archivePasswordStatus = ExtractBase::ArchiveIsPassworded;
-        kDebug() << "password incorrect";
+        qCDebug(KWOOTY_LOG) << "password incorrect";
     }
 
 

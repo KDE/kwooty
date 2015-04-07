@@ -22,7 +22,7 @@
 
 #include <KAboutData>
 #include <KIcon>
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KLocalizedString>
 #include <QHBoxLayout>
 

@@ -21,7 +21,7 @@
 #include "datarestorer.h"
 
 #include <KMessageBox>
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include <QUuid>
 
@@ -192,7 +192,7 @@ void DataRestorer::writeDataToDisk() {
 
         // open the file :
         if (!file.open(QIODevice::WriteOnly)) {
-            kDebug() << "Cannot open file for writing";
+            qCDebug(KWOOTY_LOG) << "Cannot open file for writing";
             return;
         }
 
@@ -235,13 +235,13 @@ bool DataRestorer::isHeaderOk(QDataStream& dataStreamIn) const {
     dataStreamIn >> magic >> appVersion;
 
     if (magic != magicNumber) {
-        kDebug() << "file does not belong to this application";
+        qCDebug(KWOOTY_LOG) << "file does not belong to this application";
         headerOk = false;
     }
 
 
     if (appVersion != applicationVersion1) {
-        kDebug() << "temporary file can not be processed (version changed)";
+        qCDebug(KWOOTY_LOG) << "temporary file can not be processed (version changed)";
         headerOk = false;
     }
     else {
@@ -498,7 +498,7 @@ void DataRestorer::readDataFromDiskSlot() {
 
                     }
                     else {
-                        kDebug() << "data can not be restored, checksum ko !!!" << checksumFromFile << checksumCompute;
+                        qCDebug(KWOOTY_LOG) << "data can not be restored, checksum ko !!!" << checksumFromFile << checksumCompute;
                     }
 
                 }

@@ -20,7 +20,7 @@
 
 #include "nzbfilehandler.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include <QXmlStreamReader>
 #include <QXmlStreamAttributes>

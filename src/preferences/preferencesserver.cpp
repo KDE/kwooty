@@ -20,7 +20,7 @@
 
 #include "preferencesserver.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include <QHBoxLayout>
 #include <QUuid>

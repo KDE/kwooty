@@ -21,7 +21,7 @@
 
 #include "sidebarwidget.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KIconLoader>
 #include <KIcon>
 #include <KSeparator>

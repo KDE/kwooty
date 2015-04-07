@@ -20,7 +20,7 @@
 
 #include "shutdownmanager.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KJob>
 #include <KMessageBox>
 #include <KApplication>
@@ -471,7 +471,7 @@ void ShutdownManager::launchSystemShutdownSlot() {
 
     }
     else {
-        kDebug() << "session has not been identified, shutdown not available !";
+        qCDebug(KWOOTY_LOG) << "session has not been identified, shutdown not available !";
     }
 
 

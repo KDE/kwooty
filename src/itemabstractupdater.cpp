@@ -20,7 +20,7 @@
 
 #include "itemabstractupdater.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include "itemparentupdater.h"
 #include "standarditemmodel.h"
 #include "kwootysettings.h"

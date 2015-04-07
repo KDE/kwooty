@@ -21,7 +21,7 @@
 
 #include "schedulertableitemdelegate.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KColorUtils>
 
 #include <QApplication>

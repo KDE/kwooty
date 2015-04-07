@@ -22,7 +22,7 @@
 #include "schedulerfilehandler.h"
 
 #include <KStandardDirs>
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KLocale>
 
 #include <QFile>
@@ -90,7 +90,7 @@ void SchedulerFileHandler::fillModel(QStandardItemModel* schedulerModel) {
 
                 if (attributes.value("version").toString() != "1") {
 
-                    kDebug() << "this scheduler.xml version is not compatible with current kwooty version";
+                    qCDebug(KWOOTY_LOG) << "this scheduler.xml version is not compatible with current kwooty version";
                     break;
                 }
             }

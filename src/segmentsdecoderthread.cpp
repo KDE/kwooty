@@ -20,7 +20,7 @@
 
 #include "segmentsdecoderthread.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <QDir>
 #include <QBuffer>
 #include "core.h"

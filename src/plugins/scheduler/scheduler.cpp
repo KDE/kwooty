@@ -21,7 +21,7 @@
 
 #include "scheduler.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KCMultiDialog>
 #include <KActionCollection>
 
@@ -137,7 +137,7 @@ void Scheduler::resumeDownloads() {
 
     }
     else {
-        kDebug() << "downloads remain suspended: temporary disk drive is full";
+        qCDebug(KWOOTY_LOG) << "downloads remain suspended: temporary disk drive is full";
     }
 
 

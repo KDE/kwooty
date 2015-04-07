@@ -20,7 +20,7 @@
 
 #include "segmentmanager.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <QModelIndexList>
 #include <QModelIndex>
 
@@ -432,12 +432,12 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, QString 
             itemParentUpdater->getItemDownloadUpdater()->updateItems(fileNameItem->index(), nzbFileData);
         }
         else {
-            kDebug() << "ooops, something goes really wrong :" << previousSegmentData.getStatus() << segmentList.size() << segmentData.getElementInList();
+            qCDebug(KWOOTY_LOG) << "ooops, something goes really wrong :" << previousSegmentData.getStatus() << segmentList.size() << segmentData.getElementInList();
         }
 
     }
     else {
-        //kDebug() <<  "Item not found - status : " << segmentData.getStatus();
+        //qCDebug(KWOOTY_LOG) <<  "Item not found - status : " << segmentData.getStatus();
     }
 
 }
@@ -468,7 +468,7 @@ void SegmentManager::updateDecodeSegmentSlot(PostDownloadInfoData decodeInfoData
 
     }
     else {
-        kDebug() <<  "Item not found - status : " << decodeInfoData.getStatus();
+        qCDebug(KWOOTY_LOG) <<  "Item not found - status : " << decodeInfoData.getStatus();
     }
 
 }
@@ -491,7 +491,7 @@ void SegmentManager::updateRepairExtractSegmentSlot(PostDownloadInfoData repairD
 
     }
     else {
-        kDebug() <<  "Item not found - status : " << repairDecompressInfoData.getStatus();
+        qCDebug(KWOOTY_LOG) <<  "Item not found - status : " << repairDecompressInfoData.getStatus();
     }
 
 }

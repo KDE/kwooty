@@ -21,7 +21,7 @@
 
 #include "watchfolderplugin.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KPluginLoader>
 #include <kgenericfactory.h>
 

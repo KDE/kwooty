@@ -21,7 +21,7 @@
 
 #include "segmentbuffer.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "servermanager.h"
 #include "itemparentupdater.h"
@@ -84,12 +84,12 @@ void SegmentBuffer::setupConnections() {
 }
 
 void SegmentBuffer::lockFinalizeDecode() {
-    kDebug();
+    qCDebug(KWOOTY_LOG);
     this->finalizeLocked = true;
 }
 
 void SegmentBuffer::unlockFinalizeDecode() {
-    kDebug();
+    qCDebug(KWOOTY_LOG);
 
     this->finalizeLocked = false;
     this->sendDataToFinalizeDecode();
@@ -98,7 +98,7 @@ void SegmentBuffer::unlockFinalizeDecode() {
 bool SegmentBuffer::isBufferFull() const {
 
     if (this->bufferFull){
-        kDebug() << "buffer is full...";
+        qCDebug(KWOOTY_LOG) << "buffer is full...";
     }
 
     return this->bufferFull;
@@ -114,7 +114,7 @@ void SegmentBuffer::removeDataFromDecodeWaitingQueue(const NzbFileData& selected
         if (currentNzbFileData.getFileSavePath() != selectedNzbFileData.getFileSavePath()) {
 
             nzbFileDataTempList.append(currentNzbFileData);
-            kDebug() << "pending files to decode updated";
+            qCDebug(KWOOTY_LOG) << "pending files to decode updated";
         }
 
     }
@@ -135,7 +135,7 @@ void SegmentBuffer::updateDecodeWaitingQueue(const NzbFileData& selectedNzbFileD
             currentNzbFileData.updateFileSavePath(targetNzbFileData);
             this->nzbFileDataList.replace(i, currentNzbFileData);
 
-            kDebug() << "pending files to decode updated";
+            qCDebug(KWOOTY_LOG) << "pending files to decode updated";
         }
 
     }
@@ -176,8 +176,8 @@ int SegmentBuffer::segmentSavingQueued(const SegmentData& segmentData) {
 
         this->requestNextSegmentDelaySec = qMin(this->requestNextSegmentDelaySec + 1, 30);
 
-        kDebug() << "segment buffer is full, buffer size:" << Utility::convertByteHumanReadable(qAbs(this->dataSizeCounter)) << ",list size:"  << this->segmentDataList.size();
-        kDebug() << "request next segment in" << this->requestNextSegmentDelaySec << "seconds...";
+        qCDebug(KWOOTY_LOG) << "segment buffer is full, buffer size:" << Utility::convertByteHumanReadable(qAbs(this->dataSizeCounter)) << ",list size:"  << this->segmentDataList.size();
+        qCDebug(KWOOTY_LOG) << "request next segment in" << this->requestNextSegmentDelaySec << "seconds...";
 
     }
     else {
@@ -213,7 +213,7 @@ void SegmentBuffer::sendDataToFinalizeDecode() {
 
     }
     else if (!this->nzbFileDataList.isEmpty()) {
-        kDebug() << "finalize decode delayed...";
+        qCDebug(KWOOTY_LOG) << "finalize decode delayed...";
     }
 
 }

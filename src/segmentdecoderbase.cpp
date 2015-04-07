@@ -21,7 +21,7 @@
 
 #include "segmentdecoderbase.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include <QDir>
 

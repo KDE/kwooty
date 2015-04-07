@@ -32,7 +32,7 @@
 #include "preferences/kconfiggrouphandler.h"
 #include "kwootysettings.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 ServerGroup::ServerGroup(ServerManager* parent, Core* core, int serverGroupId) : QObject(parent) {
 
@@ -333,7 +333,7 @@ void ServerGroup::checkServerStabilitySlot() {
 
         QTimer::singleShot(5 * UtilityNamespace::MINUTES_TO_MILLISECONDS, this, SLOT(startTimerSlot()));
 
-        kDebug() << "server stability issues, forced to unavailable during 5 minutes, group :" << this->serverGroupId;
+        qCDebug(KWOOTY_LOG) << "server stability issues, forced to unavailable during 5 minutes, group :" << this->serverGroupId;
     }
 
     // reset counter :
@@ -347,7 +347,7 @@ void ServerGroup::serverSwitchIfFailure() {
     // availability of **master server** (master or active failover) has changed, notify server manager :
     if (this->isMasterServer() || this->isActiveFailover()) {
 
-        kDebug() << "Master server group id : " << this->serverGroupId << "available : " << this->serverAvailable;
+        qCDebug(KWOOTY_LOG) << "Master server group id : " << this->serverGroupId << "available : " << this->serverAvailable;
         this->serverManager->masterServerAvailabilityChanges();
 
     }
@@ -357,7 +357,7 @@ void ServerGroup::serverSwitchIfFailure() {
         // if backup server is now unavailable :
         if (!this->serverAvailable) {
 
-            kDebug() << "Backup server group id : " << this->serverGroupId << "available : " << this->serverAvailable;
+            qCDebug(KWOOTY_LOG) << "Backup server group id : " << this->serverGroupId << "available : " << this->serverAvailable;
 
             // current backup server is down, try to download pending downloads with another backup server if any :
             this->serverManager->downloadWithAnotherBackupServer(this);

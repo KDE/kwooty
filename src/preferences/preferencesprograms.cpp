@@ -20,7 +20,7 @@
 
 #include "preferencesprograms.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <QFile>
 
 #include "utilities/utility.h"

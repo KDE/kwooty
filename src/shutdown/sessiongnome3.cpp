@@ -21,7 +21,7 @@
 
 #include "sessiongnome3.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KStandardDirs>
 #include <KProcess>
 
@@ -30,7 +30,7 @@
 
 SessionGnome3::SessionGnome3(ShutdownManager* parent) : SessionBase(parent) {
 
-    kDebug();
+    qCDebug(KWOOTY_LOG);
 
     this->methodCallEnumStringMap.insert(SessionGnome3::DbusSuspend,              "Suspend");
     this->methodCallEnumStringMap.insert(SessionGnome3::DbusSuspendAllowed,       "SuspendAllowed");
@@ -136,7 +136,7 @@ bool SessionGnome3::callDbusMethod(const SessionGnome3::DbusMethodCall dbusMetho
         methodAvailable = reply.value();
     }
 
-    //kDebug() << "methodAvailable :" << methodAvailable;
+    //qCDebug(KWOOTY_LOG) << "methodAvailable :" << methodAvailable;
 
     return methodAvailable;
 

@@ -21,7 +21,7 @@
 
 #include "segmentdecoderuuenc.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "kwootysettings.h"
 #include "segmentsdecoderthread.h"
@@ -90,7 +90,7 @@ void SegmentDecoderUUEnc::decodeSegments(NzbFileData currentNzbFileData, const Q
         // can not create the file :
         else {
             this->decodeProgression(decodeInfoData);
-            kDebug() << "can not create " << Utility::buildFullPath(fileSavePath, fileNameStr);
+            qCDebug(KWOOTY_LOG) << "can not create " << Utility::buildFullPath(fileSavePath, fileNameStr);
 
         }
 
@@ -353,7 +353,7 @@ QString SegmentDecoderUUEnc::searchPattern(QIODevice* segmentFile) {
         // then check that next lines are UU encoded data :
         if (!fileName.isEmpty()) {
 
-            //kDebug() << "file name : " << fileName;
+            //qCDebug(KWOOTY_LOG) << "file name : " << fileName;
             if (this->isUUEncodedLine(lineArray)) {
 
                 uuEncodedDataFound = true;

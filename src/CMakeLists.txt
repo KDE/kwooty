@@ -14,7 +14,8 @@ set(Kwooty_SRCS
   uniqueapp.cpp
 )
 
-set(Kwooty_lib_SRCS 
+set(Kwooty_lib_SRCS
+  kwooty_debug.cpp 
   mainwindow.cpp
   core.cpp
   nzbfilehandler.cpp

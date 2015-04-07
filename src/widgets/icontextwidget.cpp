@@ -24,7 +24,7 @@
 #include <KIconLoader>
 #include <KIcon>
 #include <KIconEffect>
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <QMouseEvent>
 
 #include <QPixmap>

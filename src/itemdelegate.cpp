@@ -21,7 +21,7 @@
 #include "itemdelegate.h"
 
 #include <KAboutData>
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KApplication>
 #include <KGlobal>
 #include <QStyleOptionViewItemV4>

@@ -20,7 +20,7 @@
 
 #include "nntpclient.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <QTimer>
 #include <QFile>
 #include <QBuffer>
@@ -180,7 +180,7 @@ void NntpClient::getAnswerFromServer() {
 
             this->tcpSocket->quitAndReconnectInMs(reconnectSeconds);
 
-            kDebug() << "AuthenticationDenied,  try to reconnect in " <<  reconnectSeconds << " seconds" << "group :" << parent->getServerGroup()->getRealServerGroupId();
+            qCDebug(KWOOTY_LOG) << "AuthenticationDenied,  try to reconnect in " <<  reconnectSeconds << " seconds" << "group :" << parent->getServerGroup()->getRealServerGroupId();
             break;
         }
 
@@ -222,7 +222,7 @@ void NntpClient::getAnswerFromServer() {
         }
 
     default: {
-            kDebug() << "Answer from host : " << answer << " not handled !" << "group :" << parent->getServerGroup()->getRealServerGroupId();
+            qCDebug(KWOOTY_LOG) << "Answer from host : " << answer << " not handled !" << "group :" << parent->getServerGroup()->getRealServerGroupId();
             // response not handled, consider that segment is not present :
             this->postDownloadProcess(NotPresent);
             break;
@@ -284,7 +284,7 @@ bool NntpClient::isClientReady() {
         this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
     }
 
-    //kDebug() << this->parent->getServerGroup()->getRealServerGroupId() << this->tcpSocket->state();
+    //qCDebug(KWOOTY_LOG) << this->parent->getServerGroup()->getRealServerGroupId() << this->tcpSocket->state();
 
     return clientReady;
 }
@@ -490,7 +490,7 @@ void NntpClient::downloadSegmentFromServerSlot() {
                 // request new segment with short delay (10 seconds) :
                 this->segmentByteArray.clear();
                 this->retryDownloadDelayed(10);
-                kDebug() << "ooops, segment size probably too big : " << Utility::convertByteHumanReadable(this->segmentByteArray.size());
+                qCDebug(KWOOTY_LOG) << "ooops, segment size probably too big : " << Utility::convertByteHumanReadable(this->segmentByteArray.size());
             }
 
         }
@@ -563,7 +563,7 @@ void NntpClient::segmentDataRollBack() {
 
         if (this->currentSegmentData.getStatus() == DownloadStatus) {
 
-            //kDebug() << "segmentData roll back effective !";
+            //qCDebug(KWOOTY_LOG) << "segmentData roll back effective !";
 
             this->currentSegmentData.setStatus(IdleStatus);
             this->currentSegmentData.setProgress(PROGRESS_INIT);
@@ -762,7 +762,7 @@ void NntpClient::disconnectedSlot() {
 
 void NntpClient::errorSlot(QAbstractSocket::SocketError socketError) {
 
-    //kDebug() << this->parent->getServerGroup()->getRealServerGroupId() << socketError;
+    //qCDebug(KWOOTY_LOG) << this->parent->getServerGroup()->getRealServerGroupId() << socketError;
 
     this->setConnectedClientStatus(ClientIdle, DoNotTouchTimers);
 

@@ -20,7 +20,7 @@
 
 #include "itemdownloadupdater.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "core.h"
 #include "itemparentupdater.h"

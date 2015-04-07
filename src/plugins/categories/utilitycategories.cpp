@@ -21,7 +21,7 @@
 
 #include "utilitycategories.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "mimedata.h"
 
@@ -158,7 +158,7 @@ QStringList UtilityCategories::retrieveMainCategoryList() {
     }
 
     if (parentTypeList.isEmpty()) {
-        kDebug() << "error retrieving mime type list !";
+        qCDebug(KWOOTY_LOG) << "error retrieving mime type list !";
     }
 
     // return main category list sorted by alphabetical order :

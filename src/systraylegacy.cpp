@@ -21,7 +21,7 @@
 
 #include "systraylegacy.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KColorScheme>
 #include <KIcon>
 #include <KIconLoader>

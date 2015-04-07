@@ -21,7 +21,7 @@
 #include "preferencescategories.h"
 
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KGlobal>
 #include <KInputDialog>
 

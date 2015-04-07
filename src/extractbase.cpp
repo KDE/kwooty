@@ -20,7 +20,7 @@
 
 #include "extractbase.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <QFile>
 #include "core.h"
 #include "kwootysettings.h"
@@ -119,7 +119,7 @@ void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, Extr
         args.append(this->extractProgramPath);
         args.append(this->createProcessArguments(archiveName, fileSavePath, passwordEnteredByUSer, passwordStr));
 
-        //kDebug() << "ARGS :" << this->extractProgramPath <<args;
+        //qCDebug(KWOOTY_LOG) << "ARGS :" << this->extractProgramPath <<args;
 
         this->extractProcess->setOutputChannelMode(KProcess::MergedChannels);
         this->extractProcess->setNextOpenMode(QIODevice::ReadWrite | QIODevice::Unbuffered);
@@ -245,7 +245,7 @@ void ExtractBase::extractReadyReadSlot(){
 
         if (!line.isEmpty()) {
 
-            //kDebug() << "line : " << line;
+            //qCDebug(KWOOTY_LOG) << "line : " << line;
 
             if (this->archivePasswordStatus == ExtractBase::ArchiveCheckIfPassworded) {
                 this->checkIfArchivePassworded(line, passwordCheckIsNextLine);
@@ -271,7 +271,7 @@ void ExtractBase::extractReadyReadSlot(){
 
 void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitStatus exitStatus) {
 
-    //kDebug() << "exitCode" << exitCode << " exitStatus " << exitStatus;
+    //qCDebug(KWOOTY_LOG) << "exitCode" << exitCode << " exitStatus " << exitStatus;
 
     // password checking has ended, files are *not* passworded, launch extract now :
     if (archivePasswordStatus == ExtractBase::ArchiveIsNotPassworded) {

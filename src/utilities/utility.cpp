@@ -20,7 +20,7 @@
 
 #include "utility.h"
 #include <KGlobal>
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KStandardDirs>
 #include <KLocalizedString>
 #include <kio/global.h>

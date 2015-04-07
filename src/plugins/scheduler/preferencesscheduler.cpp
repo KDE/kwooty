@@ -20,7 +20,7 @@
 
 #include "preferencesscheduler.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KGlobal>
 #include <KIconLoader>
 #include <KColorUtils>

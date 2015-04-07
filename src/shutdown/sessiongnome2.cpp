@@ -21,7 +21,7 @@
 
 #include "sessiongnome2.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KJob>
 #include <KStandardDirs>
 #include <KProcess>
@@ -29,7 +29,7 @@
 
 SessionGnome2::SessionGnome2(ShutdownManager* parent) : SessionBase(parent) {
 
-    kDebug();
+    qCDebug(KWOOTY_LOG);
 }
 
 

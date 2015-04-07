@@ -21,7 +21,7 @@
 
 #include "sessionbase.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include "kwootysettings.h"
 
 

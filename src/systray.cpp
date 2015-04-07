@@ -21,7 +21,7 @@
 
 #include "systray.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KColorScheme>
 #include <QIcon>
 #include <KIconLoader>

@@ -21,7 +21,7 @@
 
 #include "clientsperserverobserver.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "servergroup.h"
 #include "sidebar.h"
@@ -145,7 +145,7 @@ void ClientsPerServerObserver::nntpErrorPerServerSlot(const int nttpErrorStatus)
 
 void ClientsPerServerObserver::encryptionStatusPerServerSlot(const bool sslActive, const QString encryptionMethod, const bool certificateVerified, const QString issuerOrgranisation, const QStringList sslErrors) {
 
-    //kDebug() << "sslActive : " << sslActive << "encryptionMethod" << encryptionMethod;
+    //qCDebug(KWOOTY_LOG) << "sslActive : " << sslActive << "encryptionMethod" << encryptionMethod;
 
     this->setSslHandshakeParameters(sslActive, encryptionMethod, certificateVerified, issuerOrgranisation, sslErrors);
 

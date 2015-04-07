@@ -22,7 +22,7 @@
 #include "preferencesplugins.h"
 
 #include <KPluginInfo>
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KSharedConfig>
 #include <kpluginfactory.h>
 #include <KLocalizedString>

@@ -22,7 +22,7 @@
 #include "extractsplit.h"
 
 #include <KUrl>
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include <QFile>
 #include <QFileInfo>

@@ -21,7 +21,7 @@
 
 #include "serverspeedmanager.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "servergroup.h"
 #include "clientmanagerconn.h"
@@ -71,7 +71,7 @@ qint64 ServerSpeedManager::getDownloadSpeedLimitInBytes() const {
 
 void ServerSpeedManager::setBandwidthMode(const BandwidthClientMode& bandwidthClientMode) {
 
-    //kDebug () << "group : " << this->parent->getServerGroupId() << "BandwidthMode : " << bandwidthClientMode;
+    //qCDebug(KWOOTY_LOG) << "group : " << this->parent->getServerGroupId() << "BandwidthMode : " << bandwidthClientMode;
 
     if (bandwidthClientMode == BandwidthLimited) {
         this->downloadSpeedTimer->start();

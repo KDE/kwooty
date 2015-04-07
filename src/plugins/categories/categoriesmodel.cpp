@@ -21,7 +21,7 @@
 
 #include "categoriesmodel.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 CategoriesModel::CategoriesModel(QObject* parent) : QStandardItemModel (parent) {
 

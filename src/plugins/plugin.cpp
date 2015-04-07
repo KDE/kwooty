@@ -24,7 +24,7 @@
 
 #include <kdemacros.h>
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <QObject>
 
 #include "mainwindow.h"
@@ -33,7 +33,7 @@
 Plugin::Plugin(const KComponentData& instance, QObject* parent): QObject(parent), KXMLGUIClient()
 {
 
-    //kDebug() << instance.componentName();
+    //qCDebug(KWOOTY_LOG) << instance.componentName();
     //PORT KF5 this->setComponentData(instance);
 
 }

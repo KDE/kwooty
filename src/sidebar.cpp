@@ -21,7 +21,7 @@
 
 #include "sidebar.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KLocalizedString>
 #include "mainwindow.h"
 #include "core.h"

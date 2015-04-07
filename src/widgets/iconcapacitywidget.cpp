@@ -22,7 +22,7 @@
 #include "iconcapacitywidget.h"
 
 #include <KIconLoader>
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include <QPixmap>
 

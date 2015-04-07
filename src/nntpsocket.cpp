@@ -21,7 +21,7 @@
 
 #include "nntpsocket.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include <QSslCipher>
 #include "clientmanagerconn.h"
@@ -347,7 +347,7 @@ void NntpSocket::idleTimeOutSlot() {
 
 void NntpSocket::answerTimeOutSlot() {
 
-    //kDebug() << "Host answer time out, reconnecting..., groupId : " << this->parent->getServerGroup()->getRealServerGroupId();
+    //qCDebug(KWOOTY_LOG) << "Host answer time out, reconnecting..., groupId : " << this->parent->getServerGroup()->getRealServerGroupId();
     this->serverAnswerTimer->stop();
 
     // anticipate socket error notification -> reconnect immediately :

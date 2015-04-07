@@ -20,7 +20,7 @@
 
 #include "repair.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 #include <KStandardDirs>
 #include <QFile>
 #include "kwootysettings.h"
@@ -100,7 +100,7 @@ void Repair::launchProcess(const NzbCollectionData& nzbCollectionData){
                 args.append(this->par2FilesOrderedList.at(0));
                 args.append( Utility::buildFullPath(fileSavePath, nzbCollectionData.getPar2BaseName()) );
 
-                //kDebug() << "ARGS :" << args;
+                //qCDebug(KWOOTY_LOG) << "ARGS :" << args;
                 this->repairProcess->setOutputChannelMode(KProcess::MergedChannels);
                 this->repairProcess->setNextOpenMode(QIODevice::ReadOnly | QIODevice::Unbuffered);
                 this->repairProcess->setProgram(args);
@@ -110,14 +110,14 @@ void Repair::launchProcess(const NzbCollectionData& nzbCollectionData){
             }
             // try to decompress files directly :
             else {
-                //kDebug() << "No Par2 files found!";
+                //qCDebug(KWOOTY_LOG) << "No Par2 files found!";
                 this->nzbCollectionData.setVerifyRepairTerminateStatus(RepairFinishedStatus);
                 emit repairProcessEndedSignal(this->nzbCollectionData);
 
                 // clear global variables :
                 this->resetVariables();
 
-                kDebug() << "try to decompress files directly...";
+                qCDebug(KWOOTY_LOG) << "try to decompress files directly...";
             }
         }
         // folder not exists :
@@ -327,14 +327,14 @@ void Repair::repairReadyReadSlot(){
 
         if (!line.isEmpty()) {
 
-            //kDebug() << "line : " << line;
+            //qCDebug(KWOOTY_LOG) << "line : " << line;
 
             switch(repairStatus) {
 
             case  Repair::IdleRepair: {
 
                     if (line.contains("Loading")) {
-                        //kDebug() << "verifying";
+                        //qCDebug(KWOOTY_LOG) << "verifying";
                         // notify nzb parent and children files that verification has begun :
                         this->sendVerifyingFilesNotification();
 
@@ -347,17 +347,17 @@ void Repair::repairReadyReadSlot(){
             case Repair::Verifying: {
 
                     if (line.contains("Repair is possible")) {
-                        //kDebug() << "Repair is possible";
+                        //qCDebug(KWOOTY_LOG) << "Repair is possible";
                         this->sendMissingFilesNotification();
                         repairStatus = Repair::Repairing;
                     }
                     else if (line.contains("Repair is not possible")) {
-                        //kDebug() << "Repair is not possible";
+                        //qCDebug(KWOOTY_LOG) << "Repair is not possible";
                         this->sendMissingFilesNotification();
                         repairStatus = Repair::RepairingNotPossible;
                     }
                     else if (line.contains("Repair complete")) {
-                        //kDebug() << "Repair complete";
+                        //qCDebug(KWOOTY_LOG) << "Repair complete";
                         repairStatus = Repair::RepairComplete;
                     }
 
@@ -372,7 +372,7 @@ void Repair::repairReadyReadSlot(){
             case Repair::Repairing: {
 
                     if (line.contains("Verifying repaired files")) {
-                        //kDebug() << "Verifying repaired files";
+                        //qCDebug(KWOOTY_LOG) << "Verifying repaired files";
                         repairStatus = Repair::Verifying;
                     }
 
@@ -406,7 +406,7 @@ void Repair::repairReadyReadSlot(){
 
 void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus exitStatus){
 
-    //kDebug() << "exitCode" << exitCode << " exitStatus " << exitStatus;
+    //qCDebug(KWOOTY_LOG) << "exitCode" << exitCode << " exitStatus " << exitStatus;
 
     // notify nzb parent item that verification has ended :
     for (int i = 0; i < this->nzbFileDataList.size(); i++) {

@@ -20,7 +20,7 @@
 
 #include "segmentdecoderyenc.h"
 
-#include <KDebug>
+#include "kwooty_debug.h"
 
 #include "kwootysettings.h"
 #include "segmentsdecoderthread.h"
@@ -152,13 +152,13 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString& temporaryFolder, Segme
 
     else {
 
-        kDebug() << "segment size not maching. beginValue:" << beginValue << ", endValue:" << endValue << ", sizeValue:" << sizeValue;
+        qCDebug(KWOOTY_LOG) << "segment size not maching. beginValue:" << beginValue << ", endValue:" << endValue << ", sizeValue:" << sizeValue;
 
     }
 
     // if write fails, try to know more about the issue :
     if (!writeSuccess) {
-        kDebug() << "write failed !" << temporaryFile.fileName() << temporaryFile.errorString();
+        qCDebug(KWOOTY_LOG) << "write failed !" << temporaryFile.fileName() << temporaryFile.errorString();
     }
 
 
@@ -320,7 +320,7 @@ void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData& nzbFileData) {
         bool success = Utility::rename(temporaryFileStr, destinationFileStr);
 
         if (!success) {
-            kDebug() << "can not move" << temporaryFileStr << "to" << destinationFileStr;
+            qCDebug(KWOOTY_LOG) << "can not move" << temporaryFileStr << "to" << destinationFileStr;
         }
 
         // remove kwooty tag application that should be present at the end of the temporary file :
