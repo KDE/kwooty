@@ -53,10 +53,6 @@ public:
     void triggerPostProcessManually(const QStandardItem*);
 
 
-#if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
-    Core* getCore() const;
-#endif
-
 
 private:
 

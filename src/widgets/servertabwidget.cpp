@@ -22,7 +22,7 @@
 #include "servertabwidget.h"
 
 #include "kwooty_debug.h"
-#include <KIcon>
+#include <QIcon>
 #include <KInputDialog>
 #include <KMessageBox>
 
@@ -48,13 +48,13 @@ ServerTabWidget::ServerTabWidget(PreferencesServer* parent) : KTabWidget(parent)
     // add a button to add backup server :
     this->newTab = new QToolButton(this);
     this->newTab->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    this->newTab->setIcon(KIcon("list-add"));
+    this->newTab->setIcon(QIcon::fromTheme("list-add"));
     this->newTab->setToolTip("Add a backup server");
 
     // add a button to remove backup server :
     this->closeTab = new QToolButton(this);
     this->closeTab->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    this->closeTab->setIcon(KIcon("list-remove"));
+    this->closeTab->setIcon(QIcon::fromTheme("list-remove"));
     this->closeTab->setToolTip("Remove current backup server");
 
     // create icons and associated texts for servers mode :

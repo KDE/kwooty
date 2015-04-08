@@ -86,11 +86,6 @@ public slots:
     void expandedSlot(const QModelIndex&);
 
 
-    // #QTBUG-5201
-#if QT_VERSION == 0x040503
-    void dataChangedSlot(QStandardItem*);
-#endif
-
 private slots:
 
 

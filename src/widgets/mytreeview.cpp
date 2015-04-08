@@ -109,10 +109,7 @@ void MyTreeView::setupConnections() {
              SLOT(expandedSlot(const QModelIndex&)));
 
 
-#if QT_VERSION == 0x040503
-    // fixes #QTBUG-5201
     connect(this->getDownloadModel(), SIGNAL(itemChanged(QStandardItem*)), this, SLOT(dataChangedSlot(QStandardItem*)));
-#endif
 
 
 }
@@ -363,22 +360,4 @@ void MyTreeView::settingsChangedSlot() {
     this->displayLongOrTinyFileName();
 }
 
-
-
-#if QT_VERSION == 0x040503
-void MyTreeView::dataChangedSlot(QStandardItem* item){
-    // items at row 0 are not updated in qt 4.5.3,
-    // this fixes update issue :
-    QModelIndex index = item->index();
-    if (index.isValid()) {
-        if (this->getDownloadModel()->isNzbItem(item) && (item->row() == 0) ) {
-            const QRect rect = this->visualRect(index);
-            if (this->viewport()->rect().intersects(rect)){
-                this->viewport()->update(rect);
-            }
-        }
-    }
-
-}
-#endif
 

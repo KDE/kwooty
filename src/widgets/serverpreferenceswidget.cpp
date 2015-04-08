@@ -23,6 +23,7 @@
 
 #include <KMessageBox>
 #include <QUuid>
+#include <QIcon>
 
 #include "preferences/preferencesserver.h"
 #include "preferences/kconfiggrouphandler.h"
@@ -88,7 +89,7 @@ int ServerPreferencesWidget::getTabIndex() {
 void ServerPreferencesWidget::setupButtons() {
 
     // set icon for info button :
-    this->serverSettingsUi->pushButtonInfo->setIcon(KIcon("system-help"));
+    this->serverSettingsUi->pushButtonInfo->setIcon(QIcon::fromTheme("system-help"));
 
     // set icon and text for server mode combo box :
     QMap<int, QString> comboBoxIconTextMap = this->serverTabWidget->getComboBoxIconTextMap();

@@ -61,14 +61,6 @@ StandardItemModel* ItemParentUpdater::getDownloadModel() const{
 }
 
 
-#if (QT_VERSION >= 0x040600) && (QT_VERSION <= 0x040602)
-Core* ItemParentUpdater::getCore() const{
-    return this->parent;
-}
-#endif
-
-
-
 void ItemParentUpdater::setupConnections() {
 
 

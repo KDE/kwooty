@@ -188,7 +188,7 @@ void MainWindow::setupActions() {
     clearAction->setText(i18n("Clear"));
     clearAction->setIcon(QIcon::fromTheme("edit-clear-list"));
     clearAction->setToolTip(i18n("Remove all rows"));
-    clearAction->setShortcut(Qt::CTRL + Qt::Key_W);
+    actionCollection()->setDefaultShortcut(clearAction, Qt::CTRL + Qt::Key_W);
     actionCollection()->addAction("clear", clearAction);
     connect(clearAction, SIGNAL(triggered(bool)), actionsManager, SLOT(clearSlot()));
 
@@ -197,7 +197,7 @@ void MainWindow::setupActions() {
     startDownloadAction->setText(i18n("Start"));
     startDownloadAction->setIcon(QIcon::fromTheme("media-playback-start"));
     startDownloadAction->setToolTip(i18n("Start download of selected rows"));
-    startDownloadAction->setShortcut(Qt::CTRL + Qt::Key_S);
+    actionCollection()->setDefaultShortcut(startDownloadAction, Qt::CTRL + Qt::Key_S);
     startDownloadAction->setEnabled(false);
     actionCollection()->addAction("start", startDownloadAction);
     connect(startDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(startDownloadSlot()));
@@ -208,7 +208,7 @@ void MainWindow::setupActions() {
     pauseDownloadAction->setText(i18n("Pause"));
     pauseDownloadAction->setIcon(QIcon::fromTheme("media-playback-pause"));
     pauseDownloadAction->setToolTip(i18n("Pause download of selected rows"));
-    pauseDownloadAction->setShortcut(Qt::CTRL + Qt::Key_P);
+    actionCollection()->setDefaultShortcut(pauseDownloadAction, Qt::CTRL + Qt::Key_P);
     pauseDownloadAction->setEnabled(false);
     actionCollection()->addAction("pause", pauseDownloadAction);
     connect(pauseDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(pauseDownloadSlot()));
@@ -219,7 +219,7 @@ void MainWindow::setupActions() {
     removeItemAction->setText(i18n("Remove"));
     removeItemAction->setIcon(QIcon::fromTheme("list-remove"));
     removeItemAction->setToolTip(i18n("Remove all selected rows"));
-    removeItemAction->setShortcut(Qt::Key_Delete);
+    actionCollection()->setDefaultShortcut(removeItemAction, Qt::Key_Delete);
     removeItemAction->setEnabled(false);
     actionCollection()->addAction("remove", removeItemAction);
     connect(removeItemAction, SIGNAL(triggered(bool)), actionsManager, SLOT(removeRowSlot()));
@@ -231,7 +231,7 @@ void MainWindow::setupActions() {
     removeItemDeleteFileAction->setText(i18n("Remove data"));
     removeItemDeleteFileAction->setIcon(QIcon::fromTheme("edit-delete"));
     removeItemDeleteFileAction->setToolTip(i18n("Remove all selected rows and respective downloaded contents"));
-    removeItemDeleteFileAction->setShortcut(Qt::SHIFT | Qt::Key_Delete);
+    actionCollection()->setDefaultShortcut(removeItemDeleteFileAction, Qt::SHIFT | Qt::Key_Delete);
     removeItemDeleteFileAction->setEnabled(false);
     actionCollection()->addAction("removeItemDeleteFile", removeItemDeleteFileAction);
     connect(removeItemDeleteFileAction, SIGNAL(triggered(bool)), actionsManager->getActionFileDeleteManager(), SLOT(actionTriggeredSlot()));
@@ -243,7 +243,7 @@ void MainWindow::setupActions() {
     moveUpAction->setText(i18n("Up"));
     moveUpAction->setIcon(QIcon::fromTheme("go-up"));
     moveUpAction->setToolTip(i18n("Go up all selected rows"));
-    moveUpAction->setShortcut(Qt::CTRL + Qt::Key_Up);
+    actionCollection()->setDefaultShortcut(moveUpAction, Qt::CTRL + Qt::Key_Up);
     moveUpAction->setEnabled(false);
     actionCollection()->addAction("moveUp", moveUpAction);
     connect(moveUpAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveUpSlot()));
@@ -254,7 +254,7 @@ void MainWindow::setupActions() {
     moveToTopAction->setText(i18n("Top"));
     moveToTopAction->setIcon(QIcon::fromTheme("go-top"));
     moveToTopAction->setToolTip(i18n("Move all selected rows to the top of the list"));
-    moveToTopAction->setShortcut(Qt::CTRL + Qt::Key_PageUp);
+    actionCollection()->setDefaultShortcut(moveToTopAction, Qt::CTRL + Qt::Key_PageUp);
     moveToTopAction->setEnabled(false);
     actionCollection()->addAction("moveTop", moveToTopAction);
     connect(moveToTopAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveToTopSlot()));
@@ -265,7 +265,7 @@ void MainWindow::setupActions() {
     moveDownAction->setText(i18n("Down"));
     moveDownAction->setIcon(QIcon::fromTheme("go-down"));
     moveDownAction->setToolTip(i18n("Go down all selected rows"));
-    moveDownAction->setShortcut(Qt::CTRL + Qt::Key_Down);
+    actionCollection()->setDefaultShortcut(moveDownAction, Qt::CTRL + Qt::Key_Down);
     moveDownAction->setEnabled(false);
     actionCollection()->addAction("moveDown", moveDownAction);
     connect(moveDownAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveDownSlot()));
@@ -276,7 +276,7 @@ void MainWindow::setupActions() {
     moveToBottomAction->setText(i18n("Bottom"));
     moveToBottomAction->setIcon(QIcon::fromTheme("go-bottom"));
     moveToBottomAction->setToolTip(i18n("Move all selected rows to the bottom of the list"));
-    moveToBottomAction->setShortcut(Qt::CTRL + Qt::Key_PageDown);
+    actionCollection()->setDefaultShortcut(moveToBottomAction, Qt::CTRL + Qt::Key_PageDown);
     moveToBottomAction->setEnabled(false);
     actionCollection()->addAction("moveBottom", moveToBottomAction);
     connect(moveToBottomAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveToBottomSlot()));
@@ -287,7 +287,7 @@ void MainWindow::setupActions() {
     openFolderAction->setText(i18n("Downloads"));
     openFolderAction->setIcon(QIcon::fromTheme("folder-downloads"));
     openFolderAction->setToolTip(i18n("Open current download folder"));
-    openFolderAction->setShortcut(Qt::CTRL + Qt::Key_D);
+    actionCollection()->setDefaultShortcut(openFolderAction, Qt::CTRL + Qt::Key_D);
     openFolderAction->setEnabled(true);
     actionCollection()->addAction("downloadFolder", openFolderAction);
     connect(openFolderAction, SIGNAL(triggered(bool)), actionsManager, SLOT(openFolderSlot()));
@@ -297,7 +297,7 @@ void MainWindow::setupActions() {
     shutdownAction->setText(i18n("Shutdown"));
     shutdownAction->setIcon(QIcon::fromTheme("system-shutdown"));
     shutdownAction->setToolTip(i18n("Schedule system shutdown"));
-    shutdownAction->setShortcut(Qt::CTRL + Qt::Key_T);
+    actionCollection()->setDefaultShortcut(shutdownAction, Qt::CTRL + Qt::Key_T);
     shutdownAction->setEnabled(false);
     shutdownAction->setCheckable(true);
     actionCollection()->addAction("shutdown", shutdownAction);
@@ -330,7 +330,7 @@ void MainWindow::setupActions() {
     retryDownloadAction->setText(i18n("Retry"));
     retryDownloadAction->setIcon(QIcon::fromTheme("edit-redo"));
     retryDownloadAction->setToolTip(i18n("Retry to download selected rows"));
-    retryDownloadAction->setShortcut(Qt::CTRL + Qt::Key_R);
+    actionCollection()->setDefaultShortcut(retryDownloadAction, Qt::CTRL + Qt::Key_R);
     retryDownloadAction->setEnabled(false);
     actionCollection()->addAction("retryDownload", retryDownloadAction);
     connect(retryDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(retryDownloadSlot()));
@@ -341,7 +341,7 @@ void MainWindow::setupActions() {
     manualExtractAction->setText(i18n("Repair and extract"));
     manualExtractAction->setIcon(QIcon::fromTheme("archive-extract"));
     manualExtractAction->setToolTip(i18n("Manually verify and extract selected item"));
-    manualExtractAction->setShortcut(Qt::CTRL + Qt::Key_E);
+    actionCollection()->setDefaultShortcut(manualExtractAction, Qt::CTRL + Qt::Key_E);
     manualExtractAction->setEnabled(false);
     actionCollection()->addAction("manualExtract", manualExtractAction);
     connect(manualExtractAction, SIGNAL(triggered(bool)), actionsManager, SLOT(manualExtractSlot()));
@@ -372,7 +372,7 @@ void MainWindow::setupActions() {
     renameNzbAction->setText(i18n("Rename..."));
     renameNzbAction->setIcon(QIcon::fromTheme("edit-rename"));
     renameNzbAction->setToolTip(i18n("Rename nzb and its corresponding download folder"));
-    renameNzbAction->setShortcut(Qt::Key_F2);
+    actionCollection()->setDefaultShortcut(renameNzbAction, Qt::Key_F2);
     renameNzbAction->setEnabled(false);
     actionCollection()->addAction("renameNzb", renameNzbAction);
     connect(renameNzbAction, SIGNAL(triggered(bool)), actionsManager->getActionRenameManager(), SLOT(actionTriggeredSlot()));
