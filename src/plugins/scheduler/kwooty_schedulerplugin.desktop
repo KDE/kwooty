@@ -13,14 +13,19 @@ Type=Service
 Icon=view-calendar
 
 Name=Bandwidth manager
+Name[cs]=Správce šířky pásma
 Name[de]=Bandbreitenverwaltung
 Name[pl]=Zarządzanie przepustowością
+Name[pt_BR]=Gerenciador de banda
+Name[sv]=Bandbreddshanterare
 Name[uk]=Керування потоком даних
 Name[x-test]=xxBandwidth managerxx
 name[cs]=Správce šířky pásma
 
 Comment=Schedule and limit bandwidth
 Comment[pl]=Zaplanuj i ogranicz przepustowość
+Comment[pt_BR]=Agenda e limite de banda
+Comment[sv]=Schemalägg och begränsa bandbredd
 Comment[uk]=Планування і обмеження потоку даних
 Comment[x-test]=xxSchedule and limit bandwidthxx
 

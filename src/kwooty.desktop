@@ -1,15 +1,20 @@
 [Desktop Entry]
 MimeType=application/x-nzb;
 Name=Kwooty
+Name[cs]=Kwooty
 Name[de]=Kwooty
 Name[nl]=Kwooty
 Name[pl]=Kwooty
+Name[pt_BR]=Kwooty
 Name[sk]=Kwooty
+Name[sv]=Kwooty
 Name[uk]=Kwooty
 Name[x-test]=xxKwootyxx
 GenericName=Nzb usenet client
 GenericName[nl]=Nzb usenet-client
 GenericName[pl]=Klient usenet Nzb
+GenericName[pt_BR]=Cliente usenet Nzb
+GenericName[sv]=Nzb usenet-klient
 GenericName[uk]=Клієнт usenet nzb
 GenericName[x-test]=xxNzb usenet clientxx
 Icon=kwooty
