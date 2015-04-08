@@ -109,9 +109,6 @@ void MyTreeView::setupConnections() {
              SLOT(expandedSlot(const QModelIndex&)));
 
 
-    connect(this->getDownloadModel(), SIGNAL(itemChanged(QStandardItem*)), this, SLOT(dataChangedSlot(QStandardItem*)));
-
-
 }
 
 
