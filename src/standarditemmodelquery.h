@@ -44,7 +44,7 @@ public:
     QStandardItem* searchParentItemDownloadOrPausing();
     QStandardItem* searchParentItemPause();
     QStandardItem* searchParentItemPostDownloadProcessing();
-    ItemStatus isRetryDownloadAllowed(QStandardItem*, bool* = 0);
+    ItemStatus isRetryDownloadAllowed(QStandardItem*, bool* = Q_NULLPTR);
     bool isManualRepairExtractAllowed(QStandardItem* fileNameItem) const;
     bool haveItemsSameParent(const QList<QModelIndex>&);
     bool isParentContainsPar2File(QStandardItem*) const;
