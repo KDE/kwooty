@@ -23,6 +23,7 @@
 #include <KCmdLineArgs>
 #include <KUrl>
 #include <QIcon>
+#include <Kdelibs4ConfigMigrator>
 #include "kwooty_debug.h"
 
 #include "uniqueapp.h"
@@ -31,6 +32,12 @@
 
 int main (int argc, char** argv)
 {
+    Kdelibs4ConfigMigrator migrate(QStringLiteral("kwooty"));
+
+    migrate.setConfigFiles(QStringList() << QStringLiteral("kwootyrc"));
+    migrate.setUiFiles(QStringList() << QStringLiteral("kwootyui.rc"));
+    migrate.migrate();
+
     K4AboutData aboutData("kwooty",
                          "",
                          ki18n("Kwooty"), "1.1.0",
