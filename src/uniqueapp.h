@@ -33,7 +33,7 @@ class UniqueApp : public KUniqueApplication
 public:
     UniqueApp();
     virtual ~UniqueApp();
-    virtual int newInstance();
+    int newInstance() Q_DECL_OVERRIDE;
 
 private:
     QPointer<MainWindow> mainWindow;
