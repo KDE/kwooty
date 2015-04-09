@@ -146,7 +146,7 @@ target_link_libraries(kwooty  kwootycore )
 
 
 install(TARGETS kwooty DESTINATION ${KDE_INSTALL_BINDIR})
-install(FILES kwootyui.rc DESTINATION ${KDE_INSTALL_DATADIR}/kwooty)
+install(FILES kwootyui.rc DESTINATION ${KXMLGUI_INSTALL_DIR}/kwooty)
 install(FILES kwooty.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR})
 install(FILES preferences/kwootysettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
 install(FILES org.kde.kwooty.desktop DESTINATION ${KDE_INSTALL_APPDIR})
