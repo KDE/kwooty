@@ -34,7 +34,7 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<SchedulerPlugin>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_schedulerplugin"))
 
 
-SchedulerPlugin::SchedulerPlugin(QObject* parent, const QList<QVariant>&) : Plugin(PluginFactory::componentData(), parent)
+SchedulerPlugin::SchedulerPlugin(QObject* parent, const QList<QVariant>&) : Plugin(parent)
 {
 
 }
@@ -65,4 +65,5 @@ void SchedulerPlugin::unload() {
 void SchedulerPlugin::configUpdated() {
     this->scheduler->settingsChanged();
 }
+#include "schedulerplugin.moc"
 

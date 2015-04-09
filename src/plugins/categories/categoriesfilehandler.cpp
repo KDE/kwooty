@@ -24,7 +24,7 @@
 #include <KStandardDirs>
 #include "kwooty_debug.h"
 #include <kmimetype.h>
-
+#include <KSharedPtr>
 #include <QXmlStreamWriter>
 #include <QFile>
 
@@ -110,7 +110,7 @@ void CategoriesFileHandler::fillModel(CategoriesModel* categoriesModel) {
 
                 if (attributes.value("version").toString() != "1") {
 
-                    qCDebug(KWOOTY_LOG) << "this categories.xml version is not compatible with current category plugin version";
+                    qDebug() << "this categories.xml version is not compatible with current category plugin version";
                     break;
                 }
             }
@@ -193,12 +193,12 @@ void CategoriesFileHandler::fillModel(CategoriesModel* categoriesModel) {
 
     if (!fileOpen) {
         error = true;
-        qCDebug(KWOOTY_LOG) << "categories.xml can not be open !";
+        qDebug() << "categories.xml can not be open !";
     }
 
     if (stream.hasError()) {
         error = true;
-        qCDebug(KWOOTY_LOG) << "categories.xml can not been parsed correctly !";
+        qDebug() << "categories.xml can not been parsed correctly !";
     }
 
 

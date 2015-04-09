@@ -29,6 +29,7 @@
 #include <QDate>
 #include <QStandardItem>
 #include <QAction>
+#include <KLocalizedString>
 
 #include "mainwindow.h"
 #include "core.h"
@@ -137,7 +138,7 @@ void Scheduler::resumeDownloads() {
 
     }
     else {
-        qCDebug(KWOOTY_LOG) << "downloads remain suspended: temporary disk drive is full";
+        qDebug() << "downloads remain suspended: temporary disk drive is full";
     }
 
 

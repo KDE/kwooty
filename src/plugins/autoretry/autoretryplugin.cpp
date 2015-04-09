@@ -34,7 +34,7 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<AutoRetryPlugin>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_autoretryplugin"))
 
 
-AutoRetryPlugin::AutoRetryPlugin(QObject* parent, const QList<QVariant>&) : Plugin(PluginFactory::componentData(), parent)
+AutoRetryPlugin::AutoRetryPlugin(QObject* parent, const QList<QVariant>&) : Plugin(parent)
 {
 
 }
@@ -59,4 +59,4 @@ void AutoRetryPlugin::unload() {
 void AutoRetryPlugin::configUpdated() {
     this->autoRetry->settingsChanged();
 }
-
+#include "autoretryplugin.moc"

@@ -81,7 +81,7 @@ QString UtilityCategories::buildFullCategoryPattern(const QString& category, con
 
 
 QString UtilityCategories::buildTextToDisplay(const QString& category, const QString& subcategory) {
-
+#if 0 //PORT KF5
     QString textToDisplay;
     KSharedPtr<KMimeType> mimeType = KMimeType::mimeType(UtilityCategories::buildFullCategoryPattern(category, subcategory));
 
@@ -90,11 +90,14 @@ QString UtilityCategories::buildTextToDisplay(const QString& category, const QSt
     }
 
     return textToDisplay;
+#else
+    return QString();
+#endif
 }
 
 
 QString UtilityCategories::buildTextToDisplayFromFullCategoryPattern(const QString& fullCategory) {
-
+#if 0 //PORT KF5
     QString textToDisplay;
     KSharedPtr<KMimeType> mimeType = KMimeType::mimeType(fullCategory);
 
@@ -103,6 +106,9 @@ QString UtilityCategories::buildTextToDisplayFromFullCategoryPattern(const QStri
     }
 
     return textToDisplay;
+#else
+    return QString();
+#endif
 }
 
 
@@ -121,7 +127,7 @@ QString UtilityCategories::builExtensionStringFromMimeType(KSharedPtr<KMimeType>
 
 void UtilityCategories::builPartialMimeData(MimeData& mimeData) {
 
-
+#if 0 //PORT KF5
     QString fullCategory = UtilityCategories::buildFullCategoryPattern(mimeData.getMainCategory(), mimeData.getSubCategory());
 
     KSharedPtr<KMimeType> mimeType = KMimeType::mimeType(fullCategory);
@@ -133,7 +139,7 @@ void UtilityCategories::builPartialMimeData(MimeData& mimeData) {
         mimeData.setDisplayedText(UtilityCategories::buildTextToDisplayFromFullCategoryPattern(fullCategory));
 
     }
-
+#endif
 }
 
 
@@ -141,7 +147,7 @@ void UtilityCategories::builPartialMimeData(MimeData& mimeData) {
 QStringList UtilityCategories::retrieveMainCategoryList() {
 
     QStringList parentTypeList;
-
+#if 0 //PORT KF5
     foreach (const KSharedPtr<KMimeType>& mimeType,  KMimeType::allMimeTypes()) {
 
         QStringList tempList = mimeType->name().split("/");
@@ -163,6 +169,7 @@ QStringList UtilityCategories::retrieveMainCategoryList() {
 
     // return main category list sorted by alphabetical order :
     qSort(parentTypeList);
+#endif
     return parentTypeList;
 }
 

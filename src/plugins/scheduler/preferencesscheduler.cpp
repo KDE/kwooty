@@ -26,7 +26,7 @@
 #include <KColorUtils>
 #include <kcolorscheme.h>
 #include <kgenericfactory.h>
-
+#include <KLocalizedString>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QModelIndex>
@@ -40,7 +40,7 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesScheduler>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_schedulersettings"))
 
 
-PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& args) : KCModule(PluginFactory::componentData(), parent, args) {
+PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& args) : KCModule(parent, args) {
 
     // set config layout :
     QHBoxLayout* layout = new QHBoxLayout(this);
@@ -78,7 +78,7 @@ PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& 
 
     QString timeSize = QTime::currentTime().toString("hh:mm");
     horizontalHeader->setDefaultSectionSize(10);
-    horizontalHeader->setMinimumSectionSize(qRound(parent->fontMetrics().width(timeSize) / 4));
+    horizontalHeader->setMinimumSectionSize(qRound((double)(parent->fontMetrics().width(timeSize) / 4)));
     horizontalHeader->hide();
 
     // build vertical header :
@@ -131,9 +131,9 @@ PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& 
 
 
     // init combobox manually start/pause bypass list :
-    this->preferencesSchedulerUi.kcfg_bypassMethods->addItem(KIcon("media-playback-pause"), i18n("Pause"));
-    this->preferencesSchedulerUi.kcfg_bypassMethods->addItem(KIcon("media-playback-start"), i18n("Start"));
-    this->preferencesSchedulerUi.kcfg_bypassMethods->addItem(KIcon("media-skip-forward"), i18n("Start or Pause"));
+    this->preferencesSchedulerUi.kcfg_bypassMethods->addItem(QIcon::fromTheme("media-playback-pause"), i18n("Pause"));
+    this->preferencesSchedulerUi.kcfg_bypassMethods->addItem(QIcon::fromTheme("media-playback-start"), i18n("Start"));
+    this->preferencesSchedulerUi.kcfg_bypassMethods->addItem(QIcon::fromTheme("media-skip-forward"), i18n("Start or Pause"));
 
 
     if (this->preferencesSchedulerUi.kcfg_bypass->checkState() == Qt::Unchecked) {
@@ -340,3 +340,4 @@ void PreferencesScheduler::checkBoxStateChangedSlot(int state) {
 }
 
 
+#include "preferencesscheduler.moc"

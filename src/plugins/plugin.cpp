@@ -30,7 +30,7 @@
 #include "mainwindow.h"
 
 
-Plugin::Plugin(const KComponentData& instance, QObject* parent): QObject(parent), KXMLGUIClient()
+Plugin::Plugin(QObject* parent): QObject(parent), KXMLGUIClient()
 {
 
     //qCDebug(KWOOTY_LOG) << instance.componentName();

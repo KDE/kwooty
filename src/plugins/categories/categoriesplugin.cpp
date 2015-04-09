@@ -34,7 +34,7 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<CategoriesPlugin>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_categoriesplugin"))
 
 
-CategoriesPlugin::CategoriesPlugin(QObject* parent, const QList<QVariant>&) : Plugin(PluginFactory::componentData(), parent)
+CategoriesPlugin::CategoriesPlugin(QObject* parent, const QList<QVariant>&) : Plugin( parent)
 {
 
 }
@@ -62,4 +62,4 @@ void CategoriesPlugin::unload() {
 void CategoriesPlugin::configUpdated() {
     this->categories->settingsChanged();
 }
-
+#include "categoriesplugin.moc"

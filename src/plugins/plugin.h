@@ -26,7 +26,6 @@
 #include <QObject>
 #include <kxmlguiclient.h>
 #include "kwooty_export.h"
-class KComponentData;
 class MainWindow;
 
 
@@ -36,7 +35,7 @@ class KWOOTY_EXPORT Plugin : public QObject, public KXMLGUIClient {
 
 public:
 
-    Plugin(const KComponentData&, QObject*);
+    Plugin(QObject*);
     void setCore(MainWindow*);
     MainWindow* getMainWindow();
 

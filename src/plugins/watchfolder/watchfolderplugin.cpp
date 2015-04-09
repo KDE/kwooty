@@ -34,7 +34,7 @@ K_PLUGIN_FACTORY(PluginFactory, registerPlugin<WatchFolderPlugin>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_watchfolderplugin"))
 
 
-WatchFolderPlugin::WatchFolderPlugin(QObject* parent, const QList<QVariant>&) : Plugin(PluginFactory::componentData(), parent)
+WatchFolderPlugin::WatchFolderPlugin(QObject* parent, const QList<QVariant>&) : Plugin(parent)
 {
 
 }
@@ -59,4 +59,4 @@ void WatchFolderPlugin::unload() {
 void WatchFolderPlugin::configUpdated() {
     this->watchFolder->settingsChanged();
 }
-
+#include "watchfolderplugin.moc"

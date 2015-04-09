@@ -23,7 +23,7 @@
 #define UTILITYCATEGORIES_H
 
 #include <kmimetype.h>
-
+#include <KSharedPtr>
 #include <QString>
 #include "categoriesmodel.h"
 #include "mimedata.h"

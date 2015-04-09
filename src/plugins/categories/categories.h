@@ -29,7 +29,7 @@
 
 #include <kio/copyjob.h>
 #include <kmimetype.h>
-
+#include <KSharedPtr>
 #include "mimedata.h"
 #include "data/itemstatusdata.h"
 #include "utilities/utility.h"

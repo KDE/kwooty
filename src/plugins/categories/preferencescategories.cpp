@@ -24,11 +24,12 @@
 #include "kwooty_debug.h"
 #include <KGlobal>
 #include <KInputDialog>
-
+#include <KIcon>
+#include <KDialog>
 #include <kgenericfactory.h>
 #include <kmimetypechooser.h>
 #include <kmimetype.h>
-
+#include <KUrl>
 #include <QHBoxLayout>
 #include <QTreeView>
 
@@ -43,7 +44,7 @@
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesCategories>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_categoriessettings"))
 
-PreferencesCategories::PreferencesCategories(QWidget* parent, const QVariantList& args) : KCModule(PluginFactory::componentData(), parent, args) {
+PreferencesCategories::PreferencesCategories(QWidget* parent, const QVariantList& args) : KCModule(parent, args) {
 
     this->saveChangesRequested = false;
 
@@ -501,3 +502,4 @@ void PreferencesCategories::defaultTransferValueButtonToggledSlot() {
 
 }
 
+#include "preferencescategories.moc"

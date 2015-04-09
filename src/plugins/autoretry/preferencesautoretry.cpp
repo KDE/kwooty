@@ -35,7 +35,7 @@ K_EXPORT_PLUGIN(PluginFactory("kwooty_autoretrysettings"))
 
 
 PreferencesAutoRetry::PreferencesAutoRetry(QWidget* parent, const QVariantList& args) :
-KCModule(PluginFactory::componentData(), parent, args) {
+KCModule(parent, args) {
 
     // set layout config layout :
     QHBoxLayout* layout = new QHBoxLayout(this);
@@ -66,3 +66,5 @@ void PreferencesAutoRetry::save(){
     KCModule::save();
 
 }
+
+#include "preferencesautoretry.moc"

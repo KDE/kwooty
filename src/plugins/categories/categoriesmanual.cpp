@@ -23,7 +23,8 @@
 #include <KFileDialog>
 #include <KAction>
 #include <KActionCollection>
-
+#include <KLocalizedString>
+#include <KIcon>
 #include "categoriesmanual.h"
 #include "core.h"
 #include "mainwindow.h"

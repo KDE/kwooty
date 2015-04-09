@@ -90,7 +90,7 @@ void SchedulerFileHandler::fillModel(QStandardItemModel* schedulerModel) {
 
                 if (attributes.value("version").toString() != "1") {
 
-                    qCDebug(KWOOTY_LOG) << "this scheduler.xml version is not compatible with current kwooty version";
+                    qDebug() << "this scheduler.xml version is not compatible with current kwooty version";
                     break;
                 }
             }

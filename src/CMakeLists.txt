@@ -6,8 +6,7 @@ set(KWOOTY_INCLUDES
 
 
 add_subdirectory(icons)
-#KF5 reactivate it
-#add_subdirectory(plugins)
+add_subdirectory(plugins)
 
 set(Kwooty_SRCS 
   main.cpp
