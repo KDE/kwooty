@@ -65,7 +65,7 @@ QString Utility::convertDownloadSpeedHumanReadable(const quint64 downloadSpeedIn
         downloadSpeedStr = i18n("%1 MiB/s", QString("%1").arg(fileSize, 0, 'f', 2));
     }
     else {
-        downloadSpeedStr = i18n("<numid>%1</numid> KiB/s", static_cast<int>(downloadSpeedInByte / NBR_BYTES_IN_KB));
+        downloadSpeedStr = i18n("%1 KiB/s", static_cast<int>(downloadSpeedInByte / NBR_BYTES_IN_KB));
     }
 
     return downloadSpeedStr;

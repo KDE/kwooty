@@ -125,7 +125,7 @@ ServerConnectionIcon UtilityServerStatus::buildConnectionStringFromStatus(const 
         // set connection icon :
         serverConnectionIcon = ConnectedNormalIcon;
 
-        connection = i18n("Connected: <numid>%1</numid>", totalConnections);
+        connection = i18n("Connected: %1", totalConnections);
 
         if (clientsObserver->isSslActive()) {
 

@@ -134,7 +134,7 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
             }
             else {
                 int progress = index.data(ProgressRole).toInt();
-                opt.text = i18n("<numid>%1</numid> %", progress);
+                opt.text = i18n("%1 %", progress);
 
                 // if progress unkwnown (appears 7z extract command is launched), display n/a :
                 if (progress == PROGRESS_UNKNOWN) {
@@ -185,7 +185,7 @@ void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem
     // set progress value and text :
     int progress = index.data(ProgressRole).toInt();
     progressBarOpt.progress = progress;    
-    progressBarOpt.text = i18n("<numid>%1</numid> %", progress);
+    progressBarOpt.text = i18n("%1 %", progress);
 
 
     if (progress == PROGRESS_UNKNOWN) {

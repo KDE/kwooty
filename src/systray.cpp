@@ -303,7 +303,7 @@ void SysTray::createToolTip() {
 
         // add download progress :
         QString progressValue = i18nc("download progress percent",
-                                      "<numid>%1</numid> %", this->queueFileObserver->getFocusedProgressValue());
+                                      "%1 %", this->queueFileObserver->getFocusedProgressValue());
         currentTip.append(Utility::buildToolTipRow(i18n("Progress: "), progressValue));
 
     }
