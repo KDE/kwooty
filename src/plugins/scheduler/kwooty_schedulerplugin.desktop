@@ -16,6 +16,7 @@ Name=Bandwidth manager
 Name[cs]=Správce šířky pásma
 Name[de]=Bandbreitenverwaltung
 Name[pl]=Zarządzanie przepustowością
+Name[pt]=Gestor da largura de banda
 Name[pt_BR]=Gerenciador de banda
 Name[sv]=Bandbreddshanterare
 Name[uk]=Керування потоком даних
@@ -24,6 +25,7 @@ name[cs]=Správce šířky pásma
 
 Comment=Schedule and limit bandwidth
 Comment[pl]=Zaplanuj i ogranicz przepustowość
+Comment[pt]=Agendar e limitar a largura de banda
 Comment[pt_BR]=Agenda e limite de banda
 Comment[sv]=Schemalägg och begränsa bandbredd
 Comment[uk]=Планування і обмеження потоку даних
