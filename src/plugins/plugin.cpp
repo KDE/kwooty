@@ -22,8 +22,6 @@
 #include "plugin.h"
 
 
-#include <kdemacros.h>
-
 #include "kwooty_debug.h"
 #include <QObject>
 

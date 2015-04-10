@@ -23,7 +23,7 @@
 
 #include "kwooty_debug.h"
 #include <KColorScheme>
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 #include <KActionCollection>
 #include <KIconEffect>
@@ -186,19 +186,19 @@ void SysTray::initPixmaps() {
 
 bool SysTray::updateIconStatus(const UtilityNamespace::ItemStatus& itemStatus) {
 
-    KIcon icon;
+    QIcon icon;
 
     // get the proper icon according to item status :
     switch(itemStatus) {
 
     case UtilityNamespace::DownloadStatus:{
 
-            //PORT KF5 icon = KIcon("mail-receive");
+            icon = QIcon::fromTheme(QLatin1String("mail-receive"));
             break;
         }
 
     case UtilityNamespace::PauseStatus: {
-            //PORT KF5 icon = KIcon("media-playback-pause");
+            icon = QIcon::fromTheme(QLatin1String("media-playback-pause"));
             break;
         }
 
