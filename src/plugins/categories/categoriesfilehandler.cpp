@@ -90,6 +90,7 @@ CategoriesModel* CategoriesFileHandler::loadModelFromFile(QObject* parent) {
 void CategoriesFileHandler::fillModel(CategoriesModel* categoriesModel) {
 
     QFile categoriesFile(this->retrieveCategoriesFilePath());
+
     bool fileOpen = categoriesFile.open(QIODevice::ReadOnly);
     QXmlStreamReader stream (&categoriesFile);
 
@@ -194,11 +195,11 @@ void CategoriesFileHandler::fillModel(CategoriesModel* categoriesModel) {
     if (!fileOpen) {
         error = true;
         qDebug() << "categories.xml can not be open !";
-    }
-
-    if (stream.hasError()) {
-        error = true;
-        qDebug() << "categories.xml can not been parsed correctly !";
+    } else {
+        if (stream.hasError()) {
+            error = true;
+            qDebug() << "categories.xml can not been parsed correctly !";
+        }
     }
 
 
