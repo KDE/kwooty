@@ -72,22 +72,20 @@ UtilityIconPainting::UtilityIconPainting() : QObject(qApp) {
 
     // build a map to store every used icons in memory according to their names :
     foreach (const QString& iconName, statusIconStrMap.values()) {
-        //PORT KF5 iconStrIconImageMap.insert(iconName, KIcon(iconName));
+        iconStrIconImageMap.insert(iconName, QIcon::fromTheme(iconName));
     }
 
     foreach (const QString& iconName, parentStatusIconStrMap.values()) {
-        //PORT KF5 iconStrIconImageMap.insert(iconName, KIcon(iconName));
+        iconStrIconImageMap.insert(iconName, QIcon::fromTheme(iconName));
     }
-#if 0 //PORT KF5
-    iconStrIconImageMap.insert("mail-reply-list",       KIcon("mail-reply-list"));
-    iconStrIconImageMap.insert("mail-mark-important",   KIcon("mail-mark-important"));
-    iconStrIconImageMap.insert("mail-mark-important",   KIcon("mail-mark-important"));
-    iconStrIconImageMap.insert("dialog-warning",        KIcon("dialog-warning"));
-    iconStrIconImageMap.insert("dialog-cancel",         KIcon("dialog-cancel"));
+    iconStrIconImageMap.insert("mail-reply-list",       QIcon::fromTheme("mail-reply-list"));
+    iconStrIconImageMap.insert("mail-mark-important",   QIcon::fromTheme("mail-mark-important"));
+    iconStrIconImageMap.insert("mail-mark-important",   QIcon::fromTheme("mail-mark-important"));
+    iconStrIconImageMap.insert("dialog-warning",        QIcon::fromTheme("dialog-warning"));
+    iconStrIconImageMap.insert("dialog-cancel",         QIcon::fromTheme("dialog-cancel"));
 
     // add semi-transparent effect to icon for Idle status :
-    iconStrIconImageMap.insert("go-next-view-transparent", KIcon(this->instance->buildSemiTransparentIcon("go-next-view")));
-#endif
+    iconStrIconImageMap.insert("go-next-view-transparent", QIcon(this->instance->buildSemiTransparentIcon("go-next-view")));
 }
 
 
@@ -108,24 +106,24 @@ UtilityIconPainting* UtilityIconPainting::getInstance() {
 
 
 
-bool UtilityIconPainting::retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus& status, KIcon& icon) {
+bool UtilityIconPainting::retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus& status, QIcon& icon) {
 
-    //PORT KF5 icon = this->iconStrIconImageMap.value(this->parentStatusIconStrMap.value(status));
+    icon = this->iconStrIconImageMap.value(this->parentStatusIconStrMap.value(status));
     return this->parentStatusIconStrMap.contains(status);
 
 }
 
-bool UtilityIconPainting::retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus& status, KIcon& icon) {
+bool UtilityIconPainting::retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus& status, QIcon& icon) {
 
-    //PORT KF5 icon = this->iconStrIconImageMap.value(this->statusIconStrMap.value(status));
+    icon = this->iconStrIconImageMap.value(this->statusIconStrMap.value(status));
     return this->statusIconStrMap.contains(status);
 
 }
 
 
-bool UtilityIconPainting::retrieveIconFromString(const QString& iconName, KIcon& icon) {
+bool UtilityIconPainting::retrieveIconFromString(const QString& iconName, QIcon& icon) {
 
-    //PORT KF5 icon = this->iconStrIconImageMap.value(iconName);
+    icon = this->iconStrIconImageMap.value(iconName);
     return this->iconStrIconImageMap.contains(iconName);
 
 }
@@ -137,7 +135,7 @@ QPixmap UtilityIconPainting::blendOverLayEmblem(const QString& overlayIconStr, c
 
     QPixmap finalIcon;
 
-    KIcon overlayIcon = KIcon(overlayIconStr);
+    QIcon overlayIcon = QIcon::fromTheme(overlayIconStr);
 
     if (!overlayIcon.isNull() && pixmap) {
 
@@ -227,7 +225,7 @@ QPixmap UtilityIconPainting::blendOverLayTopRight(const QString& mainIconStr, co
     }
     else {
 
-        KIcon overlayIcon = KIcon(overlayIconStr);
+        QIcon overlayIcon = QIcon::fromTheme(overlayIconStr);
 
         if (!overlayIcon.isNull()) {
 

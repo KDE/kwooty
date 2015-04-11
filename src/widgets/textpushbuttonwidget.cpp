@@ -21,7 +21,7 @@
 
 #include "textpushbuttonwidget.h"
 
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 
 #include "utilities/utilityiconpainting.h"

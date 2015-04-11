@@ -23,7 +23,7 @@
 #define UTILITYICONPAINTING_H
 
 
-#include <KIcon>
+#include <QIcon>
 #include <KIconLoader>
 
 #include <QMap>
@@ -56,9 +56,9 @@ public:
     QColor lighterColor(const qreal&);
     void displayLighterText(QStandardItem*);
 
-    bool retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus&, KIcon& icon);
-    bool retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus&, KIcon& icon);
-    bool retrieveIconFromString(const QString&, KIcon& icon);
+    bool retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus&, QIcon& icon);
+    bool retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus&, QIcon& icon);
+    bool retrieveIconFromString(const QString&, QIcon& icon);
 
 private:
     static UtilityIconPainting* instance;
@@ -66,7 +66,7 @@ private:
 
     QHash<int, QString> statusIconStrMap;
     QHash<int, QString> parentStatusIconStrMap;
-    QHash<QString, KIcon> iconStrIconImageMap;
+    QHash<QString, QIcon> iconStrIconImageMap;
 
 
 

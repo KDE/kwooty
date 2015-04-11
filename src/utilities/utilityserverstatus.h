@@ -22,7 +22,7 @@
 #ifndef UTILITYSERVERSTATUS_H
 #define UTILITYSERVERSTATUS_H
 
-#include <KIcon>
+#include <QIcon>
 
 #include "observers/clientsobserverbase.h"
 
@@ -57,7 +57,7 @@ public:
         DoNotDisplayEncryptionMethod
     };
 
-    static KIcon getConnectionIcon(const ServerConnectionIcon&);
+    static QIcon getConnectionIcon(const ServerConnectionIcon&);
     static QPixmap getConnectionPixmap(const ServerConnectionIcon&);
     static ServerConnectionIcon buildConnectionStringFromStatus(const ClientsObserverBase*, QString&, EncryptionMethodDisplay = DisplayEncryptionMethod);
     static QString buildSslHandshakeStatus(const ClientsObserverBase*);

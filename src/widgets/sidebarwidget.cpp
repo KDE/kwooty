@@ -23,7 +23,7 @@
 
 #include "kwooty_debug.h"
 #include <KIconLoader>
-#include <KIcon>
+#include <QIcon>
 #include <KSeparator>
 #include <KMultiTabBarTab>
 

@@ -24,7 +24,7 @@
 #include "kwooty_debug.h"
 #include <KGlobal>
 #include <KInputDialog>
-#include <KIcon>
+#include <QIcon>
 #include <KDialog>
 #include <kgenericfactory.h>
 #include <kmimetypechooser.h>
@@ -96,14 +96,14 @@ PreferencesCategories::PreferencesCategories(QWidget* parent, const QVariantList
     // resize columns in order that each column occupy half of the treeview width :
     mimeTreeView->header()->resizeSection(CategoriesModel::ColumnCategory, defaultWidth / 2) ;
 
-    this->preferencesCategoriesUi.toolButtonAdd->setIcon(KIcon("list-add"));
+    this->preferencesCategoriesUi.toolButtonAdd->setIcon(QIcon::fromTheme("list-add"));
     this->preferencesCategoriesUi.toolButtonAdd->setText(i18n("Add Category"));
 
-    this->preferencesCategoriesUi.toolButtonRemove->setIcon(KIcon("list-remove"));
+    this->preferencesCategoriesUi.toolButtonRemove->setIcon(QIcon::fromTheme("list-remove"));
     this->preferencesCategoriesUi.toolButtonRemove->setText(i18n("Remove Category"));
     this->preferencesCategoriesUi.toolButtonRemove->setEnabled(false);
 
-    this->preferencesCategoriesUi.toolButtonEditSubcategory->setIcon(KIcon("document-edit"));
+    this->preferencesCategoriesUi.toolButtonEditSubcategory->setIcon(QIcon::fromTheme("document-edit"));
     this->preferencesCategoriesUi.toolButtonEditSubcategory->setText(i18n("Edit Subcategory"));
     this->preferencesCategoriesUi.toolButtonEditSubcategory->setEnabled(false);
 

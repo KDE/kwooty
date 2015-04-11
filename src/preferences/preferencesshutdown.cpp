@@ -21,7 +21,7 @@
 #include "preferencesshutdown.h"
 
 #include "kwooty_debug.h"
-#include <KIcon>
+#include <QIcon>
 #include "core.h"
 #include "shutdown/shutdownmanager.h"
 #include "utilities/utility.h"
@@ -41,7 +41,7 @@ PreferencesShutdown::PreferencesShutdown(Core* core) {
     while (mapIterator.hasNext()) {
 
         mapIterator.next();
-        kcfg_shutdownMethods->addItem(KIcon(mapIterator.key()), mapIterator.value());
+        kcfg_shutdownMethods->addItem(QIcon::fromTheme(mapIterator.key()), mapIterator.value());
 
     }
 

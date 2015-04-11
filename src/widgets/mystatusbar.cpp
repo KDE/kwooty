@@ -21,7 +21,7 @@
 #include "mystatusbar.h"
 
 #include <KAboutData>
-#include <KIcon>
+#include <QIcon>
 #include "kwooty_debug.h"
 #include <KLocalizedString>
 #include <QHBoxLayout>

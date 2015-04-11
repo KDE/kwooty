@@ -203,7 +203,7 @@ void ServerTabWidget::setServerTabIcon(const int& tabIndex, const int& serverMod
         iconStr = this->comboBoxIconTextMap.value(serverModeIndex);
     }
 
-    this->setTabIcon(tabIndex, KIcon(iconStr));
+    this->setTabIcon(tabIndex, QIcon::fromTheme(iconStr));
 
 }
 
@@ -213,7 +213,7 @@ void ServerTabWidget::syncGroupBoxTitle() {
 
     int tabNumber = this->count();
 
-    for (int i = 1; i < tabNumber; i++) {
+    for (int i = 1; i < tabNumber; ++i) {
         static_cast<ServerPreferencesWidget*>(this->widget(i))->setGroupBoxTitle(i);
     }
 

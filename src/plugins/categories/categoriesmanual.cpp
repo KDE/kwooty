@@ -24,7 +24,7 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KLocalizedString>
-#include <KIcon>
+#include <QIcon>
 #include "categoriesmanual.h"
 #include "core.h"
 #include "mainwindow.h"
@@ -44,7 +44,7 @@ CategoriesManual::CategoriesManual(Categories* categories) : QObject(categories)
     // create manualTransferFolderAction :
     KAction* manualTransferFolderAction = new KAction(this);
     manualTransferFolderAction->setText(i18n("Transfer folder..."));
-    manualTransferFolderAction->setIcon(KIcon("folder-favorites"));
+    manualTransferFolderAction->setIcon(QIcon::fromTheme("folder-favorites"));
     manualTransferFolderAction->setToolTip(i18n("Select transfer folder"));
     manualTransferFolderAction->setShortcut(Qt::CTRL + Qt::Key_F);
     manualTransferFolderAction->setEnabled(true);

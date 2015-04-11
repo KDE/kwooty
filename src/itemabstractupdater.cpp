@@ -149,7 +149,7 @@ void ItemAbstractUpdater::setIcon(QStandardItem* stateItem, const QString& iconN
 
     QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
 
-    KIcon icon;
+    QIcon icon;
     bool iconFound = UtilityIconPainting::getInstance()->retrieveIconFromString(iconName, icon);
 
     if (iconFound) {
@@ -166,7 +166,7 @@ void ItemAbstractUpdater::setIcon(QStandardItem* stateItem, const UtilityNamespa
     if (this->downloadModel->isNzbItem(fileNameItem)) {
 
         // update its icon according to its current status :
-        KIcon icon;
+        QIcon icon;
         bool iconFound = UtilityIconPainting::getInstance()->retrieveParentIconFromStatus(status, icon);
 
         if (iconFound) {
@@ -178,7 +178,7 @@ void ItemAbstractUpdater::setIcon(QStandardItem* stateItem, const UtilityNamespa
     else {
 
         // update its icon according to its current status :
-        KIcon icon;
+        QIcon icon;
         bool iconFound = UtilityIconPainting::getInstance()->retrieveChildIconFromStatus(status, icon);
 
         if (iconFound) {

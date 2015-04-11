@@ -22,7 +22,7 @@
 #include "icontextwidget.h"
 
 #include <KIconLoader>
-#include <KIcon>
+#include <QIcon>
 #include <KIconEffect>
 #include "kwooty_debug.h"
 #include <QMouseEvent>

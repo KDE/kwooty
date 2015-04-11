@@ -33,8 +33,8 @@ UtilityServerStatus::UtilityServerStatus() {
 }
 
 
-KIcon UtilityServerStatus::getConnectionIcon(const ServerConnectionIcon& serverConnectionIcon) {
-    return KIcon(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon));
+QIcon UtilityServerStatus::getConnectionIcon(const ServerConnectionIcon& serverConnectionIcon) {
+    return QIcon(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon));
 }
 
 
@@ -68,7 +68,7 @@ QPixmap UtilityServerStatus::getConnectionPixmap(const ServerConnectionIcon& ser
     }
     // if server is connected with a not trusted ssl connection, add an overlay warning icon :
     else if (serverConnectionIcon == ConnectedEncryptedOverlayIcon) {
-        pixmap = UtilityIconPainting::getInstance()->blendOverLayEmblem("emblem-important", KIcon(iconStr));
+        pixmap = UtilityIconPainting::getInstance()->blendOverLayEmblem("emblem-important", QIcon::fromTheme(iconStr));
     }
     else {
         pixmap = SmallIcon(iconStr);
