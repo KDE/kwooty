@@ -21,7 +21,7 @@
 
 #include "kwooty_debug.h"
 #include <KFileDialog>
-#include <KAction>
+#include <QAction>
 #include <KActionCollection>
 #include <KLocalizedString>
 #include <QIcon>
@@ -42,7 +42,7 @@ CategoriesManual::CategoriesManual(Categories* categories) : QObject(categories)
     this->treeView = this->core->getTreeView();
 
     // create manualTransferFolderAction :
-    KAction* manualTransferFolderAction = new KAction(this);
+    QAction* manualTransferFolderAction = new QAction(this);
     manualTransferFolderAction->setText(i18n("Transfer folder..."));
     manualTransferFolderAction->setIcon(QIcon::fromTheme("folder-favorites"));
     manualTransferFolderAction->setToolTip(i18n("Select transfer folder"));
