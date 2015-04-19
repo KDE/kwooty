@@ -23,7 +23,7 @@
 #define CATEGORIESMANUAL_H
 
 #include <QObject>
-#include <KMenu>
+#include <QMenu>
 #include <QHash>
 #include "categories.h"
 
@@ -58,7 +58,7 @@ signals:
 
 
 public slots:
-    void addExternalActionSlot(KMenu*, QStandardItem*);
+    void addExternalActionSlot(QMenu*, QStandardItem*);
     void manualTransferFolderSlot();
 
 

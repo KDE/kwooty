@@ -62,9 +62,9 @@ void CategoriesManual::setupConnections() {
 
     // add action in context menu when requested :
     connect (this->treeView,
-             SIGNAL(addExternalActionSignal(KMenu*, QStandardItem*)),
+             SIGNAL(addExternalActionSignal(QMenu*, QStandardItem*)),
              this,
-             SLOT(addExternalActionSlot(KMenu*, QStandardItem*)));
+             SLOT(addExternalActionSlot(QMenu*, QStandardItem*)));
 
     // action has been triggered by user :
     KActionCollection* actionCollection = this->core->getMainWindow()->actionCollection();
@@ -139,7 +139,7 @@ void CategoriesManual::updateNzbFileNameToolTip(QStandardItem* nzbItem, const QS
 //===========================================================================================================
 
 
-void CategoriesManual::addExternalActionSlot(KMenu* contextMenu, QStandardItem* item) {
+void CategoriesManual::addExternalActionSlot(QMenu* contextMenu, QStandardItem* item) {
 
     // FIXME: not yet the case but if several plugins need to insert actions in contextMenu,
     // think about displaying them always in the same order.
