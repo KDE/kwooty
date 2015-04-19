@@ -23,7 +23,7 @@
 
 #include "kwooty_debug.h"
 #include <kdirwatch.h>
-#include <klocale.h>
+#include <KLocalizedString>
 
 #include <QFileInfo>
 #include <QDir>
