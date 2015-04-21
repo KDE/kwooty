@@ -32,7 +32,7 @@
 #include <KActionCollection>
 #include <KSaveFile>
 #include "kwooty_debug.h"
-#include <KMenuBar>
+#include <QMenuBar>
 
 #include <QTextStream>
 #include <QtGui>

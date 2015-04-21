@@ -21,13 +21,14 @@
 #include "utility.h"
 #include <KGlobal>
 #include "kwooty_debug.h"
-#include <KStandardDirs>
+
 #include <KLocalizedString>
 #include <kio/global.h>
 #include "kdiskfreespaceinfo.h"
 
 #include <QFile>
 #include <QDir>
+#include <QStandardPaths>
 #include "kwootysettings.h"
 
 
@@ -368,7 +369,7 @@ QStringList Utility::buildPriorityArgument(const int& processPriority, const int
     QStringList niceProcessArgs;
 
     // look for 'nice' location :
-    QString nicePath = KStandardDirs::findExe("nice");
+    QString nicePath = QStandardPaths::findExecutable("nice");
     niceProcessArgs.append(nicePath);
     niceProcessArgs.append("-n");
 

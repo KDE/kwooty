@@ -27,7 +27,6 @@
 #include <QHBoxLayout>
 
 #include "kwooty_watchfoldersettings.h"
-#include <kgenericfactory.h>
 
 
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesWatchFolder>();)

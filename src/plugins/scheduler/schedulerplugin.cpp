@@ -23,7 +23,6 @@
 
 #include "kwooty_debug.h"
 #include <KPluginLoader>
-#include <kgenericfactory.h>
 
 #include "plugin.h"
 #include "mainwindow.h"

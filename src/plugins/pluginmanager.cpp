@@ -22,9 +22,8 @@
 #include "pluginmanager.h"
 
 #include "kwooty_debug.h"
-#include <KComponentData>
 #include <KServiceTypeTrader>
-
+#include <KSharedConfig>
 #include "mainwindow.h"
 
 
