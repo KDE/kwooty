@@ -33,7 +33,7 @@ StatusBarWidgetBase::StatusBarWidgetBase(QWidget* parent, MyStatusBar::WidgetIde
 
 void StatusBarWidgetBase::setupConnections() {
 
-    // notify status bar that double mouse click on widget has been catched :
+    // notify status bar that double mouse click on widget has been caught :
     connect (this,
              SIGNAL(statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity)),
              this->parent(),

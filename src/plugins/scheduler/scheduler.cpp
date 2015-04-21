@@ -411,7 +411,7 @@ void Scheduler::dataAboutToArriveSlot(QModelIndex appendedIndex) {
     // scheduler is not active but new nzb have to be set on pause :
     else if (SchedulerSettings::pauseIncomingFiles()) {
 
-        // immediatly set the appended nzb on Pause :
+        // immediately set the appended nzb on Pause :
         if (appendedIndex.isValid()) {
 
             this->core->getActionsManager()->setStartPauseDownload(PauseStatus, appendedIndex);

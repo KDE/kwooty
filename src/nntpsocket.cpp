@@ -369,7 +369,7 @@ void NntpSocket::rateControlSlot() {
 
 void NntpSocket::peerVerifyErrorSlot() {
 
-    // error occured during certificate verifying, set verify mode to QueryPeer in order to establish connection
+    // error occurred during certificate verifying, set verify mode to QueryPeer in order to establish connection
     // but inform the user that certificate is not verified by tooltip in status bar :
     this->setPeerVerifyMode(QSslSocket::QueryPeer);
 
@@ -390,7 +390,7 @@ void NntpSocket::socketEncryptedSlot() {
         issuerOrgranisation = sslCertificate.issuerInfo(QSslCertificate::Organization);
     }
 
-    // retrieve errors occured during ssl handshake :
+    // retrieve errors occurred during ssl handshake :
     QStringList sslErrors;
 
     foreach (const QSslError& currentSslError, this->sslErrors()) {

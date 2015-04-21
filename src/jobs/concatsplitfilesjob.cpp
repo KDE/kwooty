@@ -93,7 +93,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
 
     joinFile.open(QIODevice::WriteOnly | QIODevice::Append);
 
-    // join splitted files (list of files is assumed to be ordered at this stage) :
+    // join split files (list of files is assumed to be ordered at this stage) :
     foreach (const NzbFileData& currentNzbFileData, this->nzbFileDataList) {
 
         fileProcessedNumber++;
@@ -111,7 +111,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
             bool conversionOk;
             int splitFileNumber = QFileInfo(fullPathArchiveName).suffix().toInt(&conversionOk);
 
-            // check that the file is a real splitted file and that the current splitted file
+            // check that the file is a real split file and that the current splitted file
             // is just following the previous one (eg : if .002 is missing, avoid to join .001, .003) :
             if (!conversionOk ||
                     (fileProcessedNumber != splitFileNumber)) {
@@ -123,7 +123,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
 
             QFile currentSplitFile(fullPathArchiveName);
 
-            // open splitted file :
+            // open split file :
             if (!currentSplitFile.open(QIODevice::ReadOnly)) {
                 processFailed = true;
                 break;
@@ -135,7 +135,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
                 break;
             }
 
-            // close splitted file :
+            // close split file :
             currentSplitFile.close();
         }
 

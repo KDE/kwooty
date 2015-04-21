@@ -183,7 +183,7 @@ void StatsInfoBuilder::updateDownloadSpeedSlot() {
     this->clientsObserver->resetTotalBytesDownloaded();
 
 
-    // at download begining mean speed equals current downloadSpeed in order to
+    // at download beginning mean speed equals current downloadSpeed in order to
     // not get too lag before reaching a proper mean speed value :
     if (this->meanSpeedActiveCounter < 10) {
 

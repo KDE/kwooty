@@ -51,11 +51,11 @@ QStringList ExtractRar::createProcessArguments(const QString& archiveName, const
     else {
         args.append("x");
 
-        // overwrite the output file if option choosen in settings :
+        // overwrite the output file if option chosen in settings :
         if (Settings::overwriteExtractedFiles()) {
             args.append("-o+");
         }
-        // rename the output file if option choosen in settings :
+        // rename the output file if option chosen in settings :
         else {
             args.append("-or");
         }

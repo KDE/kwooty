@@ -29,7 +29,6 @@
 #include <KPageDialog>
 #include <KPageWidgetItem>
 #include <KMessageBox>
-#include <KActionCollection>
 #include <KSaveFile>
 #include <KDebug>
 #include <KMenuBar>

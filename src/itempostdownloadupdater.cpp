@@ -226,7 +226,7 @@ void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData& decode
                     nzbFileData.setPar2File(true);
                 }
 
-                // check if it is a splitted file :
+                // check if it is a split file :
                 else if (FileOperations::isSplitFileFormat(decodedFile)) {
                     nzbFileData.setArchiveFormat(SplitFileFormat);
 

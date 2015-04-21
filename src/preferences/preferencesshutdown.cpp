@@ -65,16 +65,16 @@ void PreferencesShutdown::setupConnections() {
 
 void PreferencesShutdown::currentIndexChangedSlot() {
 
-    // set text timerRadioButton text according to choosen shutdown method :
+    // set text timerRadioButton text according to chosen shutdown method :
     kcfg_timerRadioButton->setText(i18nc("%1 = Shutdown/Suspend to RAM/Suspend to disk",
                                          "%1 in:", kcfg_shutdownMethods->currentText()));
 
-    // set text jobsRadioButton text according to choosen shutdown method :
+    // set text jobsRadioButton text according to chosen shutdown method :
     kcfg_jobsRadioButton->setText(i18nc("%1 = Shutdown/Suspend to RAM/Suspend to disk",
                                         "%1 when all jobs are finished", kcfg_shutdownMethods->currentText()));
 
 
-    // set text pausedShutdown text according to choosen shutdown method :
+    // set text pausedShutdown text according to chosen shutdown method :
     QString shutdownMethodText = kcfg_shutdownMethods->currentText();
     kcfg_pausedShutdown->setText(i18nc("%1%2 = shutdown/suspend to RAM/suspend",
                                        "Do not %1%2 if jobs are finished but paused files remain",

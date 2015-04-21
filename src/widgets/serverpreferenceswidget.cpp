@@ -56,7 +56,7 @@ ServerPreferencesWidget::ServerPreferencesWidget(ServerTabWidget* parent,
 
     this->setupConnections();
 
-    // ensure that default values are diplayed if a new tab has been created by user
+    // ensure that default values are displayed if a new tab has been created by user
     // or default settings have been requested :
     if ( (serverNameQuery == ServerTabWidget::AskServerName) ||
          (serverNameQuery == ServerTabWidget::DefaultSettingsName) ) {

@@ -152,7 +152,7 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString& temporaryFolder, Segme
 
     else {
 
-        kDebug() << "segment size not maching. beginValue:" << beginValue << ", endValue:" << endValue << ", sizeValue:" << sizeValue;
+        kDebug() << "segment size not matching. beginValue:" << beginValue << ", endValue:" << endValue << ", sizeValue:" << sizeValue;
 
     }
 

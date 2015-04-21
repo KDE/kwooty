@@ -58,11 +58,11 @@ QStringList ExtractZip::createProcessArguments(const QString& archiveName, const
 
         args.append("x");
 
-        // overwrite the output file if option choosen in settings :
+        // overwrite the output file if option chosen in settings :
         if (Settings::overwriteExtractedFiles()) {
             args.append("-aoa");
         }
-        // rename the output file if option choosen in settings :
+        // rename the output file if option chosen in settings :
         else {
             args.append("-aou");
         }
@@ -113,7 +113,7 @@ void ExtractZip::startedSlot() {
         QFileInfo fileInfo(nzbFileData.getDecodedFileName());
         QString suffixName = fileInfo.suffix();
 
-        // 7z and zip splitted files should have the following pattern : file.001, file.002, ...
+        // 7z and zip split files should have the following pattern : file.001, file.002, ...
         // file archive detection differs from rar ones as for 7z format,
         // only file.001 will embbed the magic number "7z", the other ones can not be identified.
         // so, if extension can be converted to int value, the file is a zip or 7z file

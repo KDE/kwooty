@@ -48,7 +48,7 @@ MyTreeView::MyTreeView(MainWindow* mainWindow) : QTreeView(mainWindow->getCentra
     // Avoid rows editing:
     this->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    // Allowing mutiple row selection :
+    // Allowing multiple row selection :
     this->setSelectionMode(QAbstractItemView::ExtendedSelection);
     this->setSelectionBehavior(QAbstractItemView::SelectRows);
     this->setUniformRowHeights(false);
