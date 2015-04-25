@@ -2,7 +2,7 @@ project (Kwooty)
 cmake_minimum_required(VERSION 2.8.12)
 
 # we need some parts of the ECM CMake helpers
-find_package(ECM 1.7.0 REQUIRED NO_MODULE)
+find_package(ECM 5.9.0 REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${kdepim_SOURCE_DIR}/cmake/modules ${ECM_MODULE_PATH})
 include(ECMOptionalAddSubdirectory)
 include(ECMInstallIcons)
@@ -20,7 +20,7 @@ include(KDECompilerSettings)
 include(ECMAddAppIcon)
 
 
-set(KF5_VERSION "5.7.0")
+set(KF5_VERSION "5.9.0")
 find_package(KF5Wallet ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KDELibs4Support ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5NotifyConfig ${KF5_VERSION} CONFIG REQUIRED)
