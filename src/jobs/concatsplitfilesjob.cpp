@@ -40,9 +40,9 @@ ConcatSplitFilesJob::ConcatSplitFilesJob(ExtractSplit* parent) {
     qRegisterMetaType< QList<NzbFileData> >("QList<NzbFileData>");
     // launch joining process from parent :
     connect (parent,
-             SIGNAL(joinFilesSignal(QList<NzbFileData>, const QString, const QString)),
+             &ExtractSplit::joinFilesSignal,
              this,
-             SLOT(joinFilesSlot(QList<NzbFileData>, const QString, const QString)));
+             &ConcatSplitFilesJob::joinFilesSlot);
 
     // start current thread :
     this->dedicatedThread->start();
@@ -61,7 +61,7 @@ ConcatSplitFilesJob::~ConcatSplitFilesJob() {
 }
 
 
-void ConcatSplitFilesJob::joinFilesSlot(QList<NzbFileData> nzbFileDataList, const QString fileSavePath, const QString joinFileName) {
+void ConcatSplitFilesJob::joinFilesSlot(const QList<NzbFileData> &nzbFileDataList, const QString &fileSavePath, const QString &joinFileName) {
 
     this->nzbFileDataList = nzbFileDataList;
     this->fileSavePath = fileSavePath;

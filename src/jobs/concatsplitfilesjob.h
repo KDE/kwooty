@@ -56,7 +56,7 @@ signals:
 
 
 public slots:
-    void joinFilesSlot(QList<NzbFileData>, const QString, const QString);
+    void joinFilesSlot(const QList<NzbFileData> &, const QString &, const QString &);
 
 
 private slots:

@@ -62,9 +62,9 @@ void CategoriesManual::setupConnections() {
 
     // add action in context menu when requested :
     connect (this->treeView,
-             SIGNAL(addExternalActionSignal(QMenu*, QStandardItem*)),
+             &MyTreeView::addExternalActionSignal,
              this,
-             SLOT(addExternalActionSlot(QMenu*, QStandardItem*)));
+             &CategoriesManual::addExternalActionSlot);
 
     // action has been triggered by user :
     KActionCollection* actionCollection = this->core->getMainWindow()->actionCollection();
