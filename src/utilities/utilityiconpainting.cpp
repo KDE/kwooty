@@ -23,7 +23,6 @@
 
 #include "kwooty_debug.h"
 #include <KIconEffect>
-#include <KApplication>
 #include "kcolorutils.h"
 
 #include <QApplication>
@@ -268,7 +267,7 @@ QLabel* UtilityIconPainting::buildLighterTextLabel(const QString& text, QWidget*
 
 QColor UtilityIconPainting::lighterColor(const qreal& amount) {
 
-    QPalette textLabelPalette = kapp->palette();
+    QPalette textLabelPalette = qApp->palette();
     return KColorUtils::tint(textLabelPalette.color(QPalette::Disabled, QPalette::WindowText),
                              textLabelPalette.color(QPalette::Active, QPalette::WindowText),
                              amount);
