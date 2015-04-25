@@ -28,7 +28,7 @@
 #include <KActionCollection>
 #include <KIconEffect>
 #include <QMenu>
-
+#include <KLocalizedString>
 #include <QToolTip>
 #include <QPainter>
 
@@ -66,10 +66,10 @@ void SysTray::setupActions() {
     this->contextMenu()->addAction(this->parent->actionCollection()->action("pauseAll"));
     this->contextMenu()->addSeparator();
     this->contextMenu()->addAction(this->parent->actionCollection()->action("downloadFolder"));
-
-    KActionCollection* sysTrayActionCollection = this->actionCollection();
+#if 0 //PORT KF5
+    QList<QAction*> sysTrayActionCollection = this->actionCollection();
     KStandardAction::quit(this->parent, SLOT(quit()), sysTrayActionCollection);
-
+#endif
 }
 
 
@@ -161,7 +161,7 @@ void SysTray::initPixmaps() {
 
 bool SysTray::updateIconStatus(const UtilityNamespace::ItemStatus& itemStatus) {
 
-    KIcon icon;
+    QIcon icon;
 
     // get the proper icon according to item status :
     switch(itemStatus) {

@@ -99,11 +99,7 @@ set(Kwooty_lib_SRCS
   jobs/concatsplitfilesjob.cpp
 )
 
-if(KSTATUSNOTIFIERITEM_FOUND)
-    set(Kwooty_lib_SRCS ${Kwooty_lib_SRCS} systray.cpp)
-else(KSTATUSNOTIFIERITEM_FOUND)
-    set(Kwooty_lib_SRCS ${Kwooty_lib_SRCS} systraylegacy.cpp)
-endif(KSTATUSNOTIFIERITEM_FOUND)
+set(Kwooty_lib_SRCS ${Kwooty_lib_SRCS} systray.cpp)
 
 
 

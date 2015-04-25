@@ -61,11 +61,7 @@
 #include "preferences/preferencesplugins.h"
 
 
-#ifdef HAVE_KSTATUSNOTIFIERITEM
 #include "systray.h"
-#else
-#include "systraylegacy.h"
-#endif
 
 
 
