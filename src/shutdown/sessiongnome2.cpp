@@ -104,11 +104,7 @@ void SessionGnome2::requestSuspend() {
 
     }
     // requests a suspend of the system :
-#if KDE_IS_VERSION(4, 5, 82)
     Solid::PowerManagement::requestSleep(suspendMethod, 0, 0);
-#else
-    Solid::Control::PowerManager::suspend(static_cast<Solid::Control::PowerManager::SuspendMethod>(suspendMethod))->start();
-#endif
 
 
 }

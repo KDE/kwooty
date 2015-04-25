@@ -22,14 +22,6 @@
 #ifndef SESSIONGNOME2_H
 #define SESSIONGNOME2_H
 
-#include <kdeversion.h>
-#if KDE_IS_VERSION(4, 5, 82)
-// nothing to do for KDE >= 4.6
-#else
-#include <solid/control/powermanager.h>
-using namespace Solid::Control;
-#endif
-
 #include <solid/powermanagement.h>
 using namespace Solid::PowerManagement;
 

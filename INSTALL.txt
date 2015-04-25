@@ -1,6 +1,6 @@
 Requirements to build the project:
 ==================================
-Kwooty requires KDE >= 4.6.
+Kwooty requires KF5 >= 5.9
 
 - cmake
 - gcc
