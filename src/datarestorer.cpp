@@ -147,7 +147,7 @@ void DataRestorer::writeDataToDisk() {
 
 
     // get nzb items whose download is not complete :
-    for (int i = 0; i < downloadModel->rowCount(); i++) {
+    for (int i = 0; i < downloadModel->rowCount(); ++i) {
 
         QList<GlobalFileData> globalFileDataList;
 
@@ -335,7 +335,7 @@ void DataRestorer::resetDataForDownloadingFile(NzbFileData& currentNzbFileData, 
 void DataRestorer::preprocessAndHandleData(const QList< QList<GlobalFileData> >& nzbFileList) {
 
     // get nzb items whose download is not complete :
-    for (int i = 0; i < nzbFileList.size(); i++) {
+    for (int i = 0; i < nzbFileList.size(); ++i) {
 
         QList<GlobalFileData> globalFileDataList = nzbFileList.at(i);
 
@@ -398,7 +398,7 @@ bool DataRestorer::isDataToSaveExist() const {
 
     bool dataToSaveExist = false;
 
-    for (int i = 0; i < downloadModel->rowCount(); i++) {
+    for (int i = 0; i < downloadModel->rowCount(); ++i) {
 
         // retrieve nzb parent item :
         QStandardItem* parentFileNameItem = this->downloadModel->item(i, FILE_NAME_COLUMN);

@@ -351,7 +351,7 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
         // if nzb(parent) item is in Idle or Download state look for idle segment, otherwise switch to next one :
         if (Utility::isReadyToDownload(currentStatus) && !itemFound) {
 
-            for (int i = 0; i < nzbItem->rowCount(); i++) {
+            for (int i = 0; i < nzbItem->rowCount(); ++i) {
 
                 if (!itemFound) {
 
@@ -504,7 +504,7 @@ void SegmentManager::updateRepairExtractSegmentSlot(PostDownloadInfoData repairD
 void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServerGroup, const int& nextServerGroup, const PendingSegments pendingSegments) {
 
 
-    for (int i = 0; i < this->downloadModel->rowCount(); i++) {
+    for (int i = 0; i < this->downloadModel->rowCount(); ++i) {
 
         QStandardItem* nzbItem = this->downloadModel->getFileNameItemFromRowNumber(i);
         UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusDataFromIndex(nzbItem->index()).getStatus();

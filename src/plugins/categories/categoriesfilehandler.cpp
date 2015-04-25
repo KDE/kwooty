@@ -227,7 +227,7 @@ void CategoriesFileHandler::saveModelToFile(CategoriesModel* categoriesModel) {
     stream.writeAttribute("version", "1");
 
 
-    for (int i = 0; i < categoriesModel->rowCount(); i++) {
+    for (int i = 0; i < categoriesModel->rowCount(); ++i) {
 
         QStandardItem* groupItem = categoriesModel->item(i);
 

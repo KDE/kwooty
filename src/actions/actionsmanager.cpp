@@ -288,7 +288,7 @@ void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus ta
         // if the item is a nzbItem, retrieve their children :
         if (this->downloadModel->isNzbItem(fileNameItem)){
 
-            for (int i = 0; i < fileNameItem->rowCount(); i++){
+            for (int i = 0; i < fileNameItem->rowCount(); ++i){
 
                 QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
                 this->core->getSegmentManager()->setIdlePauseSegments(nzbChildrenItem, targetStatus);
@@ -348,7 +348,7 @@ void ActionsManager::retryDownload(const QModelIndexList& indexList) {
             // all children are reverted back to DecodeFinishStatus with no child reset in queue.
             // Check that this case does not happen :
             bool childStatusConsistencyCorrect = false;
-            for (int i = 0; i < fileNameItem->rowCount(); i++) {
+            for (int i = 0; i < fileNameItem->rowCount(); ++i) {
 
                 QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
                 if (this->modelQuery->isRetryDownloadAllowed(nzbChildrenItem) == IdleStatus) {
@@ -362,7 +362,7 @@ void ActionsManager::retryDownload(const QModelIndexList& indexList) {
             // if at leat one child item is reset to IdleStatus, then allow download retry :
             if (childStatusConsistencyCorrect) {
 
-                for (int i = 0; i < fileNameItem->rowCount(); i++) {
+                for (int i = 0; i < fileNameItem->rowCount(); ++i) {
 
                     QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
                     itemStatusResetTarget = this->modelQuery->isRetryDownloadAllowed(nzbChildrenItem);
@@ -425,14 +425,14 @@ void ActionsManager::removeRow(const QList<QModelIndex>& indexesList) {
 
 
     //stores rows in a list
-    for (int i = 0; i < indexesList.size(); i++) {
+    for (int i = 0; i < indexesList.size(); ++i) {
         rowList.append(indexesList.at(i).row());
     }
 
     qSort(rowList.begin(), rowList.end(), qGreater<int>());
 
 
-    for (int i = 0; i < indexesList.size(); i++) {
+    for (int i = 0; i < indexesList.size(); ++i) {
 
         QModelIndex currentModelIndex = indexesList.at(i);
         if (currentModelIndex.isValid()) {

@@ -231,7 +231,7 @@ void StatsInfoBuilder::retrieveQueuedFilesInfo(bool& parentDownloadingFound, boo
     QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
 
     // get the first parent with download active :
-    for (int i = 0; i < rootItem->rowCount(); i++) {
+    for (int i = 0; i < rootItem->rowCount(); ++i) {
 
         QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
         UtilityNamespace::ItemStatus currentStatus = this->parent->getDownloadModel()->getStatusFromStateItem(parentStateItem);

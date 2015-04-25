@@ -107,7 +107,7 @@ bool SegmentBuffer::isBufferFull() const {
 void SegmentBuffer::removeDataFromDecodeWaitingQueue(const NzbFileData& selectedNzbFileData) {
 
     QList<NzbFileData> nzbFileDataTempList;
-    for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+    for (int i = 0; i < this->nzbFileDataList.size(); ++i) {
 
         NzbFileData currentNzbFileData = this->nzbFileDataList.at(i);
 
@@ -126,7 +126,7 @@ void SegmentBuffer::removeDataFromDecodeWaitingQueue(const NzbFileData& selected
 
 void SegmentBuffer::updateDecodeWaitingQueue(const NzbFileData& selectedNzbFileData, const NzbFileData& targetNzbFileData) {
 
-    for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+    for (int i = 0; i < this->nzbFileDataList.size(); ++i) {
 
         NzbFileData currentNzbFileData = this->nzbFileDataList.at(i);
 

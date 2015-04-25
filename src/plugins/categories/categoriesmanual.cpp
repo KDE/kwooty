@@ -81,7 +81,7 @@ void CategoriesManual::unload() {
     // remove previous tooltips to nzb fileName column to notify user about the selected folder :
     QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
 
-    for (int i = 0; i < rootItem->rowCount(); i++) {
+    for (int i = 0; i < rootItem->rowCount(); ++i) {
         this->updateNzbFileNameToolTip(rootItem->child(i));
     }
 
@@ -201,7 +201,7 @@ void CategoriesManual::manualTransferFolderSlot() {
                     QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
 
                     // remove old items currently stored in map :
-                    for (int i = 0; i < rootItem->rowCount(); i++) {
+                    for (int i = 0; i < rootItem->rowCount(); ++i) {
 
                         QModelIndex nzbFileNameIndex = rootItem->child(i)->index();
 

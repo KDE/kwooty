@@ -76,7 +76,7 @@ void ActionButtonsManager::selectedItemSlot() {
     }
     else {
 
-        for (int i = 0; i < indexesList.size(); i++) {
+        for (int i = 0; i < indexesList.size(); ++i) {
 
             QModelIndex currentModelIndex = indexesList.at(i);
             QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(currentModelIndex);

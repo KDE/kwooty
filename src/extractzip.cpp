@@ -105,7 +105,7 @@ void ExtractZip::startedSlot() {
 
     this->extractProgressValue = PROGRESS_UNKNOWN;
 
-    for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+    for (int i = 0; i < this->nzbFileDataList.size(); ++i) {
 
         NzbFileData nzbFileData = this->nzbFileDataList.at(i);
 

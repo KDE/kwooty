@@ -350,12 +350,12 @@ void ServerTabWidget::saveDataSlot() {
     int tabNumber = this->count();
 
     // delete all previous server settings entries :
-    for (int i = 0; i < UtilityNamespace::MAX_SERVERS; i++) {
+    for (int i = 0; i < UtilityNamespace::MAX_SERVERS; ++i) {
         KConfigGroupHandler::getInstance()->removeServerSettings(i);
     }
 
     // save the new ones :
-    for (int i = 0; i < tabNumber; i++) {
+    for (int i = 0; i < tabNumber; ++i) {
 
         ServerData serverData = static_cast<ServerPreferencesWidget*>(this->widget(i))->getData();
         serverData.setServerId(i);

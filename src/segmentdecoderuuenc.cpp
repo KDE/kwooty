@@ -217,7 +217,7 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
             int counter = 0;
 
             // first char corresponds to line size :
-            for (int i = 1; i < uuLine.size() - 1; i++) {
+            for (int i = 1; i < uuLine.size() - 1; ++i) {
 
                 // skip current loop (get groups of 4 bytes):
                 if ( counter == 3) {

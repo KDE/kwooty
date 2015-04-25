@@ -236,7 +236,7 @@ void SideBar::serverManagerSettingsChangedSlot() {
 
 
         // synchronize info for each server with newly settings :
-        for (int i = 0; i < this->sideBarWidget->count(); i++) {
+        for (int i = 0; i < this->sideBarWidget->count(); ++i) {
 
             ServerData serverData = this->serverManager->getServerGroupById(i)->getServerData();
 

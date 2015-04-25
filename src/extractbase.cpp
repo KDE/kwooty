@@ -391,7 +391,7 @@ void ExtractBase::emitProcessUpdate(const QVariant& parentIdentifer, const int& 
 
 void ExtractBase::findItemAndNotifyUser(const QString& fileNameStr, const UtilityNamespace::ItemStatus status, UtilityNamespace::ItemTarget itemTarget) {
 
-    for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+    for (int i = 0; i < this->nzbFileDataList.size(); ++i) {
 
         NzbFileData nzbFileData = this->nzbFileDataList.at(i);
 

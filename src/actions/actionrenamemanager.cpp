@@ -83,7 +83,7 @@ bool ActionRenameManager::validateNewFolderName(QStandardItem* selectedFileNameI
     QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
 
     // check state of each parent item :
-    for (int i = 0; i < rootItem->rowCount(); i++) {
+    for (int i = 0; i < rootItem->rowCount(); ++i) {
 
         // get corresponding nzb file name item :
         QStandardItem* fileNameItem = rootItem->child(i, FILE_NAME_COLUMN);
@@ -136,7 +136,7 @@ void ActionRenameManager::processRename(QStandardItem* selectedFileNameItem) {
     // update files with same parent waiting to be decoded with new nzb name folder :
     this->segmentBuffer->updateDecodeWaitingQueue(selectedNzbFileDataOld, selectedNzbFileData);
 
-    for (int i = 0; i < selectedFileNameItem->rowCount(); i++) {
+    for (int i = 0; i < selectedFileNameItem->rowCount(); ++i) {
 
         // retrieve first nzb child item :
         QStandardItem* childFileNameItem = selectedFileNameItem->child(i, FILE_NAME_COLUMN);

@@ -154,7 +154,7 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
 
                 //set corresponding element value for the current segmentData :
                 QList<SegmentData> segmentDataOrderedList = segmentMap.values();
-                for (int i = 0; i < segmentDataOrderedList.size(); i++) {
+                for (int i = 0; i < segmentDataOrderedList.size(); ++i) {
 
                     SegmentData segmentData = segmentDataOrderedList.at(i);
                     segmentData.setElementInList(i);

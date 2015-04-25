@@ -267,7 +267,7 @@ void Scheduler::applySpeedLimit() {
     int totalDownloadSpeed = 0;
 
     // retrieve total download speed for all avaialable servers (master + backups) :
-    for (int i = 0; i < serverNumber; i++) {
+    for (int i = 0; i < serverNumber; ++i) {
 
         int serverDownloadSpeed = static_cast<int>(this->serverManager->retrieveServerDownloadSpeed(i));
 
@@ -280,7 +280,7 @@ void Scheduler::applySpeedLimit() {
 
 
     // for each server group, apply download speed limit :
-    for (int i = 0; i < serverNumber; i++) {
+    for (int i = 0; i < serverNumber; ++i) {
 
         if (totalDownloadSpeed > SchedulerSettings::downloadLimitSpinBox()) {
 

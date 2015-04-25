@@ -111,7 +111,7 @@ void PreferencesServer::loadSettings() {
 
     int serverNumber = KConfigGroupHandler::getInstance()->readServerNumberSettings();
 
-    for (int i = 0; i < serverNumber; i++) {
+    for (int i = 0; i < serverNumber; ++i) {
         this->tabWidget->addNewTab();
     }
 

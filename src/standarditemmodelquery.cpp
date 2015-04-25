@@ -44,7 +44,7 @@ QStandardItem* StandardItemModelQuery::searchParentItem(const SearchItemStatus& 
     QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
 
     // get the first parent with download active :
-    for (int i = 0; i < rootItem->rowCount(); i++) {
+    for (int i = 0; i < rootItem->rowCount(); ++i) {
 
         QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
         UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
@@ -114,7 +114,7 @@ QList<QModelIndex> StandardItemModelQuery::retrieveDecodeFinishParentIndexList()
 
     QList<QModelIndex> downloadFinishParentIndexList;
 
-    for (int i = 0; i < this->downloadModel->rowCount(); i++) {
+    for (int i = 0; i < this->downloadModel->rowCount(); ++i) {
 
         QModelIndex parentIndex = this->downloadModel->item(i)->index();
 
@@ -135,7 +135,7 @@ QStandardItem* StandardItemModelQuery::retrieveParentFileNameItemFromUuid(const 
 
     QStandardItem* parentFileNameItem = 0;
 
-    for (int i = 0; i < this->downloadModel->rowCount(); i++) {
+    for (int i = 0; i < this->downloadModel->rowCount(); ++i) {
 
         if (parentUuidStr == this->downloadModel->getUuidStrFromIndex(this->downloadModel->item(i)->index())) {
 
@@ -156,7 +156,7 @@ QList<QModelIndex> StandardItemModelQuery::retrieveStartPauseIndexList(const Uti
     QList<QModelIndex> indexesList;
     int rowNumber = this->downloadModel->rowCount();
 
-    for (int i = 0; i < rowNumber; i++) {
+    for (int i = 0; i < rowNumber; ++i) {
 
         QModelIndex currentIndex = this->downloadModel->item(i)->index();
         QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(currentIndex);
@@ -195,7 +195,7 @@ bool StandardItemModelQuery::areJobsFinished() const {
         QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
 
         // for each parent item, get its current status :
-        for (int i = 0; i < rootItem->rowCount(); i++) {
+        for (int i = 0; i < rootItem->rowCount(); ++i) {
 
             QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
             UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
@@ -235,7 +235,7 @@ bool StandardItemModelQuery::haveItemsSameParent(const QList<QModelIndex>& index
         // get the parent of the first selected element :
         QModelIndex firstParentIndex = indexesList.at(0).parent();
 
-        for (int i = 1; i < indexesList.size(); i++) {
+        for (int i = 1; i < indexesList.size(); ++i) {
 
             QModelIndex currentModelIndex = indexesList.at(i);
 
@@ -262,7 +262,7 @@ bool StandardItemModelQuery::isParentContainsPar2File(QStandardItem* item) const
     // if current item is a child, retrieve its parent :
     QStandardItem* parentFileNameItem = this->downloadModel->getNzbItem(item);
 
-    for (int i = 0; i < parentFileNameItem->rowCount(); i++) {
+    for (int i = 0; i < parentFileNameItem->rowCount(); ++i) {
 
         QStandardItem* nzbChildrenItem = parentFileNameItem->child(i, FILE_NAME_COLUMN);
         NzbFileData nzbFileData = this->downloadModel->getNzbFileDataFromIndex(nzbChildrenItem->index());
@@ -387,7 +387,7 @@ bool StandardItemModelQuery::isParentFileNameExists(const QString& nzbName) cons
     QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
 
     // for each parent item, get its current nzb file name :
-    for (int i = 0; i < rootItem->rowCount(); i++) {
+    for (int i = 0; i < rootItem->rowCount(); ++i) {
 
         QStandardItem* parentFileNameItem = rootItem->child(i, FILE_NAME_COLUMN);
 

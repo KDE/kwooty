@@ -74,7 +74,7 @@ bool CategoriesModel::isDuplicateSubCategory(QStandardItem* selectedItem, const 
 
     bool duplicate = false;
 
-    for (int i = 0; i < selectedItem->rowCount(); i++) {
+    for (int i = 0; i < selectedItem->rowCount(); ++i) {
 
         QStandardItem* childItem = selectedItem->child(i);
         MimeData mimeData = this->loadMimeData(childItem);
@@ -97,7 +97,7 @@ void CategoriesModel::addParentCategoryListToModel(const QStringList& categoryLi
 
         bool categoryInserted = false;
 
-        for (int i = 0; i < this->rowCount(); i++) {
+        for (int i = 0; i < this->rowCount(); ++i) {
 
             // check if category has previously been added :
             if (parentType == this->getMainCategory(item(i))) {
@@ -193,7 +193,7 @@ QList<MimeData> CategoriesModel::retrieveMimeDataListFromItem(QStandardItem* sel
 
     QList<MimeData> mimeDataList;
 
-    for (int i = 0; i < selectedItem->rowCount(); i++) {
+    for (int i = 0; i < selectedItem->rowCount(); ++i) {
         mimeDataList.append(this->loadMimeData(selectedItem->child(i)));
     }
 
@@ -217,7 +217,7 @@ QStandardItem* CategoriesModel::retrieveItemFromCategory(const QString& category
     }
 
     // look for category pattern stored in each mimeData :
-    for (int i = 0; i < parentItem->rowCount(); i++) {
+    for (int i = 0; i < parentItem->rowCount(); ++i) {
 
         QStandardItem* currentCategoryItem = parentItem->child(i);
 
@@ -254,7 +254,7 @@ int CategoriesModel::retrieveLexicalTextPosition(const QString& targetDisplayedT
 
     int position = 0;
 
-    for (int i = 0; i < selectedItem->rowCount(); i++) {
+    for (int i = 0; i < selectedItem->rowCount(); ++i) {
 
         QString currentDisplayedText = this->loadMimeData(selectedItem->child(i)).getDisplayedText();
 

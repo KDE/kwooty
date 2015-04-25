@@ -62,7 +62,7 @@ int UniqueApp::newInstance() {
             KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
             // open nzb files set as argument :
-            for (int i = 0; i < args->count(); i++) {
+            for (int i = 0; i < args->count(); ++i) {
 
                 this->mainWindow->openFileWithFileMode(args->url(i), UtilityNamespace::OpenWith);
 

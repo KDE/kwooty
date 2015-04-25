@@ -133,7 +133,7 @@ void ActionFileDeleteManager::actionTriggeredSlot() {
          this->core->getModelQuery()->haveItemsSameParent(selectedIndexList) ) {
 
         // store rows in a list :
-        for (int i = 0; i < selectedIndexList.size(); i++) {
+        for (int i = 0; i < selectedIndexList.size(); ++i) {
 
             QStandardItem* selectedFileNameItem = this->downloadModel->getFileNameItemFromIndex(selectedIndexList.at(i));
 

@@ -178,7 +178,7 @@ QStringList UtilityCategories::retrieveFilteredMainCategoryList(CategoriesModel*
 
     QStringList filteredMainCategoryList = UtilityCategories::retrieveMainCategoryList();
 
-    for (int i = 0; i < categoriesModel->rowCount(); i++) {
+    for (int i = 0; i < categoriesModel->rowCount(); ++i) {
 
         QString currentMainCategory = categoriesModel->getMainCategory(categoriesModel->item(i));
 

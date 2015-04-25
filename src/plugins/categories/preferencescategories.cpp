@@ -307,7 +307,7 @@ QStringList PreferencesCategories::retrieveSelectionList(QStandardItem* selected
     // retrieve all full gategories from parent item :
     QStringList selectionList;
 
-    for (int i = 0; i < selectedItem->rowCount(); i++) {
+    for (int i = 0; i < selectedItem->rowCount(); ++i) {
 
         QStandardItem* childItem = selectedItem->child(i);
         MimeData mimeData = this->categoriesModel->loadMimeData(childItem);

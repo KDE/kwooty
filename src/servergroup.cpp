@@ -272,7 +272,7 @@ void ServerGroup::createNntpClients() {
     // set a delay of +100 ms between each nntp client instance :
     int connectionDelay = 0;
 
-    for (int i = 0; i < connectionNumber; i++) {
+    for (int i = 0; i < connectionNumber; ++i) {
         this->clientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
         connectionDelay += 100;
     }
@@ -451,7 +451,7 @@ bool ServerGroup::settingsServerChangedSlot() {
     if (connectionNumber > this->clientManagerConnList.size()) {
 
         int connectionDelay = 0;
-        for (int i = this->clientManagerConnList.size(); i < connectionNumber; i++){
+        for (int i = this->clientManagerConnList.size(); i < connectionNumber; ++i){
 
             this->clientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
 

@@ -95,7 +95,7 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex) {
     // smart par2 download, set them to Idle only if a file crc has failed :
     bool par2FilesUpdated = this->updatePar2ItemsIfCrcFailed(nzbItemStatusData, rowNumber, nzbIndex);
 
-    for (int i = 0; i < rowNumber; i++) {
+    for (int i = 0; i < rowNumber; ++i) {
 
         ItemStatusData itemStatusData = nzbIndex.child(i, STATE_COLUMN).data(StatusRole).value<ItemStatusData>();
 
@@ -349,7 +349,7 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
         // prepare nzbFileDataList :
         QList<NzbFileData> nzbFileDataList;
 
-        for (int i = 0; i < rowNumber; i++) {
+        for (int i = 0; i < rowNumber; ++i) {
 
             QModelIndex childIndex = nzbIndex.child(i, FILE_NAME_COLUMN);
             NzbFileData currentNzbFileData = this->downloadModel->getNzbFileDataFromIndex(childIndex);
@@ -432,7 +432,7 @@ void ItemParentUpdater::recalculateNzbSize(const QModelIndex& nzbIndex){
     // get size of all nzb children :
     int rowNumber = this->downloadModel->itemFromIndex(nzbIndex)->rowCount();
 
-    for (int i = 0; i < rowNumber; i++) {
+    for (int i = 0; i < rowNumber; ++i) {
 
         // get itemStatusData :
         ItemStatusData childItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex.child(i, SIZE_COLUMN));
@@ -477,7 +477,7 @@ bool ItemParentUpdater::updatePar2ItemsIfCrcFailed(ItemStatusData& nzbItemStatus
         // search for children with a bad crc :
         if (nzbItemStatusData.getCrc32Match() == CrcOk) {
 
-            for (int i = 0; i < rowNumber; i++) {
+            for (int i = 0; i < rowNumber; ++i) {
 
                 ItemStatusData itemStatusData = nzbIndex.child(i, STATE_COLUMN).data(StatusRole).value<ItemStatusData>();
 

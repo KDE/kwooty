@@ -140,7 +140,7 @@ void SchedulerFileHandler::fillModel(QStandardItemModel* schedulerModel) {
 
 
     // check that all items are correctly set :
-    for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; i++) {
+    for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; ++i) {
         for (int j = 0; j < COLUMN_NUMBER_SCHEDULER; j++) {
 
             QStandardItem* item = schedulerModel->itemFromIndex(schedulerModel->index(i, j));
@@ -173,7 +173,7 @@ void SchedulerFileHandler::saveModelToFile(QStandardItemModel* schedulerModel) {
 
 
 
-    for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; i++) {
+    for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; ++i) {
 
         // <day> :
         stream.writeStartElement("day");

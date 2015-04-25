@@ -409,7 +409,7 @@ void Repair::repairFinishedSlot(const int exitCode, const QProcess::ExitStatus e
     //qCDebug(KWOOTY_LOG) << "exitCode" << exitCode << " exitStatus " << exitStatus;
 
     // notify nzb parent item that verification has ended :
-    for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+    for (int i = 0; i < this->nzbFileDataList.size(); ++i) {
 
         NzbFileData nzbFileData = this->nzbFileDataList.at(i);
 
@@ -522,7 +522,7 @@ void Repair::sendVerifyingFilesNotification() {
     par2File.open(QIODevice::ReadOnly);
     QByteArray par2ByteArray = par2File.readAll();
 
-    for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+    for (int i = 0; i < this->nzbFileDataList.size(); ++i) {
 
         NzbFileData nzbFileData = this->nzbFileDataList.at(i);
 
@@ -570,7 +570,7 @@ void Repair::sendVerifyNotification(const QString& fileNameStr, const QString& o
     NzbFileData parentFileData;
 
     // search corresponding file into the list :
-    for (int i = 0; i < this->nzbFileDataList.size(); i++) {
+    for (int i = 0; i < this->nzbFileDataList.size(); ++i) {
 
         NzbFileData nzbFileData = this->nzbFileDataList.at(i);
 

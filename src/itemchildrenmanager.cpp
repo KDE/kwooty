@@ -71,7 +71,7 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex index) 
     // check if some par2 files have not been downloaded :
     QStandardItem* parentItem = this->downloadModel->itemFromIndex(index);
 
-    for (int i = 0; i < parentItem->rowCount(); i++) {
+    for (int i = 0; i < parentItem->rowCount(); ++i) {
 
         // get current item status :
         UtilityNamespace::ItemStatus childItemStatus = this->downloadModel->getChildStatusFromNzbIndex(index, i);
@@ -99,7 +99,7 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex index) 
     if (par2Required) {
 
         // reset rar files to decodeFinish status :
-        for (int i = 0; i < parentItem->rowCount(); i++) {
+        for (int i = 0; i < parentItem->rowCount(); ++i) {
 
             QModelIndex childIndex = index.child(i, FILE_NAME_COLUMN);
 
@@ -146,7 +146,7 @@ void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex index, Uti
         // get all nzb children :
         int rowNumber = this->downloadModel->itemFromIndex(index)->rowCount();
 
-        for (int i = 0; i < rowNumber; i++) {
+        for (int i = 0; i < rowNumber; ++i) {
 
             QModelIndex childIndex = index.child(i, FILE_NAME_COLUMN);
             NzbFileData currentNzbFileData = this->downloadModel->getNzbFileDataFromIndex(childIndex);
@@ -209,7 +209,7 @@ void ItemChildrenManager::resetItemStatusToTarget(QStandardItem* fileNameItem, c
 
 void ItemChildrenManager::resetFinishedChildrenItemToDecodeFinish(QStandardItem* fileNameItem) {
 
-    for (int i = 0; i < fileNameItem->rowCount(); i++) {
+    for (int i = 0; i < fileNameItem->rowCount(); ++i) {
 
         QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
 
@@ -241,7 +241,7 @@ void ItemChildrenManager::settingsChangedSlot() {
         QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
 
         // for each parent item, update it children :
-        for (int i = 0; i < rootItem->rowCount(); i++) {
+        for (int i = 0; i < rootItem->rowCount(); ++i) {
 
             QStandardItem* parentItem = rootItem->child(i, FILE_NAME_COLUMN);
 

@@ -77,7 +77,7 @@ QList<QStandardItem*> ActionMergeManager::checkMergeCandidates(bool& mergeAvaila
             QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
 
             // check state of each parent item :
-            for (int i = 0; i < rootItem->rowCount(); i++) {
+            for (int i = 0; i < rootItem->rowCount(); ++i) {
 
                 // get corresponding nzb file name item :
                 QStandardItem* fileNameItem = rootItem->child(i, FILE_NAME_COLUMN);

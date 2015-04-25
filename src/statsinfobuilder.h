@@ -82,10 +82,10 @@ private:
 
 signals:
 
-    void updateDownloadSpeedInfoSignal(const QString);
+    void updateDownloadSpeedInfoSignal(const QString &);
     void updateTimeInfoSignal(const bool);
     void updateFreeSpaceSignal(const UtilityNamespace::FreeDiskSpace, const QString = QString(), const int = 0);
-    void insufficientDiskSpaceSignal(const QString);
+    void insufficientDiskSpaceSignal(const QString&);
 
 public slots:
 

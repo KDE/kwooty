@@ -92,7 +92,7 @@ PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& 
     QStringList verticalHeaderLabels;
     verticalHeaderLabels << QString();
 
-    for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; i++) {
+    for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; ++i) {
         verticalHeaderLabels.append(QDate::longDayName(i));
     }
 
@@ -100,7 +100,7 @@ PreferencesScheduler::PreferencesScheduler(QWidget* parent, const QVariantList& 
 
 
     // span first row with 4 cells (it will be used to display a spanned horizontal header with itemDelegate) :
-    for (int i = 0; i < COLUMN_NUMBER_SCHEDULER; i++) {
+    for (int i = 0; i < COLUMN_NUMBER_SCHEDULER; ++i) {
 
         int index = i * 4;
         schedulerTableView->setSpan(HEADER_ROW_SCHEDULER, index, 1, 4);

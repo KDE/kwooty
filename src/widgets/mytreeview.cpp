@@ -245,7 +245,7 @@ void MyTreeView::expandedSlot(const QModelIndex& index) {
     // retrieve maximum child fileName and fileSize text size :
     QStandardItem* parentItem = this->getDownloadModel()->itemFromIndex(index);
 
-    for (int i = 0; i < parentItem->rowCount(); i++) {
+    for (int i = 0; i < parentItem->rowCount(); ++i) {
 
         // get corresponding file name index :
         QModelIndex fileNameIndex = index.child(i, FILE_NAME_COLUMN);
@@ -306,7 +306,7 @@ void MyTreeView::displayLongOrTinyFileName() {
         // retrieve parent nzb :
         QStandardItem* rootItem = downloadModel->invisibleRootItem();
 
-        for (int i = 0; i < downloadModel->invisibleRootItem()->rowCount(); i++) {
+        for (int i = 0; i < downloadModel->invisibleRootItem()->rowCount(); ++i) {
 
             QStandardItem* nzbItem = rootItem->child(i);
 

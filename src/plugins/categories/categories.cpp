@@ -577,7 +577,7 @@ KIO::CopyJob* Categories::moveJobLegacy(const MimeData& mimeData, const QString&
         // if move folder path already exists, try to find another name :
         if (QDir(moveFolderPath).exists()) {
 
-            for (int i = 1; i < 100; i++) {
+            for (int i = 1; i < 100; ++i) {
 
                 // rename folder with extension, eg : folder.1 :
                 QString candidateAbsoluteFileName = moveFolderPath + "." + QString::number(i);

@@ -205,7 +205,7 @@ void Core::restoreDataFromPreviousSession(const QList<GlobalFileData>& globalFil
     this->handleNzbFile(nzbFile, nzbFileData.getNzbName(), globalFileDataList);
 
     // update parent status to the same value as previous session :
-    for (int i = 0; i < this->downloadModel->rowCount(); i++) {
+    for (int i = 0; i < this->downloadModel->rowCount(); ++i) {
 
         // retrieve nzb parent item :
         QStandardItem* parentFileNameItem = this->downloadModel->item(i, FILE_NAME_COLUMN);
@@ -364,7 +364,7 @@ void Core::statusBarFileSizeUpdate() {
     QStandardItem* rootItem = downloadModel->invisibleRootItem();
 
     // parse nzb items :
-    for (int i = 0; i < rootItem->rowCount(); i++) {
+    for (int i = 0; i < rootItem->rowCount(); ++i) {
 
         QStandardItem* nzbItem = rootItem->child(i);
 

@@ -205,7 +205,7 @@ QStringList RepairDecompressThread::listDifferentFileBaseName(NzbCollectionData&
     // group archive files together :
     QStringList fileBaseNameList;
 
-    for (int i =0; i < nzbFileDataList.size(); i++) {
+    for (int i =0; i < nzbFileDataList.size(); ++i) {
 
         NzbFileData nzbFileData = nzbFileDataList.at(i);
 
