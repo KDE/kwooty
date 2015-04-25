@@ -44,10 +44,10 @@ private:
     void enableGroupBox(bool, const QString&);
     QString buildNicePriorityToolTip();
 
-public slots:
+public Q_SLOTS:
     void aboutToShowSettingsSlot();
 
-private slots:
+private Q_SLOTS:
     void verifyProcessPriorityChangedSlot();
     void extractProcessPriorityChangedSlot();
 

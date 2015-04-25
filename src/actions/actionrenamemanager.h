@@ -43,10 +43,10 @@ private:
     void processRename(QStandardItem*);
     void launchProcess();
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
     void actionTriggeredSlot();
     void handleResultSlot(KJob*);
 

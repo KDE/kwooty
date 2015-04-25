@@ -64,10 +64,10 @@ private:
     int connectionDelay;
 
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
     void dataHasArrivedSlot();
     void resetConnectionSlot();
     void disconnectRequestSlot();
@@ -75,7 +75,7 @@ public slots:
     void limitDownloadSpeedSlot(BandwidthClientMode);
     void startupCompleteSlot();
 
-private slots:
+private Q_SLOTS:
     void initSlot();
 
 

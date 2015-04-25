@@ -41,10 +41,10 @@ private:
     bool isSchedulerEnabled() const;
     QHash<DownloadLimitStatus, QColor> statusColorMap;
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
 
 
 };

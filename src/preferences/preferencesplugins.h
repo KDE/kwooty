@@ -49,7 +49,7 @@ private:
     KConfigDialog* kConfigDialog;
 
 
-public slots:
+public Q_SLOTS:
 
     void configButtonClickedSlot(KDialog::ButtonCode);
 

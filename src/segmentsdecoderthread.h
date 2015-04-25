@@ -59,7 +59,7 @@ private:
     SegmentDecoderBase* retrieveProperDecoderDuringDownload(SegmentData&, QString&);
 
 
-signals:
+Q_SIGNALS:
     void updateDecodeSegmentSignal(SegmentData, int, int);
     void updateDecodeSignal(PostDownloadInfoData);
     void saveFileErrorSignal(int);
@@ -68,12 +68,12 @@ signals:
     void finalizeDecoderIdleSignal();
 
 
-public slots:
+public Q_SLOTS:
     void decodeSegmentsSlot(NzbFileData);
     void suppressOldOrphanedSegmentsSlot();
     void saveDownloadedSegmentSlot(SegmentData);
 
-private slots:
+private Q_SLOTS:
 
 
 };

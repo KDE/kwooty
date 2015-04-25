@@ -61,12 +61,12 @@ private:
 
 
 
-signals:
+Q_SIGNALS:
 
     void pressedSignal();
 
 
-public slots:
+public Q_SLOTS:
 
 
 };

@@ -37,7 +37,7 @@ private:
     void setupConnections();
 
 
-public slots:
+public Q_SLOTS:
     void currentIndexChangedSlot();
     void radioButtonToggledSlot();
 };

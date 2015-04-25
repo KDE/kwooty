@@ -60,11 +60,11 @@ private:
     void setupConnections();
 
 
-signals:
+Q_SIGNALS:
 
-public slots:
+public Q_SLOTS:
 
-private slots:
+private Q_SLOTS:
     void cellEnteredSlot(const QModelIndex&);
     void cellPressedSlot(const QModelIndex&);
     void downloadLimitValueChangedSlot(int);

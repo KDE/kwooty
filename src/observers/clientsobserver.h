@@ -56,12 +56,12 @@ private:
 
 
 
-signals:
+Q_SIGNALS:
     void updateConnectionStatusSignal();
     void updateFileSizeInfoSignal(const quint64, const quint64);
 
 
-public slots:
+public Q_SLOTS:
 
     void nntpClientSpeedSlot(const int);
     void connectionStatusSlot(const int);

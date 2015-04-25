@@ -85,7 +85,7 @@ private:
     void dataReadArrived();
 
 
-signals:
+Q_SIGNALS:
     void downloadSegmentFromServerSignal();
     void answerTimeOutSignal();
     void socketEncryptedInfoSignal(bool, QString, QString, QStringList);
@@ -93,13 +93,13 @@ signals:
     void tryToReconnectSignal();
 
 
-public slots:
+public Q_SLOTS:
     void answerTimeOutSlot();
     void idleTimeOutSlot();
     void rateControlSlot();
     void tryToReconnectSlot();
 
-private slots:
+private Q_SLOTS:
     void socketEncryptedSlot();
     void peerVerifyErrorSlot();
 

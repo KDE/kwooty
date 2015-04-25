@@ -52,14 +52,14 @@ private:
     
 
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
     void jobFinishSlot(const UtilityNamespace::ItemStatus, const QString);
     void insufficientDiskSpaceSlot(const QString);
 
-private slots:
+private Q_SLOTS:
 
 };
 

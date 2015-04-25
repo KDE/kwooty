@@ -80,19 +80,19 @@ private:
 
 
 
-signals:
+Q_SIGNALS:
 
     void updateDownloadSpeedInfoSignal(const QString &);
     void updateTimeInfoSignal(const bool);
     void updateFreeSpaceSignal(const UtilityNamespace::FreeDiskSpace, const QString = QString(), const int = 0);
     void insufficientDiskSpaceSignal(const QString&);
 
-public slots:
+public Q_SLOTS:
 
     void settingsChangedSlot();
 
 
-private slots:
+private Q_SLOTS:
 
     void updateDownloadSpeedSlot();
 

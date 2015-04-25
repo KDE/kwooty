@@ -75,15 +75,15 @@ private:
 
 
 
-signals:
+Q_SIGNALS:
     void updateRepairExtractSegmentSignal(PostDownloadInfoData);
 
-public slots:
+public Q_SLOTS:
     void repairDecompressSlot(NzbCollectionData);
     void repairProcessEndedSlot(NzbCollectionData);
     void extractProcessEndedSlot(NzbCollectionData);
 
-private slots:
+private Q_SLOTS:
     void startRepairSlot();
     void startExtractSlot();    
     void processJobSlot();

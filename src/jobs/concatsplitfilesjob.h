@@ -50,16 +50,16 @@ private:
     bool joinSplittedFiles();
 
 
-signals:
+Q_SIGNALS:
     void progressPercentSignal(int, QString);
     void resultSignal(int);
 
 
-public slots:
+public Q_SLOTS:
     void joinFilesSlot(const QList<NzbFileData> &, const QString &, const QString &);
 
 
-private slots:
+private Q_SLOTS:
 
 
 };

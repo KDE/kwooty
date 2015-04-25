@@ -47,10 +47,10 @@ private:
     KCapacityBar* capacityBar;
     QLabel* iconLabel;
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
 
 
 };

@@ -80,16 +80,16 @@ private:
     void askForSavingDownloads(bool&);
 
 
-signals:
+Q_SIGNALS:
     void aboutToShowSettingsSignal();
     void savePendingDownloadsSignal();
     void startupCompleteSignal();
 
-public slots:
+public Q_SLOTS:
     void systraySlot();
 
 
-private slots:
+private Q_SLOTS:
     void openFile();
     void showSettings(UtilityNamespace::PreferencesPage = UtilityNamespace::GeneralPage);
     void quit();

@@ -115,7 +115,7 @@ private:
     void initFoldersSettings();
 
     
-signals:
+Q_SIGNALS:
     void dataHasArrivedSignal();
     void dataAboutToArriveSignal(QModelIndex);
     void settingsChangedSignal();
@@ -123,7 +123,7 @@ signals:
     void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);
 
 
-public slots:
+public Q_SLOTS:
     void saveFileErrorSlot(const int);
     void updateSettingsSlot();
     void downloadWaitingPar2Slot();
@@ -132,7 +132,7 @@ public slots:
     void extractPasswordRequiredSlot(QString);
 
     
-private slots:
+private Q_SLOTS:
     
     
     

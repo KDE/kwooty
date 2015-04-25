@@ -45,12 +45,12 @@ private:
     void decodeProgression(PostDownloadInfoData&);
 
 
-signals:
+Q_SIGNALS:
 
-public slots:
+public Q_SLOTS:
 
 
-private slots:
+private Q_SLOTS:
 
 
 };

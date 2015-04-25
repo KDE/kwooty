@@ -57,7 +57,7 @@ protected:
     bool crc32Match;
 
 
-signals:
+Q_SIGNALS:
 
 };
 

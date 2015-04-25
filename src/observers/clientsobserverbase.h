@@ -66,12 +66,12 @@ protected:
 private:
 
 
-signals:
+Q_SIGNALS:
 
-public slots:
+public Q_SLOTS:
 
 
-protected slots:
+protected Q_SLOTS:
 
 
 };

@@ -75,7 +75,7 @@ private:
 
     void buildClearIcon(const QPixmap&, QPixmap&);
 
-signals:
+Q_SIGNALS:
     void activeSignal(bool);
 
 

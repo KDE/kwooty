@@ -57,15 +57,15 @@ private:
     void setupConnections();
 
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
     void activeSlot(bool);
     void serverManagerSettingsChangedSlot();
 
 
-private slots:
+private Q_SLOTS:
 
 
 

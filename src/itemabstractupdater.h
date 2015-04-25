@@ -78,7 +78,7 @@ protected:
     void setIcon(QStandardItem*, const QString&);
 
 
-protected slots:
+protected Q_SLOTS:
 
     void parentStatusIconUpdateSlot(QStandardItem*, ItemStatusData);
     void childStatusIconUpdateSlot(QStandardItem*, ItemStatusData);

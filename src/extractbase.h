@@ -102,15 +102,15 @@ protected:
     virtual QString searchExtractProgram() = 0;
 
 
-signals:
+Q_SIGNALS:
     void extractProcessEndedSignal(NzbCollectionData = NzbCollectionData());
     void extractPasswordRequiredSignal(QString);
 
 
-public slots:
+public Q_SLOTS:
     void passwordEnteredByUserSlot(bool, QString password = QString());
 
-protected slots:
+protected Q_SLOTS:
     void extractReadyReadSlot();
     void extractFinishedSlot(const int, const QProcess::ExitStatus);
 

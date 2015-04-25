@@ -88,14 +88,14 @@ private:
     QString currentUuidItem;
     bool jobProcessing;
 
-signals:
+Q_SIGNALS:
     void pluginJobRunningSignal(bool);
 
-public slots:
+public Q_SLOTS:
     void handleResultSlot(KJob*);
     void jobProgressionSlot(KIO::Job*);
 
-private slots:
+private Q_SLOTS:
     void parentStatusItemChangedSlot(QStandardItem*, ItemStatusData);
 
 };

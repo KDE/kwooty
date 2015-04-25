@@ -44,17 +44,17 @@ private:
     void setupConnections();
 
 
-signals:
+Q_SIGNALS:
     void recalculateNzbSizeSignal(const QModelIndex);
 
 
-public slots:
+public Q_SLOTS:
     void mergeSubMenuAboutToShowSlot();
     void actionTriggeredSlot();
     void actionTriggeredSlot(QAction*);
     void handleResultSlot(KJob*);
 
-private slots:
+private Q_SLOTS:
 
 
 };

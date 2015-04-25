@@ -48,16 +48,16 @@ private:
     void setupConnections();
 
 
-signals:
+Q_SIGNALS:
     void downloadWaitingPar2Signal();
 
 
-public slots:
+public Q_SLOTS:
     void changePar2FilesStatusSlot(const QModelIndex, UtilityNamespace::ItemStatus);
     void settingsChangedSlot();
 
 
-private slots:
+private Q_SLOTS:
 
 
 };

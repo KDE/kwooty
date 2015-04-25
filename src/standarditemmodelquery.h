@@ -72,13 +72,13 @@ private:
 
     QStandardItem* searchParentItem(const SearchItemStatus&);
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
 
 
-private slots:
+private Q_SLOTS:
 
 
 };

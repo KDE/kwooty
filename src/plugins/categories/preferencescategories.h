@@ -59,13 +59,13 @@ private:
     CategoriesModel* categoriesModel;
     bool saveChangesRequested;
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
 
 
-private slots:
+private Q_SLOTS:
 
     void toolButtonAddClickSlot();
     void toolButtonRemoveClickSlot();

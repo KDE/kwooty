@@ -81,14 +81,14 @@ private:
 
 
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
     void serverManagerSettingsChangedSlot();
     void statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity);
 
-private slots:
+private Q_SLOTS:
     void schedulerTimerSlot();
     void dataAboutToArriveSlot(QModelIndex = QModelIndex());
     void startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus, QList<QModelIndex>);

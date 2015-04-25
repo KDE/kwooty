@@ -58,7 +58,7 @@ private:
     void resetVariables();
 
 
-signals:
+Q_SIGNALS:
 
     void connectionStatusSignal(int);
     void encryptionStatusSignal(const bool, const QString = QString(), const bool = false, const QString = QString(), const QStringList = QStringList());
@@ -66,14 +66,14 @@ signals:
     void nntpErrorSignal(const int);
     void serverStatisticsUpdateSignal(const int);
 
-public slots:
+public Q_SLOTS:
 
     void nntpClientSpeedPerServerSlot(const SegmentInfoData);
     void connectionStatusPerServerSlot(const int);
     void encryptionStatusPerServerSlot(const bool, const QString, const bool, const QString, const QStringList);
     void nntpErrorPerServerSlot(const int);
 
-private slots:
+private Q_SLOTS:
     void updateDownloadSpeedSlot();
 
 };

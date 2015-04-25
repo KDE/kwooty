@@ -81,7 +81,7 @@ private:
     ActionFileDeleteManager* actionFileDeleteManager;
 
     
-signals:
+Q_SIGNALS:
     void statusBarFileSizeUpdateSignal(StatusBarUpdateType);
     void allRowRemovedSignal();
     void recalculateNzbSizeSignal(const QModelIndex);
@@ -90,7 +90,7 @@ signals:
     void startPauseTriggeredSignal(UtilityNamespace::ItemStatus);
 
 
-public slots:
+public Q_SLOTS:
     void moveToTopSlot();
     void moveToBottomSlot();
     void moveUpSlot();

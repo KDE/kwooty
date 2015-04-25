@@ -45,13 +45,13 @@ private:
     void emitStatusToAllArchives(const int&, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
 
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
 
 
-private slots:
+private Q_SLOTS:
 
 };
 

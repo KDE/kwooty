@@ -51,14 +51,14 @@ private:
     void restorePreviousSettings();
     void defaultSettings();
 
-private slots:
+private Q_SLOTS:
     void configButtonClickedSlot(KDialog::ButtonCode);
 
 
-public slots:
+public Q_SLOTS:
 
 
-signals:
+Q_SIGNALS:
     void saveDataSignal();
 
 

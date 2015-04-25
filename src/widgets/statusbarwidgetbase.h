@@ -53,12 +53,12 @@ private:
     void setupConnections();
 
 
-signals:
+Q_SIGNALS:
 
     void statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity);
 
 
-public slots:
+public Q_SLOTS:
 
 
 };

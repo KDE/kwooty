@@ -50,14 +50,14 @@ private:
     void retryDownload(QStandardItem*);
 
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
     void parentStatusItemChangedSlot(QStandardItem*);
     void childStatusItemChangedSlot(QStandardItem*);
 
-private slots:
+private Q_SLOTS:
 
 
 };

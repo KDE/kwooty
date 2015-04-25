@@ -61,11 +61,11 @@ private:
     void clearWarningLabel(QLabel*);
 
 
-signals:
+Q_SIGNALS:
 
-public slots:
+public Q_SLOTS:
 
-private slots:
+private Q_SLOTS:
     void portValueChangedSlot(int);
     void valueChangedSlot();
     void serverModeValueChangedSlot(int);

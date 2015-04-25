@@ -72,15 +72,15 @@ private:
     QStandardItem* getColumnItem(const QModelIndex&, const int) const;
 
 
-signals:
+Q_SIGNALS:
     void parentStatusItemChangedSignal(QStandardItem*, ItemStatusData);
     void childStatusItemChangedSignal(QStandardItem*, ItemStatusData);
     void parentProgressItemChangedSignal();
 
 
-public slots:
+public Q_SLOTS:
 
-private slots:
+private Q_SLOTS:
 
 
 };

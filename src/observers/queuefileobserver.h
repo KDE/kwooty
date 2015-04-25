@@ -73,20 +73,20 @@ private:
     void addToList(const JobNotifyData&);
 
 
-signals:
+Q_SIGNALS:
 
     void progressUpdateSignal(const int);
     void statusUpdateSignal(const UtilityNamespace::ItemStatus);
     void jobFinishSignal(const UtilityNamespace::ItemStatus, const QString);
 
-public slots:
+public Q_SLOTS:
 
     void parentItemChangedSlot();
     void jobFinishStatusSlot(QStandardItem*);
     void pluginJobRunningSlot(bool);
 
 
-private slots:
+private Q_SLOTS:
 
 
     void checkJobFinishSlot();

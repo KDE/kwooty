@@ -91,19 +91,19 @@ private:
     void serverSwitchIfFailure();
 
 
-signals:
+Q_SIGNALS:
     void dataHasArrivedClientReadySignal();
     void disconnectRequestSignal();
     void connectRequestSignal();
     void resetConnectionSignal();
 
 
-public slots:
+public Q_SLOTS:
     bool settingsServerChangedSlot();
     void downloadPendingSegmentsSlot();
 
 
-private slots:
+private Q_SLOTS:
     void checkServerAvailabilitySlot();
     void checkServerStabilitySlot();
     void startTimerSlot();

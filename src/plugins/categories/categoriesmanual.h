@@ -54,10 +54,10 @@ private:
     QHash<QString, QString> uuidFolderMap;
 
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
     void addExternalActionSlot(QMenu*, QStandardItem*);
     void manualTransferFolderSlot();
 

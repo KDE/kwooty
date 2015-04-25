@@ -59,14 +59,14 @@ private:
     ConcatSplitFilesJob* concatSplitFilesJob;
 
 
-signals:
+Q_SIGNALS:
     void joinFilesSignal(QList <NzbFileData>, const QString, const QString);
 
 
-public slots:
+public Q_SLOTS:
 
 
-private slots:
+private Q_SLOTS:
     void jobPercentSlot(int, QString);
     void jobFinishSlot(int);
 

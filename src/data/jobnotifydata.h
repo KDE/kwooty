@@ -53,9 +53,9 @@ private:
     QString nzbFileName;
 
 
-signals:
+Q_SIGNALS:
 
-public slots:
+public Q_SLOTS:
 
 
 

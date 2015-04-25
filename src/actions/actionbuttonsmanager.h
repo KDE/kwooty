@@ -50,7 +50,7 @@ private:
     StandardItemModelQuery* downloadModelQuery;
 
     
-signals:
+Q_SIGNALS:
     void setMoveButtonEnabledSignal(bool);
     void setPauseButtonEnabledSignal(bool);
     void setPauseAllButtonEnabledSignal(bool);
@@ -64,7 +64,7 @@ signals:
     void setRemoveDeleteFileButtonEnabledSignal(bool);
 
     
-public slots:
+public Q_SLOTS:
     void selectedItemSlot();
     
 };

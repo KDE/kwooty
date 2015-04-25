@@ -54,10 +54,10 @@ private:
     bool isEndElement(QXmlStreamReader&, const QString&);
 
 
-signals:
+Q_SIGNALS:
     
 
-public slots:
+public Q_SLOTS:
     
 };
 

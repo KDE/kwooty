@@ -60,10 +60,10 @@ private:
     bool display;
 
 
-public slots:
+public Q_SLOTS:
 
 
-private slots:
+private Q_SLOTS:
     void tabClickedSlot(const int&);
 
 };

@@ -55,14 +55,14 @@ private:
     void unloadCurrentPlugin(const KPluginInfo&);
 
 
-signals:
+Q_SIGNALS:
 
-public slots:
+public Q_SLOTS:
 
     void configCommittedSlot(const QByteArray&);
 
 
-private slots:
+private Q_SLOTS:
 
 };
 

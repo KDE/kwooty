@@ -77,16 +77,16 @@ protected:
     void dragMoveEvent(QDragMoveEvent*);
     void dropEvent(QDropEvent*);
 
-signals:
+Q_SIGNALS:
     void addExternalActionSignal(QMenu*, QStandardItem*);
 
 
-public slots:
+public Q_SLOTS:
     void settingsChangedSlot();
     void expandedSlot(const QModelIndex&);
 
 
-private slots:
+private Q_SLOTS:
 
 
 };

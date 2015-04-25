@@ -71,14 +71,14 @@ private:
 
 
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
     void saveDataSlot();
 
 
-private slots:
+private Q_SLOTS:
 
     void closeTabClickedSlot();
     void newTabClickedSlot(const ServerTabWidget::ServerNameQuery = ServerTabWidget::AskServerName);

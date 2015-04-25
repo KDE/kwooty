@@ -70,14 +70,14 @@ protected:
     virtual void launchProcess() = 0;
 
 
-signals:
+Q_SIGNALS:
 
-public slots:
+public Q_SLOTS:
 
     void processFileSlot();
     virtual void actionTriggeredSlot() = 0;
 
-protected slots:
+protected Q_SLOTS:
 
     virtual void handleResultSlot(KJob*) = 0;
 

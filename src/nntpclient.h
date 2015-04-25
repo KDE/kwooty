@@ -119,7 +119,7 @@ private:
     void retryDownloadDelayed(const int&);
 
 
-signals:
+Q_SIGNALS:
     void getNextSegmentSignal(ClientManagerConn*);
     void updateDownloadSegmentSignal(SegmentData);
     void connectionStatusPerServerSignal(int);
@@ -127,11 +127,11 @@ signals:
     void nntpErrorPerServerSignal(const int);
 
 
-public slots:
+public Q_SLOTS:
     void dataHasArrivedSlot();
 
 
-private slots:
+private Q_SLOTS:
     void connectToHostSlot();
     void readyReadSlot();
     void connectedSlot();

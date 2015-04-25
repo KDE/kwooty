@@ -47,13 +47,13 @@ private:
     void countGlobalItemStatus(const SegmentData&);
 
 
-signals:
+Q_SIGNALS:
     void statusBarDecrementSignal(quint64, int);
     void decodeSegmentsSignal(NzbFileData);
 
-public slots:
+public Q_SLOTS:
 
-private slots:
+private Q_SLOTS:
 
 };
 

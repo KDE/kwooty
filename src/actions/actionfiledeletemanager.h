@@ -42,12 +42,12 @@ private:
     void launchProcess();
     void resetState();
 
-signals:
+Q_SIGNALS:
     
-public slots:
+public Q_SLOTS:
 
 
-private slots:
+private Q_SLOTS:
     void handleResultSlot(KJob*);
     void actionTriggeredSlot();
 

@@ -66,9 +66,9 @@ private:
     void fillModel(QStandardItemModel*);
 
 
-signals:
+Q_SIGNALS:
 
-public slots:
+public Q_SLOTS:
 
 };
 

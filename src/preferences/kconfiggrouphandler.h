@@ -84,7 +84,7 @@ private:
     ServerData fillServerData(const int&, KConfigGroup&, const PasswordData&);
 
 
-public slots:
+public Q_SLOTS:
     void settingsChangedSlot();
     void walletClosedSlot();
 

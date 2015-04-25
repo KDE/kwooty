@@ -66,17 +66,17 @@ private:
     void setupConnections();
 
 
-signals:
+Q_SIGNALS:
     void setShutdownButtonCheckedSignal(bool);
     void setShutdownButtonEnabledSignal(bool);
     void statusBarShutdownInfoSignal(QString, QString);
 
-public slots:
+public Q_SLOTS:
     void enableSystemShutdownSlot(bool);
     void shutdownCancelledSlot();
     void statusItemUpdatedSlot();
 
-private slots:
+private Q_SLOTS:
     void retrieveCurrentJobsInfoSlot();
     void settingsChangedSlot();
     void launchSystemShutdownSlot();

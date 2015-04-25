@@ -78,11 +78,11 @@ private:
     void buildConnWidgetToolTip(const QString&);
 
 
-signals:
+Q_SIGNALS:
     void showSettingsSignal(UtilityNamespace::PreferencesPage);
     void statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity);
 
-public slots:
+public Q_SLOTS:
 
     void updateConnectionStatusSlot();
     void updateDownloadSpeedInfoSlot(const QString);
@@ -93,7 +93,7 @@ public slots:
     void statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity);
 
 
-private slots:
+private Q_SLOTS:
 
 };
 

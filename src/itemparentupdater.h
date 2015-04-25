@@ -80,16 +80,16 @@ private:
     bool updatePar2ItemsIfCrcFailed(ItemStatusData&, const int rowNumber, const QModelIndex&);
     void updateItemsIfDirectExtractFailed(const QModelIndex, UtilityNamespace::ItemStatus);
 
-signals:
+Q_SIGNALS:
 
     void repairDecompressSignal(NzbCollectionData);
     void downloadWaitingPar2Signal();
 
-public slots:
+public Q_SLOTS:
     void recalculateNzbSizeSlot(const QModelIndex);
 
 
-private slots:
+private Q_SLOTS:
 
 };
 

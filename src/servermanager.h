@@ -63,11 +63,11 @@ private:
 
     void setupConnections();
 
-signals:
+Q_SIGNALS:
     void serverManagerSettingsChangedSignal();
 
 
-public slots:
+public Q_SLOTS:
     void settingsChangedSlot();
     void requestClientConnectionSlot();
 

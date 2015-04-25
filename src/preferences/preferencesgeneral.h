@@ -38,7 +38,7 @@ private:
     void enableSaveRestoreItems(const bool&);
 
 
-private slots:
+private Q_SLOTS:
     void stateChangedSlot();
 
 

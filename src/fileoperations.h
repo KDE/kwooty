@@ -50,9 +50,9 @@ private:
     void openUrl(KUrl, bool&, UtilityNamespace::OpenFileMode);
 
 
-signals:
+Q_SIGNALS:
 
-public slots:
+public Q_SLOTS:
 
 
 

@@ -68,19 +68,19 @@ private:
     void sendDataToFinalizeDecode();
 
 
-signals:
+Q_SIGNALS:
     void saveDownloadedSegmentSignal(SegmentData);
     void decodeSegmentsSignal(NzbFileData);
     void finalizeDecoderLockedSignal();
 
 
-public slots:
+public Q_SLOTS:
     void segmentDecoderIdleSlot();
     void finalizeDecodeQueuedSlot(const NzbFileData&);
     void finalizeDecoderIdleSlot();
 
 
-private slots:
+private Q_SLOTS:
 
 
 };

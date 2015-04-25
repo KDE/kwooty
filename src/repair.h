@@ -86,15 +86,15 @@ private:
     UtilityNamespace::ItemTarget getItemTarget(const NzbFileData&);
 
 
-signals:
+Q_SIGNALS:
     void repairProcessEndedSignal(NzbCollectionData);
 
-public slots:
+public Q_SLOTS:
     void repairReadyReadSlot();
     void repairFinishedSlot(int, QProcess::ExitStatus);
 
 
-private slots:
+private Q_SLOTS:
 
 
 };

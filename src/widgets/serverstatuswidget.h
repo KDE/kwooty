@@ -70,7 +70,7 @@ private:
     void insertRightRowFormLayout(ServerStatusWidget::RowItemsRight, QFormLayout*, const QString&, QWidget*);
 
 
-public slots:
+public Q_SLOTS:
     void buttonPressedSlot();
 
 

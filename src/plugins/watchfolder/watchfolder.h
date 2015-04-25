@@ -66,13 +66,13 @@ private:
     void appendFileToList(const QString&);
 
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
 
 
-private slots:
+private Q_SLOTS:
     void watchFileSlot(const QString&);
     void fileCompleteTimerSlot();
 

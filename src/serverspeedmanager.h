@@ -72,13 +72,13 @@ private:
     void resetVariables();
 
 
-signals:
+Q_SIGNALS:
     void limitDownloadSpeedSignal(BandwidthClientMode);
 
-public slots:
+public Q_SLOTS:
 
 
-private slots:
+private Q_SLOTS:
     void adjustDownloadSpeedSlot();
 
 

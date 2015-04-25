@@ -78,14 +78,14 @@ private:
 
 
 
-signals:
+Q_SIGNALS:
     void suppressOldOrphanedSegmentsSignal();
 
 
-public slots:
+public Q_SLOTS:
     void parentStatusItemChangedSlot(QStandardItem*, ItemStatusData);
 
-private slots:
+private Q_SLOTS:
     void readDataFromDiskSlot();
     void saveQueueDataSilentlySlot();
 

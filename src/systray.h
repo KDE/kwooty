@@ -64,17 +64,17 @@ private:
     void updateIconProgress(const int&);
     void createToolTip();
 
-signals:
+Q_SIGNALS:
 
 
-public slots:
+public Q_SLOTS:
 
     void progressUpdateSlot(const int);
     void statusUpdateSlot(const UtilityNamespace::ItemStatus);
     void updateDownloadSpeedInfoSlot();
     void updateConnectionStatusSlot();
 
-private slots:
+private Q_SLOTS:
 
 
 

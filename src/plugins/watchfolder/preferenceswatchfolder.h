@@ -46,11 +46,11 @@ private:
     Ui_PreferencesWatchFolder preferencesWatchFolderUi;
 
 
-signals:
+Q_SIGNALS:
 
-public slots:
+public Q_SLOTS:
 
-private slots:
+private Q_SLOTS:
 
 };
 
