@@ -102,7 +102,7 @@ void NntpSocket::setupConnections() {
     connect(this->rateControlTimer, SIGNAL(timeout()), this, SLOT(rateControlSlot()));
 
     connect (this, SIGNAL(encrypted()), this, SLOT(socketEncryptedSlot()));
-    connect (this, SIGNAL(peerVerifyError(const QSslError&)), this, SLOT(peerVerifyErrorSlot()));
+    connect (this, SIGNAL(peerVerifyError(QSslError)), this, SLOT(peerVerifyErrorSlot()));
 
 }
 

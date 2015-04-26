@@ -61,7 +61,7 @@ void ExtractBase::setupConnections() {
     qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
 
     connect (this->extractProcess, SIGNAL(readyRead()), this, SLOT(extractReadyReadSlot()));
-    connect (this->extractProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(extractFinishedSlot(int, QProcess::ExitStatus)));
+    connect (this->extractProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(extractFinishedSlot(int,QProcess::ExitStatus)));
 
 
     // begin verify - repair process for new pending files when signal has been received :
@@ -78,9 +78,9 @@ void ExtractBase::setupConnections() {
 
     // send password entered by the user :
     connect (parent->getCore(),
-             SIGNAL(passwordEnteredByUserSignal(bool, QString)),
+             SIGNAL(passwordEnteredByUserSignal(bool,QString)),
              this,
-             SLOT(passwordEnteredByUserSlot(bool, QString)));
+             SLOT(passwordEnteredByUserSlot(bool,QString)));
 
 }
 

@@ -58,13 +58,13 @@ void QueueFileObserver::setupConnections() {
 
     // parent status item has been updated :
     connect(this->downloadModel,
-            SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+            SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
             this,
             SLOT(parentItemChangedSlot()));
 
     // parent status item has been updated :
     connect(this->downloadModel,
-            SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+            SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
             this,
             SLOT(jobFinishStatusSlot(QStandardItem*)));
 

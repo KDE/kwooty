@@ -43,9 +43,9 @@ void ActionMergeManager::setupConnections() {
 
     // recalculate full nzb size when merge has been done :
     connect (this,
-             SIGNAL(recalculateNzbSizeSignal(const QModelIndex)),
+             SIGNAL(recalculateNzbSizeSignal(QModelIndex)),
              this->core->getItemParentUpdater(),
-             SLOT(recalculateNzbSizeSlot(const QModelIndex)));
+             SLOT(recalculateNzbSizeSlot(QModelIndex)));
 
 }
 

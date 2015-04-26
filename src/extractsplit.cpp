@@ -40,7 +40,7 @@ ExtractSplit::ExtractSplit(RepairDecompressThread* parent): ExtractBase(parent) 
     this->concatSplitFilesJob = new ConcatSplitFilesJob(this);
 
     // get joinning progression from joining thread :
-    connect (this->concatSplitFilesJob, SIGNAL(progressPercentSignal(int, QString)), this, SLOT(jobPercentSlot(int, QString)));
+    connect (this->concatSplitFilesJob, SIGNAL(progressPercentSignal(int,QString)), this, SLOT(jobPercentSlot(int,QString)));
 
     // be notified when joining file thread has finished :
     connect (this->concatSplitFilesJob, SIGNAL(resultSignal(int)), this, SLOT(jobFinishSlot(int)));

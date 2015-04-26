@@ -48,34 +48,34 @@ void ClientsPerServerObserver::setupConnections() {
     ClientsObserver* clientsObserver = this->parent->getCore()->getClientsObserver();
     // send connection status (connected, deconnected) to client observer for the current server :
     connect (this,
-             SIGNAL(connectionStatusSignal(const int)),
+             SIGNAL(connectionStatusSignal(int)),
              clientsObserver,
-             SLOT(connectionStatusSlot(const int)));
+             SLOT(connectionStatusSlot(int)));
 
 
     // send type of encryption used by host with ssl connection to client observer for the current server :
     connect (this,
-             SIGNAL(encryptionStatusSignal(const bool, const QString, const bool, const QString, const QStringList)),
+             SIGNAL(encryptionStatusSignal(bool,QString,bool,QString,QStringList)),
              clientsObserver,
-             SLOT(encryptionStatusSlot(const bool, const QString, const bool, const QString, const QStringList)));
+             SLOT(encryptionStatusSlot(bool,QString,bool,QString,QStringList)));
 
     // send eventual socket error to client observer for the current server :
     connect (this,
-             SIGNAL(nntpErrorSignal(const int)),
+             SIGNAL(nntpErrorSignal(int)),
              clientsObserver,
-             SLOT(nntpErrorSlot(const int)));
+             SLOT(nntpErrorSlot(int)));
 
     // send bytes downloaded to client observer for the current server :
     connect (this,
-             SIGNAL(speedSignal(const int)),
+             SIGNAL(speedSignal(int)),
              clientsObserver,
-             SLOT(nntpClientSpeedSlot(const int)));
+             SLOT(nntpClientSpeedSlot(int)));
 
     // notify sidebar that some nntpClient info have been updated :
     connect (this,
-             SIGNAL(serverStatisticsUpdateSignal(const int)),
+             SIGNAL(serverStatisticsUpdateSignal(int)),
              this->parent->getCore(),
-             SLOT(serverStatisticsUpdateSlot(const int)));
+             SLOT(serverStatisticsUpdateSlot(int)));
 
 
     // calculate average download speed for all nntp client instances of this server group :

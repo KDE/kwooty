@@ -79,18 +79,18 @@ ServerTabWidget::ServerTabWidget(PreferencesServer* parent) : KTabWidget(parent)
 void ServerTabWidget::setupConnections() {
 
     // tab buttons have been clicked :
-    connect (this->newTab, SIGNAL(clicked (bool)), this, SLOT(newTabClickedSlot()));
-    connect (this->closeTab, SIGNAL(clicked (bool)), this, SLOT(closeTabClickedSlot()));
+    connect (this->newTab, SIGNAL(clicked(bool)), this, SLOT(newTabClickedSlot()));
+    connect (this->closeTab, SIGNAL(clicked(bool)), this, SLOT(closeTabClickedSlot()));
 
     // current tab has been moved by user :
-    connect (this->tabBar(), SIGNAL(tabMoved (int, int)), this, SLOT(tabMovedSlot(int, int)));
-    connect (this->tabBar(), SIGNAL(currentChanged (int)), this, SLOT(currentChangedSlot(int)));
+    connect (this->tabBar(), SIGNAL(tabMoved(int,int)), this, SLOT(tabMovedSlot(int,int)));
+    connect (this->tabBar(), SIGNAL(currentChanged(int)), this, SLOT(currentChangedSlot(int)));
 
     // save data asked from kConfigDialog :
     connect (this->preferencesServer, SIGNAL(saveDataSignal()), this, SLOT(saveDataSlot()));
 
     // notify changes in settings if tab has moved :
-    connect (this->tabBar(), SIGNAL(tabMoved (int, int)), this, SLOT(valueChangedSlot()));
+    connect (this->tabBar(), SIGNAL(tabMoved(int,int)), this, SLOT(valueChangedSlot()));
 
     // double click has been performed on tab to rename server :
     connect (this, SIGNAL(mouseDoubleClick(QWidget*)), this, SLOT(renameTabSlot(QWidget*)));

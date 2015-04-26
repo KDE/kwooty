@@ -165,8 +165,8 @@ void PreferencesScheduler::setupConnections() {
     connect (this->preferencesSchedulerUi.kcfg_downloadLimitSpinBox, SIGNAL(valueChanged(int)), this, SLOT(downloadLimitValueChangedSlot(int)));
     connect (this->preferencesSchedulerUi.kcfg_enableScheduler, SIGNAL(toggled(bool)), this, SLOT(schedulerToggledSlot(bool)));
 
-    connect (this->preferencesSchedulerUi.schedulerTableView, SIGNAL(entered (const QModelIndex&)), this, SLOT(cellEnteredSlot(const QModelIndex&)));
-    connect (this->preferencesSchedulerUi.schedulerTableView, SIGNAL(pressed (const QModelIndex&)), this, SLOT(cellPressedSlot(const QModelIndex&)));
+    connect (this->preferencesSchedulerUi.schedulerTableView, SIGNAL(entered(QModelIndex)), this, SLOT(cellEnteredSlot(QModelIndex)));
+    connect (this->preferencesSchedulerUi.schedulerTableView, SIGNAL(pressed(QModelIndex)), this, SLOT(cellPressedSlot(QModelIndex)));
 
     connect (this->preferencesSchedulerUi.kcfg_enableScheduler, SIGNAL(pressed()), this, SLOT(schedulerPressedSlot()));
     connect (this->preferencesSchedulerUi.kcfg_enablePermanentSpeedLimit, SIGNAL(pressed()), this, SLOT(permanentSpeedLimitPressedSlot()));

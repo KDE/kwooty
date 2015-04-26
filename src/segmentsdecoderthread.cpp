@@ -95,17 +95,17 @@ void SegmentsDecoderThread::setupConnections() {
 
 
     connect (this,
-             SIGNAL(saveFileErrorSignal(const int)),
+             SIGNAL(saveFileErrorSignal(int)),
              parent,
-             SLOT(saveFileErrorSlot(const int)));
+             SLOT(saveFileErrorSlot(int)));
 
 
     // send to core segment data update :
     qRegisterMetaType<SegmentData>("SegmentData");
     connect (this,
-             SIGNAL(updateDownloadSegmentSignal(SegmentData, QString)),
+             SIGNAL(updateDownloadSegmentSignal(SegmentData,QString)),
              this->parent->getSegmentManager(),
-             SLOT(updateDownloadSegmentSlot(SegmentData, QString)));
+             SLOT(updateDownloadSegmentSlot(SegmentData,QString)));
 
 
 }

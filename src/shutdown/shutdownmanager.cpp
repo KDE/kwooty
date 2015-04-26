@@ -80,7 +80,7 @@ void ShutdownManager::setupConnections() {
     connect (parent, SIGNAL(settingsChangedSignal()), this, SLOT(settingsChangedSlot()));
 
     // enable or disable shutdown button according to nzb parent status:
-    connect(parent->getDownloadModel(), SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)), this, SLOT(statusItemUpdatedSlot()));
+    connect(parent->getDownloadModel(), SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)), this, SLOT(statusItemUpdatedSlot()));
 
 }
 

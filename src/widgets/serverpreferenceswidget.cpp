@@ -106,27 +106,27 @@ void ServerPreferencesWidget::setupButtons() {
 void ServerPreferencesWidget::setupConnections() {
 
     // check/uncheck ssl checkbox according to port value:
-    connect (this->serverSettingsUi->port, SIGNAL(valueChanged (int)), this, SLOT(portValueChangedSlot(int)));
+    connect (this->serverSettingsUi->port, SIGNAL(valueChanged(int)), this, SLOT(portValueChangedSlot(int)));
 
     connect (this->serverSettingsUi->comboBoxServerMode, SIGNAL(currentIndexChanged(int)), this, SLOT(serverModeValueChangedSlot(int)));
 
 
     // enable apply button when a setting has been changed :
-    connect (this->serverSettingsUi->port, SIGNAL(valueChanged (int)), this, SLOT(valueChangedSlot()));
-    connect (this->serverSettingsUi->connectionNumber, SIGNAL(valueChanged (int)), this, SLOT(valueChangedSlot()));
-    connect (this->serverSettingsUi->disconnectTimeout, SIGNAL(valueChanged (int)), this, SLOT(valueChangedSlot()));
+    connect (this->serverSettingsUi->port, SIGNAL(valueChanged(int)), this, SLOT(valueChangedSlot()));
+    connect (this->serverSettingsUi->connectionNumber, SIGNAL(valueChanged(int)), this, SLOT(valueChangedSlot()));
+    connect (this->serverSettingsUi->disconnectTimeout, SIGNAL(valueChanged(int)), this, SLOT(valueChangedSlot()));
 
-    connect (this->serverSettingsUi->hostName, SIGNAL(textChanged (const QString&)), this, SLOT(valueChangedSlot()));
-    connect (this->serverSettingsUi->login, SIGNAL(textChanged (const QString&)), this, SLOT(valueChangedSlot()));
-    connect (this->serverSettingsUi->password, SIGNAL(textChanged (const QString&)), this, SLOT(valueChangedSlot()));
+    connect (this->serverSettingsUi->hostName, SIGNAL(textChanged(QString)), this, SLOT(valueChangedSlot()));
+    connect (this->serverSettingsUi->login, SIGNAL(textChanged(QString)), this, SLOT(valueChangedSlot()));
+    connect (this->serverSettingsUi->password, SIGNAL(textChanged(QString)), this, SLOT(valueChangedSlot()));
 
-    connect (this->serverSettingsUi->groupBoxAuthentication, SIGNAL(clicked (bool)), this, SLOT(valueChangedSlot()));
+    connect (this->serverSettingsUi->groupBoxAuthentication, SIGNAL(clicked(bool)), this, SLOT(valueChangedSlot()));
     connect (this->serverSettingsUi->enableSSL, SIGNAL(stateChanged(int)), this, SLOT(valueChangedSlot()));
 
     connect (this->serverSettingsUi->comboBoxServerMode, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChangedSlot()));
 
     // display information box when pushButtonInfo is clicked :
-    connect (this->serverSettingsUi->pushButtonInfo, SIGNAL(clicked (bool)), this, SLOT(pushButtonInfoClickedSlot()));
+    connect (this->serverSettingsUi->pushButtonInfo, SIGNAL(clicked(bool)), this, SLOT(pushButtonInfoClickedSlot()));
 
     // check if server name, login and password contain trailling white spaces when editing finished :
     connect (this->serverSettingsUi->hostName, SIGNAL(editingFinished()), this, SLOT(formEditingFinishedSlot()));

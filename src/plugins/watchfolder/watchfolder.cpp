@@ -63,16 +63,16 @@ void WatchFolder::setupConnections() {
 
     // kDirWatch notify that a file has been created :
     connect (this->kDirWatch,
-             SIGNAL(created(const QString&)),
+             SIGNAL(created(QString)),
              this,
-             SLOT(watchFileSlot(const QString& )));
+             SLOT(watchFileSlot(QString)));
 
 
     // kDirWatch notify that a file has changed :
     connect (this->kDirWatch,
-             SIGNAL(dirty(const QString&)),
+             SIGNAL(dirty(QString)),
              this,
-             SLOT(watchFileSlot(const QString& )));
+             SLOT(watchFileSlot(QString)));
 
     // when time-out occurs, check if nzb files from list can be processed
     connect(this->fileCompleteTimer,

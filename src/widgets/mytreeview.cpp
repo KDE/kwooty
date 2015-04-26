@@ -90,7 +90,7 @@ void MyTreeView::setupConnections() {
 
     // enable or disable buttons according to selected items :
     connect (this->selectionModel(),
-             SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
              this->getCore()->getActionsManager()->getActionButtonsManager(),
              SLOT(selectedItemSlot()));
 
@@ -104,9 +104,9 @@ void MyTreeView::setupConnections() {
 
     // treeview has been expanded :
     connect (this,
-             SIGNAL(expanded(const QModelIndex&)),
+             SIGNAL(expanded(QModelIndex)),
              this,
-             SLOT(expandedSlot(const QModelIndex&)));
+             SLOT(expandedSlot(QModelIndex)));
 
 
 }

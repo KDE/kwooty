@@ -138,7 +138,7 @@ void PreferencesCategories::setupConnections() {
 
     // enable or disable buttons according to selected items :
     connect (this->preferencesCategoriesUi.mimeTreeView->selectionModel(),
-             SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
+             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
              this,
              SLOT(categoryWidgetsSlot()));
 
@@ -158,9 +158,9 @@ void PreferencesCategories::setupConnections() {
              SLOT(toolButtonRemoveClickSlot()));
 
     connect (this->preferencesCategoriesUi.kurlrequester,
-             SIGNAL(textChanged(const QString&)),
+             SIGNAL(textChanged(QString)),
              this,
-             SLOT(urlChangedSlot(const QString&)));
+             SLOT(urlChangedSlot(QString)));
 
     connect (this->preferencesCategoriesUi.kcfg_enableDefaultTransfer,
              SIGNAL(stateChanged(int)),

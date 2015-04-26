@@ -153,7 +153,7 @@ bool KConfigGroupHandler::openWallet() {
             this->wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), this->mainWindow->winId());
 
             // be notified that the wallet has been closed :
-            connect (this->wallet, SIGNAL(walletClosed ()), this, SLOT(walletClosedSlot()));
+            connect (this->wallet, SIGNAL(walletClosed()), this, SLOT(walletClosedSlot()));
         }
 
         // if wallet has been successfully open :

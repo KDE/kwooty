@@ -94,12 +94,12 @@ void ActionsManager::setupConnections() {
 
     // enable or disable buttons according to selected items :
     connect (this->downloadModel,
-             SIGNAL(childStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+             SIGNAL(childStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
              this->actionButtonsManager,
              SLOT(selectedItemSlot()));
 
     connect (this->downloadModel,
-             SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+             SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
              this->actionButtonsManager,
              SLOT(selectedItemSlot()));
 
@@ -123,9 +123,9 @@ void ActionsManager::setupConnections() {
 
     // recalculate full nzb size when children may have been removed :
     connect (this,
-             SIGNAL(recalculateNzbSizeSignal(const QModelIndex)),
+             SIGNAL(recalculateNzbSizeSignal(QModelIndex)),
              this->core->getItemParentUpdater(),
-             SLOT(recalculateNzbSizeSlot(const QModelIndex)));
+             SLOT(recalculateNzbSizeSlot(QModelIndex)));
 
 
     // disable shutdown scheduler if user removed all rows :
@@ -137,9 +137,9 @@ void ActionsManager::setupConnections() {
 
     // enable smart par2 download for incoming nzb files :
     connect (this,
-             SIGNAL(changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus)),
+             SIGNAL(changePar2FilesStatusSignal(QModelIndex,UtilityNamespace::ItemStatus)),
              this->core->getItemParentUpdater()->getItemChildrenManager(),
-             SLOT(changePar2FilesStatusSlot(const QModelIndex, UtilityNamespace::ItemStatus)));
+             SLOT(changePar2FilesStatusSlot(QModelIndex,UtilityNamespace::ItemStatus)));
 
 }
 

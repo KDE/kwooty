@@ -55,12 +55,12 @@ AutoRetry::~AutoRetry() {
 void AutoRetry::setupConnections() {
 
     connect(this->core->getDownloadModel(),
-            SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+            SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
             this,
             SLOT(parentStatusItemChangedSlot(QStandardItem*)));
 
     connect(this->core->getDownloadModel(),
-            SIGNAL(childStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+            SIGNAL(childStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
             this,
             SLOT(childStatusItemChangedSlot(QStandardItem*)));
 

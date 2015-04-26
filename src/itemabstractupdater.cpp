@@ -38,18 +38,18 @@ ItemAbstractUpdater::ItemAbstractUpdater(StandardItemModel* downloadModel, ItemH
     if (itemHierarchy == ItemAbstractUpdater::Child) {
 
         connect (this->downloadModel,
-                 SIGNAL(childStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+                 SIGNAL(childStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
                  this,
-                 SLOT(childStatusIconUpdateSlot(QStandardItem*, ItemStatusData)));
+                 SLOT(childStatusIconUpdateSlot(QStandardItem*,ItemStatusData)));
 
     }
     // update icon near parent file name item :
     else if (itemHierarchy == ItemAbstractUpdater::Parent) {
 
         connect (this->downloadModel,
-                 SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+                 SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
                  this,
-                 SLOT(parentStatusIconUpdateSlot(QStandardItem*, ItemStatusData)));
+                 SLOT(parentStatusIconUpdateSlot(QStandardItem*,ItemStatusData)));
 
     }
 

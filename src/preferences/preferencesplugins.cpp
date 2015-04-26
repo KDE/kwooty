@@ -50,7 +50,7 @@ PreferencesPlugins::PreferencesPlugins(KConfigDialog* kConfigDialog, PluginManag
     connect(this->kPluginSelector, SIGNAL(changed(bool)), this->kConfigDialog, SLOT(enableButtonApply(bool)));
 
     // config plugin has been committed, inform plugin manager :
-    connect(this->kPluginSelector, SIGNAL(configCommitted(const QByteArray&)), this->pluginManager, SLOT(configCommittedSlot(const QByteArray&)));
+    connect(this->kPluginSelector, SIGNAL(configCommitted(QByteArray)), this->pluginManager, SLOT(configCommittedSlot(QByteArray)));
 
     // feedback from kConfigDialog, choose action according to button clicked by user :
     connect(this->kConfigDialog, SIGNAL(buttonClicked(KDialog::ButtonCode)), this, SLOT(configButtonClickedSlot(KDialog::ButtonCode)));

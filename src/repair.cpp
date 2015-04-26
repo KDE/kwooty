@@ -54,7 +54,7 @@ void Repair::setupConnections() {
     qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
 
     connect (this->repairProcess, SIGNAL(readyRead()), this, SLOT(repairReadyReadSlot()));
-    connect (this->repairProcess, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(repairFinishedSlot(int, QProcess::ExitStatus)));
+    connect (this->repairProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(repairFinishedSlot(int,QProcess::ExitStatus)));
 
 }
 

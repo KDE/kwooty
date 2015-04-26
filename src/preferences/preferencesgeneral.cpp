@@ -50,7 +50,7 @@ PreferencesGeneral::PreferencesGeneral()
 void PreferencesGeneral::setupConnections() {
 
     // check/uncheck ssl checkbox according to port value:
-    connect (kcfg_restoreDownloads, SIGNAL(stateChanged (int)), this, SLOT(stateChangedSlot()));
+    connect (kcfg_restoreDownloads, SIGNAL(stateChanged(int)), this, SLOT(stateChangedSlot()));
 
 }
 

@@ -109,9 +109,9 @@ void Scheduler::setupConnections() {
 
     // allow user to bypass scheduler if start/pause actions have been manually trigered :
     connect(this->core->getActionsManager(),
-            SIGNAL(startPauseAboutToBeTriggeredSignal(UtilityNamespace::ItemStatus, QList<QModelIndex>)),
+            SIGNAL(startPauseAboutToBeTriggeredSignal(UtilityNamespace::ItemStatus,QList<QModelIndex>)),
             this,
-            SLOT(startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus, QList<QModelIndex>)));
+            SLOT(startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus,QList<QModelIndex>)));
 
     connect(this->core->getActionsManager(),
             SIGNAL(startPauseTriggeredSignal(UtilityNamespace::ItemStatus)),

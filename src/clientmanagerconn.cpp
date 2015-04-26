@@ -125,28 +125,28 @@ void ClientManagerConn::initSlot() {
 
     // send connection status (connected, deconnected) to client observer for the current server :
     connect (this->nntpClient,
-             SIGNAL(connectionStatusPerServerSignal(const int)),
+             SIGNAL(connectionStatusPerServerSignal(int)),
              this->parent->getClientsPerServerObserver(),
-             SLOT(connectionStatusPerServerSlot(const int)));
+             SLOT(connectionStatusPerServerSlot(int)));
 
     // send type of encryption used by host with ssl connection to client observer for the current server :
     connect (this->nntpClient->getTcpSocket(),
-             SIGNAL(encryptionStatusPerServerSignal(const bool, const QString, const bool, const QString, const QStringList)),
+             SIGNAL(encryptionStatusPerServerSignal(bool,QString,bool,QString,QStringList)),
              this->parent->getClientsPerServerObserver(),
-             SLOT(encryptionStatusPerServerSlot(const bool, const QString, const bool, const QString, const QStringList)));
+             SLOT(encryptionStatusPerServerSlot(bool,QString,bool,QString,QStringList)));
 
     // send eventual socket error to client observer for the current server :
     connect (this->nntpClient,
-             SIGNAL(nntpErrorPerServerSignal(const int)),
+             SIGNAL(nntpErrorPerServerSignal(int)),
              this->parent->getClientsPerServerObserver(),
-             SLOT(nntpErrorPerServerSlot(const int)));
+             SLOT(nntpErrorPerServerSlot(int)));
 
     // send bytes downloaded to client observer for the current server :
     qRegisterMetaType<SegmentInfoData>("SegmentInfoData");
     connect (this->nntpClient,
-             SIGNAL(speedPerServerSignal(const SegmentInfoData)),
+             SIGNAL(speedPerServerSignal(SegmentInfoData)),
              this->parent->getClientsPerServerObserver(),
-             SLOT(nntpClientSpeedPerServerSlot(const SegmentInfoData)));
+             SLOT(nntpClientSpeedPerServerSlot(SegmentInfoData)));
 
 
 }

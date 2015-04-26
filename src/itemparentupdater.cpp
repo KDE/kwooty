@@ -65,9 +65,9 @@ void ItemParentUpdater::setupConnections() {
 
 
     connect (itemDownloadUpdater,
-             SIGNAL(statusBarDecrementSignal(const quint64, const int)),
+             SIGNAL(statusBarDecrementSignal(quint64,int)),
              parent->getClientsObserver(),
-             SLOT(decrementSlot(const quint64, const int)));
+             SLOT(decrementSlot(quint64,int)));
 
     // download par2 files if crc check failed during archive download :
     connect (this,

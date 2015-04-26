@@ -451,10 +451,10 @@ void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage)
         this->preferencesPagesMap.insert(PluginsPage, preferencesPluginsPage);
 
 
-        connect(dialog, SIGNAL(settingsChanged(const QString&)), this->core, SLOT(updateSettingsSlot()));
-        connect(dialog, SIGNAL(settingsChanged(const QString&)), this->kConfigGroupHandler, SLOT(settingsChangedSlot()));
-        connect(dialog, SIGNAL(settingsChanged(const QString&)), preferencesPrograms, SLOT(aboutToShowSettingsSlot()));
-        connect(dialog, SIGNAL(settingsChanged(const QString&)), this, SLOT(systraySlot()));
+        connect(dialog, SIGNAL(settingsChanged(QString)), this->core, SLOT(updateSettingsSlot()));
+        connect(dialog, SIGNAL(settingsChanged(QString)), this->kConfigGroupHandler, SLOT(settingsChangedSlot()));
+        connect(dialog, SIGNAL(settingsChanged(QString)), preferencesPrograms, SLOT(aboutToShowSettingsSlot()));
+        connect(dialog, SIGNAL(settingsChanged(QString)), this, SLOT(systraySlot()));
         connect(this, SIGNAL(aboutToShowSettingsSignal()), preferencesPrograms, SLOT(aboutToShowSettingsSlot()));
 
         // show settings box :

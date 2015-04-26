@@ -78,19 +78,19 @@ void SysTray::setupConnections() {
 
     // update systray icon when download progress has changed :
     connect (this->queueFileObserver,
-             SIGNAL(progressUpdateSignal(const int)),
+             SIGNAL(progressUpdateSignal(int)),
              this,
-             SLOT(progressUpdateSlot(const int)));
+             SLOT(progressUpdateSlot(int)));
 
     // update status icon overlay when status has changed :
     connect (this->queueFileObserver,
-             SIGNAL(statusUpdateSignal(const UtilityNamespace::ItemStatus)),
+             SIGNAL(statusUpdateSignal(UtilityNamespace::ItemStatus)),
              this,
-             SLOT(statusUpdateSlot(const UtilityNamespace::ItemStatus)));
+             SLOT(statusUpdateSlot(UtilityNamespace::ItemStatus)));
 
     // update tooltip when download speed has been updated :
     connect (this->statsInfoBuilder,
-             SIGNAL(updateDownloadSpeedInfoSignal(const QString)),
+             SIGNAL(updateDownloadSpeedInfoSignal(QString)),
              this,
              SLOT(updateDownloadSpeedInfoSlot()));
 

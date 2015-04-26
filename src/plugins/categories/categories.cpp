@@ -109,9 +109,9 @@ Core* Categories::getCore() {
 void Categories::setupConnections() {
 
     connect(this->core->getDownloadModel(),
-            SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+            SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
             this,
-            SLOT(parentStatusItemChangedSlot(QStandardItem*, ItemStatusData)));
+            SLOT(parentStatusItemChangedSlot(QStandardItem*,ItemStatusData)));
 
     //notify queue file observer that job is running :
     connect(this,
@@ -262,7 +262,7 @@ void Categories::launchMoveProcess(const MimeData& mimeData, const QString& nzbF
 
     // setup connections with job :
     connect(moveJob, SIGNAL(result(KJob*)), this, SLOT(handleResultSlot(KJob*)));
-    connect(moveJob, SIGNAL(moving(KIO::Job*, const KUrl& , const KUrl&)), this, SLOT(jobProgressionSlot(KIO::Job*)));
+    connect(moveJob, SIGNAL(moving(KIO::Job*,KUrl,KUrl)), this, SLOT(jobProgressionSlot(KIO::Job*)));
 
 
     moveJob->start();

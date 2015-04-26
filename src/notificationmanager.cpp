@@ -56,16 +56,16 @@ void NotificationManager::setupConnections() {
 
     // queueFileObserver emit signal when a job is finished :
     connect(this->parent->getQueueFileObserver(),
-            SIGNAL(jobFinishSignal(const UtilityNamespace::ItemStatus, const QString)),
+            SIGNAL(jobFinishSignal(UtilityNamespace::ItemStatus,QString)),
             this,
-            SLOT(jobFinishSlot(const UtilityNamespace::ItemStatus, const QString)));
+            SLOT(jobFinishSlot(UtilityNamespace::ItemStatus,QString)));
 
 
     // statsInfoBuilder emit signal when a disk space is insufficient :
     connect(this->parent->getClientsObserver()->getStatsInfoBuilder(),
-            SIGNAL(insufficientDiskSpaceSignal(const QString)),
+            SIGNAL(insufficientDiskSpaceSignal(QString)),
             this,
-            SLOT(insufficientDiskSpaceSlot(const QString)));
+            SLOT(insufficientDiskSpaceSlot(QString)));
 
 
 }

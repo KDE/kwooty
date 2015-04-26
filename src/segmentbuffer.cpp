@@ -59,7 +59,7 @@ void SegmentBuffer::setupConnections() {
     connect (this->core->getItemParentUpdater()->getItemDownloadUpdater(),
              SIGNAL(decodeSegmentsSignal(NzbFileData)),
              this,
-             SLOT(finalizeDecodeQueuedSlot(const NzbFileData&)));
+             SLOT(finalizeDecodeQueuedSlot(NzbFileData)));
 
     // store it it the buffer until segmentDecoderThread is not idle :
     connect (this,

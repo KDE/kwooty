@@ -88,34 +88,34 @@ void MyStatusBar::setupConnections() {
     
     // send remaining size to status bar :
     connect (this->clientsObserver,
-             SIGNAL(updateFileSizeInfoSignal(const quint64, const quint64)),
+             SIGNAL(updateFileSizeInfoSignal(quint64,quint64)),
              this,
-             SLOT(updateFileSizeInfoSlot(const quint64, const quint64)));
+             SLOT(updateFileSizeInfoSlot(quint64,quint64)));
     
     // send download speed to status bar :
     connect (this->clientsObserver->getStatsInfoBuilder(),
-             SIGNAL(updateDownloadSpeedInfoSignal(const QString)),
+             SIGNAL(updateDownloadSpeedInfoSignal(QString)),
              this,
-             SLOT(updateDownloadSpeedInfoSlot(const QString)));
+             SLOT(updateDownloadSpeedInfoSlot(QString)));
     
     // send ETA to status bar :
     connect (this->clientsObserver->getStatsInfoBuilder(),
-             SIGNAL(updateTimeInfoSignal(const bool)),
+             SIGNAL(updateTimeInfoSignal(bool)),
              this,
-             SLOT(updateTimeInfoSlot(const bool)));
+             SLOT(updateTimeInfoSlot(bool)));
     
     // send free space to status bar :
     connect (this->clientsObserver->getStatsInfoBuilder(),
-             SIGNAL(updateFreeSpaceSignal(const UtilityNamespace::FreeDiskSpace, const QString, const int)),
+             SIGNAL(updateFreeSpaceSignal(UtilityNamespace::FreeDiskSpace,QString,int)),
              this,
-             SLOT(updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace, const QString, const int)));
+             SLOT(updateFreeSpaceSlot(UtilityNamespace::FreeDiskSpace,QString,int)));
     
     
     // send shutdown info in status bar :
     connect((static_cast<MainWindow*>(this->parentWidget()))->getCore()->getShutdownManager(),
-            SIGNAL(statusBarShutdownInfoSignal(QString, QString)),
+            SIGNAL(statusBarShutdownInfoSignal(QString,QString)),
             this,
-            SLOT(statusBarShutdownInfoSlot(QString, QString)));
+            SLOT(statusBarShutdownInfoSlot(QString,QString)));
 
     // display the proper settings page when double clicking on widgets from statusBar :
     connect(this,

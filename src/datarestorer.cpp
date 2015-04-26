@@ -79,9 +79,9 @@ void DataRestorer::setupConnections() {
 
     // download is finish for one nzb file, save eventual remaining downloads now :
     connect(this->downloadModel,
-            SIGNAL(parentStatusItemChangedSignal(QStandardItem*, ItemStatusData)),
+            SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
             this,
-            SLOT(parentStatusItemChangedSlot(QStandardItem*, ItemStatusData)));
+            SLOT(parentStatusItemChangedSlot(QStandardItem*,ItemStatusData)));
 
 
 }
