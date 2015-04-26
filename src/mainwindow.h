@@ -87,11 +87,11 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void systraySlot();
+    void showSettings(UtilityNamespace::PreferencesPage = UtilityNamespace::GeneralPage);
 
 
 private Q_SLOTS:
     void openFile();
-    void showSettings(UtilityNamespace::PreferencesPage = UtilityNamespace::GeneralPage);
     void quit();
     void toggleShowMenuBar();
 

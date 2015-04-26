@@ -82,52 +82,52 @@ MyStatusBar::~MyStatusBar() {}
 void MyStatusBar::setupConnections() {
     
     connect (this->clientsObserver,
-             SIGNAL(updateConnectionStatusSignal()),
+             &ClientsObserver::updateConnectionStatusSignal,
              this,
-             SLOT(updateConnectionStatusSlot()));
+             &MyStatusBar::updateConnectionStatusSlot);
     
     // send remaining size to status bar :
     connect (this->clientsObserver,
-             SIGNAL(updateFileSizeInfoSignal(quint64,quint64)),
+             &ClientsObserver::updateFileSizeInfoSignal,
              this,
-             SLOT(updateFileSizeInfoSlot(quint64,quint64)));
+             &MyStatusBar::updateFileSizeInfoSlot);
     
     // send download speed to status bar :
     connect (this->clientsObserver->getStatsInfoBuilder(),
-             SIGNAL(updateDownloadSpeedInfoSignal(QString)),
+             &StatsInfoBuilder::updateDownloadSpeedInfoSignal,
              this,
-             SLOT(updateDownloadSpeedInfoSlot(QString)));
+             &MyStatusBar::updateDownloadSpeedInfoSlot);
     
     // send ETA to status bar :
     connect (this->clientsObserver->getStatsInfoBuilder(),
-             SIGNAL(updateTimeInfoSignal(bool)),
+             &StatsInfoBuilder::updateTimeInfoSignal,
              this,
-             SLOT(updateTimeInfoSlot(bool)));
+             &MyStatusBar::updateTimeInfoSlot);
     
     // send free space to status bar :
     connect (this->clientsObserver->getStatsInfoBuilder(),
-             SIGNAL(updateFreeSpaceSignal(UtilityNamespace::FreeDiskSpace,QString,int)),
+             &StatsInfoBuilder::updateFreeSpaceSignal,
              this,
-             SLOT(updateFreeSpaceSlot(UtilityNamespace::FreeDiskSpace,QString,int)));
+             &MyStatusBar::updateFreeSpaceSlot);
     
     
     // send shutdown info in status bar :
     connect((static_cast<MainWindow*>(this->parentWidget()))->getCore()->getShutdownManager(),
-            SIGNAL(statusBarShutdownInfoSignal(QString,QString)),
+            &ShutdownManager::statusBarShutdownInfoSignal,
             this,
-            SLOT(statusBarShutdownInfoSlot(QString,QString)));
+            &MyStatusBar::statusBarShutdownInfoSlot);
 
     // display the proper settings page when double clicking on widgets from statusBar :
     connect(this,
-            SIGNAL(showSettingsSignal(UtilityNamespace::PreferencesPage)),
+            &MyStatusBar::showSettingsSignal,
             static_cast<MainWindow*>(this->parentWidget()),
-            SLOT(showSettings(UtilityNamespace::PreferencesPage)));
+            &MainWindow::showSettings);
 
     // show / hide sideBarWidget when button is toggled :
     connect(this->infoBarWidget,
-            SIGNAL(activeSignal(bool)),
+            &IconTextWidget::activeSignal,
             (static_cast<MainWindow*>(this->parentWidget()))->getSideBar(),
-            SLOT(activeSlot(bool)));
+            &SideBar::activeSlot);
 
 }
 

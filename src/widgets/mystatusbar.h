@@ -51,12 +51,7 @@ public:
     IconTextWidget* getInfoBarWidget();
     ~MyStatusBar();
 
-
-protected:
-
-
 private:
-
     ClientsObserver* clientsObserver;
     IconTextWidget* sizeLabel;
     IconTextWidget* speedLabel;
