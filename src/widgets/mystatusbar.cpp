@@ -39,7 +39,7 @@
 #include "kwootysettings.h"
 
 
-MyStatusBar::MyStatusBar(MainWindow* parent) : KStatusBar(parent) {
+MyStatusBar::MyStatusBar(MainWindow* parent) : QStatusBar(parent) {
     
     this->clientsObserver = parent->getCore()->getClientsObserver();
 

@@ -21,7 +21,7 @@
 #ifndef STATUSBAR_H
 #define STATUSBAR_H
 
-#include <KStatusBar>
+#include <QStatusBar>
 
 #include <QLabel>
 
@@ -33,7 +33,7 @@ class ClientsObserver;
 class IconTextWidget;
 class IconCapacityWidget;
 
-class MyStatusBar : public KStatusBar
+class MyStatusBar : public QStatusBar
 {
     Q_OBJECT
 public:
