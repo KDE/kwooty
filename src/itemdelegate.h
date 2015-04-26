@@ -32,9 +32,9 @@ class ItemDelegate : public QStyledItemDelegate
 
 public:
     ItemDelegate(QWidget*);
-    void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
+    void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const Q_DECL_OVERRIDE;
     void drawProgressBar(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
-    QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const;
+    QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const Q_DECL_OVERRIDE;
 
 
 private:

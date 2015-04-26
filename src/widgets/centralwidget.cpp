@@ -1,3 +1,23 @@
+/***************************************************************************
+ *   Copyright (C) 2010 by Xavier Lefage                                   *
+ *   xavier.kwooty@gmail.com                                               *
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ *   This program is distributed in the hope that it will be useful,       *
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+ *   GNU General Public License for more details.                          *
+ *                                                                         *
+ *   You should have received a copy of the GNU General Public License     *
+ *   along with this program; if not, write to the                         *
+ *   Free Software Foundation, Inc.,                                       *
+ *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+ ***************************************************************************/
+
 #include "centralwidget.h"
 
 #include <KMessageBox>
@@ -12,21 +32,21 @@
 CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent) {
 
     // init button code that avoid to display one message box per nntp client instance error :
-    this->saveErrorButtonCode = 0;
+    saveErrorButtonCode = 0;
 
 }
 
 
 
 bool CentralWidget::isDialogExisting() {
-    return !(this->saveErrorButtonCode == 0);
+    return !(saveErrorButtonCode == 0);
 }
 
 
 void CentralWidget::saveFileError(const int fromProcessing) {
 
     // notify user with a message box (and avoid multiple message box instances):
-    if (this->saveErrorButtonCode == 0) {
+    if (saveErrorButtonCode == 0) {
 
         QString saveErrorFolder;
 
@@ -38,16 +58,16 @@ void CentralWidget::saveFileError(const int fromProcessing) {
         }
 
 
-        this->saveErrorButtonCode = KMessageBox::Cancel;
-        this->saveErrorButtonCode = KMessageBox::messageBox(this,
+        saveErrorButtonCode = KMessageBox::Cancel;
+        saveErrorButtonCode = KMessageBox::messageBox(this,
                                                             KMessageBox::Sorry,
                                                             i18n("Write error in <b>%1</b>: disk drive may be full.<br>Downloads have been suspended.",
                                                                  saveErrorFolder),
                                                             i18n("Write error"));
 
 
-        if (this->saveErrorButtonCode == KMessageBox::Ok) {
-            this->saveErrorButtonCode = 0;
+        if (saveErrorButtonCode == KMessageBox::Ok) {
+            saveErrorButtonCode = 0;
         }
 
     }
@@ -166,24 +186,24 @@ int CentralWidget::displayAboutToShutdownMessageBox(const QString& shutdownMetho
 
 #if 0 //PORT KF5
     // create kdialog :
-    this->aboutToShutdownDialog = new KDialog(this, Qt::Dialog);
-    this->aboutToShutdownDialog->setCaption(i18n("Warning"));
-    this->aboutToShutdownDialog->setButtons(KDialog::Yes | KDialog::No);
-    this->aboutToShutdownDialog->setModal(true);
+    aboutToShutdownDialog = new KDialog(this, Qt::Dialog);
+    aboutToShutdownDialog->setCaption(i18n("Warning"));
+    aboutToShutdownDialog->setButtons(KDialog::Yes | KDialog::No);
+    aboutToShutdownDialog->setModal(true);
 
     // display text for continue button
     KGuiItem buttonContinue = KStandardGuiItem::cont();
     buttonContinue.setText(shutdownMethodText);
-    this->aboutToShutdownDialog->setButtonGuiItem(KDialog::Yes, buttonContinue);
+    aboutToShutdownDialog->setButtonGuiItem(KDialog::Yes, buttonContinue);
 
     // set cancel button :
-    this->aboutToShutdownDialog->setButtonGuiItem(KDialog::No, KStandardGuiItem::cancel());
+    aboutToShutdownDialog->setButtonGuiItem(KDialog::No, KStandardGuiItem::cancel());
 
     // display kmessagebox :
     bool checkboxReturn = false;
     QString status = i18nc("%1 = shutdown/suspend to RAM/suspend to disk",
                            "Kwooty is about to %1 system. Continue?", shutdownMethodText.toLower());
-    return KMessageBox::createKMessageBox(this->aboutToShutdownDialog,
+    return KMessageBox::createKMessageBox(aboutToShutdownDialog,
                                           QMessageBox::Warning,
                                           status,
                                           QStringList(),
@@ -198,8 +218,8 @@ int CentralWidget::displayAboutToShutdownMessageBox(const QString& shutdownMetho
 
 void CentralWidget::closeAboutToShutdownMessageBox() {
 
-    if (this->aboutToShutdownDialog) {
-        this->aboutToShutdownDialog->reject();
+    if (aboutToShutdownDialog) {
+        aboutToShutdownDialog->reject();
     }
 
 }

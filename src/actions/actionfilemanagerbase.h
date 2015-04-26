@@ -69,9 +69,6 @@ protected:
     void displayMessage(const QString&);
     virtual void launchProcess() = 0;
 
-
-Q_SIGNALS:
-
 public Q_SLOTS:
 
     void processFileSlot();

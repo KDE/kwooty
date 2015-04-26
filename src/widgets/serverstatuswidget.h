@@ -52,7 +52,7 @@ public:
         RowRight
     };
 
-    ServerStatusWidget(QWidget*);
+    explicit ServerStatusWidget(QWidget*);
 
     void updateLeftLabelField(const int&, const QString&, const QString& = QString());
     void updateRightLabelField(const int&, const QString&, const QString& = QString());

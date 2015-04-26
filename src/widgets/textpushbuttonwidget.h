@@ -37,19 +37,13 @@ class TextPushButtonWidget : public QWidget {
 
 public:
 
-    TextPushButtonWidget(QWidget*);
+    explicit TextPushButtonWidget(QWidget*);
 
     void setIcon(const ServerConnectionIcon&);
     void setText(const QString&);
     QString getText() const;
     void showIcon();
     void hideIcon();
-
-
-
-protected:
-
-
 private:
 
     QLabel* textLabel;
@@ -64,11 +58,6 @@ private:
 Q_SIGNALS:
 
     void pressedSignal();
-
-
-public Q_SLOTS:
-
-
 };
 
 #endif // TEXTPUSHBUTTONWIDGET_H

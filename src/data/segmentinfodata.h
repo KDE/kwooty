@@ -58,12 +58,6 @@ private:
     int nzbRowModelPosition;
     int fileNameItemRowModelPosition;
     int bytesDownloaded;
-
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
 };
 
 #endif // SEGMENTINFODATA_H

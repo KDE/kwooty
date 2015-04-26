@@ -69,7 +69,7 @@ private:
 Q_SIGNALS:
     void setShutdownButtonCheckedSignal(bool);
     void setShutdownButtonEnabledSignal(bool);
-    void statusBarShutdownInfoSignal(QString, QString);
+    void statusBarShutdownInfoSignal(const QString &, const QString &);
 
 public Q_SLOTS:
     void enableSystemShutdownSlot(bool);

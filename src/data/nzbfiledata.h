@@ -119,6 +119,6 @@ private:
 QDataStream& operator<<(QDataStream&, const NzbFileData&);
 QDataStream& operator>>(QDataStream&, NzbFileData&);
 
-Q_DECLARE_METATYPE(NzbFileData);
+Q_DECLARE_METATYPE(NzbFileData)
 
 #endif // NZBFILEDATA_H
