@@ -61,19 +61,6 @@ protected:
     void updateTotalConnections(const int&);
     void setNntpErrorStatus(const int&);
     void setSslHandshakeParameters(const bool&, const QString&, const bool&, const QString&, const QStringList&);
-
-
-private:
-
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
-
-protected Q_SLOTS:
-
-
 };
 
 #endif // CLIENTSOBSERVERBASE_H

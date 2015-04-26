@@ -37,7 +37,7 @@
        <property name="filter">
         <string notr="true"/>
        </property>
-       <property name="clickMessage">
+       <property name="placeholderText">
         <string notr="true"/>
        </property>
       </widget>

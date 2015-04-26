@@ -64,9 +64,6 @@ private:
     int connectionDelay;
 
 
-Q_SIGNALS:
-
-
 public Q_SLOTS:
     void dataHasArrivedSlot();
     void resetConnectionSlot();

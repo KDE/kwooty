@@ -63,11 +63,6 @@ public:
     static QString buildSslHandshakeStatus(const ClientsObserverBase*);
     static QString buildConnectionToolTip(const ClientsObserverBase*, const QString&, const QString&);
     static QString getServerModeString(UtilityNamespace::BackupServerMode);
-
-
-private:
-
-
 };
 
 #endif // UTILITYSERVERSTATUS_H

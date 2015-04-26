@@ -515,7 +515,7 @@ void Core::saveFileErrorSlot(const int fromProcessing) {
 }
 
 
-void Core::extractPasswordRequiredSlot(QString currentArchiveFileName) {
+void Core::extractPasswordRequiredSlot(const QString &currentArchiveFileName) {
 
     bool passwordEntered;
     QString password = this->getCentralWidget()->extractPasswordRequired(currentArchiveFileName, passwordEntered);

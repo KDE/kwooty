@@ -117,10 +117,10 @@ private:
     
 Q_SIGNALS:
     void dataHasArrivedSignal();
-    void dataAboutToArriveSignal(QModelIndex);
+    void dataAboutToArriveSignal(const QModelIndex &);
     void settingsChangedSignal();
-    void passwordEnteredByUserSignal(bool, QString password = QString());
-    void changePar2FilesStatusSignal(const QModelIndex, UtilityNamespace::ItemStatus);
+    void passwordEnteredByUserSignal(bool, const QString &password = QString());
+    void changePar2FilesStatusSignal(const QModelIndex &, UtilityNamespace::ItemStatus);
 
 
 public Q_SLOTS:
@@ -129,7 +129,7 @@ public Q_SLOTS:
     void downloadWaitingPar2Slot();
     void statusBarFileSizeUpdateSlot(StatusBarUpdateType);
     void serverStatisticsUpdateSlot(const int);
-    void extractPasswordRequiredSlot(QString);
+    void extractPasswordRequiredSlot(const QString &);
 
     
 private Q_SLOTS:
