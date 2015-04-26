@@ -189,7 +189,7 @@ IconTextWidget* MyStatusBar::getInfoBarWidget() {
 }
 
 
-void MyStatusBar::statusBarShutdownInfoSlot(QString iconStr, QString text) {
+void MyStatusBar::statusBarShutdownInfoSlot(const QString &iconStr, const QString &text) {
     
     this->shutdownWidget->setIcon(iconStr);
     this->shutdownWidget->setText(text);
@@ -244,13 +244,13 @@ void MyStatusBar::updateFileSizeInfoSlot(const quint64 totalFiles, const quint64
 
 
 
-void MyStatusBar::updateDownloadSpeedInfoSlot(const QString speedInKBStr) {
+void MyStatusBar::updateDownloadSpeedInfoSlot(const QString &speedInKBStr) {
     
     this->speedLabel->setTextOnly(i18n("Speed: %1", speedInKBStr));
 }
 
 
-void MyStatusBar::updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace diskSpaceStatus, const QString availableVal, const int usedDiskPercentage) {
+void MyStatusBar::updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace diskSpaceStatus, const QString &availableVal, const int usedDiskPercentage) {
     
     // diskspace is unknown, hide widgets :
     if (diskSpaceStatus == UnknownDiskSpace) {

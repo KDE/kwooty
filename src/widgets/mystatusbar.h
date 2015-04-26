@@ -35,11 +35,8 @@ class IconCapacityWidget;
 
 class MyStatusBar : public KStatusBar
 {
-
     Q_OBJECT
-
 public:
-
     enum WidgetIdentity { SizeWidgetIdentity,
                           SpeedWidgetIdentity,
                           ConnectionWidgetIdentity,
@@ -49,7 +46,7 @@ public:
                           IconCapacityWidgetIdentity
                         };
 
-    MyStatusBar(MainWindow*);
+    explicit MyStatusBar(MainWindow*);
     MyStatusBar();
     IconTextWidget* getInfoBarWidget();
     ~MyStatusBar();
@@ -85,16 +82,12 @@ Q_SIGNALS:
 public Q_SLOTS:
 
     void updateConnectionStatusSlot();
-    void updateDownloadSpeedInfoSlot(const QString);
+    void updateDownloadSpeedInfoSlot(const QString &);
     void updateFileSizeInfoSlot(const quint64, const quint64);
     void updateTimeInfoSlot(const bool);
-    void updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace, const QString, const int);
-    void statusBarShutdownInfoSlot(QString, QString);
+    void updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace, const QString &, const int);
+    void statusBarShutdownInfoSlot(const QString &, const QString &);
     void statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity);
-
-
-private Q_SLOTS:
-
 };
 
 
