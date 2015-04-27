@@ -39,7 +39,7 @@ class PreferencesCategories : public KCModule {
     Q_OBJECT
 
 public:
-    PreferencesCategories(QWidget* = 0, const QVariantList& = QVariantList());
+    PreferencesCategories(QWidget* = Q_NULLPTR, const QVariantList& = QVariantList());
     ~PreferencesCategories();
 
     virtual void save();
@@ -58,13 +58,6 @@ private:
     Ui_PreferencesCategories preferencesCategoriesUi;
     CategoriesModel* categoriesModel;
     bool saveChangesRequested;
-
-Q_SIGNALS:
-
-
-public Q_SLOTS:
-
-
 private Q_SLOTS:
 
     void toolButtonAddClickSlot();

@@ -62,17 +62,17 @@ public:
 
 private:
 
-    HierarchyCategory hierarchyCategory;
-    QString mainCategory;
-    QString subCategory;
-    QString patterns;
-    QString moveFolderPath;
-    QString comments;
-    QString displayedText;
+    HierarchyCategory mHierarchyCategory;
+    QString mMainCategory;
+    QString mSubCategory;
+    QString mPatterns;
+    QString mMoveFolderPath;
+    QString mComments;
+    QString mDisplayedText;
 
 
 };
 
-Q_DECLARE_METATYPE(MimeData);
+Q_DECLARE_METATYPE(MimeData)
 
 #endif // MIMEDATA_H

@@ -36,7 +36,7 @@ class CategoriesManual : public QObject {
     Q_OBJECT
 
 public:
-    CategoriesManual(Categories* parent);
+    explicit CategoriesManual(Categories* parent);
     bool isManualFolderSelected(const QString&);
     QString getMoveFolderPath(const QString&);
     void unload();
@@ -52,11 +52,6 @@ private:
     MyTreeView* treeView;
     StandardItemModel* downloadModel;
     QHash<QString, QString> uuidFolderMap;
-
-
-Q_SIGNALS:
-
-
 public Q_SLOTS:
     void addExternalActionSlot(QMenu*, QStandardItem*);
     void manualTransferFolderSlot();

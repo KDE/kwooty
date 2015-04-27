@@ -30,7 +30,7 @@ class ActionRenameManager : public ActionFileManagerBase {
     Q_OBJECT
 
 public:
-    ActionRenameManager(ActionsManager*);
+    explicit ActionRenameManager(ActionsManager*);
     void checkRenameCandidates(bool&);
 
 private:
@@ -42,10 +42,6 @@ private:
     bool isRenameAllowed(QStandardItem*) const;
     void processRename(QStandardItem*);
     void launchProcess() Q_DECL_OVERRIDE;
-
-Q_SIGNALS:
-
-
 public Q_SLOTS:
     void actionTriggeredSlot() Q_DECL_OVERRIDE;
     void handleResultSlot(KJob*) Q_DECL_OVERRIDE;

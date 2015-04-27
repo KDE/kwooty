@@ -44,7 +44,7 @@ public:
     };
 
 
-    CategoriesModel(QObject*);
+    explicit CategoriesModel(QObject*);
 
     MimeData loadMimeData(QStandardItem*);
     MimeData loadMimeData(const QModelIndex&);
@@ -70,11 +70,6 @@ public:
 private:
 
     bool stringPos(const QString&, const QString&, int&);
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
 };
 
 #endif // CATEGORIESMODEL_H

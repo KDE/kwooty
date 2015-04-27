@@ -83,7 +83,7 @@ private:
 QDataStream& operator<<(QDataStream&, const ItemStatusData&);
 QDataStream& operator>>(QDataStream&, ItemStatusData&);
 
-Q_DECLARE_METATYPE(ItemStatusData);
+Q_DECLARE_METATYPE(ItemStatusData)
 
 #endif // ITEMSTATUSDATA_H
 

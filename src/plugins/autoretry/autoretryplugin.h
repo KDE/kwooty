@@ -46,15 +46,6 @@ private:
     void load();
     void unload();
     void configUpdated();
-
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
-private Q_SLOTS:
-
-
 };
 
 #endif // AUTORETRYPLUGIN_H

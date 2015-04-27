@@ -21,11 +21,11 @@
 #include "globalfiledata.h"
 
 
-GlobalFileData::GlobalFileData(const NzbFileData& nzbFileData, const ItemStatusData& itemStatusData, const int& progressValue)
+GlobalFileData::GlobalFileData(const NzbFileData& nzbFileData, const ItemStatusData& itemStatusData, int progressValue)
 {
-    this->nzbFileData = nzbFileData;
-    this->itemStatusData = itemStatusData;
-    this->progressValue = progressValue;
+    mNzbFileData = nzbFileData;
+    mItemStatusData = itemStatusData;
+    mProgressValue = progressValue;
 }
 
 GlobalFileData::GlobalFileData()
@@ -40,29 +40,29 @@ GlobalFileData::~GlobalFileData()
 
 
 NzbFileData GlobalFileData::getNzbFileData() const {
-    return this->nzbFileData;
+    return mNzbFileData;
 }
 
 void GlobalFileData::setNzbFileData(const NzbFileData& nzbFileData) {
-    this->nzbFileData = nzbFileData;
+    mNzbFileData = nzbFileData;
 }
 
 
 ItemStatusData GlobalFileData::getItemStatusData() const {
-    return this->itemStatusData;
+    return mItemStatusData;
 }
 
 void GlobalFileData::setItemStatusData(const ItemStatusData& itemStatusData) {
-    this->itemStatusData = itemStatusData;
+    mItemStatusData = itemStatusData;
 }
 
 
 int GlobalFileData::getProgressValue() const {
-    return this->progressValue;
+    return mProgressValue;
 }
 
-void GlobalFileData::setProgressValue(const int& progressValue) {
-    this->progressValue = progressValue;
+void GlobalFileData::setProgressValue(int progressValue) {
+    mProgressValue = progressValue;
 }
 
 

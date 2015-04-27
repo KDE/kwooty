@@ -36,7 +36,7 @@ class PreferencesAutoRetry : public KCModule
     Q_OBJECT
 
 public:
-    PreferencesAutoRetry(QWidget* = 0, const QVariantList& = QVariantList());
+    PreferencesAutoRetry(QWidget* = Q_NULLPTR, const QVariantList& = QVariantList());
     ~PreferencesAutoRetry();
 
     virtual void save();
@@ -44,14 +44,6 @@ public:
 
 private:
     Ui_PreferencesAutoRetry preferencesAutoRetryUi;
-
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
-private Q_SLOTS:
-
 };
 
 #endif // PREFERENCESAUTORETRY_H

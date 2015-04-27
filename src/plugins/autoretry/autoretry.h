@@ -49,17 +49,9 @@ private:
     void setupConnections();
     void retryDownload(QStandardItem*);
 
-
-Q_SIGNALS:
-
-
 public Q_SLOTS:
     void parentStatusItemChangedSlot(QStandardItem*);
     void childStatusItemChangedSlot(QStandardItem*);
-
-private Q_SLOTS:
-
-
 };
 
 #endif // AUTORETRY_H

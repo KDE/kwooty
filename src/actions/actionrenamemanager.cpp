@@ -203,7 +203,7 @@ void ActionRenameManager::actionTriggeredSlot() {
          selectedFileNameItem &&
          selectedFileNameItem->rowCount() > 0) {
 
-        this->input = KInputDialog::getText(i18n("Rename Folder"), i18nc("@label:textbox",
+        this->input = KInputDialog::getText(i18n("Rename Folder"), xi18nc("@label:textbox",
                                                                          "Rename the folder %1 to:",
                                                                          "<filename>" + selectedFileNameItem->text() + "</filename>"),
                                             selectedFileNameItem->text());

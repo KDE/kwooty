@@ -33,7 +33,7 @@ class GlobalFileData
 
 public:
 
-    GlobalFileData(const NzbFileData&, const ItemStatusData& itemStatusData = ItemStatusData(), const int& progressValue = 0);
+    GlobalFileData(const NzbFileData&, const ItemStatusData& mItemStatusData = ItemStatusData(), int mProgressValue = 0);
     GlobalFileData();
     ~GlobalFileData();
 
@@ -44,13 +44,13 @@ public:
     void setItemStatusData(const ItemStatusData&);
 
     int getProgressValue() const;
-    void setProgressValue(const int&);
+    void setProgressValue(int );
 
 
 private:
-    NzbFileData nzbFileData;
-    ItemStatusData itemStatusData;
-    int progressValue;
+    NzbFileData mNzbFileData;
+    ItemStatusData mItemStatusData;
+    int mProgressValue;
 
 
 };
@@ -59,6 +59,6 @@ private:
 QDataStream& operator<<(QDataStream&, const GlobalFileData&);
 QDataStream& operator>>(QDataStream&, GlobalFileData&);
 
-Q_DECLARE_METATYPE(GlobalFileData);
+Q_DECLARE_METATYPE(GlobalFileData)
 
 #endif // GLOBALFILEDATA_H
