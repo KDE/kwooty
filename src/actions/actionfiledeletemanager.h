@@ -39,8 +39,13 @@ private:
     QString retrieveFileSavePath(QStandardItem*) const;
     bool isDeleteAllowed(QStandardItem*) const;
     void removeRowDeleteFile();
-    void launchProcess() Q_DECL_OVERRIDE;
+    void launchProcess();
     void resetState();
+
+Q_SIGNALS:
+    
+public Q_SLOTS:
+
 
 private Q_SLOTS:
     void handleResultSlot(KJob*);

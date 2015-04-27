@@ -34,7 +34,7 @@ class SessionKde : public SessionBase {
 public:
 
     SessionKde(ShutdownManager*);
-    QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods() Q_DECL_OVERRIDE;
+    QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods();
 
 private:
 

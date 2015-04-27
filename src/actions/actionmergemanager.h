@@ -30,7 +30,7 @@ class ActionMergeManager : public ActionFileManagerBase {
     Q_OBJECT
 
 public:
-    explicit ActionMergeManager(ActionsManager*);
+    ActionMergeManager(ActionsManager*);
     QList<QStandardItem*> checkMergeCandidates(bool&);
 
 private:
@@ -40,7 +40,7 @@ private:
 
     bool isMergeAllowed(QStandardItem*) const;
     void processMerge(QStandardItem*, QStandardItem*);
-    void launchProcess() Q_DECL_OVERRIDE;
+    void launchProcess();
     void setupConnections();
 
 
@@ -50,9 +50,13 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void mergeSubMenuAboutToShowSlot();
-    void actionTriggeredSlot() Q_DECL_OVERRIDE;
+    void actionTriggeredSlot();
     void actionTriggeredSlot(QAction*);
     void handleResultSlot(KJob*);
+
+private Q_SLOTS:
+
+
 };
 
 #endif // ACTIONMERGEMANAGER_H

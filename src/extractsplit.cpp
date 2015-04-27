@@ -53,7 +53,7 @@ ExtractSplit::~ExtractSplit() {
 
 
 
-void ExtractSplit::launchProcess(const NzbCollectionData& nzbCollectionData, ExtractBase::ArchivePasswordStatus, bool, const QString&) {
+void ExtractSplit::launchProcess(const NzbCollectionData& nzbCollectionData, ExtractBase::ArchivePasswordStatus, bool, QString) {
 
     this->nzbCollectionData = nzbCollectionData;
 

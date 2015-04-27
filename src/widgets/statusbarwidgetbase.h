@@ -41,7 +41,7 @@ public:
 
 protected:
 
-    void mouseDoubleClickEvent(QMouseEvent*) Q_DECL_OVERRIDE;
+    void mouseDoubleClickEvent(QMouseEvent*);
     MyStatusBar::WidgetIdentity widgetIdentity;
 
     KIconLoader* iconLoader;
@@ -56,6 +56,11 @@ private:
 Q_SIGNALS:
 
     void statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity);
+
+
+public Q_SLOTS:
+
+
 };
 
 #endif // STATUSBARWIDGETBASE_H

@@ -55,6 +55,11 @@ Q_SIGNALS:
 public Q_SLOTS:
     void changePar2FilesStatusSlot(const QModelIndex, UtilityNamespace::ItemStatus);
     void settingsChangedSlot();
+
+
+private Q_SLOTS:
+
+
 };
 
 #endif // ITEMCHILDRENMANAGER_H

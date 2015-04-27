@@ -49,6 +49,14 @@ protected:
 
     virtual void requestShutdown() = 0;
     virtual void requestSuspend() = 0;
+
+
+Q_SIGNALS:
+    
+
+public Q_SLOTS:
+    
+
 };
 
 #endif // SESSIONBASE_H

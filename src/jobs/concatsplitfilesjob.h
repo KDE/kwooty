@@ -37,7 +37,7 @@ class ConcatSplitFilesJob : public QObject {
     Q_OBJECT
 
 public:
-    explicit ConcatSplitFilesJob(ExtractSplit*);
+    ConcatSplitFilesJob(ExtractSplit*);
     ~ConcatSplitFilesJob();
 
 
@@ -51,12 +51,17 @@ private:
 
 
 Q_SIGNALS:
-    void progressPercentSignal(int, const QString &);
+    void progressPercentSignal(int, QString);
     void resultSignal(int);
 
 
 public Q_SLOTS:
     void joinFilesSlot(const QList<NzbFileData> &, const QString &, const QString &);
+
+
+private Q_SLOTS:
+
+
 };
 
 #endif // CONCATSPLITFILESJOB_H

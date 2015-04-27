@@ -41,14 +41,14 @@ private:
     bool validateNewFolderName(QStandardItem*) const;
     bool isRenameAllowed(QStandardItem*) const;
     void processRename(QStandardItem*);
-    void launchProcess() Q_DECL_OVERRIDE;
+    void launchProcess();
 
 Q_SIGNALS:
 
 
 public Q_SLOTS:
-    void actionTriggeredSlot() Q_DECL_OVERRIDE;
-    void handleResultSlot(KJob*) Q_DECL_OVERRIDE;
+    void actionTriggeredSlot();
+    void handleResultSlot(KJob*);
 
 };
 

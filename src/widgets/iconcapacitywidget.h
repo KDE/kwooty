@@ -22,19 +22,21 @@
 #ifndef ICONCAPACITYWIDGET_H
 #define ICONCAPACITYWIDGET_H
 
+#include <kcapacitybar.h>
 
 #include <QWidget>
+#include <QLabel>
 
 #include "statusbarwidgetbase.h"
 
-class QLabel;
-class KCapacityBar;
 
 class IconCapacityWidget : public StatusBarWidgetBase {
+
+
 Q_OBJECT
 
 public:
-    explicit IconCapacityWidget(QWidget*, MyStatusBar::WidgetIdentity);
+    IconCapacityWidget(QWidget*, MyStatusBar::WidgetIdentity);
     void showIcon();
     void hideIcon();
     void setIcon(const QString&);
@@ -44,6 +46,13 @@ private:
 
     KCapacityBar* capacityBar;
     QLabel* iconLabel;
+
+Q_SIGNALS:
+
+
+public Q_SLOTS:
+
+
 };
 
 #endif // ICONCAPACITYWIDGET_H

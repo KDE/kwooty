@@ -36,21 +36,21 @@
 
 IconTextWidget::IconTextWidget(QWidget* parent, MyStatusBar::WidgetIdentity widgetIdentity) : StatusBarWidgetBase(parent, widgetIdentity) {
 
-    iconLoader = KIconLoader::global();
+    this->iconLoader = KIconLoader::global();
 
-    iconPressed = false;
-    iconLabel = new QLabel(this);
-    textLabel = new QLabel(this);
+    this->iconPressed = false;
+    this->iconLabel = new QLabel(this);
+    this->textLabel = new QLabel(this);
 
-    iconMode = NormalModeIcon;
-    serverConnectionIcon = InitIcon;
+    this->iconMode = NormalModeIcon;
+    this->serverConnectionIcon = InitIcon;
 
-    hBoxLayout = new QHBoxLayout(this);
-    hBoxLayout->addWidget(iconLabel);
-    hBoxLayout->addWidget(textLabel);
+    this->hBoxLayout = new QHBoxLayout(this);
+    this->hBoxLayout->addWidget(this->iconLabel);
+    this->hBoxLayout->addWidget(this->textLabel);
 
-    hBoxLayout->setSpacing(5);
-    hBoxLayout->setMargin(0);
+    this->hBoxLayout->setSpacing(5);
+    this->hBoxLayout->setMargin(0);
 
 }
 
@@ -60,16 +60,16 @@ void IconTextWidget::enterEvent(QEvent* event) {
 
     Q_UNUSED(event);
 
-    if (iconMode == GammaIcon) {
-        iconLabel->setPixmap(clearNormalIcon);
+    if (this->iconMode == GammaIcon) {
+        this->iconLabel->setPixmap(this->clearNormalIcon);
     }
 
-    if (iconMode == SwitchIcon && !iconPressed) {
-        iconLabel->setPixmap(clearNormalIcon);
+    if (this->iconMode == SwitchIcon && !this->iconPressed) {
+        this->iconLabel->setPixmap(this->clearNormalIcon);
     }
 
-    if (iconMode == SwitchIcon && iconPressed) {
-        iconLabel->setPixmap(clearActiveIcon);
+    if (this->iconMode == SwitchIcon && this->iconPressed) {
+        this->iconLabel->setPixmap(this->clearActiveIcon);
     }
 
 }
@@ -79,34 +79,34 @@ void IconTextWidget::leaveEvent(QEvent* event) {
 
     Q_UNUSED(event);
 
-    if (iconMode == GammaIcon && !iconPressed) {
-        iconLabel->setPixmap(normalIcon);
+    if (this->iconMode == GammaIcon && !this->iconPressed) {
+        this->iconLabel->setPixmap(this->normalIcon);
     }
 
-    if (iconMode == SwitchIcon && !iconPressed) {
-        iconLabel->setPixmap(normalIcon);
+    if (this->iconMode == SwitchIcon && !this->iconPressed) {
+        this->iconLabel->setPixmap(this->normalIcon);
     }
 
-    if (iconMode == SwitchIcon && iconPressed) {
-        iconLabel->setPixmap(activeIcon);
+    if (this->iconMode == SwitchIcon && this->iconPressed) {
+        this->iconLabel->setPixmap(this->activeIcon);
     }
 
 }
 
 
-void IconTextWidget::setIconMode(const IconMode _iconMode) {
-    iconMode = _iconMode;
+void IconTextWidget::setIconMode(const IconMode iconMode) {
+    this->iconMode = iconMode;
 }
 
 
 
 void IconTextWidget::setIconOnly(const QString& normalIconStr, const QString& enabledIconStr) {
 
-    hBoxLayout->setSpacing(0);
-    setIcon(normalIconStr, enabledIconStr);
+    this->hBoxLayout->setSpacing(0);
+    this->setIcon(normalIconStr, enabledIconStr);
 
     // disconnect in order to not forward mouse double click events :
-    disconnect(SIGNAL(statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity)));
+    this->disconnect(SIGNAL(statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity)));
 
 }
 
@@ -115,21 +115,21 @@ void IconTextWidget::setIconOnly(const QString& normalIconStr, const QString& en
 void IconTextWidget::mousePressEvent(QMouseEvent* event)  {
 
     Q_UNUSED(event);
-    iconPressed = !iconPressed;
-    enterEvent(event);
-    emit activeSignal(iconPressed);
+    this->iconPressed = !this->iconPressed;
+    this->enterEvent(event);
+    emit activeSignal(this->iconPressed);
 
 }
 
 
 
-void IconTextWidget::setIcon(const ServerConnectionIcon& _serverConnectionIcon) {
+void IconTextWidget::setIcon(const ServerConnectionIcon& serverConnectionIcon) {
 
     // avoid useless icon drawing :
-    if (serverConnectionIcon != _serverConnectionIcon) {
+    if (this->serverConnectionIcon != serverConnectionIcon) {
 
-        iconLabel->setPixmap(UtilityServerStatus::getConnectionPixmap(_serverConnectionIcon));
-        serverConnectionIcon = _serverConnectionIcon;
+        this->iconLabel->setPixmap(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon));
+        this->serverConnectionIcon = serverConnectionIcon;
 
     }
 
@@ -140,13 +140,13 @@ void IconTextWidget::setIcon(const QString& normalIconStr) {
 
     if (!normalIconStr.isEmpty()) {
 
-        normalIcon = iconLoader->loadIcon(normalIconStr, KIconLoader::Small);
-        iconLabel->setPixmap(normalIcon);
-        clearNormalIcon = UtilityIconPainting::getInstance()->buildClearIcon(normalIcon);
+        this->normalIcon = this->iconLoader->loadIcon(normalIconStr, KIconLoader::Small);
+        this->iconLabel->setPixmap(this->normalIcon);
+        this->clearNormalIcon = UtilityIconPainting::getInstance()->buildClearIcon(this->normalIcon);
 
     }
     else {
-        iconLabel->setPixmap(QPixmap());
+        this->iconLabel->setPixmap(QPixmap());
     }
 
 }
@@ -154,12 +154,12 @@ void IconTextWidget::setIcon(const QString& normalIconStr) {
 
 void IconTextWidget::setIcon(const QString& normalIconStr, const QString& enabledIconStr) {
 
-    setIcon(normalIconStr);
+    this->setIcon(normalIconStr);
 
     if (!enabledIconStr.isEmpty()) {
 
-        activeIcon = iconLoader->loadIcon(enabledIconStr, KIconLoader::Small);
-        clearActiveIcon = UtilityIconPainting::getInstance()->buildClearIcon(activeIcon);
+        this->activeIcon = this->iconLoader->loadIcon(enabledIconStr, KIconLoader::Small);
+        this->clearActiveIcon = UtilityIconPainting::getInstance()->buildClearIcon(this->activeIcon);
 
     }
 
@@ -171,14 +171,14 @@ void IconTextWidget::setIcon(const QString& normalIconStr, const QString& enable
 
 void IconTextWidget::setActive(const bool& active) {
 
-    iconPressed = active;
+    this->iconPressed = active;
 
-    if (iconMode == GammaIcon) {
-        iconLabel->setPixmap(clearNormalIcon);
+    if (this->iconMode == GammaIcon) {
+        this->iconLabel->setPixmap(this->clearNormalIcon);
     }
 
-    else if (active && iconMode == SwitchIcon) {
-        iconLabel->setPixmap(activeIcon);
+    else if (active && this->iconMode == SwitchIcon) {
+        this->iconLabel->setPixmap(this->activeIcon);
     }
 
 }
@@ -187,32 +187,32 @@ void IconTextWidget::setActive(const bool& active) {
 
 void IconTextWidget::setText(const QString& text) {
 
-    textLabel->setText(text);
+    this->textLabel->setText(text);
 }
 
 void IconTextWidget::setTextOnly(const QString& text) {
 
-    if (!iconLabel->isHidden()) {
-        hBoxLayout->setSpacing(0);
-        iconLabel->hide();
+    if (!this->iconLabel->isHidden()) {
+        this->hBoxLayout->setSpacing(0);
+        this->iconLabel->hide();
     }
 
-    textLabel->setText(text);
+    this->textLabel->setText(text);
 }
 
 
 QString IconTextWidget::getText() const {
-    return textLabel->text();
+    return this->textLabel->text();
 }
 
 
 void IconTextWidget::showIcon() {
-    iconLabel->show();
+    this->iconLabel->show();
 }
 
 
 void IconTextWidget::hideIcon() {
-    iconLabel->hide();
+    this->iconLabel->hide();
 }
 
 

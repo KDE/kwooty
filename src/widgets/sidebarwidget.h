@@ -34,7 +34,7 @@ class SideBarWidget : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SideBarWidget(QWidget*);
+    SideBarWidget(QWidget*);
 
     void addTab(QWidget*, const ServerConnectionIcon&, const QString&);
     void removeTabAndWidgetByIndex(int);
@@ -44,7 +44,7 @@ public:
     QWidget* widget(const int& index);
     int indexOf(QWidget*) const;
     int currentIndex() const;
-    void setDisplay(bool _display);
+    void setDisplay(const bool&);
     bool isDisplayed() const;
     void updateIconByIndex(const int&, const ServerConnectionIcon&);
     void updateTextByIndex(const int&, const QString&);
@@ -58,6 +58,10 @@ private:
     KMultiTabBar* multiTabBar;
     QHash<int, ServerConnectionIcon> indexServerIconMap;
     bool display;
+
+
+public Q_SLOTS:
+
 
 private Q_SLOTS:
     void tabClickedSlot(const int&);

@@ -143,7 +143,7 @@ void ClientsPerServerObserver::nntpErrorPerServerSlot(const int nttpErrorStatus)
 
 }
 
-void ClientsPerServerObserver::encryptionStatusPerServerSlot(const bool sslActive, const QString &encryptionMethod, const bool certificateVerified, const QString &issuerOrgranisation, const QStringList &sslErrors) {
+void ClientsPerServerObserver::encryptionStatusPerServerSlot(const bool sslActive, const QString encryptionMethod, const bool certificateVerified, const QString issuerOrgranisation, const QStringList sslErrors) {
 
     //qCDebug(KWOOTY_LOG) << "sslActive : " << sslActive << "encryptionMethod" << encryptionMethod;
 

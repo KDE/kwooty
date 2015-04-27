@@ -80,6 +80,14 @@ private:
     bool allPostProcessingCorrect;
     bool postProcessFinish;
 
+
+
+Q_SIGNALS:
+
+public Q_SLOTS:
+
+
+
 };
 
 #endif // POSTDOWNLOADINFODATA_H

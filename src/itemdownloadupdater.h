@@ -50,6 +50,11 @@ private:
 Q_SIGNALS:
     void statusBarDecrementSignal(quint64, int);
     void decodeSegmentsSignal(NzbFileData);
+
+public Q_SLOTS:
+
+private Q_SLOTS:
+
 };
 
 #endif // ITEMDOWNLOADUPDATER_H

@@ -86,7 +86,7 @@ void ExtractBase::setupConnections() {
 
 
 
-void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, ExtractBase::ArchivePasswordStatus archivePasswordStatus, bool passwordEnteredByUSer, const QString &passwordStr){
+void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, ExtractBase::ArchivePasswordStatus archivePasswordStatus, bool passwordEnteredByUSer, QString passwordStr){
 
     this->nzbCollectionData = nzbCollectionData;
     this->nzbFileDataList = nzbCollectionData.getNzbFileDataList();

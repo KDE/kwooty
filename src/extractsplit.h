@@ -43,7 +43,7 @@ public:
     ExtractSplit(RepairDecompressThread*);
     ~ExtractSplit();
     void launchProcess(const NzbCollectionData&, ExtractBase::ArchivePasswordStatus = ArchiveCheckIfPassworded,
-                       bool passwordEnteredByUSer = false, const QString &passwordStr = QString()) Q_DECL_OVERRIDE;
+                       bool passwordEnteredByUSer = false, const QString passwordStr = QString());
 
 
 private:
@@ -60,7 +60,7 @@ private:
 
 
 Q_SIGNALS:
-    void joinFilesSignal(const QList <NzbFileData> &, const QString &, const QString &);
+    void joinFilesSignal(QList <NzbFileData>, const QString, const QString);
 
 
 public Q_SLOTS:

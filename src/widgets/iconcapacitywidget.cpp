@@ -21,9 +21,6 @@
 
 #include "iconcapacitywidget.h"
 
-#include <kcapacitybar.h>
-#include <QLabel>
-
 #include <KIconLoader>
 #include "kwooty_debug.h"
 
@@ -34,17 +31,17 @@
 
 IconCapacityWidget::IconCapacityWidget(QWidget* parent, MyStatusBar::WidgetIdentity widgetIdentity) : StatusBarWidgetBase(parent, widgetIdentity) {
 
-    iconLoader = KIconLoader::global();
+    this->iconLoader = KIconLoader::global();
 
-    iconLabel = new QLabel(this);
-    capacityBar = new KCapacityBar(KCapacityBar::DrawTextInline, this);
+    this->iconLabel = new QLabel(this);
+    this->capacityBar = new KCapacityBar(KCapacityBar::DrawTextInline, this);
 
-    hBoxLayout = new QHBoxLayout(this);
-    hBoxLayout->addWidget(iconLabel);
-    hBoxLayout->addWidget(capacityBar);
+    this->hBoxLayout = new QHBoxLayout(this);
+    this->hBoxLayout->addWidget(this->iconLabel);
+    this->hBoxLayout->addWidget(this->capacityBar);
 
-    hBoxLayout->setSpacing(5);
-    hBoxLayout->setMargin(0);
+    this->hBoxLayout->setSpacing(5);
+    this->hBoxLayout->setMargin(0);
 
 }
 
@@ -54,10 +51,10 @@ void IconCapacityWidget::setIcon(const QString& iconStr) {
 
     if (!iconStr.isEmpty()) {
 
-        iconLabel->setPixmap(iconLoader->loadIcon(iconStr, KIconLoader::Small));
+        this->iconLabel->setPixmap(this->iconLoader->loadIcon(iconStr, KIconLoader::Small));
     }
     else {
-        iconLabel->setPixmap(QPixmap());
+        this->iconLabel->setPixmap(QPixmap());
     }
 
 }
@@ -65,12 +62,12 @@ void IconCapacityWidget::setIcon(const QString& iconStr) {
 
 
 void IconCapacityWidget::showIcon() {
-    iconLabel->show();
+    this->iconLabel->show();
 }
 
 
 void IconCapacityWidget::hideIcon() {
-    iconLabel->hide();
+    this->iconLabel->hide();
 }
 
 
@@ -78,17 +75,17 @@ void IconCapacityWidget::hideIcon() {
 void IconCapacityWidget::updateCapacity(const QString& availableVal, const int& usedDiskPercentage) {
 
     // adjust capacityBar size according to text :
-    int widthInPixel = capacityBar->fontMetrics().width(availableVal) + 30;
+    int widthInPixel = this->capacityBar->fontMetrics().width(availableVal) + 30;
 
     // if capacitybar width is lower than current width, ajust it :
-    if (capacityBar->minimumWidth() < widthInPixel) {
+    if (this->capacityBar->minimumWidth() < widthInPixel) {
 
-        capacityBar->setMinimumWidth(widthInPixel);
+        this->capacityBar->setMinimumWidth(widthInPixel);
 
     }
 
-    capacityBar->setValue(usedDiskPercentage);
-    capacityBar->setText(availableVal);
-    capacityBar->update();
+    this->capacityBar->setValue(usedDiskPercentage);
+    this->capacityBar->setText(availableVal);
+    this->capacityBar->update();
 
 }

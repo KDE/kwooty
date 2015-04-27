@@ -39,7 +39,7 @@ class ActionButtonsManager : public QObject {
     Q_OBJECT
 
 public:
-    explicit ActionButtonsManager(ActionsManager*);
+    ActionButtonsManager(ActionsManager*);
 
 
 private:

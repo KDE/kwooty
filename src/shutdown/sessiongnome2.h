@@ -39,8 +39,8 @@ public:
 
 private:
 
-    void requestShutdown() Q_DECL_OVERRIDE;
-    void requestSuspend() Q_DECL_OVERRIDE;
+    void requestShutdown();
+    void requestSuspend();
 
 };
 

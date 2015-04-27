@@ -56,9 +56,9 @@ public:
     void setActive(const bool&);
 
 protected:
-    void enterEvent(QEvent*) Q_DECL_OVERRIDE;
-    void leaveEvent(QEvent*) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent*) Q_DECL_OVERRIDE;
+    void enterEvent(QEvent*);
+    void leaveEvent(QEvent*);
+    void mousePressEvent(QMouseEvent*);
 
 
 private:
@@ -77,6 +77,10 @@ private:
 
 Q_SIGNALS:
     void activeSignal(bool);
+
+
+
+
 };
 
 #endif // ICONTEXTWIDGET_H

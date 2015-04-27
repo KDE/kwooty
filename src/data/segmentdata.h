@@ -99,6 +99,6 @@ QDataStream& operator<<(QDataStream&, const SegmentData&);
 QDataStream& operator>>(QDataStream&, SegmentData&);
 
 
-Q_DECLARE_METATYPE(SegmentData)
+Q_DECLARE_METATYPE(SegmentData);
 
 #endif // SEGMENTDATA_H

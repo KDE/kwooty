@@ -52,6 +52,13 @@ private:
     QDateTime dateTime;
     QString nzbFileName;
 
+
+Q_SIGNALS:
+
+public Q_SLOTS:
+
+
+
 };
 
 #endif // JOBNOTIFYDATA_H

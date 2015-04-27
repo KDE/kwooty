@@ -67,7 +67,7 @@ void FileOperations::openFile() {
 }
 
 
-void FileOperations::openFileWithFileMode(const KUrl &nzbUrl, UtilityNamespace::OpenFileMode openFileMode) {
+void FileOperations::openFileWithFileMode(KUrl nzbUrl, UtilityNamespace::OpenFileMode openFileMode) {
 
     bool isWrongUrl = false;
 
