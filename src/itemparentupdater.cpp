@@ -536,7 +536,7 @@ void ItemParentUpdater::updateItemsIfDirectExtractFailed(const QModelIndex nzbIn
 //============================================================================================================//
 
 
-void ItemParentUpdater::recalculateNzbSizeSlot(const QModelIndex index) {
+void ItemParentUpdater::recalculateNzbSizeSlot(const QModelIndex &index) {
 
     this->recalculateNzbSize(index);
     this->updateNzbItems(index);

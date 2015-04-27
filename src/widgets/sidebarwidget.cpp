@@ -37,32 +37,32 @@
 
 SideBarWidget::SideBarWidget(QWidget* parent) : QWidget(parent) {
 
-    this->multiTabBar = new KMultiTabBar(KMultiTabBar::Top, parent);
-    this->multiTabBar->setStyle(KMultiTabBar::KDEV3ICON);
+    multiTabBar = new KMultiTabBar(KMultiTabBar::Top, parent);
+    multiTabBar->setStyle(KMultiTabBar::KDEV3ICON);
 
-    this->stackedWidget = new QStackedWidget(this);
+    stackedWidget = new QStackedWidget(this);
 
     QVBoxLayout* vBoxLayout = new QVBoxLayout(this);
     vBoxLayout->setMargin(0);
     vBoxLayout->setSpacing(0);
 
-    vBoxLayout->addWidget(this->multiTabBar);
-    vBoxLayout->addWidget(this->stackedWidget);
+    vBoxLayout->addWidget(multiTabBar);
+    vBoxLayout->addWidget(stackedWidget);
 
-    this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
 }
 
 
 void SideBarWidget::addTab(QWidget* currentWidget, const ServerConnectionIcon& serverConnectionIcon, const QString& label) {
 
-    int tabIndex = this->stackedWidget->count();
+    int tabIndex = stackedWidget->count();
 
-    this->multiTabBar->appendTab(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon), tabIndex, label);
-    this->stackedWidget->addWidget(currentWidget);
+    multiTabBar->appendTab(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon), tabIndex, label);
+    stackedWidget->addWidget(currentWidget);
 
     // display associated server info widget when tab has been clicked :
-    connect(this->multiTabBar->tab(tabIndex), SIGNAL(clicked(int)), this, SLOT(tabClickedSlot(int)));
+    connect(multiTabBar->tab(tabIndex), SIGNAL(clicked(int)), this, SLOT(tabClickedSlot(int)));
 
 }
 
@@ -71,79 +71,79 @@ void SideBarWidget::addTab(QWidget* currentWidget, const ServerConnectionIcon& s
 void SideBarWidget::updateIconByIndex(const int& currentIndex, const ServerConnectionIcon& serverConnectionIcon) {
 
     // avoid useless icon drawing :
-    if (this->indexServerIconMap.value(currentIndex) !=  serverConnectionIcon) {
+    if (indexServerIconMap.value(currentIndex) !=  serverConnectionIcon) {
 
-        this->multiTabBar->tab(currentIndex)->setIcon(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon));
+        multiTabBar->tab(currentIndex)->setIcon(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon));
 
-        this->indexServerIconMap.insert(currentIndex, serverConnectionIcon);
+        indexServerIconMap.insert(currentIndex, serverConnectionIcon);
 
     }
 }
 
 
 void SideBarWidget::updateTextByIndex(const int& currentIndex, const QString& tabName) {
-    this->multiTabBar->tab(currentIndex)->setText(tabName);
+    multiTabBar->tab(currentIndex)->setText(tabName);
 }
 
 void SideBarWidget::updateToolTipByIndex(const int& currentIndex, const QString& tabName) {
-    this->multiTabBar->tab(currentIndex)->setToolTip(tabName);
+    multiTabBar->tab(currentIndex)->setToolTip(tabName);
 }
 
 
 void SideBarWidget::activeDefaultTab(const int& index) {
 
-    this->tabClickedSlot(index);
-    this->stackedWidget->setVisible(true);
-    this->multiTabBar->tab(index)->setState(true);
+    tabClickedSlot(index);
+    stackedWidget->setVisible(true);
+    multiTabBar->tab(index)->setState(true);
 
 }
 
 bool SideBarWidget::isOnlyTabDisplayed() const {
-    return this->stackedWidget->isHidden();
+    return stackedWidget->isHidden();
 }
 
 void SideBarWidget::displayTabOnly() {
-    return this->stackedWidget->hide();
+    return stackedWidget->hide();
 }
 
 
 int SideBarWidget::count() const {
-    return this->stackedWidget->count();
+    return stackedWidget->count();
 }
 
 
 QWidget* SideBarWidget::widget(const int& index) {
-    return this->stackedWidget->widget(index);
+    return stackedWidget->widget(index);
 }
 
 int SideBarWidget::currentIndex() const {
-    return this->stackedWidget->currentIndex();
+    return stackedWidget->currentIndex();
 }
 
 
 int SideBarWidget::indexOf(QWidget* currentWidget) const {
-    return this->stackedWidget->indexOf(currentWidget);
+    return stackedWidget->indexOf(currentWidget);
 }
 
 
-void SideBarWidget::setDisplay(const bool& display) {
+void SideBarWidget::setDisplay(bool _display) {
     // keep display state there as it seems that isVisible() returns false when kwooty is iconified.
     // This is mandatary to save and restore the correct state of this widget :
-    this->display = display;
+    display = _display;
 
-    this->setVisible(display);
+    setVisible(display);
 }
 
 bool SideBarWidget::isDisplayed() const {
-    return this->display;
+    return display;
 }
 
 
 
 void SideBarWidget::removeLast() {
 
-    if (this->count() > 0) {
-        this->removeTabAndWidgetByIndex(this->count() - 1);
+    if (count() > 0) {
+        removeTabAndWidgetByIndex(count() - 1);
     }
 
 }
@@ -153,41 +153,41 @@ void SideBarWidget::removeLast() {
 void SideBarWidget::removeTabAndWidgetByIndex(int currentIndex) {
 
     // detelete and remove tab :
-    this->multiTabBar->removeTab(currentIndex);
+    multiTabBar->removeTab(currentIndex);
 
     // delete the associated widget :
-    delete this->stackedWidget->widget(currentIndex);
+    delete stackedWidget->widget(currentIndex);
 
 }
 
 void SideBarWidget::removeTabByWidget(QWidget* currentWidget) {
-    return this->stackedWidget->removeWidget(currentWidget);
+    return stackedWidget->removeWidget(currentWidget);
 }
 
 
 void SideBarWidget::tabClickedSlot(const int& tabIndex) {
 
-    QWidget* currentWidget = this->stackedWidget->currentWidget();
-    QWidget* targetWidget = this->stackedWidget->widget(tabIndex);
+    QWidget* currentWidget = stackedWidget->currentWidget();
+    QWidget* targetWidget = stackedWidget->widget(tabIndex);
 
     if (currentWidget != targetWidget) {
 
         // disable previous button and enable the clicked one :
-        this->multiTabBar->setTab(this->indexOf(currentWidget), false);
-        this->multiTabBar->setTab(tabIndex, true);
+        multiTabBar->setTab(indexOf(currentWidget), false);
+        multiTabBar->setTab(tabIndex, true);
 
         // display widget corresponding to selected tab :
-        if (this->stackedWidget->isHidden()) {
-            this->stackedWidget->show();
+        if (stackedWidget->isHidden()) {
+            stackedWidget->show();
         }
 
-        this->stackedWidget->setCurrentIndex(tabIndex);
-        this->stackedWidget->currentWidget()->show();
+        stackedWidget->setCurrentIndex(tabIndex);
+        stackedWidget->currentWidget()->show();
 
     }
     // show / hide the current widget :
     else {
-        this->stackedWidget->setVisible(!this->stackedWidget->currentWidget()->isVisible());
+        stackedWidget->setVisible(!stackedWidget->currentWidget()->isVisible());
     }
 
 

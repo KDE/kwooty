@@ -44,15 +44,15 @@ public:
 
 
     SessionGnome3(ShutdownManager*);
-    QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods();
+    QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods() Q_DECL_OVERRIDE;
 
 private:
 
     QMap<SessionGnome3::DbusMethodCall, QString> methodCallEnumStringMap;
     QDBusInterface* dbusUpowerInterface;
 
-    void requestShutdown();
-    void requestSuspend();
+    void requestShutdown() Q_DECL_OVERRIDE;
+    void requestSuspend() Q_DECL_OVERRIDE;
     bool callDbusMethod(const SessionGnome3::DbusMethodCall);
 
 };

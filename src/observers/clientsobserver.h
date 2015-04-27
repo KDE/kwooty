@@ -65,7 +65,7 @@ public Q_SLOTS:
 
     void nntpClientSpeedSlot(const int);
     void connectionStatusSlot(const int);
-    void encryptionStatusSlot(const bool, const QString, const bool, const QString, const QStringList);
+    void encryptionStatusSlot(const bool, const QString &, const bool, const QString &, const QStringList &);
     void nntpErrorSlot(const int);
     void decrementSlot(const quint64, const int);
 

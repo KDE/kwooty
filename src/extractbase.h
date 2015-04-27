@@ -58,7 +58,7 @@ class ExtractBase : public QObject
     ExtractBase(RepairDecompressThread*);
     virtual ~ExtractBase();
     virtual void launchProcess(const NzbCollectionData&, ExtractBase::ArchivePasswordStatus = ArchiveCheckIfPassworded,
-                               bool passwordEnteredByUSer = false, const QString passwordStr = QString());
+                               bool passwordEnteredByUSer = false, const QString &passwordStr = QString());
     virtual void preRepairProcessing(const NzbCollectionData&);
     bool canHandleFormat(UtilityNamespace::ArchiveFormat);
 

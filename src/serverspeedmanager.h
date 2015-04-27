@@ -74,10 +74,6 @@ private:
 
 Q_SIGNALS:
     void limitDownloadSpeedSignal(BandwidthClientMode);
-
-public Q_SLOTS:
-
-
 private Q_SLOTS:
     void adjustDownloadSpeedSlot();
 

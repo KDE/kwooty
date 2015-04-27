@@ -86,11 +86,7 @@ Q_SIGNALS:
     void downloadWaitingPar2Signal();
 
 public Q_SLOTS:
-    void recalculateNzbSizeSlot(const QModelIndex);
-
-
-private Q_SLOTS:
-
+    void recalculateNzbSizeSlot(const QModelIndex &);
 };
 
 #endif // ITEMPARENTUPDATER_H

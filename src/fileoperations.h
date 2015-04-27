@@ -39,23 +39,15 @@ class KWOOTY_EXPORT FileOperations : public QObject {
 
 public:
 
-    FileOperations(Core*);
+    explicit FileOperations(Core*);
     void openFile();
-    void openFileWithFileMode(KUrl, UtilityNamespace::OpenFileMode);
+    void openFileWithFileMode(const KUrl &, UtilityNamespace::OpenFileMode);
 
     static bool isSplitFileFormat(const QFile&);
 
 private:
     Core* core;
     void openUrl(KUrl, bool&, UtilityNamespace::OpenFileMode);
-
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
-
-
 };
 
 #endif // FILEOPERATIONS_H

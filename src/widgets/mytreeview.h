@@ -72,10 +72,10 @@ private:
 
 
 protected:
-    void contextMenuEvent(QContextMenuEvent*);
-    void dragEnterEvent(QDragEnterEvent*);
-    void dragMoveEvent(QDragMoveEvent*);
-    void dropEvent(QDropEvent*);
+    void contextMenuEvent(QContextMenuEvent*) Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent*) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent*) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent*) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void addExternalActionSignal(QMenu*, QStandardItem*);
@@ -84,11 +84,6 @@ Q_SIGNALS:
 public Q_SLOTS:
     void settingsChangedSlot();
     void expandedSlot(const QModelIndex&);
-
-
-private Q_SLOTS:
-
-
 };
 
 #endif // MYTREEVIEW_H

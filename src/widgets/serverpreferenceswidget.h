@@ -60,11 +60,6 @@ private:
     void fillWarningLabel(QLabel*, const QString&);
     void clearWarningLabel(QLabel*);
 
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
 private Q_SLOTS:
     void portValueChangedSlot(int);
     void valueChangedSlot();

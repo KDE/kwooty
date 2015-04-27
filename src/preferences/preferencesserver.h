@@ -36,10 +36,7 @@ class PreferencesServer : public QWidget, public Ui::PreferencesServer {
      Q_OBJECT
 
 public:
-
-
-
-    PreferencesServer(KConfigDialog*);
+    explicit PreferencesServer(KConfigDialog*);
 
 
 private:

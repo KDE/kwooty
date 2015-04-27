@@ -45,7 +45,7 @@ class KWOOTY_EXPORT QueueFileObserver : public QObject {
 
 public:
 
-    QueueFileObserver(Core*);
+    explicit QueueFileObserver(Core*);
     UtilityNamespace::ItemStatus getFocusedItemStatus() const;
     int getFocusedProgressValue() const;
     bool isPluginJobRunning();
@@ -77,7 +77,7 @@ Q_SIGNALS:
 
     void progressUpdateSignal(const int);
     void statusUpdateSignal(const UtilityNamespace::ItemStatus);
-    void jobFinishSignal(const UtilityNamespace::ItemStatus, const QString);
+    void jobFinishSignal(const UtilityNamespace::ItemStatus, const QString &);
 
 public Q_SLOTS:
 

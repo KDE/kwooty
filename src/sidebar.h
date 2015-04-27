@@ -41,7 +41,7 @@ class SideBar : public QObject {
 
 
 public:
-    SideBar(MainWindow*);
+    explicit SideBar(MainWindow*);
     SideBarWidget* getSideBarWidget();
     void saveState();
     void loadState();
@@ -55,19 +55,9 @@ private:
 
     void createSideBarWidgets();
     void setupConnections();
-
-
-Q_SIGNALS:
-
-
 public Q_SLOTS:
     void activeSlot(bool);
     void serverManagerSettingsChangedSlot();
-
-
-private Q_SLOTS:
-
-
 
 };
 
