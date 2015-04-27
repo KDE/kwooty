@@ -38,10 +38,10 @@
 
 SideBar::SideBar(MainWindow* parent) : QObject(parent) {
 
-    this->core = parent->getCore();
-    this->sideBarWidget = new SideBarWidget(parent);
-    this->serverManager = 0;
-    this->stateRestored = false;
+    this->mCore = parent->getCore();
+    this->mSideBarWidget = new SideBarWidget(parent);
+    this->mServerManager = 0;
+    this->mStateRestored = false;
 
     this->serverManagerSettingsChangedSlot();
     this->setupConnections();
@@ -52,7 +52,7 @@ SideBar::SideBar(MainWindow* parent) : QObject(parent) {
 void SideBar::setupConnections() {
 
     // notify sidebar that settings have been changed :
-    connect (this->core->getServerManager(),
+    connect (this->mCore->getServerManager(),
              SIGNAL(serverManagerSettingsChangedSignal()),
              this,
              SLOT(serverManagerSettingsChangedSlot()), Qt::QueuedConnection);
@@ -61,19 +61,19 @@ void SideBar::setupConnections() {
 
 
 SideBarWidget* SideBar::getSideBarWidget() {
-    return this->sideBarWidget;
+    return this->mSideBarWidget;
 }
 
 
 void SideBar::saveState() {
 
     // save info anly if there is at least one current widget :
-    if (this->sideBarWidget->currentIndex() != -1) {
+    if (this->mSideBarWidget->currentIndex() != -1) {
 
         // save current states to restore them in next session :
-        KConfigGroupHandler::getInstance()->writeSideBarDisplay(this->sideBarWidget->isDisplayed());
-        KConfigGroupHandler::getInstance()->writeSideBarTabOnlyDisplay(this->sideBarWidget->isOnlyTabDisplayed());
-        KConfigGroupHandler::getInstance()->writeSideBarServerIndex(this->sideBarWidget->currentIndex());
+        KConfigGroupHandler::getInstance()->writeSideBarDisplay(this->mSideBarWidget->isDisplayed());
+        KConfigGroupHandler::getInstance()->writeSideBarTabOnlyDisplay(this->mSideBarWidget->isOnlyTabDisplayed());
+        KConfigGroupHandler::getInstance()->writeSideBarServerIndex(this->mSideBarWidget->currentIndex());
 
     }
 
@@ -90,19 +90,19 @@ void SideBar::loadState() {
     bool tabOnlyDisplay = KConfigGroupHandler::getInstance()->readSideBarTabOnlyDisplay();
 
     if (tabOnlyDisplay) {
-        this->sideBarWidget->displayTabOnly();
+        this->mSideBarWidget->displayTabOnly();
     }
 
     else {
         // set focus on previous session tab :
         int tabIndex = KConfigGroupHandler::getInstance()->readSideBarServerIndex();
 
-        if (tabIndex < this->sideBarWidget->count()) {
-            this->sideBarWidget->activeDefaultTab(tabIndex);
+        if (tabIndex < this->mSideBarWidget->count()) {
+            this->mSideBarWidget->activeDefaultTab(tabIndex);
         }
     }
 
-    this->stateRestored = true;
+    this->mStateRestored = true;
 
 }
 
@@ -111,12 +111,12 @@ void SideBar::loadState() {
 void SideBar::createSideBarWidgets() {
 
     // add a widget for a servergroup :
-    while (this->serverManager->getServerNumber() > this->sideBarWidget->count()) {
+    while (this->mServerManager->getServerNumber() > this->mSideBarWidget->count()) {
 
-        int serverWidgetIndex = this->sideBarWidget->count();
-        QString serverName = this->serverManager->getServerGroupById(serverWidgetIndex)->getServerData().getServerName();
+        int serverWidgetIndex = this->mSideBarWidget->count();
+        QString serverName = this->mServerManager->getServerGroupById(serverWidgetIndex)->getServerData().getServerName();
 
-        this->sideBarWidget->addTab(new ServerStatusWidget(this->sideBarWidget), DisconnectedIcon, serverName);
+        this->mSideBarWidget->addTab(new ServerStatusWidget(this->mSideBarWidget), DisconnectedIcon, serverName);
 
     }
 
@@ -126,9 +126,9 @@ void SideBar::createSideBarWidgets() {
 
 void SideBar::serverStatisticsUpdate(const int serverId) {
 
-    if (this->serverManager) {
+    if (this->mServerManager) {
 
-        ServerGroup* serverGroup = this->serverManager->getServerGroupById(serverId);
+        ServerGroup* serverGroup = this->mServerManager->getServerGroupById(serverId);
 
         ClientsPerServerObserver* clientsPerServerObserver = serverGroup->getClientsPerServerObserver();
 
@@ -143,7 +143,7 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
         }
 
         // update tab icon :
-        this->sideBarWidget->updateIconByIndex(serverId, serverConnectionTabIcon);
+        this->mSideBarWidget->updateIconByIndex(serverId, serverConnectionTabIcon);
 
 
         // retrieve server mode according to server :
@@ -184,7 +184,7 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
         QString speedToolTipLabel = i18n("Current download speed - Mean download speed");
 
         // update fields :
-        ServerStatusWidget* serverStatusWidget = static_cast<ServerStatusWidget*>(this->sideBarWidget->widget(serverId));
+        ServerStatusWidget* serverStatusWidget = static_cast<ServerStatusWidget*>(this->mSideBarWidget->widget(serverId));
 
         serverStatusWidget->updateLeftLabelField(ServerStatusWidget::StatusItem, connection);
         serverStatusWidget->updateLeftLabelField(ServerStatusWidget::SpeedItem, speedTextLabel, speedToolTipLabel);
@@ -208,25 +208,25 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
 
 void SideBar::activeSlot(bool active) {
 
-    this->sideBarWidget->setDisplay(active);
+    this->mSideBarWidget->setDisplay(active);
 }
 
 
 void SideBar::serverManagerSettingsChangedSlot() {
 
     // if servermanager instance is not yet initialized :
-    if (!this->serverManager) {
-        this->serverManager = static_cast<MainWindow*>(this->parent())->getCore()->getServerManager();
+    if (!this->mServerManager) {
+        this->mServerManager = static_cast<MainWindow*>(this->parent())->getCore()->getServerManager();
     }
 
-    if (this->serverManager) {
+    if (this->mServerManager) {
 
         // remove widgets from side bar if number of servers has been reduced :
-        if (this->serverManager->getServerNumber() < this->sideBarWidget->count()) {
+        if (this->mServerManager->getServerNumber() < this->mSideBarWidget->count()) {
 
-            while (this->serverManager->getServerNumber() < this->sideBarWidget->count()) {
+            while (this->mServerManager->getServerNumber() < this->mSideBarWidget->count()) {
 
-                this->sideBarWidget->removeLast();
+                this->mSideBarWidget->removeLast();
             }
         }
         // add widgets from side bar if number of servers has been increased :
@@ -236,19 +236,19 @@ void SideBar::serverManagerSettingsChangedSlot() {
 
 
         // synchronize info for each server with newly settings :
-        for (int i = 0; i < this->sideBarWidget->count(); ++i) {
+        for (int i = 0; i < this->mSideBarWidget->count(); ++i) {
 
-            ServerData serverData = this->serverManager->getServerGroupById(i)->getServerData();
+            ServerData serverData = this->mServerManager->getServerGroupById(i)->getServerData();
 
             // update text and tooltip accordingly :
-            this->sideBarWidget->updateTextByIndex(i, serverData.getServerName());
-            this->sideBarWidget->updateToolTipByIndex(i, serverData.getServerName());
+            this->mSideBarWidget->updateTextByIndex(i, serverData.getServerName());
+            this->mSideBarWidget->updateToolTipByIndex(i, serverData.getServerName());
 
             this->serverStatisticsUpdate(i);
         }
 
         // for first call, restore previous session settings :
-        if (!this->stateRestored) {
+        if (!this->mStateRestored) {
             this->loadState();
         }
 

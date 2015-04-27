@@ -41,19 +41,19 @@ class SysTray : public KStatusNotifierItem
     Q_OBJECT
 
 public:
-    SysTray(MainWindow*);
+    explicit SysTray(MainWindow*);
 
 
 private:
 
-    MainWindow* parent;
-    QueueFileObserver* queueFileObserver;
-    ClientsObserver* clientsObserver;
-    StatsInfoBuilder* statsInfoBuilder;
-    QPixmap normalBaseIcon;
-    QPixmap grayedBaseIcon;
-    QPixmap renderedIcon;
-    int oldMergePos;
+    MainWindow* mParent;
+    QueueFileObserver* mQueueFileObserver;
+    ClientsObserver* mClientsObserver;
+    StatsInfoBuilder* mStatsInfoBuilder;
+    QPixmap mNormalBaseIcon;
+    QPixmap mGrayedBaseIcon;
+    QPixmap mRenderedIcon;
+    int mOldMergePos;
 
     bool updateIconStatus(const UtilityNamespace::ItemStatus&);
     bool blendOverlay(const QPixmap&);
@@ -63,22 +63,12 @@ private:
     void initShow();
     void updateIconProgress(const int&);
     void createToolTip();
-
-Q_SIGNALS:
-
-
 public Q_SLOTS:
 
     void progressUpdateSlot(const int);
     void statusUpdateSlot(const UtilityNamespace::ItemStatus);
     void updateDownloadSpeedInfoSlot();
     void updateConnectionStatusSlot();
-
-private Q_SLOTS:
-
-
-
-
 
 };
 

@@ -36,7 +36,7 @@ class ServerSpeedManager : public QObject {
     Q_OBJECT
 
 public:
-    ServerSpeedManager(ServerGroup* parent);
+    explicit ServerSpeedManager(ServerGroup* parent);
 
     void setDownloadSpeedLimitInBytes(const qint64&);
     qint64 getDownloadSpeedLimitInBytes() const;

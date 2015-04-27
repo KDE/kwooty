@@ -72,10 +72,6 @@ public Q_SLOTS:
     void decodeSegmentsSlot(NzbFileData);
     void suppressOldOrphanedSegmentsSlot();
     void saveDownloadedSegmentSlot(SegmentData);
-
-private Q_SLOTS:
-
-
 };
 
 #endif // SEGMENTSDECODERTHREAD_H

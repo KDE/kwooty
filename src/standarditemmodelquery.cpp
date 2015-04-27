@@ -30,8 +30,8 @@
 
 StandardItemModelQuery::StandardItemModelQuery(Core* core) : QObject(core) {
 
-    this->core = core;
-    this->downloadModel = core->getDownloadModel();
+    this->mCore = core;
+    this->mDownloadModel = core->getDownloadModel();
 
 }
 
@@ -41,13 +41,13 @@ QStandardItem* StandardItemModelQuery::searchParentItem(const SearchItemStatus& 
     QStandardItem* stateItem = 0;
 
     // get the root model :
-    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+    QStandardItem* rootItem = this->mDownloadModel->invisibleRootItem();
 
     // get the first parent with download active :
     for (int i = 0; i < rootItem->rowCount(); ++i) {
 
         QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
-        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
+        UtilityNamespace::ItemStatus currentStatus = this->mDownloadModel->getStatusFromStateItem(parentStateItem);
 
         if (searchItemStatus == SearchItemIdle) {
 
@@ -114,12 +114,12 @@ QList<QModelIndex> StandardItemModelQuery::retrieveDecodeFinishParentIndexList()
 
     QList<QModelIndex> downloadFinishParentIndexList;
 
-    for (int i = 0; i < this->downloadModel->rowCount(); ++i) {
+    for (int i = 0; i < this->mDownloadModel->rowCount(); ++i) {
 
-        QModelIndex parentIndex = this->downloadModel->item(i)->index();
+        QModelIndex parentIndex = this->mDownloadModel->item(i)->index();
 
         // for earch parent item, check if download has been finished :
-        if (this->downloadModel->getStatusDataFromIndex(parentIndex).isDecodeFinish()) {
+        if (this->mDownloadModel->getStatusDataFromIndex(parentIndex).isDecodeFinish()) {
 
             downloadFinishParentIndexList.append(parentIndex);
 
@@ -135,11 +135,11 @@ QStandardItem* StandardItemModelQuery::retrieveParentFileNameItemFromUuid(const 
 
     QStandardItem* parentFileNameItem = 0;
 
-    for (int i = 0; i < this->downloadModel->rowCount(); ++i) {
+    for (int i = 0; i < this->mDownloadModel->rowCount(); ++i) {
 
-        if (parentUuidStr == this->downloadModel->getUuidStrFromIndex(this->downloadModel->item(i)->index())) {
+        if (parentUuidStr == this->mDownloadModel->getUuidStrFromIndex(this->mDownloadModel->item(i)->index())) {
 
-            parentFileNameItem = this->downloadModel->item(i);
+            parentFileNameItem = this->mDownloadModel->item(i);
             break;
         }
 
@@ -154,14 +154,14 @@ QList<QModelIndex> StandardItemModelQuery::retrieveStartPauseIndexList(const Uti
 
     // select all rows in order to set them to paused or Idle :
     QList<QModelIndex> indexesList;
-    int rowNumber = this->downloadModel->rowCount();
+    int rowNumber = this->mDownloadModel->rowCount();
 
     for (int i = 0; i < rowNumber; ++i) {
 
-        QModelIndex currentIndex = this->downloadModel->item(i)->index();
-        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(currentIndex);
+        QModelIndex currentIndex = this->mDownloadModel->item(i)->index();
+        QStandardItem* stateItem = this->mDownloadModel->getStateItemFromIndex(currentIndex);
 
-        UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(stateItem);
+        UtilityNamespace::ItemStatus currentStatus = this->mDownloadModel->getStatusFromStateItem(stateItem);
 
         if ( ( (targetStatus == PauseStatus) && Utility::isReadyToDownload(currentStatus) ) ||
              ( (targetStatus == IdleStatus)  && Utility::isPausedOrPausing(currentStatus) ) ) {
@@ -176,7 +176,7 @@ QList<QModelIndex> StandardItemModelQuery::retrieveStartPauseIndexList(const Uti
 
 
 bool StandardItemModelQuery::isRootModelEmpty() const {
-    return (!this->downloadModel->invisibleRootItem()->hasChildren());
+    return (!this->mDownloadModel->invisibleRootItem()->hasChildren());
 }
 
 
@@ -185,20 +185,20 @@ bool StandardItemModelQuery::areJobsFinished() const {
     bool jobFinished = true;
 
     // at first check that no plugin are doing post processing :
-    if (this->core->getQueueFileObserver()->isPluginJobRunning()) {
+    if (this->mCore->getQueueFileObserver()->isPluginJobRunning()) {
 
         jobFinished = false;
     }
 
     else {
         // get the root model :
-        QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+        QStandardItem* rootItem = this->mDownloadModel->invisibleRootItem();
 
         // for each parent item, get its current status :
         for (int i = 0; i < rootItem->rowCount(); ++i) {
 
             QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
-            UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(parentStateItem);
+            UtilityNamespace::ItemStatus currentStatus = this->mDownloadModel->getStatusFromStateItem(parentStateItem);
 
             // check parent status activity :
             if ( Utility::isReadyToDownload(currentStatus)       ||
@@ -260,12 +260,12 @@ bool StandardItemModelQuery::isParentContainsPar2File(QStandardItem* item) const
     bool containsPar2File = false;
 
     // if current item is a child, retrieve its parent :
-    QStandardItem* parentFileNameItem = this->downloadModel->getNzbItem(item);
+    QStandardItem* parentFileNameItem = this->mDownloadModel->getNzbItem(item);
 
     for (int i = 0; i < parentFileNameItem->rowCount(); ++i) {
 
         QStandardItem* nzbChildrenItem = parentFileNameItem->child(i, FILE_NAME_COLUMN);
-        NzbFileData nzbFileData = this->downloadModel->getNzbFileDataFromIndex(nzbChildrenItem->index());
+        NzbFileData nzbFileData = this->mDownloadModel->getNzbFileDataFromIndex(nzbChildrenItem->index());
 
         if (nzbFileData.isPar2File()) {
 
@@ -286,14 +286,14 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
     // by default consider that item does not need to be downloaded again :
     ItemStatus itemStatusResetTarget = ExtractFinishedStatus;
 
-    ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
+    ItemStatusData itemStatusData = this->mDownloadModel->getStatusDataFromIndex(fileNameItem->index());
     //qCDebug(KWOOTY_LOG) <<  "status:" << itemStatusData.getDataStatus() << "crc:" << itemStatusData.getCrc32Match() << "decodeFinish:" << itemStatusData.isDecodeFinish() << "downloadFinish:" <<itemStatusData.isDownloadFinish();
 
 
     ItemStatusData parentItemStatusData = itemStatusData;
     // if current item is a child, retrieve its parent :
-    if (!downloadModel->isNzbItem(fileNameItem)) {
-        parentItemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->parent()->index());
+    if (!mDownloadModel->isNzbItem(fileNameItem)) {
+        parentItemStatusData = this->mDownloadModel->getStatusDataFromIndex(fileNameItem->parent()->index());
     }
 
     // only allow to retry download if post download processing is not running and
@@ -360,9 +360,9 @@ bool StandardItemModelQuery::isManualRepairExtractAllowed(QStandardItem* fileNam
     bool manualRepairExtractAllowed = false;
 
     // check that selected item is a parent :
-    if (this->downloadModel->isNzbItem(fileNameItem)) {
+    if (this->mDownloadModel->isNzbItem(fileNameItem)) {
 
-        ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
+        ItemStatusData nzbItemStatusData = this->mDownloadModel->getStatusDataFromIndex(fileNameItem->index());
 
         // if parent status is "DecodeFinish" and automatic post process is disabled,
         // manual extract is allowed :
@@ -384,7 +384,7 @@ bool StandardItemModelQuery::isParentFileNameExists(const QString& nzbName) cons
     bool parentFileNameExists = false;
 
     // get the root model :
-    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+    QStandardItem* rootItem = this->mDownloadModel->invisibleRootItem();
 
     // for each parent item, get its current nzb file name :
     for (int i = 0; i < rootItem->rowCount(); ++i) {

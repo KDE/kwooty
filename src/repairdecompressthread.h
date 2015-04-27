@@ -40,7 +40,7 @@ class RepairDecompressThread : public QObject {
     Q_OBJECT
 
 public:
-    RepairDecompressThread(Core*);
+    explicit RepairDecompressThread(Core*);
     RepairDecompressThread();
     ~RepairDecompressThread();
     Core* getCore();

@@ -38,7 +38,7 @@ class KWOOTY_EXPORT ServerManager : public QObject {
 
 public:
 
-    ServerManager(Core*);
+    explicit ServerManager(Core*);
     ServerGroup* getNextTargetServer(ServerGroup*);
     ServerGroup* getServerGroupById(const int&);
     SegmentBuffer* getSegmentBuffer();
@@ -56,10 +56,10 @@ public:
 
 
 private:
-    Core* parent;
-    QMap<int, ServerGroup*> idServerGroupMap;
-    ServerGroup* currentMasterServer;
-    SegmentBuffer* segmentBuffer;
+    Core* mParent;
+    QMap<int, ServerGroup*> mIdServerGroupMap;
+    ServerGroup* mCurrentMasterServer;
+    SegmentBuffer* mSegmentBuffer;
 
     void setupConnections();
 

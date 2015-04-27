@@ -92,11 +92,6 @@ Q_SIGNALS:
 public Q_SLOTS:
     void repairReadyReadSlot();
     void repairFinishedSlot(int, QProcess::ExitStatus);
-
-
-private Q_SLOTS:
-
-
 };
 
 

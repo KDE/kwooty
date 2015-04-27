@@ -76,13 +76,6 @@ Q_SIGNALS:
     void parentStatusItemChangedSignal(QStandardItem*, ItemStatusData);
     void childStatusItemChangedSignal(QStandardItem*, ItemStatusData);
     void parentProgressItemChangedSignal();
-
-
-public Q_SLOTS:
-
-private Q_SLOTS:
-
-
 };
 
 #endif // STANDARDITEMMODEL_H

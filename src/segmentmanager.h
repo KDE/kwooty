@@ -48,7 +48,7 @@ public:
                          };
 
 
-    SegmentManager(Core*);
+    explicit SegmentManager(Core*);
     SegmentManager();
     void setIdlePauseSegments(QStandardItem*, const UtilityNamespace::ItemStatus);
     void setIdleDownloadFailSegments(QStandardItem*);
@@ -63,20 +63,11 @@ private:
     bool sendNextIdleSegment(QStandardItem*, ClientManagerConn*, SegmentInfoData);
 
 
-Q_SIGNALS:
-
 public Q_SLOTS:
     void updateDownloadSegmentSlot(SegmentData,  QString = QString());
     void getNextSegmentSlot(ClientManagerConn*);
     void updateDecodeSegmentSlot(PostDownloadInfoData repairDecompressInfoData);
     void updateRepairExtractSegmentSlot(PostDownloadInfoData repairDecompressInfoData);
-
-
-private Q_SLOTS:
-
-
-
-
 };
 
 #endif // SEGMENTMANAGER_H

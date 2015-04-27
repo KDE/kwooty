@@ -48,10 +48,10 @@ public:
     void serverStatisticsUpdate(const int);
 
 private:
-    Core* core;
-    SideBarWidget* sideBarWidget;
-    ServerManager* serverManager;
-    bool stateRestored;
+    Core* mCore;
+    SideBarWidget* mSideBarWidget;
+    ServerManager* mServerManager;
+    bool mStateRestored;
 
     void createSideBarWidgets();
     void setupConnections();

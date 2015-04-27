@@ -38,7 +38,7 @@ class KWOOTY_EXPORT StandardItemModelQuery : public QObject {
 
 public:
 
-    StandardItemModelQuery(Core*);
+    explicit StandardItemModelQuery(Core*);
 
     QStandardItem* searchParentItemIdle();
     QStandardItem* searchParentItemDownloadOrPausing();
@@ -67,19 +67,10 @@ private:
         SearchItemPostDownloadProcessing
     };
 
-    Core* core;
-    StandardItemModel* downloadModel;
+    Core* mCore;
+    StandardItemModel* mDownloadModel;
 
     QStandardItem* searchParentItem(const SearchItemStatus&);
-
-Q_SIGNALS:
-
-
-public Q_SLOTS:
-
-
-private Q_SLOTS:
-
 
 };
 

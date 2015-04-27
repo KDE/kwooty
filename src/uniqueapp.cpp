@@ -30,13 +30,13 @@
 
 UniqueApp::UniqueApp() : KUniqueApplication()
 {
-    this->kwootyInstance = false;
+    this->mKwootyInstance = false;
 }
 
 UniqueApp::~UniqueApp()
 {
-    if (this->mainWindow) {
-        delete this->mainWindow;
+    if (this->mMainWindow) {
+        delete this->mMainWindow;
     }
 }
 
@@ -46,25 +46,25 @@ UniqueApp::~UniqueApp()
 int UniqueApp::newInstance() {
 
     // create a new instance :
-    if (!this->kwootyInstance) {
+    if (!this->mKwootyInstance) {
 
         this->setWindowIcon(QIcon::fromTheme("kwooty"));
-        this->kwootyInstance = true;
-        this->mainWindow = new MainWindow();
+        this->mKwootyInstance = true;
+        this->mMainWindow = new MainWindow();
 
     }
 
     // instance already exists :
-    if ( this->kwootyInstance ){
+    if ( this->mKwootyInstance ){
 
-        if (this->mainWindow ) {
+        if (this->mMainWindow ) {
 
             KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
             // open nzb files set as argument :
             for (int i = 0; i < args->count(); ++i) {
 
-                this->mainWindow->openFileWithFileMode(args->url(i), UtilityNamespace::OpenWith);
+                this->mMainWindow->openFileWithFileMode(args->url(i), UtilityNamespace::OpenWith);
 
             }
 
@@ -73,9 +73,9 @@ int UniqueApp::newInstance() {
 
                 // display main window if it only visible is systray :
                 if ( !this->isSessionRestored() &&
-                     !this->mainWindow->isVisible() ) {
+                     !this->mMainWindow->isVisible() ) {
 
-                    this->mainWindow->show();
+                    this->mMainWindow->show();
 
                 }
             }
@@ -84,13 +84,13 @@ int UniqueApp::newInstance() {
             else {
 
                 // shown only main window if it is not only present in systray :
-                if (this->mainWindow->isVisible()) {
-                    this->mainWindow->show();
+                if (this->mMainWindow->isVisible()) {
+                    this->mMainWindow->show();
                 }
 
                 args->clear();
 
-                KStartupInfo::setNewStartupId(this->mainWindow, this->startupId());
+                KStartupInfo::setNewStartupId(this->mMainWindow, this->startupId());
             }
 
         }

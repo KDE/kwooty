@@ -36,21 +36,21 @@
 
 ServerManager::ServerManager(Core* parent) : QObject(parent) {
 
-    this->parent = parent;
+    this->mParent = parent;
 
     int serverNumber = KConfigGroupHandler::getInstance()->readServerNumberSettings();
 
     // create segment buffer to store downloaded segments ready to decoded by dedicated server :
-    this->segmentBuffer = new SegmentBuffer(this, parent);
+    this->mSegmentBuffer = new SegmentBuffer(this, parent);
 
 
     // create all nntp clients for all servers (master + backups) :
     for (int serverGroupId = 0; serverGroupId < serverNumber; serverGroupId++) {
-        this->idServerGroupMap.insert(serverGroupId, new ServerGroup(this, parent, serverGroupId));
+        this->mIdServerGroupMap.insert(serverGroupId, new ServerGroup(this, parent, serverGroupId));
     }
 
     // by default, the master server is always the first one :
-    this->currentMasterServer = this->idServerGroupMap.value(MasterServer);
+    this->mCurrentMasterServer = this->mIdServerGroupMap.value(MasterServer);
 
     this->setupConnections();
 
@@ -64,7 +64,7 @@ ServerManager::ServerManager(Core* parent) : QObject(parent) {
 void ServerManager::setupConnections() {
 
     // parent notify that settings have been changed :
-    connect (this->parent,
+    connect (this->mParent,
              SIGNAL(settingsChangedSignal()),
              this,
              SLOT(settingsChangedSlot()));
@@ -74,20 +74,20 @@ void ServerManager::setupConnections() {
 
 
 int ServerManager::getServerNumber() const {
-    return this->idServerGroupMap.size();
+    return this->mIdServerGroupMap.size();
 }
 
 ServerGroup* ServerManager::getServerGroupById(const int& index) {
-    return this->idServerGroupMap.value(index);
+    return this->mIdServerGroupMap.value(index);
 }
 
 SegmentBuffer* ServerManager::getSegmentBuffer() {
-    return this->segmentBuffer;
+    return this->mSegmentBuffer;
 }
 
 
 bool ServerManager::isSessionRestoredNoJobs() const {
-    return (this->parent->getModelQuery()->isRootModelEmpty() && kapp->isSessionRestored());
+    return (this->mParent->getModelQuery()->isRootModelEmpty() && kapp->isSessionRestored());
 }
 
 
@@ -99,7 +99,7 @@ ServerGroup* ServerManager::getNextTargetServer(ServerGroup* currentServerGroup)
     if (currentServerGroup->isMasterServer()) {
 
         // search any other Active servers in order to download missing segments from MasterServer with them :
-        foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values()) {
+        foreach (ServerGroup* nextServerGroup, this->mIdServerGroupMap.values()) {
 
             if ( nextServerGroup->isActiveBackupServer() &&
                  nextServerGroup->isServerAvailable() ) {
@@ -123,12 +123,12 @@ ServerGroup* ServerManager::getNextTargetServer(ServerGroup* currentServerGroup)
         }
 
         // if a next backup server exists :
-        if (this->idServerGroupMap.size() > currentTargetServer + 1) {
+        if (this->mIdServerGroupMap.size() > currentTargetServer + 1) {
 
             // look for next available backup server with passive mode only
             // - a backup server with failover mode whose master server is available act as being in passive mode
             // - a backup server with active mode is considered as another master server :
-            foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values().mid(currentTargetServer + 1)) {
+            foreach (ServerGroup* nextServerGroup, this->mIdServerGroupMap.values().mid(currentTargetServer + 1)) {
 
                 if ( nextServerGroup->isPassiveBackupServer() &&
                      nextServerGroup->isServerAvailable() ) {
@@ -151,7 +151,7 @@ ServerGroup* ServerManager::getNextTargetServer(ServerGroup* currentServerGroup)
 void ServerManager::downloadWithAnotherBackupServer(ServerGroup* currentServerGroup) {
 
     // check that there is at least one pending download in order to not connect clients uselessly :
-    if ( !this->parent->getModelQuery()->isRootModelEmpty() ) {
+    if ( !this->mParent->getModelQuery()->isRootModelEmpty() ) {
 
         // get next server group :
         ServerGroup* nextServerGroup = this->getNextTargetServer(currentServerGroup);
@@ -165,7 +165,7 @@ void ServerManager::downloadWithAnotherBackupServer(ServerGroup* currentServerGr
 
         // update pending segments with this new server group id in order to be downloaded by
         // this server group (if NoTargetServer pending segments are considered as download finish) :
-        this->parent->getSegmentManager()->updatePendingSegmentsToTargetServer(currentServerGroup->getServerGroupId(), nextServerId);
+        this->mParent->getSegmentManager()->updatePendingSegmentsToTargetServer(currentServerGroup->getServerGroupId(), nextServerId);
 
 
         // notify server group that pending segments wait for it :
@@ -184,7 +184,7 @@ bool ServerManager::areAllServersEncrypted() const {
     bool allServersEncrypted = true;
 
     // current master server availability has changed ,
-    foreach (ServerGroup* currentServerGroup, this->idServerGroupMap.values()) {
+    foreach (ServerGroup* currentServerGroup, this->mIdServerGroupMap.values()) {
 
         if ( currentServerGroup->getClientsPerServerObserver()->isConnected() &&
              !currentServerGroup->getClientsPerServerObserver()->isSslActive() ) {
@@ -205,7 +205,7 @@ quint64 ServerManager::retrieveCumulatedDownloadSpeed(const int& nzbDownloadRowP
 
     // look for every servers currently downloading the same nzb item (at nzbDownloadRowPos in model)
     // in order to compute the current nzb item cumulated download speed :
-    foreach (ServerGroup* currentServerGroup, this->idServerGroupMap.values()) {
+    foreach (ServerGroup* currentServerGroup, this->mIdServerGroupMap.values()) {
 
         ClientsPerServerObserver* clientsPerServerObserver = currentServerGroup->getClientsPerServerObserver();
         SegmentInfoData segmentInfoData = clientsPerServerObserver->getSegmentInfoData();
@@ -227,7 +227,7 @@ quint64 ServerManager::retrieveCumulatedDownloadSpeed(const int& nzbDownloadRowP
 quint64 ServerManager::retrieveServerDownloadSpeed(const int& currentServer) const {
 
     // retrieve average download speed for the current server :
-    ServerGroup* currentServerGroup = this->idServerGroupMap.value(currentServer);
+    ServerGroup* currentServerGroup = this->mIdServerGroupMap.value(currentServer);
     return currentServerGroup->getClientsPerServerObserver()->getDownloadSpeed();
 
 }
@@ -237,7 +237,7 @@ quint64 ServerManager::retrieveServerDownloadSpeed(const int& currentServer) con
 void ServerManager::setBandwidthMode(const BandwidthClientMode& bandwidthClientMode) {
 
     // retrieve average download speed for the current server :
-    foreach (ServerGroup* currentServerGroup, this->idServerGroupMap.values()) {
+    foreach (ServerGroup* currentServerGroup, this->mIdServerGroupMap.values()) {
         currentServerGroup->getServerSpeedManager()->setBandwidthMode(bandwidthClientMode);
     }
 }
@@ -246,7 +246,7 @@ void ServerManager::setBandwidthMode(const BandwidthClientMode& bandwidthClientM
 void ServerManager::setLimitServerDownloadSpeed(const int& currentServer, const qint64& serverGroupLimitSpeedInBytes) {
 
     // retrieve average download speed for the current server :
-    ServerGroup* currentServerGroup = this->idServerGroupMap.value(currentServer);
+    ServerGroup* currentServerGroup = this->mIdServerGroupMap.value(currentServer);
     currentServerGroup->getServerSpeedManager()->setDownloadSpeedLimitInBytes(serverGroupLimitSpeedInBytes);
 
 }
@@ -258,7 +258,7 @@ void ServerManager::masterServerAvailabilityChanges() {
     ServerGroup* newMasterServer = 0;
 
     // current master server availability has changed ,
-    foreach (ServerGroup* currentServerGroup, this->idServerGroupMap.values()) {
+    foreach (ServerGroup* currentServerGroup, this->mIdServerGroupMap.values()) {
 
         // look for the first available master server substitute :
         if ( currentServerGroup->isServerAvailable() &&
@@ -272,15 +272,15 @@ void ServerManager::masterServerAvailabilityChanges() {
 
     // if a new master server has been found, store it :
     if ( newMasterServer &&
-         this->currentMasterServer != newMasterServer ) {
+         this->mCurrentMasterServer != newMasterServer ) {
 
-        this->currentMasterServer = newMasterServer;
+        this->mCurrentMasterServer = newMasterServer;
 
         // retry to download pending segments with new master server first :
-        this->parent->getSegmentManager()->updatePendingSegmentsToTargetServer(MasterServer, MasterServer, SegmentManager::ResetSegments);
+        this->mParent->getSegmentManager()->updatePendingSegmentsToTargetServer(MasterServer, MasterServer, SegmentManager::ResetSegments);
 
         // notify it that pending segments wait for it :
-        this->currentMasterServer->assignDownloadToReadyClients();
+        this->mCurrentMasterServer->assignDownloadToReadyClients();
 
     }
 
@@ -289,14 +289,14 @@ void ServerManager::masterServerAvailabilityChanges() {
 
 
 bool ServerManager::currentIsFirstMasterAvailable(const ServerGroup* currentServerGroup) const {
-    return (this->currentMasterServer == currentServerGroup);
+    return (this->mCurrentMasterServer == currentServerGroup);
 }
 
 
 void ServerManager::resetAllServerConnection() {
 
     // disconnect and reconnect all clients from all servers :
-    foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values()) {
+    foreach (ServerGroup* nextServerGroup, this->mIdServerGroupMap.values()) {
         nextServerGroup->resetAllClientsConnection();
     }
 
@@ -315,21 +315,21 @@ void ServerManager::settingsChangedSlot() {
     int serverNumber = KConfigGroupHandler::getInstance()->readServerNumberSettings();
 
     // 1.a if new backup servers are requested :
-    if (serverNumber > this->idServerGroupMap.size()) {
+    if (serverNumber > this->mIdServerGroupMap.size()) {
 
-        for (int serverGroupId = this->idServerGroupMap.size(); serverGroupId < serverNumber; serverGroupId++){
-            this->idServerGroupMap.insert(serverGroupId, new ServerGroup(this, parent, serverGroupId));
+        for (int serverGroupId = this->mIdServerGroupMap.size(); serverGroupId < serverNumber; serverGroupId++){
+            this->mIdServerGroupMap.insert(serverGroupId, new ServerGroup(this, mParent, serverGroupId));
         }
     }
 
     // 1.b if less backup servers are requested :
-    if (serverNumber < this->idServerGroupMap.size()) {
+    if (serverNumber < this->mIdServerGroupMap.size()) {
         serverSettingsChanged = true;
     }
 
 
     // 2.a notify servergroups that some settings changed :
-    foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values()) {
+    foreach (ServerGroup* nextServerGroup, this->mIdServerGroupMap.values()) {
 
         bool currentServerSettingsChanged = nextServerGroup->settingsServerChangedSlot();
 
@@ -342,21 +342,21 @@ void ServerManager::settingsChangedSlot() {
     if (serverSettingsChanged) {
 
         // disconnect all clients from all servers :
-        foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values()) {
+        foreach (ServerGroup* nextServerGroup, this->mIdServerGroupMap.values()) {
             nextServerGroup->disconnectAllClients();
         }
 
         // retry to download pending segments with master server first, then first backup server, then second one...
         // with new servers settings :
-        this->parent->getSegmentManager()->updatePendingSegmentsToTargetServer(MasterServer, MasterServer, SegmentManager::ResetSegments);
+        this->mParent->getSegmentManager()->updatePendingSegmentsToTargetServer(MasterServer, MasterServer, SegmentManager::ResetSegments);
 
         // by default, the master server is always the first one :
-        this->currentMasterServer = this->idServerGroupMap.value(MasterServer);
+        this->mCurrentMasterServer = this->mIdServerGroupMap.value(MasterServer);
 
 
         // remove servers right now after disconnection done :
-        while (this->idServerGroupMap.size() > serverNumber) {
-            this->idServerGroupMap.take(this->idServerGroupMap.size() - 1)->deleteLater();
+        while (this->mIdServerGroupMap.size() > serverNumber) {
+            this->mIdServerGroupMap.take(this->mIdServerGroupMap.size() - 1)->deleteLater();
         }
 
 
@@ -375,7 +375,7 @@ void ServerManager::settingsChangedSlot() {
 
 void ServerManager::requestClientConnectionSlot() {
 
-    foreach (ServerGroup* nextServerGroup, this->idServerGroupMap.values()) {
+    foreach (ServerGroup* nextServerGroup, this->mIdServerGroupMap.values()) {
         nextServerGroup->connectAllClients();
     }
 

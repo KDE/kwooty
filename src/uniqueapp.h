@@ -36,8 +36,8 @@ public:
     int newInstance() Q_DECL_OVERRIDE;
 
 private:
-    QPointer<MainWindow> mainWindow;
-    bool kwootyInstance;
+    QPointer<MainWindow> mMainWindow;
+    bool mKwootyInstance;
 
 };
 

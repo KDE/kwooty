@@ -78,11 +78,6 @@ public Q_SLOTS:
     void segmentDecoderIdleSlot();
     void finalizeDecodeQueuedSlot(const NzbFileData&);
     void finalizeDecoderIdleSlot();
-
-
-private Q_SLOTS:
-
-
 };
 
 #endif // SEGMENTBUFFER_H
