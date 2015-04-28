@@ -165,7 +165,7 @@ void SideBarWidget::removeTabByWidget(QWidget* currentWidget) {
 }
 
 
-void SideBarWidget::tabClickedSlot(const int& tabIndex) {
+void SideBarWidget::tabClickedSlot(int tabIndex) {
 
     QWidget* currentWidget = stackedWidget->currentWidget();
     QWidget* targetWidget = stackedWidget->widget(tabIndex);

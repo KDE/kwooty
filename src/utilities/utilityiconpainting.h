@@ -67,11 +67,6 @@ private:
     QHash<int, QString> statusIconStrMap;
     QHash<int, QString> parentStatusIconStrMap;
     QHash<QString, QIcon> iconStrIconImageMap;
-
-
-
-
-
 };
 
 #endif // UTILITYICONPAINTING_H

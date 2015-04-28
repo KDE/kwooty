@@ -71,7 +71,7 @@ void PreferencesGeneral::stateChangedSlot() {
 }
 
 
-void PreferencesGeneral::enableSaveRestoreItems(const bool& enable) {
+void PreferencesGeneral::enableSaveRestoreItems(bool enable) {
 
     restoreDownloadsLabel->setEnabled(enable);
     saveDownloadsLabel->setEnabled(enable);

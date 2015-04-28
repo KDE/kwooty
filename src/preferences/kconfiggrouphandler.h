@@ -43,13 +43,13 @@ public:
         DoNotReadPasswordData
     };
 
-    KConfigGroupHandler(MainWindow*);
+    explicit KConfigGroupHandler(MainWindow*);
     ~KConfigGroupHandler();
 
     static KConfigGroupHandler* getInstance();
 
-    ServerData readServerSettings(const int&, const PasswordData& = ReadPasswordData);
-    void writeServerSettings(const int&, ServerData);
+    ServerData readServerSettings(int, const PasswordData& = ReadPasswordData);
+    void writeServerSettings(int, ServerData);
     void removeServerSettings(const int&);
 
     int readServerNumberSettings();

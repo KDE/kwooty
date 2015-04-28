@@ -75,7 +75,7 @@ void IconCapacityWidget::hideIcon() {
 
 
 
-void IconCapacityWidget::updateCapacity(const QString& availableVal, const int& usedDiskPercentage) {
+void IconCapacityWidget::updateCapacity(const QString& availableVal, int usedDiskPercentage) {
 
     // adjust capacityBar size according to text :
     int widthInPixel = capacityBar->fontMetrics().width(availableVal) + 30;

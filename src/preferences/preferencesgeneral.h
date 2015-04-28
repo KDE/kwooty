@@ -35,7 +35,7 @@ public:
 
 private:
     void setupConnections();
-    void enableSaveRestoreItems(const bool&);
+    void enableSaveRestoreItems(bool);
 
 
 private Q_SLOTS:

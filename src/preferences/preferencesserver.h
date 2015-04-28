@@ -50,11 +50,6 @@ private:
 
 private Q_SLOTS:
     void configButtonClickedSlot(KDialog::ButtonCode);
-
-
-public Q_SLOTS:
-
-
 Q_SIGNALS:
     void saveDataSignal();
 

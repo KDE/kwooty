@@ -69,11 +69,6 @@ private:
     QString displayEditDialogBox();
     QString displayRenameTabDialogBox();
 
-
-
-Q_SIGNALS:
-
-
 public Q_SLOTS:
     void saveDataSlot();
 

@@ -60,7 +60,7 @@ private:
     bool display;
 
 private Q_SLOTS:
-    void tabClickedSlot(const int&);
+    void tabClickedSlot(int);
 
 };
 

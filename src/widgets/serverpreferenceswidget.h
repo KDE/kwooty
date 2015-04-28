@@ -56,7 +56,7 @@ private:
     void setupConnections();
     void setupButtons();
     void hideWidgets(const int&) ;
-    void enableWidgets(const bool&);
+    void enableWidgets( bool);
     void fillWarningLabel(QLabel*, const QString&);
     void clearWarningLabel(QLabel*);
 

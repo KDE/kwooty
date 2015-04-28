@@ -219,7 +219,7 @@ ServerData ServerPreferencesWidget::getData() {
 
 
 
-void ServerPreferencesWidget::enableWidgets(const bool& enable) {
+void ServerPreferencesWidget::enableWidgets(bool enable) {
 
     this->serverSettingsUi->hostName->setEnabled(enable);
     this->serverSettingsUi->login->setEnabled(enable);

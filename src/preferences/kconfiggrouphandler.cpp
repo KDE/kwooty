@@ -254,7 +254,7 @@ void KConfigGroupHandler::writePassword(const int& serverId, KConfigGroup& confi
 //======================================================================================//
 
 
-ServerData KConfigGroupHandler::readServerSettings(const int& serverId, const PasswordData& passwordData) {
+ServerData KConfigGroupHandler::readServerSettings(int serverId, const PasswordData& passwordData) {
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
 
@@ -316,7 +316,7 @@ ServerData KConfigGroupHandler::fillServerData(const int& serverId, KConfigGroup
 
 
 
-void KConfigGroupHandler::writeServerSettings(const int& serverId, ServerData serverData) {
+void KConfigGroupHandler::writeServerSettings(int serverId, ServerData serverData) {
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
 

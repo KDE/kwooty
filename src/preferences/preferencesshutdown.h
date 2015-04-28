@@ -31,7 +31,7 @@ class PreferencesShutdown : public QWidget, public Ui::PreferencesShutdown
 
     Q_OBJECT
 public:
-    PreferencesShutdown(Core*);
+    explicit PreferencesShutdown(Core*);
 
 private:
     void setupConnections();

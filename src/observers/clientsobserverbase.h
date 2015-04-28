@@ -34,7 +34,7 @@ class ClientsObserverBase : public QObject
     Q_OBJECT
 public:
 
-    ClientsObserverBase(QObject*);
+    explicit ClientsObserverBase(QObject*);
     int getTotalConnections() const;
     bool isCertificateVerified() const;
     int getNttpErrorStatus() const;

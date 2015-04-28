@@ -48,24 +48,19 @@ public:
 
 private:
     QStringList createProcessArguments(const QString&, const QString&, const bool&, const QString&);
-    void extractUpdate(const QString&);
-    void checkIfArchivePassworded(const QString&, bool&);
-    void sendExtractProgramNotFoundNotification();
-    QString searchExtractProgram();
+    void extractUpdate(const QString&) Q_DECL_OVERRIDE;
+    void checkIfArchivePassworded(const QString&, bool&) Q_DECL_OVERRIDE;
+    void sendExtractProgramNotFoundNotification() Q_DECL_OVERRIDE;
+    QString searchExtractProgram() Q_DECL_OVERRIDE;
     void retrieveFullPathJoinFileName(const NzbCollectionData&, QString&, QString&) const;
     QList<NzbFileData> retrieveSplitFilesOnly(const QString&) const;
-    void removeRenamedArchiveFile(const NzbFileData&);
-    void preRepairProcessing(const NzbCollectionData&);
+    void removeRenamedArchiveFile(const NzbFileData&) Q_DECL_OVERRIDE;
+    void preRepairProcessing(const NzbCollectionData&) Q_DECL_OVERRIDE;
     ConcatSplitFilesJob* concatSplitFilesJob;
 
 
 Q_SIGNALS:
     void joinFilesSignal(const QList <NzbFileData> &, const QString &, const QString &);
-
-
-public Q_SLOTS:
-
-
 private Q_SLOTS:
     void jobPercentSlot(int, QString);
     void jobFinishSlot(int);

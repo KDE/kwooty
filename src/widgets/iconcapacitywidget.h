@@ -38,7 +38,7 @@ public:
     void showIcon();
     void hideIcon();
     void setIcon(const QString&);
-    void updateCapacity(const QString&, const int&);
+    void updateCapacity(const QString&, int);
 
 private:
 
