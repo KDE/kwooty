@@ -37,18 +37,18 @@ ExtractSplit::ExtractSplit(RepairDecompressThread* parent): ExtractBase(parent) 
 
     this->archiveFormat = SplitFileFormat;
 
-    this->concatSplitFilesJob = new ConcatSplitFilesJob(this);
+    this->mConcatSplitFilesJob = new ConcatSplitFilesJob(this);
 
     // get joinning progression from joining thread :
-    connect (this->concatSplitFilesJob, SIGNAL(progressPercentSignal(int,QString)), this, SLOT(jobPercentSlot(int,QString)));
+    connect (this->mConcatSplitFilesJob, SIGNAL(progressPercentSignal(int,QString)), this, SLOT(jobPercentSlot(int,QString)));
 
     // be notified when joining file thread has finished :
-    connect (this->concatSplitFilesJob, SIGNAL(resultSignal(int)), this, SLOT(jobFinishSlot(int)));
+    connect (this->mConcatSplitFilesJob, SIGNAL(resultSignal(int)), this, SLOT(jobFinishSlot(int)));
 
 }
 
 ExtractSplit::~ExtractSplit() {
-    delete this->concatSplitFilesJob;
+    delete this->mConcatSplitFilesJob;
 }
 
 
@@ -126,7 +126,7 @@ void ExtractSplit::preRepairProcessing(const NzbCollectionData& nzbCollectionDat
 //                                         SLOTS                                                //
 //==============================================================================================//
 
-void ExtractSplit::jobPercentSlot(int progress, QString fileNameStr) {
+void ExtractSplit::jobPercentSlot(int progress, const QString &fileNameStr) {
 
     // search corresponding file into the list :
     this->findItemAndNotifyUser(fileNameStr, ExtractStatus, BothItemsTarget);

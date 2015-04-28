@@ -40,7 +40,7 @@ public:
     Q_OBJECT
 
 public:
-    ExtractSplit(RepairDecompressThread*);
+    explicit ExtractSplit(RepairDecompressThread*);
     ~ExtractSplit();
     void launchProcess(const NzbCollectionData&, ExtractBase::ArchivePasswordStatus = ArchiveCheckIfPassworded,
                        bool passwordEnteredByUSer = false, const QString &passwordStr = QString()) Q_DECL_OVERRIDE;
@@ -56,13 +56,13 @@ private:
     QList<NzbFileData> retrieveSplitFilesOnly(const QString&) const;
     void removeRenamedArchiveFile(const NzbFileData&) Q_DECL_OVERRIDE;
     void preRepairProcessing(const NzbCollectionData&) Q_DECL_OVERRIDE;
-    ConcatSplitFilesJob* concatSplitFilesJob;
+    ConcatSplitFilesJob* mConcatSplitFilesJob;
 
 
 Q_SIGNALS:
     void joinFilesSignal(const QList <NzbFileData> &, const QString &, const QString &);
 private Q_SLOTS:
-    void jobPercentSlot(int, QString);
+    void jobPercentSlot(int, const QString &);
     void jobFinishSlot(int);
 
 
