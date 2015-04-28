@@ -108,7 +108,7 @@ Q_SIGNALS:
 
 
 public Q_SLOTS:
-    void passwordEnteredByUserSlot(bool, QString password = QString());
+    void passwordEnteredByUserSlot(bool, const QString &password = QString());
 
 protected Q_SLOTS:
     void extractReadyReadSlot();

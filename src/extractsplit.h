@@ -34,9 +34,6 @@ class RepairDecompressThread;
 
 
 class ExtractSplit : public ExtractBase {
-
-public:
-
     Q_OBJECT
 
 public:

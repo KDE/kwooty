@@ -336,7 +336,7 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
 
 
 
-void ExtractBase::passwordEnteredByUserSlot(bool passwordEntered, QString password) {
+void ExtractBase::passwordEnteredByUserSlot(bool passwordEntered, const QString &password) {
 
     // this slot is shared between 7zextract and rarextract instances
     // do processing for proper instance : the one whih archivePasswordStatus set to ArchiveIsPassworded :

@@ -28,11 +28,9 @@
 
 class ExtractRar : public ExtractBase
 {
-public:
         Q_OBJECT
-
 public:
-    ExtractRar(RepairDecompressThread*);
+    explicit ExtractRar(RepairDecompressThread*);
     ~ExtractRar();
 
 private:
@@ -43,16 +41,6 @@ private:
     void sendExtractProgramNotFoundNotification();
     QString searchExtractProgram();
     void emitStatusToAllArchives(const int&, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
-
-
-Q_SIGNALS:
-
-
-public Q_SLOTS:
-
-
-private Q_SLOTS:
-
 };
 
 #endif // EXTRACTRAR_H

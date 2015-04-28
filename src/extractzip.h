@@ -28,11 +28,10 @@
 
 class ExtractZip : public ExtractBase
 {
-public:
         Q_OBJECT
 
 public:
-    ExtractZip(RepairDecompressThread*);
+    explicit ExtractZip(RepairDecompressThread*);
     ~ExtractZip();
 
 private:
