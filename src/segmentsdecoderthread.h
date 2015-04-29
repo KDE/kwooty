@@ -63,7 +63,7 @@ Q_SIGNALS:
     void updateDecodeSegmentSignal(SegmentData, int, int);
     void updateDecodeSignal(PostDownloadInfoData);
     void saveFileErrorSignal(int);
-    void updateDownloadSegmentSignal(SegmentData, QString);
+    void updateDownloadSegmentSignal(const SegmentData &, const QString &);
     void segmentDecoderIdleSignal();
     void finalizeDecoderIdleSignal();
 

@@ -40,7 +40,7 @@ class SegmentDecoderBase : public QObject {
   Q_OBJECT
 
 public:
-    SegmentDecoderBase(SegmentsDecoderThread*);
+    explicit SegmentDecoderBase(SegmentsDecoderThread*);
 
 
     QString scanSegmentFiles(const NzbFileData&);

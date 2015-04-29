@@ -79,9 +79,9 @@ Q_SIGNALS:
     void updateRepairExtractSegmentSignal(PostDownloadInfoData);
 
 public Q_SLOTS:
-    void repairDecompressSlot(NzbCollectionData);
-    void repairProcessEndedSlot(NzbCollectionData);
-    void extractProcessEndedSlot(NzbCollectionData);
+    void repairDecompressSlot(const NzbCollectionData&);
+    void repairProcessEndedSlot(const NzbCollectionData&);
+    void extractProcessEndedSlot(const NzbCollectionData&);
 
 private Q_SLOTS:
     void startRepairSlot();

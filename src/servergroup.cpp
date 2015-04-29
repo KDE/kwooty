@@ -36,33 +36,33 @@
 
 ServerGroup::ServerGroup(ServerManager* parent, Core* core, int serverGroupId) : QObject(parent) {
 
-    this->serverManager = parent;
-    this->core = core;
-    this->serverGroupId = serverGroupId;
-    this->serverAvailable = true;
-    this->pendingSegments = false;
-    this->stabilityCounter = 0;
+    this->mServerManager = parent;
+    this->mCore = core;
+    this->mServerGroupId = serverGroupId;
+    this->mServerAvailable = true;
+    this->mPendingSegments = false;
+    this->mStabilityCounter = 0;
 
     // retrieve server settings *without* password (if stored by kwallet it may be asked to access wallet, so ask question only when first server connection is required) :
-    this->serverData = KConfigGroupHandler::getInstance()->readServerSettings(this->serverGroupId, KConfigGroupHandler::DoNotReadPasswordData);
-    this->passwordRetrieved = false;
+    this->mServerData = KConfigGroupHandler::getInstance()->readServerSettings(this->mServerGroupId, KConfigGroupHandler::DoNotReadPasswordData);
+    this->mPasswordRetrieved = false;
 
     // create observer for clients specific to this server instance :
-    this->clientsPerServerObserver = new ClientsPerServerObserver(this);
+    this->mClientsPerServerObserver = new ClientsPerServerObserver(this);
 
     // create download speed manager for this server group :
-    this->serverSpeedManager = new ServerSpeedManager(this);
+    this->mServerSpeedManager = new ServerSpeedManager(this);
 
     // connect clients :
     this->createNntpClients();
 
     // check server availabilty every 500 ms :
-    this->clientsAvailableTimer = new QTimer(this);
-    this->clientsAvailableTimer->start(500);
+    this->mClientsAvailableTimer = new QTimer(this);
+    this->mClientsAvailableTimer->start(500);
 
     // check server stability every minutes :
-    this->stabilityTimer = new QTimer(this);
-    this->stabilityTimer->start(1 * UtilityNamespace::MINUTES_TO_MILLISECONDS);
+    this->mStabilityTimer = new QTimer(this);
+    this->mStabilityTimer->start(1 * UtilityNamespace::MINUTES_TO_MILLISECONDS);
 
     this->setupConnections();
 
@@ -73,26 +73,26 @@ ServerGroup::ServerGroup(ServerManager* parent, Core* core, int serverGroupId) :
 void ServerGroup::setupConnections() {
 
     // check that server is available or not :
-    connect(clientsAvailableTimer, SIGNAL(timeout()), this, SLOT(checkServerAvailabilitySlot()));
+    connect(mClientsAvailableTimer, SIGNAL(timeout()), this, SLOT(checkServerAvailabilitySlot()));
 
     // check if pending segments are ready for the current server :
-    connect(clientsAvailableTimer, SIGNAL(timeout()), this, SLOT(downloadPendingSegmentsSlot()));
+    connect(mClientsAvailableTimer, SIGNAL(timeout()), this, SLOT(downloadPendingSegmentsSlot()));
 
     // check server stability :
-    connect(stabilityTimer, SIGNAL(timeout()), this, SLOT(checkServerStabilitySlot()));
+    connect(mStabilityTimer, SIGNAL(timeout()), this, SLOT(checkServerStabilitySlot()));
 
 }
 
 
 int ServerGroup::getRealServerGroupId() const {
     // used for debugging puropses only :
-    return this->serverGroupId;
+    return this->mServerGroupId;
 }
 
 int ServerGroup::getServerGroupId() const {
 
     // default server group id :
-    int currentServerGroupId = this->serverGroupId;
+    int currentServerGroupId = this->mServerGroupId;
 
     // if server is now configured in Active mode, return MasterServer groupId
     // in order be considered as another master server and to be able to download
@@ -130,17 +130,17 @@ bool ServerGroup::isBufferFull() {
 
 void ServerGroup::readDataWithPassword() {
 
-    if (!this->passwordRetrieved) {
+    if (!this->mPasswordRetrieved) {
 
-        this->serverData = KConfigGroupHandler::getInstance()->readServerSettings(this->serverGroupId);
-        this->passwordRetrieved = true;
+        this->mServerData = KConfigGroupHandler::getInstance()->readServerSettings(this->mServerGroupId);
+        this->mPasswordRetrieved = true;
 
     }
 
 }
 
 
-bool ServerGroup::canDownload(const int& serverGroupTargetId) const {
+bool ServerGroup::canDownload(int serverGroupTargetId) const {
 
     bool segmentMatch = false;
 
@@ -158,7 +158,7 @@ bool ServerGroup::canDownload(const int& serverGroupTargetId) const {
     else if (this->isPassiveBackupServer() || this->isPassiveFailover()) {
 
         // check that the current target corresponds to the proper server group id :
-        if (serverGroupTargetId == this->serverGroupId) {
+        if (serverGroupTargetId == this->mServerGroupId) {
             segmentMatch = true;
         }
 
@@ -189,39 +189,39 @@ bool ServerGroup::canDownload(const int& serverGroupTargetId) const {
 
 
 Core* ServerGroup::getCore() {
-    return this->core;
+    return this->mCore;
 }
 
 ServerManager* ServerGroup::getServerManager() {
-    return this->serverManager;
+    return this->mServerManager;
 }
 
 ClientsPerServerObserver* ServerGroup::getClientsPerServerObserver() {
-    return this->clientsPerServerObserver;
+    return this->mClientsPerServerObserver;
 }
 
 ServerSpeedManager* ServerGroup::getServerSpeedManager() {
-    return this->serverSpeedManager;
+    return this->mServerSpeedManager;
 }
 
 
 ServerData ServerGroup::getServerData() const {
-    return this->serverData;
+    return this->mServerData;
 }
 
 
 QList<ClientManagerConn*> ServerGroup::getClientManagerConnList() {
-    return this->clientManagerConnList;
+    return this->mClientManagerConnList;
 }
 
 
 bool ServerGroup::isMasterServer() const {
-    return (this->serverGroupId == MasterServer);
+    return (this->mServerGroupId == MasterServer);
 }
 
 
 bool ServerGroup::isDisabledBackupServer() const {
-    return (this->serverData.getServerModeIndex() == UtilityNamespace::DisabledServer);
+    return (this->mServerData.getServerModeIndex() == UtilityNamespace::DisabledServer);
 }
 
 
@@ -230,7 +230,7 @@ bool ServerGroup::isPassiveBackupServer() const {
     bool passiveServer = false;
 
     // current server is in passive mode :
-    if (this->serverData.getServerModeIndex() == UtilityNamespace::PassiveServer) {
+    if (this->mServerData.getServerModeIndex() == UtilityNamespace::PassiveServer) {
         passiveServer = true;
     }
     // else if it is in failover mode, it will works as passive if it is not currently replacing a down master server :
@@ -242,24 +242,24 @@ bool ServerGroup::isPassiveBackupServer() const {
 }
 
 bool ServerGroup::isActiveBackupServer() const {
-    return (this->serverData.getServerModeIndex() == UtilityNamespace::ActiveServer);
+    return (this->mServerData.getServerModeIndex() == UtilityNamespace::ActiveServer);
 }
 
 bool ServerGroup::isFailoverBackupServer() const {
-    return (this->serverData.getServerModeIndex() == UtilityNamespace::FailoverServer);
+    return (this->mServerData.getServerModeIndex() == UtilityNamespace::FailoverServer);
 }
 
 bool ServerGroup::isActiveFailover() const {
-    return (this->isFailoverBackupServer() && this->serverManager->currentIsFirstMasterAvailable(this));
+    return (this->isFailoverBackupServer() && this->mServerManager->currentIsFirstMasterAvailable(this));
 }
 
 bool ServerGroup::isPassiveFailover() const {
-    return (this->isFailoverBackupServer() && !this->serverManager->currentIsFirstMasterAvailable(this));
+    return (this->isFailoverBackupServer() && !this->mServerManager->currentIsFirstMasterAvailable(this));
 }
 
 
 bool ServerGroup::isServerAvailable() const {
-    return this->serverAvailable;
+    return this->mServerAvailable;
 }
 
 
@@ -267,13 +267,13 @@ bool ServerGroup::isServerAvailable() const {
 void ServerGroup::createNntpClients() {
 
     // create the nntp clients thread manager :
-    int connectionNumber = KConfigGroupHandler::getInstance()->serverConnectionNumber(this->serverGroupId);
+    int connectionNumber = KConfigGroupHandler::getInstance()->serverConnectionNumber(this->mServerGroupId);
 
     // set a delay of +100 ms between each nntp client instance :
     int connectionDelay = 0;
 
     for (int i = 0; i < connectionNumber; ++i) {
-        this->clientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
+        this->mClientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
         connectionDelay += 100;
     }
 
@@ -284,7 +284,7 @@ void ServerGroup::createNntpClients() {
 void ServerGroup::disconnectAllClients() {
 
     // stop timer that notify if clients are available or not :
-    this->clientsAvailableTimer->stop();
+    this->mClientsAvailableTimer->stop();
 
     // disconnect all clients :
     emit disconnectRequestSignal();
@@ -297,9 +297,9 @@ void ServerGroup::connectAllClients() {
     emit connectRequestSignal();
 
     // restart timer that notify if clients are available :
-    this->stabilityCounter = 0;
-    this->serverAvailable = true;
-    QTimer::singleShot(500 * this->serverGroupId, this, SLOT(startTimerSlot()));
+    this->mStabilityCounter = 0;
+    this->mServerAvailable = true;
+    QTimer::singleShot(500 * this->mServerGroupId, this, SLOT(startTimerSlot()));
 
 }
 
@@ -315,29 +315,29 @@ void ServerGroup::assignDownloadToReadyClients() {
 
     // do not hammer backup servers that new segments are available,
     // it will be done asynchronously every 500ms :
-    this->pendingSegments = true;
+    this->mPendingSegments = true;
 }
 
 
 
 void ServerGroup::checkServerStabilitySlot() {
 
-    if (this->stabilityCounter > MAX_SERVER_DOWN_PER_MINUTE) {
+    if (this->mStabilityCounter > MAX_SERVER_DOWN_PER_MINUTE) {
 
         // stop timer availability checking :
-        this->clientsAvailableTimer->stop();
+        this->mClientsAvailableTimer->stop();
 
         // set server unavailable for 5 minutes :
-        this->serverAvailable = false;
+        this->mServerAvailable = false;
         this->serverSwitchIfFailure();
 
         QTimer::singleShot(5 * UtilityNamespace::MINUTES_TO_MILLISECONDS, this, SLOT(startTimerSlot()));
 
-        qCDebug(KWOOTY_LOG) << "server stability issues, forced to unavailable during 5 minutes, group :" << this->serverGroupId;
+        qCDebug(KWOOTY_LOG) << "server stability issues, forced to unavailable during 5 minutes, group :" << this->mServerGroupId;
     }
 
     // reset counter :
-    this->stabilityCounter = 0;
+    this->mStabilityCounter = 0;
 }
 
 
@@ -347,26 +347,26 @@ void ServerGroup::serverSwitchIfFailure() {
     // availability of **master server** (master or active failover) has changed, notify server manager :
     if (this->isMasterServer() || this->isActiveFailover()) {
 
-        qCDebug(KWOOTY_LOG) << "Master server group id : " << this->serverGroupId << "available : " << this->serverAvailable;
-        this->serverManager->masterServerAvailabilityChanges();
+        qCDebug(KWOOTY_LOG) << "Master server group id : " << this->mServerGroupId << "available : " << this->mServerAvailable;
+        this->mServerManager->masterServerAvailabilityChanges();
 
     }
     // availability of **backup server** has changed :
     else {
 
         // if backup server is now unavailable :
-        if (!this->serverAvailable) {
+        if (!this->mServerAvailable) {
 
-            qCDebug(KWOOTY_LOG) << "Backup server group id : " << this->serverGroupId << "available : " << this->serverAvailable;
+            qCDebug(KWOOTY_LOG) << "Backup server group id : " << this->mServerGroupId << "available : " << this->mServerAvailable;
 
             // current backup server is down, try to download pending downloads with another backup server if any :
-            this->serverManager->downloadWithAnotherBackupServer(this);
+            this->mServerManager->downloadWithAnotherBackupServer(this);
         }
 
     }
 
     // check that current server is not available / unavailable too frequently :
-    this->stabilityCounter++;
+    this->mStabilityCounter++;
 
 }
 
@@ -382,16 +382,16 @@ void ServerGroup::serverSwitchIfFailure() {
 
 
 void ServerGroup::startTimerSlot() {
-    this->clientsAvailableTimer->start();
+    this->mClientsAvailableTimer->start();
 }
 
 
 void ServerGroup::downloadPendingSegmentsSlot() {
 
-    if (this->pendingSegments) {
+    if (this->mPendingSegments) {
 
         // notify only nntpclients ready that pending data are waiting :
-        foreach (ClientManagerConn* clientManagerConn, this->clientManagerConnList) {
+        foreach (ClientManagerConn* clientManagerConn, this->mClientManagerConnList) {
 
             if (clientManagerConn->isClientReady()) {
                 clientManagerConn->dataHasArrivedSlot();
@@ -399,7 +399,7 @@ void ServerGroup::downloadPendingSegmentsSlot() {
         }
 
         // clients have been notified :
-        this->pendingSegments = false;
+        this->mPendingSegments = false;
     }
 
 }
@@ -407,12 +407,12 @@ void ServerGroup::downloadPendingSegmentsSlot() {
 
 void ServerGroup::checkServerAvailabilitySlot() {
 
-    bool serverAvailableOld = this->serverAvailable;
+    bool serverAvailableOld = this->mServerAvailable;
 
     int clientsNotReady = 0;
 
     // count the number of clients not ready to download :
-    foreach (ClientManagerConn* clientManagerConn, this->clientManagerConnList) {
+    foreach (ClientManagerConn* clientManagerConn, this->mClientManagerConnList) {
 
         if (!clientManagerConn->isClientReady()) {
             clientsNotReady++;
@@ -420,20 +420,20 @@ void ServerGroup::checkServerAvailabilitySlot() {
     }
 
     // if all clients are not ready, the server is unavailable :
-    if (clientsNotReady == this->clientManagerConnList.size()) {
-        this->serverAvailable = false;
+    if (clientsNotReady == this->mClientManagerConnList.size()) {
+        this->mServerAvailable = false;
     }
     else {
-        this->serverAvailable = true;
+        this->mServerAvailable = true;
     }
 
     // server has been disabled in settings, consider it as unavailable :
     if (this->isDisabledBackupServer()) {
-        this->serverAvailable = false;
+        this->mServerAvailable = false;
     }
 
     // server availabilty has changed :
-    if (this->serverAvailable != serverAvailableOld) {
+    if (this->mServerAvailable != serverAvailableOld) {
         this->serverSwitchIfFailure();
     }
 
@@ -446,14 +446,14 @@ bool ServerGroup::settingsServerChangedSlot() {
 
     // 1. ajust connection objects according to value set in settings :
     // if more nntp connections are requested :
-    int connectionNumber = KConfigGroupHandler::getInstance()->serverConnectionNumber(this->serverGroupId);
+    int connectionNumber = KConfigGroupHandler::getInstance()->serverConnectionNumber(this->mServerGroupId);
 
-    if (connectionNumber > this->clientManagerConnList.size()) {
+    if (connectionNumber > this->mClientManagerConnList.size()) {
 
         int connectionDelay = 0;
-        for (int i = this->clientManagerConnList.size(); i < connectionNumber; ++i){
+        for (int i = this->mClientManagerConnList.size(); i < connectionNumber; ++i){
 
-            this->clientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
+            this->mClientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
 
             //set a delay of 100ms between each new connection :
             connectionDelay += 100;
@@ -462,27 +462,27 @@ bool ServerGroup::settingsServerChangedSlot() {
     }
 
     // if less nntp connections are requested :
-    if (connectionNumber < this->clientManagerConnList.size()) {
+    if (connectionNumber < this->mClientManagerConnList.size()) {
 
-        while (this->clientManagerConnList.size() > connectionNumber) {
-            this->clientManagerConnList.takeLast()->deleteLater();
+        while (this->mClientManagerConnList.size() > connectionNumber) {
+            this->mClientManagerConnList.takeLast()->deleteLater();
         }
 
     }
 
     // read new server config :
-    ServerData newServerData = KConfigGroupHandler::getInstance()->readServerSettings(this->serverGroupId);
+    ServerData newServerData = KConfigGroupHandler::getInstance()->readServerSettings(this->mServerGroupId);
 
     bool serverSettingsChanged = false;
 
     // if config changed :
-    if (this->serverData != newServerData) {
+    if (this->mServerData != newServerData) {
 
         // update new settings right now as they will used by nntpclients :
-        this->serverData = newServerData;
+        this->mServerData = newServerData;
 
         // reset stability counter :
-        this->stabilityCounter = 0;
+        this->mStabilityCounter = 0;
 
         // notity manager that some settings have changed :
         serverSettingsChanged = true;
@@ -491,7 +491,7 @@ bool ServerGroup::settingsServerChangedSlot() {
 
 
     // name of server may have changed, update it in order to synchronize tab name in side bar ;
-    this->serverData.setServerName(newServerData.getServerName());
+    this->mServerData.setServerName(newServerData.getServerName());
 
 
     return serverSettingsChanged;

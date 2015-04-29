@@ -69,8 +69,8 @@ private:
 
 
 Q_SIGNALS:
-    void saveDownloadedSegmentSignal(SegmentData);
-    void decodeSegmentsSignal(NzbFileData);
+    void saveDownloadedSegmentSignal(const SegmentData &);
+    void decodeSegmentsSignal(const NzbFileData &);
     void finalizeDecoderLockedSignal();
 
 

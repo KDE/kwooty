@@ -53,7 +53,7 @@ public:
     int getRealServerGroupId() const;
     int saveSegment(const SegmentData&);
     bool isBufferFull();
-    bool canDownload(const int&) const;
+    bool canDownload(int) const;
     bool isServerAvailable() const;
     bool isMasterServer() const;
     bool isDisabledBackupServer() const;
@@ -72,19 +72,19 @@ public:
 private:
     static const int MAX_SERVER_DOWN_PER_MINUTE = 4;
 
-    ServerData serverData;
-    QTimer* clientsAvailableTimer;
-    QTimer* stabilityTimer;
-    QList<ClientManagerConn*> clientManagerConnList;
-    Core* core;
-    ServerManager* serverManager;
-    ServerSpeedManager* serverSpeedManager;
-    ClientsPerServerObserver* clientsPerServerObserver;
-    int serverGroupId;
-    int stabilityCounter;
-    bool serverAvailable;
-    bool pendingSegments;
-    bool passwordRetrieved;
+    ServerData mServerData;
+    QTimer* mClientsAvailableTimer;
+    QTimer* mStabilityTimer;
+    QList<ClientManagerConn*> mClientManagerConnList;
+    Core* mCore;
+    ServerManager* mServerManager;
+    ServerSpeedManager* mServerSpeedManager;
+    ClientsPerServerObserver* mClientsPerServerObserver;
+    int mServerGroupId;
+    int mStabilityCounter;
+    bool mServerAvailable;
+    bool mPendingSegments;
+    bool mPasswordRetrieved;
 
     void createNntpClients();
     void setupConnections();

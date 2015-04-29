@@ -609,7 +609,7 @@ void RepairDecompressThread::startExtractSlot() {
 }
 
 
-void RepairDecompressThread::repairProcessEndedSlot(NzbCollectionData nzbCollectionDataToExtract) {
+void RepairDecompressThread::repairProcessEndedSlot(const NzbCollectionData &nzbCollectionDataToExtract) {
 
     UtilityNamespace::ItemStatus repairStatus = nzbCollectionDataToExtract.getVerifyRepairTerminateStatus();
 
@@ -629,7 +629,7 @@ void RepairDecompressThread::repairProcessEndedSlot(NzbCollectionData nzbCollect
 }
 
 
-void RepairDecompressThread::extractProcessEndedSlot(NzbCollectionData nzbCollectionData) {
+void RepairDecompressThread::extractProcessEndedSlot(const NzbCollectionData &nzbCollectionData) {
 
     bool triggerPar2Download = false;
 
@@ -658,7 +658,7 @@ void RepairDecompressThread::extractProcessEndedSlot(NzbCollectionData nzbCollec
 }
 
 
-void RepairDecompressThread::repairDecompressSlot(NzbCollectionData nzbCollectionData) {
+void RepairDecompressThread::repairDecompressSlot(const NzbCollectionData &nzbCollectionData) {
 
     // all files have been downloaded and decoded, set them in the pending list
     // in order to process them :
