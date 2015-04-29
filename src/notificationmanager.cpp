@@ -72,12 +72,12 @@ void NotificationManager::setupConnections() {
 
 
 
-void NotificationManager::jobFinishSlot(const UtilityNamespace::ItemStatus status, const QString message) {
-    this->sendEvent("jobFinished", QString("%1 - %2").arg(this->finishSatusTextMap.value(status)).arg(message));
+void NotificationManager::jobFinishSlot(const UtilityNamespace::ItemStatus status, const QString &message) {
+    this->sendEvent("jobFinished", QStringLiteral("%1 - %2").arg(this->finishSatusTextMap.value(status)).arg(message));
 }
 
 
-void NotificationManager::insufficientDiskSpaceSlot(const QString message) {
+void NotificationManager::insufficientDiskSpaceSlot(const QString &message) {
     this->sendEvent("insufficientDiskSpace", message, KNotification::Persistent);
 }
 

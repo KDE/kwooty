@@ -34,7 +34,7 @@ Q_OBJECT
 
 public:
 
-    NzbFileHandler(Core*);
+    explicit NzbFileHandler(Core*);
     QList<GlobalFileData> processNzbFile(QFile&, const QString&);
 
 private:

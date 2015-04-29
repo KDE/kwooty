@@ -39,7 +39,7 @@ class NotificationManager : public QObject {
 
 
 public:
-    NotificationManager(Core*);
+    explicit NotificationManager(Core*);
 
 private:
 
@@ -56,8 +56,8 @@ Q_SIGNALS:
 
 
 public Q_SLOTS:
-    void jobFinishSlot(const UtilityNamespace::ItemStatus, const QString);
-    void insufficientDiskSpaceSlot(const QString);
+    void jobFinishSlot(const UtilityNamespace::ItemStatus, const QString &);
+    void insufficientDiskSpaceSlot(const QString &);
 
 private Q_SLOTS:
 
