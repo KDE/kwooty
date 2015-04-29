@@ -30,7 +30,7 @@ class ActionFileDeleteManager : public ActionFileManagerBase {
     Q_OBJECT
 
 public:
-    ActionFileDeleteManager(ActionsManager*);
+    explicit ActionFileDeleteManager(ActionsManager*);
 
 private:
 

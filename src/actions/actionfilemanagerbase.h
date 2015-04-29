@@ -48,7 +48,7 @@ class ActionFileManagerBase : public QObject {
 
 public:
 
-    ActionFileManagerBase(ActionsManager*);
+    explicit ActionFileManagerBase(ActionsManager*);
 
 protected:
 

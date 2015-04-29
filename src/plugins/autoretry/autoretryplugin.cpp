@@ -47,15 +47,15 @@ AutoRetryPlugin::~AutoRetryPlugin()
 
 
 void AutoRetryPlugin::load() {
-    this->autoRetry = new AutoRetry(this);
+    this->mAutoRetry = new AutoRetry(this);
 }
 
 void AutoRetryPlugin::unload() {
-    delete this->autoRetry;
+    delete this->mAutoRetry;
 }
 
 
 void AutoRetryPlugin::configUpdated() {
-    this->autoRetry->settingsChanged();
+    this->mAutoRetry->settingsChanged();
 }
 #include "autoretryplugin.moc"

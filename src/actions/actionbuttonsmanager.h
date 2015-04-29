@@ -43,11 +43,11 @@ public:
 
 
 private:
-    ActionsManager* actionsManager;
-    Core* core;
-    MyTreeView* treeView;
-    StandardItemModel* downloadModel;
-    StandardItemModelQuery* downloadModelQuery;
+    ActionsManager* mActionsManager;
+    Core* mCore;
+    MyTreeView* mTreeView;
+    StandardItemModel* mDownloadModel;
+    StandardItemModelQuery* mDownloadModelQuery;
 
     
 Q_SIGNALS:

@@ -27,38 +27,38 @@ JobNotifyData::JobNotifyData(){
 
 
 QString JobNotifyData::getParentUniqueIdentifier() const {
-    return this->parentUniqueIdentifier;
+    return this->mParentUniqueIdentifier;
 }
 
 void JobNotifyData::setParentUniqueIdentifier(const QString& parentUniqueIdentifier) {
-    this->parentUniqueIdentifier = parentUniqueIdentifier;
+    this->mParentUniqueIdentifier = parentUniqueIdentifier;
 }
 
 
 UtilityNamespace::ItemStatus JobNotifyData::getStatus() const {
-    return this->status;
+    return this->mStatus;
 }
 
 void JobNotifyData::setStatus(const UtilityNamespace::ItemStatus& status) {
-    this->status = status;
+    this->mStatus = status;
 }
 
 
 QDateTime JobNotifyData::getDateTime() const {
-    return this->dateTime;
+    return this->mDateTime;
 }
 
 void JobNotifyData::setDateTime(const QDateTime& dateTime) {
-    this->dateTime = dateTime;
+    this->mDateTime = dateTime;
 }
 
 
 QString JobNotifyData::getNzbFileName() const {
-    return this->nzbFileName;
+    return this->mNzbFileName;
 }
 
 void JobNotifyData::setNzbFileName(const QString& nzbFileName) {
-    this->nzbFileName = nzbFileName;
+    this->mNzbFileName = nzbFileName;
 }
 
 bool JobNotifyData::operator==(const JobNotifyData& jobNotifyDataToCompare) {

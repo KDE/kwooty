@@ -41,7 +41,7 @@ public:
 
 private:
 
-    AutoRetry* autoRetry;
+    AutoRetry* mAutoRetry;
 
     void load();
     void unload();

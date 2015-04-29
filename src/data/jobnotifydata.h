@@ -47,10 +47,10 @@ public:
 
 private:
 
-    QString parentUniqueIdentifier;
-    UtilityNamespace::ItemStatus status;
-    QDateTime dateTime;
-    QString nzbFileName;
+    QString mParentUniqueIdentifier;
+    UtilityNamespace::ItemStatus mStatus;
+    QDateTime mDateTime;
+    QString mNzbFileName;
 
 };
 
