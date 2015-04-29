@@ -25,7 +25,7 @@
 #include <KGlobal>
 #include <KInputDialog>
 #include <QIcon>
-#include <KDialog>
+#include <QDialog>
 #include <kgenericfactory.h>
 #include <kmimetypechooser.h>
 #include <kmimetype.h>
@@ -205,7 +205,7 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
     MimeData firstMimeDataToDisplay(MimeData::SubCategory);
 
     // dialog has not been canceled, do process :
-    if (dialog.exec() == KDialog::Accepted) {
+    if (dialog.exec() == QDialog::Accepted) {
 
         foreach (const QString& mimeType, dialog.chooser()->mimeTypes()) {
 
@@ -296,7 +296,7 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
         }
 
 
-    } //  end if (dialog.exec() == KDialog::Accepted)
+    } //  end if (dialog.exec() == QDialog::Accepted)
 
 }
 

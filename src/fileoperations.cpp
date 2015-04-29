@@ -83,7 +83,7 @@ void FileOperations::openFileWithFileMode(const KUrl &nzbUrl, UtilityNamespace::
 
 
 
-void FileOperations::openUrl(KUrl url, bool& isWrongUrl, UtilityNamespace::OpenFileMode openFileMode) {
+void FileOperations::openUrl(const KUrl &url, bool& isWrongUrl, UtilityNamespace::OpenFileMode openFileMode) {
 
     QString downloadFile;
 

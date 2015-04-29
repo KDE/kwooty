@@ -50,7 +50,7 @@ public:
     explicit MainWindow(QWidget* parent = Q_NULLPTR);
     ~MainWindow();
 
-    void openFileWithFileMode(KUrl, UtilityNamespace::OpenFileMode);
+    void openFileWithFileMode(const KUrl&, UtilityNamespace::OpenFileMode);
     QAction* getActionFromName(const QString&);
     MyStatusBar* getStatusBar() const;
     SideBar* getSideBar() const;
@@ -61,16 +61,16 @@ public:
 
 
 private:
-    Core* core;
-    CentralWidget* centralWidget;
-    MyTreeView* treeView;
-    QPointer<SysTray> sysTray;
-    MyStatusBar* statusBar;
-    SideBar* sideBar;
-    PluginManager* pluginManager;
-    KConfigGroupHandler* kConfigGroupHandler;
-    QHash<PreferencesPage, KPageWidgetItem*> preferencesPagesMap;
-    bool quitSelected;
+    Core* mCore;
+    CentralWidget* mCentralWidget;
+    MyTreeView* mTreeView;
+    QPointer<SysTray> mSysTray;
+    MyStatusBar* mStatusBar;
+    SideBar* mSideBar;
+    PluginManager* mPluginManager;
+    KConfigGroupHandler* mKConfigGroupHandler;
+    QHash<PreferencesPage, KPageWidgetItem*> mPreferencesPagesMap;
+    bool mQuitSelected;
 
     void initVariables();
     void buildLayout(QWidget*);

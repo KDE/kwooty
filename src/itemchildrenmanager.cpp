@@ -33,7 +33,7 @@
 
 ItemChildrenManager::ItemChildrenManager(Core* parent, ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater (parent->getDownloadModel(), ItemAbstractUpdater::Child) {
 
-    this->parent = parent;
+    this->mParent = parent;
     this->itemParentUpdater = itemParentUpdater;
 
     // set smartPar2Download setting value :
@@ -48,7 +48,7 @@ ItemChildrenManager::ItemChildrenManager(Core* parent, ItemParentUpdater* itemPa
 void ItemChildrenManager::setupConnections() {
 
     // parent notify that settings have been changed :
-    connect (parent,
+    connect (mParent,
              SIGNAL(settingsChangedSignal()),
              this,
              SLOT(settingsChangedSlot()));
@@ -63,7 +63,7 @@ void ItemChildrenManager::setupConnections() {
 
 
 
-bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex index) {
+bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex &index) {
 
     bool par2NotDownloaded = false;
     bool extractFail = false;
@@ -133,7 +133,7 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex index) 
 //============================================================================================================//
 
 
-void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex index, UtilityNamespace::ItemStatus itemStatus) {
+void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex &index, UtilityNamespace::ItemStatus itemStatus) {
 
     // get itemStatusData :
     ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(index);
@@ -189,7 +189,7 @@ void ItemChildrenManager::resetItemStatusToTarget(QStandardItem* fileNameItem, c
     // if current item has to be downloaded again :
     if (itemStatusResetTarget == IdleStatus) {
 
-        QPointer<SegmentManager> segmentManager = this->parent->getSegmentManager();
+        QPointer<SegmentManager> segmentManager = this->mParent->getSegmentManager();
 
         if (segmentManager) {
             segmentManager->setIdleDownloadFailSegments(fileNameItem);

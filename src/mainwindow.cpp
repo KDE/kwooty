@@ -70,22 +70,22 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent) {
     this->initVariables();
 
     // setup kconfig group handler :
-    this->kConfigGroupHandler = new KConfigGroupHandler(this);
+    this->mKConfigGroupHandler = new KConfigGroupHandler(this);
 
     // setup central widget :
-    this->centralWidget = new CentralWidget(this);
+    this->mCentralWidget = new CentralWidget(this);
 
     // setup treeview :
-    this->treeView = new MyTreeView(this);
+    this->mTreeView = new MyTreeView(this);
 
     // setup core :
-    this->core = new Core(this);
+    this->mCore = new Core(this);
 
     // finish treeView init :
-    this->treeView->achieveInit();
+    this->mTreeView->achieveInit();
 
     // setup side bar manager :
-    this->sideBar = new SideBar(this);
+    this->mSideBar = new SideBar(this);
 
 
     // create the user interface :
@@ -96,21 +96,21 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent) {
     this->setupActions();
 
     // setup statusBar :
-    this->statusBar = new MyStatusBar(this);
-    this->setStatusBar(this->statusBar);
+    this->mStatusBar = new MyStatusBar(this);
+    this->setStatusBar(this->mStatusBar);
 
     // setup system tray :
     this->systraySlot();
 
     // setup plugin manager :
-    this->pluginManager = new PluginManager(this);
-    this->pluginManager->loadPlugins();
+    this->mPluginManager = new PluginManager(this);
+    this->mPluginManager->loadPlugins();
 
-    this->quitSelected = false;
+    this->mQuitSelected = false;
 
     // hide main window when session is restored and systray icon is checked, else show main window :
     if ( !(kapp->isSessionRestored() && Settings::sysTray()) ||
-         (kapp->isSessionRestored() && !this->kConfigGroupHandler->readMainWindowHiddenOnExit()) ) {
+         (kapp->isSessionRestored() && !this->mKConfigGroupHandler->readMainWindowHiddenOnExit()) ) {
 
         this->show();
     }
@@ -126,10 +126,10 @@ MainWindow::~MainWindow(){
 }
 
 void MainWindow::initVariables() {
-    this->core = 0;
-    this->centralWidget = 0;
-    this->treeView = 0;
-    this->sideBar = 0;
+    this->mCore = 0;
+    this->mCentralWidget = 0;
+    this->mTreeView = 0;
+    this->mSideBar = 0;
 }
 
 
@@ -139,40 +139,40 @@ void MainWindow::buildLayout(QWidget* widget) {
     mainVBoxLayout->setSpacing(2);
     mainVBoxLayout->setMargin(1);
 
-    mainVBoxLayout->addWidget(this->treeView);
-    mainVBoxLayout->addWidget(this->sideBar->getSideBarWidget());
+    mainVBoxLayout->addWidget(this->mTreeView);
+    mainVBoxLayout->addWidget(this->mSideBar->getSideBarWidget());
 
 }
 
 
 MyStatusBar* MainWindow::getStatusBar() const {
-    Q_ASSERT (this->statusBar != 0);
-    return this->statusBar;
+    Q_ASSERT (this->mStatusBar != 0);
+    return this->mStatusBar;
 }
 
 SideBar* MainWindow::getSideBar() const {
-    Q_ASSERT (this->sideBar != 0);
-    return this->sideBar;
+    Q_ASSERT (this->mSideBar != 0);
+    return this->mSideBar;
 }
 
 CentralWidget* MainWindow::getCentralWidget() const {
-    Q_ASSERT (this->centralWidget != 0);
-    return this->centralWidget;
+    Q_ASSERT (this->mCentralWidget != 0);
+    return this->mCentralWidget;
 }
 
 Core* MainWindow::getCore() const{
-    Q_ASSERT (this->core != 0);
-    return this->core;
+    Q_ASSERT (this->mCore != 0);
+    return this->mCore;
 }
 
 MyTreeView* MainWindow::getTreeView() const{
-    Q_ASSERT (this->treeView != 0);
-    return this->treeView;
+    Q_ASSERT (this->mTreeView != 0);
+    return this->mTreeView;
 }
 
 void MainWindow::setupActions() {
 
-    ActionsManager* actionsManager = this->core->getActionsManager();
+    ActionsManager* actionsManager = this->mCore->getActionsManager();
     ActionButtonsManager* actionButtonsManager = actionsManager->getActionButtonsManager();
 
     //-----------------
@@ -297,9 +297,9 @@ void MainWindow::setupActions() {
     shutdownAction->setEnabled(false);
     shutdownAction->setCheckable(true);
     actionCollection()->addAction("shutdown", shutdownAction);
-    connect(shutdownAction, SIGNAL(triggered(bool)), core->getShutdownManager(), SLOT(enableSystemShutdownSlot(bool)));
-    connect(core->getShutdownManager(), SIGNAL(setShutdownButtonCheckedSignal(bool)), shutdownAction, SLOT(setChecked(bool)));
-    connect(core->getShutdownManager(), SIGNAL(setShutdownButtonEnabledSignal(bool)), shutdownAction, SLOT(setEnabled(bool)) );
+    connect(shutdownAction, SIGNAL(triggered(bool)), mCore->getShutdownManager(), SLOT(enableSystemShutdownSlot(bool)));
+    connect(mCore->getShutdownManager(), SIGNAL(setShutdownButtonCheckedSignal(bool)), shutdownAction, SLOT(setChecked(bool)));
+    connect(mCore->getShutdownManager(), SIGNAL(setShutdownButtonEnabledSignal(bool)), shutdownAction, SLOT(setEnabled(bool)) );
 
     // startAllDownloadAction :
     QAction * startAllDownloadAction = new QAction(this);
@@ -413,9 +413,9 @@ void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage)
 
         emit aboutToShowSettingsSignal();
 
-        if (this->preferencesPagesMap.contains(preferencesPage)) {
+        if (this->mPreferencesPagesMap.contains(preferencesPage)) {
 
-            KConfigDialog::exists("settings")->setCurrentPage(this->preferencesPagesMap.value(preferencesPage));
+            KConfigDialog::exists("settings")->setCurrentPage(this->mPreferencesPagesMap.value(preferencesPage));
         }
 
         KConfigDialog::showDialog("settings");
@@ -428,31 +428,31 @@ void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage)
 
         PreferencesGeneral* preferencesGeneral = new PreferencesGeneral();
         KPageWidgetItem* preferencesGeneralPage = dialog->addPage(preferencesGeneral, i18n("General"), "preferences-system", i18n("General Setup"));
-        this->preferencesPagesMap.insert(GeneralPage, preferencesGeneralPage);
+        this->mPreferencesPagesMap.insert(GeneralPage, preferencesGeneralPage);
 
         PreferencesServer* preferencesServer = new PreferencesServer(dialog);
         KPageWidgetItem* preferencesServerPage = dialog->addPage(preferencesServer, i18n("Connection"), "network-workgroup", i18n("Setup Server Connection"));
-        this->preferencesPagesMap.insert(ServerPage, preferencesServerPage);
+        this->mPreferencesPagesMap.insert(ServerPage, preferencesServerPage);
 
         PreferencesPrograms* preferencesPrograms = new PreferencesPrograms();
         KPageWidgetItem* preferencesProgramsPage = dialog->addPage(preferencesPrograms, i18n("Programs"), "system-run", i18n("Setup External Programs"));
-        this->preferencesPagesMap.insert(ProgramsPage, preferencesProgramsPage);
+        this->mPreferencesPagesMap.insert(ProgramsPage, preferencesProgramsPage);
 
         PreferencesDisplay* preferencesDisplay = new PreferencesDisplay();
         KPageWidgetItem* preferencesDisplayPage = dialog->addPage(preferencesDisplay, i18n("Display modes"), "view-choose", i18n("Setup Display Modes"));
-        this->preferencesPagesMap.insert(DisplayPage, preferencesDisplayPage);
+        this->mPreferencesPagesMap.insert(DisplayPage, preferencesDisplayPage);
 
-        PreferencesShutdown* preferencesShutdown = new PreferencesShutdown(this->core);
+        PreferencesShutdown* preferencesShutdown = new PreferencesShutdown(this->mCore);
         KPageWidgetItem* preferencesShutdownPage = dialog->addPage(preferencesShutdown, i18n("Shutdown"), "system-shutdown", i18n("Setup System Shutdown"));
-        this->preferencesPagesMap.insert(ShutdownPage, preferencesShutdownPage);
+        this->mPreferencesPagesMap.insert(ShutdownPage, preferencesShutdownPage);
 
-        PreferencesPlugins* preferencesPlugins = new PreferencesPlugins(dialog, this->pluginManager);
+        PreferencesPlugins* preferencesPlugins = new PreferencesPlugins(dialog, this->mPluginManager);
         KPageWidgetItem* preferencesPluginsPage = dialog->addPage(preferencesPlugins, i18n("Plugins"), "preferences-plugin", i18n("Plugins Setup"));
-        this->preferencesPagesMap.insert(PluginsPage, preferencesPluginsPage);
+        this->mPreferencesPagesMap.insert(PluginsPage, preferencesPluginsPage);
 
 
-        connect(dialog, SIGNAL(settingsChanged(QString)), this->core, SLOT(updateSettingsSlot()));
-        connect(dialog, SIGNAL(settingsChanged(QString)), this->kConfigGroupHandler, SLOT(settingsChangedSlot()));
+        connect(dialog, SIGNAL(settingsChanged(QString)), this->mCore, SLOT(updateSettingsSlot()));
+        connect(dialog, SIGNAL(settingsChanged(QString)), this->mKConfigGroupHandler, SLOT(settingsChangedSlot()));
         connect(dialog, SIGNAL(settingsChanged(QString)), preferencesPrograms, SLOT(aboutToShowSettingsSlot()));
         connect(dialog, SIGNAL(settingsChanged(QString)), this, SLOT(systraySlot()));
         connect(this, SIGNAL(aboutToShowSettingsSignal()), preferencesPrograms, SLOT(aboutToShowSettingsSlot()));
@@ -493,13 +493,13 @@ void MainWindow::toggleShowMenuBar() {
 
 void MainWindow::openFile() {
 
-    this->core->getFileOperations()->openFile();
+    this->mCore->getFileOperations()->openFile();
 
 }
 
-void MainWindow::openFileWithFileMode(KUrl nzbUrl, UtilityNamespace::OpenFileMode openFileMode) {
+void MainWindow::openFileWithFileMode(const KUrl &nzbUrl, UtilityNamespace::OpenFileMode openFileMode) {
 
-    this->core->getFileOperations()->openFileWithFileMode(nzbUrl, openFileMode);
+    this->mCore->getFileOperations()->openFileWithFileMode(nzbUrl, openFileMode);
 
 }
 
@@ -508,7 +508,7 @@ void MainWindow::openFileWithFileMode(KUrl nzbUrl, UtilityNamespace::OpenFileMod
 void MainWindow::quit() {
 
     // quit has been requested :
-    this->quitSelected = true;
+    this->mQuitSelected = true;
 
     // call queryclose() for quit confirmation :
     if (this->queryClose()) {
@@ -528,7 +528,7 @@ bool MainWindow::queryClose() {
     if (!kapp->sessionSaving()) {
 
         // if the main window is just closed :
-        if (!this->quitSelected ) {
+        if (!this->mQuitSelected ) {
 
             // if system tray icon exists :
             if (Settings::sysTray()) {
@@ -555,7 +555,7 @@ bool MainWindow::queryClose() {
     }
     // session manager is about to quit, just save data silently and quit :
     else {
-        core->savePendingDownloads(UtilityNamespace::ShutdownMethodUnknown, SaveSilently);
+        mCore->savePendingDownloads(UtilityNamespace::ShutdownMethodUnknown, SaveSilently);
     }
 
     return confirmQuit;
@@ -565,8 +565,8 @@ bool MainWindow::queryClose() {
 
 bool MainWindow::queryExit() {
 
-    this->kConfigGroupHandler->writeMainWindowHiddenOnExit(this->isHidden());
-    this->sideBar->saveState();
+    this->mKConfigGroupHandler->writeMainWindowHiddenOnExit(this->isHidden());
+    this->mSideBar->saveState();
 
     return true;
 }
@@ -574,10 +574,10 @@ bool MainWindow::queryExit() {
 
 void MainWindow::askForSavingDownloads(bool& confirmQuit) {
 
-    int answer = core->savePendingDownloads();
+    int answer = mCore->savePendingDownloads();
 
     if (answer == KMessageBox::Cancel) {
-        this->quitSelected = false;
+        this->mQuitSelected = false;
         confirmQuit = false;
     }
 
@@ -587,12 +587,12 @@ void MainWindow::askForSavingDownloads(bool& confirmQuit) {
 void MainWindow::systraySlot() {
 
     // remove system tray if requested by user :
-    if (!Settings::sysTray() && this->sysTray) {
-        delete this->sysTray;
+    if (!Settings::sysTray() && this->mSysTray) {
+        delete this->mSysTray;
     }
     // setup system tray if requested by user :
-    else if (Settings::sysTray() && !this->sysTray) {
-        this->sysTray = new SysTray(this);
+    else if (Settings::sysTray() && !this->mSysTray) {
+        this->mSysTray = new SysTray(this);
     }
 
 }

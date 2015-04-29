@@ -47,7 +47,7 @@ public:
 
 private:
     Core* core;
-    void openUrl(KUrl, bool&, UtilityNamespace::OpenFileMode);
+    void openUrl(const KUrl &, bool&, UtilityNamespace::OpenFileMode);
 };
 
 #endif // FILEOPERATIONS_H
