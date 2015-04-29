@@ -39,7 +39,7 @@ class PreferencesPlugins : public QWidget
 
 public:
 
-    PreferencesPlugins(KConfigDialog*, PluginManager*);
+    explicit PreferencesPlugins(KConfigDialog*, PluginManager*);
 
 
 private:

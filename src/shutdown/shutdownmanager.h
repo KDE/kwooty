@@ -39,23 +39,23 @@ class ShutdownManager : public QObject {
 
 public:
 
-    ShutdownManager(Core*);
+    explicit ShutdownManager(Core*);
     QMap<QString, QString> retrieveIconAvailableShutdownMap();
     void handleShutdownError(const QString&);
 
 private:
 
-    Core* parent;
-    SessionBase* session;
-    QTimer* activityMonitorTimer;
-    QTimer* launchShutdownTimer;
-    QString scheduleDateTimeStr;
-    int noActivityCounter;
-    int shutdownTimerInterval;
-    bool enableSystemShutdown;
-    bool jobsRadioButton;
-    bool timerRadioButton;
-    bool pausedShutdown;
+    Core* mParent;
+    SessionBase* mSession;
+    QTimer* mActivityMonitorTimer;
+    QTimer* mLaunchShutdownTimer;
+    QString mScheduleDateTimeStr;
+    int mNoActivityCounter;
+    int mShutdownTimerInterval;
+    bool mEnableSystemShutdown;
+    bool mJobsRadioButton;
+    bool mTimerRadioButton;
+    bool mPausedShutdown;
 
     UtilityNamespace::SystemShutdownType getChosenShutdownType();
     QString getShutdownMethodText(UtilityNamespace::SystemShutdownType) const;

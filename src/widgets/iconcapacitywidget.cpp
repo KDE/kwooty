@@ -36,12 +36,12 @@ IconCapacityWidget::IconCapacityWidget(QWidget* parent, MyStatusBar::WidgetIdent
 
     iconLoader = KIconLoader::global();
 
-    iconLabel = new QLabel(this);
-    capacityBar = new KCapacityBar(KCapacityBar::DrawTextInline, this);
+    mIconLabel = new QLabel(this);
+    mCapacityBar = new KCapacityBar(KCapacityBar::DrawTextInline, this);
 
     hBoxLayout = new QHBoxLayout(this);
-    hBoxLayout->addWidget(iconLabel);
-    hBoxLayout->addWidget(capacityBar);
+    hBoxLayout->addWidget(mIconLabel);
+    hBoxLayout->addWidget(mCapacityBar);
 
     hBoxLayout->setSpacing(5);
     hBoxLayout->setMargin(0);
@@ -54,10 +54,10 @@ void IconCapacityWidget::setIcon(const QString& iconStr) {
 
     if (!iconStr.isEmpty()) {
 
-        iconLabel->setPixmap(iconLoader->loadIcon(iconStr, KIconLoader::Small));
+        mIconLabel->setPixmap(iconLoader->loadIcon(iconStr, KIconLoader::Small));
     }
     else {
-        iconLabel->setPixmap(QPixmap());
+        mIconLabel->setPixmap(QPixmap());
     }
 
 }
@@ -65,12 +65,12 @@ void IconCapacityWidget::setIcon(const QString& iconStr) {
 
 
 void IconCapacityWidget::showIcon() {
-    iconLabel->show();
+    mIconLabel->show();
 }
 
 
 void IconCapacityWidget::hideIcon() {
-    iconLabel->hide();
+    mIconLabel->hide();
 }
 
 
@@ -78,17 +78,17 @@ void IconCapacityWidget::hideIcon() {
 void IconCapacityWidget::updateCapacity(const QString& availableVal, int usedDiskPercentage) {
 
     // adjust capacityBar size according to text :
-    int widthInPixel = capacityBar->fontMetrics().width(availableVal) + 30;
+    int widthInPixel = mCapacityBar->fontMetrics().width(availableVal) + 30;
 
     // if capacitybar width is lower than current width, ajust it :
-    if (capacityBar->minimumWidth() < widthInPixel) {
+    if (mCapacityBar->minimumWidth() < widthInPixel) {
 
-        capacityBar->setMinimumWidth(widthInPixel);
+        mCapacityBar->setMinimumWidth(widthInPixel);
 
     }
 
-    capacityBar->setValue(usedDiskPercentage);
-    capacityBar->setText(availableVal);
-    capacityBar->update();
+    mCapacityBar->setValue(usedDiskPercentage);
+    mCapacityBar->setText(availableVal);
+    mCapacityBar->update();
 
 }

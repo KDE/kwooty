@@ -42,8 +42,8 @@ public:
 
 private:
 
-    KCapacityBar* capacityBar;
-    QLabel* iconLabel;
+    KCapacityBar* mCapacityBar;
+    QLabel* mIconLabel;
 };
 
 #endif // ICONCAPACITYWIDGET_H

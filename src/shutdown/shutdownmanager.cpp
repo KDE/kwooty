@@ -44,21 +44,21 @@
 ShutdownManager::ShutdownManager(Core* parent) : QObject (parent) {
     
     // variable initialisation :
-    this->parent = parent;
-    this->noActivityCounter = 0;
-    this->enableSystemShutdown = false;
+    this->mParent = parent;
+    this->mNoActivityCounter = 0;
+    this->mEnableSystemShutdown = false;
 
     // check if system has to shudown every 10 seconds :
-    this->shutdownTimerInterval = 10000;
+    this->mShutdownTimerInterval = 10000;
 
     // store settings values :
     this->storeSettings();
 
     // create activity timer :
-    this->activityMonitorTimer = new QTimer(this);
+    this->mActivityMonitorTimer = new QTimer(this);
 
     // create system shutdown timer :
-    this->launchShutdownTimer = new QTimer(this);
+    this->mLaunchShutdownTimer = new QTimer(this);
 
     this->setupConnections();
 
@@ -71,39 +71,39 @@ ShutdownManager::ShutdownManager(Core* parent) : QObject (parent) {
 void ShutdownManager::setupConnections() {
 
     // check application activity (download, extract, etc...) at each timeout :
-    connect(this->activityMonitorTimer, SIGNAL(timeout()), this, SLOT(retrieveCurrentJobsInfoSlot()));
+    connect(this->mActivityMonitorTimer, SIGNAL(timeout()), this, SLOT(retrieveCurrentJobsInfoSlot()));
 
     // launch system shutdown after launchShutdownTimer timeout :
-    connect(this->launchShutdownTimer, SIGNAL(timeout()), this, SLOT(launchSystemShutdownSlot()));
+    connect(this->mLaunchShutdownTimer, SIGNAL(timeout()), this, SLOT(launchSystemShutdownSlot()));
 
     // parent notify that settings have changed :
-    connect (parent, SIGNAL(settingsChangedSignal()), this, SLOT(settingsChangedSlot()));
+    connect (mParent, SIGNAL(settingsChangedSignal()), this, SLOT(settingsChangedSlot()));
 
     // enable or disable shutdown button according to nzb parent status:
-    connect(parent->getDownloadModel(), SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)), this, SLOT(statusItemUpdatedSlot()));
+    connect(mParent->getDownloadModel(), SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)), this, SLOT(statusItemUpdatedSlot()));
 
 }
 
 
 void ShutdownManager::systemAboutToShutdown() {
 
-    if (this->session) {
+    if (this->mSession) {
 
         // stop timer and reset noActivityCounter :
         this->enableSystemShutdownSlot(false);
 
         // shutdown system automatically in 10 seconds :
-        this->launchShutdownTimer->start(10000);
+        this->mLaunchShutdownTimer->start(10000);
 
         // text by default :
         QString shutdownMethodText = this->getShutdownMethodText( UtilityNamespace::Shutdown);
 
         // get shutdown method text :
-        UtilityNamespace::SystemShutdownType systemShutdownType = this->session->getChosenShutdownType();
+        UtilityNamespace::SystemShutdownType systemShutdownType = this->mSession->getChosenShutdownType();
         shutdownMethodText = this->getShutdownMethodText(systemShutdownType);
 
         // finally display shutdown confirmation dialog :
-        int answer = this->parent->getCentralWidget()->displayAboutToShutdownMessageBox(shutdownMethodText);
+        int answer = this->mParent->getCentralWidget()->displayAboutToShutdownMessageBox(shutdownMethodText);
 
         // user has confirmed shutdown, launch shutdown right now :
         if (answer == KDialog::Yes) {
@@ -113,7 +113,7 @@ void ShutdownManager::systemAboutToShutdown() {
         // shutdown cancelled :
         else {
             // stop shutdown timer if cancelled bu the user :
-            this->launchShutdownTimer->stop();
+            this->mLaunchShutdownTimer->stop();
 
             // update shutdown button (not enabled/checked) :
             this->shutdownCancelledSlot();
@@ -127,10 +127,10 @@ void ShutdownManager::systemAboutToShutdown() {
 void ShutdownManager::storeSettings() {
 
     //settings have changed, store new values :
-    this->jobsRadioButton = Settings::jobsRadioButton();
-    this->timerRadioButton = Settings::timerRadioButton();
-    this->pausedShutdown = Settings::pausedShutdown();
-    this->scheduleDateTimeStr = Settings::scheduleDateTime().time().toString("hh:mm");
+    this->mJobsRadioButton = Settings::jobsRadioButton();
+    this->mTimerRadioButton = Settings::timerRadioButton();
+    this->mPausedShutdown = Settings::pausedShutdown();
+    this->mScheduleDateTimeStr = Settings::scheduleDateTime().time().toString("hh:mm");
 }
 
 
@@ -139,10 +139,10 @@ void ShutdownManager::updateStatusBar() {
     QString shutdownMethodText;
     QString shutdownMethodIcon;
 
-    if (this->session) {
+    if (this->mSession) {
 
         // if shutdown scheduler is active :
-        if (this->enableSystemShutdown) {
+        if (this->mEnableSystemShutdown) {
 
             // define shutown method text :
             if (Settings::jobsRadioButton()) {
@@ -161,7 +161,7 @@ void ShutdownManager::updateStatusBar() {
 
             // define shutdown method icon :
             QMap<QString, QString>iconAvailableShutdownMap = this->retrieveIconAvailableShutdownMap();
-            shutdownMethodIcon = iconAvailableShutdownMap.key(this->getShutdownMethodText(this->session->getChosenShutdownType()));
+            shutdownMethodIcon = iconAvailableShutdownMap.key(this->getShutdownMethodText(this->mSession->getChosenShutdownType()));
 
         }
 
@@ -175,7 +175,7 @@ void ShutdownManager::updateStatusBar() {
 
 void ShutdownManager::retrieveSession() {
 
-    this->session = 0;
+    this->mSession = 0;
 
     QString desktopSession;
 
@@ -183,7 +183,7 @@ void ShutdownManager::retrieveSession() {
     desktopSession = ::getenv("KDE_FULL_SESSION");
     if (desktopSession.contains("true", Qt::CaseInsensitive)) {
 
-        this->session = new SessionKde(this);
+        this->mSession = new SessionKde(this);
     }
 
     // check if session is a GNOME session :
@@ -213,11 +213,11 @@ void ShutdownManager::retrieveSession() {
                 if (conversionOk) {
 
                     if (mainVersion == 3) {
-                        this->session = new SessionGnome3(this);
+                        this->mSession = new SessionGnome3(this);
 
                     }
                     else if (mainVersion == 2) {
-                        this->session = new SessionGnome2(this);
+                        this->mSession = new SessionGnome2(this);
 
                     }
 
@@ -237,9 +237,9 @@ QMap<QString, QString> ShutdownManager::retrieveIconAvailableShutdownMap() {
 
     QMap<QString, QString>iconAvailableShutdownMap;
 
-    if (this->session) {
+    if (this->mSession) {
 
-        foreach (const UtilityNamespace::SystemShutdownType& shutdownType, this->session->retrieveAvailableShutdownMethods()) {
+        foreach (const UtilityNamespace::SystemShutdownType& shutdownType, this->mSession->retrieveAvailableShutdownMethods()) {
 
             // add shutdown :
             if (shutdownType == UtilityNamespace::Shutdown) {
@@ -301,7 +301,7 @@ QString ShutdownManager::getShutdownMethodText(UtilityNamespace::SystemShutdownT
 
 void ShutdownManager::handleShutdownError(const QString& message) {
 
-    this->parent->getCentralWidget()->displaySorryMessageBox(message);
+    this->mParent->getCentralWidget()->displaySorryMessageBox(message);
 
     // uncheck shutdown button :
     this->shutdownCancelledSlot();
@@ -315,16 +315,16 @@ void ShutdownManager::handleShutdownError(const QString& message) {
 
 void ShutdownManager::settingsChangedSlot() {
 
-    if ( this->jobsRadioButton != Settings::jobsRadioButton()   ||
-         this->timerRadioButton != Settings::timerRadioButton() ||
-         this->pausedShutdown != Settings::pausedShutdown()     ||
-         this->scheduleDateTimeStr != Settings::scheduleDateTime().time().toString("hh:mm") ) {
+    if ( this->mJobsRadioButton != Settings::jobsRadioButton()   ||
+         this->mTimerRadioButton != Settings::timerRadioButton() ||
+         this->mPausedShutdown != Settings::pausedShutdown()     ||
+         this->mScheduleDateTimeStr != Settings::scheduleDateTime().time().toString("hh:mm") ) {
 
         // update settings :
         this->storeSettings();
 
         // relaunch shutdown schedule according to new settings :
-        this->enableSystemShutdownSlot(this->enableSystemShutdown);
+        this->enableSystemShutdownSlot(this->mEnableSystemShutdown);
 
     }
 
@@ -339,7 +339,7 @@ void ShutdownManager::shutdownCancelledSlot() {
     emit setShutdownButtonCheckedSignal(false);
 
     // if no more jobs are available, set system button as "not enabled" :
-    if (this->parent->getModelQuery()->areJobsFinished()) {
+    if (this->mParent->getModelQuery()->areJobsFinished()) {
         emit setShutdownButtonEnabledSignal(false);
     }
 
@@ -352,12 +352,12 @@ void ShutdownManager::shutdownCancelledSlot() {
 void ShutdownManager::statusItemUpdatedSlot() {
 
     // if activity detected, set shutdown button as enabled :
-    if (!this->parent->getModelQuery()->areJobsFinished()) {
+    if (!this->mParent->getModelQuery()->areJobsFinished()) {
 
         emit setShutdownButtonEnabledSignal(true);
     }
     // else if shutdown scheduler is not active, shutdown button should be disabled :
-    else if (!this->enableSystemShutdown){
+    else if (!this->mEnableSystemShutdown){
         emit setShutdownButtonEnabledSignal(false);
     }
 
@@ -367,17 +367,17 @@ void ShutdownManager::statusItemUpdatedSlot() {
 
 void ShutdownManager::enableSystemShutdownSlot(bool enable) {
 
-    this->enableSystemShutdown = enable;
+    this->mEnableSystemShutdown = enable;
 
-    if (this->enableSystemShutdown) {
+    if (this->mEnableSystemShutdown) {
 
         // if shutdown when jobs are finished :
         if (Settings::jobsRadioButton()) {
 
             // start activity polling timer :
-            if (!this->parent->getModelQuery()->areJobsFinished()) {
+            if (!this->mParent->getModelQuery()->areJobsFinished()) {
 
-                this->activityMonitorTimer->start(this->shutdownTimerInterval);
+                this->mActivityMonitorTimer->start(this->mShutdownTimerInterval);
 
             }
 
@@ -387,8 +387,8 @@ void ShutdownManager::enableSystemShutdownSlot(bool enable) {
         if (Settings::timerRadioButton()) {
 
             // set Timeout to time set in settings :
-            this->activityMonitorTimer->stop();
-            this->activityMonitorTimer->start(Settings::scheduleDateTime().time().hour() * UtilityNamespace::HOURS_TO_MILLISECONDS +
+            this->mActivityMonitorTimer->stop();
+            this->mActivityMonitorTimer->start(Settings::scheduleDateTime().time().hour() * UtilityNamespace::HOURS_TO_MILLISECONDS +
                                               Settings::scheduleDateTime().time().minute() * UtilityNamespace::MINUTES_TO_MILLISECONDS);
 
 
@@ -398,9 +398,9 @@ void ShutdownManager::enableSystemShutdownSlot(bool enable) {
     // if scheduling is disabled, stop monitoring :
     else {
 
-        this->activityMonitorTimer->stop();
+        this->mActivityMonitorTimer->stop();
         this->statusItemUpdatedSlot();
-        this->noActivityCounter = 0;
+        this->mNoActivityCounter = 0;
     }
 
 
@@ -415,19 +415,19 @@ void ShutdownManager::retrieveCurrentJobsInfoSlot(){
 
     if (Settings::jobsRadioButton()) {
 
-        bool jobsFinished = this->parent->getModelQuery()->areJobsFinished();
+        bool jobsFinished = this->mParent->getModelQuery()->areJobsFinished();
 
         // set timer interval to lower value if jobs finished has been confirmed :
         if (jobsFinished) {
 
-            if (this->activityMonitorTimer->interval() != 1000) {
-                this->activityMonitorTimer->setInterval(1000);
+            if (this->mActivityMonitorTimer->interval() != 1000) {
+                this->mActivityMonitorTimer->setInterval(1000);
             }
 
-            this->noActivityCounter++;
+            this->mNoActivityCounter++;
 
             // if no more downloads / repairing / extracting processes are active 3 consecutive times, shutdown system :
-            if (this->noActivityCounter == 3) {
+            if (this->mNoActivityCounter == 3) {
 
                 //display warning to user before shutdown :
                 this->systemAboutToShutdown();
@@ -436,8 +436,8 @@ void ShutdownManager::retrieveCurrentJobsInfoSlot(){
         }
         // activity has started again, reset variables :
         else {
-            this->activityMonitorTimer->setInterval(this->shutdownTimerInterval);
-            this->noActivityCounter = 0;
+            this->mActivityMonitorTimer->setInterval(this->mShutdownTimerInterval);
+            this->mNoActivityCounter = 0;
         }
     }
 
@@ -452,22 +452,22 @@ void ShutdownManager::retrieveCurrentJobsInfoSlot(){
 
 void ShutdownManager::launchSystemShutdownSlot() {
 
-    this->launchShutdownTimer->stop();
+    this->mLaunchShutdownTimer->stop();
 
     // close dialog if shutdown has been automatically launched :
-    this->parent->getCentralWidget()->closeAboutToShutdownMessageBox();
+    this->mParent->getCentralWidget()->closeAboutToShutdownMessageBox();
 
-    if (this->session) {
+    if (this->mSession) {
 
         // save potential pending data for future session restoring without asking any questions :
-        parent->savePendingDownloads(this->session->getChosenShutdownType(), SaveSilently);
+        mParent->savePendingDownloads(this->mSession->getChosenShutdownType(), SaveSilently);
 
 
         // shutdown is launched, set system button as "not checked" :
         emit setShutdownButtonCheckedSignal(false);
 
         // launch system shutdown according to session used :
-        this->session->launchSystemShutdown();
+        this->mSession->launchSystemShutdown();
 
     }
     else {
