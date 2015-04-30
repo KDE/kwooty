@@ -34,8 +34,8 @@ public:
 
 private:
 
-    QString input;
-    QString selectedItemUuid;
+    QString mInput;
+    QString mSelectedItemUuid;
 
     bool validateNewFolderName(QStandardItem *) const;
     bool isRenameAllowed(QStandardItem *) const;

@@ -33,55 +33,55 @@ UtilityIconPainting::UtilityIconPainting() : QObject(qApp)
 {
 
     // build map in order to display status icon near to each child file name item :
-    statusIconStrMap.insert(DownloadStatus,            "mail-receive");
-    statusIconStrMap.insert(DownloadFinishStatus,      "mail-mark-unread");
-    statusIconStrMap.insert(IdleStatus,                "mail-mark-unread");
-    statusIconStrMap.insert(PauseStatus,               "mail-mark-unread");
-    statusIconStrMap.insert(PausingStatus,             "mail-mark-unread");
-    statusIconStrMap.insert(WaitForPar2IdleStatus,     "mail-mark-unread-new");
-    statusIconStrMap.insert(ScanStatus,                "mail-mark-unread");
-    statusIconStrMap.insert(DecodeStatus,              "mail-mark-unread");
-    statusIconStrMap.insert(DecodeFinishStatus,        "mail-mark-read");
-    statusIconStrMap.insert(DecodeErrorStatus,         "edit-delete");
-    statusIconStrMap.insert(VerifyStatus,              "mail-mark-read");
-    statusIconStrMap.insert(VerifyFoundStatus,         "dialog-ok-apply");
-    statusIconStrMap.insert(VerifyMatchStatus,         "dialog-ok-apply");
-    statusIconStrMap.insert(VerifyMissingStatus,       "edit-delete");
-    statusIconStrMap.insert(VerifyDamagedStatus,       "edit-delete");
-    statusIconStrMap.insert(RepairStatus,              "mail-mark-read");
-    statusIconStrMap.insert(RepairNotPossibleStatus,   "edit-delete");
-    statusIconStrMap.insert(RepairFailedStatus,        "edit-delete");
-    statusIconStrMap.insert(ExtractStatus,             "dialog-ok-apply");
-    statusIconStrMap.insert(ExtractBadCrcStatus,       "edit-delete");
-    statusIconStrMap.insert(ExtractSuccessStatus,      "dialog-ok-apply");
-    statusIconStrMap.insert(ExtractFailedStatus,       "edit-delete");
+    mStatusIconStrMap.insert(DownloadStatus,            "mail-receive");
+    mStatusIconStrMap.insert(DownloadFinishStatus,      "mail-mark-unread");
+    mStatusIconStrMap.insert(IdleStatus,                "mail-mark-unread");
+    mStatusIconStrMap.insert(PauseStatus,               "mail-mark-unread");
+    mStatusIconStrMap.insert(PausingStatus,             "mail-mark-unread");
+    mStatusIconStrMap.insert(WaitForPar2IdleStatus,     "mail-mark-unread-new");
+    mStatusIconStrMap.insert(ScanStatus,                "mail-mark-unread");
+    mStatusIconStrMap.insert(DecodeStatus,              "mail-mark-unread");
+    mStatusIconStrMap.insert(DecodeFinishStatus,        "mail-mark-read");
+    mStatusIconStrMap.insert(DecodeErrorStatus,         "edit-delete");
+    mStatusIconStrMap.insert(VerifyStatus,              "mail-mark-read");
+    mStatusIconStrMap.insert(VerifyFoundStatus,         "dialog-ok-apply");
+    mStatusIconStrMap.insert(VerifyMatchStatus,         "dialog-ok-apply");
+    mStatusIconStrMap.insert(VerifyMissingStatus,       "edit-delete");
+    mStatusIconStrMap.insert(VerifyDamagedStatus,       "edit-delete");
+    mStatusIconStrMap.insert(RepairStatus,              "mail-mark-read");
+    mStatusIconStrMap.insert(RepairNotPossibleStatus,   "edit-delete");
+    mStatusIconStrMap.insert(RepairFailedStatus,        "edit-delete");
+    mStatusIconStrMap.insert(ExtractStatus,             "dialog-ok-apply");
+    mStatusIconStrMap.insert(ExtractBadCrcStatus,       "edit-delete");
+    mStatusIconStrMap.insert(ExtractSuccessStatus,      "dialog-ok-apply");
+    mStatusIconStrMap.insert(ExtractFailedStatus,       "edit-delete");
 
     // build map in order to display status icon near to each parent nzb file name item :
-    parentStatusIconStrMap.insert(IdleStatus,           "go-next-view");
-    parentStatusIconStrMap.insert(PauseStatus,          "go-next-view");
-    parentStatusIconStrMap.insert(PausingStatus,        "go-next-view");
-    parentStatusIconStrMap.insert(DownloadStatus,       "go-next-view");
-    parentStatusIconStrMap.insert(VerifyFinishedStatus, "dialog-ok");
-    parentStatusIconStrMap.insert(RepairFinishedStatus, "dialog-ok");
-    parentStatusIconStrMap.insert(ExtractFinishedStatus, "dialog-ok");
-    parentStatusIconStrMap.insert(DownloadFinishStatus, "go-next-view");
+    mParentStatusIconStrMap.insert(IdleStatus,           "go-next-view");
+    mParentStatusIconStrMap.insert(PauseStatus,          "go-next-view");
+    mParentStatusIconStrMap.insert(PausingStatus,        "go-next-view");
+    mParentStatusIconStrMap.insert(DownloadStatus,       "go-next-view");
+    mParentStatusIconStrMap.insert(VerifyFinishedStatus, "dialog-ok");
+    mParentStatusIconStrMap.insert(RepairFinishedStatus, "dialog-ok");
+    mParentStatusIconStrMap.insert(ExtractFinishedStatus, "dialog-ok");
+    mParentStatusIconStrMap.insert(DownloadFinishStatus, "go-next-view");
 
     // build a map to store every used icons in memory according to their names :
-    foreach (const QString &iconName, statusIconStrMap.values()) {
-        iconStrIconImageMap.insert(iconName, QIcon::fromTheme(iconName));
+    foreach (const QString &iconName, mStatusIconStrMap.values()) {
+        mIconStrIconImageMap.insert(iconName, QIcon::fromTheme(iconName));
     }
 
-    foreach (const QString &iconName, parentStatusIconStrMap.values()) {
-        iconStrIconImageMap.insert(iconName, QIcon::fromTheme(iconName));
+    foreach (const QString &iconName, mParentStatusIconStrMap.values()) {
+        mIconStrIconImageMap.insert(iconName, QIcon::fromTheme(iconName));
     }
-    iconStrIconImageMap.insert("mail-reply-list",       QIcon::fromTheme("mail-reply-list"));
-    iconStrIconImageMap.insert("mail-mark-important",   QIcon::fromTheme("mail-mark-important"));
-    iconStrIconImageMap.insert("mail-mark-important",   QIcon::fromTheme("mail-mark-important"));
-    iconStrIconImageMap.insert("dialog-warning",        QIcon::fromTheme("dialog-warning"));
-    iconStrIconImageMap.insert("dialog-cancel",         QIcon::fromTheme("dialog-cancel"));
+    mIconStrIconImageMap.insert("mail-reply-list",       QIcon::fromTheme("mail-reply-list"));
+    mIconStrIconImageMap.insert("mail-mark-important",   QIcon::fromTheme("mail-mark-important"));
+    mIconStrIconImageMap.insert("mail-mark-important",   QIcon::fromTheme("mail-mark-important"));
+    mIconStrIconImageMap.insert("dialog-warning",        QIcon::fromTheme("dialog-warning"));
+    mIconStrIconImageMap.insert("dialog-cancel",         QIcon::fromTheme("dialog-cancel"));
 
     // add semi-transparent effect to icon for Idle status :
-    iconStrIconImageMap.insert("go-next-view-transparent", QIcon(this->instance->buildSemiTransparentIcon("go-next-view")));
+    mIconStrIconImageMap.insert("go-next-view-transparent", QIcon(this->instance->buildSemiTransparentIcon("go-next-view")));
 }
 
 UtilityIconPainting::~UtilityIconPainting() {}
@@ -101,24 +101,24 @@ UtilityIconPainting *UtilityIconPainting::getInstance()
 bool UtilityIconPainting::retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus &status, QIcon &icon)
 {
 
-    icon = this->iconStrIconImageMap.value(this->parentStatusIconStrMap.value(status));
-    return this->parentStatusIconStrMap.contains(status);
+    icon = this->mIconStrIconImageMap.value(this->mParentStatusIconStrMap.value(status));
+    return this->mParentStatusIconStrMap.contains(status);
 
 }
 
 bool UtilityIconPainting::retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus &status, QIcon &icon)
 {
 
-    icon = this->iconStrIconImageMap.value(this->statusIconStrMap.value(status));
-    return this->statusIconStrMap.contains(status);
+    icon = this->mIconStrIconImageMap.value(this->mStatusIconStrMap.value(status));
+    return this->mStatusIconStrMap.contains(status);
 
 }
 
 bool UtilityIconPainting::retrieveIconFromString(const QString &iconName, QIcon &icon)
 {
 
-    icon = this->iconStrIconImageMap.value(iconName);
-    return this->iconStrIconImageMap.contains(iconName);
+    icon = this->mIconStrIconImageMap.value(iconName);
+    return this->mIconStrIconImageMap.contains(iconName);
 
 }
 
@@ -210,9 +210,9 @@ QPixmap UtilityIconPainting::blendOverLayTopRight(const QString &mainIconStr, co
     QPixmap pixmap;
     QString keyStr = mainIconStr + overlayIconStr;
 
-    if (UtilityIconPainting::getInstance()->textIconMap.contains(keyStr)) {
+    if (UtilityIconPainting::getInstance()->mTextIconMap.contains(keyStr)) {
 
-        pixmap = UtilityIconPainting::getInstance()->textIconMap.value(keyStr);
+        pixmap = UtilityIconPainting::getInstance()->mTextIconMap.value(keyStr);
 
     } else {
 
@@ -229,7 +229,7 @@ QPixmap UtilityIconPainting::blendOverLayTopRight(const QString &mainIconStr, co
             p.drawPixmap(6, 0, overlayPixmap);
             p.end();
 
-            UtilityIconPainting::getInstance()->textIconMap.insert(keyStr, pixmap);
+            UtilityIconPainting::getInstance()->mTextIconMap.insert(keyStr, pixmap);
         }
 
     }

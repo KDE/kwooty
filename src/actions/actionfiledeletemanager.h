@@ -33,7 +33,7 @@ public:
 
 private:
 
-    QStringList selectedItemUuidList;
+    QStringList mSelectedItemUuidList;
 
     QString retrieveFileSavePath(QStandardItem *) const;
     bool isDeleteAllowed(QStandardItem *) const;
@@ -42,8 +42,8 @@ private:
     void resetState();
 
 private Q_SLOTS:
-    void handleResultSlot(KJob *);
-    void actionTriggeredSlot();
+    void handleResultSlot(KJob *) Q_DECL_OVERRIDE;
+    void actionTriggeredSlot() Q_DECL_OVERRIDE;
 
 };
 

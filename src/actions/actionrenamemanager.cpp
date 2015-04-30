@@ -87,7 +87,7 @@ bool ActionRenameManager::validateNewFolderName(QStandardItem *selectedFileNameI
         NzbFileData parentNzbFileData = downloadModel->getNzbFileDataFromIndex(fileNameItem->index());
 
         if (selectedFileNameItem != fileNameItem &&
-                parentNzbFileData.getNzbName() == this->input) {
+                parentNzbFileData.getNzbName() == this->mInput) {
 
             validate = false;
             break;
@@ -102,7 +102,7 @@ bool ActionRenameManager::validateNewFolderName(QStandardItem *selectedFileNameI
 void ActionRenameManager::launchProcess()
 {
 
-    QStandardItem *selectedFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->selectedItemUuid);
+    QStandardItem *selectedFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->mSelectedItemUuid);
 
     if (selectedFileNameItem &&
             this->isRenameAllowed(selectedFileNameItem)) {
@@ -127,7 +127,7 @@ void ActionRenameManager::processRename(QStandardItem *selectedFileNameItem)
 
     // update new nzb name :
     NzbFileData selectedNzbFileData = selectedNzbFileDataOld;
-    selectedNzbFileData.setNzbName(this->input);
+    selectedNzbFileData.setNzbName(this->mInput);
 
     // update files with same parent waiting to be decoded with new nzb name folder :
     this->segmentBuffer->updateDecodeWaitingQueue(selectedNzbFileDataOld, selectedNzbFileData);
@@ -141,7 +141,7 @@ void ActionRenameManager::processRename(QStandardItem *selectedFileNameItem)
         NzbFileData childNzbFileData = this->downloadModel->getNzbFileDataFromIndex(childFileNameItem->index());
 
         // then update its file save path :
-        childNzbFileData.setNzbName(this->input);
+        childNzbFileData.setNzbName(this->mInput);
 
         this->downloadModel->updateNzbFileDataToItem(childFileNameItem, childNzbFileData);
 
@@ -162,7 +162,7 @@ void ActionRenameManager::processRename(QStandardItem *selectedFileNameItem)
     moveJob->start();
 
     // update displayed folder name :
-    selectedFileNameItem->setText(this->input);
+    selectedFileNameItem->setText(this->mInput);
 
     // finaly, launch retry process :
     //this->actionsManager->retryDownload(QList<QModelIndex>() << selectedFileNameItem->index());
@@ -196,17 +196,17 @@ void ActionRenameManager::actionTriggeredSlot()
             selectedFileNameItem &&
             selectedFileNameItem->rowCount() > 0) {
 
-        this->input = KInputDialog::getText(i18n("Rename Folder"), xi18nc("@label:textbox",
+        this->mInput = KInputDialog::getText(i18n("Rename Folder"), xi18nc("@label:textbox",
                                             "Rename the folder %1 to:",
                                             "<filename>" + selectedFileNameItem->text() + "</filename>"),
                                             selectedFileNameItem->text());
 
-        if (!this->input.isEmpty() &&
-                this->downloadModel->getNzbFileDataFromIndex(selectedFileNameItem->index()).getNzbName() != this->input) {
+        if (!this->mInput.isEmpty() &&
+                this->downloadModel->getNzbFileDataFromIndex(selectedFileNameItem->index()).getNzbName() != this->mInput) {
 
             if (this->validateNewFolderName(selectedFileNameItem)) {
 
-                this->selectedItemUuid = this->downloadModel->getUuidStrFromIndex(selectedFileNameItem->index());
+                this->mSelectedItemUuid = this->downloadModel->getUuidStrFromIndex(selectedFileNameItem->index());
 
                 this->actionFileStep = ActionFileRequested;
                 this->processFileSlot();

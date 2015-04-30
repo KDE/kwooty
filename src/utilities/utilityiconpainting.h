@@ -61,11 +61,11 @@ public:
 
 private:
     static UtilityIconPainting *instance;
-    QMap<QString, QPixmap> textIconMap;
+    QMap<QString, QPixmap> mTextIconMap;
 
-    QHash<int, QString> statusIconStrMap;
-    QHash<int, QString> parentStatusIconStrMap;
-    QHash<QString, QIcon> iconStrIconImageMap;
+    QHash<int, QString> mStatusIconStrMap;
+    QHash<int, QString> mParentStatusIconStrMap;
+    QHash<QString, QIcon> mIconStrIconImageMap;
 };
 
 #endif // UTILITYICONPAINTING_H

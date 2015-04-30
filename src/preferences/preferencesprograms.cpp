@@ -26,7 +26,8 @@
 #include "utilities/utility.h"
 #include "kwootysettings.h"
 
-PreferencesPrograms::PreferencesPrograms()
+PreferencesPrograms::PreferencesPrograms(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
     this->setupConnections();
@@ -48,12 +49,12 @@ PreferencesPrograms::PreferencesPrograms()
     this->verifyProcessPriorityChangedSlot();
     this->extractProcessPriorityChangedSlot();
 
-    iconLoader = new KIconLoader();
+    mIconLoader = new KIconLoader();
 }
 
 PreferencesPrograms::~PreferencesPrograms()
 {
-    delete iconLoader;
+    delete mIconLoader;
 }
 
 void PreferencesPrograms::aboutToShowSettingsSlot()
@@ -104,7 +105,7 @@ void PreferencesPrograms::displayProgramInfo(const bool isProgramFound, const QS
 
     // indicate path to binary file if program has been found :
     if (isProgramFound) {
-        labelIcon->setPixmap(iconLoader->loadIcon("dialog-ok", KIconLoader::Small));
+        labelIcon->setPixmap(mIconLoader->loadIcon("dialog-ok", KIconLoader::Small));
         labelText->setText(i18n("<b>%1</b> program found: %2", program, path));
 
         // enable group box if program found :
@@ -113,7 +114,7 @@ void PreferencesPrograms::displayProgramInfo(const bool isProgramFound, const QS
     }
     // indicate that program has not been found :
     else {
-        labelIcon->setPixmap(iconLoader->loadIcon("dialog-close", KIconLoader::Small));
+        labelIcon->setPixmap(mIconLoader->loadIcon("dialog-close", KIconLoader::Small));
         labelText->setText(i18n("<b>%1</b> program not found", program));
 
         // disable group box if program not found :

@@ -60,7 +60,7 @@ void ActionFileDeleteManager::resetState()
 {
 
     this->actionFileStep = ActionFileIdle;
-    this->selectedItemUuidList.clear();
+    this->mSelectedItemUuidList.clear();
 
 }
 
@@ -73,7 +73,7 @@ void ActionFileDeleteManager::removeRowDeleteFile()
 
     QList<QModelIndex> indexesListCheck;
 
-    foreach (QString uuid, this->selectedItemUuidList) {
+    foreach (QString uuid, this->mSelectedItemUuidList) {
 
         QStandardItem *selectedFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(uuid);
         QString fileSavePath = this->retrieveFileSavePath(selectedFileNameItem);
@@ -136,7 +136,7 @@ void ActionFileDeleteManager::actionTriggeredSlot()
             if (this->isDeleteAllowed(selectedFileNameItem)) {
 
                 QString uuid = this->core->getDownloadModel()->getUuidStrFromIndex(selectedFileNameItem->index());
-                this->selectedItemUuidList.append(uuid);
+                this->mSelectedItemUuidList.append(uuid);
 
                 QString fileSavePath = this->retrieveFileSavePath(selectedFileNameItem);
 

@@ -40,10 +40,10 @@ public:
     ~ConcatSplitFilesJob();
 
 private:
-    QList<NzbFileData> nzbFileDataList;
-    QString fileSavePath;
-    QString joinFileName;
-    QThread *dedicatedThread;
+    QList<NzbFileData> mNzbFileDataList;
+    QString mFileSavePath;
+    QString mJoinFileName;
+    QThread *mDedicatedThread;
 
     bool joinSplittedFiles();
 

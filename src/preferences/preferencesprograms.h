@@ -31,11 +31,11 @@ class PreferencesPrograms : public QWidget, public Ui::PreferencesPrograms
     Q_OBJECT
 
 public:
-    PreferencesPrograms();
+    explicit PreferencesPrograms(QWidget *parent = Q_NULLPTR);
     ~PreferencesPrograms();
 
 private:
-    KIconLoader *iconLoader;
+    KIconLoader *mIconLoader;
 
     void setupConnections();
     void displayProgramInfo(const bool, const QString &, QLabel *, QLabel *, const QString &);

@@ -44,7 +44,7 @@ class KWOOTY_EXPORT ActionsManager : public QObject
     Q_OBJECT
 
 public:
-    ActionsManager(Core *);
+    explicit ActionsManager(Core *);
     Core *getCore() const;
     ActionButtonsManager *getActionButtonsManager() const;
     ActionMergeManager *getActionMergeManager() const;
