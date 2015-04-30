@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SERVERGROUP_H
 #define SERVERGROUP_H
 
@@ -36,22 +35,23 @@ class Core;
 class ClientsPerServerObserver;
 class ServerSpeedManager;
 
-class ServerGroup : public QObject {
+class ServerGroup : public QObject
+{
 
     Q_OBJECT
 
 public:
-    ServerGroup(ServerManager*, Core*, int);
-    Core* getCore();
-    ServerManager* getServerManager();
-    ClientsPerServerObserver* getClientsPerServerObserver();
-    ServerSpeedManager* getServerSpeedManager();
-    ServerGroup* getNextTargetServer();
+    ServerGroup(ServerManager *, Core *, int);
+    Core *getCore();
+    ServerManager *getServerManager();
+    ClientsPerServerObserver *getClientsPerServerObserver();
+    ServerSpeedManager *getServerSpeedManager();
+    ServerGroup *getNextTargetServer();
     ServerData getServerData() const;
-    QList<ClientManagerConn*> getClientManagerConnList();
+    QList<ClientManagerConn *> getClientManagerConnList();
     int getServerGroupId() const;
     int getRealServerGroupId() const;
-    int saveSegment(const SegmentData&);
+    int saveSegment(const SegmentData &);
     bool isBufferFull();
     bool canDownload(int) const;
     bool isServerAvailable() const;
@@ -68,18 +68,17 @@ public:
     void resetAllClientsConnection();
     void readDataWithPassword();
 
-
 private:
     static const int MAX_SERVER_DOWN_PER_MINUTE = 4;
 
     ServerData mServerData;
-    QTimer* mClientsAvailableTimer;
-    QTimer* mStabilityTimer;
-    QList<ClientManagerConn*> mClientManagerConnList;
-    Core* mCore;
-    ServerManager* mServerManager;
-    ServerSpeedManager* mServerSpeedManager;
-    ClientsPerServerObserver* mClientsPerServerObserver;
+    QTimer *mClientsAvailableTimer;
+    QTimer *mStabilityTimer;
+    QList<ClientManagerConn *> mClientManagerConnList;
+    Core *mCore;
+    ServerManager *mServerManager;
+    ServerSpeedManager *mServerSpeedManager;
+    ClientsPerServerObserver *mClientsPerServerObserver;
     int mServerGroupId;
     int mStabilityCounter;
     bool mServerAvailable;
@@ -90,24 +89,20 @@ private:
     void setupConnections();
     void serverSwitchIfFailure();
 
-
 Q_SIGNALS:
     void dataHasArrivedClientReadySignal();
     void disconnectRequestSignal();
     void connectRequestSignal();
     void resetConnectionSignal();
 
-
 public Q_SLOTS:
     bool settingsServerChangedSlot();
     void downloadPendingSegmentsSlot();
-
 
 private Q_SLOTS:
     void checkServerAvailabilitySlot();
     void checkServerStabilitySlot();
     void startTimerSlot();
-
 
 };
 

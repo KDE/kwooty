@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef AUTORETRY_H
 #define AUTORETRY_H
 
@@ -37,21 +36,20 @@ class AutoRetry : public QObject
     Q_OBJECT
 
 public:
-    AutoRetry(AutoRetryPlugin*);
+    AutoRetry(AutoRetryPlugin *);
     ~AutoRetry();
     void settingsChanged();
 
-
 private:
 
-    Core* core;
+    Core *core;
 
     void setupConnections();
-    void retryDownload(QStandardItem*);
+    void retryDownload(QStandardItem *);
 
 public Q_SLOTS:
-    void parentStatusItemChangedSlot(QStandardItem*);
-    void childStatusItemChangedSlot(QStandardItem*);
+    void parentStatusItemChangedSlot(QStandardItem *);
+    void childStatusItemChangedSlot(QStandardItem *);
 };
 
 #endif // AUTORETRY_H

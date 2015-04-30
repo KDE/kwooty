@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "icontextwidget.h"
 
 #include <KIconLoader>
@@ -33,8 +32,8 @@
 #include "utilities/utilityiconpainting.h"
 #include "statusbarwidgetbase.h"
 
-
-IconTextWidget::IconTextWidget(QWidget* parent, MyStatusBar::WidgetIdentity widgetIdentity) : StatusBarWidgetBase(parent, widgetIdentity) {
+IconTextWidget::IconTextWidget(QWidget *parent, MyStatusBar::WidgetIdentity widgetIdentity) : StatusBarWidgetBase(parent, widgetIdentity)
+{
 
     iconLoader = KIconLoader::global();
 
@@ -54,9 +53,8 @@ IconTextWidget::IconTextWidget(QWidget* parent, MyStatusBar::WidgetIdentity widg
 
 }
 
-
-
-void IconTextWidget::enterEvent(QEvent* event) {
+void IconTextWidget::enterEvent(QEvent *event)
+{
 
     Q_UNUSED(event);
 
@@ -74,8 +72,8 @@ void IconTextWidget::enterEvent(QEvent* event) {
 
 }
 
-
-void IconTextWidget::leaveEvent(QEvent* event) {
+void IconTextWidget::leaveEvent(QEvent *event)
+{
 
     Q_UNUSED(event);
 
@@ -93,14 +91,13 @@ void IconTextWidget::leaveEvent(QEvent* event) {
 
 }
 
-
-void IconTextWidget::setIconMode(const IconMode _iconMode) {
+void IconTextWidget::setIconMode(const IconMode _iconMode)
+{
     iconMode = _iconMode;
 }
 
-
-
-void IconTextWidget::setIconOnly(const QString& normalIconStr, const QString& enabledIconStr) {
+void IconTextWidget::setIconOnly(const QString &normalIconStr, const QString &enabledIconStr)
+{
 
     hBoxLayout->setSpacing(0);
     setIcon(normalIconStr, enabledIconStr);
@@ -110,9 +107,8 @@ void IconTextWidget::setIconOnly(const QString& normalIconStr, const QString& en
 
 }
 
-
-
-void IconTextWidget::mousePressEvent(QMouseEvent* event)  {
+void IconTextWidget::mousePressEvent(QMouseEvent *event)
+{
 
     Q_UNUSED(event);
     iconPressed = !iconPressed;
@@ -121,9 +117,8 @@ void IconTextWidget::mousePressEvent(QMouseEvent* event)  {
 
 }
 
-
-
-void IconTextWidget::setIcon(const ServerConnectionIcon& _serverConnectionIcon) {
+void IconTextWidget::setIcon(const ServerConnectionIcon &_serverConnectionIcon)
+{
 
     // avoid useless icon drawing :
     if (serverConnectionIcon != _serverConnectionIcon) {
@@ -135,8 +130,8 @@ void IconTextWidget::setIcon(const ServerConnectionIcon& _serverConnectionIcon) 
 
 }
 
-
-void IconTextWidget::setIcon(const QString& normalIconStr) {
+void IconTextWidget::setIcon(const QString &normalIconStr)
+{
 
     if (!normalIconStr.isEmpty()) {
 
@@ -144,15 +139,14 @@ void IconTextWidget::setIcon(const QString& normalIconStr) {
         iconLabel->setPixmap(normalIcon);
         clearNormalIcon = UtilityIconPainting::getInstance()->buildClearIcon(normalIcon);
 
-    }
-    else {
+    } else {
         iconLabel->setPixmap(QPixmap());
     }
 
 }
 
-
-void IconTextWidget::setIcon(const QString& normalIconStr, const QString& enabledIconStr) {
+void IconTextWidget::setIcon(const QString &normalIconStr, const QString &enabledIconStr)
+{
 
     setIcon(normalIconStr);
 
@@ -165,11 +159,8 @@ void IconTextWidget::setIcon(const QString& normalIconStr, const QString& enable
 
 }
 
-
-
-
-
-void IconTextWidget::setActive(const bool& active) {
+void IconTextWidget::setActive(const bool &active)
+{
 
     iconPressed = active;
 
@@ -183,14 +174,14 @@ void IconTextWidget::setActive(const bool& active) {
 
 }
 
-
-
-void IconTextWidget::setText(const QString& text) {
+void IconTextWidget::setText(const QString &text)
+{
 
     textLabel->setText(text);
 }
 
-void IconTextWidget::setTextOnly(const QString& text) {
+void IconTextWidget::setTextOnly(const QString &text)
+{
 
     if (!iconLabel->isHidden()) {
         hBoxLayout->setSpacing(0);
@@ -200,19 +191,18 @@ void IconTextWidget::setTextOnly(const QString& text) {
     textLabel->setText(text);
 }
 
-
-QString IconTextWidget::getText() const {
+QString IconTextWidget::getText() const
+{
     return textLabel->text();
 }
 
-
-void IconTextWidget::showIcon() {
+void IconTextWidget::showIcon()
+{
     iconLabel->show();
 }
 
-
-void IconTextWidget::hideIcon() {
+void IconTextWidget::hideIcon()
+{
     iconLabel->hide();
 }
-
 

@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "segmentdecoderbase.h"
 
 #include "kwooty_debug.h"
@@ -29,15 +28,15 @@
 #include "data/segmentdata.h"
 #include "segmentsdecoderthread.h"
 
-
-SegmentDecoderBase::SegmentDecoderBase(SegmentsDecoderThread* parent) : QObject(parent) {
+SegmentDecoderBase::SegmentDecoderBase(SegmentsDecoderThread *parent) : QObject(parent)
+{
 
     this->segmentsDecoderThread = parent;
 
 }
 
-
-QString SegmentDecoderBase::scanSegmentFiles(const NzbFileData& currentNzbFileData) {
+QString SegmentDecoderBase::scanSegmentFiles(const NzbFileData &currentNzbFileData)
+{
 
     this->parentIdentifer = currentNzbFileData.getUniqueIdentifier();
     this->segmentDataList = currentNzbFileData.getSegmentList();
@@ -54,7 +53,7 @@ QString SegmentDecoderBase::scanSegmentFiles(const NzbFileData& currentNzbFileDa
     }
 
     // scan every files to be decoded :
-    foreach (const SegmentData& currentSegment, this->segmentDataList) {
+    foreach (const SegmentData &currentSegment, this->segmentDataList) {
 
         // if segment has been downloaded :
         if (currentSegment.getArticlePresenceOnServer() == Present) {
@@ -79,14 +78,12 @@ QString SegmentDecoderBase::scanSegmentFiles(const NzbFileData& currentNzbFileDa
 
     } // end of loop
 
-
     return fileName;
 
 }
 
-
-
-QString SegmentDecoderBase::scanCurrentSegment(SegmentData& currentSegment) {
+QString SegmentDecoderBase::scanCurrentSegment(SegmentData &currentSegment)
+{
 
     QString fileName;
 
@@ -94,10 +91,10 @@ QString SegmentDecoderBase::scanCurrentSegment(SegmentData& currentSegment) {
     if (currentSegment.getArticlePresenceOnServer() == Present) {
 
         // open the current segment file :
-        QIODevice* ioDevice = currentSegment.getIoDevice();
+        QIODevice *ioDevice = currentSegment.getIoDevice();
         ioDevice->open(QIODevice::ReadOnly);
 
-         // look for file name :
+        // look for file name :
         fileName = this->searchPattern(ioDevice);
 
         // close the current segment file :

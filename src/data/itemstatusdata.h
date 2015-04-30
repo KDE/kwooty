@@ -27,13 +27,14 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class KWOOTY_EXPORT ItemStatusData {
+class KWOOTY_EXPORT ItemStatusData
+{
 
 public:
     ItemStatusData();
     ~ItemStatusData();
     void init();
-    void downloadRetry(const ItemStatus& itemStatusResetTarget);
+    void downloadRetry(const ItemStatus &itemStatusResetTarget);
     int getDownloadRetryCounter() const;
 
     void setStatus(const UtilityNamespace::ItemStatus);
@@ -52,7 +53,7 @@ public:
     void setPostProcessFinish(const bool);
 
     bool areAllPostProcessingCorrect() const;
-    void setAllPostProcessingCorrect(const bool&);
+    void setAllPostProcessingCorrect(const bool &);
 
     UtilityNamespace::CrcNotify getCrc32Match() const;
     void setCrc32Match(const UtilityNamespace::CrcNotify);
@@ -61,10 +62,9 @@ public:
     void setArticleEncodingType(const UtilityNamespace::ArticleEncodingType);
 
     int getNextServerId() const;
-    void setNextServerId(const int&);
+    void setNextServerId(const int &);
 
-
-    bool operator!=(const ItemStatusData&);
+    bool operator!=(const ItemStatusData &);
 
 private:
     UtilityNamespace::ItemStatus status;
@@ -80,8 +80,8 @@ private:
 
 };
 
-QDataStream& operator<<(QDataStream&, const ItemStatusData&);
-QDataStream& operator>>(QDataStream&, ItemStatusData&);
+QDataStream &operator<<(QDataStream &, const ItemStatusData &);
+QDataStream &operator>>(QDataStream &, ItemStatusData &);
 
 Q_DECLARE_METATYPE(ItemStatusData)
 

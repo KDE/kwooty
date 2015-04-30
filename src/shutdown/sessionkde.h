@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SESSIONKDE_H
 #define SESSIONKDE_H
 
@@ -27,20 +26,18 @@ using namespace Solid::PowerManagement;
 
 #include "sessionbase.h"
 
-
-class SessionKde : public SessionBase {
-
+class SessionKde : public SessionBase
+{
 
 public:
 
-    SessionKde(ShutdownManager*);
+    SessionKde(ShutdownManager *);
     QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods() Q_DECL_OVERRIDE;
 
 private:
 
     void requestShutdown();
     void requestSuspend();
-
 
 };
 

@@ -18,8 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
-
 #ifndef STATUSBARWIDGETBASE_H
 #define STATUSBARWIDGETBASE_H
 
@@ -30,28 +28,26 @@
 
 #include "widgets/mystatusbar.h"
 
-class StatusBarWidgetBase : public QWidget {
+class StatusBarWidgetBase : public QWidget
+{
 
     Q_OBJECT
 
 public:
-    StatusBarWidgetBase(QWidget*, MyStatusBar::WidgetIdentity);
+    StatusBarWidgetBase(QWidget *, MyStatusBar::WidgetIdentity);
     MyStatusBar::WidgetIdentity getWidgetIdentity();
-
 
 protected:
 
-    void mouseDoubleClickEvent(QMouseEvent*) Q_DECL_OVERRIDE;
+    void mouseDoubleClickEvent(QMouseEvent *) Q_DECL_OVERRIDE;
     MyStatusBar::WidgetIdentity widgetIdentity;
 
-    KIconLoader* iconLoader;
-    QHBoxLayout* hBoxLayout;
-
+    KIconLoader *iconLoader;
+    QHBoxLayout *hBoxLayout;
 
 private:
 
     void setupConnections();
-
 
 Q_SIGNALS:
 

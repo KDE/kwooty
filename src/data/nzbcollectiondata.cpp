@@ -18,10 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "nzbcollectiondata.h"
 
-NzbCollectionData::NzbCollectionData() {
+NzbCollectionData::NzbCollectionData()
+{
 
     this->par2FileDownloadStatus = DownloadFinishStatus;
     this->extractTerminateStatus = ExtractSuccessStatus;
@@ -32,16 +32,16 @@ NzbCollectionData::NzbCollectionData() {
 
 }
 
-
-QList<NzbFileData> NzbCollectionData::takeNzbFileDataList() {
+QList<NzbFileData> NzbCollectionData::takeNzbFileDataList()
+{
 
     QList<NzbFileData> tempList = this->nzbFileDataList;
     this->nzbFileDataList.clear();
     return tempList;
 }
 
-
-QVariant NzbCollectionData::getFirstChildUniqueIdentifier() const{
+QVariant NzbCollectionData::getFirstChildUniqueIdentifier() const
+{
 
     QVariant uniqueIdentifier;
 
@@ -51,40 +51,44 @@ QVariant NzbCollectionData::getFirstChildUniqueIdentifier() const{
     return uniqueIdentifier;
 }
 
-
-QList<NzbFileData> NzbCollectionData::getNzbFileDataList() const{
+QList<NzbFileData> NzbCollectionData::getNzbFileDataList() const
+{
     return this->nzbFileDataList;
 }
-void NzbCollectionData::setNzbFileDataList(const QList<NzbFileData>& nzbFileDataList){
+void NzbCollectionData::setNzbFileDataList(const QList<NzbFileData> &nzbFileDataList)
+{
     this->nzbFileDataList = nzbFileDataList;
 }
 
-
-void NzbCollectionData::setNzbParentId(const QString& nzbParentId){
+void NzbCollectionData::setNzbParentId(const QString &nzbParentId)
+{
     this->nzbParentId = nzbParentId;
 }
-QString NzbCollectionData::getNzbParentId() const{
+QString NzbCollectionData::getNzbParentId() const
+{
     return this->nzbParentId;
 }
 
-
-void NzbCollectionData::setPar2FileDownloadStatus(const UtilityNamespace::ItemStatus par2FileDownloadStatus){
+void NzbCollectionData::setPar2FileDownloadStatus(const UtilityNamespace::ItemStatus par2FileDownloadStatus)
+{
     this->par2FileDownloadStatus = par2FileDownloadStatus;
 }
-UtilityNamespace::ItemStatus NzbCollectionData::getPar2FileDownloadStatus() const {
+UtilityNamespace::ItemStatus NzbCollectionData::getPar2FileDownloadStatus() const
+{
     return this->par2FileDownloadStatus;
 }
 
-
-void NzbCollectionData::setPar2BaseName(const QString& par2BaseName) {
+void NzbCollectionData::setPar2BaseName(const QString &par2BaseName)
+{
     this->par2BaseName = par2BaseName;
 }
-QString NzbCollectionData::getPar2BaseName() const{
+QString NzbCollectionData::getPar2BaseName() const
+{
     return this->par2BaseName;
 }
 
-
-void NzbCollectionData::setExtractTerminateStatus(const UtilityNamespace::ItemStatus extractTerminateStatus){
+void NzbCollectionData::setExtractTerminateStatus(const UtilityNamespace::ItemStatus extractTerminateStatus)
+{
     this->extractTerminateStatus = extractTerminateStatus;
 
     if (extractTerminateStatus == ExtractFailedStatus) {
@@ -92,12 +96,13 @@ void NzbCollectionData::setExtractTerminateStatus(const UtilityNamespace::ItemSt
     }
 
 }
-UtilityNamespace::ItemStatus NzbCollectionData::getExtractTerminateStatus() const {
+UtilityNamespace::ItemStatus NzbCollectionData::getExtractTerminateStatus() const
+{
     return this->extractTerminateStatus;
 }
 
-
-void NzbCollectionData::setVerifyRepairTerminateStatus(const UtilityNamespace::ItemStatus verifyRepairTerminateStatus){
+void NzbCollectionData::setVerifyRepairTerminateStatus(const UtilityNamespace::ItemStatus verifyRepairTerminateStatus)
+{
     this->verifyRepairTerminateStatus = verifyRepairTerminateStatus;
 
     if (verifyRepairTerminateStatus == RepairFailedStatus) {
@@ -105,37 +110,41 @@ void NzbCollectionData::setVerifyRepairTerminateStatus(const UtilityNamespace::I
     }
 
 }
-UtilityNamespace::ItemStatus NzbCollectionData::getVerifyRepairTerminateStatus() const {
+UtilityNamespace::ItemStatus NzbCollectionData::getVerifyRepairTerminateStatus() const
+{
     return this->verifyRepairTerminateStatus;
 }
 
-
-void NzbCollectionData::setAllPostProcessingCorrect(const bool& allPostProcessingCorrect) {
+void NzbCollectionData::setAllPostProcessingCorrect(const bool &allPostProcessingCorrect)
+{
     this->allPostProcessingCorrect = allPostProcessingCorrect;
 }
-bool NzbCollectionData::isAllPostProcessingCorrect() const{
+bool NzbCollectionData::isAllPostProcessingCorrect() const
+{
     return this->allPostProcessingCorrect;
 }
 
-
-bool NzbCollectionData::isExtractProcessAllowed() const {
+bool NzbCollectionData::isExtractProcessAllowed() const
+{
     return this->extractProcessAllowed;
 }
 
-void NzbCollectionData::setExtractProcessAllowed(const bool& extractProcessAllowed) {
+void NzbCollectionData::setExtractProcessAllowed(const bool &extractProcessAllowed)
+{
     this->extractProcessAllowed = extractProcessAllowed;
 }
 
-
-bool NzbCollectionData::isRepairProcessAllowed() const {
+bool NzbCollectionData::isRepairProcessAllowed() const
+{
     return this->repairProcessAllowed;
 }
 
-void NzbCollectionData::setRepairProcessAllowed(const bool& repairProcessAllowed) {
+void NzbCollectionData::setRepairProcessAllowed(const bool &repairProcessAllowed)
+{
     this->repairProcessAllowed = repairProcessAllowed;
 }
 
-
-bool NzbCollectionData::operator==(const NzbCollectionData& nzbCollectionDataToCompare) {
+bool NzbCollectionData::operator==(const NzbCollectionData &nzbCollectionDataToCompare)
+{
     return (this->getNzbParentId() == nzbCollectionDataToCompare.getNzbParentId());
 }

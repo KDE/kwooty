@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "pluginmanager.h"
 
 #include "kwooty_debug.h"
@@ -26,8 +25,7 @@
 #include <KSharedConfig>
 #include "mainwindow.h"
 
-
-PluginManager::PluginManager(MainWindow* core) : QObject(core)
+PluginManager::PluginManager(MainWindow *core) : QObject(core)
 {
 
     this->core = core;
@@ -38,18 +36,17 @@ PluginManager::PluginManager(MainWindow* core) : QObject(core)
 
 }
 
-
-PluginManager::~PluginManager() {
+PluginManager::~PluginManager()
+{
 
 }
 
-
-void PluginManager::loadPlugins() {
-
+void PluginManager::loadPlugins()
+{
 
     KConfigGroup kConfigGroup = KSharedConfig::openConfig()->group("Plugins");
 
-    foreach (const KPluginInfo& currentPluginInfo, this->pluginInfoList) {
+    foreach (const KPluginInfo &currentPluginInfo, this->pluginInfoList) {
 
         // look in config file if the plugin have to be loaded :
         QString entryReadStr = kConfigGroup.readEntry(QString("%1Enabled").arg(currentPluginInfo.pluginName()), "");
@@ -83,14 +80,14 @@ void PluginManager::loadPlugins() {
 
 }
 
+void PluginManager::loadCurrentPlugin(const KPluginInfo &currentPluginInfo)
+{
 
-void PluginManager::loadCurrentPlugin(const KPluginInfo& currentPluginInfo) {
-
-    KPluginFactory* factory = KPluginLoader(currentPluginInfo.service()->library()).factory();
+    KPluginFactory *factory = KPluginLoader(currentPluginInfo.service()->library()).factory();
     if (factory) {
 
         // instanciate plugin :
-        Plugin* plugin = factory->create<Plugin>(this);
+        Plugin *plugin = factory->create<Plugin>(this);
 
         if (plugin) {
 
@@ -103,7 +100,6 @@ void PluginManager::loadCurrentPlugin(const KPluginInfo& currentPluginInfo) {
             plugin->load();
 
             this->loadedInfoPluginMap.insert(currentPluginInfo, plugin);
-
 
         } else {
             qCDebug(KWOOTY_LOG) << "Plugin can not be created:" << currentPluginInfo.service()->library();
@@ -118,11 +114,11 @@ void PluginManager::loadCurrentPlugin(const KPluginInfo& currentPluginInfo) {
 
 }
 
-
-void PluginManager::unloadCurrentPlugin(const KPluginInfo& currentPluginInfo) {
+void PluginManager::unloadCurrentPlugin(const KPluginInfo &currentPluginInfo)
+{
 
     // remove plugin from map :
-    Plugin* pluginToUnload = this->loadedInfoPluginMap.take(currentPluginInfo);
+    Plugin *pluginToUnload = this->loadedInfoPluginMap.take(currentPluginInfo);
 
     // check plugin validity before unload :
     if (pluginToUnload) {
@@ -134,14 +130,11 @@ void PluginManager::unloadCurrentPlugin(const KPluginInfo& currentPluginInfo) {
 
 }
 
-
-
-
-
-void PluginManager::configCommittedSlot(const QByteArray& componentName) {
+void PluginManager::configCommittedSlot(const QByteArray &componentName)
+{
 
     // look for plugin whose config has been updated :
-    foreach (Plugin* currentPlugin, this->loadedInfoPluginMap.values()) {
+    foreach (Plugin *currentPlugin, this->loadedInfoPluginMap.values()) {
 #if 0 //PORT KF5
         // corresponding plugin has been found :
         if (componentName == currentPlugin->componentData().componentName()) {
@@ -155,13 +148,9 @@ void PluginManager::configCommittedSlot(const QByteArray& componentName) {
 
 }
 
-
-
-QList<KPluginInfo> PluginManager::getPluginInfoList() {
+QList<KPluginInfo> PluginManager::getPluginInfoList()
+{
 
     return this->pluginInfoList;
 }
-
-
-
 

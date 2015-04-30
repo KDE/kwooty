@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SIDEBAR_H
 #define SIDEBAR_H
 
@@ -27,30 +26,27 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
 class Core;
 class MainWindow;
 class SideBarWidget;
 class ServerManager;
 
-
-class SideBar : public QObject {
-
+class SideBar : public QObject
+{
 
     Q_OBJECT
 
-
 public:
-    explicit SideBar(MainWindow*);
-    SideBarWidget* getSideBarWidget();
+    explicit SideBar(MainWindow *);
+    SideBarWidget *getSideBarWidget();
     void saveState();
     void loadState();
     void serverStatisticsUpdate(const int);
 
 private:
-    Core* mCore;
-    SideBarWidget* mSideBarWidget;
-    ServerManager* mServerManager;
+    Core *mCore;
+    SideBarWidget *mSideBarWidget;
+    ServerManager *mServerManager;
     bool mStateRestored;
 
     void createSideBarWidgets();

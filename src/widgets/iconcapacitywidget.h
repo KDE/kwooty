@@ -18,10 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef ICONCAPACITYWIDGET_H
 #define ICONCAPACITYWIDGET_H
-
 
 #include <QWidget>
 
@@ -30,20 +28,21 @@
 class QLabel;
 class KCapacityBar;
 
-class IconCapacityWidget : public StatusBarWidgetBase {
-Q_OBJECT
+class IconCapacityWidget : public StatusBarWidgetBase
+{
+    Q_OBJECT
 
 public:
-    explicit IconCapacityWidget(QWidget*, MyStatusBar::WidgetIdentity);
+    explicit IconCapacityWidget(QWidget *, MyStatusBar::WidgetIdentity);
     void showIcon();
     void hideIcon();
-    void setIcon(const QString&);
-    void updateCapacity(const QString&, int);
+    void setIcon(const QString &);
+    void updateCapacity(const QString &, int);
 
 private:
 
-    KCapacityBar* mCapacityBar;
-    QLabel* mIconLabel;
+    KCapacityBar *mCapacityBar;
+    QLabel *mIconLabel;
 };
 
 #endif // ICONCAPACITYWIDGET_H

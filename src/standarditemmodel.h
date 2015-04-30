@@ -21,7 +21,6 @@
 #ifndef STANDARDITEMMODEL_H
 #define STANDARDITEMMODEL_H
 
-
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QModelIndex>
@@ -35,46 +34,45 @@ class Core;
 class ItemStatusData;
 class NzbFileData;
 
-class KWOOTY_EXPORT StandardItemModel : public QStandardItemModel {
+class KWOOTY_EXPORT StandardItemModel : public QStandardItemModel
+{
 
     Q_OBJECT
 
 public:
-    StandardItemModel(Core*);
+    StandardItemModel(Core *);
     StandardItemModel();
-    QStandardItem* getParentItem(const QModelIndex&) const;
-    QStandardItem* getStateItemFromIndex(const QModelIndex&) const;
-    QStandardItem* getFileNameItemFromIndex(const QModelIndex&) const;
-    QStandardItem* getProgressItemFromIndex(const QModelIndex&) const;
-    QStandardItem* getSizeItemFromIndex(const QModelIndex&) const;
-    ItemStatusData getStatusDataFromIndex(const QModelIndex&) const;
-    QStandardItem* getNzbItem(QStandardItem* item) const;
-    QStandardItem* getNzbItem(const QModelIndex&) const;
-    NzbFileData getNzbFileDataFromIndex(const QModelIndex&) const;
-    int getProgressValueFromIndex(const QModelIndex&) const;
-    quint64 getSizeValueFromIndex(const QModelIndex&) const;
-    QString getUuidStrFromIndex(const QModelIndex&) const;
-    QString getParentFileSavePathFromIndex(const QModelIndex&) const;
-    UtilityNamespace::ItemStatus getStatusFromStateItem(QStandardItem*) const;
-    UtilityNamespace::ItemStatus getChildStatusFromNzbIndex(const QModelIndex&, int) const;
-    QStandardItem* getFileNameItemFromRowNumber(const int&) const;
-    bool isNzbItem(QStandardItem*) const;
-    void updateStateItem(const QModelIndex& index, const UtilityNamespace::ItemStatus);
-    void updateProgressItem(const QModelIndex&, const int);
-    void storeStatusDataToItem(QStandardItem*, const ItemStatusData&);
-    void initStatusDataToItem(QStandardItem*, const ItemStatusData&);
-    void updateNzbFileDataToItem(QStandardItem*, const NzbFileData&);
-    void updateStatusDataFromIndex(const QModelIndex&, const ItemStatusData&);
-    void updateParentFileSavePathFromIndex(const QModelIndex&, const NzbFileData&);
-
+    QStandardItem *getParentItem(const QModelIndex &) const;
+    QStandardItem *getStateItemFromIndex(const QModelIndex &) const;
+    QStandardItem *getFileNameItemFromIndex(const QModelIndex &) const;
+    QStandardItem *getProgressItemFromIndex(const QModelIndex &) const;
+    QStandardItem *getSizeItemFromIndex(const QModelIndex &) const;
+    ItemStatusData getStatusDataFromIndex(const QModelIndex &) const;
+    QStandardItem *getNzbItem(QStandardItem *item) const;
+    QStandardItem *getNzbItem(const QModelIndex &) const;
+    NzbFileData getNzbFileDataFromIndex(const QModelIndex &) const;
+    int getProgressValueFromIndex(const QModelIndex &) const;
+    quint64 getSizeValueFromIndex(const QModelIndex &) const;
+    QString getUuidStrFromIndex(const QModelIndex &) const;
+    QString getParentFileSavePathFromIndex(const QModelIndex &) const;
+    UtilityNamespace::ItemStatus getStatusFromStateItem(QStandardItem *) const;
+    UtilityNamespace::ItemStatus getChildStatusFromNzbIndex(const QModelIndex &, int) const;
+    QStandardItem *getFileNameItemFromRowNumber(const int &) const;
+    bool isNzbItem(QStandardItem *) const;
+    void updateStateItem(const QModelIndex &index, const UtilityNamespace::ItemStatus);
+    void updateProgressItem(const QModelIndex &, const int);
+    void storeStatusDataToItem(QStandardItem *, const ItemStatusData &);
+    void initStatusDataToItem(QStandardItem *, const ItemStatusData &);
+    void updateNzbFileDataToItem(QStandardItem *, const NzbFileData &);
+    void updateStatusDataFromIndex(const QModelIndex &, const ItemStatusData &);
+    void updateParentFileSavePathFromIndex(const QModelIndex &, const NzbFileData &);
 
 private:
-    QStandardItem* getColumnItem(const QModelIndex&, const int) const;
-
+    QStandardItem *getColumnItem(const QModelIndex &, const int) const;
 
 Q_SIGNALS:
-    void parentStatusItemChangedSignal(QStandardItem*, ItemStatusData);
-    void childStatusItemChangedSignal(QStandardItem*, ItemStatusData);
+    void parentStatusItemChangedSignal(QStandardItem *, ItemStatusData);
+    void childStatusItemChangedSignal(QStandardItem *, ItemStatusData);
     void parentProgressItemChangedSignal();
 };
 

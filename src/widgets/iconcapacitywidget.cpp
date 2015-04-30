@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "iconcapacitywidget.h"
 
 #include <kcapacitybar.h>
@@ -31,8 +30,8 @@
 
 #include "statusbarwidgetbase.h"
 
-
-IconCapacityWidget::IconCapacityWidget(QWidget* parent, MyStatusBar::WidgetIdentity widgetIdentity) : StatusBarWidgetBase(parent, widgetIdentity) {
+IconCapacityWidget::IconCapacityWidget(QWidget *parent, MyStatusBar::WidgetIdentity widgetIdentity) : StatusBarWidgetBase(parent, widgetIdentity)
+{
 
     iconLoader = KIconLoader::global();
 
@@ -48,34 +47,30 @@ IconCapacityWidget::IconCapacityWidget(QWidget* parent, MyStatusBar::WidgetIdent
 
 }
 
-
-
-void IconCapacityWidget::setIcon(const QString& iconStr) {
+void IconCapacityWidget::setIcon(const QString &iconStr)
+{
 
     if (!iconStr.isEmpty()) {
 
         mIconLabel->setPixmap(iconLoader->loadIcon(iconStr, KIconLoader::Small));
-    }
-    else {
+    } else {
         mIconLabel->setPixmap(QPixmap());
     }
 
 }
 
-
-
-void IconCapacityWidget::showIcon() {
+void IconCapacityWidget::showIcon()
+{
     mIconLabel->show();
 }
 
-
-void IconCapacityWidget::hideIcon() {
+void IconCapacityWidget::hideIcon()
+{
     mIconLabel->hide();
 }
 
-
-
-void IconCapacityWidget::updateCapacity(const QString& availableVal, int usedDiskPercentage) {
+void IconCapacityWidget::updateCapacity(const QString &availableVal, int usedDiskPercentage)
+{
 
     // adjust capacityBar size according to text :
     int widthInPixel = mCapacityBar->fontMetrics().width(availableVal) + 30;

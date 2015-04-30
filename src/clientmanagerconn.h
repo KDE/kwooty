@@ -30,16 +30,16 @@ using namespace UtilityNamespace;
 class NntpClient;
 class ServerGroup;
 
-
-class ClientManagerConn : public QObject {
+class ClientManagerConn : public QObject
+{
 
     Q_OBJECT
 
 public:
-    ClientManagerConn(ServerGroup*, int, int);
+    ClientManagerConn(ServerGroup *, int, int);
     ~ClientManagerConn();
-    NntpClient* getNntpClient();
-    ServerGroup* getServerGroup();
+    NntpClient *getNntpClient();
+    ServerGroup *getServerGroup();
     ServerData getServerData() const;
     int getClientId() const;
     int getConnectionDelay() const;
@@ -50,19 +50,16 @@ public:
     bool isBandwidthLimited() const;
     bool isBandwidthFull() const;
     void noSegmentAvailable();
-    void processNextSegment(const SegmentData&);
-    void setBandwidthMode(const BandwidthClientMode&);
+    void processNextSegment(const SegmentData &);
+    void setBandwidthMode(const BandwidthClientMode &);
     void handleFirstConnection();
 
-
-
 private:
-    NntpClient* nntpClient;
-    ServerGroup* parent;
+    NntpClient *nntpClient;
+    ServerGroup *parent;
     BandwidthClientMode bandwidthClientMode;
     int clientId;
     int connectionDelay;
-
 
 public Q_SLOTS:
     void dataHasArrivedSlot();
@@ -74,7 +71,6 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void initSlot();
-
 
 };
 

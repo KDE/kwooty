@@ -34,12 +34,13 @@
 
 class CategoriesModel;
 
-class PreferencesCategories : public KCModule {
+class PreferencesCategories : public KCModule
+{
 
     Q_OBJECT
 
 public:
-    PreferencesCategories(QWidget* = Q_NULLPTR, const QVariantList& = QVariantList());
+    PreferencesCategories(QWidget * = Q_NULLPTR, const QVariantList & = QVariantList());
     ~PreferencesCategories();
 
     virtual void save();
@@ -47,23 +48,23 @@ public:
 
 private:
 
-    QStandardItem* getSelectedItem();
-    QStringList retrieveSelectionList(QStandardItem*);
-    QString buildGroupBoxTitle(const QString& = QString());
-    void subCategoryWidgets(const QModelIndex&);
-    void addMimeTypeToGroup(QStandardItem*);
+    QStandardItem *getSelectedItem();
+    QStringList retrieveSelectionList(QStandardItem *);
+    QString buildGroupBoxTitle(const QString & = QString());
+    void subCategoryWidgets(const QModelIndex &);
+    void addMimeTypeToGroup(QStandardItem *);
     void setupConnections();
     void saveChanges();
 
     Ui_PreferencesCategories preferencesCategoriesUi;
-    CategoriesModel* categoriesModel;
+    CategoriesModel *categoriesModel;
     bool saveChangesRequested;
 private Q_SLOTS:
 
     void toolButtonAddClickSlot();
     void toolButtonRemoveClickSlot();
     void toolButtonEditSubcategoryClickSlot();
-    void urlChangedSlot(const QString&);
+    void urlChangedSlot(const QString &);
     void categoryWidgetsSlot();
     void defaultTransferValueButtonToggledSlot();
 

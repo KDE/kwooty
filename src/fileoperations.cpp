@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "fileoperations.h"
 
 #include <KFileDialog>
@@ -33,21 +32,22 @@
 #include "widgets/centralwidget.h"
 #include "kwootysettings.h"
 
-FileOperations::FileOperations(Core* core) : QObject(core) {
+FileOperations::FileOperations(Core *core) : QObject(core)
+{
 
     this->core = core;
 
 }
 
-
-void FileOperations::openFile() {
+void FileOperations::openFile()
+{
 
     bool isWrongUrl = false;
 
     QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(KUrl(), i18n("*.nzb|nzb files"), this->core->getCentralWidget());
 
     // process selected file(s) :
-    foreach (const QString& fileNameFromDialog, fileNameFromDialogList) {
+    foreach (const QString &fileNameFromDialog, fileNameFromDialogList) {
 
         if (!fileNameFromDialog.isNull() || !fileNameFromDialog.isEmpty()) {
 
@@ -55,19 +55,17 @@ void FileOperations::openFile() {
 
         }
 
-
         // If url cannot be reached open an error message box
-        if (isWrongUrl){
+        if (isWrongUrl) {
             KMessageBox::error(this->core->getCentralWidget() , KIO::NetAccess::lastErrorString());
         }
-
 
     }
 
 }
 
-
-void FileOperations::openFileWithFileMode(const KUrl &nzbUrl, UtilityNamespace::OpenFileMode openFileMode) {
+void FileOperations::openFileWithFileMode(const KUrl &nzbUrl, UtilityNamespace::OpenFileMode openFileMode)
+{
 
     bool isWrongUrl = false;
 
@@ -75,24 +73,23 @@ void FileOperations::openFileWithFileMode(const KUrl &nzbUrl, UtilityNamespace::
     this->openUrl(nzbUrl, isWrongUrl, openFileMode);
 
     // If url cannot be reached open an error message box
-    if (isWrongUrl){
+    if (isWrongUrl) {
         KMessageBox::error(this->core->getCentralWidget(), KIO::NetAccess::lastErrorString());
     }
 
 }
 
-
-
-void FileOperations::openUrl(const KUrl &url, bool& isWrongUrl, UtilityNamespace::OpenFileMode openFileMode) {
+void FileOperations::openUrl(const KUrl &url, bool &isWrongUrl, UtilityNamespace::OpenFileMode openFileMode)
+{
 
     QString downloadFile;
 
-    if(KIO::NetAccess::download(url, downloadFile, this->core->getCentralWidget())){
+    if (KIO::NetAccess::download(url, downloadFile, this->core->getCentralWidget())) {
 
         QFile file(downloadFile);
 
         // Open the nzb file :
-        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
             KMessageBox::error(this->core->getCentralWidget(), KIO::NetAccess::lastErrorString());
         }
 
@@ -101,8 +98,8 @@ void FileOperations::openUrl(const KUrl &url, bool& isWrongUrl, UtilityNamespace
         QString nzbBaseName = nzbRealBaseName;
 
         int counter = 1;
-        while ( counter < 100 &&
-                this->core->getModelQuery()->isParentFileNameExists(nzbBaseName) ) {
+        while (counter < 100 &&
+                this->core->getModelQuery()->isParentFileNameExists(nzbBaseName)) {
 
             // add a suffix to distinguish files between each others :
             nzbBaseName = nzbRealBaseName + "-" + QString::number(counter++);
@@ -116,15 +113,15 @@ void FileOperations::openUrl(const KUrl &url, bool& isWrongUrl, UtilityNamespace
 
         // copy nzb file in its associated download folder if file has been open has been triggered by another app  :
         if (Settings::openWith() &&
-            (openFileMode == UtilityNamespace::OpenWith)) {
+                (openFileMode == UtilityNamespace::OpenWith)) {
 
             // create download folder :
             QString downloadFolderPath = Utility::buildFullPath(Settings::completedFolder().path(), nzbBaseName);
             Utility::createFolder(downloadFolderPath);
 
             // copy nzb file in created download folder :
-            file.copy( Utility::buildFullPath(downloadFolderPath, url.fileName()) );
-            QFile::setPermissions( Utility::buildFullPath(downloadFolderPath, url.fileName() ), QFile::ReadOwner | QFile::WriteOwner);
+            file.copy(Utility::buildFullPath(downloadFolderPath, url.fileName()));
+            QFile::setPermissions(Utility::buildFullPath(downloadFolderPath, url.fileName()), QFile::ReadOwner | QFile::WriteOwner);
 
         }
 
@@ -139,8 +136,8 @@ void FileOperations::openUrl(const KUrl &url, bool& isWrongUrl, UtilityNamespace
 
 }
 
-
-bool FileOperations::isSplitFileFormat(const QFile& decodedFile) {
+bool FileOperations::isSplitFileFormat(const QFile &decodedFile)
+{
 
     bool splitFile = false;
 

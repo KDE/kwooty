@@ -40,45 +40,42 @@ class PluginManager;
 class SideBar;
 class KConfigGroupHandler;
 
-
 class KWOOTY_EXPORT MainWindow : public KXmlGuiWindow
 
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget* parent = Q_NULLPTR);
+    explicit MainWindow(QWidget *parent = Q_NULLPTR);
     ~MainWindow();
 
-    void openFileWithFileMode(const KUrl&, UtilityNamespace::OpenFileMode);
-    QAction* getActionFromName(const QString&);
-    MyStatusBar* getStatusBar() const;
-    SideBar* getSideBar() const;
-    Core* getCore() const;
-    CentralWidget* getCentralWidget() const;
-    MyTreeView* getTreeView() const;
+    void openFileWithFileMode(const KUrl &, UtilityNamespace::OpenFileMode);
+    QAction *getActionFromName(const QString &);
+    MyStatusBar *getStatusBar() const;
+    SideBar *getSideBar() const;
+    Core *getCore() const;
+    CentralWidget *getCentralWidget() const;
+    MyTreeView *getTreeView() const;
     QSize sizeHint() const;
 
-
 private:
-    Core* mCore;
-    CentralWidget* mCentralWidget;
-    MyTreeView* mTreeView;
+    Core *mCore;
+    CentralWidget *mCentralWidget;
+    MyTreeView *mTreeView;
     QPointer<SysTray> mSysTray;
-    MyStatusBar* mStatusBar;
-    SideBar* mSideBar;
-    PluginManager* mPluginManager;
-    KConfigGroupHandler* mKConfigGroupHandler;
-    QHash<PreferencesPage, KPageWidgetItem*> mPreferencesPagesMap;
+    MyStatusBar *mStatusBar;
+    SideBar *mSideBar;
+    PluginManager *mPluginManager;
+    KConfigGroupHandler *mKConfigGroupHandler;
+    QHash<PreferencesPage, KPageWidgetItem *> mPreferencesPagesMap;
     bool mQuitSelected;
 
     void initVariables();
-    void buildLayout(QWidget*);
+    void buildLayout(QWidget *);
     void setupActions();
     bool queryClose();
     bool queryExit();
-    void askForSavingDownloads(bool&);
-
+    void askForSavingDownloads(bool &);
 
 Q_SIGNALS:
     void aboutToShowSettingsSignal();
@@ -88,7 +85,6 @@ Q_SIGNALS:
 public Q_SLOTS:
     void systraySlot();
     void showSettings(UtilityNamespace::PreferencesPage = UtilityNamespace::GeneralPage);
-
 
 private Q_SLOTS:
     void openFile();

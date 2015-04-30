@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef STATSINFOBUILDER_H
 #define STATSINFOBUILDER_H
 
@@ -40,21 +39,20 @@ class StatsInfoBuilder : public QObject
 public:
     static const int SPEED_AVERAGE_SECONDS = 2;
 
-    StatsInfoBuilder(ClientsObserver*, Core*);
+    StatsInfoBuilder(ClientsObserver *, Core *);
     void sendFullUpdate();
     QString getTotalTimeValue() const;
     QString getCurrentTimeValue() const;
     QString getTimeLabel() const;
     QString getNzbNameDownloading() const;
     QString getDownloadSpeedReadableStr() const;
-    QTimer* getDownloadSpeedTimer() const;
+    QTimer *getDownloadSpeedTimer() const;
 
-
-private:   
-    Core* parent;
-    ClientsObserver* clientsObserver;
-    StandardItemModel* downloadModel;
-    QTimer* downloadSpeedTimer;
+private:
+    Core *parent;
+    ClientsObserver *clientsObserver;
+    StandardItemModel *downloadModel;
+    QTimer *downloadSpeedTimer;
     QString nzbNameDownloading;
     QString currentTimeValue;
     QString totalTimeValue;
@@ -69,33 +67,29 @@ private:
     quint64 downloadSpeedCurrent;
     UtilityNamespace::FreeDiskSpace previousDiskSpaceStatus;
 
-    QString calculateArrivalTime(const quint32&);
-    QString calculateRemainingTime(const quint32&);
+    QString calculateArrivalTime(const quint32 &);
+    QString calculateRemainingTime(const quint32 &);
     void setupConnections();
     void resetVariables();
     void computeTimeInfo();
     void retrieveFreeDiskSpace();
-    void retrieveQueuedFilesInfo(bool&, bool&);
-    void computeMeanSpeed(const quint64&, quint64&);
-
-
+    void retrieveQueuedFilesInfo(bool &, bool &);
+    void computeMeanSpeed(const quint64 &, quint64 &);
 
 Q_SIGNALS:
 
     void updateDownloadSpeedInfoSignal(const QString &);
     void updateTimeInfoSignal(const bool);
     void updateFreeSpaceSignal(const UtilityNamespace::FreeDiskSpace, const QString = QString(), const int = 0);
-    void insufficientDiskSpaceSignal(const QString&);
+    void insufficientDiskSpaceSignal(const QString &);
 
 public Q_SLOTS:
 
     void settingsChangedSlot();
 
-
 private Q_SLOTS:
 
     void updateDownloadSpeedSlot();
-
 
 };
 

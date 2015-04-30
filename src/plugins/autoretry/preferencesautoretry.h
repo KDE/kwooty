@@ -29,14 +29,12 @@
 #include <KPluginFactory>
 #include <KPluginLoader>
 
-
-
 class PreferencesAutoRetry : public KCModule
 {
     Q_OBJECT
 
 public:
-    PreferencesAutoRetry(QWidget* = Q_NULLPTR, const QVariantList& = QVariantList());
+    PreferencesAutoRetry(QWidget * = Q_NULLPTR, const QVariantList & = QVariantList());
     ~PreferencesAutoRetry();
 
     virtual void save();

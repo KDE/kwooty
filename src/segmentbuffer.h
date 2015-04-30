@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SEGMENTBUFFER_H
 #define SEGMENTBUFFER_H
 
@@ -34,29 +33,28 @@ using namespace UtilityNamespace;
 class ServerManager;
 class Core;
 
-
-class SegmentBuffer : public QObject {
+class SegmentBuffer : public QObject
+{
 
     Q_OBJECT
 
 public:
-    SegmentBuffer(ServerManager*, Core*);
-    int segmentSavingQueued(const SegmentData&);
-    void finalizeDecodeQueued(const NzbFileData&);
+    SegmentBuffer(ServerManager *, Core *);
+    int segmentSavingQueued(const SegmentData &);
+    void finalizeDecodeQueued(const NzbFileData &);
     void lockFinalizeDecode();
     void unlockFinalizeDecode();
     bool isfinalizeDecodeIdle() const;
     bool isBufferFull() const;
-    void updateDecodeWaitingQueue(const NzbFileData&, const NzbFileData&);
-    void removeDataFromDecodeWaitingQueue(const NzbFileData&);
-
+    void updateDecodeWaitingQueue(const NzbFileData &, const NzbFileData &);
+    void removeDataFromDecodeWaitingQueue(const NzbFileData &);
 
 private:
 
     QList<SegmentData> segmentDataList;
     QList<NzbFileData> nzbFileDataList;
-    Core* core;
-    ServerManager* serverManager;
+    Core *core;
+    ServerManager *serverManager;
     qint64 dataSizeCounter;
     int requestNextSegmentDelaySec;
     bool segmentDecoderIdle;
@@ -67,16 +65,14 @@ private:
     void setupConnections();
     void sendDataToFinalizeDecode();
 
-
 Q_SIGNALS:
     void saveDownloadedSegmentSignal(const SegmentData &);
     void decodeSegmentsSignal(const NzbFileData &);
     void finalizeDecoderLockedSignal();
 
-
 public Q_SLOTS:
     void segmentDecoderIdleSlot();
-    void finalizeDecodeQueuedSlot(const NzbFileData&);
+    void finalizeDecodeQueuedSlot(const NzbFileData &);
     void finalizeDecoderIdleSlot();
 };
 

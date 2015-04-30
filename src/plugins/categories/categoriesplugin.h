@@ -18,15 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef CATEGORIESPLUGIN_H
 #define CATEGORIESPLUGIN_H
 
-
 #include "plugin.h"
 #include "categories.h"
-
-
 
 class CategoriesPlugin : public Plugin
 {
@@ -35,13 +31,12 @@ class CategoriesPlugin : public Plugin
 
 public:
 
-    CategoriesPlugin(QObject*, const QList<QVariant>&);
+    CategoriesPlugin(QObject *, const QList<QVariant> &);
     ~CategoriesPlugin();
-
 
 private:
 
-    Categories* categories;
+    Categories *categories;
 
     void load();
     void unload();

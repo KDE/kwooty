@@ -18,10 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef UTILITYICONPAINTING_H
 #define UTILITYICONPAINTING_H
-
 
 #include <QIcon>
 #include <KIconLoader>
@@ -34,7 +32,8 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class UtilityIconPainting : public QObject {
+class UtilityIconPainting : public QObject
+{
 
     Q_OBJECT
 
@@ -42,26 +41,26 @@ public:
     UtilityIconPainting();
     ~UtilityIconPainting();
 
-    static UtilityIconPainting* getInstance();
-    QPixmap blendOverLayTopRight(const QString&, const QString&);
-    QPixmap blendOverLayEmblem(const QString&, const QPixmap*);
-    QPixmap blendOverLayEmblem(const QString&, const QIcon&);
-    QPixmap buildNormalIcon(const QString&);
-    QPixmap buildGrayIcon(const QString&);
-    QPixmap buildGrayIcon(const QPixmap&);
-    QPixmap buildClearIcon(const QPixmap&);
-    QPixmap buildSemiTransparentIcon(const QString&);
-    QPixmap buildSemiTransparentIcon(const QPixmap&);
-    QLabel* buildLighterTextLabel(const QString&, QWidget*);
-    QColor lighterColor(const qreal&);
-    void displayLighterText(QStandardItem*);
+    static UtilityIconPainting *getInstance();
+    QPixmap blendOverLayTopRight(const QString &, const QString &);
+    QPixmap blendOverLayEmblem(const QString &, const QPixmap *);
+    QPixmap blendOverLayEmblem(const QString &, const QIcon &);
+    QPixmap buildNormalIcon(const QString &);
+    QPixmap buildGrayIcon(const QString &);
+    QPixmap buildGrayIcon(const QPixmap &);
+    QPixmap buildClearIcon(const QPixmap &);
+    QPixmap buildSemiTransparentIcon(const QString &);
+    QPixmap buildSemiTransparentIcon(const QPixmap &);
+    QLabel *buildLighterTextLabel(const QString &, QWidget *);
+    QColor lighterColor(const qreal &);
+    void displayLighterText(QStandardItem *);
 
-    bool retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus&, QIcon& icon);
-    bool retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus&, QIcon& icon);
-    bool retrieveIconFromString(const QString&, QIcon& icon);
+    bool retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus &, QIcon &icon);
+    bool retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus &, QIcon &icon);
+    bool retrieveIconFromString(const QString &, QIcon &icon);
 
 private:
-    static UtilityIconPainting* instance;
+    static UtilityIconPainting *instance;
     QMap<QString, QPixmap> textIconMap;
 
     QHash<int, QString> statusIconStrMap;

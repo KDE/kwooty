@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef JOBNOTIFYDATA_H
 #define JOBNOTIFYDATA_H
 
@@ -30,20 +29,18 @@ using namespace UtilityNamespace;
 class JobNotifyData
 {
 
-
 public:
     JobNotifyData();
 
     QString getParentUniqueIdentifier() const;
-    void setParentUniqueIdentifier(const QString&);
+    void setParentUniqueIdentifier(const QString &);
     UtilityNamespace::ItemStatus getStatus() const;
-    void setStatus(const UtilityNamespace::ItemStatus&);
+    void setStatus(const UtilityNamespace::ItemStatus &);
     QDateTime getDateTime() const;
-    void setDateTime(const QDateTime&);
+    void setDateTime(const QDateTime &);
     QString getNzbFileName() const;
-    void setNzbFileName(const QString&);
-    bool operator==(const JobNotifyData&);
-
+    void setNzbFileName(const QString &);
+    bool operator==(const JobNotifyData &);
 
 private:
 

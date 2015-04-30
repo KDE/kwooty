@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "queuefileobserver.h"
 
 #include "kwooty_debug.h"
@@ -29,8 +28,8 @@
 #include "standarditemmodelquery.h"
 #include "kwootysettings.h"
 
-
-QueueFileObserver::QueueFileObserver(Core* parent) : QObject(parent) {
+QueueFileObserver::QueueFileObserver(Core *parent) : QObject(parent)
+{
 
     this->downloadModel = parent->getDownloadModel();
     this->modelQuery = parent->getModelQuery();
@@ -44,11 +43,10 @@ QueueFileObserver::QueueFileObserver(Core* parent) : QObject(parent) {
     this->focusedItemStatus = IdleStatus;
     this->pluginJobRunning = false;
 
-
 }
 
-
-void QueueFileObserver::setupConnections() {
+void QueueFileObserver::setupConnections()
+{
 
     // parent progress item has been updated :
     connect(this->downloadModel,
@@ -68,14 +66,13 @@ void QueueFileObserver::setupConnections() {
             this,
             SLOT(jobFinishStatusSlot(QStandardItem*)));
 
-
     // ensure that jobs are finished after a time-out :
     connect(this->jobNotifyTimer, SIGNAL(timeout()), this, SLOT(checkJobFinishSlot()));
 
 }
 
-
-void QueueFileObserver::checkProgressItemValue(QStandardItem* stateItem) {
+void QueueFileObserver::checkProgressItemValue(QStandardItem *stateItem)
+{
 
     if (stateItem) {
 
@@ -94,19 +91,18 @@ void QueueFileObserver::checkProgressItemValue(QStandardItem* stateItem) {
 
 }
 
-
-int QueueFileObserver::getFocusedProgressValue() const {
+int QueueFileObserver::getFocusedProgressValue() const
+{
     return this->focusedProgressValue;
 }
 
-
-UtilityNamespace::ItemStatus QueueFileObserver::getFocusedItemStatus() const {
+UtilityNamespace::ItemStatus QueueFileObserver::getFocusedItemStatus() const
+{
     return this->focusedItemStatus;
 }
 
-
-
-void QueueFileObserver::addToList(const JobNotifyData& jobNotifyData) {
+void QueueFileObserver::addToList(const JobNotifyData &jobNotifyData)
+{
 
     // keep a list with a max size of 10 :
     if (this->jobNotifyDataList.size() > MAX_LIST_SIZE) {
@@ -118,12 +114,10 @@ void QueueFileObserver::addToList(const JobNotifyData& jobNotifyData) {
 
 }
 
+JobNotifyData QueueFileObserver::retrieveJobNotifyData(QStandardItem *stateItem, UtilityNamespace::ItemStatus status)
+{
 
-
-JobNotifyData QueueFileObserver::retrieveJobNotifyData(QStandardItem* stateItem, UtilityNamespace::ItemStatus status) {
-
-
-    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
+    QStandardItem *fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
 
     // store parent identifier :
     JobNotifyData jobNotifyData;
@@ -135,8 +129,8 @@ JobNotifyData QueueFileObserver::retrieveJobNotifyData(QStandardItem* stateItem,
     return jobNotifyData;
 }
 
-
-bool QueueFileObserver::isPluginJobRunning() {
+bool QueueFileObserver::isPluginJobRunning()
+{
     return this->pluginJobRunning;
 }
 
@@ -144,14 +138,13 @@ bool QueueFileObserver::isPluginJobRunning() {
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void QueueFileObserver::parentItemChangedSlot() {
-
+void QueueFileObserver::parentItemChangedSlot()
+{
 
     UtilityNamespace::ItemStatus currentItemStatus = this->focusedItemStatus;
 
     // search current item being downloading :
-    QStandardItem* stateItem = this->modelQuery->searchParentItemDownloadOrPausing();
+    QStandardItem *stateItem = this->modelQuery->searchParentItemDownloadOrPausing();
 
     if (stateItem) {
         currentItemStatus = DownloadStatus;
@@ -174,7 +167,6 @@ void QueueFileObserver::parentItemChangedSlot() {
             this->focusedProgressValue = PROGRESS_UNKNOWN;
         }
     }
-
 
     // item has not been found, there is no more download activities in queue, emit reset progress signal :
     if (!stateItem) {
@@ -208,17 +200,14 @@ void QueueFileObserver::parentItemChangedSlot() {
 
 }
 
-
-
-void QueueFileObserver::jobFinishStatusSlot(QStandardItem* stateItem) {
-
+void QueueFileObserver::jobFinishStatusSlot(QStandardItem *stateItem)
+{
 
     UtilityNamespace::ItemStatus status = this->downloadModel->getStatusFromStateItem(stateItem);
     JobNotifyData currentJobNotifyData = this->retrieveJobNotifyData(stateItem, status);
 
     // pending finish job has already been found in the list :
     if (this->jobNotifyDataList.contains(currentJobNotifyData)) {
-
 
         int currentIndex = this->jobNotifyDataList.indexOf(currentJobNotifyData);
 
@@ -251,19 +240,18 @@ void QueueFileObserver::jobFinishStatusSlot(QStandardItem* stateItem) {
 
 }
 
-
-
-void QueueFileObserver::checkJobFinishSlot() {
+void QueueFileObserver::checkJobFinishSlot()
+{
 
     QList<JobNotifyData> pendingJobList;
 
-    foreach (const JobNotifyData& jobNotifyData, this->jobNotifyDataList) {
+    foreach (const JobNotifyData &jobNotifyData, this->jobNotifyDataList) {
 
         // if status of item did not changed after few seconds and that there is no verifing or extracting processed
         // (eg : current item could be pending for verifying while a previous nzb is currently being verified),
         // then send notification :
-        if ( (jobNotifyData.getDateTime().secsTo(QDateTime::currentDateTime()) > 2) &&
-             !this->modelQuery->searchParentItemPostDownloadProcessing() ) {
+        if ((jobNotifyData.getDateTime().secsTo(QDateTime::currentDateTime()) > 2) &&
+                !this->modelQuery->searchParentItemPostDownloadProcessing()) {
 
             // notifications will handle this signal :
             emit jobFinishSignal(jobNotifyData.getStatus(), jobNotifyData.getNzbFileName());
@@ -273,7 +261,6 @@ void QueueFileObserver::checkJobFinishSlot() {
         else {
             pendingJobList.append(jobNotifyData);
         }
-
 
     }
 
@@ -285,8 +272,8 @@ void QueueFileObserver::checkJobFinishSlot() {
 
 }
 
-
-void QueueFileObserver::pluginJobRunningSlot(bool pluginJobRunning) {
+void QueueFileObserver::pluginJobRunningSlot(bool pluginJobRunning)
+{
 
     this->pluginJobRunning = pluginJobRunning;
 

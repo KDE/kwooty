@@ -36,23 +36,20 @@
 #include "standarditemmodel.h"
 #include "kwootysettings.h"
 
-
-
-SegmentManager::SegmentManager(Core* parent) : QObject (parent) {
+SegmentManager::SegmentManager(Core *parent) : QObject(parent)
+{
 
     this->downloadModel = parent->getDownloadModel();
     this->itemParentUpdater = parent->getItemParentUpdater();
 
 }
 
-
 SegmentManager::SegmentManager()
 {
 }
 
-
-
-bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientManagerConn* currentClientManagerConn, SegmentInfoData segmentInfoData){
+bool SegmentManager::sendNextIdleSegment(QStandardItem *fileNameItem, ClientManagerConn *currentClientManagerConn, SegmentInfoData segmentInfoData)
+{
 
     bool itemFound = false;
 
@@ -66,9 +63,9 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
         SegmentData segmentData = segmentList.at(segmentIndex);
 
         // filter Idle segments searching according to corresponding serverGroup id :
-        if ( !itemFound &&
-             (segmentData.getStatus() == IdleStatus) &&
-             (currentClientManagerConn->getServerGroup()->canDownload(segmentData.getServerGroupTarget())) ) {
+        if (!itemFound &&
+                (segmentData.getStatus() == IdleStatus) &&
+                (currentClientManagerConn->getServerGroup()->canDownload(segmentData.getServerGroupTarget()))) {
 
             itemFound = true;
 
@@ -103,17 +100,15 @@ bool SegmentManager::sendNextIdleSegment(QStandardItem* fileNameItem, ClientMana
 
     } // end of for loop
 
-
     return itemFound;
 
 }
 
-
-
-void SegmentManager::setIdlePauseSegments(QStandardItem* fileNameItem, const UtilityNamespace::ItemStatus targetStatus){
+void SegmentManager::setIdlePauseSegments(QStandardItem *fileNameItem, const UtilityNamespace::ItemStatus targetStatus)
+{
 
     // check that the nzb status item is either Idle, Download or pausing / paused :
-    QStandardItem* nzbStatusItem = this->downloadModel->getStateItemFromIndex(fileNameItem->index());
+    QStandardItem *nzbStatusItem = this->downloadModel->getStateItemFromIndex(fileNameItem->index());
     UtilityNamespace::ItemStatus nzbStatus = this->downloadModel->getStatusFromStateItem(nzbStatusItem);
 
     // Set to pause / idle only items that are in download process (eg : not the ones decoded or verified...) :
@@ -139,19 +134,16 @@ void SegmentManager::setIdlePauseSegments(QStandardItem* fileNameItem, const Uti
 
         }
 
-
         // update the nzbFileData of current fileNameItem and its corresponding items;
         nzbFileData.setSegmentList(segmentList);
         this->downloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
-
 
         itemParentUpdater->getItemDownloadUpdater()->updateItems(fileNameItem->index(), nzbFileData);
     }
 }
 
-
-
-void SegmentManager::setIdleDownloadFailSegments(QStandardItem* fileNameItem) {
+void SegmentManager::setIdleDownloadFailSegments(QStandardItem *fileNameItem)
+{
 
     // set post processed segments with a bad crc back to Idle :
     NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
@@ -162,13 +154,12 @@ void SegmentManager::setIdleDownloadFailSegments(QStandardItem* fileNameItem) {
         SegmentData currentSegment = segmentList.at(segmentIndex);
 
         // re-download only segments that own an incorrect crc :
-        if (QFile::exists( Utility::buildFullPath(nzbFileData.getFileSavePath(), nzbFileData.getDecodedFileName())) ) {
+        if (QFile::exists(Utility::buildFullPath(nzbFileData.getFileSavePath(), nzbFileData.getDecodedFileName()))) {
 
-            if ((currentSegment.getCrc32Match() != UtilityNamespace::CrcOk) ) {
+            if ((currentSegment.getCrc32Match() != UtilityNamespace::CrcOk)) {
                 currentSegment.setReadyForNewServer(MasterServer);
             }
-        }
-        else {
+        } else {
             currentSegment.setReadyForNewServer(MasterServer);
         }
 
@@ -193,9 +184,10 @@ void SegmentManager::setIdleDownloadFailSegments(QStandardItem* fileNameItem) {
 
 }
 
-QStandardItem* SegmentManager::searchItem(const SegmentData& segmentData) {
+QStandardItem *SegmentManager::searchItem(const SegmentData &segmentData)
+{
 
-    QStandardItem* targetFileNameItem = 0;
+    QStandardItem *targetFileNameItem = 0;
 
     // search item from it's previous stored position in model :
     SegmentInfoData segmentInfoData = segmentData.getSegmentInfoData();
@@ -206,11 +198,11 @@ QStandardItem* SegmentManager::searchItem(const SegmentData& segmentData) {
     // get file name item row from nzb item :
     int secondLevelRowPosition = segmentInfoData.getFileNameItemRowModelPosition();
 
-    QStandardItem* nzbItem = this->downloadModel->item(firstLevelRowPosition, FILE_NAME_COLUMN);
+    QStandardItem *nzbItem = this->downloadModel->item(firstLevelRowPosition, FILE_NAME_COLUMN);
 
     if (nzbItem) {
 
-        QStandardItem* fileNameItem = nzbItem->child(secondLevelRowPosition, FILE_NAME_COLUMN);
+        QStandardItem *fileNameItem = nzbItem->child(secondLevelRowPosition, FILE_NAME_COLUMN);
 
         if (fileNameItem) {
 
@@ -227,22 +219,19 @@ QStandardItem* SegmentManager::searchItem(const SegmentData& segmentData) {
 
 }
 
-
-
-
-QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const UtilityNamespace::ItemStatus itemStatus) {
+QStandardItem *SegmentManager::searchItem(const QVariant &parentIdentifer, const UtilityNamespace::ItemStatus itemStatus)
+{
 
     // init fileNameItem :
-    QStandardItem* fileNameItem = 0;
+    QStandardItem *fileNameItem = 0;
 
     bool itemUpdated = false;
     QModelIndex parentModelIndex;
     QModelIndex nzbFileModelIndex;
 
-
     // search the unique identifier modelIndex that match with the segmentData's one for updating it :
-    if ( (this->downloadModel->rowCount() > 0) &&
-         (parentIdentifer != QVariant()) ) {
+    if ((this->downloadModel->rowCount() > 0) &&
+            (parentIdentifer != QVariant())) {
 
         int row = 0;
 
@@ -251,11 +240,10 @@ QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const
             //retrieve root item (nzb item) :
             nzbFileModelIndex = this->downloadModel->item(row, FILE_NAME_COLUMN)->index();
 
-            QStandardItem* nzbStatusItem = this->downloadModel->item(row, STATE_COLUMN);
+            QStandardItem *nzbStatusItem = this->downloadModel->item(row, STATE_COLUMN);
 
             // before processing searches, check that the nzb status item is either Idle, Download or in being paused :
             UtilityNamespace::ItemStatus nzbStatus = this->downloadModel->getStatusFromStateItem(nzbStatusItem);
-
 
             // determine search in nzb parent item according to its status :
             bool isSearchInNzb = false;
@@ -264,17 +252,17 @@ QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const
             switch (itemStatus) {
 
             case DownloadStatus: {
-                if ( Utility::isReadyToDownload(nzbStatus) ||
-                     Utility::isPausing(nzbStatus) ) {
+                if (Utility::isReadyToDownload(nzbStatus) ||
+                        Utility::isPausing(nzbStatus)) {
                     isSearchInNzb = true;
                 }
                 break;
             }
             case DecodeStatus: {
-                if ( Utility::isReadyToDownload(nzbStatus) ||
-                     Utility::isDownloadFinish(nzbStatus) ||
-                     Utility::isPausing(nzbStatus)  ||
-                     Utility::isDecoding(nzbStatus) ) {
+                if (Utility::isReadyToDownload(nzbStatus) ||
+                        Utility::isDownloadFinish(nzbStatus) ||
+                        Utility::isPausing(nzbStatus)  ||
+                        Utility::isDecoding(nzbStatus)) {
                     isSearchInNzb = true;
                 }
                 break;
@@ -300,14 +288,14 @@ QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const
 
                 // search parent item that match among the list :
                 QModelIndexList parentIndexList = this->downloadModel->match(parentModelIndex,
-                                                                             IdentifierRole,
-                                                                             parentIdentifer,
-                                                                             1,
-                                                                             Qt::MatchExactly);
+                                                  IdentifierRole,
+                                                  parentIdentifer,
+                                                  1,
+                                                  Qt::MatchExactly);
 
                 // parent should be found (otherwise the row has been removed by the user) :
-                if (!parentIndexList.isEmpty()){
-                    
+                if (!parentIndexList.isEmpty()) {
+
                     // only one element is returned :
                     parentModelIndex = parentIndexList.at(0);
                     fileNameItem = this->downloadModel->itemFromIndex(parentModelIndex);
@@ -316,12 +304,10 @@ QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const
                     break;
                 }
 
-
             }
 
             row++;
         }
-
 
     }
 
@@ -329,23 +315,20 @@ QStandardItem* SegmentManager::searchItem(const QVariant& parentIdentifer, const
 
 }
 
-
-
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerConn){
+void SegmentManager::getNextSegmentSlot(ClientManagerConn *currentClientManagerConn)
+{
 
     bool itemFound = false;
     int row = 0;
 
-    while ( (row < this->downloadModel->rowCount()) && !itemFound ) {
+    while ((row < this->downloadModel->rowCount()) && !itemFound) {
 
-        QStandardItem* nzbItem = this->downloadModel->item(row, FILE_NAME_COLUMN);
-        QStandardItem* nzbStatusItem = this->downloadModel->item(row, STATE_COLUMN);
+        QStandardItem *nzbItem = this->downloadModel->item(row, FILE_NAME_COLUMN);
+        QStandardItem *nzbStatusItem = this->downloadModel->item(row, STATE_COLUMN);
         UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusFromStateItem(nzbStatusItem);
 
         // if nzb(parent) item is in Idle or Download state look for idle segment, otherwise switch to next one :
@@ -355,8 +338,8 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
 
                 if (!itemFound) {
 
-                    QStandardItem* fileNameItem = nzbItem->child(i, FILE_NAME_COLUMN);
-                    QStandardItem* stateItem = nzbItem->child(i, STATE_COLUMN);
+                    QStandardItem *fileNameItem = nzbItem->child(i, FILE_NAME_COLUMN);
+                    QStandardItem *stateItem = nzbItem->child(i, STATE_COLUMN);
 
                     // check children status and send idle segment :
                     UtilityNamespace::ItemStatus currentChildStatus = this->downloadModel->getStatusFromStateItem(stateItem);
@@ -368,13 +351,13 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
 
                     ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
 
-                    if ( Utility::isReadyToDownload(currentChildStatus) &&
-                         (currentServerId >= itemStatusData.getNextServerId()) ) {
+                    if (Utility::isReadyToDownload(currentChildStatus) &&
+                            (currentServerId >= itemStatusData.getNextServerId())) {
 
                         // set nzb item row position it's child file name item row to construtor :
                         SegmentInfoData segmentInfoData(nzbItem->text(), row, i);
                         itemFound = this->sendNextIdleSegment(fileNameItem, currentClientManagerConn, segmentInfoData);
-                        
+
                     }
                 }
             }
@@ -389,16 +372,15 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn* currentClientManagerC
 
 }
 
-
-
-void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, QString decodedFileName) {
+void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, QString decodedFileName)
+{
 
     // fast search index :
-    QStandardItem* fileNameItem = this->searchItem(segmentData);
+    QStandardItem *fileNameItem = this->searchItem(segmentData);
 
     // if not found, proceed to deep search index :
     if (!fileNameItem) {
-         fileNameItem = this->searchItem(segmentData.getParentUniqueIdentifier(), DownloadStatus);
+        fileNameItem = this->searchItem(segmentData.getParentUniqueIdentifier(), DownloadStatus);
     }
 
     // if corresponding item has been found :
@@ -410,8 +392,8 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, QString 
         SegmentData previousSegmentData = segmentList.at(segmentData.getElementInList());
 
         // update segment only if it has not already be downloaded :
-        if ( (previousSegmentData.getStatus() <= PausingStatus) &&
-             (segmentList.size() > segmentData.getElementInList()) ) {
+        if ((previousSegmentData.getStatus() <= PausingStatus) &&
+                (segmentList.size() > segmentData.getElementInList())) {
 
             // segment has been processed, parent identifier can now be removed :
             segmentData.setParentUniqueIdentifier(QVariant());
@@ -430,33 +412,29 @@ void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, QString 
             this->downloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
 
             itemParentUpdater->getItemDownloadUpdater()->updateItems(fileNameItem->index(), nzbFileData);
-        }
-        else {
+        } else {
             qCDebug(KWOOTY_LOG) << "ooops, something goes really wrong :" << previousSegmentData.getStatus() << segmentList.size() << segmentData.getElementInList();
         }
 
-    }
-    else {
+    } else {
         //qCDebug(KWOOTY_LOG) <<  "Item not found - status : " << segmentData.getStatus();
     }
 
 }
 
-
-
-
-void SegmentManager::updateDecodeSegmentSlot(PostDownloadInfoData decodeInfoData) {
+void SegmentManager::updateDecodeSegmentSlot(PostDownloadInfoData decodeInfoData)
+{
 
     // search index in current downloading nzb :
-    QStandardItem* fileNameItem = this->searchItem(decodeInfoData.getParentIdentifer(), DecodeStatus);
+    QStandardItem *fileNameItem = this->searchItem(decodeInfoData.getParentIdentifer(), DecodeStatus);
 
     // if item has not been found the nzb parent item could be in pause state, search it :
-    if (!fileNameItem){
+    if (!fileNameItem) {
         fileNameItem = this->searchItem(decodeInfoData.getParentIdentifer(), PauseStatus);
     }
 
     // item has been found :
-    if (fileNameItem){
+    if (fileNameItem) {
 
         decodeInfoData.setModelIndex(fileNameItem->index());
 
@@ -466,20 +444,17 @@ void SegmentManager::updateDecodeSegmentSlot(PostDownloadInfoData decodeInfoData
         // update items :
         itemParentUpdater->getItemPostDownloadUpdater()->updateItems(decodeInfoData);
 
-    }
-    else {
+    } else {
         qCDebug(KWOOTY_LOG) <<  "Item not found - status : " << decodeInfoData.getStatus();
     }
 
 }
 
-
-
-
-void SegmentManager::updateRepairExtractSegmentSlot(PostDownloadInfoData repairDecompressInfoData) {
+void SegmentManager::updateRepairExtractSegmentSlot(PostDownloadInfoData repairDecompressInfoData)
+{
 
     // search item according to its ID :
-    QStandardItem* fileNameItem = this->searchItem(repairDecompressInfoData.getParentIdentifer(), RepairStatus);
+    QStandardItem *fileNameItem = this->searchItem(repairDecompressInfoData.getParentIdentifer(), RepairStatus);
 
     // if corresponding item has been found :
     if (fileNameItem) {
@@ -489,24 +464,18 @@ void SegmentManager::updateRepairExtractSegmentSlot(PostDownloadInfoData repairD
         // update items :
         itemParentUpdater->getItemPostDownloadUpdater()->updateItems(repairDecompressInfoData);
 
-    }
-    else {
+    } else {
         qCDebug(KWOOTY_LOG) <<  "Item not found - status : " << repairDecompressInfoData.getStatus();
     }
 
 }
 
-
-
-
-
-
-void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServerGroup, const int& nextServerGroup, const PendingSegments pendingSegments) {
-
+void SegmentManager::updatePendingSegmentsToTargetServer(const int &currentServerGroup, const int &nextServerGroup, const PendingSegments pendingSegments)
+{
 
     for (int i = 0; i < this->downloadModel->rowCount(); ++i) {
 
-        QStandardItem* nzbItem = this->downloadModel->getFileNameItemFromRowNumber(i);
+        QStandardItem *nzbItem = this->downloadModel->getFileNameItemFromRowNumber(i);
         UtilityNamespace::ItemStatus currentStatus = this->downloadModel->getStatusDataFromIndex(nzbItem->index()).getStatus();
 
         // if nzb item is currently being downloaded :
@@ -514,7 +483,7 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
 
             for (int j = 0; j < nzbItem->rowCount(); j++) {
 
-                QStandardItem* childFileNameItem = nzbItem->child(j, FILE_NAME_COLUMN);
+                QStandardItem *childFileNameItem = nzbItem->child(j, FILE_NAME_COLUMN);
                 UtilityNamespace::ItemStatus childStatus = this->downloadModel->getChildStatusFromNzbIndex(nzbItem->index(), j);
 
                 // if the current file is pending or being downloaded :
@@ -532,8 +501,8 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
                         // update pending segments to a new backup server target :
                         if (pendingSegments == UpdateSegments) {
 
-                            if ( Utility::isInDownloadProcess(currentSegment.getStatus()) &&
-                                 currentSegment.getServerGroupTarget() == currentServerGroup ) {
+                            if (Utility::isInDownloadProcess(currentSegment.getStatus()) &&
+                                    currentSegment.getServerGroupTarget() == currentServerGroup) {
 
                                 // if another backup server is available, set it ready to be downloaded with :
                                 if (nextServerGroup != NoTargetServer) {
@@ -568,7 +537,6 @@ void SegmentManager::updatePendingSegmentsToTargetServer(const int& currentServe
                         }
 
                     }
-
 
                     if (listUpdated) {
                         // update the nzbFileData of current fileNameItem and its corresponding items;

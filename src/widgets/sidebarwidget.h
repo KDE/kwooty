@@ -27,35 +27,34 @@
 
 #include "utilities/utilityserverstatus.h"
 
-
-
-class SideBarWidget : public QWidget {
+class SideBarWidget : public QWidget
+{
 
     Q_OBJECT
 
 public:
-    explicit SideBarWidget(QWidget*);
+    explicit SideBarWidget(QWidget *);
 
-    void addTab(QWidget*, const ServerConnectionIcon&, const QString&);
+    void addTab(QWidget *, const ServerConnectionIcon &, const QString &);
     void removeTabAndWidgetByIndex(int);
-    void removeTabByWidget(QWidget*);
+    void removeTabByWidget(QWidget *);
     void removeLast();
     int count() const;
-    QWidget* widget(const int& index);
-    int indexOf(QWidget*) const;
+    QWidget *widget(const int &index);
+    int indexOf(QWidget *) const;
     int currentIndex() const;
     void setDisplay(bool _display);
     bool isDisplayed() const;
-    void updateIconByIndex(const int&, const ServerConnectionIcon&);
-    void updateTextByIndex(const int&, const QString&);
-    void updateToolTipByIndex(const int&, const QString&);
-    void activeDefaultTab(const int&);
+    void updateIconByIndex(const int &, const ServerConnectionIcon &);
+    void updateTextByIndex(const int &, const QString &);
+    void updateToolTipByIndex(const int &, const QString &);
+    void activeDefaultTab(const int &);
     bool isOnlyTabDisplayed() const;
     void displayTabOnly();
 
 private:
-    QStackedWidget* stackedWidget;
-    KMultiTabBar* multiTabBar;
+    QStackedWidget *stackedWidget;
+    KMultiTabBar *multiTabBar;
     QHash<int, ServerConnectionIcon> indexServerIconMap;
     bool display;
 

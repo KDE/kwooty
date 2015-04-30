@@ -34,7 +34,6 @@ class StandardItemModel;
 class SegmentData;
 class SegmentInfoData;
 
-
 class SegmentManager : public QObject
 {
 
@@ -47,25 +46,23 @@ public:
                            ResetSegments
                          };
 
-
-    explicit SegmentManager(Core*);
+    explicit SegmentManager(Core *);
     SegmentManager();
-    void setIdlePauseSegments(QStandardItem*, const UtilityNamespace::ItemStatus);
-    void setIdleDownloadFailSegments(QStandardItem*);
-    QStandardItem* searchItem(const QVariant&, const UtilityNamespace::ItemStatus);
-    QStandardItem* searchItem(const SegmentData&);
-    void updatePendingSegmentsToTargetServer(const int&, const int&, const PendingSegments = UpdateSegments);
+    void setIdlePauseSegments(QStandardItem *, const UtilityNamespace::ItemStatus);
+    void setIdleDownloadFailSegments(QStandardItem *);
+    QStandardItem *searchItem(const QVariant &, const UtilityNamespace::ItemStatus);
+    QStandardItem *searchItem(const SegmentData &);
+    void updatePendingSegmentsToTargetServer(const int &, const int &, const PendingSegments = UpdateSegments);
 
 private:
-    StandardItemModel* downloadModel;
-    ItemParentUpdater* itemParentUpdater;
+    StandardItemModel *downloadModel;
+    ItemParentUpdater *itemParentUpdater;
 
-    bool sendNextIdleSegment(QStandardItem*, ClientManagerConn*, SegmentInfoData);
-
+    bool sendNextIdleSegment(QStandardItem *, ClientManagerConn *, SegmentInfoData);
 
 public Q_SLOTS:
     void updateDownloadSegmentSlot(SegmentData,  QString = QString());
-    void getNextSegmentSlot(ClientManagerConn*);
+    void getNextSegmentSlot(ClientManagerConn *);
     void updateDecodeSegmentSlot(PostDownloadInfoData repairDecompressInfoData);
     void updateRepairExtractSegmentSlot(PostDownloadInfoData repairDecompressInfoData);
 };

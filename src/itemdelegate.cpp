@@ -26,13 +26,12 @@
 #include <KGlobal>
 #include <QStyleOptionViewItemV4>
 
-
 #include "data/itemstatusdata.h"
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
-ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent) {
+ItemDelegate::ItemDelegate(QWidget *parent) : QStyledItemDelegate(parent)
+{
 
     // associate text to display according to item status :
     statusTextMap.insert(DownloadStatus,            i18n("Downloading..."));
@@ -81,80 +80,75 @@ ItemDelegate::ItemDelegate(QWidget* parent) : QStyledItemDelegate(parent) {
 
 }
 
-
-void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+void ItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
 
     QStyleOptionViewItemV4 opt = option;
     int status = -1;
 
-    switch(index.column()){
+    switch (index.column()) {
 
-    case STATE_COLUMN:{
-            // get the status :
-            ItemStatusData itemStatusData = index.data(StatusRole).value<ItemStatusData>();
-            status = itemStatusData.getStatus();
+    case STATE_COLUMN: {
+        // get the status :
+        ItemStatusData itemStatusData = index.data(StatusRole).value<ItemStatusData>();
+        status = itemStatusData.getStatus();
 
-            //set text according to status :
-            opt.text = statusTextMap.value(status);
+        //set text according to status :
+        opt.text = statusTextMap.value(status);
 
-            // modify text value if download contains incomplete data :
-            if (status == IdleStatus) {
-                if (itemStatusData.getDownloadRetryCounter() > 0) {
-                    opt.text = i18nc("i.e: In queue (retry)", "%1 (retry)", opt.text);
-                }
+        // modify text value if download contains incomplete data :
+        if (status == IdleStatus) {
+            if (itemStatusData.getDownloadRetryCounter() > 0) {
+                opt.text = i18nc("i.e: In queue (retry)", "%1 (retry)", opt.text);
             }
-            else if (status == DownloadStatus) {
-                if (itemStatusData.getDataStatus() == NoData) {
-                    opt.text = i18n("No Data");
-                }
-                if (itemStatusData.getDataStatus() == DataIncomplete){
-                    opt.text = i18nc("i.e: Downloading... (incomplete)", "%1 (incomplete)", opt.text);
-                }
+        } else if (status == DownloadStatus) {
+            if (itemStatusData.getDataStatus() == NoData) {
+                opt.text = i18n("No Data");
             }
-            else if (status == DownloadFinishStatus) {
-                if (itemStatusData.getDataStatus() == NoData) {
-                    opt.text = i18n("File not found");
-                }
+            if (itemStatusData.getDataStatus() == DataIncomplete) {
+                opt.text = i18nc("i.e: Downloading... (incomplete)", "%1 (incomplete)", opt.text);
             }
-            else if (status == DecodeFinishStatus) {
-                if (Utility::isBadCrcForYencArticle(itemStatusData.getCrc32Match(), itemStatusData.getArticleEncodingType())) {
-                    opt.text = i18nc("i.e: Decoded (bad CRC)", "%1 (bad CRC)", opt.text);
-                }
+        } else if (status == DownloadFinishStatus) {
+            if (itemStatusData.getDataStatus() == NoData) {
+                opt.text = i18n("File not found");
             }
-
-            break;
+        } else if (status == DecodeFinishStatus) {
+            if (Utility::isBadCrcForYencArticle(itemStatusData.getCrc32Match(), itemStatusData.getArticleEncodingType())) {
+                opt.text = i18nc("i.e: Decoded (bad CRC)", "%1 (bad CRC)", opt.text);
+            }
         }
 
-    case PROGRESS_COLUMN:{
+        break;
+    }
 
-            // draw progress bar for parent :
-            if (index.parent() == QModelIndex()){
-                this->drawProgressBar(painter, option, index);
-                return;
+    case PROGRESS_COLUMN: {
+
+        // draw progress bar for parent :
+        if (index.parent() == QModelIndex()) {
+            this->drawProgressBar(painter, option, index);
+            return;
+        } else {
+            int progress = index.data(ProgressRole).toInt();
+            opt.text = i18n("%1 %", progress);
+
+            // if progress unkwnown (appears 7z extract command is launched), display n/a :
+            if (progress == PROGRESS_UNKNOWN) {
+                opt.text = i18n("n/a");
             }
-            else {
-                int progress = index.data(ProgressRole).toInt();
-                opt.text = i18n("%1 %", progress);
 
-                // if progress unkwnown (appears 7z extract command is launched), display n/a :
-                if (progress == PROGRESS_UNKNOWN) {
-                    opt.text = i18n("n/a");
-                }
-
-            }
-
-            break;
         }
 
-    case SIZE_COLUMN:{
-            opt.text = Utility::convertByteHumanReadable(index.data(SizeRole).toULongLong());
-            break;
-        }
+        break;
+    }
 
+    case SIZE_COLUMN: {
+        opt.text = Utility::convertByteHumanReadable(index.data(SizeRole).toULongLong());
+        break;
+    }
 
     default: {
-            break;
-        }
+        break;
+    }
 
     }
 
@@ -166,11 +160,10 @@ void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, 
     // draw text :
     QStyledItemDelegate::paint(painter, opt, index);
 
-    
 }
 
-
-void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+void ItemDelegate::drawProgressBar(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
 
     QStyleOptionProgressBar progressBarOpt;
     progressBarOpt.rect = option.rect;
@@ -184,14 +177,12 @@ void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem
 
     // set progress value and text :
     int progress = index.data(ProgressRole).toInt();
-    progressBarOpt.progress = progress;    
+    progressBarOpt.progress = progress;
     progressBarOpt.text = i18n("%1 %", progress);
-
 
     if (progress == PROGRESS_UNKNOWN) {
         progressBarOpt.text = i18n("n/a");
     }
-
 
     // draw progress bar :
     QStyledItemDelegate::paint(painter, option, index);
@@ -199,15 +190,13 @@ void ItemDelegate::drawProgressBar(QPainter* painter, const QStyleOptionViewItem
 
 }
 
-
-
-
-QSize ItemDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const {
+QSize ItemDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
 
     QSize size = QStyledItemDelegate::sizeHint(option, index);
 
     // increase row height if index is a parent :
-    if (index.parent() == QModelIndex()) {        
+    if (index.parent() == QModelIndex()) {
         size.setHeight(QFontMetricsF(option.font).height() + 2 * PARENT_ROW_PADDING);
     }
 

@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef ACTIONFILEMANAGERBASE_H
 #define ACTIONFILEMANAGERBASE_H
 
@@ -41,14 +40,14 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
-class ActionFileManagerBase : public QObject {
+class ActionFileManagerBase : public QObject
+{
 
     Q_OBJECT
 
 public:
 
-    explicit ActionFileManagerBase(ActionsManager*);
+    explicit ActionFileManagerBase(ActionsManager *);
 
 protected:
 
@@ -58,15 +57,15 @@ protected:
         ActionFileIdle
     };
 
-    Core* core;
-    MyTreeView* treeView;
-    SegmentBuffer* segmentBuffer;
-    ActionsManager* actionsManager;
-    StandardItemModel* downloadModel;
+    Core *core;
+    MyTreeView *treeView;
+    SegmentBuffer *segmentBuffer;
+    ActionsManager *actionsManager;
+    StandardItemModel *downloadModel;
     ActionFileStep actionFileStep;
 
     void setupConnections();
-    void displayMessage(const QString&);
+    void displayMessage(const QString &);
     virtual void launchProcess() = 0;
 
 public Q_SLOTS:
@@ -76,7 +75,7 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
 
-    virtual void handleResultSlot(KJob*) = 0;
+    virtual void handleResultSlot(KJob *) = 0;
 
 };
 

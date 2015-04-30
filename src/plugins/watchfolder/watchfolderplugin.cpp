@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "watchfolderplugin.h"
 
 #include "kwooty_debug.h"
@@ -29,34 +28,31 @@
 #include "mainwindow.h"
 #include "core.h"
 
-
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<WatchFolderPlugin>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_watchfolderplugin"))
 
-
-WatchFolderPlugin::WatchFolderPlugin(QObject* parent, const QList<QVariant>&) : Plugin(parent)
+WatchFolderPlugin::WatchFolderPlugin(QObject *parent, const QList<QVariant> &) : Plugin(parent)
 {
 
 }
-
 
 WatchFolderPlugin::~WatchFolderPlugin()
 {
 
 }
 
-
-
-void WatchFolderPlugin::load() {
+void WatchFolderPlugin::load()
+{
     this->watchFolder = new WatchFolder(this);
 }
 
-void WatchFolderPlugin::unload() {
+void WatchFolderPlugin::unload()
+{
     delete this->watchFolder;
 }
 
-
-void WatchFolderPlugin::configUpdated() {
+void WatchFolderPlugin::configUpdated()
+{
     this->watchFolder->settingsChanged();
 }
 #include "watchfolderplugin.moc"

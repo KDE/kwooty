@@ -20,4 +20,3 @@
 #include "kwooty_debug.h"
 Q_LOGGING_CATEGORY(KWOOTY_LOG, "lob_kwooty")
 
-

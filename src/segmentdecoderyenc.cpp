@@ -25,16 +25,17 @@
 #include "kwootysettings.h"
 #include "segmentsdecoderthread.h"
 
-
-SegmentDecoderYEnc::SegmentDecoderYEnc(SegmentsDecoderThread* parent) : SegmentDecoderBase(parent) {
+SegmentDecoderYEnc::SegmentDecoderYEnc(SegmentsDecoderThread *parent) : SegmentDecoderBase(parent)
+{
 
 }
 
-SegmentDecoderYEnc::~SegmentDecoderYEnc() {
+SegmentDecoderYEnc::~SegmentDecoderYEnc()
+{
 }
 
-
-void SegmentDecoderYEnc::decodeProgression(PostDownloadInfoData& decodeInfoData){
+void SegmentDecoderYEnc::decodeProgression(PostDownloadInfoData &decodeInfoData)
+{
 
     decodeInfoData.setCrc32Match(this->crc32Match);
     decodeInfoData.setArticleEncodingType(ArticleEncodingYEnc);
@@ -42,29 +43,27 @@ void SegmentDecoderYEnc::decodeProgression(PostDownloadInfoData& decodeInfoData)
     this->segmentsDecoderThread->emitDecodeProgression(decodeInfoData);
 }
 
-
-
-bool SegmentDecoderYEnc::decodeEncodedData(const QString& temporaryFolder, SegmentData& segmentData, const QString& decodedFileName, bool& writeSuccess) {
+bool SegmentDecoderYEnc::decodeEncodedData(const QString &temporaryFolder, SegmentData &segmentData, const QString &decodedFileName, bool &writeSuccess)
+{
 
     this->crc32Match = false;
 
     // /!\ be sure that destination file has not already been moved in target folder.
     // this can happen only when a retry action has been performed :
     // file has already been post-processed and should be moved again in temporary folder to write decoded segment in it :
-    QString temporaryFileStr = Utility::buildFullPath( temporaryFolder, segmentData.getSegmentInfoData().getTemporaryFileName() );
-    QString destinationFileStr = Utility::buildFullPath( segmentData.getSegmentInfoData().getDestinationFileSavePath(), decodedFileName );
+    QString temporaryFileStr = Utility::buildFullPath(temporaryFolder, segmentData.getSegmentInfoData().getTemporaryFileName());
+    QString destinationFileStr = Utility::buildFullPath(segmentData.getSegmentInfoData().getDestinationFileSavePath(), decodedFileName);
     bool renamed = Utility::rename(destinationFileStr, temporaryFileStr);
 
     // check that temporary folder is already created, else create it :
     Utility::createFolder(temporaryFolder);
 
-    QFile temporaryFile( Utility::buildFullPath(temporaryFolder, segmentData.getSegmentInfoData().getTemporaryFileName()) );
+    QFile temporaryFile(Utility::buildFullPath(temporaryFolder, segmentData.getSegmentInfoData().getTemporaryFileName()));
     temporaryFile.open(QIODevice::ReadWrite);
 
     // retrieve data to decode :
     segmentData.getIoDevice()->open(QIODevice::ReadOnly);
     QByteArray segmentByteArray = segmentData.getIoDevice()->readAll();
-
 
     // get first line of the segment :
     int yDataBeginPos = 0;
@@ -72,8 +71,8 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString& temporaryFolder, Segme
 
     qint64 fullSizeValue = this->getPatternValue(yBeginArray, "size=");
 
-    if ( renamed ||
-         temporaryFile.size() < fullSizeValue ) {
+    if (renamed ||
+            temporaryFile.size() < fullSizeValue) {
 
         writeSuccess = temporaryFile.resize(fullSizeValue + static_cast<qint64>(applicationFileOwner.size()));
 
@@ -82,7 +81,6 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString& temporaryFolder, Segme
         writeSuccess = temporaryFile.seek(fullSizeValue);
         temporaryFile.write(applicationFileOwner.toLatin1());
     }
-
 
     // if it is a multi part, get the next line :
     qint64 beginValue = 0;
@@ -112,11 +110,9 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString& temporaryFolder, Segme
     // retrieve segment size value :
     qint64 sizeValue = this->getPatternValue(yEndArray, "size=");
 
-
     // if segment is a single part or segment size is matching :
-    if ( singlePart ||
-         (sizeValue == endValue - beginValue + 1) ) {
-
+    if (singlePart ||
+            (sizeValue == endValue - beginValue + 1)) {
 
         // get the yy encoded data :
         QByteArray captureArray = segmentByteArray.mid(yDataBeginPos , yDataEndPos - yDataBeginPos);
@@ -161,7 +157,6 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString& temporaryFolder, Segme
         qCDebug(KWOOTY_LOG) << "write failed !" << temporaryFile.fileName() << temporaryFile.errorString();
     }
 
-
     // close devices :
     segmentData.getIoDevice()->close();
     temporaryFile.close();
@@ -169,10 +164,8 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString& temporaryFolder, Segme
     return this->crc32Match;
 }
 
-
-
-
-qint64 SegmentDecoderYEnc::getPatternValue(const QByteArray& yPartArray, const QString& pattern, const int& base){
+qint64 SegmentDecoderYEnc::getPatternValue(const QByteArray &yPartArray, const QString &pattern, const int &base)
+{
 
     QRegExp regExp(".*p?" + pattern + "((\\w|\\d)*).*");
     qint64 patternValue = 0;
@@ -187,10 +180,8 @@ qint64 SegmentDecoderYEnc::getPatternValue(const QByteArray& yPartArray, const Q
     return patternValue;
 }
 
-
-
-
-QByteArray SegmentDecoderYEnc::getLineByteArray(const QString& lineBeginPattern, const QByteArray& segmentByteArray, int& yDataBeginPos){
+QByteArray SegmentDecoderYEnc::getLineByteArray(const QString &lineBeginPattern, const QByteArray &segmentByteArray, int &yDataBeginPos)
+{
 
     int beginLinePos = segmentByteArray.indexOf(lineBeginPattern);
     int endLinePos = segmentByteArray.indexOf("\n", beginLinePos) + 1;
@@ -202,11 +193,8 @@ QByteArray SegmentDecoderYEnc::getLineByteArray(const QString& lineBeginPattern,
 
 }
 
-
-
-
-
-QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray& captureArray, const quint32& crc32FromFile) {
+QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray &captureArray, const quint32 &crc32FromFile)
+{
 
     // used for crc32 computation :
     quint32 crc32Computed = 0xffffffff;
@@ -218,8 +206,7 @@ QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray& captureArray, const quint3
 
     bool specialCharacter = false;
 
-
-    foreach (const char& encodedCharacter, captureArray) {
+    foreach (const char &encodedCharacter, captureArray) {
 
         // decode char :
         if (encodedCharacter != '\r' && encodedCharacter != '\n') {
@@ -232,12 +219,10 @@ QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray& captureArray, const quint3
                 decodedCharacter = (encodedCharacter - 106) % 256;
                 decoded = true;
                 specialCharacter = false;
-            }
-            else {
+            } else {
                 if (encodedCharacter == '=') {
                     specialCharacter = true;
-                }
-                else {
+                } else {
 
                     decodedCharacter = (encodedCharacter - 42) % 256;
                     decoded = true;
@@ -257,7 +242,6 @@ QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray& captureArray, const quint3
 
     }
 
-
     // finish crc 32 computation of encoded segment data :
     crc32Computed ^= 0xffffffff;
 
@@ -271,21 +255,17 @@ QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray& captureArray, const quint3
 
 }
 
-
-
-
-quint32 SegmentDecoderYEnc::computeCrc32Part(const quint32& hash, const unsigned char& data) {
-    return crc::crcArray[(hash^data) & 0xff]^(hash >> 8);
+quint32 SegmentDecoderYEnc::computeCrc32Part(const quint32 &hash, const unsigned char &data)
+{
+    return crc::crcArray[(hash ^ data) & 0xff] ^ (hash >> 8);
 }
 
-
-
-void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData& nzbFileData) {
+void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData &nzbFileData)
+{
 
     // init variables :
     this->parentIdentifer = nzbFileData.getUniqueIdentifier();
     this->crc32Match = false;
-
 
     // decodeInfoData sent by defaut :
     PostDownloadInfoData decodeInfoData;
@@ -299,7 +279,7 @@ void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData& nzbFileData) {
     if (Utility::createFolder(nzbFileData.getFileSavePath())) {
 
         // check crc value for each segment :
-        foreach (const SegmentData& segmentData, nzbFileData.getSegmentList()) {
+        foreach (const SegmentData &segmentData, nzbFileData.getSegmentList()) {
 
             // if article is not present on server or computed crc is not matching,
             // the global crc for the file is considered as incorrect :
@@ -307,8 +287,7 @@ void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData& nzbFileData) {
 
                 this->crc32Match = true;
 
-            }
-            else {
+            } else {
 
                 this->crc32Match = false;
                 break;
@@ -349,15 +328,13 @@ void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData& nzbFileData) {
         this->segmentsDecoderThread->emitSaveFileError();
     }
 
-
     // clear variables :
     this->parentIdentifer.clear();
 
 }
 
-
-
-QString SegmentDecoderYEnc::searchPattern(QIODevice* segmentFile) {
+QString SegmentDecoderYEnc::searchPattern(QIODevice *segmentFile)
+{
 
     QString fileName;
     // look for file name :
@@ -374,7 +351,6 @@ QString SegmentDecoderYEnc::searchPattern(QIODevice* segmentFile) {
             break;
         }
     }
-
 
     return fileName;
 

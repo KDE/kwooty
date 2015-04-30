@@ -18,15 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef WATCHFOLDERPLUGIN_H
 #define WATCHFOLDERPLUGIN_H
 
-
 #include "plugin.h"
 #include "watchfolder.h"
-
-
 
 class WatchFolderPlugin : public Plugin
 {
@@ -35,25 +31,22 @@ class WatchFolderPlugin : public Plugin
 
 public:
 
-    WatchFolderPlugin(QObject*, const QList<QVariant>&);
+    WatchFolderPlugin(QObject *, const QList<QVariant> &);
     ~WatchFolderPlugin();
-
 
 private:
 
-    WatchFolder* watchFolder;
+    WatchFolder *watchFolder;
 
     void load();
     void unload();
     void configUpdated();
-
 
 Q_SIGNALS:
 
 public Q_SLOTS:
 
 private Q_SLOTS:
-
 
 };
 

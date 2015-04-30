@@ -18,21 +18,19 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "sessionbase.h"
 
 #include "kwooty_debug.h"
 #include "kwootysettings.h"
 
-
-SessionBase::SessionBase(ShutdownManager* shutdownManager) : QObject(shutdownManager) {
+SessionBase::SessionBase(ShutdownManager *shutdownManager) : QObject(shutdownManager)
+{
 
     this->shutdownManager = shutdownManager;
 }
 
-
-void SessionBase::launchSystemShutdown() {
-
+void SessionBase::launchSystemShutdown()
+{
 
     // get type of system shutdown :
     switch (this->getChosenShutdownType()) {
@@ -44,12 +42,11 @@ void SessionBase::launchSystemShutdown() {
 
     case UtilityNamespace::Standby:
     case UtilityNamespace::Suspend:
-    case UtilityNamespace::Hibernate:{
+    case UtilityNamespace::Hibernate: {
 
         this->requestSuspend();
         break;
     }
-
 
     default: {
         this->shutdownManager->handleShutdownError(i18n("System shutdown type unknown, shutdown is not possible!"));
@@ -60,8 +57,8 @@ void SessionBase::launchSystemShutdown() {
 
 }
 
-
-UtilityNamespace::SystemShutdownType SessionBase::getChosenShutdownType() {
+UtilityNamespace::SystemShutdownType SessionBase::getChosenShutdownType()
+{
 
     UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown;
 
@@ -75,6 +72,4 @@ UtilityNamespace::SystemShutdownType SessionBase::getChosenShutdownType() {
     return systemShutdownType;
 
 }
-
-
 

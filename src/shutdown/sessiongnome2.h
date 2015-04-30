@@ -18,23 +18,20 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SESSIONGNOME2_H
 #define SESSIONGNOME2_H
 
 #include <solid/powermanagement.h>
 using namespace Solid::PowerManagement;
 
-
-
 #include "sessionbase.h"
 
-class SessionGnome2 : public SessionBase {
-
+class SessionGnome2 : public SessionBase
+{
 
 public:
 
-    SessionGnome2(ShutdownManager*);
+    SessionGnome2(ShutdownManager *);
     QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods();
 
 private:

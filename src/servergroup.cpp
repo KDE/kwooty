@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "servergroup.h"
 
 #include "servermanager.h"
@@ -34,7 +33,8 @@
 
 #include "kwooty_debug.h"
 
-ServerGroup::ServerGroup(ServerManager* parent, Core* core, int serverGroupId) : QObject(parent) {
+ServerGroup::ServerGroup(ServerManager *parent, Core *core, int serverGroupId) : QObject(parent)
+{
 
     this->mServerManager = parent;
     this->mCore = core;
@@ -68,9 +68,8 @@ ServerGroup::ServerGroup(ServerManager* parent, Core* core, int serverGroupId) :
 
 }
 
-
-
-void ServerGroup::setupConnections() {
+void ServerGroup::setupConnections()
+{
 
     // check that server is available or not :
     connect(mClientsAvailableTimer, SIGNAL(timeout()), this, SLOT(checkServerAvailabilitySlot()));
@@ -83,13 +82,14 @@ void ServerGroup::setupConnections() {
 
 }
 
-
-int ServerGroup::getRealServerGroupId() const {
+int ServerGroup::getRealServerGroupId() const
+{
     // used for debugging puropses only :
     return this->mServerGroupId;
 }
 
-int ServerGroup::getServerGroupId() const {
+int ServerGroup::getServerGroupId() const
+{
 
     // default server group id :
     int currentServerGroupId = this->mServerGroupId;
@@ -110,25 +110,27 @@ int ServerGroup::getServerGroupId() const {
     return currentServerGroupId;
 }
 
-
-ServerGroup* ServerGroup::getNextTargetServer() {
+ServerGroup *ServerGroup::getNextTargetServer()
+{
 
     return this->getServerManager()->getNextTargetServer(this);
 
 }
 
-int ServerGroup::saveSegment(const SegmentData& segmentData) {
+int ServerGroup::saveSegment(const SegmentData &segmentData)
+{
 
     return this->getServerManager()->getSegmentBuffer()->segmentSavingQueued(segmentData);
 }
 
-bool ServerGroup::isBufferFull() {
+bool ServerGroup::isBufferFull()
+{
 
     return this->getServerManager()->getSegmentBuffer()->isBufferFull();
 }
 
-
-void ServerGroup::readDataWithPassword() {
+void ServerGroup::readDataWithPassword()
+{
 
     if (!this->mPasswordRetrieved) {
 
@@ -139,11 +141,10 @@ void ServerGroup::readDataWithPassword() {
 
 }
 
-
-bool ServerGroup::canDownload(int serverGroupTargetId) const {
+bool ServerGroup::canDownload(int serverGroupTargetId) const
+{
 
     bool segmentMatch = false;
-
 
     // if this is the Master server or an activeFailOver server that supersedes it :
     if (this->isMasterServer() || this->isActiveFailover()) {
@@ -168,7 +169,7 @@ bool ServerGroup::canDownload(int serverGroupTargetId) const {
 
         // servergroup will download segments targeted for Master server and also for itself :
         if (serverGroupTargetId == MasterServer ||
-            serverGroupTargetId == ActiveBackupServer) {
+                serverGroupTargetId == ActiveBackupServer) {
 
             segmentMatch = true;
 
@@ -180,52 +181,52 @@ bool ServerGroup::canDownload(int serverGroupTargetId) const {
         segmentMatch = true;
     }
 
-
-
     return segmentMatch;
 
 }
 
-
-
-Core* ServerGroup::getCore() {
+Core *ServerGroup::getCore()
+{
     return this->mCore;
 }
 
-ServerManager* ServerGroup::getServerManager() {
+ServerManager *ServerGroup::getServerManager()
+{
     return this->mServerManager;
 }
 
-ClientsPerServerObserver* ServerGroup::getClientsPerServerObserver() {
+ClientsPerServerObserver *ServerGroup::getClientsPerServerObserver()
+{
     return this->mClientsPerServerObserver;
 }
 
-ServerSpeedManager* ServerGroup::getServerSpeedManager() {
+ServerSpeedManager *ServerGroup::getServerSpeedManager()
+{
     return this->mServerSpeedManager;
 }
 
-
-ServerData ServerGroup::getServerData() const {
+ServerData ServerGroup::getServerData() const
+{
     return this->mServerData;
 }
 
-
-QList<ClientManagerConn*> ServerGroup::getClientManagerConnList() {
+QList<ClientManagerConn *> ServerGroup::getClientManagerConnList()
+{
     return this->mClientManagerConnList;
 }
 
-
-bool ServerGroup::isMasterServer() const {
+bool ServerGroup::isMasterServer() const
+{
     return (this->mServerGroupId == MasterServer);
 }
 
-
-bool ServerGroup::isDisabledBackupServer() const {
+bool ServerGroup::isDisabledBackupServer() const
+{
     return (this->mServerData.getServerModeIndex() == UtilityNamespace::DisabledServer);
 }
 
-
-bool ServerGroup::isPassiveBackupServer() const {
+bool ServerGroup::isPassiveBackupServer() const
+{
 
     bool passiveServer = false;
 
@@ -241,30 +242,33 @@ bool ServerGroup::isPassiveBackupServer() const {
     return passiveServer;
 }
 
-bool ServerGroup::isActiveBackupServer() const {
+bool ServerGroup::isActiveBackupServer() const
+{
     return (this->mServerData.getServerModeIndex() == UtilityNamespace::ActiveServer);
 }
 
-bool ServerGroup::isFailoverBackupServer() const {
+bool ServerGroup::isFailoverBackupServer() const
+{
     return (this->mServerData.getServerModeIndex() == UtilityNamespace::FailoverServer);
 }
 
-bool ServerGroup::isActiveFailover() const {
+bool ServerGroup::isActiveFailover() const
+{
     return (this->isFailoverBackupServer() && this->mServerManager->currentIsFirstMasterAvailable(this));
 }
 
-bool ServerGroup::isPassiveFailover() const {
+bool ServerGroup::isPassiveFailover() const
+{
     return (this->isFailoverBackupServer() && !this->mServerManager->currentIsFirstMasterAvailable(this));
 }
 
-
-bool ServerGroup::isServerAvailable() const {
+bool ServerGroup::isServerAvailable() const
+{
     return this->mServerAvailable;
 }
 
-
-
-void ServerGroup::createNntpClients() {
+void ServerGroup::createNntpClients()
+{
 
     // create the nntp clients thread manager :
     int connectionNumber = KConfigGroupHandler::getInstance()->serverConnectionNumber(this->mServerGroupId);
@@ -279,9 +283,8 @@ void ServerGroup::createNntpClients() {
 
 }
 
-
-
-void ServerGroup::disconnectAllClients() {
+void ServerGroup::disconnectAllClients()
+{
 
     // stop timer that notify if clients are available or not :
     this->mClientsAvailableTimer->stop();
@@ -290,8 +293,8 @@ void ServerGroup::disconnectAllClients() {
     emit disconnectRequestSignal();
 }
 
-
-void ServerGroup::connectAllClients() {
+void ServerGroup::connectAllClients()
+{
 
     // connect all clients :
     emit connectRequestSignal();
@@ -303,24 +306,21 @@ void ServerGroup::connectAllClients() {
 
 }
 
-
-
-
-void ServerGroup::resetAllClientsConnection() {
+void ServerGroup::resetAllClientsConnection()
+{
     emit resetConnectionSignal();
 }
 
-
-void ServerGroup::assignDownloadToReadyClients() {
+void ServerGroup::assignDownloadToReadyClients()
+{
 
     // do not hammer backup servers that new segments are available,
     // it will be done asynchronously every 500ms :
     this->mPendingSegments = true;
 }
 
-
-
-void ServerGroup::checkServerStabilitySlot() {
+void ServerGroup::checkServerStabilitySlot()
+{
 
     if (this->mStabilityCounter > MAX_SERVER_DOWN_PER_MINUTE) {
 
@@ -340,9 +340,8 @@ void ServerGroup::checkServerStabilitySlot() {
     this->mStabilityCounter = 0;
 }
 
-
-
-void ServerGroup::serverSwitchIfFailure() {
+void ServerGroup::serverSwitchIfFailure()
+{
 
     // availability of **master server** (master or active failover) has changed, notify server manager :
     if (this->isMasterServer() || this->isActiveFailover()) {
@@ -370,28 +369,22 @@ void ServerGroup::serverSwitchIfFailure() {
 
 }
 
-
-
-
-
-
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void ServerGroup::startTimerSlot() {
+void ServerGroup::startTimerSlot()
+{
     this->mClientsAvailableTimer->start();
 }
 
-
-void ServerGroup::downloadPendingSegmentsSlot() {
+void ServerGroup::downloadPendingSegmentsSlot()
+{
 
     if (this->mPendingSegments) {
 
         // notify only nntpclients ready that pending data are waiting :
-        foreach (ClientManagerConn* clientManagerConn, this->mClientManagerConnList) {
+        foreach (ClientManagerConn *clientManagerConn, this->mClientManagerConnList) {
 
             if (clientManagerConn->isClientReady()) {
                 clientManagerConn->dataHasArrivedSlot();
@@ -404,15 +397,15 @@ void ServerGroup::downloadPendingSegmentsSlot() {
 
 }
 
-
-void ServerGroup::checkServerAvailabilitySlot() {
+void ServerGroup::checkServerAvailabilitySlot()
+{
 
     bool serverAvailableOld = this->mServerAvailable;
 
     int clientsNotReady = 0;
 
     // count the number of clients not ready to download :
-    foreach (ClientManagerConn* clientManagerConn, this->mClientManagerConnList) {
+    foreach (ClientManagerConn *clientManagerConn, this->mClientManagerConnList) {
 
         if (!clientManagerConn->isClientReady()) {
             clientsNotReady++;
@@ -422,8 +415,7 @@ void ServerGroup::checkServerAvailabilitySlot() {
     // if all clients are not ready, the server is unavailable :
     if (clientsNotReady == this->mClientManagerConnList.size()) {
         this->mServerAvailable = false;
-    }
-    else {
+    } else {
         this->mServerAvailable = true;
     }
 
@@ -437,12 +429,10 @@ void ServerGroup::checkServerAvailabilitySlot() {
         this->serverSwitchIfFailure();
     }
 
-
 }
 
-
-
-bool ServerGroup::settingsServerChangedSlot() {
+bool ServerGroup::settingsServerChangedSlot()
+{
 
     // 1. ajust connection objects according to value set in settings :
     // if more nntp connections are requested :
@@ -451,7 +441,7 @@ bool ServerGroup::settingsServerChangedSlot() {
     if (connectionNumber > this->mClientManagerConnList.size()) {
 
         int connectionDelay = 0;
-        for (int i = this->mClientManagerConnList.size(); i < connectionNumber; ++i){
+        for (int i = this->mClientManagerConnList.size(); i < connectionNumber; ++i) {
 
             this->mClientManagerConnList.append(new ClientManagerConn(this, i, connectionDelay));
 
@@ -489,14 +479,10 @@ bool ServerGroup::settingsServerChangedSlot() {
 
     }
 
-
     // name of server may have changed, update it in order to synchronize tab name in side bar ;
     this->mServerData.setServerName(newServerData.getServerName());
-
 
     return serverSettingsChanged;
 
 }
-
-
 

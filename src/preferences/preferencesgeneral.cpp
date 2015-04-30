@@ -26,12 +26,11 @@ PreferencesGeneral::PreferencesGeneral()
     setupUi(this);
 
     //set mode to folder mode :
-    kcfg_completedFolder->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
-    kcfg_temporaryFolder->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
+    kcfg_completedFolder->setMode(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
+    kcfg_temporaryFolder->setMode(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
 
     // setup connections :
     this->setupConnections();
-
 
     // init combobox save/restore downloads methods list :
     QStringList downloadsSessionList;
@@ -45,18 +44,16 @@ PreferencesGeneral::PreferencesGeneral()
     this->stateChangedSlot();
 }
 
-
-
-void PreferencesGeneral::setupConnections() {
+void PreferencesGeneral::setupConnections()
+{
 
     // check/uncheck ssl checkbox according to port value:
-    connect (kcfg_restoreDownloads, SIGNAL(stateChanged(int)), this, SLOT(stateChangedSlot()));
+    connect(kcfg_restoreDownloads, SIGNAL(stateChanged(int)), this, SLOT(stateChangedSlot()));
 
 }
 
-
-
-void PreferencesGeneral::stateChangedSlot() {
+void PreferencesGeneral::stateChangedSlot()
+{
 
     // if "save pending downloads" is checked, enable confirmSaveSilently and confirmRestoreSilently checkboxes :
     if (kcfg_restoreDownloads->checkState() == Qt::Checked) {
@@ -64,14 +61,13 @@ void PreferencesGeneral::stateChangedSlot() {
     }
     // disable them :
     else {
-       this->enableSaveRestoreItems(false);
+        this->enableSaveRestoreItems(false);
     }
-
 
 }
 
-
-void PreferencesGeneral::enableSaveRestoreItems(bool enable) {
+void PreferencesGeneral::enableSaveRestoreItems(bool enable)
+{
 
     restoreDownloadsLabel->setEnabled(enable);
     saveDownloadsLabel->setEnabled(enable);
@@ -79,5 +75,4 @@ void PreferencesGeneral::enableSaveRestoreItems(bool enable) {
     kcfg_restoreDownloadsMethods->setEnabled(enable);
 
 }
-
 

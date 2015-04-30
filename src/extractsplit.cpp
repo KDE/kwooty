@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "extractsplit.h"
 
 #include <KUrl>
@@ -32,28 +31,28 @@
 #include "fileoperations.h"
 #include "jobs/concatsplitfilesjob.h"
 
-
-ExtractSplit::ExtractSplit(RepairDecompressThread* parent): ExtractBase(parent) {
+ExtractSplit::ExtractSplit(RepairDecompressThread *parent): ExtractBase(parent)
+{
 
     this->archiveFormat = SplitFileFormat;
 
     this->mConcatSplitFilesJob = new ConcatSplitFilesJob(this);
 
     // get joinning progression from joining thread :
-    connect (this->mConcatSplitFilesJob, SIGNAL(progressPercentSignal(int,QString)), this, SLOT(jobPercentSlot(int,QString)));
+    connect(this->mConcatSplitFilesJob, SIGNAL(progressPercentSignal(int,QString)), this, SLOT(jobPercentSlot(int,QString)));
 
     // be notified when joining file thread has finished :
-    connect (this->mConcatSplitFilesJob, SIGNAL(resultSignal(int)), this, SLOT(jobFinishSlot(int)));
+    connect(this->mConcatSplitFilesJob, SIGNAL(resultSignal(int)), this, SLOT(jobFinishSlot(int)));
 
 }
 
-ExtractSplit::~ExtractSplit() {
+ExtractSplit::~ExtractSplit()
+{
     delete this->mConcatSplitFilesJob;
 }
 
-
-
-void ExtractSplit::launchProcess(const NzbCollectionData& nzbCollectionData, ExtractBase::ArchivePasswordStatus, bool, const QString&) {
+void ExtractSplit::launchProcess(const NzbCollectionData &nzbCollectionData, ExtractBase::ArchivePasswordStatus, bool, const QString &)
+{
 
     this->nzbCollectionData = nzbCollectionData;
 
@@ -68,16 +67,15 @@ void ExtractSplit::launchProcess(const NzbCollectionData& nzbCollectionData, Ext
 
 }
 
-
-
-QList<NzbFileData> ExtractSplit::retrieveSplitFilesOnly(const QString& fileSavePath) const {
+QList<NzbFileData> ExtractSplit::retrieveSplitFilesOnly(const QString &fileSavePath) const
+{
 
     QList<NzbFileData> nzbFileDataFilteredList;
 
-    foreach (const NzbFileData& currentNzbFileData, this->nzbCollectionData.getNzbFileDataList()) {
+    foreach (const NzbFileData &currentNzbFileData, this->nzbCollectionData.getNzbFileDataList()) {
 
         // get current file :
-        QFile currentSplitFile( Utility::buildFullPath(fileSavePath, currentNzbFileData.getDecodedFileName()) );
+        QFile currentSplitFile(Utility::buildFullPath(fileSavePath, currentNzbFileData.getDecodedFileName()));
 
         // check if it is a splitted file (check for .001, .002, etc... pattern) :
         if (FileOperations::isSplitFileFormat(currentSplitFile)) {
@@ -88,9 +86,8 @@ QList<NzbFileData> ExtractSplit::retrieveSplitFilesOnly(const QString& fileSaveP
     return nzbFileDataFilteredList;
 }
 
-
-
-void ExtractSplit::retrieveFullPathJoinFileName(const NzbCollectionData& nzbCollectionData, QString& fileSavePath, QString& joinFileName) const {
+void ExtractSplit::retrieveFullPathJoinFileName(const NzbCollectionData &nzbCollectionData, QString &fileSavePath, QString &joinFileName) const
+{
 
     NzbFileData currentNzbFileData = this->getFirstArchiveFileFromList(nzbCollectionData.getNzbFileDataList());
 
@@ -100,9 +97,8 @@ void ExtractSplit::retrieveFullPathJoinFileName(const NzbCollectionData& nzbColl
 
 }
 
-
-
-void ExtractSplit::removeRenamedArchiveFile(const NzbFileData&) {
+void ExtractSplit::removeRenamedArchiveFile(const NzbFileData &)
+{
 
     // /!\  reimplemented from ExtractBase : at this stage if renamedFileName is not empty,
     // it may probably correspond to the 'joined file' name if repair processing previously occured.
@@ -110,23 +106,23 @@ void ExtractSplit::removeRenamedArchiveFile(const NzbFileData&) {
 
 }
 
-
-void ExtractSplit::preRepairProcessing(const NzbCollectionData& nzbCollectionData) {
+void ExtractSplit::preRepairProcessing(const NzbCollectionData &nzbCollectionData)
+{
 
     QString fileSavePath;
     QString joinFileName;
 
     this->retrieveFullPathJoinFileName(nzbCollectionData, fileSavePath, joinFileName);
 
-    Utility::removeData( Utility::buildFullPath(fileSavePath, joinFileName) );
+    Utility::removeData(Utility::buildFullPath(fileSavePath, joinFileName));
 }
-
 
 //==============================================================================================//
 //                                         SLOTS                                                //
 //==============================================================================================//
 
-void ExtractSplit::jobPercentSlot(int progress, const QString &fileNameStr) {
+void ExtractSplit::jobPercentSlot(int progress, const QString &fileNameStr)
+{
 
     // search corresponding file into the list :
     this->findItemAndNotifyUser(fileNameStr, ExtractStatus, BothItemsTarget);
@@ -136,22 +132,23 @@ void ExtractSplit::jobPercentSlot(int progress, const QString &fileNameStr) {
 
 }
 
-
-
-void ExtractSplit::jobFinishSlot(int errorCode) {
+void ExtractSplit::jobFinishSlot(int errorCode)
+{
 
     // post processing when job is complete (if no error occured during the job, job->error() == 0) :
     this->extractFinishedSlot(errorCode, QProcess::NormalExit);
 
 }
 
-
-
-
-
 // the following methods are not used for joining splitted files job :
-QStringList ExtractSplit::createProcessArguments(const QString&, const QString&, const bool&, const QString&){return QStringList();}
-void ExtractSplit::extractUpdate(const QString&){}
-void ExtractSplit::checkIfArchivePassworded(const QString&, bool&){}
-void ExtractSplit::sendExtractProgramNotFoundNotification(){}
-QString ExtractSplit::searchExtractProgram(){return QString();}
+QStringList ExtractSplit::createProcessArguments(const QString &, const QString &, const bool &, const QString &)
+{
+    return QStringList();
+}
+void ExtractSplit::extractUpdate(const QString &) {}
+void ExtractSplit::checkIfArchivePassworded(const QString &, bool &) {}
+void ExtractSplit::sendExtractProgramNotFoundNotification() {}
+QString ExtractSplit::searchExtractProgram()
+{
+    return QString();
+}

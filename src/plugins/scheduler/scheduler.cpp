@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "scheduler.h"
 
 #include "kwooty_debug.h"
@@ -45,9 +44,8 @@
 #include "schedulerfilehandler.h"
 #include "kwooty_schedulersettings.h"
 
-
-
-Scheduler::Scheduler(SchedulerPlugin* parent) :  QObject(parent) {
+Scheduler::Scheduler(SchedulerPlugin *parent) :  QObject(parent)
+{
 
     this->core = parent->getMainWindow()->getCore();
     this->serverManager = this->core->getServerManager();
@@ -71,13 +69,13 @@ Scheduler::Scheduler(SchedulerPlugin* parent) :  QObject(parent) {
 
 }
 
-
-Scheduler::~Scheduler() {
+Scheduler::~Scheduler()
+{
 
 }
 
-
-void Scheduler::setupConnections() {
+void Scheduler::setupConnections()
+{
 
     // when time-out occurs, check current download speed :
     connect(this->schedulerTimer,
@@ -85,27 +83,23 @@ void Scheduler::setupConnections() {
             this,
             SLOT(schedulerTimerSlot()));
 
-
     // be notified when server settings have changed :
-    connect (this->serverManager,
-             SIGNAL(serverManagerSettingsChangedSignal()),
-             this,
-             SLOT(serverManagerSettingsChangedSlot()));
-
+    connect(this->serverManager,
+            SIGNAL(serverManagerSettingsChangedSignal()),
+            this,
+            SLOT(serverManagerSettingsChangedSlot()));
 
     // be notified when nzb data has arrived :
-    connect (this->core,
-             SIGNAL(dataAboutToArriveSignal(QModelIndex)),
-             this,
-             SLOT(dataAboutToArriveSlot(QModelIndex)));
-
+    connect(this->core,
+            SIGNAL(dataAboutToArriveSignal(QModelIndex)),
+            this,
+            SLOT(dataAboutToArriveSlot(QModelIndex)));
 
     // display settings when statur bar widget has been double clicked :
-    connect (this->statusBar,
-             SIGNAL(statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity)),
-             this,
-             SLOT(statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity)));
-
+    connect(this->statusBar,
+            SIGNAL(statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity)),
+            this,
+            SLOT(statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity)));
 
     // allow user to bypass scheduler if start/pause actions have been manually trigered :
     connect(this->core->getActionsManager(),
@@ -120,35 +114,32 @@ void Scheduler::setupConnections() {
 
 }
 
-
-
-void Scheduler::suspendDownloads() {
+void Scheduler::suspendDownloads()
+{
 
     this->scheduleStartPauseDownload(PauseStatus);
 
 }
 
-
-void Scheduler::resumeDownloads() {
+void Scheduler::resumeDownloads()
+{
 
     // if start has been requested, check that disk is not full :
     if (!Utility::isTemporaryFolderDiskFull()) {
 
         this->scheduleStartPauseDownload(IdleStatus);
 
-    }
-    else {
+    } else {
         qDebug() << "downloads remain suspended: temporary disk drive is full";
     }
 
-
 }
 
-
-void Scheduler::scheduleStartPauseDownload(UtilityNamespace::ItemStatus itemStatus) {
+void Scheduler::scheduleStartPauseDownload(UtilityNamespace::ItemStatus itemStatus)
+{
 
     // 1.first remove all indexes from list whose download is over :
-    foreach (const QModelIndex& decodeFinishParentIndex, this->core->getModelQuery()->retrieveDecodeFinishParentIndexList()) {
+    foreach (const QModelIndex &decodeFinishParentIndex, this->core->getModelQuery()->retrieveDecodeFinishParentIndexList()) {
 
         QString parentUuid = this->core->getDownloadModel()->getUuidStrFromIndex(decodeFinishParentIndex);
 
@@ -161,10 +152,10 @@ void Scheduler::scheduleStartPauseDownload(UtilityNamespace::ItemStatus itemStat
 
     // 2. retrieve all uuid items currently Idle to set on Pause or vice versa :
     QList<QModelIndex> targetIndexesList;
-    foreach (const QModelIndex& index, this->core->getModelQuery()->retrieveStartPauseIndexList(itemStatus)) {
+    foreach (const QModelIndex &index, this->core->getModelQuery()->retrieveStartPauseIndexList(itemStatus)) {
 
         // if bypass is enabled and items have not been manually set on start/pause :
-        if (!this->retrieveProperListFromMap(itemStatus).contains(this->core->getDownloadModel()->getUuidStrFromIndex(index)) ) {
+        if (!this->retrieveProperListFromMap(itemStatus).contains(this->core->getDownloadModel()->getUuidStrFromIndex(index))) {
 
             targetIndexesList.append(index);
 
@@ -179,8 +170,8 @@ void Scheduler::scheduleStartPauseDownload(UtilityNamespace::ItemStatus itemStat
 
 }
 
-
-QList<QString> Scheduler::retrieveProperListFromMap(const UtilityNamespace::ItemStatus& targetItemStatus) const {
+QList<QString> Scheduler::retrieveProperListFromMap(const UtilityNamespace::ItemStatus &targetItemStatus) const
+{
 
     QList<QString> bypassedItemList = this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart);
 
@@ -197,29 +188,27 @@ QList<QString> Scheduler::retrieveProperListFromMap(const UtilityNamespace::Item
 
 }
 
-
-
-void Scheduler::initUuidStartPauseMap() {
+void Scheduler::initUuidStartPauseMap()
+{
 
     if (SchedulerSettings::bypassMethods() == Scheduler::BypassItemsPause) {
 
-        foreach (const QString& uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsStart)) {
+        foreach (const QString &uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsStart)) {
             this->manuallyUuidStartPauseMap.remove(uuid);
         }
 
-        foreach (const QString& uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart)) {
+        foreach (const QString &uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart)) {
             this->manuallyUuidStartPauseMap.insert(uuid, BypassItemsPause);
 
         }
 
-    }
-    else if (SchedulerSettings::bypassMethods() == Scheduler::BypassItemsStart) {
+    } else if (SchedulerSettings::bypassMethods() == Scheduler::BypassItemsStart) {
 
-        foreach (const QString& uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPause)) {
+        foreach (const QString &uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPause)) {
             this->manuallyUuidStartPauseMap.remove(uuid);
         }
 
-        foreach (const QString& uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart)) {
+        foreach (const QString &uuid, this->manuallyUuidStartPauseMap.keys(Scheduler::BypassItemsPauseOrStart)) {
             this->manuallyUuidStartPauseMap.insert(uuid, BypassItemsStart);
 
         }
@@ -228,8 +217,8 @@ void Scheduler::initUuidStartPauseMap() {
 
 }
 
-
-void Scheduler::checkDownloadStatus(const DownloadLimitStatus& downloadLimitStatus) {
+void Scheduler::checkDownloadStatus(const DownloadLimitStatus &downloadLimitStatus)
+{
 
     // for each polling, check that pending files are set on pause if download status is disabled :
     if (downloadLimitStatus == DisabledDownload) {
@@ -247,8 +236,7 @@ void Scheduler::checkDownloadStatus(const DownloadLimitStatus& downloadLimitStat
         // then apply proper bandwidth management according to current status :
         if (downloadLimitStatus == NoLimitDownload) {
             this->serverManager->setBandwidthMode(BandwidthFull);
-        }
-        else if (downloadLimitStatus == LimitDownload) {
+        } else if (downloadLimitStatus == LimitDownload) {
             this->serverManager->setBandwidthMode(BandwidthLimited);
         }
 
@@ -259,8 +247,8 @@ void Scheduler::checkDownloadStatus(const DownloadLimitStatus& downloadLimitStat
 
 }
 
-
-void Scheduler::applySpeedLimit() {
+void Scheduler::applySpeedLimit()
+{
 
     int serverNumber = this->serverManager->getServerNumber();
     int serversCurrentlyDownloadingNumber = 0;
@@ -278,7 +266,6 @@ void Scheduler::applySpeedLimit() {
         totalDownloadSpeed += serverDownloadSpeed;
     }
 
-
     // for each server group, apply download speed limit :
     for (int i = 0; i < serverNumber; ++i) {
 
@@ -295,14 +282,12 @@ void Scheduler::applySpeedLimit() {
             }
         }
 
-
     }
-
 
 }
 
-
-DownloadLimitStatus Scheduler::getCurrentDownloadLimitStatus() {
+DownloadLimitStatus Scheduler::getCurrentDownloadLimitStatus()
+{
 
     // retrieve current time :
     QTime currentTime = QTime::currentTime();
@@ -312,24 +297,22 @@ DownloadLimitStatus Scheduler::getCurrentDownloadLimitStatus() {
     int row = QDate().currentDate().dayOfWeek();
 
     // get corresponding download limit status :
-    QStandardItem* item = this->schedulerModel->item(row, column);
+    QStandardItem *item = this->schedulerModel->item(row, column);
     return static_cast<DownloadLimitStatus>(item->data(DownloadLimitRole).toInt());
 
 }
 
-
-void Scheduler::disableSpeedLimit() {
+void Scheduler::disableSpeedLimit()
+{
     this->serverManager->setBandwidthMode(BandwidthFull);
 }
-
-
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void Scheduler::statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity WidgetIdentity) {
+void Scheduler::statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity WidgetIdentity)
+{
 
     // if double click has been done on download speed widget :
     if (WidgetIdentity == MyStatusBar::SpeedWidgetIdentity) {
@@ -337,10 +320,10 @@ void Scheduler::statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity WidgetId
         // display scheduler settings dialog page :
         KCMultiDialog schedulerConfigDialog;
 
-        schedulerConfigDialog.setFaceType( KCMultiDialog::Plain );
+        schedulerConfigDialog.setFaceType(KCMultiDialog::Plain);
         schedulerConfigDialog.setWindowTitle(i18n("Bandwidth manager"));
         schedulerConfigDialog.addModule("kwooty_schedulersettings");
-        schedulerConfigDialog.resize (600, 400);
+        schedulerConfigDialog.resize(600, 400);
         schedulerConfigDialog.exec();
 
         // once the page has been closed, apply new settings :
@@ -349,8 +332,8 @@ void Scheduler::statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity WidgetId
 
 }
 
-
-void Scheduler::schedulerTimerSlot() {
+void Scheduler::schedulerTimerSlot()
+{
 
     // do not perform any actions if model is empty as no download can be requested at that time :
     if (!this->core->getModelQuery()->isRootModelEmpty()) {
@@ -365,8 +348,8 @@ void Scheduler::schedulerTimerSlot() {
         }
 
         // if downloadLimitSpinBox is set to 0, it corresponds to no limit download :
-        if ( SchedulerSettings::downloadLimitSpinBox() == NO_SPEED_LIMIT &&
-             downloadLimitStatus == LimitDownload ) {
+        if (SchedulerSettings::downloadLimitSpinBox() == NO_SPEED_LIMIT &&
+                downloadLimitStatus == LimitDownload) {
 
             downloadLimitStatus = NoLimitDownload;
 
@@ -383,17 +366,16 @@ void Scheduler::schedulerTimerSlot() {
 
 }
 
-
-void Scheduler::serverManagerSettingsChangedSlot() {
+void Scheduler::serverManagerSettingsChangedSlot()
+{
 
     // reset download status to full speed if server settings changed :
     this->downloadLimitStatus = NoLimitDownload;
     this->disableSpeedLimit();
 }
 
-
-
-void Scheduler::dataAboutToArriveSlot(QModelIndex appendedIndex) {
+void Scheduler::dataAboutToArriveSlot(QModelIndex appendedIndex)
+{
 
     if (SchedulerSettings::enableScheduler()) {
 
@@ -408,7 +390,6 @@ void Scheduler::dataAboutToArriveSlot(QModelIndex appendedIndex) {
         }
     }
 
-
     // scheduler is not active but new nzb have to be set on pause :
     else if (SchedulerSettings::pauseIncomingFiles()) {
 
@@ -422,11 +403,11 @@ void Scheduler::dataAboutToArriveSlot(QModelIndex appendedIndex) {
 
 }
 
+void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus targetItemStatus, QList<QModelIndex> targetIndexesList)
+{
 
-void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus targetItemStatus, QList<QModelIndex> targetIndexesList) {
-
-    if ( SchedulerSettings::enableScheduler() &&
-         SchedulerSettings::bypass() ) {
+    if (SchedulerSettings::enableScheduler() &&
+            SchedulerSettings::bypass()) {
 
         // by default consider that scheduler does not bypass any items :
         BypassSchedulerMethod bypassSchedulerMethod = BypassNoItems;
@@ -437,15 +418,15 @@ void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus ta
         }
 
         // if items have been manually set on pause :
-        else if ( targetItemStatus == PauseStatus &&
-                  SchedulerSettings::bypassMethods() == Scheduler::BypassItemsPause ) {
+        else if (targetItemStatus == PauseStatus &&
+                 SchedulerSettings::bypassMethods() == Scheduler::BypassItemsPause) {
 
             bypassSchedulerMethod = BypassItemsPause;
         }
 
         // if items have been manually set on start :
-        else if ( targetItemStatus == IdleStatus &&
-                  SchedulerSettings::bypassMethods() == Scheduler::BypassItemsStart ) {
+        else if (targetItemStatus == IdleStatus &&
+                 SchedulerSettings::bypassMethods() == Scheduler::BypassItemsStart) {
 
             bypassSchedulerMethod = BypassItemsStart;
         }
@@ -453,7 +434,7 @@ void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus ta
         if (bypassSchedulerMethod != BypassNoItems) {
 
             // retrieve items selected by user :
-            foreach (const QModelIndex& selectedIndex, targetIndexesList) {
+            foreach (const QModelIndex &selectedIndex, targetIndexesList) {
 
                 // retrieve their corresponding uuid and store them :
                 QString indexUuidStr = this->core->getDownloadModel()->getUuidStrFromIndex(selectedIndex);
@@ -466,8 +447,8 @@ void Scheduler::startPauseAboutToBeTriggeredSlot(UtilityNamespace::ItemStatus ta
 
 }
 
-
-void Scheduler::settingsChanged() {
+void Scheduler::settingsChanged()
+{
 
     // reload settings from just saved config file :
     SchedulerSettings::self()->load();
@@ -480,8 +461,7 @@ void Scheduler::settingsChanged() {
 
             this->initUuidStartPauseMap();
 
-        }
-        else {
+        } else {
 
             this->manuallyUuidStartPauseMap.clear();
 
@@ -490,7 +470,6 @@ void Scheduler::settingsChanged() {
         }
 
     }
-
 
     // restart previously paused downloads after settings changes :
     this->checkDownloadStatus(NoLimitDownload);

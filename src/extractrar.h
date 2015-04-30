@@ -18,29 +18,26 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef EXTRACTRAR_H
 #define EXTRACTRAR_H
 
-
 #include "extractbase.h"
-
 
 class ExtractRar : public ExtractBase
 {
-        Q_OBJECT
+    Q_OBJECT
 public:
-    explicit ExtractRar(RepairDecompressThread*);
+    explicit ExtractRar(RepairDecompressThread *);
     ~ExtractRar();
 
 private:
 
-    QStringList createProcessArguments(const QString&, const QString&, const bool&, const QString&) ;
-    void extractUpdate(const QString&);
-    void checkIfArchivePassworded(const QString&, bool&);
+    QStringList createProcessArguments(const QString &, const QString &, const bool &, const QString &) ;
+    void extractUpdate(const QString &);
+    void checkIfArchivePassworded(const QString &, bool &);
     void sendExtractProgramNotFoundNotification();
     QString searchExtractProgram();
-    void emitStatusToAllArchives(const int&, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
+    void emitStatusToAllArchives(const int &, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
 };
 
 #endif // EXTRACTRAR_H

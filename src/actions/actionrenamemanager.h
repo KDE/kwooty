@@ -18,33 +18,32 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef ACTIONRENAMEMANAGER_H
 #define ACTIONRENAMEMANAGER_H
 
 #include "actionfilemanagerbase.h"
 
-
-class ActionRenameManager : public ActionFileManagerBase {
+class ActionRenameManager : public ActionFileManagerBase
+{
 
     Q_OBJECT
 
 public:
-    explicit ActionRenameManager(ActionsManager*);
-    void checkRenameCandidates(bool&);
+    explicit ActionRenameManager(ActionsManager *);
+    void checkRenameCandidates(bool &);
 
 private:
 
     QString input;
     QString selectedItemUuid;
 
-    bool validateNewFolderName(QStandardItem*) const;
-    bool isRenameAllowed(QStandardItem*) const;
-    void processRename(QStandardItem*);
+    bool validateNewFolderName(QStandardItem *) const;
+    bool isRenameAllowed(QStandardItem *) const;
+    void processRename(QStandardItem *);
     void launchProcess() Q_DECL_OVERRIDE;
 public Q_SLOTS:
     void actionTriggeredSlot() Q_DECL_OVERRIDE;
-    void handleResultSlot(KJob*) Q_DECL_OVERRIDE;
+    void handleResultSlot(KJob *) Q_DECL_OVERRIDE;
 
 };
 

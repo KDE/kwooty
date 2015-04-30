@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SERVERTABWIDGET_H
 #define SERVERTABWIDGET_H
 
@@ -29,11 +28,10 @@
 
 class PreferencesServer;
 
-class ServerTabWidget : public KTabWidget {
-
+class ServerTabWidget : public KTabWidget
+{
 
     Q_OBJECT
-
 
 public:
 
@@ -41,28 +39,27 @@ public:
     enum ServerNameQuery { AskServerName,
                            DoNotAskServerName,
                            DefaultSettingsName
-                       };
+                         };
 
     // new tab name or rename tab :
     enum ServerTabNaming { CreateTab,
                            RenameTab
-                       };
+                         };
 
-    ServerTabWidget(PreferencesServer*);
+    ServerTabWidget(PreferencesServer *);
     void addNewTab();
     void addDefaultTab();
-    void deleteAndRemoveTab(const int&);
-    void setServerTabIcon(const int&, const int&);
+    void deleteAndRemoveTab(const int &);
+    void setServerTabIcon(const int &, const int &);
     QMap<int, QString> getComboBoxIconTextMap();
 
-
 private:
-    QToolButton* newTab;
-    QToolButton* closeTab;
-    PreferencesServer* preferencesServer;
+    QToolButton *newTab;
+    QToolButton *closeTab;
+    PreferencesServer *preferencesServer;
     QMap<int, QString> comboBoxIconTextMap;
 
-    void setServerTabText(const ServerTabNaming& = CreateTab);
+    void setServerTabText(const ServerTabNaming & = CreateTab);
     void setupConnections();
     void enableDisableTabButtons();
     void syncGroupBoxTitle();
@@ -72,7 +69,6 @@ private:
 public Q_SLOTS:
     void saveDataSlot();
 
-
 private Q_SLOTS:
 
     void closeTabClickedSlot();
@@ -80,7 +76,7 @@ private Q_SLOTS:
     void tabMovedSlot(int, int);
     void currentChangedSlot(int);
     void valueChangedSlot();
-    void renameTabSlot(QWidget*);
+    void renameTabSlot(QWidget *);
 
 };
 

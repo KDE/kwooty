@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "actionsmanager.h"
 
 #include <KMessageBox>
@@ -43,8 +42,8 @@
 #include "actions/actionfiledeletemanager.h"
 #include "kwootysettings.h"
 
-
-ActionsManager::ActionsManager(Core* core) : QObject (core) {
+ActionsManager::ActionsManager(Core *core) : QObject(core)
+{
 
     this->core = core;
     this->treeView = this->core->getTreeView();
@@ -67,47 +66,50 @@ ActionsManager::ActionsManager(Core* core) : QObject (core) {
 
 }
 
-
-ActionButtonsManager* ActionsManager::getActionButtonsManager() const {
+ActionButtonsManager *ActionsManager::getActionButtonsManager() const
+{
     return this->actionButtonsManager;
 }
 
-ActionMergeManager* ActionsManager::getActionMergeManager() const {
+ActionMergeManager *ActionsManager::getActionMergeManager() const
+{
     return this->actionMergeManager;
 }
 
-ActionRenameManager* ActionsManager::getActionRenameManager() const {
+ActionRenameManager *ActionsManager::getActionRenameManager() const
+{
     return this->actionRenameManager;
 }
 
-ActionFileDeleteManager* ActionsManager::getActionFileDeleteManager() const {
+ActionFileDeleteManager *ActionsManager::getActionFileDeleteManager() const
+{
     return this->actionFileDeleteManager;
 }
 
-Core* ActionsManager::getCore() const {
+Core *ActionsManager::getCore() const
+{
     return this->core;
 }
 
-
-void ActionsManager::setupConnections() {
-
+void ActionsManager::setupConnections()
+{
 
     // enable or disable buttons according to selected items :
-    connect (this->downloadModel,
-             SIGNAL(childStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
-             this->actionButtonsManager,
-             SLOT(selectedItemSlot()));
+    connect(this->downloadModel,
+            SIGNAL(childStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
+            this->actionButtonsManager,
+            SLOT(selectedItemSlot()));
 
-    connect (this->downloadModel,
-             SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
-             this->actionButtonsManager,
-             SLOT(selectedItemSlot()));
+    connect(this->downloadModel,
+            SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
+            this->actionButtonsManager,
+            SLOT(selectedItemSlot()));
 
     // update status bar info :
-    connect( this,
-             SIGNAL(statusBarFileSizeUpdateSignal(StatusBarUpdateType)),
-             this->core,
-             SLOT(statusBarFileSizeUpdateSlot(StatusBarUpdateType)) );
+    connect(this,
+            SIGNAL(statusBarFileSizeUpdateSignal(StatusBarUpdateType)),
+            this->core,
+            SLOT(statusBarFileSizeUpdateSlot(StatusBarUpdateType)));
 
     // one or several rows have been removed :
     connect(this,
@@ -122,41 +124,40 @@ void ActionsManager::setupConnections() {
             SLOT(parentItemChangedSlot()));
 
     // recalculate full nzb size when children may have been removed :
-    connect (this,
-             SIGNAL(recalculateNzbSizeSignal(QModelIndex)),
-             this->core->getItemParentUpdater(),
-             SLOT(recalculateNzbSizeSlot(QModelIndex)));
-
+    connect(this,
+            SIGNAL(recalculateNzbSizeSignal(QModelIndex)),
+            this->core->getItemParentUpdater(),
+            SLOT(recalculateNzbSizeSlot(QModelIndex)));
 
     // disable shutdown scheduler if user removed all rows :
-    connect (this,
-             SIGNAL(allRowRemovedSignal()),
-             this->core->getShutdownManager(),
-             SLOT(shutdownCancelledSlot()));
-
+    connect(this,
+            SIGNAL(allRowRemovedSignal()),
+            this->core->getShutdownManager(),
+            SLOT(shutdownCancelledSlot()));
 
     // enable smart par2 download for incoming nzb files :
-    connect (this,
-             SIGNAL(changePar2FilesStatusSignal(QModelIndex,UtilityNamespace::ItemStatus)),
-             this->core->getItemParentUpdater()->getItemChildrenManager(),
-             SLOT(changePar2FilesStatusSlot(QModelIndex,UtilityNamespace::ItemStatus)));
+    connect(this,
+            SIGNAL(changePar2FilesStatusSignal(QModelIndex,UtilityNamespace::ItemStatus)),
+            this->core->getItemParentUpdater()->getItemChildrenManager(),
+            SLOT(changePar2FilesStatusSlot(QModelIndex,UtilityNamespace::ItemStatus)));
 
 }
 
-void ActionsManager::changePar2FilesStatus(const QModelIndex index, UtilityNamespace::ItemStatus itemStatus) {
+void ActionsManager::changePar2FilesStatus(const QModelIndex index, UtilityNamespace::ItemStatus itemStatus)
+{
 
     emit changePar2FilesStatusSignal(index, itemStatus);
 
 }
 
-
-void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType) {
+void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType)
+{
 
     // get selected indexes :
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
 
     // get parent item :
-    QStandardItem* parentItem = 0;
+    QStandardItem *parentItem = 0;
     if (!indexesList.isEmpty()) {
         parentItem = this->downloadModel->getParentItem(indexesList.at(0));
     }
@@ -164,18 +165,16 @@ void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType) {
     // sort indexes by decremental order
     qSort(indexesList.begin(), indexesList.end(), qGreater<QModelIndex>());
 
-
     // remove selected indexes from model
-    QMap< int, QList<QStandardItem*> > itemRowsMap;
+    QMap< int, QList<QStandardItem *> > itemRowsMap;
 
-    foreach (const QModelIndex& index, indexesList) {
+    foreach (const QModelIndex &index, indexesList) {
 
         int rowNumber = index.row();
-        QList<QStandardItem*> rowItems = parentItem->takeRow(rowNumber);
+        QList<QStandardItem *> rowItems = parentItem->takeRow(rowNumber);
 
         itemRowsMap.insert(rowNumber, rowItems);
     }
-
 
     QList<int> rowNumberList = itemRowsMap.keys();
 
@@ -184,9 +183,9 @@ void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType) {
     QList<int> updatedRowNumberList;
 
     // then replace removed indexes to the proper position :
-    foreach (const int& currentRow, rowNumberList) {
+    foreach (const int &currentRow, rowNumberList) {
 
-        QList<QStandardItem*> itemRows = itemRowsMap.value(currentRow);
+        QList<QStandardItem *> itemRows = itemRowsMap.value(currentRow);
 
         int updatedRowNumber;
 
@@ -207,26 +206,23 @@ void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType) {
         }
 
         // control out of range and multiple row selection :
-        if ( (updatedRowNumber < 0) ||
-             (updatedRowNumber > parentItem->rowCount()) ||
-             updatedRowNumberList.contains(updatedRowNumber) ) {
+        if ((updatedRowNumber < 0) ||
+                (updatedRowNumber > parentItem->rowCount()) ||
+                updatedRowNumberList.contains(updatedRowNumber)) {
 
-
-            if ( (moveRowType == MoveRowsUp) ||
-                 (moveRowType == MoveRowsDown) )  {
+            if ((moveRowType == MoveRowsUp) ||
+                    (moveRowType == MoveRowsDown))  {
 
                 updatedRowNumber = currentRow;
             }
 
-            if ( (moveRowType == MoveRowsTop) ||
-                 (moveRowType == MoveRowsBottom) ) {
+            if ((moveRowType == MoveRowsTop) ||
+                    (moveRowType == MoveRowsBottom)) {
 
                 updatedRowNumber = updatedRowNumberList.at(updatedRowNumberList.size() - 1) + 1;
             }
 
-
         }
-
 
         // insert row to the model :
         parentItem->insertRow(updatedRowNumber, itemRows);
@@ -235,28 +231,25 @@ void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType) {
         updatedRowNumberList.append(updatedRowNumber);
 
         this->treeView->selectionModel()->select(QItemSelection(itemRows.at(0)->index(), itemRows.at(itemRows.size() - 1)->index()),
-                                                 QItemSelectionModel::Select);
+                QItemSelectionModel::Select);
     }
-
-
 
     // ensure that moved rows are still visible :
     if (!rowNumberList.isEmpty()) {
 
         QModelIndex visibleIndex;
 
-        if ( (moveRowType == MoveRowsUp) ||
-             (moveRowType == MoveRowsTop) ) {
+        if ((moveRowType == MoveRowsUp) ||
+                (moveRowType == MoveRowsTop)) {
 
             visibleIndex = itemRowsMap.value(rowNumberList.takeFirst()).at(0)->index();
         }
 
-        if ( (moveRowType == MoveRowsDown) ||
-             (moveRowType == MoveRowsBottom) ){
+        if ((moveRowType == MoveRowsDown) ||
+                (moveRowType == MoveRowsBottom)) {
 
             visibleIndex = itemRowsMap.value(rowNumberList.takeLast()).at(0)->index();
         }
-
 
         this->treeView->scrollTo(visibleIndex);
 
@@ -264,8 +257,8 @@ void ActionsManager::moveRow(ActionsManager::MoveRowType moveRowType) {
 
 }
 
-
-void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus targetStatus, const QModelIndex& index){
+void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus targetStatus, const QModelIndex &index)
+{
 
     QList<QModelIndex> targetIndexesList;
     targetIndexesList.append(index);
@@ -273,24 +266,23 @@ void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus ta
 
 }
 
-
-
-void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus targetStatus, const QList<QModelIndex>& indexesList){
+void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus targetStatus, const QList<QModelIndex> &indexesList)
+{
 
     // notify listeners that start/pause download action is about to be triggered :
     emit startPauseAboutToBeTriggeredSignal(targetStatus, indexesList);
 
-    foreach (const QModelIndex& currentModelIndex, indexesList) {
+    foreach (const QModelIndex &currentModelIndex, indexesList) {
 
         // get file name item related to selected index :
-        QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(currentModelIndex);
+        QStandardItem *fileNameItem = this->downloadModel->getFileNameItemFromIndex(currentModelIndex);
 
         // if the item is a nzbItem, retrieve their children :
-        if (this->downloadModel->isNzbItem(fileNameItem)){
+        if (this->downloadModel->isNzbItem(fileNameItem)) {
 
-            for (int i = 0; i < fileNameItem->rowCount(); ++i){
+            for (int i = 0; i < fileNameItem->rowCount(); ++i) {
 
-                QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
+                QStandardItem *nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
                 this->core->getSegmentManager()->setIdlePauseSegments(nzbChildrenItem, targetStatus);
             }
         }
@@ -317,20 +309,19 @@ void ActionsManager::setStartPauseDownload(const UtilityNamespace::ItemStatus ta
 
 }
 
-
-
-void ActionsManager::setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus targetStatus) {
+void ActionsManager::setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus targetStatus)
+{
 
     this->setStartPauseDownload(targetStatus, this->modelQuery->retrieveStartPauseIndexList(targetStatus));
 
 }
 
+void ActionsManager::retryDownload(const QModelIndexList &indexList)
+{
 
-void ActionsManager::retryDownload(const QModelIndexList& indexList) {
+    ItemParentUpdater *itemParentUpdater = this->core->getItemParentUpdater();
 
-    ItemParentUpdater* itemParentUpdater = this->core->getItemParentUpdater();
-
-    foreach (const QModelIndex& currentModelIndex, indexList) {
+    foreach (const QModelIndex &currentModelIndex, indexList) {
 
         bool changeItemStatus = false;
 
@@ -338,7 +329,7 @@ void ActionsManager::retryDownload(const QModelIndexList& indexList) {
         ItemStatus itemStatusResetTarget = ExtractFinishedStatus;
 
         // get file name item related to selected index :
-        QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(currentModelIndex);
+        QStandardItem *fileNameItem = this->downloadModel->getFileNameItemFromIndex(currentModelIndex);
 
         // if current item is a nzbItem, retrieve their children :
         if (this->downloadModel->isNzbItem(fileNameItem)) {
@@ -350,7 +341,7 @@ void ActionsManager::retryDownload(const QModelIndexList& indexList) {
             bool childStatusConsistencyCorrect = false;
             for (int i = 0; i < fileNameItem->rowCount(); ++i) {
 
-                QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
+                QStandardItem *nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
                 if (this->modelQuery->isRetryDownloadAllowed(nzbChildrenItem) == IdleStatus) {
 
                     childStatusConsistencyCorrect = true;
@@ -364,7 +355,7 @@ void ActionsManager::retryDownload(const QModelIndexList& indexList) {
 
                 for (int i = 0; i < fileNameItem->rowCount(); ++i) {
 
-                    QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
+                    QStandardItem *nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
                     itemStatusResetTarget = this->modelQuery->isRetryDownloadAllowed(nzbChildrenItem);
 
                     // if itemStatusResetTarget is different from ExtractFinishedStatus, retry download is allowed :
@@ -417,12 +408,11 @@ void ActionsManager::retryDownload(const QModelIndexList& indexList) {
 
 }
 
-
-void ActionsManager::removeRow(const QList<QModelIndex>& indexesList) {
+void ActionsManager::removeRow(const QList<QModelIndex> &indexesList)
+{
 
     bool par2FilesStatuschanged = false;
     QList<int> rowList;
-
 
     //stores rows in a list
     for (int i = 0; i < indexesList.size(); ++i) {
@@ -430,7 +420,6 @@ void ActionsManager::removeRow(const QList<QModelIndex>& indexesList) {
     }
 
     qSort(rowList.begin(), rowList.end(), qGreater<int>());
-
 
     for (int i = 0; i < indexesList.size(); ++i) {
 
@@ -443,7 +432,7 @@ void ActionsManager::removeRow(const QList<QModelIndex>& indexesList) {
             }
             // else files of the parent (nzb item) has been selected :
             else {
-                QStandardItem* nzbItem = this->downloadModel->itemFromIndex(currentModelIndex.parent());
+                QStandardItem *nzbItem = this->downloadModel->itemFromIndex(currentModelIndex.parent());
                 nzbItem->removeRow(rowList.at(i));
 
                 if (nzbItem->rowCount() > 0) {
@@ -467,12 +456,10 @@ void ActionsManager::removeRow(const QList<QModelIndex>& indexesList) {
         }
     }
 
-
     // then send signal to nntp clients to download Par2 files :
     if (par2FilesStatuschanged) {
         this->core->downloadWaitingPar2Slot();
     }
-
 
     // disable shutdown if all rows have been removed by the user :
     if (this->downloadModel->invisibleRootItem()->rowCount() == 0) {
@@ -483,34 +470,34 @@ void ActionsManager::removeRow(const QList<QModelIndex>& indexesList) {
     // update the status bar :
     emit statusBarFileSizeUpdateSignal(Incremental);
 
-
 }
-
-
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-void ActionsManager::moveToTopSlot() {
+void ActionsManager::moveToTopSlot()
+{
     this->moveRow(MoveRowsTop);
 }
 
-void ActionsManager::moveToBottomSlot() {
+void ActionsManager::moveToBottomSlot()
+{
     this->moveRow(MoveRowsBottom);
 }
 
-void ActionsManager::moveUpSlot() {
+void ActionsManager::moveUpSlot()
+{
     this->moveRow(MoveRowsUp);
 }
 
-void ActionsManager::moveDownSlot() {
+void ActionsManager::moveDownSlot()
+{
     this->moveRow(MoveRowsDown);
 }
 
-
-
-void ActionsManager::clearSlot() {
+void ActionsManager::clearSlot()
+{
 
     // clear rows by default :
     int answer = KMessageBox::Yes;
@@ -541,11 +528,10 @@ void ActionsManager::clearSlot() {
 
     }
 
-
 }
 
-
-void ActionsManager::removeRowSlot() {
+void ActionsManager::removeRowSlot()
+{
 
     // remove selected rows by default :
     int answer = KMessageBox::Yes;
@@ -564,12 +550,11 @@ void ActionsManager::removeRowSlot() {
 
         this->removeRow(this->treeView->selectionModel()->selectedRows());
 
-
     }
 }
 
-
-void ActionsManager::openFolderSlot() {
+void ActionsManager::openFolderSlot()
+{
 
     // get selected indexes :
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
@@ -598,30 +583,29 @@ void ActionsManager::openFolderSlot() {
 
 }
 
-
-void ActionsManager::pauseDownloadSlot() {
+void ActionsManager::pauseDownloadSlot()
+{
 
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
     this->setStartPauseDownload(UtilityNamespace::PauseStatus, indexesList);
 
 }
 
-
-void ActionsManager::pauseAllDownloadSlot() {
+void ActionsManager::pauseAllDownloadSlot()
+{
     this->setStartPauseDownloadAllItems(UtilityNamespace::PauseStatus);
 }
 
-
-
-void ActionsManager::startDownloadSlot() {
+void ActionsManager::startDownloadSlot()
+{
 
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
     this->setStartPauseDownload(IdleStatus, indexesList);
 
 }
 
-
-void ActionsManager::startAllDownloadSlot() {
+void ActionsManager::startAllDownloadSlot()
+{
 
     // ensure that any previous save file error message box is closed before starting pending downloads again :
     if (!this->core->getCentralWidget()->isDialogExisting()) {
@@ -631,21 +615,20 @@ void ActionsManager::startAllDownloadSlot() {
     }
 }
 
-
-
-void ActionsManager::retryDownloadSlot() {
+void ActionsManager::retryDownloadSlot()
+{
     this->retryDownload(this->treeView->selectionModel()->selectedRows());
 }
 
-
-void ActionsManager::manualExtractSlot() {
+void ActionsManager::manualExtractSlot()
+{
 
     QList<QModelIndex> indexesList = this->treeView->selectionModel()->selectedRows();
 
     // take the first selected item :
     if (!indexesList.isEmpty()) {
 
-        QStandardItem* nzbFileItem = this->downloadModel->getNzbItem(indexesList.at(0));
+        QStandardItem *nzbFileItem = this->downloadModel->getNzbItem(indexesList.at(0));
 
         if (this->modelQuery->isManualRepairExtractAllowed(nzbFileItem)) {
 

@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "nzbfiledata.h"
 
 NzbFileData::NzbFileData()
@@ -30,7 +29,8 @@ NzbFileData::NzbFileData()
 
 }
 
-NzbFileData::NzbFileData(const QString& fileName, const QStringList& groupList, const QList<SegmentData>& segmentList) {
+NzbFileData::NzbFileData(const QString &fileName, const QStringList &groupList, const QList<SegmentData> &segmentList)
+{
 
     this->setFileName(fileName);
     this->setGroupList(groupList);
@@ -40,32 +40,35 @@ NzbFileData::NzbFileData(const QString& fileName, const QStringList& groupList, 
     this->archiveFormat = UnknownArchiveFormat;
 }
 
-NzbFileData::~NzbFileData(){ }
+NzbFileData::~NzbFileData() { }
 
-
-
-QString NzbFileData::getFileName() const {
+QString NzbFileData::getFileName() const
+{
     return this->fileName;
 }
 
-void NzbFileData::setFileName(const QString& fileName) {
+void NzbFileData::setFileName(const QString &fileName)
+{
     this->fileName = fileName;
 }
 
-QString NzbFileData::getReducedFileName() const {
+QString NzbFileData::getReducedFileName() const
+{
     return this->reducedFileName;
 }
 
-void NzbFileData::setReducedFileName(const QString& reducedFileName) {
+void NzbFileData::setReducedFileName(const QString &reducedFileName)
+{
     this->reducedFileName = reducedFileName;
 }
 
-
-QString NzbFileData::getTemporaryFileName() const {
+QString NzbFileData::getTemporaryFileName() const
+{
     return this->temporaryFileName;
 }
 
-void NzbFileData::setTemporaryFileName(const QString& temporaryFileName) {
+void NzbFileData::setTemporaryFileName(const QString &temporaryFileName)
+{
 
     // remove '-' separator from uuid string and retrieve the first 12 characters
     // that will be used to create the temporary file name :
@@ -74,12 +77,13 @@ void NzbFileData::setTemporaryFileName(const QString& temporaryFileName) {
 
 }
 
-
-QString NzbFileData::getDecodedFileName() const {
+QString NzbFileData::getDecodedFileName() const
+{
     return this->decodedFileName;
 }
 
-void NzbFileData::setDecodedFileName(const QString& decodedFileName) {
+void NzbFileData::setDecodedFileName(const QString &decodedFileName)
+{
 
     this->decodedFileName = decodedFileName;
 
@@ -91,15 +95,16 @@ void NzbFileData::setDecodedFileName(const QString& decodedFileName) {
 
 }
 
-bool NzbFileData::match(const QString& fileNameStr, const QString& originalFileNameStr) {
+bool NzbFileData::match(const QString &fileNameStr, const QString &originalFileNameStr)
+{
 
-    return ( this->possibleFileNameList.contains(fileNameStr) ||
-             this->possibleFileNameList.contains(originalFileNameStr) );
+    return (this->possibleFileNameList.contains(fileNameStr) ||
+            this->possibleFileNameList.contains(originalFileNameStr));
 
 }
 
-
-void NzbFileData::setRenamedFileName(const QString& fileNameStr, const QString& originalFileNameStr)  {
+void NzbFileData::setRenamedFileName(const QString &fileNameStr, const QString &originalFileNameStr)
+{
 
     if (!this->possibleFileNameList.contains(fileNameStr) && !fileNameStr.isEmpty()) {
         this->possibleFileNameList.append(fileNameStr);
@@ -115,41 +120,48 @@ void NzbFileData::setRenamedFileName(const QString& fileNameStr, const QString& 
 
 }
 
-
-QString NzbFileData::getRenamedFileName() const {
+QString NzbFileData::getRenamedFileName() const
+{
     return this->renamedFileName;
 }
 
-
-QString NzbFileData::getNzbName() const {
+QString NzbFileData::getNzbName() const
+{
     return this->nzbName;
 }
 
-void NzbFileData::setNzbName(const QString& nzbName) {
+void NzbFileData::setNzbName(const QString &nzbName)
+{
     this->nzbName = nzbName;
 }
 
-bool NzbFileData::isPar2File() const {
+bool NzbFileData::isPar2File() const
+{
     return this->par2File;
 }
 
-void NzbFileData::setPar2File(const bool par2File) {
+void NzbFileData::setPar2File(const bool par2File)
+{
     this->par2File = par2File;
 }
 
-bool NzbFileData::isArchiveFile() const {
+bool NzbFileData::isArchiveFile() const
+{
     return this->archiveFile;
 }
 
-void NzbFileData::setArchiveFile(const bool archiveFile) {
+void NzbFileData::setArchiveFile(const bool archiveFile)
+{
     this->archiveFile = archiveFile;
 }
 
-UtilityNamespace::ArchiveFormat NzbFileData::getArchiveFormat() const {
+UtilityNamespace::ArchiveFormat NzbFileData::getArchiveFormat() const
+{
     return this->archiveFormat;
 }
 
-void NzbFileData::setArchiveFormat(const UtilityNamespace::ArchiveFormat archiveFormat) {
+void NzbFileData::setArchiveFormat(const UtilityNamespace::ArchiveFormat archiveFormat)
+{
 
     // archive is a known format handled for extracting :
     if (archiveFormat != UnknownArchiveFormat) {
@@ -159,31 +171,38 @@ void NzbFileData::setArchiveFormat(const UtilityNamespace::ArchiveFormat archive
     this->archiveFormat = archiveFormat;
 }
 
-void NzbFileData::setVerifyProgressionStep(const UtilityNamespace::ItemStatus verifyProgressionStep) {
+void NzbFileData::setVerifyProgressionStep(const UtilityNamespace::ItemStatus verifyProgressionStep)
+{
     this->verifyProgressionStep = verifyProgressionStep;
 }
 
-UtilityNamespace::ItemStatus NzbFileData::getVerifyProgressionStep() const {
+UtilityNamespace::ItemStatus NzbFileData::getVerifyProgressionStep() const
+{
     return this->verifyProgressionStep;
 }
 
-void NzbFileData::setExtractProgressionStep(const UtilityNamespace::ItemStatus extractProgressionStep) {
+void NzbFileData::setExtractProgressionStep(const UtilityNamespace::ItemStatus extractProgressionStep)
+{
     this->extractProgressionStep = extractProgressionStep;
 }
 
-UtilityNamespace::ItemStatus NzbFileData::getExtractProgressionStep() const {
+UtilityNamespace::ItemStatus NzbFileData::getExtractProgressionStep() const
+{
     return this->extractProgressionStep;
 }
 
-quint64 NzbFileData::getSize() const {
+quint64 NzbFileData::getSize() const
+{
     return this->size;
 }
 
-void NzbFileData::setSize(const quint64 size) {
+void NzbFileData::setSize(const quint64 size)
+{
     this->size = size;
 }
 
-QString NzbFileData::getFileSavePath() const {
+QString NzbFileData::getFileSavePath() const
+{
 
     QString fileSavePath;
 
@@ -194,87 +213,97 @@ QString NzbFileData::getFileSavePath() const {
 
 }
 
-void NzbFileData::updateFileSavePath(const NzbFileData& targetNzbFileData) {
+void NzbFileData::updateFileSavePath(const NzbFileData &targetNzbFileData)
+{
 
     this->downloadFolderPath = targetNzbFileData.getDownloadFolderPath();
     this->nzbName = targetNzbFileData.getNzbName();
 }
 
-
-QString NzbFileData::getDownloadFolderPath() const {
+QString NzbFileData::getDownloadFolderPath() const
+{
     return this->downloadFolderPath;
 }
 
-void NzbFileData::setDownloadFolderPath(const QString& downloadFolderPath){
+void NzbFileData::setDownloadFolderPath(const QString &downloadFolderPath)
+{
     this->downloadFolderPath = downloadFolderPath;
 }
 
-void NzbFileData::setBaseName(const QString& baseName){
+void NzbFileData::setBaseName(const QString &baseName)
+{
     this->baseName = baseName;
 }
 
-QString NzbFileData::getBaseName() const {
+QString NzbFileData::getBaseName() const
+{
     return this->baseName;
 }
 
-QStringList NzbFileData::getGroupList() const {
+QStringList NzbFileData::getGroupList() const
+{
     return this->groupList;
 }
 
-void NzbFileData::setGroupList(const QStringList& groupList){
+void NzbFileData::setGroupList(const QStringList &groupList)
+{
     this->groupList = groupList;
 }
 
-QList<SegmentData> NzbFileData::getSegmentList() const {
+QList<SegmentData> NzbFileData::getSegmentList() const
+{
     return this->segmentList;
 }
 
-void NzbFileData::setSegmentList(const QList<SegmentData>& segmentList){
+void NzbFileData::setSegmentList(const QList<SegmentData> &segmentList)
+{
     this->segmentList = segmentList;
 }
 
-void NzbFileData::setUniqueIdentifier(const QVariant& uniqueIdentifier){
+void NzbFileData::setUniqueIdentifier(const QVariant &uniqueIdentifier)
+{
     this->uniqueIdentifier = uniqueIdentifier;
 }
 
-QVariant NzbFileData::getUniqueIdentifier() const {
+QVariant NzbFileData::getUniqueIdentifier() const
+{
     return this->uniqueIdentifier;
 }
 
-bool NzbFileData::operator==(const NzbFileData& nzbFileDataToCompare) {
+bool NzbFileData::operator==(const NzbFileData &nzbFileDataToCompare)
+{
     return (this->getUniqueIdentifier() == nzbFileDataToCompare.getUniqueIdentifier());
 }
 
-bool NzbFileData::operator<(const NzbFileData& nzbFileDataToCompare) const{
+bool NzbFileData::operator<(const NzbFileData &nzbFileDataToCompare) const
+{
     // this data object will be sorted according to file name criteria :
     return (this->getDecodedFileName() < nzbFileDataToCompare.getDecodedFileName());
 }
 
-
-
-QDataStream& operator<<(QDataStream& out, const NzbFileData& nzbFileData) {
+QDataStream &operator<<(QDataStream &out, const NzbFileData &nzbFileData)
+{
 
     out << nzbFileData.getFileName()
-            << nzbFileData.getReducedFileName()
-            << nzbFileData.getDecodedFileName()
-            << nzbFileData.getTemporaryFileName()
-            << nzbFileData.getBaseName()
-            << nzbFileData.getNzbName()
-            << nzbFileData.getDownloadFolderPath()
-            << nzbFileData.getGroupList()
-            << nzbFileData.getSegmentList()
-            << nzbFileData.getUniqueIdentifier()
-            << nzbFileData.getSize()
-            << nzbFileData.isPar2File()
-            << nzbFileData.isArchiveFile()
-            << (qint16)nzbFileData.getArchiveFormat();
+        << nzbFileData.getReducedFileName()
+        << nzbFileData.getDecodedFileName()
+        << nzbFileData.getTemporaryFileName()
+        << nzbFileData.getBaseName()
+        << nzbFileData.getNzbName()
+        << nzbFileData.getDownloadFolderPath()
+        << nzbFileData.getGroupList()
+        << nzbFileData.getSegmentList()
+        << nzbFileData.getUniqueIdentifier()
+        << nzbFileData.getSize()
+        << nzbFileData.isPar2File()
+        << nzbFileData.isArchiveFile()
+        << (qint16)nzbFileData.getArchiveFormat();
 
     return out;
 }
 
-
-
-QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData) {
+QDataStream &operator>>(QDataStream &in, NzbFileData &nzbFileData)
+{
 
     QString fileName;
     QString reducedFileName;
@@ -292,20 +321,19 @@ QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData) {
     qint16 archiveFormat;
 
     in >> fileName
-            >> reducedFileName
-            >> decodedFileName
-            >> temporaryFileName
-            >> baseName
-            >> nzbName
-            >> downloadFolderPath
-            >> groupList
-            >> segmentList
-            >> uniqueIdentifier
-            >> size
-            >> par2File
-            >> archiveFile
-            >> archiveFormat;
-
+       >> reducedFileName
+       >> decodedFileName
+       >> temporaryFileName
+       >> baseName
+       >> nzbName
+       >> downloadFolderPath
+       >> groupList
+       >> segmentList
+       >> uniqueIdentifier
+       >> size
+       >> par2File
+       >> archiveFile
+       >> archiveFormat;
 
     nzbFileData.setFileName(fileName);
     nzbFileData.setReducedFileName(reducedFileName);
@@ -329,6 +357,4 @@ QDataStream& operator>>(QDataStream& in, NzbFileData& nzbFileData) {
 
     return in;
 }
-
-
 

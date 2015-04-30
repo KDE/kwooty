@@ -33,31 +33,31 @@ class SegmentDecoderYEnc;
 class SegmentDecoderUUEnc;
 class SegmentData;
 
-class SegmentsDecoderThread : public QObject {
+class SegmentsDecoderThread : public QObject
+{
 
     Q_OBJECT
 
 public:
 
-    SegmentsDecoderThread(Core*);
+    SegmentsDecoderThread(Core *);
     SegmentsDecoderThread();
     ~SegmentsDecoderThread();
-    void emitDecodeProgression(const PostDownloadInfoData&);
+    void emitDecodeProgression(const PostDownloadInfoData &);
     void emitSaveFileError();
 
 private:
-    QThread* dedicatedThread;
-    Core* parent;
-    SegmentDecoderYEnc* yencDecoder;
-    SegmentDecoderUUEnc* uuencDecoder;
+    QThread *dedicatedThread;
+    Core *parent;
+    SegmentDecoderYEnc *yencDecoder;
+    SegmentDecoderUUEnc *uuencDecoder;
     QList<SegmentData> segmentDataList;
 
     void init();
     void setupConnections();
-    SegmentDecoderYEnc* retrieveYencDecoder();
-    SegmentDecoderBase* retrieveProperDecoderAfterDownload(const NzbFileData&, QString&);
-    SegmentDecoderBase* retrieveProperDecoderDuringDownload(SegmentData&, QString&);
-
+    SegmentDecoderYEnc *retrieveYencDecoder();
+    SegmentDecoderBase *retrieveProperDecoderAfterDownload(const NzbFileData &, QString &);
+    SegmentDecoderBase *retrieveProperDecoderDuringDownload(SegmentData &, QString &);
 
 Q_SIGNALS:
     void updateDecodeSegmentSignal(SegmentData, int, int);
@@ -66,7 +66,6 @@ Q_SIGNALS:
     void updateDownloadSegmentSignal(const SegmentData &, const QString &);
     void segmentDecoderIdleSignal();
     void finalizeDecoderIdleSignal();
-
 
 public Q_SLOTS:
     void decodeSegmentsSlot(NzbFileData);

@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "sessiongnome3.h"
 
 #include "kwooty_debug.h"
@@ -27,8 +26,8 @@
 
 #include <QDBusReply>
 
-
-SessionGnome3::SessionGnome3(ShutdownManager* parent) : SessionBase(parent) {
+SessionGnome3::SessionGnome3(ShutdownManager *parent) : SessionBase(parent)
+{
 
     qCDebug(KWOOTY_LOG);
 
@@ -41,9 +40,8 @@ SessionGnome3::SessionGnome3(ShutdownManager* parent) : SessionBase(parent) {
 
 }
 
-
-
-QList<UtilityNamespace::SystemShutdownType> SessionGnome3::retrieveAvailableShutdownMethods() {
+QList<UtilityNamespace::SystemShutdownType> SessionGnome3::retrieveAvailableShutdownMethods()
+{
 
     QList<UtilityNamespace::SystemShutdownType> indexShutdownTypeList;
 
@@ -60,15 +58,14 @@ QList<UtilityNamespace::SystemShutdownType> SessionGnome3::retrieveAvailableShut
         indexShutdownTypeList.append(UtilityNamespace::Hibernate);
     }
 
-
     return indexShutdownTypeList;
 }
 
-
-void SessionGnome3::requestShutdown() {
+void SessionGnome3::requestShutdown()
+{
 
     // try to shutdown system with dbus and ConsoleKit :
-    QDBusInterface* dbusConsoleKitInterface = new QDBusInterface ("org.freedesktop.ConsoleKit", "/org/freedesktop/ConsoleKit/Manager", "org.freedesktop.ConsoleKit.Manager", QDBusConnection::systemBus());
+    QDBusInterface *dbusConsoleKitInterface = new QDBusInterface("org.freedesktop.ConsoleKit", "/org/freedesktop/ConsoleKit/Manager", "org.freedesktop.ConsoleKit.Manager", QDBusConnection::systemBus());
 
     // call stop method :
     dbusConsoleKitInterface->call("Stop");
@@ -77,7 +74,7 @@ void SessionGnome3::requestShutdown() {
     if (dbusConsoleKitInterface->lastError().isValid()) {
 
         // last chance to shutdown system if previous command fails :
-        QDBusInterface* dbusManagerInterface = new QDBusInterface ("org.gnome.SessionManager", "/org/gnome/SessionManager", "org.gnome.SessionManager", QDBusConnection::systemBus());
+        QDBusInterface *dbusManagerInterface = new QDBusInterface("org.gnome.SessionManager", "/org/gnome/SessionManager", "org.gnome.SessionManager", QDBusConnection::systemBus());
 
         // call stop method :
         dbusManagerInterface->call("Stop");
@@ -89,8 +86,8 @@ void SessionGnome3::requestShutdown() {
 
 }
 
-
-void SessionGnome3::requestSuspend() {
+void SessionGnome3::requestSuspend()
+{
 
     SessionGnome3::DbusMethodCall suspendMethod = SessionGnome3::DbusSuspend;
 
@@ -116,15 +113,15 @@ void SessionGnome3::requestSuspend() {
 
 }
 
-
-bool SessionGnome3::callDbusMethod(const SessionGnome3::DbusMethodCall dbusMethodCall) {
+bool SessionGnome3::callDbusMethod(const SessionGnome3::DbusMethodCall dbusMethodCall)
+{
 
     bool methodAvailable = false;
 
     // create dbus interface :
     if (!this->dbusUpowerInterface) {
 
-        this->dbusUpowerInterface = new QDBusInterface ("org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.UPower", QDBusConnection::systemBus(), this);
+        this->dbusUpowerInterface = new QDBusInterface("org.freedesktop.UPower", "/org/freedesktop/UPower", "org.freedesktop.UPower", QDBusConnection::systemBus(), this);
 
     }
 
@@ -141,6 +138,4 @@ bool SessionGnome3::callDbusMethod(const SessionGnome3::DbusMethodCall dbusMetho
     return methodAvailable;
 
 }
-
-
 

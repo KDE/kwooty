@@ -30,27 +30,25 @@ using namespace UtilityNamespace;
 class Core;
 class ItemParentUpdater;
 
-
-class ItemChildrenManager : public ItemAbstractUpdater {
+class ItemChildrenManager : public ItemAbstractUpdater
+{
 
     Q_OBJECT
 
 public:
-    ItemChildrenManager(Core*, ItemParentUpdater*);
+    ItemChildrenManager(Core *, ItemParentUpdater *);
     bool resetItemStatusIfExtractFail(const QModelIndex &);
-    void resetFinishedChildrenItemToDecodeFinish(QStandardItem*);
-    void resetItemStatusToTarget(QStandardItem*, const ItemStatus&);
+    void resetFinishedChildrenItemToDecodeFinish(QStandardItem *);
+    void resetItemStatusToTarget(QStandardItem *, const ItemStatus &);
 
 private:
-    Core* mParent;
+    Core *mParent;
     bool smartPar2Download;
 
     void setupConnections();
 
-
 Q_SIGNALS:
     void downloadWaitingPar2Signal();
-
 
 public Q_SLOTS:
     void changePar2FilesStatusSlot(const QModelIndex &, UtilityNamespace::ItemStatus);

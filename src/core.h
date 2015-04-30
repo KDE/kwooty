@@ -52,76 +52,70 @@ class SideBar;
 class ActionsManager;
 class ItemStatusData;
 
+Q_DECLARE_METATYPE(QStandardItem *)
+Q_DECLARE_METATYPE(ItemStatusData *)
 
-
-Q_DECLARE_METATYPE (QStandardItem*)
-Q_DECLARE_METATYPE (ItemStatusData*)
-
-
-class KWOOTY_EXPORT Core : public QObject {
+class KWOOTY_EXPORT Core : public QObject
+{
 
     Q_OBJECT
-    
+
 public:
-    Core(MainWindow*);
+    Core(MainWindow *);
     ~Core();
-    void handleNzbFile(QFile& file, const QString&, const QList<GlobalFileData>& inGlobalFileDataList = QList<GlobalFileData>());
-    void restoreDataFromPreviousSession(const QList<GlobalFileData>&);
-    void emitDataHasArrived(const QModelIndex& = QModelIndex());
+    void handleNzbFile(QFile &file, const QString &, const QList<GlobalFileData> &inGlobalFileDataList = QList<GlobalFileData>());
+    void restoreDataFromPreviousSession(const QList<GlobalFileData> &);
+    void emitDataHasArrived(const QModelIndex & = QModelIndex());
     int savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType = UtilityNamespace::ShutdownMethodUnknown, const SaveFileBehavior = SaveNotSilently);
 
-
-    MainWindow* getMainWindow() const;
-    MyTreeView* getTreeView() const;
-    DataRestorer* getDataRestorer() const;
-    ServerManager* getServerManager() const;
-    ActionsManager* getActionsManager() const;
-    SegmentManager* getSegmentManager() const;
-    NzbFileHandler* getNzbFileHandler() const;
-    FileOperations* getFileOperations() const;
-    ShutdownManager* getShutdownManager() const;
-    StandardItemModel* getDownloadModel() const;
-    ClientsObserver* getClientsObserver() const;
-    StandardItemModelQuery* getModelQuery() const;
-    QueueFileObserver* getQueueFileObserver() const;
-    ItemParentUpdater* getItemParentUpdater() const;
-    SegmentsDecoderThread* getSegmentsDecoderThread() const;
-    SideBar* getSideBar() const;
-    CentralWidget* getCentralWidget() const;
-
+    MainWindow *getMainWindow() const;
+    MyTreeView *getTreeView() const;
+    DataRestorer *getDataRestorer() const;
+    ServerManager *getServerManager() const;
+    ActionsManager *getActionsManager() const;
+    SegmentManager *getSegmentManager() const;
+    NzbFileHandler *getNzbFileHandler() const;
+    FileOperations *getFileOperations() const;
+    ShutdownManager *getShutdownManager() const;
+    StandardItemModel *getDownloadModel() const;
+    ClientsObserver *getClientsObserver() const;
+    StandardItemModelQuery *getModelQuery() const;
+    QueueFileObserver *getQueueFileObserver() const;
+    ItemParentUpdater *getItemParentUpdater() const;
+    SegmentsDecoderThread *getSegmentsDecoderThread() const;
+    SideBar *getSideBar() const;
+    CentralWidget *getCentralWidget() const;
 
 private:
-    MainWindow* mainWindow;
-    DataRestorer* dataRestorer;
-    ServerManager* serverManager;
-    ActionsManager* actionsManager;
-    NzbFileHandler* nzbFileHandler;
-    SegmentManager* segmentManager;
-    FileOperations* fileOperations;
-    ShutdownManager* shutdownManager;
-    StandardItemModel* downloadModel;
-    ClientsObserver* clientsObserver;
-    StandardItemModelQuery* modelQuery;
-    QueueFileObserver* queueFileObserver;
-    ItemParentUpdater* itemParentUpdater;
-    NotificationManager* notificationManager;
-    SegmentsDecoderThread* segmentsDecoderThread;
-    RepairDecompressThread* repairDecompressThread;
+    MainWindow *mainWindow;
+    DataRestorer *dataRestorer;
+    ServerManager *serverManager;
+    ActionsManager *actionsManager;
+    NzbFileHandler *nzbFileHandler;
+    SegmentManager *segmentManager;
+    FileOperations *fileOperations;
+    ShutdownManager *shutdownManager;
+    StandardItemModel *downloadModel;
+    ClientsObserver *clientsObserver;
+    StandardItemModelQuery *modelQuery;
+    QueueFileObserver *queueFileObserver;
+    ItemParentUpdater *itemParentUpdater;
+    NotificationManager *notificationManager;
+    SegmentsDecoderThread *segmentsDecoderThread;
+    RepairDecompressThread *repairDecompressThread;
 
-    QModelIndex setDataToModel(const QList<GlobalFileData>&, const QString&);
+    QModelIndex setDataToModel(const QList<GlobalFileData> &, const QString &);
 
-    void addParentItem (QStandardItem*, const GlobalFileData&);
+    void addParentItem(QStandardItem *, const GlobalFileData &);
     void statusBarFileSizeUpdate();
     void initFoldersSettings();
 
-    
 Q_SIGNALS:
     void dataHasArrivedSignal();
     void dataAboutToArriveSignal(const QModelIndex &);
     void settingsChangedSignal();
     void passwordEnteredByUserSignal(bool, const QString &password = QString());
     void changePar2FilesStatusSignal(const QModelIndex &, UtilityNamespace::ItemStatus);
-
 
 public Q_SLOTS:
     void saveFileErrorSlot(const int);
@@ -131,11 +125,8 @@ public Q_SLOTS:
     void serverStatisticsUpdateSlot(const int);
     void extractPasswordRequiredSlot(const QString &);
 
-    
 private Q_SLOTS:
-    
-    
-    
+
 };
 
 #endif // core_H

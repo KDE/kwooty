@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "schedulerfilehandler.h"
 
 #include <KStandardDirs>
@@ -34,17 +33,18 @@
 using namespace UtilityNamespace;
 using namespace SchedulerNamespace;
 
-
-SchedulerFileHandler::SchedulerFileHandler(QObject* parent) : QObject(parent) {
-
-}
-
-SchedulerFileHandler::SchedulerFileHandler() {
+SchedulerFileHandler::SchedulerFileHandler(QObject *parent) : QObject(parent)
+{
 
 }
 
+SchedulerFileHandler::SchedulerFileHandler()
+{
 
-void SchedulerFileHandler::reloadModel(QStandardItemModel* schedulerModel) {
+}
+
+void SchedulerFileHandler::reloadModel(QStandardItemModel *schedulerModel)
+{
 
     schedulerModel->clear();
 
@@ -52,25 +52,25 @@ void SchedulerFileHandler::reloadModel(QStandardItemModel* schedulerModel) {
     this->fillModel(schedulerModel);
 }
 
-QStandardItemModel* SchedulerFileHandler::loadModelFromFile(QObject* parent) {
+QStandardItemModel *SchedulerFileHandler::loadModelFromFile(QObject *parent)
+{
 
     // build scheduler model :
-    QStandardItemModel* schedulerModel = new QStandardItemModel(parent);
+    QStandardItemModel *schedulerModel = new QStandardItemModel(parent);
     this->reloadModel(schedulerModel);
 
     return schedulerModel;
 }
 
-
-
-void SchedulerFileHandler::fillModel(QStandardItemModel* schedulerModel) {
+void SchedulerFileHandler::fillModel(QStandardItemModel *schedulerModel)
+{
 
     schedulerModel->setColumnCount(COLUMN_NUMBER_SCHEDULER);
     schedulerModel->setRowCount(ROW_NUMBER_SCHEDULER);
 
     QFile schedulerFile(this->retrieveSchedulerFilePath());
     schedulerFile.open(QIODevice::ReadOnly);
-    QXmlStreamReader stream (&schedulerFile);
+    QXmlStreamReader stream(&schedulerFile);
 
     int dayNumber = 1;
     int halfHourNumber = 0;
@@ -115,7 +115,7 @@ void SchedulerFileHandler::fillModel(QStandardItemModel* schedulerModel) {
                 downloadLimitStatus = stream.readElementText().toInt();
 
                 // set data to model :
-                QStandardItem* item = schedulerModel->itemFromIndex(schedulerModel->index(dayNumber, halfHourNumber));
+                QStandardItem *item = schedulerModel->itemFromIndex(schedulerModel->index(dayNumber, halfHourNumber));
                 item->setData(downloadLimitStatus, DownloadLimitRole);
 
                 // set tooltip :
@@ -134,16 +134,14 @@ void SchedulerFileHandler::fillModel(QStandardItemModel* schedulerModel) {
 
     }
 
-
     // parsing is done, close the file :
     schedulerFile.close();
-
 
     // check that all items are correctly set :
     for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; ++i) {
         for (int j = 0; j < COLUMN_NUMBER_SCHEDULER; j++) {
 
-            QStandardItem* item = schedulerModel->itemFromIndex(schedulerModel->index(i, j));
+            QStandardItem *item = schedulerModel->itemFromIndex(schedulerModel->index(i, j));
 
             bool conversionOk;
             item->data(DownloadLimitRole).toInt(&conversionOk);
@@ -156,8 +154,8 @@ void SchedulerFileHandler::fillModel(QStandardItemModel* schedulerModel) {
 
 }
 
-
-void SchedulerFileHandler::saveModelToFile(QStandardItemModel* schedulerModel) {
+void SchedulerFileHandler::saveModelToFile(QStandardItemModel *schedulerModel)
+{
 
     QFile schedulerFile(this->retrieveSchedulerFilePath());
     schedulerFile.open(QIODevice::WriteOnly);
@@ -171,19 +169,15 @@ void SchedulerFileHandler::saveModelToFile(QStandardItemModel* schedulerModel) {
     stream.writeAttribute("application", "kwooty");
     stream.writeAttribute("version", "1");
 
-
-
     for (int i = HEADER_ROW_SCHEDULER + 1; i < ROW_NUMBER_SCHEDULER; ++i) {
 
         // <day> :
         stream.writeStartElement("day");
         stream.writeAttribute("number", QString::number(i));
 
-
         for (int j = 0; j < COLUMN_NUMBER_SCHEDULER; j++) {
 
-
-            QStandardItem* item = schedulerModel->itemFromIndex(schedulerModel->index(i, j));
+            QStandardItem *item = schedulerModel->itemFromIndex(schedulerModel->index(i, j));
             int downloadLimitStatus = item->data(DownloadLimitRole).toInt();
 
             // <halfour> :
@@ -194,7 +188,6 @@ void SchedulerFileHandler::saveModelToFile(QStandardItemModel* schedulerModel) {
 
             // </halfour> :
             stream.writeEndElement();
-
 
         }
 
@@ -210,11 +203,8 @@ void SchedulerFileHandler::saveModelToFile(QStandardItemModel* schedulerModel) {
 
 }
 
-
-QString SchedulerFileHandler::retrieveSchedulerFilePath() {
+QString SchedulerFileHandler::retrieveSchedulerFilePath()
+{
     return KStandardDirs::locateLocal("appdata", QString::fromLatin1("scheduler.xml"));
 }
-
-
-
 

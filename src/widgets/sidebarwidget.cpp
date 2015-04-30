@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "sidebarwidget.h"
 
 #include "kwooty_debug.h"
@@ -34,15 +33,15 @@
 #include "mainwindow.h"
 #include "utilities/utilityiconpainting.h"
 
-
-SideBarWidget::SideBarWidget(QWidget* parent) : QWidget(parent) {
+SideBarWidget::SideBarWidget(QWidget *parent) : QWidget(parent)
+{
 
     multiTabBar = new KMultiTabBar(KMultiTabBar::Top, parent);
     multiTabBar->setStyle(KMultiTabBar::KDEV3ICON);
 
     stackedWidget = new QStackedWidget(this);
 
-    QVBoxLayout* vBoxLayout = new QVBoxLayout(this);
+    QVBoxLayout *vBoxLayout = new QVBoxLayout(this);
     vBoxLayout->setMargin(0);
     vBoxLayout->setSpacing(0);
 
@@ -53,8 +52,8 @@ SideBarWidget::SideBarWidget(QWidget* parent) : QWidget(parent) {
 
 }
 
-
-void SideBarWidget::addTab(QWidget* currentWidget, const ServerConnectionIcon& serverConnectionIcon, const QString& label) {
+void SideBarWidget::addTab(QWidget *currentWidget, const ServerConnectionIcon &serverConnectionIcon, const QString &label)
+{
 
     int tabIndex = stackedWidget->count();
 
@@ -66,9 +65,8 @@ void SideBarWidget::addTab(QWidget* currentWidget, const ServerConnectionIcon& s
 
 }
 
-
-
-void SideBarWidget::updateIconByIndex(const int& currentIndex, const ServerConnectionIcon& serverConnectionIcon) {
+void SideBarWidget::updateIconByIndex(const int &currentIndex, const ServerConnectionIcon &serverConnectionIcon)
+{
 
     // avoid useless icon drawing :
     if (indexServerIconMap.value(currentIndex) !=  serverConnectionIcon) {
@@ -80,17 +78,18 @@ void SideBarWidget::updateIconByIndex(const int& currentIndex, const ServerConne
     }
 }
 
-
-void SideBarWidget::updateTextByIndex(const int& currentIndex, const QString& tabName) {
+void SideBarWidget::updateTextByIndex(const int &currentIndex, const QString &tabName)
+{
     multiTabBar->tab(currentIndex)->setText(tabName);
 }
 
-void SideBarWidget::updateToolTipByIndex(const int& currentIndex, const QString& tabName) {
+void SideBarWidget::updateToolTipByIndex(const int &currentIndex, const QString &tabName)
+{
     multiTabBar->tab(currentIndex)->setToolTip(tabName);
 }
 
-
-void SideBarWidget::activeDefaultTab(const int& index) {
+void SideBarWidget::activeDefaultTab(const int &index)
+{
 
     tabClickedSlot(index);
     stackedWidget->setVisible(true);
@@ -98,35 +97,38 @@ void SideBarWidget::activeDefaultTab(const int& index) {
 
 }
 
-bool SideBarWidget::isOnlyTabDisplayed() const {
+bool SideBarWidget::isOnlyTabDisplayed() const
+{
     return stackedWidget->isHidden();
 }
 
-void SideBarWidget::displayTabOnly() {
+void SideBarWidget::displayTabOnly()
+{
     return stackedWidget->hide();
 }
 
-
-int SideBarWidget::count() const {
+int SideBarWidget::count() const
+{
     return stackedWidget->count();
 }
 
-
-QWidget* SideBarWidget::widget(const int& index) {
+QWidget *SideBarWidget::widget(const int &index)
+{
     return stackedWidget->widget(index);
 }
 
-int SideBarWidget::currentIndex() const {
+int SideBarWidget::currentIndex() const
+{
     return stackedWidget->currentIndex();
 }
 
-
-int SideBarWidget::indexOf(QWidget* currentWidget) const {
+int SideBarWidget::indexOf(QWidget *currentWidget) const
+{
     return stackedWidget->indexOf(currentWidget);
 }
 
-
-void SideBarWidget::setDisplay(bool _display) {
+void SideBarWidget::setDisplay(bool _display)
+{
     // keep display state there as it seems that isVisible() returns false when kwooty is iconified.
     // This is mandatary to save and restore the correct state of this widget :
     display = _display;
@@ -134,13 +136,13 @@ void SideBarWidget::setDisplay(bool _display) {
     setVisible(display);
 }
 
-bool SideBarWidget::isDisplayed() const {
+bool SideBarWidget::isDisplayed() const
+{
     return display;
 }
 
-
-
-void SideBarWidget::removeLast() {
+void SideBarWidget::removeLast()
+{
 
     if (count() > 0) {
         removeTabAndWidgetByIndex(count() - 1);
@@ -148,9 +150,8 @@ void SideBarWidget::removeLast() {
 
 }
 
-
-
-void SideBarWidget::removeTabAndWidgetByIndex(int currentIndex) {
+void SideBarWidget::removeTabAndWidgetByIndex(int currentIndex)
+{
 
     // detelete and remove tab :
     multiTabBar->removeTab(currentIndex);
@@ -160,15 +161,16 @@ void SideBarWidget::removeTabAndWidgetByIndex(int currentIndex) {
 
 }
 
-void SideBarWidget::removeTabByWidget(QWidget* currentWidget) {
+void SideBarWidget::removeTabByWidget(QWidget *currentWidget)
+{
     return stackedWidget->removeWidget(currentWidget);
 }
 
+void SideBarWidget::tabClickedSlot(int tabIndex)
+{
 
-void SideBarWidget::tabClickedSlot(int tabIndex) {
-
-    QWidget* currentWidget = stackedWidget->currentWidget();
-    QWidget* targetWidget = stackedWidget->widget(tabIndex);
+    QWidget *currentWidget = stackedWidget->currentWidget();
+    QWidget *targetWidget = stackedWidget->widget(tabIndex);
 
     if (currentWidget != targetWidget) {
 
@@ -189,7 +191,6 @@ void SideBarWidget::tabClickedSlot(int tabIndex) {
     else {
         stackedWidget->setVisible(!stackedWidget->currentWidget()->isVisible());
     }
-
 
 }
 

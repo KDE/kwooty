@@ -18,11 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "actionfilemanagerbase.h"
 
-
-ActionFileManagerBase::ActionFileManagerBase(ActionsManager* actionsManager) : QObject(actionsManager) {
+ActionFileManagerBase::ActionFileManagerBase(ActionsManager *actionsManager) : QObject(actionsManager)
+{
 
     this->actionsManager = actionsManager;
     this->core = actionsManager->getCore();
@@ -36,20 +35,19 @@ ActionFileManagerBase::ActionFileManagerBase(ActionsManager* actionsManager) : Q
 
 }
 
-
-void ActionFileManagerBase::setupConnections() {
+void ActionFileManagerBase::setupConnections()
+{
 
     // process to renaming when segment buffer notifies that lock is enabled :
-    connect (this->segmentBuffer,
-             SIGNAL(finalizeDecoderLockedSignal()),
-             this,
-             SLOT(processFileSlot()));
+    connect(this->segmentBuffer,
+            SIGNAL(finalizeDecoderLockedSignal()),
+            this,
+            SLOT(processFileSlot()));
 
 }
 
-
-
-void ActionFileManagerBase::processFileSlot() {
+void ActionFileManagerBase::processFileSlot()
+{
 
     if (this->actionFileStep == ActionFileRequested) {
 
@@ -70,12 +68,11 @@ void ActionFileManagerBase::processFileSlot() {
 
 }
 
-
-void ActionFileManagerBase::displayMessage(const QString& message) {
+void ActionFileManagerBase::displayMessage(const QString &message)
+{
 
     this->actionFileStep = ActionFileIdle;
     this->core->getCentralWidget()->displaySorryMessageBox(message);
 
 }
-
 

@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "sidebar.h"
 
 #include "kwooty_debug.h"
@@ -35,8 +34,8 @@
 #include "utilities/utilityserverstatus.h"
 #include "preferences/kconfiggrouphandler.h"
 
-
-SideBar::SideBar(MainWindow* parent) : QObject(parent) {
+SideBar::SideBar(MainWindow *parent) : QObject(parent)
+{
 
     this->mCore = parent->getCore();
     this->mSideBarWidget = new SideBarWidget(parent);
@@ -48,24 +47,24 @@ SideBar::SideBar(MainWindow* parent) : QObject(parent) {
 
 }
 
-
-void SideBar::setupConnections() {
+void SideBar::setupConnections()
+{
 
     // notify sidebar that settings have been changed :
-    connect (this->mCore->getServerManager(),
-             SIGNAL(serverManagerSettingsChangedSignal()),
-             this,
-             SLOT(serverManagerSettingsChangedSlot()), Qt::QueuedConnection);
+    connect(this->mCore->getServerManager(),
+            SIGNAL(serverManagerSettingsChangedSignal()),
+            this,
+            SLOT(serverManagerSettingsChangedSlot()), Qt::QueuedConnection);
 
 }
 
-
-SideBarWidget* SideBar::getSideBarWidget() {
+SideBarWidget *SideBar::getSideBarWidget()
+{
     return this->mSideBarWidget;
 }
 
-
-void SideBar::saveState() {
+void SideBar::saveState()
+{
 
     // save info anly if there is at least one current widget :
     if (this->mSideBarWidget->currentIndex() != -1) {
@@ -79,8 +78,8 @@ void SideBar::saveState() {
 
 }
 
-
-void SideBar::loadState() {
+void SideBar::loadState()
+{
 
     // show / hide side bar :
     bool sideBarDisplay = KConfigGroupHandler::getInstance()->readSideBarDisplay();
@@ -106,9 +105,8 @@ void SideBar::loadState() {
 
 }
 
-
-
-void SideBar::createSideBarWidgets() {
+void SideBar::createSideBarWidgets()
+{
 
     // add a widget for a servergroup :
     while (this->mServerManager->getServerNumber() > this->mSideBarWidget->count()) {
@@ -122,15 +120,14 @@ void SideBar::createSideBarWidgets() {
 
 }
 
-
-
-void SideBar::serverStatisticsUpdate(const int serverId) {
+void SideBar::serverStatisticsUpdate(const int serverId)
+{
 
     if (this->mServerManager) {
 
-        ServerGroup* serverGroup = this->mServerManager->getServerGroupById(serverId);
+        ServerGroup *serverGroup = this->mServerManager->getServerGroupById(serverId);
 
-        ClientsPerServerObserver* clientsPerServerObserver = serverGroup->getClientsPerServerObserver();
+        ClientsPerServerObserver *clientsPerServerObserver = serverGroup->getClientsPerServerObserver();
 
         QString connection;
         ServerConnectionIcon serverConnectionIcon = UtilityServerStatus::buildConnectionStringFromStatus(clientsPerServerObserver, connection, UtilityServerStatus::DoNotDisplayEncryptionMethod);
@@ -145,7 +142,6 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
         // update tab icon :
         this->mSideBarWidget->updateIconByIndex(serverId, serverConnectionTabIcon);
 
-
         // retrieve server mode according to server :
         QString hostName = serverGroup->getServerData().getHostName();
         QString serverMode = i18n("Master");
@@ -154,17 +150,14 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
             serverMode = UtilityServerStatus::getServerModeString((UtilityNamespace::BackupServerMode)serverGroup->getServerData().getServerModeIndex());
         }
 
-
         // retrieve connection related information :
         QString sslConnectionInfo = UtilityServerStatus::buildSslHandshakeStatus(clientsPerServerObserver);
-
 
         // if server is currently being downloading, get the downloaded nzb name :
         QString downloadFileName = i18n("n/a");
         if (clientsPerServerObserver->isDownloading()) {
             downloadFileName = clientsPerServerObserver->getSegmentInfoData().getNzbFileName();
         }
-
 
         // retrieve ssl encryption method :
         bool displayIcon = false;
@@ -175,7 +168,6 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
             displayIcon = true;
         }
 
-
         // build speed text label :
         quint64 downloadSpeed = clientsPerServerObserver->getDownloadSpeed();
         quint64 effectiveMeanDownloadSpeed = clientsPerServerObserver->getEffectiveMeanDownloadSpeed();
@@ -184,7 +176,7 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
         QString speedToolTipLabel = i18n("Current download speed - Mean download speed");
 
         // update fields :
-        ServerStatusWidget* serverStatusWidget = static_cast<ServerStatusWidget*>(this->mSideBarWidget->widget(serverId));
+        ServerStatusWidget *serverStatusWidget = static_cast<ServerStatusWidget *>(this->mSideBarWidget->widget(serverId));
 
         serverStatusWidget->updateLeftLabelField(ServerStatusWidget::StatusItem, connection);
         serverStatusWidget->updateLeftLabelField(ServerStatusWidget::SpeedItem, speedTextLabel, speedToolTipLabel);
@@ -197,26 +189,22 @@ void SideBar::serverStatisticsUpdate(const int serverId) {
     }
 }
 
-
-
-
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void SideBar::activeSlot(bool active) {
+void SideBar::activeSlot(bool active)
+{
 
     this->mSideBarWidget->setDisplay(active);
 }
 
-
-void SideBar::serverManagerSettingsChangedSlot() {
+void SideBar::serverManagerSettingsChangedSlot()
+{
 
     // if servermanager instance is not yet initialized :
     if (!this->mServerManager) {
-        this->mServerManager = static_cast<MainWindow*>(this->parent())->getCore()->getServerManager();
+        this->mServerManager = static_cast<MainWindow *>(this->parent())->getCore()->getServerManager();
     }
 
     if (this->mServerManager) {
@@ -233,7 +221,6 @@ void SideBar::serverManagerSettingsChangedSlot() {
         else {
             this->createSideBarWidgets();
         }
-
 
         // synchronize info for each server with newly settings :
         for (int i = 0; i < this->mSideBarWidget->count(); ++i) {
@@ -255,9 +242,4 @@ void SideBar::serverManagerSettingsChangedSlot() {
     }
 
 }
-
-
-
-
-
 

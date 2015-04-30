@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "serverstatuswidget.h"
 
 #include "kwooty_debug.h"
@@ -32,18 +31,16 @@
 #include "widgets/textpushbuttonwidget.h"
 #include "utilities/utilityiconpainting.h"
 
-
-ServerStatusWidget::ServerStatusWidget(QWidget* parent) : QDockWidget(parent) {
-
+ServerStatusWidget::ServerStatusWidget(QWidget *parent) : QDockWidget(parent)
+{
 
     this->setAllowedAreas(Qt::AllDockWidgetAreas);
     this->setFeatures(QDockWidget::NoDockWidgetFeatures);
 
     this->setTitleBarWidget(new QWidget(this));
 
-
     // build left form :
-    QWidget* leftWidget = new QWidget(this);
+    QWidget *leftWidget = new QWidget(this);
     this->formLayoutLeft = new QFormLayout(leftWidget);
     this->formatLayout(this->formLayoutLeft);
 
@@ -52,23 +49,21 @@ ServerStatusWidget::ServerStatusWidget(QWidget* parent) : QDockWidget(parent) {
     this->insertLeftRowFormLayout(VolumeItem, this->formLayoutLeft, i18n("Downloaded:"), new QLabel(this));
 
     // allow label size reduction in case nzb file name would be too long :
-    QLabel* fileLabel = new QLabel(this);
+    QLabel *fileLabel = new QLabel(this);
     fileLabel->setMinimumWidth(10);
     this->insertLeftRowFormLayout(FileItem, this->formLayoutLeft, i18n("File:"), fileLabel);
 
-
     // build right form :
-    QWidget* rightWidget = new QWidget(this);
+    QWidget *rightWidget = new QWidget(this);
     this->formLayoutRight = new QFormLayout(rightWidget);
     this->formatLayout(this->formLayoutRight);
-
 
     this->insertRightRowFormLayout(NameItem, this->formLayoutRight, i18n("Server:"), new QLabel(this));
     this->insertRightRowFormLayout(ModeItem, this->formLayoutRight, i18n("Mode:"), new QLabel(this));
     this->insertRightRowFormLayout(SslItem, this->formLayoutRight, i18n("Encryption:"), new TextPushButtonWidget(this));
 
-    QWidget* mainWidget = new QWidget(this);
-    QHBoxLayout* hBoxLayout = new QHBoxLayout(mainWidget);
+    QWidget *mainWidget = new QWidget(this);
+    QHBoxLayout *hBoxLayout = new QHBoxLayout(mainWidget);
 
     hBoxLayout->addWidget(leftWidget);
     hBoxLayout->addSpacerItem(new QSpacerItem(100, 1, QSizePolicy::Expanding));
@@ -76,25 +71,24 @@ ServerStatusWidget::ServerStatusWidget(QWidget* parent) : QDockWidget(parent) {
 
     this->setWidget(mainWidget);
 
-
 }
 
-
-void ServerStatusWidget::insertLeftRowFormLayout(ServerStatusWidget::RowItemsLeft rowItemsLeft, QFormLayout* formLayout, const QString& text, QWidget* widget) {
+void ServerStatusWidget::insertLeftRowFormLayout(ServerStatusWidget::RowItemsLeft rowItemsLeft, QFormLayout *formLayout, const QString &text, QWidget *widget)
+{
 
     formLayout->insertRow(rowItemsLeft, UtilityIconPainting::getInstance()->buildLighterTextLabel(text, this), widget);
 
 }
 
-void ServerStatusWidget::insertRightRowFormLayout(ServerStatusWidget::RowItemsRight rowItemsRight, QFormLayout* formLayout, const QString& text, QWidget* widget) {
+void ServerStatusWidget::insertRightRowFormLayout(ServerStatusWidget::RowItemsRight rowItemsRight, QFormLayout *formLayout, const QString &text, QWidget *widget)
+{
 
     formLayout->insertRow(rowItemsRight, UtilityIconPainting::getInstance()->buildLighterTextLabel(text, this), widget);
 
 }
 
-
-
-void ServerStatusWidget::formatLayout(QFormLayout* formLayout) {
+void ServerStatusWidget::formatLayout(QFormLayout *formLayout)
+{
 
     formLayout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
     formLayout->setLabelAlignment(Qt::AlignLeft);
@@ -103,25 +97,24 @@ void ServerStatusWidget::formatLayout(QFormLayout* formLayout) {
     formLayout->setHorizontalSpacing(20);
 }
 
+void ServerStatusWidget::updateLeftLabelField(const int &itemIndex, const QString &text, const QString &toolTip)
+{
 
-
-void ServerStatusWidget::updateLeftLabelField(const int& itemIndex, const QString& text, const QString& toolTip) {
-
-    QLabel* currentLabel = static_cast<QLabel*>(this->formLayoutLeft->itemAt(itemIndex, QFormLayout::FieldRole)->widget());
+    QLabel *currentLabel = static_cast<QLabel *>(this->formLayoutLeft->itemAt(itemIndex, QFormLayout::FieldRole)->widget());
     this->updateLabelField(currentLabel, text, toolTip);
 
 }
 
+void ServerStatusWidget::updateRightLabelField(const int &itemIndex, const QString &text, const QString &toolTip)
+{
 
-void ServerStatusWidget::updateRightLabelField(const int& itemIndex, const QString& text, const QString& toolTip) {
-
-    QLabel* currentLabel = static_cast<QLabel*>(this->formLayoutRight->itemAt(itemIndex, QFormLayout::FieldRole)->widget());
+    QLabel *currentLabel = static_cast<QLabel *>(this->formLayoutRight->itemAt(itemIndex, QFormLayout::FieldRole)->widget());
     this->updateLabelField(currentLabel, text, toolTip);
 
 }
 
-
-void ServerStatusWidget::updateLabelField(QLabel* currentLabel, const QString& text, const QString& toolTip) {
+void ServerStatusWidget::updateLabelField(QLabel *currentLabel, const QString &text, const QString &toolTip)
+{
 
     if (currentLabel) {
         currentLabel->setText(text);
@@ -133,19 +126,17 @@ void ServerStatusWidget::updateLabelField(QLabel* currentLabel, const QString& t
     }
 }
 
+void ServerStatusWidget::updateTextPushButtonField(const int &itemIndex, const QString &text, const bool &displayIcon, const ServerConnectionIcon &serverConnectionIcon, const QString &sslConnectionInfo)
+{
 
-void ServerStatusWidget::updateTextPushButtonField(const int& itemIndex, const QString& text, const bool& displayIcon, const ServerConnectionIcon& serverConnectionIcon, const QString& sslConnectionInfo) {
-
-
-    TextPushButtonWidget* textPushButtonWidget = static_cast<TextPushButtonWidget*>(this->formLayoutRight->itemAt(itemIndex, QFormLayout::FieldRole)->widget());
+    TextPushButtonWidget *textPushButtonWidget = static_cast<TextPushButtonWidget *>(this->formLayoutRight->itemAt(itemIndex, QFormLayout::FieldRole)->widget());
 
     textPushButtonWidget->setText(text);
 
     if (displayIcon) {
         textPushButtonWidget->showIcon();
         textPushButtonWidget->setIcon(serverConnectionIcon);
-    }
-    else{
+    } else {
         textPushButtonWidget->hideIcon();
     }
 
@@ -154,12 +145,8 @@ void ServerStatusWidget::updateTextPushButtonField(const int& itemIndex, const Q
 
 }
 
-
-
-
-void ServerStatusWidget::buttonPressedSlot() {
+void ServerStatusWidget::buttonPressedSlot()
+{
     KMessageBox::information(this, this->sslConnectionInfo, i18n("Encryption Information"));
 }
-
-
 

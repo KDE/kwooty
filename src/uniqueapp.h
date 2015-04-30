@@ -25,8 +25,6 @@
 #include <QPointer>
 class MainWindow;
 
-
-
 class UniqueApp : public KUniqueApplication
 {
 
@@ -40,6 +38,5 @@ private:
     bool mKwootyInstance;
 
 };
-
 
 #endif // UNIQUEAPP_H

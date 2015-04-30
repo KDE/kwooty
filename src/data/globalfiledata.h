@@ -21,43 +21,38 @@
 #ifndef GLOBALFILEDATA_H
 #define GLOBALFILEDATA_H
 
-
 #include "nzbfiledata.h"
 #include "itemstatusdata.h"
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
-
 
 class GlobalFileData
 {
 
 public:
 
-    GlobalFileData(const NzbFileData&, const ItemStatusData& mItemStatusData = ItemStatusData(), int mProgressValue = 0);
+    GlobalFileData(const NzbFileData &, const ItemStatusData &mItemStatusData = ItemStatusData(), int mProgressValue = 0);
     GlobalFileData();
     ~GlobalFileData();
 
     NzbFileData getNzbFileData() const;
-    void setNzbFileData(const NzbFileData&);
+    void setNzbFileData(const NzbFileData &);
 
     ItemStatusData getItemStatusData() const;
-    void setItemStatusData(const ItemStatusData&);
+    void setItemStatusData(const ItemStatusData &);
 
     int getProgressValue() const;
-    void setProgressValue(int );
-
+    void setProgressValue(int);
 
 private:
     NzbFileData mNzbFileData;
     ItemStatusData mItemStatusData;
     int mProgressValue;
 
-
 };
 
-
-QDataStream& operator<<(QDataStream&, const GlobalFileData&);
-QDataStream& operator>>(QDataStream&, GlobalFileData&);
+QDataStream &operator<<(QDataStream &, const GlobalFileData &);
+QDataStream &operator>>(QDataStream &, GlobalFileData &);
 
 Q_DECLARE_METATYPE(GlobalFileData)
 

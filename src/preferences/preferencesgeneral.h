@@ -24,11 +24,10 @@
 #include <QWidget>
 #include "ui_preferencesgeneral.h"
 
-
 class PreferencesGeneral : public QWidget, public Ui::PreferencesGeneral
 {
 
-     Q_OBJECT
+    Q_OBJECT
 
 public:
     PreferencesGeneral();
@@ -37,10 +36,8 @@ private:
     void setupConnections();
     void enableSaveRestoreItems(bool);
 
-
 private Q_SLOTS:
     void stateChangedSlot();
-
 
 };
 

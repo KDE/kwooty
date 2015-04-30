@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "kwooty_debug.h"
 #include <KFileDialog>
 #include <QAction>
@@ -33,16 +32,15 @@
 #include "widgets/mytreeview.h"
 #include "kwooty_categoriessettings.h"
 
-
-
-CategoriesManual::CategoriesManual(Categories* categories) : QObject(categories) {
+CategoriesManual::CategoriesManual(Categories *categories) : QObject(categories)
+{
 
     this->core = categories->getCore();
     this->downloadModel = this->core->getDownloadModel();
     this->treeView = this->core->getTreeView();
 
     // create manualTransferFolderAction :
-    QAction* manualTransferFolderAction = new QAction(this);
+    QAction *manualTransferFolderAction = new QAction(this);
     manualTransferFolderAction->setText(i18n("Transfer folder..."));
     manualTransferFolderAction->setIcon(QIcon::fromTheme("folder-favorites"));
     manualTransferFolderAction->setToolTip(i18n("Select transfer folder"));
@@ -57,17 +55,17 @@ CategoriesManual::CategoriesManual(Categories* categories) : QObject(categories)
 
 }
 
-
-void CategoriesManual::setupConnections() {
+void CategoriesManual::setupConnections()
+{
 
     // add action in context menu when requested :
-    connect (this->treeView,
-             &MyTreeView::addExternalActionSignal,
-             this,
-             &CategoriesManual::addExternalActionSlot);
+    connect(this->treeView,
+            &MyTreeView::addExternalActionSignal,
+            this,
+            &CategoriesManual::addExternalActionSlot);
 
     // action has been triggered by user :
-    KActionCollection* actionCollection = this->core->getMainWindow()->actionCollection();
+    KActionCollection *actionCollection = this->core->getMainWindow()->actionCollection();
     connect(actionCollection->action("chooseFavoriteFolder"),
             SIGNAL(triggered(bool)),
             this,
@@ -75,37 +73,35 @@ void CategoriesManual::setupConnections() {
 
 }
 
-
-void CategoriesManual::unload() {
+void CategoriesManual::unload()
+{
 
     // remove previous tooltips to nzb fileName column to notify user about the selected folder :
-    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+    QStandardItem *rootItem = this->downloadModel->invisibleRootItem();
 
     for (int i = 0; i < rootItem->rowCount(); ++i) {
         this->updateNzbFileNameToolTip(rootItem->child(i));
     }
 
     // remove action from context menu :
-    KActionCollection* actionCollection = this->core->getMainWindow()->actionCollection();
+    KActionCollection *actionCollection = this->core->getMainWindow()->actionCollection();
     actionCollection->removeAction(actionCollection->action("chooseFavoriteFolder"));
 
 }
 
-
-
-bool CategoriesManual::isManualFolderSelected(const QString& currentUuidItem) {
+bool CategoriesManual::isManualFolderSelected(const QString &currentUuidItem)
+{
 
     if (CategoriesSettings::manualFolder()) {
         return this->uuidFolderMap.contains(currentUuidItem);
-    }
-    else {
+    } else {
         return false;
     }
 
 }
 
-
-bool CategoriesManual::isActionAllowed(QStandardItem* item) const {
+bool CategoriesManual::isActionAllowed(QStandardItem *item) const
+{
 
     ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(item->index());
 
@@ -114,40 +110,38 @@ bool CategoriesManual::isActionAllowed(QStandardItem* item) const {
 
 }
 
-
-QString CategoriesManual::getMoveFolderPath(const QString& currentUuidItem) {
+QString CategoriesManual::getMoveFolderPath(const QString &currentUuidItem)
+{
 
     return this->uuidFolderMap.take(currentUuidItem);
 
 }
 
-void CategoriesManual::updateNzbFileNameToolTip(QStandardItem* nzbItem, const QString& directory) {
+void CategoriesManual::updateNzbFileNameToolTip(QStandardItem *nzbItem, const QString &directory)
+{
 
     if (directory.isEmpty()) {
         nzbItem->setToolTip(directory);
-    }
-    else {
+    } else {
         nzbItem->setToolTip(i18n("Transfer folder: %1", directory));
     }
 
 }
 
-
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //===========================================================================================================
 
-
-void CategoriesManual::addExternalActionSlot(QMenu* contextMenu, QStandardItem* item) {
+void CategoriesManual::addExternalActionSlot(QMenu *contextMenu, QStandardItem *item)
+{
 
     // FIXME: not yet the case but if several plugins need to insert actions in contextMenu,
     // think about displaying them always in the same order.
 
     // if item is a nzb item :
-    if ( item &&
-         CategoriesSettings::manualFolder() &&
-         this->downloadModel->isNzbItem(item) ) {
+    if (item &&
+            CategoriesSettings::manualFolder() &&
+            this->downloadModel->isNzbItem(item)) {
 
         // if post process is not finished yet, allow to manually select transfert folder :
         if (this->isActionAllowed(item)) {
@@ -161,8 +155,8 @@ void CategoriesManual::addExternalActionSlot(QMenu* contextMenu, QStandardItem* 
 
 }
 
-
-void CategoriesManual::manualTransferFolderSlot() {
+void CategoriesManual::manualTransferFolderSlot()
+{
 
     if (CategoriesSettings::manualFolder()) {
 
@@ -172,11 +166,11 @@ void CategoriesManual::manualTransferFolderSlot() {
         // one row should be selected when context menu action appears :
         if (!indexesList.isEmpty()) {
 
-            QStandardItem* item = this->downloadModel->getFileNameItemFromIndex(indexesList.at(0));
+            QStandardItem *item = this->downloadModel->getFileNameItemFromIndex(indexesList.at(0));
 
             // first, be sure that item is a parent one (nzb) :
-            if ( this->downloadModel->isNzbItem(item) &&
-                 this->isActionAllowed(item) ) {
+            if (this->downloadModel->isNzbItem(item) &&
+                    this->isActionAllowed(item)) {
 
                 QString uuidIndex = this->downloadModel->getUuidStrFromIndex(item->index());
 
@@ -190,15 +184,14 @@ void CategoriesManual::manualTransferFolderSlot() {
                     startDirectory = storedDirectory;
                 }
 
-
-                QString directory = KFileDialog::getExistingDirectory ( KUrl(startDirectory),
-                                                                        static_cast<QWidget*>(this->core->getCentralWidget()),
-                                                                        i18n("Select transfer folder") );
+                QString directory = KFileDialog::getExistingDirectory(KUrl(startDirectory),
+                                    static_cast<QWidget *>(this->core->getCentralWidget()),
+                                    i18n("Select transfer folder"));
                 // target folder has been selected :
                 if (!directory.isEmpty()) {
 
                     // get the root item :
-                    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+                    QStandardItem *rootItem = this->downloadModel->invisibleRootItem();
 
                     // remove old items currently stored in map :
                     for (int i = 0; i < rootItem->rowCount(); ++i) {

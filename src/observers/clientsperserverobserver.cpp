@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "clientsperserverobserver.h"
 
 #include "kwooty_debug.h"
@@ -31,9 +30,8 @@
 #include "data/segmentinfodata.h"
 #include "kwootysettings.h"
 
-
-
-ClientsPerServerObserver::ClientsPerServerObserver(ServerGroup* parent) : ClientsObserverBase(parent) {
+ClientsPerServerObserver::ClientsPerServerObserver(ServerGroup *parent) : ClientsObserverBase(parent)
+{
 
     this->parent = parent;
 
@@ -42,41 +40,39 @@ ClientsPerServerObserver::ClientsPerServerObserver(ServerGroup* parent) : Client
 
 }
 
+void ClientsPerServerObserver::setupConnections()
+{
 
-void ClientsPerServerObserver::setupConnections() {
-
-    ClientsObserver* clientsObserver = this->parent->getCore()->getClientsObserver();
+    ClientsObserver *clientsObserver = this->parent->getCore()->getClientsObserver();
     // send connection status (connected, deconnected) to client observer for the current server :
-    connect (this,
-             SIGNAL(connectionStatusSignal(int)),
-             clientsObserver,
-             SLOT(connectionStatusSlot(int)));
-
+    connect(this,
+            SIGNAL(connectionStatusSignal(int)),
+            clientsObserver,
+            SLOT(connectionStatusSlot(int)));
 
     // send type of encryption used by host with ssl connection to client observer for the current server :
-    connect (this,
-             SIGNAL(encryptionStatusSignal(bool,QString,bool,QString,QStringList)),
-             clientsObserver,
-             SLOT(encryptionStatusSlot(bool,QString,bool,QString,QStringList)));
+    connect(this,
+            SIGNAL(encryptionStatusSignal(bool,QString,bool,QString,QStringList)),
+            clientsObserver,
+            SLOT(encryptionStatusSlot(bool,QString,bool,QString,QStringList)));
 
     // send eventual socket error to client observer for the current server :
-    connect (this,
-             SIGNAL(nntpErrorSignal(int)),
-             clientsObserver,
-             SLOT(nntpErrorSlot(int)));
+    connect(this,
+            SIGNAL(nntpErrorSignal(int)),
+            clientsObserver,
+            SLOT(nntpErrorSlot(int)));
 
     // send bytes downloaded to client observer for the current server :
-    connect (this,
-             SIGNAL(speedSignal(int)),
-             clientsObserver,
-             SLOT(nntpClientSpeedSlot(int)));
+    connect(this,
+            SIGNAL(speedSignal(int)),
+            clientsObserver,
+            SLOT(nntpClientSpeedSlot(int)));
 
     // notify sidebar that some nntpClient info have been updated :
-    connect (this,
-             SIGNAL(serverStatisticsUpdateSignal(int)),
-             this->parent->getCore(),
-             SLOT(serverStatisticsUpdateSlot(int)));
-
+    connect(this,
+            SIGNAL(serverStatisticsUpdateSignal(int)),
+            this->parent->getCore(),
+            SLOT(serverStatisticsUpdateSlot(int)));
 
     // calculate average download speed for all nntp client instances of this server group :
     connect(clientsObserver->getStatsInfoBuilder()->getDownloadSpeedTimer(),
@@ -85,9 +81,8 @@ void ClientsPerServerObserver::setupConnections() {
             SLOT(updateDownloadSpeedSlot()));
 }
 
-
-
-void ClientsPerServerObserver::resetVariables() {
+void ClientsPerServerObserver::resetVariables()
+{
 
     ClientsObserverBase::resetVariables() ;
 
@@ -100,9 +95,8 @@ void ClientsPerServerObserver::resetVariables() {
 
 }
 
-
-
-void ClientsPerServerObserver::nntpClientSpeedPerServerSlot(const SegmentInfoData segmentInfoData) {
+void ClientsPerServerObserver::nntpClientSpeedPerServerSlot(const SegmentInfoData segmentInfoData)
+{
 
     int bytesDownloaded = segmentInfoData.getBytesDownloaded();
 
@@ -119,9 +113,8 @@ void ClientsPerServerObserver::nntpClientSpeedPerServerSlot(const SegmentInfoDat
 
 }
 
-
-
-void ClientsPerServerObserver::connectionStatusPerServerSlot(const int connectionStatus) {
+void ClientsPerServerObserver::connectionStatusPerServerSlot(const int connectionStatus)
+{
 
     this->updateTotalConnections(connectionStatus);
 
@@ -132,32 +125,31 @@ void ClientsPerServerObserver::connectionStatusPerServerSlot(const int connectio
 
 }
 
-
-void ClientsPerServerObserver::nntpErrorPerServerSlot(const int nttpErrorStatus) {
+void ClientsPerServerObserver::nntpErrorPerServerSlot(const int nttpErrorStatus)
+{
 
     this->setNntpErrorStatus(nttpErrorStatus);
 
     // forward current server download speed to global observer :
     emit nntpErrorSignal(nttpErrorStatus);
 
-
 }
 
-void ClientsPerServerObserver::encryptionStatusPerServerSlot(const bool sslActive, const QString &encryptionMethod, const bool certificateVerified, const QString &issuerOrgranisation, const QStringList &sslErrors) {
+void ClientsPerServerObserver::encryptionStatusPerServerSlot(const bool sslActive, const QString &encryptionMethod, const bool certificateVerified, const QString &issuerOrgranisation, const QStringList &sslErrors)
+{
 
     //qCDebug(KWOOTY_LOG) << "sslActive : " << sslActive << "encryptionMethod" << encryptionMethod;
 
     this->setSslHandshakeParameters(sslActive, encryptionMethod, certificateVerified, issuerOrgranisation, sslErrors);
 
     // forward current server download speed to global observer :
-    emit encryptionStatusSignal (sslActive, encryptionMethod, certificateVerified, issuerOrgranisation, sslErrors);
+    emit encryptionStatusSignal(sslActive, encryptionMethod, certificateVerified, issuerOrgranisation, sslErrors);
 
     emit serverStatisticsUpdateSignal(this->parent->getRealServerGroupId());
 }
 
-
-
-void ClientsPerServerObserver::updateDownloadSpeedSlot() {
+void ClientsPerServerObserver::updateDownloadSpeedSlot()
+{
 
     // get current download speed :
     this->downloadSpeed = this->totalBytesDownloaded / StatsInfoBuilder::SPEED_AVERAGE_SECONDS;
@@ -173,7 +165,6 @@ void ClientsPerServerObserver::updateDownloadSpeedSlot() {
 
     }
 
-
     // notify side bar that download speed has been updated :
     emit serverStatisticsUpdateSignal(this->parent->getRealServerGroupId());
 
@@ -182,37 +173,38 @@ void ClientsPerServerObserver::updateDownloadSpeedSlot() {
 
 }
 
-
-bool ClientsPerServerObserver::isSslActive() const {
+bool ClientsPerServerObserver::isSslActive() const
+{
     return this->sslActive;
 }
 
-bool ClientsPerServerObserver::isDownloading() const {
+bool ClientsPerServerObserver::isDownloading() const
+{
     return (this->downloadSpeed > 0);
 }
 
-
-quint64 ClientsPerServerObserver::getDownloadSpeed() const {
+quint64 ClientsPerServerObserver::getDownloadSpeed() const
+{
     return this->downloadSpeed;
 }
 
-
-quint64 ClientsPerServerObserver::getAverageDownloadSpeed() const {
+quint64 ClientsPerServerObserver::getAverageDownloadSpeed() const
+{
     return this->averageDownloadSpeed;
 }
 
-quint64 ClientsPerServerObserver::getEffectiveMeanDownloadSpeed() const {
+quint64 ClientsPerServerObserver::getEffectiveMeanDownloadSpeed() const
+{
     return this->effectiveMeanDownloadSpeed;
 }
 
-
-SegmentInfoData ClientsPerServerObserver::getSegmentInfoData() const {
+SegmentInfoData ClientsPerServerObserver::getSegmentInfoData() const
+{
     return this->segmentInfoData;
 }
 
-
-quint64 ClientsPerServerObserver::getBytesDownloadedForCurrentSession() const {
+quint64 ClientsPerServerObserver::getBytesDownloadedForCurrentSession() const
+{
     return this->bytesDownloadedForCurrentSession;
 }
-
 

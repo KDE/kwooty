@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SERVERPREFERENCESWIDGET_H
 #define SERVERPREFERENCESWIDGET_H
 
@@ -31,34 +30,33 @@
 class PreferencesServer;
 class ServerTabWidget;
 
-
-class ServerPreferencesWidget : public QWidget {
+class ServerPreferencesWidget : public QWidget
+{
 
     Q_OBJECT
 
-
 public:
-    ServerPreferencesWidget(ServerTabWidget*, PreferencesServer*, int, const ServerTabWidget::ServerNameQuery);
+    ServerPreferencesWidget(ServerTabWidget *, PreferencesServer *, int, const ServerTabWidget::ServerNameQuery);
     ~ServerPreferencesWidget();
 
-    void setData(const int&);
+    void setData(const int &);
     ServerData getData();
     int getTabIndex();
-    void setGroupBoxTitle(const int&);
+    void setGroupBoxTitle(const int &);
 
 private:
-    Ui_ServerSettings* serverSettingsUi;
-    PreferencesServer* preferencesServer;
-    ServerTabWidget* serverTabWidget;
+    Ui_ServerSettings *serverSettingsUi;
+    PreferencesServer *preferencesServer;
+    ServerTabWidget *serverTabWidget;
     int tabIndex;
 
-    bool checkFormText(const QString&);
+    bool checkFormText(const QString &);
     void setupConnections();
     void setupButtons();
-    void hideWidgets(const int&) ;
-    void enableWidgets( bool);
-    void fillWarningLabel(QLabel*, const QString&);
-    void clearWarningLabel(QLabel*);
+    void hideWidgets(const int &) ;
+    void enableWidgets(bool);
+    void fillWarningLabel(QLabel *, const QString &);
+    void clearWarningLabel(QLabel *);
 
 private Q_SLOTS:
     void portValueChangedSlot(int);
@@ -66,8 +64,6 @@ private Q_SLOTS:
     void serverModeValueChangedSlot(int);
     void pushButtonInfoClickedSlot();
     void formEditingFinishedSlot();
-
-
 
 };
 

@@ -39,73 +39,68 @@ class ExtractBase : public QObject
     Q_ENUMS(InternalExtractStatus)
     Q_ENUMS(ArchivePasswordStatus)
 
-  public:
+public:
 
-    enum InternalExtractStatus{ IdleExtract,
-                                ExtractQuestion,
-                                Extracting,
-                                ExtractingNotPossible,
-                                ExtractComplete
+    enum InternalExtractStatus { IdleExtract,
+                                 ExtractQuestion,
+                                 Extracting,
+                                 ExtractingNotPossible,
+                                 ExtractComplete
 
-                            };
+                               };
     enum ArchivePasswordStatus { ArchiveCheckIfPassworded,
                                  ArchiveIsPassworded,
                                  ArchiveIsNotPassworded,
                                  ArchivePasswordCheckEnded
-                             };
+                               };
 
-
-    ExtractBase(RepairDecompressThread*);
+    ExtractBase(RepairDecompressThread *);
     virtual ~ExtractBase();
-    virtual void launchProcess(const NzbCollectionData&, ExtractBase::ArchivePasswordStatus = ArchiveCheckIfPassworded,
+    virtual void launchProcess(const NzbCollectionData &, ExtractBase::ArchivePasswordStatus = ArchiveCheckIfPassworded,
                                bool passwordEnteredByUSer = false, const QString &passwordStr = QString());
-    virtual void preRepairProcessing(const NzbCollectionData&);
+    virtual void preRepairProcessing(const NzbCollectionData &);
     bool canHandleFormat(UtilityNamespace::ArchiveFormat);
-
-
 
 protected:
 
-    KProcess* extractProcess;
+    KProcess *extractProcess;
     NzbCollectionData nzbCollectionData;
     QList<NzbFileData> nzbFileDataList;
-    QTimer* processWaitAnswerTimer;
+    QTimer *processWaitAnswerTimer;
     ExtractBase::ArchivePasswordStatus  archivePasswordStatus;
     QString extractProgramPath;
     QString stdOutputLines;
     int extractProgressValue;
     bool isExtractProgramFound;
-    RepairDecompressThread* parent;
+    RepairDecompressThread *parent;
     UtilityNamespace::ArchiveFormat archiveFormat;
 
     void setupConnections();
     void resetVariables();
-    void updateNzbFileDataInList(NzbFileData&, const UtilityNamespace::ItemStatus, const int);
+    void updateNzbFileDataInList(NzbFileData &, const UtilityNamespace::ItemStatus, const int);
     void emitProgressToArchivesWithCurrentStatus(const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget, const int);
     void emitFinishToArchivesWithoutErrors(const UtilityNamespace::ItemStatus, const int);
-    void emitStatusToAllArchives(const int&, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
-    void findItemAndNotifyUser(const QString& fileNameStr, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
+    void emitStatusToAllArchives(const int &, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
+    void findItemAndNotifyUser(const QString &fileNameStr, const UtilityNamespace::ItemStatus, const UtilityNamespace::ItemTarget);
     void removeArchiveFiles();
-    void emitProcessUpdate(const QVariant&, const int&, const UtilityNamespace::ItemStatus&, const UtilityNamespace::ItemTarget&);
+    void emitProcessUpdate(const QVariant &, const int &, const UtilityNamespace::ItemStatus &, const UtilityNamespace::ItemTarget &);
     NzbFileData getFirstArchiveFileFromList() const;
-    NzbFileData getFirstArchiveFileFromList(const QList<NzbFileData>&) const;
-    QString getOriginalFileName(const NzbFileData&) const;
+    NzbFileData getFirstArchiveFileFromList(const QList<NzbFileData> &) const;
+    QString getOriginalFileName(const NzbFileData &) const;
 
     // virtual methods :
-    virtual void removeRenamedArchiveFile(const NzbFileData&);
+    virtual void removeRenamedArchiveFile(const NzbFileData &);
 
     // pure virtual methods implemented by extractrar and extractzip :
-    virtual QStringList createProcessArguments(const QString&, const QString&, const bool&, const QString&)  = 0;
-    virtual void extractUpdate(const QString&) = 0;
-    virtual void checkIfArchivePassworded(const QString&, bool&) = 0;
+    virtual QStringList createProcessArguments(const QString &, const QString &, const bool &, const QString &)  = 0;
+    virtual void extractUpdate(const QString &) = 0;
+    virtual void checkIfArchivePassworded(const QString &, bool &) = 0;
     virtual void sendExtractProgramNotFoundNotification() = 0;
     virtual QString searchExtractProgram() = 0;
-
 
 Q_SIGNALS:
     void extractProcessEndedSignal(NzbCollectionData = NzbCollectionData());
     void extractPasswordRequiredSignal(QString);
-
 
 public Q_SLOTS:
     void passwordEnteredByUserSlot(bool, const QString &password = QString());

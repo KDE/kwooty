@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef WATCHFOLDER_H
 #define WATCHFOLDER_H
 
@@ -44,17 +43,16 @@ class WatchFolder : public QObject
     Q_OBJECT
 
 public:
-    WatchFolder(WatchFolderPlugin*);
+    WatchFolder(WatchFolderPlugin *);
     ~WatchFolder();
     void settingsChanged();
-
 
 private:
     static const int MAX_LIST_SIZE = 10;
 
-    KDirWatch* kDirWatch;
-    Core* core;
-    QTimer* fileCompleteTimer;
+    KDirWatch *kDirWatch;
+    Core *core;
+    QTimer *fileCompleteTimer;
     QStringList nzbFileList;
     QHash<QString, QDateTime> nzbFilePathlastEnqueuedMap;
     QSet<QString> nzbFileInWatchFolderSet;
@@ -63,19 +61,15 @@ private:
 
     void setupConnections();
     QSet<QString> getNzbFileSetFromWatchFolder();
-    void appendFileToList(const QString&);
-
+    void appendFileToList(const QString &);
 
 Q_SIGNALS:
 
-
 public Q_SLOTS:
 
-
 private Q_SLOTS:
-    void watchFileSlot(const QString&);
+    void watchFileSlot(const QString &);
     void fileCompleteTimerSlot();
-
 
 };
 

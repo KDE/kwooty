@@ -20,19 +20,20 @@
 
 #include "itemstatusdata.h"
 
-
-ItemStatusData::ItemStatusData() {
+ItemStatusData::ItemStatusData()
+{
 
     this->init();
     this->downloadRetryCounter = 0;
     this->articleEncodingType = UtilityNamespace::ArticleEncodingUnknown;
 }
 
-
-ItemStatusData::~ItemStatusData() {
+ItemStatusData::~ItemStatusData()
+{
 }
 
-void ItemStatusData::init() {
+void ItemStatusData::init()
+{
 
     this->status = IdleStatus;
     this->downloadFinish = false;
@@ -45,8 +46,8 @@ void ItemStatusData::init() {
 
 }
 
-
-void ItemStatusData::downloadRetry(const ItemStatus& itemStatusResetTarget) {
+void ItemStatusData::downloadRetry(const ItemStatus &itemStatusResetTarget)
+{
 
     this->init();
 
@@ -66,99 +67,114 @@ void ItemStatusData::downloadRetry(const ItemStatus& itemStatusResetTarget) {
 
 }
 
-
-UtilityNamespace::Data ItemStatusData::getDataStatus() const {
+UtilityNamespace::Data ItemStatusData::getDataStatus() const
+{
     return this->data;
 }
 
-void ItemStatusData::setDataStatus(const UtilityNamespace::Data data) {
+void ItemStatusData::setDataStatus(const UtilityNamespace::Data data)
+{
     this->data = data;
 }
 
-
-bool ItemStatusData::isDownloadFinish() const {
+bool ItemStatusData::isDownloadFinish() const
+{
     return this->downloadFinish;
 }
 
-void ItemStatusData::setDownloadFinish(const bool downloadFinish) {
+void ItemStatusData::setDownloadFinish(const bool downloadFinish)
+{
     this->downloadFinish = downloadFinish;
 }
 
-bool ItemStatusData::isDecodeFinish() const {
+bool ItemStatusData::isDecodeFinish() const
+{
     return this->decodeFinish;
 }
 
-void ItemStatusData::setDecodeFinish(const bool decodeFinish) {
+void ItemStatusData::setDecodeFinish(const bool decodeFinish)
+{
     this->decodeFinish = decodeFinish;
 }
 
-bool ItemStatusData::isPostProcessFinish() const {
+bool ItemStatusData::isPostProcessFinish() const
+{
     return this->postProcessFinish;
 }
 
-void ItemStatusData::setPostProcessFinish(const bool postProcessFinish) {
+void ItemStatusData::setPostProcessFinish(const bool postProcessFinish)
+{
     this->postProcessFinish = postProcessFinish;
 }
 
-bool ItemStatusData::areAllPostProcessingCorrect() const {
+bool ItemStatusData::areAllPostProcessingCorrect() const
+{
     return this->allPostProcessingCorrect;
 }
 
-void ItemStatusData::setAllPostProcessingCorrect(const bool& allPostProcessingCorrect) {
+void ItemStatusData::setAllPostProcessingCorrect(const bool &allPostProcessingCorrect)
+{
     this->allPostProcessingCorrect = allPostProcessingCorrect;
 }
 
-
-UtilityNamespace::CrcNotify ItemStatusData::getCrc32Match() const {
+UtilityNamespace::CrcNotify ItemStatusData::getCrc32Match() const
+{
     return this->crc32Match;
 }
 
-void ItemStatusData::setCrc32Match(const UtilityNamespace::CrcNotify crc32Match) {
+void ItemStatusData::setCrc32Match(const UtilityNamespace::CrcNotify crc32Match)
+{
     this->crc32Match = crc32Match;
 }
 
-UtilityNamespace::ArticleEncodingType ItemStatusData::getArticleEncodingType() const {
+UtilityNamespace::ArticleEncodingType ItemStatusData::getArticleEncodingType() const
+{
     return this->articleEncodingType;
 }
 
-void ItemStatusData::setArticleEncodingType(const UtilityNamespace::ArticleEncodingType articleEncodingType) {
+void ItemStatusData::setArticleEncodingType(const UtilityNamespace::ArticleEncodingType articleEncodingType)
+{
     this->articleEncodingType = articleEncodingType;
 }
 
-
-void ItemStatusData::setStatus(const UtilityNamespace::ItemStatus status) {
+void ItemStatusData::setStatus(const UtilityNamespace::ItemStatus status)
+{
     this->status = status;
 }
 
-UtilityNamespace::ItemStatus ItemStatusData::getStatus() const {
+UtilityNamespace::ItemStatus ItemStatusData::getStatus() const
+{
     return this->status;
 }
 
-int ItemStatusData::getNextServerId() const {
+int ItemStatusData::getNextServerId() const
+{
     return this->nextServerId;
 }
-void ItemStatusData::setNextServerId(const int& nextServerId) {
+void ItemStatusData::setNextServerId(const int &nextServerId)
+{
     this->nextServerId = nextServerId;
 }
 
-int ItemStatusData::getDownloadRetryCounter() const {
+int ItemStatusData::getDownloadRetryCounter() const
+{
     return this->downloadRetryCounter;
 }
 
-
-bool ItemStatusData::operator!=(const ItemStatusData& itemStatusDataToCompare) {
+bool ItemStatusData::operator!=(const ItemStatusData &itemStatusDataToCompare)
+{
 
     bool different = false;
 
-    if ( (this->status               != itemStatusDataToCompare.getStatus())                 ||
-         (this->data                 != itemStatusDataToCompare.getDataStatus())             ||
-         (this->downloadFinish       != itemStatusDataToCompare.isDownloadFinish())          ||
-         (this->decodeFinish         != itemStatusDataToCompare.isDecodeFinish())            ||
-         (this->postProcessFinish    != itemStatusDataToCompare.isPostProcessFinish())       ||
-         (this->crc32Match           != itemStatusDataToCompare.getCrc32Match())             ||
-         (this->articleEncodingType  != itemStatusDataToCompare.getArticleEncodingType())    ||
-         (this->nextServerId         != itemStatusDataToCompare.getNextServerId())           ||
-         (this->downloadRetryCounter != itemStatusDataToCompare.getDownloadRetryCounter()) ) {
+    if ((this->status               != itemStatusDataToCompare.getStatus())                 ||
+            (this->data                 != itemStatusDataToCompare.getDataStatus())             ||
+            (this->downloadFinish       != itemStatusDataToCompare.isDownloadFinish())          ||
+            (this->decodeFinish         != itemStatusDataToCompare.isDecodeFinish())            ||
+            (this->postProcessFinish    != itemStatusDataToCompare.isPostProcessFinish())       ||
+            (this->crc32Match           != itemStatusDataToCompare.getCrc32Match())             ||
+            (this->articleEncodingType  != itemStatusDataToCompare.getArticleEncodingType())    ||
+            (this->nextServerId         != itemStatusDataToCompare.getNextServerId())           ||
+            (this->downloadRetryCounter != itemStatusDataToCompare.getDownloadRetryCounter())) {
 
         different = true;
     }
@@ -166,8 +182,8 @@ bool ItemStatusData::operator!=(const ItemStatusData& itemStatusDataToCompare) {
     return different;
 }
 
-
-QDataStream& operator<<(QDataStream& out, const ItemStatusData& itemStatusData) {
+QDataStream &operator<<(QDataStream &out, const ItemStatusData &itemStatusData)
+{
 
     out << (qint16)itemStatusData.getStatus()
         << (qint16)itemStatusData.getDataStatus()
@@ -180,9 +196,8 @@ QDataStream& operator<<(QDataStream& out, const ItemStatusData& itemStatusData) 
     return out;
 }
 
-
-
-QDataStream& operator>>(QDataStream& in, ItemStatusData& itemStatusData) {
+QDataStream &operator>>(QDataStream &in, ItemStatusData &itemStatusData)
+{
 
     qint16 status;
     qint16 data;

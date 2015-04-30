@@ -34,11 +34,10 @@
 #include "datarestorer.h"
 #include "kwootysettings.h"
 
+SegmentsDecoderThread::SegmentsDecoderThread() {}
 
-SegmentsDecoderThread::SegmentsDecoderThread(){}
-
-
-SegmentsDecoderThread::SegmentsDecoderThread(Core* inParent) {
+SegmentsDecoderThread::SegmentsDecoderThread(Core *inParent)
+{
 
     this->parent = inParent;
 
@@ -52,8 +51,8 @@ SegmentsDecoderThread::SegmentsDecoderThread(Core* inParent) {
 
 }
 
-
-SegmentsDecoderThread::~SegmentsDecoderThread() {
+SegmentsDecoderThread::~SegmentsDecoderThread()
+{
 
     this->dedicatedThread->quit();
     this->dedicatedThread->wait();
@@ -62,8 +61,8 @@ SegmentsDecoderThread::~SegmentsDecoderThread() {
 
 }
 
-
-void SegmentsDecoderThread::init() {
+void SegmentsDecoderThread::init()
+{
 
     // create Yenc decoder instance :
     this->yencDecoder = new SegmentDecoderYEnc(this);
@@ -76,56 +75,52 @@ void SegmentsDecoderThread::init() {
 
 }
 
-
-void SegmentsDecoderThread::setupConnections() {
+void SegmentsDecoderThread::setupConnections()
+{
 
     // suppress old segments if user have to chosen to not reload data from previous session :
-    connect (parent->getDataRestorer(),
-             SIGNAL(suppressOldOrphanedSegmentsSignal()),
-             this,
-             SLOT(suppressOldOrphanedSegmentsSlot()));
-
+    connect(parent->getDataRestorer(),
+            SIGNAL(suppressOldOrphanedSegmentsSignal()),
+            this,
+            SLOT(suppressOldOrphanedSegmentsSlot()));
 
     // update info about decoding process :
     qRegisterMetaType<PostDownloadInfoData>("PostDownloadInfoData");
-    connect (this,
-             SIGNAL(updateDecodeSignal(PostDownloadInfoData)),
-             this->parent->getSegmentManager(),
-             SLOT(updateDecodeSegmentSlot(PostDownloadInfoData)));
+    connect(this,
+            SIGNAL(updateDecodeSignal(PostDownloadInfoData)),
+            this->parent->getSegmentManager(),
+            SLOT(updateDecodeSegmentSlot(PostDownloadInfoData)));
 
-
-    connect (this,
-             SIGNAL(saveFileErrorSignal(int)),
-             parent,
-             SLOT(saveFileErrorSlot(int)));
-
+    connect(this,
+            SIGNAL(saveFileErrorSignal(int)),
+            parent,
+            SLOT(saveFileErrorSlot(int)));
 
     // send to core segment data update :
     qRegisterMetaType<SegmentData>("SegmentData");
-    connect (this,
-             SIGNAL(updateDownloadSegmentSignal(SegmentData,QString)),
-             this->parent->getSegmentManager(),
-             SLOT(updateDownloadSegmentSlot(SegmentData,QString)));
-
+    connect(this,
+            SIGNAL(updateDownloadSegmentSignal(SegmentData,QString)),
+            this->parent->getSegmentManager(),
+            SLOT(updateDownloadSegmentSlot(SegmentData,QString)));
 
 }
 
-
-void SegmentsDecoderThread::emitDecodeProgression(const PostDownloadInfoData& decodeInfoData) {
+void SegmentsDecoderThread::emitDecodeProgression(const PostDownloadInfoData &decodeInfoData)
+{
     emit updateDecodeSignal(decodeInfoData);
 }
 
-void SegmentsDecoderThread::emitSaveFileError() {
+void SegmentsDecoderThread::emitSaveFileError()
+{
     emit saveFileErrorSignal(DuringDecode);
 }
-
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void SegmentsDecoderThread::saveDownloadedSegmentSlot(SegmentData segmentData) {
+void SegmentsDecoderThread::saveDownloadedSegmentSlot(SegmentData segmentData)
+{
 
     QString temporaryFolder = Settings::temporaryFolder().path();
     bool writeSuccess = true;
@@ -138,12 +133,10 @@ void SegmentsDecoderThread::saveDownloadedSegmentSlot(SegmentData segmentData) {
 
         bool crc32Match = this->yencDecoder->decodeEncodedData(temporaryFolder, segmentData, decodedfileName, writeSuccess);
 
-
         // by default, crc value is set to CrcUnknown :
         if (crc32Match) {
             segmentData.setCrc32Match(CrcOk);
-        }
-        else {
+        } else {
             segmentData.setCrc32Match(CrcKo);
         }
 
@@ -173,10 +166,8 @@ void SegmentsDecoderThread::saveDownloadedSegmentSlot(SegmentData segmentData) {
     emit segmentDecoderIdleSignal();
 }
 
-
-
-
-void SegmentsDecoderThread::decodeSegmentsSlot(NzbFileData nzbFileData) {
+void SegmentsDecoderThread::decodeSegmentsSlot(NzbFileData nzbFileData)
+{
 
     // if yenc decoding has already been performed :
     if (!nzbFileData.getDecodedFileName().isEmpty()) {
@@ -208,15 +199,13 @@ void SegmentsDecoderThread::decodeSegmentsSlot(NzbFileData nzbFileData) {
 
     }
 
-
     // decoder is ready again :
     emit finalizeDecoderIdleSignal();
 
 }
 
-
-
-void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
+void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot()
+{
 
     // get temporary path :
     QString tempPathStr = Settings::temporaryFolder().path();
@@ -227,9 +216,9 @@ void SegmentsDecoderThread::suppressOldOrphanedSegmentsSlot() {
 
     // if file is a previous segment, suppress it :
     QFile temporaryFile;
-    foreach (const QString& currentFileStr, temporaryFilelist) {
+    foreach (const QString &currentFileStr, temporaryFilelist) {
 
-        temporaryFile.setFileName( Utility::buildFullPath(tempPathStr, currentFileStr) );
+        temporaryFile.setFileName(Utility::buildFullPath(tempPathStr, currentFileStr));
 
         if (temporaryFile.exists()) {
 

@@ -18,10 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
-
 
 #include <KPluginInfo>
 
@@ -32,7 +30,6 @@
 
 class MainWindow;
 
-
 class KWOOTY_EXPORT PluginManager : public QObject
 {
 
@@ -40,27 +37,25 @@ class KWOOTY_EXPORT PluginManager : public QObject
 
 public:
 
-    PluginManager(MainWindow*);
+    PluginManager(MainWindow *);
     ~PluginManager();
     QList<KPluginInfo> getPluginInfoList();
     void loadPlugins();
 
 private:
 
-    MainWindow* core;
+    MainWindow *core;
     QList<KPluginInfo> pluginInfoList;
-    QMap<KPluginInfo, Plugin*> loadedInfoPluginMap;
+    QMap<KPluginInfo, Plugin *> loadedInfoPluginMap;
 
-    void loadCurrentPlugin(const KPluginInfo&);
-    void unloadCurrentPlugin(const KPluginInfo&);
-
+    void loadCurrentPlugin(const KPluginInfo &);
+    void unloadCurrentPlugin(const KPluginInfo &);
 
 Q_SIGNALS:
 
 public Q_SLOTS:
 
-    void configCommittedSlot(const QByteArray&);
-
+    void configCommittedSlot(const QByteArray &);
 
 private Q_SLOTS:
 

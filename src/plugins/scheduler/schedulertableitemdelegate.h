@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SCHEDULERTABLEITEMDELEGATE_H
 #define SCHEDULERTABLEITEMDELEGATE_H
 
@@ -28,14 +27,14 @@
 #include "schedulerfilehandler.h"
 using namespace SchedulerNamespace;
 
-class SchedulerTableItemDelegate : public QStyledItemDelegate {
+class SchedulerTableItemDelegate : public QStyledItemDelegate
+{
 
     Q_OBJECT
 
 public:
-    SchedulerTableItemDelegate(QObject* parent = 0);
-    void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
-
+    SchedulerTableItemDelegate(QObject *parent = 0);
+    void paint(QPainter *, const QStyleOptionViewItem &, const QModelIndex &) const;
 
 private:
     bool isSchedulerEnabled() const;
@@ -43,9 +42,7 @@ private:
 
 Q_SIGNALS:
 
-
 public Q_SLOTS:
-
 
 };
 

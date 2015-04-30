@@ -18,23 +18,21 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "sessionkde.h"
 
 #include "kwooty_debug.h"
 #include <KJob>
 //#include <kworkspace/kworkspace.h>
 
-
-SessionKde::SessionKde(ShutdownManager* parent) : SessionBase(parent) {
+SessionKde::SessionKde(ShutdownManager *parent) : SessionBase(parent)
+{
 
     qCDebug(KWOOTY_LOG);
 
 }
 
-
-
-QList<UtilityNamespace::SystemShutdownType> SessionKde::retrieveAvailableShutdownMethods() {
+QList<UtilityNamespace::SystemShutdownType> SessionKde::retrieveAvailableShutdownMethods()
+{
 
     QList<UtilityNamespace::SystemShutdownType> indexShutdownTypeList;
 
@@ -42,7 +40,7 @@ QList<UtilityNamespace::SystemShutdownType> SessionKde::retrieveAvailableShutdow
     indexShutdownTypeList.append(UtilityNamespace::Shutdown);
 
     // then add supported sleep types by system :
-    foreach (const SleepState& sleepState, Solid::PowerManagement::supportedSleepStates()) {
+    foreach (const SleepState &sleepState, Solid::PowerManagement::supportedSleepStates()) {
 
         // add standby :
         if (sleepState == StandbyState) {
@@ -62,14 +60,13 @@ QList<UtilityNamespace::SystemShutdownType> SessionKde::retrieveAvailableShutdow
 
 }
 
-
-void SessionKde::requestShutdown() {
+void SessionKde::requestShutdown()
+{
 #if 0 // PORT KF5
     // check if shutdown has any chance of succeeding :
     bool canShutDown = KWorkSpace::canShutDown(KWorkSpace::ShutdownConfirmNo,
-                                               KWorkSpace::ShutdownTypeHalt,
-                                               KWorkSpace::ShutdownModeForceNow);
-
+                       KWorkSpace::ShutdownTypeHalt,
+                       KWorkSpace::ShutdownModeForceNow);
 
     // if shutdown is possible :
     if (canShutDown) {
@@ -78,22 +75,20 @@ void SessionKde::requestShutdown() {
         KWorkSpace::requestShutDown(KWorkSpace::ShutdownConfirmNo,
                                     KWorkSpace::ShutdownTypeHalt,
                                     KWorkSpace::ShutdownModeForceNow);
-    }
-    else {
+    } else {
         this->shutdownManager->handleShutdownError(i18n("Shutdown has failed (session manager can not be contacted)."));
     }
 #endif
 
 }
 
-
-void SessionKde::requestSuspend() {
+void SessionKde::requestSuspend()
+{
 
     Solid::PowerManagement::SleepState suspendMethod = StandbyState;
 
     // get type of system shutdown :
     switch (this->getChosenShutdownType()) {
-
 
     case UtilityNamespace::Standby: {
         suspendMethod = Solid::PowerManagement::StandbyState;

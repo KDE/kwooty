@@ -46,20 +46,20 @@ public:
                           IconCapacityWidgetIdentity
                         };
 
-    explicit MyStatusBar(MainWindow*);
+    explicit MyStatusBar(MainWindow *);
     MyStatusBar();
-    IconTextWidget* getInfoBarWidget();
+    IconTextWidget *getInfoBarWidget();
     ~MyStatusBar();
 
 private:
-    ClientsObserver* clientsObserver;
-    IconTextWidget* sizeLabel;
-    IconTextWidget* speedLabel;
-    IconTextWidget* connectionWidget;
-    IconTextWidget* shutdownWidget;
-    IconTextWidget* timeInfoWidget;
-    IconTextWidget* infoBarWidget;
-    IconCapacityWidget* iconCapacityWidget;
+    ClientsObserver *clientsObserver;
+    IconTextWidget *sizeLabel;
+    IconTextWidget *speedLabel;
+    IconTextWidget *connectionWidget;
+    IconTextWidget *shutdownWidget;
+    IconTextWidget *timeInfoWidget;
+    IconTextWidget *infoBarWidget;
+    IconCapacityWidget *iconCapacityWidget;
 
     void setupConnections();
     void setConnectionWidget();
@@ -67,8 +67,7 @@ private:
     void setTimeInfoWidget();
     void setInfoBarWidget();
 
-    void buildConnWidgetToolTip(const QString&);
-
+    void buildConnWidgetToolTip(const QString &);
 
 Q_SIGNALS:
     void showSettingsSignal(UtilityNamespace::PreferencesPage);
@@ -84,7 +83,5 @@ public Q_SLOTS:
     void statusBarShutdownInfoSlot(const QString &, const QString &);
     void statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity);
 };
-
-
 
 #endif // STATUSBAR_H

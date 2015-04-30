@@ -18,17 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef NZBCOLLECTIONDATA_H
 #define NZBCOLLECTIONDATA_H
-
 
 #include "nzbfiledata.h"
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class NzbCollectionData {
-
+class NzbCollectionData
+{
 
 public:
     NzbCollectionData();
@@ -36,26 +34,25 @@ public:
     QList<NzbFileData> takeNzbFileDataList();
     QList<NzbFileData> getNzbFileDataList() const;
     QVariant getFirstChildUniqueIdentifier() const;
-    void setNzbFileDataList(const QList<NzbFileData>&);
-    void setNzbParentId(const QString&);
+    void setNzbFileDataList(const QList<NzbFileData> &);
+    void setNzbParentId(const QString &);
     QString getNzbParentId() const;
     void setPar2FileDownloadStatus(const UtilityNamespace::ItemStatus);
     UtilityNamespace::ItemStatus getPar2FileDownloadStatus() const;
-    void setPar2BaseName(const QString&);
+    void setPar2BaseName(const QString &);
     QString getPar2BaseName() const;
     void setExtractTerminateStatus(const UtilityNamespace::ItemStatus);
     UtilityNamespace::ItemStatus getExtractTerminateStatus() const;
     void setVerifyRepairTerminateStatus(const UtilityNamespace::ItemStatus);
     UtilityNamespace::ItemStatus getVerifyRepairTerminateStatus() const;
-    void setAllPostProcessingCorrect(const bool&);
+    void setAllPostProcessingCorrect(const bool &);
     bool isAllPostProcessingCorrect() const;
     bool isExtractProcessAllowed() const;
-    void setExtractProcessAllowed(const bool&);
+    void setExtractProcessAllowed(const bool &);
     bool isRepairProcessAllowed() const;
-    void setRepairProcessAllowed(const bool&);
+    void setRepairProcessAllowed(const bool &);
 
-    bool operator==(const NzbCollectionData&);
-
+    bool operator==(const NzbCollectionData &);
 
 private:
     QList<NzbFileData> nzbFileDataList;

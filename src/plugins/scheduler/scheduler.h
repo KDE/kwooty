@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 
@@ -33,22 +32,20 @@
 using namespace UtilityNamespace;
 using namespace SchedulerNamespace;
 
-
 class Core;
 class SchedulerPlugin;
 class ServerManager;
 
-
-class Scheduler : public QObject {
+class Scheduler : public QObject
+{
 
     Q_OBJECT
 
 public:
-    Scheduler(SchedulerPlugin*);
+    Scheduler(SchedulerPlugin *);
     ~Scheduler();
     void settingsChanged();
     void disableSpeedLimit();
-
 
 private:
 
@@ -58,31 +55,27 @@ private:
                                  BypassNoItems
                                };
 
-
     static const int NO_SPEED_LIMIT = 0;
 
-    QStandardItemModel* schedulerModel;
-    Core* core;
-    ServerManager* serverManager;
-    MyStatusBar* statusBar;
-    QTimer* schedulerTimer;
+    QStandardItemModel *schedulerModel;
+    Core *core;
+    ServerManager *serverManager;
+    MyStatusBar *statusBar;
+    QTimer *schedulerTimer;
     DownloadLimitStatus downloadLimitStatus;
     QHash<QString, Scheduler::BypassSchedulerMethod> manuallyUuidStartPauseMap;
 
     DownloadLimitStatus getCurrentDownloadLimitStatus();
     void setupConnections();
     void applySpeedLimit();
-    void checkDownloadStatus(const DownloadLimitStatus&);
+    void checkDownloadStatus(const DownloadLimitStatus &);
     void suspendDownloads();
     void resumeDownloads();
     void scheduleStartPauseDownload(UtilityNamespace::ItemStatus);
-    QList<QString> retrieveProperListFromMap(const UtilityNamespace::ItemStatus&) const;
+    QList<QString> retrieveProperListFromMap(const UtilityNamespace::ItemStatus &) const;
     void initUuidStartPauseMap();
 
-
-
 Q_SIGNALS:
-
 
 public Q_SLOTS:
     void serverManagerSettingsChangedSlot();

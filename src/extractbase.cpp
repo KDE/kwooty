@@ -28,9 +28,8 @@
 #include "repairdecompressthread.h"
 #include "data/nzbfiledata.h"
 
-
-
-ExtractBase::ExtractBase(RepairDecompressThread* parent): QObject (parent) {
+ExtractBase::ExtractBase(RepairDecompressThread *parent): QObject(parent)
+{
 
     this->parent = parent;
 
@@ -40,53 +39,51 @@ ExtractBase::ExtractBase(RepairDecompressThread* parent): QObject (parent) {
 
 }
 
-
-ExtractBase::~ExtractBase() {
+ExtractBase::~ExtractBase()
+{
     this->extractProcess->close();
 }
 
-
-bool ExtractBase::canHandleFormat(UtilityNamespace::ArchiveFormat archiveFormat) {
+bool ExtractBase::canHandleFormat(UtilityNamespace::ArchiveFormat archiveFormat)
+{
     return (this->archiveFormat == archiveFormat);
 }
 
-void ExtractBase::preRepairProcessing(const NzbCollectionData&) {
+void ExtractBase::preRepairProcessing(const NzbCollectionData &)
+{
     // do nothing by default, may be implemented in derivated classes.
 }
 
-
-
-void ExtractBase::setupConnections() {
+void ExtractBase::setupConnections()
+{
 
     qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
 
-    connect (this->extractProcess, SIGNAL(readyRead()), this, SLOT(extractReadyReadSlot()));
-    connect (this->extractProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(extractFinishedSlot(int,QProcess::ExitStatus)));
-
+    connect(this->extractProcess, SIGNAL(readyRead()), this, SLOT(extractReadyReadSlot()));
+    connect(this->extractProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(extractFinishedSlot(int,QProcess::ExitStatus)));
 
     // begin verify - repair process for new pending files when signal has been received :
-    connect (this,
-             SIGNAL(extractProcessEndedSignal(NzbCollectionData)),
-             this->parent,
-             SLOT(extractProcessEndedSlot(NzbCollectionData)));
+    connect(this,
+            SIGNAL(extractProcessEndedSignal(NzbCollectionData)),
+            this->parent,
+            SLOT(extractProcessEndedSlot(NzbCollectionData)));
 
     // display dialog box when password is required for archive extraction :
-    connect (this,
-             SIGNAL(extractPasswordRequiredSignal(QString)),
-             parent->getCore(),
-             SLOT(extractPasswordRequiredSlot(QString)));
+    connect(this,
+            SIGNAL(extractPasswordRequiredSignal(QString)),
+            parent->getCore(),
+            SLOT(extractPasswordRequiredSlot(QString)));
 
     // send password entered by the user :
-    connect (parent->getCore(),
-             SIGNAL(passwordEnteredByUserSignal(bool,QString)),
-             this,
-             SLOT(passwordEnteredByUserSlot(bool,QString)));
+    connect(parent->getCore(),
+            SIGNAL(passwordEnteredByUserSignal(bool,QString)),
+            this,
+            SLOT(passwordEnteredByUserSlot(bool,QString)));
 
 }
 
-
-
-void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, ExtractBase::ArchivePasswordStatus archivePasswordStatus, bool passwordEnteredByUSer, const QString &passwordStr){
+void ExtractBase::launchProcess(const NzbCollectionData &nzbCollectionData, ExtractBase::ArchivePasswordStatus archivePasswordStatus, bool passwordEnteredByUSer, const QString &passwordStr)
+{
 
     this->nzbCollectionData = nzbCollectionData;
     this->nzbFileDataList = nzbCollectionData.getNzbFileDataList();
@@ -98,7 +95,6 @@ void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, Extr
 
     // launch extract if unrar program found :
     if (this->isExtractProgramFound) {
-
 
         NzbFileData currentNzbFileData = this->getFirstArchiveFileFromList();
 
@@ -126,7 +122,6 @@ void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, Extr
         this->extractProcess->setProgram(args);
         this->extractProcess->start();
 
-
     }
     // unrar or 7z program has not been found, notify user :
     else {
@@ -135,13 +130,12 @@ void ExtractBase::launchProcess(const NzbCollectionData& nzbCollectionData, Extr
 
 }
 
-
-
 //==============================================================================================//
 //                                       processing                                             //
 //==============================================================================================//
 
-QString ExtractBase::getOriginalFileName(const NzbFileData& currentNzbFileData) const {
+QString ExtractBase::getOriginalFileName(const NzbFileData &currentNzbFileData) const
+{
 
     // get the decoded file name (default behavior) :
     QString archiveName = currentNzbFileData.getDecodedFileName();
@@ -154,12 +148,11 @@ QString ExtractBase::getOriginalFileName(const NzbFileData& currentNzbFileData) 
     return archiveName;
 }
 
-
-
-NzbFileData ExtractBase::getFirstArchiveFileFromList(const QList<NzbFileData>& currentNzbFileDataList) const {
+NzbFileData ExtractBase::getFirstArchiveFileFromList(const QList<NzbFileData> &currentNzbFileDataList) const
+{
 
     NzbFileData currentNzbFileData;
-    foreach (const NzbFileData& nzbFileData, currentNzbFileDataList) {
+    foreach (const NzbFileData &nzbFileData, currentNzbFileDataList) {
 
         if (nzbFileData.isArchiveFile()) {
             //return the first achive file from list :
@@ -171,22 +164,21 @@ NzbFileData ExtractBase::getFirstArchiveFileFromList(const QList<NzbFileData>& c
     return currentNzbFileData;
 }
 
-
-NzbFileData ExtractBase::getFirstArchiveFileFromList() const {
-   return this->getFirstArchiveFileFromList(this->nzbFileDataList);
+NzbFileData ExtractBase::getFirstArchiveFileFromList() const
+{
+    return this->getFirstArchiveFileFromList(this->nzbFileDataList);
 }
 
-
-
-void ExtractBase::updateNzbFileDataInList(NzbFileData& currentNzbFileData, const UtilityNamespace::ItemStatus extractStep, const int index) {
+void ExtractBase::updateNzbFileDataInList(NzbFileData &currentNzbFileData, const UtilityNamespace::ItemStatus extractStep, const int index)
+{
 
     currentNzbFileData.setExtractProgressionStep(extractStep);
     this->nzbFileDataList.replace(index, currentNzbFileData);
 
 }
 
-
-void ExtractBase::resetVariables(){
+void ExtractBase::resetVariables()
+{
 
     this->isExtractProgramFound = false;
     this->nzbCollectionData = NzbCollectionData();
@@ -196,10 +188,10 @@ void ExtractBase::resetVariables(){
     this->extractProgressValue = PROGRESS_INIT;
 }
 
+void ExtractBase::removeArchiveFiles()
+{
 
-void ExtractBase::removeArchiveFiles(){
-
-    foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData &nzbFileData, this->nzbFileDataList) {
 
         if (nzbFileData.getExtractProgressionStep() == ExtractStatus) {
 
@@ -216,7 +208,8 @@ void ExtractBase::removeArchiveFiles(){
     }
 }
 
-void ExtractBase::removeRenamedArchiveFile(const NzbFileData& nzbFileData) {
+void ExtractBase::removeRenamedArchiveFile(const NzbFileData &nzbFileData)
+{
 
     // if file has been renamed, par2 may have created the archive with the original name suppress it :
     if (!nzbFileData.getRenamedFileName().isEmpty()) {
@@ -228,12 +221,12 @@ void ExtractBase::removeRenamedArchiveFile(const NzbFileData& nzbFileData) {
 
 }
 
-
 //==============================================================================================//
 //                                         SLOTS                                                //
 //==============================================================================================//
 
-void ExtractBase::extractReadyReadSlot(){
+void ExtractBase::extractReadyReadSlot()
+{
 
     bool passwordCheckIsNextLine = false;
 
@@ -267,9 +260,8 @@ void ExtractBase::extractReadyReadSlot(){
 
 }
 
-
-
-void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitStatus exitStatus) {
+void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitStatus exitStatus)
+{
 
     //qCDebug(KWOOTY_LOG) << "exitCode" << exitCode << " exitStatus " << exitStatus;
 
@@ -294,7 +286,7 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
     else {
 
         // 1. exit without errors :
-        if (exitStatus == QProcess::NormalExit && exitCode == QProcess::NormalExit){
+        if (exitStatus == QProcess::NormalExit && exitCode == QProcess::NormalExit) {
 
             // notify repairDecompressThread that extraction is over :
             this->nzbCollectionData.setExtractTerminateStatus(ExtractSuccessStatus);
@@ -320,7 +312,6 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
 
         }
 
-
         // notify parent that extraction has finished :
         NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
 
@@ -334,9 +325,8 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
 
 }
 
-
-
-void ExtractBase::passwordEnteredByUserSlot(bool passwordEntered, const QString &password) {
+void ExtractBase::passwordEnteredByUserSlot(bool passwordEntered, const QString &password)
+{
 
     // this slot is shared between 7zextract and rarextract instances
     // do processing for proper instance : the one whih archivePasswordStatus set to ArchiveIsPassworded :
@@ -363,17 +353,14 @@ void ExtractBase::passwordEnteredByUserSlot(bool passwordEntered, const QString 
             // notify repairDecompressThread that extraction is over :
             emit extractProcessEndedSignal();
 
-
-
         }
 
     }
 
 }
 
-
-
-void ExtractBase::emitProcessUpdate(const QVariant& parentIdentifer, const int& progression, const UtilityNamespace::ItemStatus& status, const UtilityNamespace::ItemTarget& itemTarget) {
+void ExtractBase::emitProcessUpdate(const QVariant &parentIdentifer, const int &progression, const UtilityNamespace::ItemStatus &status, const UtilityNamespace::ItemTarget &itemTarget)
+{
 
     PostDownloadInfoData repairDecompressInfoData;
     repairDecompressInfoData.initRepairDecompress(parentIdentifer, progression, status, itemTarget);
@@ -381,15 +368,12 @@ void ExtractBase::emitProcessUpdate(const QVariant& parentIdentifer, const int& 
 
 }
 
-
-
-
 //==============================================================================================//
 //                                     emit  SIGNALS                                            //
 //==============================================================================================//
 
-
-void ExtractBase::findItemAndNotifyUser(const QString& fileNameStr, const UtilityNamespace::ItemStatus status, UtilityNamespace::ItemTarget itemTarget) {
+void ExtractBase::findItemAndNotifyUser(const QString &fileNameStr, const UtilityNamespace::ItemStatus status, UtilityNamespace::ItemTarget itemTarget)
+{
 
     for (int i = 0; i < this->nzbFileDataList.size(); ++i) {
 
@@ -412,11 +396,10 @@ void ExtractBase::findItemAndNotifyUser(const QString& fileNameStr, const Utilit
     this->emitProgressToArchivesWithCurrentStatus(status, itemTarget, this->extractProgressValue);
 }
 
+void ExtractBase::emitProgressToArchivesWithCurrentStatus(const UtilityNamespace::ItemStatus status, const UtilityNamespace::ItemTarget itemTarget,  const int percentage)
+{
 
-
-void ExtractBase::emitProgressToArchivesWithCurrentStatus(const UtilityNamespace::ItemStatus status, const UtilityNamespace::ItemTarget itemTarget,  const int percentage) {
-
-    foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData &nzbFileData, this->nzbFileDataList) {
 
         if (nzbFileData.getExtractProgressionStep() == status) {
 
@@ -429,24 +412,22 @@ void ExtractBase::emitProgressToArchivesWithCurrentStatus(const UtilityNamespace
 
 }
 
+void ExtractBase::emitFinishToArchivesWithoutErrors(const UtilityNamespace::ItemStatus status, const int percentage)
+{
 
-
-void ExtractBase::emitFinishToArchivesWithoutErrors(const UtilityNamespace::ItemStatus status, const int percentage) {
-
-    foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData &nzbFileData, this->nzbFileDataList) {
 
         UtilityNamespace::ItemStatus nzbFileDataStatus = nzbFileData.getExtractProgressionStep();
 
         // look for files without extracting errors :
         if (nzbFileDataStatus != ExtractBadCrcStatus) {
 
-            if (nzbFileDataStatus == ExtractStatus){
+            if (nzbFileDataStatus == ExtractStatus) {
 
                 this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, status, ChildItemTarget);
 
             }
-        }
-        else {
+        } else {
 
             // only used to send *progression %* value for files with extracting errors :
             this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, nzbFileData.getExtractProgressionStep(), ChildItemTarget);
@@ -456,10 +437,10 @@ void ExtractBase::emitFinishToArchivesWithoutErrors(const UtilityNamespace::Item
     }
 }
 
+void ExtractBase::emitStatusToAllArchives(const int &progress, const UtilityNamespace::ItemStatus status, const UtilityNamespace::ItemTarget target)
+{
 
-void ExtractBase::emitStatusToAllArchives(const int& progress, const UtilityNamespace::ItemStatus status, const UtilityNamespace::ItemTarget target) {
-
-    foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData &nzbFileData, this->nzbFileDataList) {
 
         if (nzbFileData.isArchiveFile()) {
 
@@ -470,5 +451,4 @@ void ExtractBase::emitStatusToAllArchives(const int& progress, const UtilityName
     }
 
 }
-
 

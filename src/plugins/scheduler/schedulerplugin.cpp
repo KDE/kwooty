@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "schedulerplugin.h"
 
 #include "kwooty_debug.h"
@@ -28,30 +27,27 @@
 #include "mainwindow.h"
 #include "core.h"
 
-
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<SchedulerPlugin>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_schedulerplugin"))
 
-
-SchedulerPlugin::SchedulerPlugin(QObject* parent, const QList<QVariant>&) : Plugin(parent)
+SchedulerPlugin::SchedulerPlugin(QObject *parent, const QList<QVariant> &) : Plugin(parent)
 {
 
 }
-
 
 SchedulerPlugin::~SchedulerPlugin()
 {
 
 }
 
-
-
-void SchedulerPlugin::load() {
+void SchedulerPlugin::load()
+{
 
     this->scheduler = new Scheduler(this);
 }
 
-void SchedulerPlugin::unload() {
+void SchedulerPlugin::unload()
+{
 
     // disable speed limit when plugin is unloaded :
     this->scheduler->disableSpeedLimit();
@@ -60,8 +56,8 @@ void SchedulerPlugin::unload() {
 
 }
 
-
-void SchedulerPlugin::configUpdated() {
+void SchedulerPlugin::configUpdated()
+{
     this->scheduler->settingsChanged();
 }
 #include "schedulerplugin.moc"

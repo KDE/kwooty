@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef ICONTEXTWIDGET_H
 #define ICONTEXTWIDGET_H
 
@@ -28,8 +27,8 @@
 #include "utilities/utilityserverstatus.h"
 #include "statusbarwidgetbase.h"
 
-
-class IconTextWidget : public StatusBarWidgetBase {
+class IconTextWidget : public StatusBarWidgetBase
+{
 
     Q_OBJECT
 
@@ -41,30 +40,29 @@ public:
         SwitchIcon
     };
 
-    IconTextWidget(QWidget*, MyStatusBar::WidgetIdentity);
+    IconTextWidget(QWidget *, MyStatusBar::WidgetIdentity);
 
     void setIconMode(const IconMode = NormalModeIcon);
-    void setIcon(const ServerConnectionIcon&);
-    void setIcon(const QString&);
-    void setIcon(const QString&, const QString&);
-    void setIconOnly(const QString&, const QString& = QString());
-    void setText(const QString&);
-    void setTextOnly(const QString&);
+    void setIcon(const ServerConnectionIcon &);
+    void setIcon(const QString &);
+    void setIcon(const QString &, const QString &);
+    void setIconOnly(const QString &, const QString & = QString());
+    void setText(const QString &);
+    void setTextOnly(const QString &);
     QString getText() const;
     void showIcon();
     void hideIcon();
-    void setActive(const bool&);
+    void setActive(const bool &);
 
 protected:
-    void enterEvent(QEvent*) Q_DECL_OVERRIDE;
-    void leaveEvent(QEvent*) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent*) Q_DECL_OVERRIDE;
-
+    void enterEvent(QEvent *) Q_DECL_OVERRIDE;
+    void leaveEvent(QEvent *) Q_DECL_OVERRIDE;
+    void mousePressEvent(QMouseEvent *) Q_DECL_OVERRIDE;
 
 private:
 
-    QLabel* iconLabel;
-    QLabel* textLabel;
+    QLabel *iconLabel;
+    QLabel *textLabel;
     QPixmap normalIcon;
     QPixmap clearNormalIcon;
     QPixmap clearActiveIcon;
@@ -73,7 +71,7 @@ private:
     ServerConnectionIcon serverConnectionIcon;
     bool iconPressed;
 
-    void buildClearIcon(const QPixmap&, QPixmap&);
+    void buildClearIcon(const QPixmap &, QPixmap &);
 
 Q_SIGNALS:
     void activeSignal(bool);

@@ -18,48 +18,40 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef CLIENTSOBSERVER_H
 #define CLIENTSOBSERVER_H
-
 
 #include "clientsobserverbase.h"
 
 class Core;
 class StatsInfoBuilder;
 
-
 class ClientsObserver : public ClientsObserverBase
 {
     Q_OBJECT
 
-
 public:
-    ClientsObserver(Core*);
-    StatsInfoBuilder* getStatsInfoBuilder() const;
+    ClientsObserver(Core *);
+    StatsInfoBuilder *getStatsInfoBuilder() const;
     void fullFileSizeUpdate(const quint64, const quint64);
     void sendFullUpdate();
     quint64 getTotalSize() const;
     void resetTotalBytesDownloaded();
-    bool isSingleServer(QString&) const;
+    bool isSingleServer(QString &) const;
     bool isSslActive() const;
-
 
 private:
 
-    Core* parent;
-    StatsInfoBuilder* statsInfoBuilder;
+    Core *parent;
+    StatsInfoBuilder *statsInfoBuilder;
     quint64 totalFiles;
     quint64 totalSize;
 
     void resetVariables();
 
-
-
 Q_SIGNALS:
     void updateConnectionStatusSignal();
     void updateFileSizeInfoSignal(const quint64, const quint64);
-
 
 public Q_SLOTS:
 
@@ -68,10 +60,6 @@ public Q_SLOTS:
     void encryptionStatusSlot(const bool, const QString &, const bool, const QString &, const QStringList &);
     void nntpErrorSlot(const int);
     void decrementSlot(const quint64, const int);
-
-
-
-
 
 };
 

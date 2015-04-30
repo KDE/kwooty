@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef CATEGORIESMODEL_H
 #define CATEGORIESMODEL_H
 
@@ -26,7 +25,8 @@
 
 #include "mimedata.h"
 
-class CategoriesModel : public QStandardItemModel {
+class CategoriesModel : public QStandardItemModel
+{
 
     Q_OBJECT
 
@@ -43,33 +43,31 @@ public:
         ColumnTarget
     };
 
+    explicit CategoriesModel(QObject *);
 
-    explicit CategoriesModel(QObject*);
-
-    MimeData loadMimeData(QStandardItem*);
-    MimeData loadMimeData(const QModelIndex&);
-    QList<MimeData> retrieveMimeDataListFromItem(QStandardItem*);
-    QStandardItem* retrieveItemFromCategory(const QString&, QStandardItem* = 0);
-    QString getMainCategory(const QModelIndex&);
-    QString getMainCategory(QStandardItem*);
-    int retrieveLexicalTextPosition(const QString&, QStandardItem*);
-    bool isDuplicateSubCategory(QStandardItem*, const QString&);
-    bool isSelectedItemParent(QStandardItem*);
-    bool isSelectedItemParent(const QModelIndex&);
-    void storeMimeData(QStandardItem*, MimeData);
-    void addParentCategoryListToModel(const QStringList&);
+    MimeData loadMimeData(QStandardItem *);
+    MimeData loadMimeData(const QModelIndex &);
+    QList<MimeData> retrieveMimeDataListFromItem(QStandardItem *);
+    QStandardItem *retrieveItemFromCategory(const QString &, QStandardItem * = 0);
+    QString getMainCategory(const QModelIndex &);
+    QString getMainCategory(QStandardItem *);
+    int retrieveLexicalTextPosition(const QString &, QStandardItem *);
+    bool isDuplicateSubCategory(QStandardItem *, const QString &);
+    bool isSelectedItemParent(QStandardItem *);
+    bool isSelectedItemParent(const QModelIndex &);
+    void storeMimeData(QStandardItem *, MimeData);
+    void addParentCategoryListToModel(const QStringList &);
     void init();
 
-    QStandardItem* getCategoryItem(QStandardItem*);
-    QStandardItem* getCategoryItem(const QModelIndex&);
-    QStandardItem* getTargetItem(QStandardItem*);
-    QStandardItem* getColumnItem(const QModelIndex&, CategoriesModel::ColumnNumber);
-    QStandardItem* getParentItem(const QModelIndex&);
-
+    QStandardItem *getCategoryItem(QStandardItem *);
+    QStandardItem *getCategoryItem(const QModelIndex &);
+    QStandardItem *getTargetItem(QStandardItem *);
+    QStandardItem *getColumnItem(const QModelIndex &, CategoriesModel::ColumnNumber);
+    QStandardItem *getParentItem(const QModelIndex &);
 
 private:
 
-    bool stringPos(const QString&, const QString&, int&);
+    bool stringPos(const QString &, const QString &, int &);
 };
 
 #endif // CATEGORIESMODEL_H

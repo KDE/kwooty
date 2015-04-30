@@ -18,37 +18,34 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "statusbarwidgetbase.h"
 
-
-
-StatusBarWidgetBase::StatusBarWidgetBase(QWidget* parent, MyStatusBar::WidgetIdentity widgetIdentity) : QWidget(parent) {
+StatusBarWidgetBase::StatusBarWidgetBase(QWidget *parent, MyStatusBar::WidgetIdentity widgetIdentity) : QWidget(parent)
+{
 
     this->widgetIdentity = widgetIdentity;
     this->setupConnections();
 
 }
 
-
-void StatusBarWidgetBase::setupConnections() {
+void StatusBarWidgetBase::setupConnections()
+{
 
     // notify status bar that double mouse click on widget has been catched :
-    connect (this,
-             SIGNAL(statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity)),
-             this->parent(),
-             SLOT(statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity)));
-
+    connect(this,
+            SIGNAL(statusBarWidgetDblClickSignal(MyStatusBar::WidgetIdentity)),
+            this->parent(),
+            SLOT(statusBarWidgetDblClickSlot(MyStatusBar::WidgetIdentity)));
 
 }
 
-
-MyStatusBar::WidgetIdentity StatusBarWidgetBase::getWidgetIdentity() {
+MyStatusBar::WidgetIdentity StatusBarWidgetBase::getWidgetIdentity()
+{
     return this->widgetIdentity;
 }
 
-
-void StatusBarWidgetBase::mouseDoubleClickEvent(QMouseEvent* event) {
+void StatusBarWidgetBase::mouseDoubleClickEvent(QMouseEvent *event)
+{
 
     emit statusBarWidgetDblClickSignal(this->widgetIdentity);
     QWidget::mouseDoubleClickEvent(event);

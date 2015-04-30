@@ -31,46 +31,43 @@ class Core;
 class ServerGroup;
 class SegmentBuffer;
 
-
-class KWOOTY_EXPORT ServerManager : public QObject {
+class KWOOTY_EXPORT ServerManager : public QObject
+{
 
     Q_OBJECT
 
 public:
 
-    explicit ServerManager(Core*);
-    ServerGroup* getNextTargetServer(ServerGroup*);
-    ServerGroup* getServerGroupById(const int&);
-    SegmentBuffer* getSegmentBuffer();
-    quint64 retrieveServerDownloadSpeed(const int&) const;
-    quint64 retrieveCumulatedDownloadSpeed(const int&) const;
+    explicit ServerManager(Core *);
+    ServerGroup *getNextTargetServer(ServerGroup *);
+    ServerGroup *getServerGroupById(const int &);
+    SegmentBuffer *getSegmentBuffer();
+    quint64 retrieveServerDownloadSpeed(const int &) const;
+    quint64 retrieveCumulatedDownloadSpeed(const int &) const;
     int getServerNumber() const;
     bool areAllServersEncrypted() const;
     bool isSessionRestoredNoJobs() const;
-    bool currentIsFirstMasterAvailable(const ServerGroup*) const;
-    void downloadWithAnotherBackupServer(ServerGroup*);
+    bool currentIsFirstMasterAvailable(const ServerGroup *) const;
+    void downloadWithAnotherBackupServer(ServerGroup *);
     void masterServerAvailabilityChanges();
-    void setLimitServerDownloadSpeed(const int&, const qint64&);
-    void setBandwidthMode(const BandwidthClientMode&);
+    void setLimitServerDownloadSpeed(const int &, const qint64 &);
+    void setBandwidthMode(const BandwidthClientMode &);
     void resetAllServerConnection();
 
-
 private:
-    Core* mParent;
-    QMap<int, ServerGroup*> mIdServerGroupMap;
-    ServerGroup* mCurrentMasterServer;
-    SegmentBuffer* mSegmentBuffer;
+    Core *mParent;
+    QMap<int, ServerGroup *> mIdServerGroupMap;
+    ServerGroup *mCurrentMasterServer;
+    SegmentBuffer *mSegmentBuffer;
 
     void setupConnections();
 
 Q_SIGNALS:
     void serverManagerSettingsChangedSignal();
 
-
 public Q_SLOTS:
     void settingsChangedSlot();
     void requestClientConnectionSlot();
-
 
 };
 

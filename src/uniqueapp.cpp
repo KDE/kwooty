@@ -40,10 +40,8 @@ UniqueApp::~UniqueApp()
     }
 }
 
-
-
-
-int UniqueApp::newInstance() {
+int UniqueApp::newInstance()
+{
 
     // create a new instance :
     if (!this->mKwootyInstance) {
@@ -55,11 +53,11 @@ int UniqueApp::newInstance() {
     }
 
     // instance already exists :
-    if ( this->mKwootyInstance ){
+    if (this->mKwootyInstance) {
 
-        if (this->mMainWindow ) {
+        if (this->mMainWindow) {
 
-            KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+            KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
             // open nzb files set as argument :
             for (int i = 0; i < args->count(); ++i) {
@@ -72,8 +70,8 @@ int UniqueApp::newInstance() {
             if (args->count() == 0) {
 
                 // display main window if it only visible is systray :
-                if ( !this->isSessionRestored() &&
-                     !this->mMainWindow->isVisible() ) {
+                if (!this->isSessionRestored() &&
+                        !this->mMainWindow->isVisible()) {
 
                     this->mMainWindow->show();
 
@@ -103,5 +101,4 @@ int UniqueApp::newInstance() {
 
     return 0;
 }
-
 

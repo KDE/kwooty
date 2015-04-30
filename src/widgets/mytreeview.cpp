@@ -37,9 +37,8 @@
 #include "actions/actionsmanager.h"
 #include "kwootysettings.h"
 
-
-
-MyTreeView::MyTreeView(MainWindow* _mainWindow) : QTreeView(_mainWindow->getCentralWidget()) {
+MyTreeView::MyTreeView(MainWindow *_mainWindow) : QTreeView(_mainWindow->getCentralWidget())
+{
 
     mainWindow = _mainWindow;
 
@@ -60,10 +59,10 @@ MyTreeView::MyTreeView(MainWindow* _mainWindow) : QTreeView(_mainWindow->getCent
     // retrieve setting about short or normal display for file names :
     displayTinyFileName = Settings::displayTinyFileName();
 
-
 }
 
-void MyTreeView::achieveInit() {
+void MyTreeView::achieveInit()
+{
 
     setModel(getDownloadModel());
 
@@ -75,48 +74,44 @@ void MyTreeView::achieveInit() {
 
 }
 
-
-
-StandardItemModel* MyTreeView::getDownloadModel() {
+StandardItemModel *MyTreeView::getDownloadModel()
+{
     return getCore()->getDownloadModel();
 }
 
-Core* MyTreeView::getCore() {
+Core *MyTreeView::getCore()
+{
     return mainWindow->getCore();
 }
 
-
-void MyTreeView::setupConnections() {
+void MyTreeView::setupConnections()
+{
 
     // enable or disable buttons according to selected items :
-    connect (selectionModel(),
-             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-             getCore()->getActionsManager()->getActionButtonsManager(),
-             SLOT(selectedItemSlot()));
-
+    connect(selectionModel(),
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            getCore()->getActionsManager()->getActionButtonsManager(),
+            SLOT(selectedItemSlot()));
 
     // settings have changed :
-    connect (getCore(),
-             SIGNAL(settingsChangedSignal()),
-             this,
-             SLOT(settingsChangedSlot()));
-
+    connect(getCore(),
+            SIGNAL(settingsChangedSignal()),
+            this,
+            SLOT(settingsChangedSlot()));
 
     // treeview has been expanded :
-    connect (this,
-             SIGNAL(expanded(QModelIndex)),
-             this,
-             SLOT(expandedSlot(QModelIndex)));
-
+    connect(this,
+            SIGNAL(expanded(QModelIndex)),
+            this,
+            SLOT(expandedSlot(QModelIndex)));
 
 }
 
-
-void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
+void MyTreeView::contextMenuEvent(QContextMenuEvent *event)
+{
 
     QMenu contextMenu(this);
-    KActionCollection* actionCollection = mainWindow->actionCollection();
-
+    KActionCollection *actionCollection = mainWindow->actionCollection();
 
     // search for pause parents :
     if (getCore()->getModelQuery()->searchParentItemPause()) {
@@ -129,7 +124,7 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
     }
 
     // get item under mouse :
-    QStandardItem* item = getDownloadModel()->itemFromIndex(indexAt(event->pos()));
+    QStandardItem *item = getDownloadModel()->itemFromIndex(indexAt(event->pos()));
 
     // add actions if right-clicked an item :
     if (item) {
@@ -151,13 +146,12 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
         }
 
         // allow manual extract process from menu if auto post process disabled :
-        if ( !Settings::groupBoxAutoDecompress() ||
-             !Settings::groupBoxAutoRepair() ) {
+        if (!Settings::groupBoxAutoDecompress() ||
+                !Settings::groupBoxAutoRepair()) {
             contextMenu.addAction(actionCollection->action("manualExtract"));
         }
 
     }
-
 
     contextMenu.addAction(actionCollection->action("retryDownload"));
     contextMenu.addSeparator();
@@ -174,7 +168,6 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
 
     emit addExternalActionSignal(&contextMenu, item);
 
-
     // if menu is not empty display it :
     if (!contextMenu.actions().isEmpty()) {
         contextMenu.exec(event->globalPos());
@@ -182,17 +175,18 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent* event) {
 
 }
 
-
-
-void MyTreeView::dragEnterEvent(QDragEnterEvent* event) {
+void MyTreeView::dragEnterEvent(QDragEnterEvent *event)
+{
     event->acceptProposedAction();
 }
 
-void MyTreeView::dragMoveEvent(QDragMoveEvent* event) {
+void MyTreeView::dragMoveEvent(QDragMoveEvent *event)
+{
     event->acceptProposedAction();
 }
 
-void MyTreeView::dropEvent(QDropEvent* event) {
+void MyTreeView::dropEvent(QDropEvent *event)
+{
 
     // add drag and drop support :
     const QMimeData *mimeData = event->mimeData();
@@ -202,7 +196,7 @@ void MyTreeView::dropEvent(QDropEvent* event) {
         // get urls of dropped files :
         QList<QUrl> urlList = mimeData->urls();
 
-        foreach (const KUrl& nzbUrl, urlList) {
+        foreach (const KUrl &nzbUrl, urlList) {
 
             // filter by .nzb extension :
             if (nzbUrl.url().endsWith(".nzb", Qt::CaseInsensitive)) {
@@ -218,10 +212,8 @@ void MyTreeView::dropEvent(QDropEvent* event) {
     event->acceptProposedAction();
 }
 
-
-
-
-void MyTreeView::setHeaderLabels() {
+void MyTreeView::setHeaderLabels()
+{
 
     QStringList headerLabels;
     headerLabels.append(i18n("File Name"));
@@ -235,15 +227,15 @@ void MyTreeView::setHeaderLabels() {
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void MyTreeView::expandedSlot(const QModelIndex& index) {
+void MyTreeView::expandedSlot(const QModelIndex &index)
+{
 
     int maxFileNameSize = 0;
     int maxSizeTextSize = 0;
     int offset = 0;
 
     // retrieve maximum child fileName and fileSize text size :
-    QStandardItem* parentItem = getDownloadModel()->itemFromIndex(index);
+    QStandardItem *parentItem = getDownloadModel()->itemFromIndex(index);
 
     for (int i = 0; i < parentItem->rowCount(); ++i) {
 
@@ -252,11 +244,9 @@ void MyTreeView::expandedSlot(const QModelIndex& index) {
         QString fileNameText = getDownloadModel()->itemFromIndex(fileNameIndex)->text();
         int currentfileNameTextSize = fontMetrics().width(fileNameText);
 
-
         if (currentfileNameTextSize > maxFileNameSize) {
             maxFileNameSize = currentfileNameTextSize;
         }
-
 
         // get corresponding file size index :
         QModelIndex sizeIndex = getDownloadModel()->getSizeItemFromIndex(fileNameIndex)->index();
@@ -270,14 +260,12 @@ void MyTreeView::expandedSlot(const QModelIndex& index) {
         offset = visualRect(fileNameIndex).left() + 2 * KIconLoader::SizeSmall;
     }
 
-
-
     // compute available space :
     int availableSpace = width() -
-            columnWidth(PROGRESS_COLUMN) -
-            columnWidth(STATE_COLUMN) -
-            maxSizeTextSize -
-            offset;
+                         columnWidth(PROGRESS_COLUMN) -
+                         columnWidth(STATE_COLUMN) -
+                         maxSizeTextSize -
+                         offset;
 
     // add offset (child branch + icon widths) to fileName size :
     maxFileNameSize += offset;
@@ -288,33 +276,30 @@ void MyTreeView::expandedSlot(const QModelIndex& index) {
         if (maxFileNameSize > columnWidth(FILE_NAME_COLUMN))  {
             setColumnWidth(FILE_NAME_COLUMN, maxFileNameSize);
         }
-    }
-    else if (availableSpace > columnWidth(FILE_NAME_COLUMN)) {
+    } else if (availableSpace > columnWidth(FILE_NAME_COLUMN)) {
         setColumnWidth(FILE_NAME_COLUMN, availableSpace);
     }
 
-
 }
 
-
-
-void MyTreeView::displayLongOrTinyFileName() {
+void MyTreeView::displayLongOrTinyFileName()
+{
 
     if (displayTinyFileName != Settings::displayTinyFileName()) {
 
-        StandardItemModel* downloadModel = getDownloadModel();
+        StandardItemModel *downloadModel = getDownloadModel();
         // retrieve parent nzb :
-        QStandardItem* rootItem = downloadModel->invisibleRootItem();
+        QStandardItem *rootItem = downloadModel->invisibleRootItem();
 
         for (int i = 0; i < downloadModel->invisibleRootItem()->rowCount(); ++i) {
 
-            QStandardItem* nzbItem = rootItem->child(i);
+            QStandardItem *nzbItem = rootItem->child(i);
 
             // retrieve nzb children :
             for (int j = 0; j < nzbItem->rowCount(); j++) {
 
                 // get corresponding file name index :
-                QStandardItem* fileNameItem = nzbItem->child(j, FILE_NAME_COLUMN);
+                QStandardItem *fileNameItem = nzbItem->child(j, FILE_NAME_COLUMN);
                 NzbFileData nzbFileData = downloadModel->getNzbFileDataFromIndex(fileNameItem->index());
 
                 // display tiny or long file name according to settings :
@@ -329,16 +314,15 @@ void MyTreeView::displayLongOrTinyFileName() {
 
 }
 
-
-QString MyTreeView::getDisplayedFileName(const NzbFileData& currentNzbFileData) const {
+QString MyTreeView::getDisplayedFileName(const NzbFileData &currentNzbFileData) const
+{
 
     QString fileName;
 
     if (Settings::displayTinyFileName()) {
         fileName = currentNzbFileData.getReducedFileName();
 
-    }
-    else {
+    } else {
         fileName = currentNzbFileData.getFileName();
     }
 
@@ -346,15 +330,12 @@ QString MyTreeView::getDisplayedFileName(const NzbFileData& currentNzbFileData) 
 
 }
 
-
-
-
-void MyTreeView::settingsChangedSlot() {
+void MyTreeView::settingsChangedSlot()
+{
 
     // change UI related settings :
     setAnimated(Settings::animateTreeView());
     setAlternatingRowColors(Settings::alternateColors());
     displayLongOrTinyFileName();
 }
-
 

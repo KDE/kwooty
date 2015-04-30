@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef NOTIFICATIONMANAGER_H
 #define NOTIFICATIONMANAGER_H
 
@@ -32,28 +31,24 @@ using namespace UtilityNamespace;
 
 class Core;
 
-
-class NotificationManager : public QObject {
+class NotificationManager : public QObject
+{
 
     Q_OBJECT
 
-
 public:
-    explicit NotificationManager(Core*);
+    explicit NotificationManager(Core *);
 
 private:
 
-    Core* parent;
+    Core *parent;
     QHash<UtilityNamespace::ItemStatus, QString> finishSatusTextMap;
 
     void init();
     void setupConnections();
-    void sendEvent(const QString&, const QString&, KNotification::NotificationFlags = KNotification::CloseOnTimeout);
-    
-
+    void sendEvent(const QString &, const QString &, KNotification::NotificationFlags = KNotification::CloseOnTimeout);
 
 Q_SIGNALS:
-
 
 public Q_SLOTS:
     void jobFinishSlot(const UtilityNamespace::ItemStatus, const QString &);

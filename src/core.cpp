@@ -52,9 +52,8 @@
 #include "observers/queuefileobserver.h"
 #include "data/itemstatusdata.h"
 
-
-
-Core::Core(MainWindow* mainWindow) : QObject(mainWindow) {
+Core::Core(MainWindow *mainWindow) : QObject(mainWindow)
+{
 
     this->mainWindow = mainWindow;
 
@@ -107,15 +106,16 @@ Core::Core(MainWindow* mainWindow) : QObject(mainWindow) {
 
 }
 
-Core::~Core() {
+Core::~Core()
+{
 
     delete this->segmentsDecoderThread;
     delete this->repairDecompressThread;
 
 }
 
-
-void Core::emitDataHasArrived(const QModelIndex& appendedIndex) {
+void Core::emitDataHasArrived(const QModelIndex &appendedIndex)
+{
 
     // first notify that data have just be appended for pre-processing :
     emit dataAboutToArriveSignal(appendedIndex);
@@ -125,9 +125,8 @@ void Core::emitDataHasArrived(const QModelIndex& appendedIndex) {
 
 }
 
-
-
-void Core::handleNzbFile(QFile& file, const QString& nzbName, const QList<GlobalFileData>& inGlobalFileDataList) {
+void Core::handleNzbFile(QFile &file, const QString &nzbName, const QList<GlobalFileData> &inGlobalFileDataList)
+{
 
     bool normalNzbFileProcessing = inGlobalFileDataList.isEmpty();
 
@@ -146,7 +145,6 @@ void Core::handleNzbFile(QFile& file, const QString& nzbName, const QList<Global
         globalFileDataList = inGlobalFileDataList;
 
     }
-
 
     // insert the data from file into the download model :
     if (!globalFileDataList.isEmpty()) {
@@ -177,11 +175,10 @@ void Core::handleNzbFile(QFile& file, const QString& nzbName, const QList<Global
 
     }
 
-
 }
 
-
-int Core::savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType, const SaveFileBehavior saveFileBehavior) {
+int Core::savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdownType, const SaveFileBehavior saveFileBehavior)
+{
 
     int answer = this->dataRestorer->saveQueueData(saveFileBehavior);
 
@@ -194,8 +191,8 @@ int Core::savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdo
     return answer;
 }
 
-
-void Core::restoreDataFromPreviousSession(const QList<GlobalFileData>& globalFileDataList) {
+void Core::restoreDataFromPreviousSession(const QList<GlobalFileData> &globalFileDataList)
+{
 
     // instanciate a QFile to only get the name of the nzb needed by handleNzbFile();
     NzbFileData nzbFileData = globalFileDataList.at(0).getNzbFileData();
@@ -208,7 +205,7 @@ void Core::restoreDataFromPreviousSession(const QList<GlobalFileData>& globalFil
     for (int i = 0; i < this->downloadModel->rowCount(); ++i) {
 
         // retrieve nzb parent item :
-        QStandardItem* parentFileNameItem = this->downloadModel->item(i, FILE_NAME_COLUMN);
+        QStandardItem *parentFileNameItem = this->downloadModel->item(i, FILE_NAME_COLUMN);
         this->itemParentUpdater->updateNzbItems(parentFileNameItem->index());
 
     }
@@ -218,13 +215,12 @@ void Core::restoreDataFromPreviousSession(const QList<GlobalFileData>& globalFil
 
 }
 
+QModelIndex Core::setDataToModel(const QList<GlobalFileData> &globalFileDataList, const QString &nzbName)
+{
 
-
-QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList, const QString& nzbName) {
-
-    QStandardItem* nzbNameItem = new QStandardItem(nzbName);
-    QStandardItem* nzbStateItem = new QStandardItem();
-    QStandardItem* nzbSizeItem = new QStandardItem();
+    QStandardItem *nzbNameItem = new QStandardItem(nzbName);
+    QStandardItem *nzbStateItem = new QStandardItem();
+    QStandardItem *nzbSizeItem = new QStandardItem();
 
     // add the nzb items to the model :
     int nzbNameItemRow = this->downloadModel->rowCount();
@@ -234,14 +230,13 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
     this->downloadModel->setItem(nzbNameItemRow, STATE_COLUMN, nzbStateItem);
     this->downloadModel->setItem(nzbNameItemRow, PROGRESS_COLUMN, new QStandardItem());
 
-
     quint64 nzbFilesSize = 0;
     int par2FileNumber = 0;
     bool badCrc = false;
     NzbFileData nzbFileData;
 
     // add children to parent (nzbNameItem) :
-    foreach (const GlobalFileData& currentGlobalFileData, globalFileDataList) {
+    foreach (const GlobalFileData &currentGlobalFileData, globalFileDataList) {
 
         // populate children :
         this->addParentItem(nzbNameItem, currentGlobalFileData);
@@ -278,16 +273,14 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
     // set size :
     nzbSizeItem->setData(qVariantFromValue(nzbFilesSize), SizeRole);
 
-
     // expand treeView :
     this->mainWindow->getTreeView()->setExpanded(nzbNameItem->index(), Settings::expandTreeView());
 
     // alternate row color :
     this->mainWindow->getTreeView()->setAlternatingRowColors(Settings::alternateColors());
 
-
     // enable / disable smart par2 download :
-    if ( !badCrc && Settings::smartPar2Download() && (par2FileNumber < globalFileDataList.size()) ) {
+    if (!badCrc && Settings::smartPar2Download() && (par2FileNumber < globalFileDataList.size())) {
 
         this->actionsManager->changePar2FilesStatus(nzbNameItem->index(), WaitForPar2IdleStatus);
 
@@ -297,9 +290,8 @@ QModelIndex Core::setDataToModel(const QList<GlobalFileData>& globalFileDataList
 
 }
 
-
-
-void Core::addParentItem (QStandardItem* nzbNameItem, const GlobalFileData& currentGlobalFileData) {
+void Core::addParentItem(QStandardItem *nzbNameItem, const GlobalFileData &currentGlobalFileData)
+{
 
     // get the current row of the nzbName item :
     int nzbNameItemNextRow = nzbNameItem->rowCount();
@@ -307,18 +299,17 @@ void Core::addParentItem (QStandardItem* nzbNameItem, const GlobalFileData& curr
     const NzbFileData currentNzbFileData  = currentGlobalFileData.getNzbFileData();
 
     // add the (consice) file name as parent's item :
-    QStandardItem* fileNameItem = new QStandardItem(this->getTreeView()->getDisplayedFileName(currentNzbFileData));
+    QStandardItem *fileNameItem = new QStandardItem(this->getTreeView()->getDisplayedFileName(currentNzbFileData));
     nzbNameItem->setChild(nzbNameItemNextRow, FILE_NAME_COLUMN, fileNameItem);
 
-    QStandardItem* parentStateItem = new QStandardItem();
+    QStandardItem *parentStateItem = new QStandardItem();
     nzbNameItem->setChild(nzbNameItemNextRow, STATE_COLUMN, parentStateItem);
 
-    QStandardItem* parentSizeItem = new QStandardItem();
+    QStandardItem *parentSizeItem = new QStandardItem();
     nzbNameItem->setChild(nzbNameItemNextRow, SIZE_COLUMN, parentSizeItem);
 
-    QStandardItem* parentProgressItem = new QStandardItem();
+    QStandardItem *parentProgressItem = new QStandardItem();
     nzbNameItem->setChild(nzbNameItemNextRow, PROGRESS_COLUMN, parentProgressItem);
-
 
     // set data to fileNameItem :
     QVariant variant;
@@ -342,7 +333,6 @@ void Core::addParentItem (QStandardItem* nzbNameItem, const GlobalFileData& curr
     nzbNameItem->setChild(nzbNameItemNextRow, PROGRESS_COLUMN, parentProgressItem);
     parentProgressItem->setData(qVariantFromValue(currentGlobalFileData.getProgressValue()), ProgressRole);
 
-
     // if the current file name corresponds to a par2 file :
     if (currentNzbFileData.isPar2File()) {
 
@@ -353,32 +343,31 @@ void Core::addParentItem (QStandardItem* nzbNameItem, const GlobalFileData& curr
 
 }
 
-
-
-void Core::statusBarFileSizeUpdate() {
+void Core::statusBarFileSizeUpdate()
+{
 
     quint64 size = 0;
     quint64 files = 0;
 
     // get the root item :
-    QStandardItem* rootItem = downloadModel->invisibleRootItem();
+    QStandardItem *rootItem = downloadModel->invisibleRootItem();
 
     // parse nzb items :
     for (int i = 0; i < rootItem->rowCount(); ++i) {
 
-        QStandardItem* nzbItem = rootItem->child(i);
+        QStandardItem *nzbItem = rootItem->child(i);
 
         // parse nzb children :
         for (int j = 0; j < nzbItem->rowCount(); j++) {
 
-            QStandardItem* statusItem = nzbItem->child(j, STATE_COLUMN);
+            QStandardItem *statusItem = nzbItem->child(j, STATE_COLUMN);
 
             // if the item is pending (Idle, Download, Paused, Pausing states), processes it :
             UtilityNamespace::ItemStatus status = downloadModel->getStatusFromStateItem(statusItem);
 
             if (Utility::isInDownloadProcess(status))  {
 
-                QStandardItem* sizeItem = nzbItem->child(j, SIZE_COLUMN);
+                QStandardItem *sizeItem = nzbItem->child(j, SIZE_COLUMN);
                 size += sizeItem->data(SizeRole).toULongLong();
                 files++;
             }
@@ -386,13 +375,12 @@ void Core::statusBarFileSizeUpdate() {
 
     }
 
-
     this->clientsObserver->fullFileSizeUpdate(size, files);
 
 }
 
-
-void Core::initFoldersSettings() {
+void Core::initFoldersSettings()
+{
 
     // set default path for download and temporary folders if not filled by user :
     if (Settings::completedFolder().path().isEmpty()) {
@@ -405,83 +393,97 @@ void Core::initFoldersSettings() {
 
 }
 
-
-
-MainWindow* Core::getMainWindow() const {
+MainWindow *Core::getMainWindow() const
+{
     return this->mainWindow;
 }
 
-SegmentManager* Core::getSegmentManager() const {
+SegmentManager *Core::getSegmentManager() const
+{
     return this->segmentManager;
 }
 
-NzbFileHandler* Core::getNzbFileHandler() const {
+NzbFileHandler *Core::getNzbFileHandler() const
+{
     return this->nzbFileHandler;
 }
 
-StandardItemModel* Core::getDownloadModel() const {
+StandardItemModel *Core::getDownloadModel() const
+{
     return this->downloadModel;
 }
 
-StandardItemModelQuery* Core::getModelQuery() const {
+StandardItemModelQuery *Core::getModelQuery() const
+{
     return this->modelQuery;
 }
 
-
-ItemParentUpdater* Core::getItemParentUpdater() const {
+ItemParentUpdater *Core::getItemParentUpdater() const
+{
     return this->itemParentUpdater;
 }
 
-ShutdownManager* Core::getShutdownManager() const {
+ShutdownManager *Core::getShutdownManager() const
+{
     return this->shutdownManager;
 }
 
-ClientsObserver* Core::getClientsObserver() const {
+ClientsObserver *Core::getClientsObserver() const
+{
     return this->clientsObserver;
 }
 
-FileOperations* Core::getFileOperations() const {
+FileOperations *Core::getFileOperations() const
+{
     return this->fileOperations;
 }
 
-QueueFileObserver* Core::getQueueFileObserver() const {
+QueueFileObserver *Core::getQueueFileObserver() const
+{
     return this->queueFileObserver;
 }
 
-DataRestorer* Core::getDataRestorer() const {
+DataRestorer *Core::getDataRestorer() const
+{
     return this->dataRestorer;
 }
 
-ServerManager* Core::getServerManager() const {
+ServerManager *Core::getServerManager() const
+{
     return this->serverManager;
 }
 
-SegmentsDecoderThread* Core::getSegmentsDecoderThread() const {
+SegmentsDecoderThread *Core::getSegmentsDecoderThread() const
+{
     return this->segmentsDecoderThread;
 }
 
-ActionsManager* Core::getActionsManager() const {
+ActionsManager *Core::getActionsManager() const
+{
     return this->actionsManager;
 }
 
-SideBar* Core::getSideBar() const {
+SideBar *Core::getSideBar() const
+{
     return this->mainWindow->getSideBar();
 }
 
-MyTreeView* Core::getTreeView() const {
+MyTreeView *Core::getTreeView() const
+{
     return this->mainWindow->getTreeView();
 }
 
-CentralWidget* Core::getCentralWidget() const {
+CentralWidget *Core::getCentralWidget() const
+{
     return this->mainWindow->getCentralWidget();
 }
-
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-void Core::statusBarFileSizeUpdateSlot(StatusBarUpdateType statusBarUpdateType) {
+void Core::statusBarFileSizeUpdateSlot(StatusBarUpdateType statusBarUpdateType)
+{
 
     if (statusBarUpdateType == Reset) {
         // reset the status bar :
@@ -493,29 +495,29 @@ void Core::statusBarFileSizeUpdateSlot(StatusBarUpdateType statusBarUpdateType) 
     }
 }
 
-
-void Core::serverStatisticsUpdateSlot(const int serverId) {
+void Core::serverStatisticsUpdateSlot(const int serverId)
+{
 
     this->getSideBar()->serverStatisticsUpdate(serverId);
 }
 
-
-void Core::downloadWaitingPar2Slot() {
+void Core::downloadWaitingPar2Slot()
+{
 
     this->statusBarFileSizeUpdate();
     this->emitDataHasArrived();
 
 }
 
-
-void Core::saveFileErrorSlot(const int fromProcessing) {
+void Core::saveFileErrorSlot(const int fromProcessing)
+{
 
     this->actionsManager->setStartPauseDownloadAllItems(UtilityNamespace::PauseStatus);
     this->getCentralWidget()->saveFileError(fromProcessing);
 }
 
-
-void Core::extractPasswordRequiredSlot(const QString &currentArchiveFileName) {
+void Core::extractPasswordRequiredSlot(const QString &currentArchiveFileName)
+{
 
     bool passwordEntered;
     QString password = this->getCentralWidget()->extractPasswordRequired(currentArchiveFileName, passwordEntered);
@@ -524,8 +526,8 @@ void Core::extractPasswordRequiredSlot(const QString &currentArchiveFileName) {
 
 }
 
-
-void Core::updateSettingsSlot() {
+void Core::updateSettingsSlot()
+{
 
     // delegate specific settings to concerned object  :
     emit settingsChangedSignal();

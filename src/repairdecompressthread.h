@@ -34,24 +34,24 @@ class Core;
 class Repair;
 class ExtractBase;
 
-
-class RepairDecompressThread : public QObject {
+class RepairDecompressThread : public QObject
+{
 
     Q_OBJECT
 
 public:
-    explicit RepairDecompressThread(Core*);
+    explicit RepairDecompressThread(Core *);
     RepairDecompressThread();
     ~RepairDecompressThread();
-    Core* getCore();
-    void emitProcessUpdate(const PostDownloadInfoData&);
+    Core *getCore();
+    void emitProcessUpdate(const PostDownloadInfoData &);
 
 private:
-    QThread* dedicatedThread;
-    QTimer* repairDecompressTimer;
-    Core* parent;
-    Repair* repair;
-    QList<ExtractBase*> extracterList;
+    QThread *dedicatedThread;
+    QTimer *repairDecompressTimer;
+    Core *parent;
+    Repair *repair;
+    QList<ExtractBase *> extracterList;
     QList<NzbCollectionData> filesToRepairList;
     QList<NzbCollectionData> filesToExtractList;
     QList<NzbCollectionData> filesToProcessList;
@@ -60,35 +60,31 @@ private:
     void init();
     void setupConnections();
     void processPendingFiles();
-    void processRarFilesFromDifferentGroups(const QStringList&, NzbCollectionData&);
-    void processRarFilesFromSameGroup(NzbCollectionData&);
-    void preRepairProcessing(const NzbCollectionData&);
-    void notifyNzbProcessEnded(const NzbCollectionData& nzbCollectionData);
-    void propagatePostProcessFailureToPendingCollection(QList<NzbCollectionData>&, const NzbCollectionData&);
-    bool isListContainsdifferentGroups(const QList<NzbFileData>&);
-    NzbFileData tryToGuessDecodedFileName(NzbFileData&, const QList<NzbFileData>&, const QString&);
-    QStringList listDifferentFileBaseName(NzbCollectionData&);
-    QString getBaseNameFromPar2(const NzbFileData&);
-    QString getBaseNameFromRar(const NzbFileData&);
-    UtilityNamespace::ArchiveFormat getArchiveFormatFromList(const QList<NzbFileData>&);
-    ExtractBase* retrieveCorrespondingExtracter(const NzbCollectionData&);
-
-
+    void processRarFilesFromDifferentGroups(const QStringList &, NzbCollectionData &);
+    void processRarFilesFromSameGroup(NzbCollectionData &);
+    void preRepairProcessing(const NzbCollectionData &);
+    void notifyNzbProcessEnded(const NzbCollectionData &nzbCollectionData);
+    void propagatePostProcessFailureToPendingCollection(QList<NzbCollectionData> &, const NzbCollectionData &);
+    bool isListContainsdifferentGroups(const QList<NzbFileData> &);
+    NzbFileData tryToGuessDecodedFileName(NzbFileData &, const QList<NzbFileData> &, const QString &);
+    QStringList listDifferentFileBaseName(NzbCollectionData &);
+    QString getBaseNameFromPar2(const NzbFileData &);
+    QString getBaseNameFromRar(const NzbFileData &);
+    UtilityNamespace::ArchiveFormat getArchiveFormatFromList(const QList<NzbFileData> &);
+    ExtractBase *retrieveCorrespondingExtracter(const NzbCollectionData &);
 
 Q_SIGNALS:
     void updateRepairExtractSegmentSignal(PostDownloadInfoData);
 
 public Q_SLOTS:
-    void repairDecompressSlot(const NzbCollectionData&);
-    void repairProcessEndedSlot(const NzbCollectionData&);
-    void extractProcessEndedSlot(const NzbCollectionData&);
+    void repairDecompressSlot(const NzbCollectionData &);
+    void repairProcessEndedSlot(const NzbCollectionData &);
+    void extractProcessEndedSlot(const NzbCollectionData &);
 
 private Q_SLOTS:
     void startRepairSlot();
-    void startExtractSlot();    
+    void startExtractSlot();
     void processJobSlot();
-
-
 
 };
 

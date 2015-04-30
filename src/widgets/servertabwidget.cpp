@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "servertabwidget.h"
 
 #include "kwooty_debug.h"
@@ -39,9 +38,8 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
-ServerTabWidget::ServerTabWidget(PreferencesServer* parent) : KTabWidget(parent) {
-
+ServerTabWidget::ServerTabWidget(PreferencesServer *parent) : KTabWidget(parent)
+{
 
     this->preferencesServer = parent;
 
@@ -67,7 +65,6 @@ ServerTabWidget::ServerTabWidget(PreferencesServer* parent) : KTabWidget(parent)
     this->setCornerWidget(this->newTab, Qt::TopRightCorner);
     this->setCornerWidget(this->closeTab, Qt::TopLeftCorner);
 
-
     parent->mainLayout->addWidget(this);
 
     this->setFocusPolicy(Qt::NoFocus);
@@ -75,56 +72,55 @@ ServerTabWidget::ServerTabWidget(PreferencesServer* parent) : KTabWidget(parent)
 
 }
 
-
-void ServerTabWidget::setupConnections() {
+void ServerTabWidget::setupConnections()
+{
 
     // tab buttons have been clicked :
-    connect (this->newTab, SIGNAL(clicked(bool)), this, SLOT(newTabClickedSlot()));
-    connect (this->closeTab, SIGNAL(clicked(bool)), this, SLOT(closeTabClickedSlot()));
+    connect(this->newTab, SIGNAL(clicked(bool)), this, SLOT(newTabClickedSlot()));
+    connect(this->closeTab, SIGNAL(clicked(bool)), this, SLOT(closeTabClickedSlot()));
 
     // current tab has been moved by user :
-    connect (this->tabBar(), SIGNAL(tabMoved(int,int)), this, SLOT(tabMovedSlot(int,int)));
-    connect (this->tabBar(), SIGNAL(currentChanged(int)), this, SLOT(currentChangedSlot(int)));
+    connect(this->tabBar(), SIGNAL(tabMoved(int,int)), this, SLOT(tabMovedSlot(int,int)));
+    connect(this->tabBar(), SIGNAL(currentChanged(int)), this, SLOT(currentChangedSlot(int)));
 
     // save data asked from kConfigDialog :
-    connect (this->preferencesServer, SIGNAL(saveDataSignal()), this, SLOT(saveDataSlot()));
+    connect(this->preferencesServer, SIGNAL(saveDataSignal()), this, SLOT(saveDataSlot()));
 
     // notify changes in settings if tab has moved :
-    connect (this->tabBar(), SIGNAL(tabMoved(int,int)), this, SLOT(valueChangedSlot()));
+    connect(this->tabBar(), SIGNAL(tabMoved(int,int)), this, SLOT(valueChangedSlot()));
 
     // double click has been performed on tab to rename server :
-    connect (this, SIGNAL(mouseDoubleClick(QWidget*)), this, SLOT(renameTabSlot(QWidget*)));
-
+    connect(this, SIGNAL(mouseDoubleClick(QWidget*)), this, SLOT(renameTabSlot(QWidget*)));
 
 }
 
-
-QMap<int, QString> ServerTabWidget::getComboBoxIconTextMap() {
+QMap<int, QString> ServerTabWidget::getComboBoxIconTextMap()
+{
     return this->comboBoxIconTextMap;
 }
 
-
-
-void ServerTabWidget::addNewTab() {
+void ServerTabWidget::addNewTab()
+{
     this->newTabClickedSlot(ServerTabWidget::DoNotAskServerName);
 }
 
-void ServerTabWidget::addDefaultTab() {
+void ServerTabWidget::addDefaultTab()
+{
     this->newTabClickedSlot(ServerTabWidget::DefaultSettingsName);
 }
 
-
-QString ServerTabWidget::displayEditDialogBox() {
+QString ServerTabWidget::displayEditDialogBox()
+{
     return KInputDialog::getText(i18n("Backup server name"), i18n("Please enter backup server name:"));
 }
 
-QString ServerTabWidget::displayRenameTabDialogBox() {
+QString ServerTabWidget::displayRenameTabDialogBox()
+{
     return KInputDialog::getText(i18n("Rename server"), i18n("Rename server:"), this->tabText(this->currentIndex()).remove("&"));
 }
 
-
-
-void ServerTabWidget::setServerTabText(const ServerTabNaming& serverTabNaming) {
+void ServerTabWidget::setServerTabText(const ServerTabNaming &serverTabNaming)
+{
 
     QString input;
 
@@ -146,12 +142,11 @@ void ServerTabWidget::setServerTabText(const ServerTabNaming& serverTabNaming) {
 
 }
 
-
-
-void ServerTabWidget::deleteAndRemoveTab(const int& index) {
+void ServerTabWidget::deleteAndRemoveTab(const int &index)
+{
 
     // get the widget to delete :
-    QWidget* currentWidget = this->widget(index);
+    QWidget *currentWidget = this->widget(index);
 
     // remove the tab :
     this->removeTab(index);
@@ -166,9 +161,8 @@ void ServerTabWidget::deleteAndRemoveTab(const int& index) {
     this->valueChangedSlot();
 }
 
-
-
-void ServerTabWidget::enableDisableTabButtons() {
+void ServerTabWidget::enableDisableTabButtons()
+{
 
     this->newTab->setEnabled(true);
     this->closeTab->setEnabled(true);
@@ -186,11 +180,10 @@ void ServerTabWidget::enableDisableTabButtons() {
         this->closeTab->setEnabled(false);
     }
 
-
 }
 
-
-void ServerTabWidget::setServerTabIcon(const int& tabIndex, const int& serverModeIndex) {
+void ServerTabWidget::setServerTabIcon(const int &tabIndex, const int &serverModeIndex)
+{
 
     QString iconStr;
 
@@ -207,26 +200,23 @@ void ServerTabWidget::setServerTabIcon(const int& tabIndex, const int& serverMod
 
 }
 
-
-
-void ServerTabWidget::syncGroupBoxTitle() {
+void ServerTabWidget::syncGroupBoxTitle()
+{
 
     int tabNumber = this->count();
 
     for (int i = 1; i < tabNumber; ++i) {
-        static_cast<ServerPreferencesWidget*>(this->widget(i))->setGroupBoxTitle(i);
+        static_cast<ServerPreferencesWidget *>(this->widget(i))->setGroupBoxTitle(i);
     }
 
 }
-
-
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery askServerName) {
+void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery askServerName)
+{
 
     int tabNumbers = this->count();
 
@@ -263,13 +253,12 @@ void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery a
         if (!tabText.isEmpty()) {
 
             // add tab with new window widget :
-            ServerPreferencesWidget* serverPreferencesWidget = new ServerPreferencesWidget(this, this->preferencesServer, tabNumbers, askServerName);
+            ServerPreferencesWidget *serverPreferencesWidget = new ServerPreferencesWidget(this, this->preferencesServer, tabNumbers, askServerName);
 
             this->addTab(serverPreferencesWidget, tabText);
 
             // set tab icon according to server mode :
             this->setServerTabIcon(tabNumbers, serverPreferencesWidget->getData().getServerModeIndex());
-
 
             this->setCurrentIndex(tabNumbers);
             this->enableDisableTabButtons();
@@ -286,9 +275,8 @@ void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery a
 
 }
 
-
-
-void ServerTabWidget::closeTabClickedSlot() {
+void ServerTabWidget::closeTabClickedSlot()
+{
 
     int currentIndex = this->currentIndex();
 
@@ -296,9 +284,8 @@ void ServerTabWidget::closeTabClickedSlot() {
 
         // ask for current server removing :
         int answer = KMessageBox::messageBox(this,
-                                            KMessageBox::QuestionYesNo,
-                                            i18n("Remove <b>%1</b> backup server ?", this->tabText(this->currentIndex()).remove("&")) );
-
+                                             KMessageBox::QuestionYesNo,
+                                             i18n("Remove <b>%1</b> backup server ?", this->tabText(this->currentIndex()).remove("&")));
 
         // if selected rows has not been canceled :
         if (answer == KMessageBox::Yes) {
@@ -313,9 +300,8 @@ void ServerTabWidget::closeTabClickedSlot() {
 
 }
 
-
-
-void ServerTabWidget::tabMovedSlot(int from, int to) {
+void ServerTabWidget::tabMovedSlot(int from, int to)
+{
 
     // the master server tab must stay at the first position :
     if (from == MasterServer && to == 1) {
@@ -326,15 +312,13 @@ void ServerTabWidget::tabMovedSlot(int from, int to) {
 
 }
 
-
-
-void ServerTabWidget::currentChangedSlot(int index) {
+void ServerTabWidget::currentChangedSlot(int index)
+{
 
     // the master server tab must stay at the first position :
     if (index == MasterServer) {
         this->setMovable(false);
-    }
-    else {
+    } else {
         this->setMovable(true);
     }
 
@@ -343,9 +327,8 @@ void ServerTabWidget::currentChangedSlot(int index) {
 
 }
 
-
-
-void ServerTabWidget::saveDataSlot() {
+void ServerTabWidget::saveDataSlot()
+{
 
     int tabNumber = this->count();
 
@@ -357,7 +340,7 @@ void ServerTabWidget::saveDataSlot() {
     // save the new ones :
     for (int i = 0; i < tabNumber; ++i) {
 
-        ServerData serverData = static_cast<ServerPreferencesWidget*>(this->widget(i))->getData();
+        ServerData serverData = static_cast<ServerPreferencesWidget *>(this->widget(i))->getData();
         serverData.setServerId(i);
 
         serverData.setServerName(this->tabText(i));
@@ -371,15 +354,13 @@ void ServerTabWidget::saveDataSlot() {
 
 }
 
-
-
-void ServerTabWidget::valueChangedSlot() {
+void ServerTabWidget::valueChangedSlot()
+{
     preferencesServer->kcfg_serverChangesNotify->setText(QUuid::createUuid().toString());
 }
 
-
-
-void ServerTabWidget::renameTabSlot(QWidget* widget) {
+void ServerTabWidget::renameTabSlot(QWidget *widget)
+{
 
     // if widget has been found, rename tab :
     if (this->indexOf(widget) > -1) {
@@ -388,8 +369,4 @@ void ServerTabWidget::renameTabSlot(QWidget* widget) {
     }
 
 }
-
-
-
-
 

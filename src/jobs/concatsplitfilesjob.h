@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef CONCATSPLITFILESJOB_H
 #define CONCATSPLITFILESJOB_H
 
@@ -31,29 +30,26 @@ using namespace UtilityNamespace;
 
 class ExtractSplit;
 
-
-class ConcatSplitFilesJob : public QObject {
+class ConcatSplitFilesJob : public QObject
+{
 
     Q_OBJECT
 
 public:
-    explicit ConcatSplitFilesJob(ExtractSplit*);
+    explicit ConcatSplitFilesJob(ExtractSplit *);
     ~ConcatSplitFilesJob();
-
 
 private:
     QList<NzbFileData> nzbFileDataList;
     QString fileSavePath;
     QString joinFileName;
-    QThread* dedicatedThread;
+    QThread *dedicatedThread;
 
     bool joinSplittedFiles();
-
 
 Q_SIGNALS:
     void progressPercentSignal(int, const QString &);
     void resultSignal(int);
-
 
 public Q_SLOTS:
     void joinFilesSlot(const QList<NzbFileData> &, const QString &, const QString &);

@@ -31,11 +31,10 @@ class PreferencesShutdown : public QWidget, public Ui::PreferencesShutdown
 
     Q_OBJECT
 public:
-    explicit PreferencesShutdown(Core*);
+    explicit PreferencesShutdown(Core *);
 
 private:
     void setupConnections();
-
 
 public Q_SLOTS:
     void currentIndexChangedSlot();

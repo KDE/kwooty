@@ -28,22 +28,21 @@
 #include "datarestorer.h"
 #include "kwootysettings.h"
 
-
-CentralWidget::CentralWidget(MainWindow* parent) : QWidget(parent) {
+CentralWidget::CentralWidget(MainWindow *parent) : QWidget(parent)
+{
 
     // init button code that avoid to display one message box per nntp client instance error :
     saveErrorButtonCode = 0;
 
 }
 
-
-
-bool CentralWidget::isDialogExisting() {
+bool CentralWidget::isDialogExisting()
+{
     return !(saveErrorButtonCode == 0);
 }
 
-
-void CentralWidget::saveFileError(const int fromProcessing) {
+void CentralWidget::saveFileError(const int fromProcessing)
+{
 
     // notify user with a message box (and avoid multiple message box instances):
     if (saveErrorButtonCode == 0) {
@@ -57,14 +56,12 @@ void CentralWidget::saveFileError(const int fromProcessing) {
             saveErrorFolder = i18n("temporary folder");
         }
 
-
         saveErrorButtonCode = KMessageBox::Cancel;
         saveErrorButtonCode = KMessageBox::messageBox(this,
-                                                            KMessageBox::Sorry,
-                                                            i18n("Write error in <b>%1</b>: disk drive may be full.<br>Downloads have been suspended.",
-                                                                 saveErrorFolder),
-                                                            i18n("Write error"));
-
+                              KMessageBox::Sorry,
+                              i18n("Write error in <b>%1</b>: disk drive may be full.<br>Downloads have been suspended.",
+                                   saveErrorFolder),
+                              i18n("Write error"));
 
         if (saveErrorButtonCode == KMessageBox::Ok) {
             saveErrorButtonCode = 0;
@@ -74,8 +71,8 @@ void CentralWidget::saveFileError(const int fromProcessing) {
 
 }
 
-
-QString CentralWidget::extractPasswordRequired(const QString& currentArchiveFileName, bool& passwordEntered) {
+QString CentralWidget::extractPasswordRequired(const QString &currentArchiveFileName, bool &passwordEntered)
+{
 
     QString password;
 
@@ -83,11 +80,10 @@ QString CentralWidget::extractPasswordRequired(const QString& currentArchiveFile
     kPasswordDialog.setPrompt(i18n("The archive <b>%1</b> is password protected. <br>Please enter the password to extract the file.",  currentArchiveFileName));
 
     // if password has been entered :
-    if(kPasswordDialog.exec()) {
+    if (kPasswordDialog.exec()) {
         passwordEntered = true;
         password = kPasswordDialog.password();
-    }
-    else {
+    } else {
         passwordEntered = false;
     }
 
@@ -95,8 +91,8 @@ QString CentralWidget::extractPasswordRequired(const QString& currentArchiveFile
 
 }
 
-
-void CentralWidget::displayNzbHandleErrorMessageBox(const QString& fileName) {
+void CentralWidget::displayNzbHandleErrorMessageBox(const QString &fileName)
+{
 
     KMessageBox::messageBox(this,
                             KMessageBox::Sorry,
@@ -106,8 +102,8 @@ void CentralWidget::displayNzbHandleErrorMessageBox(const QString& fileName) {
 
 }
 
-
-int CentralWidget::displayRestoreMessageBox() {
+int CentralWidget::displayRestoreMessageBox()
+{
 
     int answer = KMessageBox::Yes;
 
@@ -123,8 +119,8 @@ int CentralWidget::displayRestoreMessageBox() {
 
 }
 
-
-int CentralWidget::displaySaveMessageBox(SaveFileBehavior saveFileBehavior) {
+int CentralWidget::displaySaveMessageBox(SaveFileBehavior saveFileBehavior)
+{
 
     int answer = KMessageBox::Yes;
 
@@ -143,8 +139,8 @@ int CentralWidget::displaySaveMessageBox(SaveFileBehavior saveFileBehavior) {
     return answer;
 }
 
-
-void CentralWidget::displaySorryMessageBox(const QString& message) {
+void CentralWidget::displaySorryMessageBox(const QString &message)
+{
 
     KMessageBox::messageBox(this,
                             KMessageBox::Sorry,
@@ -152,8 +148,8 @@ void CentralWidget::displaySorryMessageBox(const QString& message) {
 
 }
 
-
-int CentralWidget::displayRemoveAllFilesMessageBox() {
+int CentralWidget::displayRemoveAllFilesMessageBox()
+{
 
     return KMessageBox::messageBox(this,
                                    KMessageBox::QuestionYesNo,
@@ -161,28 +157,27 @@ int CentralWidget::displayRemoveAllFilesMessageBox() {
 
 }
 
-
-int CentralWidget::displayRemoveSelectedFilesMessageBox() {
+int CentralWidget::displayRemoveSelectedFilesMessageBox()
+{
 
     return KMessageBox::messageBox(this,
                                    KMessageBox::QuestionYesNo,
                                    i18n("Remove selected files from queue ?"));
 }
 
-
-int CentralWidget::displayMergeItemsMessageBox(const QString& selectedNzbFileName, const QString& targetNzbFileName) {
+int CentralWidget::displayMergeItemsMessageBox(const QString &selectedNzbFileName, const QString &targetNzbFileName)
+{
 
     return KMessageBox::messageBox(this,
                                    KMessageBox::QuestionYesNo,
                                    xi18nc("@label:textbox", "Merge content of %1 into %2 ?",
-                                         "<nl/><filename>" + selectedNzbFileName + "</filename><nl/>",
-                                         "<nl/><filename>" + targetNzbFileName + "</filename>"));
+                                          "<nl/><filename>" + selectedNzbFileName + "</filename><nl/>",
+                                          "<nl/><filename>" + targetNzbFileName + "</filename>"));
 
 }
 
-
-
-int CentralWidget::displayAboutToShutdownMessageBox(const QString& shutdownMethodText) {
+int CentralWidget::displayAboutToShutdownMessageBox(const QString &shutdownMethodText)
+{
 
 #if 0 //PORT KF5
     // create kdialog :
@@ -211,12 +206,12 @@ int CentralWidget::displayAboutToShutdownMessageBox(const QString& shutdownMetho
                                           &checkboxReturn,
                                           KMessageBox::Notify);
 #else
-   return 0;
+    return 0;
 #endif
 }
 
-
-void CentralWidget::closeAboutToShutdownMessageBox() {
+void CentralWidget::closeAboutToShutdownMessageBox()
+{
 
     if (aboutToShutdownDialog) {
         aboutToShutdownDialog->reject();

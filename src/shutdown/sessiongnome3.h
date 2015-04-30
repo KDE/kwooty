@@ -18,17 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SESSIONGNOME3_H
 #define SESSIONGNOME3_H
-
 
 #include "sessionbase.h"
 
 #include <QDBusInterface>
 
-class SessionGnome3 : public SessionBase {
-
+class SessionGnome3 : public SessionBase
+{
 
 public:
 
@@ -42,14 +40,13 @@ public:
         DbusHibernate
     };
 
-
-    SessionGnome3(ShutdownManager*);
+    SessionGnome3(ShutdownManager *);
     QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods() Q_DECL_OVERRIDE;
 
 private:
 
     QMap<SessionGnome3::DbusMethodCall, QString> methodCallEnumStringMap;
-    QDBusInterface* dbusUpowerInterface;
+    QDBusInterface *dbusUpowerInterface;
 
     void requestShutdown() Q_DECL_OVERRIDE;
     void requestSuspend() Q_DECL_OVERRIDE;

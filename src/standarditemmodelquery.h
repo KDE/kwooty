@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef STANDARDITEMMODELQUERY_H
 #define STANDARDITEMMODELQUERY_H
 
@@ -31,31 +30,29 @@ using namespace UtilityNamespace;
 class Core;
 class StandardItemModel;
 
-
-class KWOOTY_EXPORT StandardItemModelQuery : public QObject {
+class KWOOTY_EXPORT StandardItemModelQuery : public QObject
+{
 
     Q_OBJECT
 
 public:
 
-    explicit StandardItemModelQuery(Core*);
+    explicit StandardItemModelQuery(Core *);
 
-    QStandardItem* searchParentItemIdle();
-    QStandardItem* searchParentItemDownloadOrPausing();
-    QStandardItem* searchParentItemPause();
-    QStandardItem* searchParentItemPostDownloadProcessing();
-    ItemStatus isRetryDownloadAllowed(QStandardItem*, bool* = Q_NULLPTR);
-    bool isManualRepairExtractAllowed(QStandardItem* fileNameItem) const;
-    bool haveItemsSameParent(const QList<QModelIndex>&);
-    bool isParentContainsPar2File(QStandardItem*) const;
-    bool isParentFileNameExists(const QString&) const;
+    QStandardItem *searchParentItemIdle();
+    QStandardItem *searchParentItemDownloadOrPausing();
+    QStandardItem *searchParentItemPause();
+    QStandardItem *searchParentItemPostDownloadProcessing();
+    ItemStatus isRetryDownloadAllowed(QStandardItem *, bool * = Q_NULLPTR);
+    bool isManualRepairExtractAllowed(QStandardItem *fileNameItem) const;
+    bool haveItemsSameParent(const QList<QModelIndex> &);
+    bool isParentContainsPar2File(QStandardItem *) const;
+    bool isParentFileNameExists(const QString &) const;
     bool isRootModelEmpty() const;
     bool areJobsFinished() const;
     QList<QModelIndex> retrieveStartPauseIndexList(const UtilityNamespace::ItemStatus) const;
     QList<QModelIndex> retrieveDecodeFinishParentIndexList() const;
-    QStandardItem* retrieveParentFileNameItemFromUuid(const QString&);
-
-
+    QStandardItem *retrieveParentFileNameItemFromUuid(const QString &);
 
 private:
 
@@ -67,10 +64,10 @@ private:
         SearchItemPostDownloadProcessing
     };
 
-    Core* mCore;
-    StandardItemModel* mDownloadModel;
+    Core *mCore;
+    StandardItemModel *mDownloadModel;
 
-    QStandardItem* searchParentItem(const SearchItemStatus&);
+    QStandardItem *searchParentItem(const SearchItemStatus &);
 
 };
 

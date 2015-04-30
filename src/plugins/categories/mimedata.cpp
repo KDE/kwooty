@@ -18,68 +18,74 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "mimedata.h"
 #include "kwooty_debug.h"
 
-MimeData::MimeData(MimeData::HierarchyCategory hierarchyCategory, const QString& mainCategory) {
+MimeData::MimeData(MimeData::HierarchyCategory hierarchyCategory, const QString &mainCategory)
+{
 
     this->mHierarchyCategory = hierarchyCategory;
     this->mMainCategory = mainCategory;
 }
 
-MimeData::MimeData() {
+MimeData::MimeData()
+{
 
     qDebug() << "ooops, this constructor should not be called";
 }
 
-
-QString MimeData::getMainCategory() const {
+QString MimeData::getMainCategory() const
+{
     return this->mMainCategory;
 }
 
-void MimeData::setMainCategory(const QString& mainCategory) {
+void MimeData::setMainCategory(const QString &mainCategory)
+{
     this->mMainCategory = mainCategory;
 }
 
-
-QString MimeData::getSubCategory() const {
+QString MimeData::getSubCategory() const
+{
     return this->mSubCategory;
 }
 
-void MimeData::setSubCategory(const QString& subCategory) {
+void MimeData::setSubCategory(const QString &subCategory)
+{
     this->mSubCategory = subCategory;
 }
 
-
-
-QString MimeData::getPatterns() const {
+QString MimeData::getPatterns() const
+{
     return this->mPatterns;
 }
 
-void MimeData::setPatterns(const QString& patterns) {
+void MimeData::setPatterns(const QString &patterns)
+{
     this->mPatterns = patterns;
 }
 
-
-QString MimeData::getMoveFolderPath() const {
+QString MimeData::getMoveFolderPath() const
+{
     return this->mMoveFolderPath;
 }
 
-void MimeData::setMoveFolderPath(const QString& moveFolderPath) {
+void MimeData::setMoveFolderPath(const QString &moveFolderPath)
+{
     this->mMoveFolderPath = moveFolderPath;
 }
 
-
-QString MimeData::getComments() const {
+QString MimeData::getComments() const
+{
     return this->mComments;
 }
 
-void MimeData::setComments(const QString& comments) {
+void MimeData::setComments(const QString &comments)
+{
     this->mComments = comments;
 }
 
-QString MimeData::getDisplayedText() {
+QString MimeData::getDisplayedText()
+{
 
     if (this->mHierarchyCategory == MainCategory) {
         this->mDisplayedText = this->mMainCategory;
@@ -88,20 +94,19 @@ QString MimeData::getDisplayedText() {
     return this->mDisplayedText;
 }
 
-void MimeData::setDisplayedText(const QString& displayedText) {
+void MimeData::setDisplayedText(const QString &displayedText)
+{
     this->mDisplayedText = displayedText;
 }
 
-
-bool MimeData::isCategoryMatch(const QString& compareCategory) {
+bool MimeData::isCategoryMatch(const QString &compareCategory)
+{
 
     if (this->mHierarchyCategory == MainCategory) {
         return (this->mMainCategory == compareCategory);
-    }
-    else {
+    } else {
         return (this->mSubCategory == compareCategory);
     }
 
 }
-
 

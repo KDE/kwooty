@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "categoriesfilehandler.h"
 
 #include <KStandardDirs>
@@ -35,40 +34,43 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
-CategoriesFileHandler::CategoriesFileHandler(QObject* parent) : QObject(parent) {
-
-}
-
-CategoriesFileHandler::CategoriesFileHandler() {
+CategoriesFileHandler::CategoriesFileHandler(QObject *parent) : QObject(parent)
+{
 
 }
 
+CategoriesFileHandler::CategoriesFileHandler()
+{
 
-QString CategoriesFileHandler::retrieveCategoriesFilePath() {
+}
+
+QString CategoriesFileHandler::retrieveCategoriesFilePath()
+{
     return KStandardDirs::locateLocal("appdata", QString::fromLatin1("categories.xml"));
 }
 
+bool CategoriesFileHandler::isStartElement(QXmlStreamReader &stream, const QString &element)
+{
 
-bool CategoriesFileHandler::isStartElement(QXmlStreamReader& stream, const QString& element) {
-
-    return ( stream.tokenType() == QXmlStreamReader::StartElement &&
-             stream.name() == element );
+    return (stream.tokenType() == QXmlStreamReader::StartElement &&
+            stream.name() == element);
 }
 
-bool CategoriesFileHandler::isEndElement(QXmlStreamReader& stream, const QString& element) {
+bool CategoriesFileHandler::isEndElement(QXmlStreamReader &stream, const QString &element)
+{
 
-    return ( stream.tokenType() == QXmlStreamReader::EndElement &&
-             stream.name() == element );
+    return (stream.tokenType() == QXmlStreamReader::EndElement &&
+            stream.name() == element);
 }
 
-QString CategoriesFileHandler::readNextCharacters(QXmlStreamReader& stream) {
+QString CategoriesFileHandler::readNextCharacters(QXmlStreamReader &stream)
+{
     stream.readNext();
     return stream.text().toString();
 }
 
-
-void CategoriesFileHandler::reloadModel(CategoriesModel* categoriesModel) {
+void CategoriesFileHandler::reloadModel(CategoriesModel *categoriesModel)
+{
 
     categoriesModel->init();
 
@@ -76,28 +78,29 @@ void CategoriesFileHandler::reloadModel(CategoriesModel* categoriesModel) {
     this->fillModel(categoriesModel);
 }
 
-CategoriesModel* CategoriesFileHandler::loadModelFromFile(QObject* parent) {
+CategoriesModel *CategoriesFileHandler::loadModelFromFile(QObject *parent)
+{
 
     // build categories model :
-    CategoriesModel* categoriesModel = new CategoriesModel(parent);
+    CategoriesModel *categoriesModel = new CategoriesModel(parent);
     this->reloadModel(categoriesModel);
 
     return categoriesModel;
 
 }
 
-
-void CategoriesFileHandler::fillModel(CategoriesModel* categoriesModel) {
+void CategoriesFileHandler::fillModel(CategoriesModel *categoriesModel)
+{
 
     QFile categoriesFile(this->retrieveCategoriesFilePath());
 
     bool fileOpen = categoriesFile.open(QIODevice::ReadOnly);
-    QXmlStreamReader stream (&categoriesFile);
+    QXmlStreamReader stream(&categoriesFile);
 
     QStringList mainCategoryList = UtilityCategories::retrieveMainCategoryList();
 
-    while ( !stream.atEnd() &&
-            !stream.hasError() ) {
+    while (!stream.atEnd() &&
+            !stream.hasError()) {
 
         // define the data that holds data for a single file to be downloaded :
         QXmlStreamReader::TokenType tokenType = stream.readNext();
@@ -128,19 +131,19 @@ void CategoriesFileHandler::fillModel(CategoriesModel* categoriesModel) {
 
                     groupMimeData.setMainCategory(mainCategory);
 
-                    QStandardItem* groupItem = new QStandardItem(groupMimeData.getDisplayedText());
+                    QStandardItem *groupItem = new QStandardItem(groupMimeData.getDisplayedText());
                     categoriesModel->storeMimeData(groupItem, groupMimeData);
                     categoriesModel->appendRow(groupItem);
 
                     // look for next <mime> :
-                    if ( stream.readNextStartElement() &&
-                         stream.name() == "mime" ) {
+                    if (stream.readNextStartElement() &&
+                            stream.name() == "mime") {
 
                         // check that we are inside <group> </group> :
                         MimeData mimeData(MimeData::SubCategory, groupMimeData.getMainCategory());
 
-                        while ( !this->isEndElement(stream, "group") &&
-                                !stream.atEnd() ) {
+                        while (!this->isEndElement(stream, "group") &&
+                                !stream.atEnd()) {
 
                             if (this->isStartElement(stream, "mimeType")) {
 
@@ -151,7 +154,6 @@ void CategoriesFileHandler::fillModel(CategoriesModel* categoriesModel) {
                                 mimeData.setMoveFolderPath(this->readNextCharacters(stream));
                             }
 
-
                             stream.readNext();
 
                             // if we reach </mime> :
@@ -161,8 +163,8 @@ void CategoriesFileHandler::fillModel(CategoriesModel* categoriesModel) {
 
                                 if (!mimeData.getSubCategory().isEmpty()) {
 
-                                    QStandardItem* childCategoryItem = new QStandardItem(mimeData.getDisplayedText());
-                                    QStandardItem* childTargetItem = new QStandardItem(mimeData.getMoveFolderPath());
+                                    QStandardItem *childCategoryItem = new QStandardItem(mimeData.getDisplayedText());
+                                    QStandardItem *childTargetItem = new QStandardItem(mimeData.getMoveFolderPath());
 
                                     categoriesModel->storeMimeData(childCategoryItem, mimeData);
 
@@ -202,7 +204,6 @@ void CategoriesFileHandler::fillModel(CategoriesModel* categoriesModel) {
         }
     }
 
-
     // if any error, fill model with init values :
     if (error) {
         categoriesModel->init();
@@ -210,9 +211,8 @@ void CategoriesFileHandler::fillModel(CategoriesModel* categoriesModel) {
 
 }
 
-
-
-void CategoriesFileHandler::saveModelToFile(CategoriesModel* categoriesModel) {
+void CategoriesFileHandler::saveModelToFile(CategoriesModel *categoriesModel)
+{
 
     QFile categoriesFile(this->retrieveCategoriesFilePath());
     categoriesFile.open(QIODevice::WriteOnly);
@@ -226,10 +226,9 @@ void CategoriesFileHandler::saveModelToFile(CategoriesModel* categoriesModel) {
     stream.writeAttribute("application", "kwooty");
     stream.writeAttribute("version", "1");
 
-
     for (int i = 0; i < categoriesModel->rowCount(); ++i) {
 
-        QStandardItem* groupItem = categoriesModel->item(i);
+        QStandardItem *groupItem = categoriesModel->item(i);
 
         // <group> :
         stream.writeStartElement("group");
@@ -239,7 +238,7 @@ void CategoriesFileHandler::saveModelToFile(CategoriesModel* categoriesModel) {
 
             for (int j = 0; j < groupItem->rowCount(); j++) {
 
-                QStandardItem* mimeItem = groupItem->child(j);
+                QStandardItem *mimeItem = groupItem->child(j);
                 MimeData currentMimeData = categoriesModel->loadMimeData(mimeItem);
 
                 // <mime> :

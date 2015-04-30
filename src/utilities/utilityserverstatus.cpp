@@ -27,18 +27,18 @@
 #include "utility.h"
 using namespace UtilityNamespace;
 
-
-UtilityServerStatus::UtilityServerStatus() {
+UtilityServerStatus::UtilityServerStatus()
+{
 
 }
 
-
-QIcon UtilityServerStatus::getConnectionIcon(const ServerConnectionIcon& serverConnectionIcon) {
+QIcon UtilityServerStatus::getConnectionIcon(const ServerConnectionIcon &serverConnectionIcon)
+{
     return QIcon(UtilityServerStatus::getConnectionPixmap(serverConnectionIcon));
 }
 
-
-QPixmap UtilityServerStatus::getConnectionPixmap(const ServerConnectionIcon& serverConnectionIcon) {
+QPixmap UtilityServerStatus::getConnectionPixmap(const ServerConnectionIcon &serverConnectionIcon)
+{
 
     QPixmap pixmap;
     QString iconStr;
@@ -69,18 +69,15 @@ QPixmap UtilityServerStatus::getConnectionPixmap(const ServerConnectionIcon& ser
     // if server is connected with a not trusted ssl connection, add an overlay warning icon :
     else if (serverConnectionIcon == ConnectedEncryptedOverlayIcon) {
         pixmap = UtilityIconPainting::getInstance()->blendOverLayEmblem("emblem-important", QIcon::fromTheme(iconStr));
-    }
-    else {
+    } else {
         pixmap = SmallIcon(iconStr);
     }
 
     return pixmap;
 }
 
-
-
-
-ServerConnectionIcon UtilityServerStatus::buildConnectionStringFromStatus(const ClientsObserverBase* clientsObserver, QString& connection, EncryptionMethodDisplay encryptionMethodDisplay) {
+ServerConnectionIcon UtilityServerStatus::buildConnectionStringFromStatus(const ClientsObserverBase *clientsObserver, QString &connection, EncryptionMethodDisplay encryptionMethodDisplay)
+{
 
     // by default consider that client is not connected to host :
     ServerConnectionIcon serverConnectionIcon = DisconnectedIcon;
@@ -93,7 +90,7 @@ ServerConnectionIcon UtilityServerStatus::buildConnectionStringFromStatus(const 
 
         int nttpErrorStatus = clientsObserver->getNttpErrorStatus();
         // detail disconnection issues to user :
-        if (nttpErrorStatus == HostNotFound){
+        if (nttpErrorStatus == HostNotFound) {
             connection = i18n("Disconnected (Host not found)");
         }
 
@@ -114,13 +111,11 @@ ServerConnectionIcon UtilityServerStatus::buildConnectionStringFromStatus(const 
             connection = i18n("Disconnected (Authentication required)");
         }
 
-
         if (nttpErrorStatus == AuthenticationFailed) {
             connection = i18n("Disconnected (Authentication Denied)");
         }
 
-    }
-    else {
+    } else {
 
         // set connection icon :
         serverConnectionIcon = ConnectedNormalIcon;
@@ -135,8 +130,8 @@ ServerConnectionIcon UtilityServerStatus::buildConnectionStringFromStatus(const 
             // display type of encryption method used by server :
             QString encryptionMethod = clientsObserver->getEncryptionMethod();
 
-            if ( !encryptionMethod.isEmpty() &&
-                 (encryptionMethodDisplay == DisplayEncryptionMethod) ) {
+            if (!encryptionMethod.isEmpty() &&
+                    (encryptionMethodDisplay == DisplayEncryptionMethod)) {
 
                 connection = connection + " :: " + encryptionMethod;
 
@@ -157,9 +152,8 @@ ServerConnectionIcon UtilityServerStatus::buildConnectionStringFromStatus(const 
 
 }
 
-
-
-QString UtilityServerStatus::buildConnectionToolTip(const ClientsObserverBase* clientsObserver, const QString& connection, const QString& serverName) {
+QString UtilityServerStatus::buildConnectionToolTip(const ClientsObserverBase *clientsObserver, const QString &connection, const QString &serverName)
+{
 
     QString toolTipStr;
 
@@ -185,8 +179,7 @@ QString UtilityServerStatus::buildConnectionToolTip(const ClientsObserverBase* c
             toolTipStr.append("<br>");
             toolTipStr.append(UtilityServerStatus::buildSslHandshakeStatus(clientsObserver));
 
-        }
-        else {
+        } else {
 
             toolTipStr.append(i18n("Connection is not encrypted"));
         }
@@ -197,16 +190,14 @@ QString UtilityServerStatus::buildConnectionToolTip(const ClientsObserverBase* c
 
 }
 
-
-
-QString UtilityServerStatus::buildSslHandshakeStatus(const ClientsObserverBase* clientsObserver) {
+QString UtilityServerStatus::buildSslHandshakeStatus(const ClientsObserverBase *clientsObserver)
+{
 
     QString sslHandshakeStatus;
 
     if (clientsObserver->isCertificateVerified()) {
         sslHandshakeStatus.append(i18n("Certificate <b>verified</b> by %1", clientsObserver->getIssuerOrgranisation()));
-    }
-    else {
+    } else {
         sslHandshakeStatus.append(i18n("Certificate <b>can not be verified</b> "));
 
         // add ssl errors encountered :
@@ -220,18 +211,17 @@ QString UtilityServerStatus::buildSslHandshakeStatus(const ClientsObserverBase* 
                                             sslErrorList.size(),
                                             "<ul style=\"margin-top:0px; margin-bottom:0px;\">" +
                                             errorListSeparator + sslErrorList.join(errorListSeparator)) +
-                                            "</ul>");
+                                      "</ul>");
         }
 
-    }   
+    }
 
     return sslHandshakeStatus;
 
 }
 
-
-
-QString UtilityServerStatus::getServerModeString(UtilityNamespace::BackupServerMode backupServerMode) {
+QString UtilityServerStatus::getServerModeString(UtilityNamespace::BackupServerMode backupServerMode)
+{
 
     QString serverMode;
 

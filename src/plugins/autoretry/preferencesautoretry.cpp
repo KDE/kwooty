@@ -20,7 +20,6 @@
 
 #include "preferencesautoretry.h"
 
-
 #include "kwooty_debug.h"
 #include <KGlobal>
 
@@ -29,20 +28,19 @@
 #include "kwooty_autoretrysettings.h"
 #include <kgenericfactory.h>
 
-
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesAutoRetry>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_autoretrysettings"))
 
-
-PreferencesAutoRetry::PreferencesAutoRetry(QWidget* parent, const QVariantList& args) :
-KCModule(parent, args) {
+PreferencesAutoRetry::PreferencesAutoRetry(QWidget *parent, const QVariantList &args) :
+    KCModule(parent, args)
+{
 
     // set layout config layout :
-    QHBoxLayout* layout = new QHBoxLayout(this);
+    QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
 
     // setup ui file :
-    QWidget* widget = new QWidget(this);
+    QWidget *widget = new QWidget(this);
     this->preferencesAutoRetryUi.setupUi(widget);
     layout->addWidget(widget);
 
@@ -51,18 +49,18 @@ KCModule(parent, args) {
 
 }
 
-
-PreferencesAutoRetry::~PreferencesAutoRetry() {
+PreferencesAutoRetry::~PreferencesAutoRetry()
+{
 
 }
 
-
-void PreferencesAutoRetry::load(){
+void PreferencesAutoRetry::load()
+{
     KCModule::load();
 }
 
-
-void PreferencesAutoRetry::save(){
+void PreferencesAutoRetry::save()
+{
     KCModule::save();
 
 }

@@ -27,52 +27,53 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class KWOOTY_EXPORT NzbFileData {
+class KWOOTY_EXPORT NzbFileData
+{
 
 public:
     NzbFileData();
-    NzbFileData(const QString&, const QStringList&, const QList<SegmentData>&);
+    NzbFileData(const QString &, const QStringList &, const QList<SegmentData> &);
     ~NzbFileData();
 
     QString getFileName() const;
-    void setFileName(const QString&);
+    void setFileName(const QString &);
 
     QString getReducedFileName() const;
-    void setReducedFileName(const QString&);
+    void setReducedFileName(const QString &);
 
     QStringList getGroupList() const;
-    void setGroupList(const QStringList&);
+    void setGroupList(const QStringList &);
 
     QList<SegmentData> getSegmentList() const;
-    void setSegmentList(const QList<SegmentData>&);
+    void setSegmentList(const QList<SegmentData> &);
 
     quint64 getSize() const;
     void setSize(const quint64);
 
     QString getNzbName() const;
-    void setNzbName(const QString&);
+    void setNzbName(const QString &);
 
-    void setBaseName(const QString&);
+    void setBaseName(const QString &);
     QString getBaseName() const;
 
-    bool match(const QString&, const QString& = QString()) ;
+    bool match(const QString &, const QString & = QString()) ;
 
     QString getDecodedFileName() const;
-    void setDecodedFileName(const QString&);
+    void setDecodedFileName(const QString &);
 
     QString getTemporaryFileName() const;
-    void setTemporaryFileName(const QString&);
+    void setTemporaryFileName(const QString &);
 
     QString getRenamedFileName() const;
-    void setRenamedFileName(const QString&, const QString&);
+    void setRenamedFileName(const QString &, const QString &);
 
-    void setUniqueIdentifier(const QVariant&);
+    void setUniqueIdentifier(const QVariant &);
     QVariant getUniqueIdentifier() const;
 
-    void setDownloadFolderPath(const QString&);
+    void setDownloadFolderPath(const QString &);
     QString getDownloadFolderPath() const;
 
-    void updateFileSavePath(const NzbFileData&);
+    void updateFileSavePath(const NzbFileData &);
     QString getFileSavePath() const;
 
     bool isPar2File() const;
@@ -90,9 +91,8 @@ public:
     void setExtractProgressionStep(const UtilityNamespace::ItemStatus);
     UtilityNamespace::ItemStatus getExtractProgressionStep() const;
 
-
-    bool operator==(const NzbFileData&);
-    bool operator<(const NzbFileData&) const;
+    bool operator==(const NzbFileData &);
+    bool operator<(const NzbFileData &) const;
 
 private:
     QString fileName;
@@ -116,8 +116,8 @@ private:
 
 };
 
-QDataStream& operator<<(QDataStream&, const NzbFileData&);
-QDataStream& operator>>(QDataStream&, NzbFileData&);
+QDataStream &operator<<(QDataStream &, const NzbFileData &);
+QDataStream &operator>>(QDataStream &, NzbFileData &);
 
 Q_DECLARE_METATYPE(NzbFileData)
 

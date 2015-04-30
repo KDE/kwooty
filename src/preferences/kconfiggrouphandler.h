@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef KCONFIGGROUPHANDLER_H
 #define KCONFIGGROUPHANDLER_H
 
@@ -32,7 +31,8 @@
 
 class MainWindow;
 
-class KConfigGroupHandler : public QObject {
+class KConfigGroupHandler : public QObject
+{
 
     Q_OBJECT
 
@@ -43,46 +43,44 @@ public:
         DoNotReadPasswordData
     };
 
-    explicit KConfigGroupHandler(MainWindow*);
+    explicit KConfigGroupHandler(MainWindow *);
     ~KConfigGroupHandler();
 
-    static KConfigGroupHandler* getInstance();
+    static KConfigGroupHandler *getInstance();
 
-    ServerData readServerSettings(int, const PasswordData& = ReadPasswordData);
+    ServerData readServerSettings(int, const PasswordData & = ReadPasswordData);
     void writeServerSettings(int, ServerData);
-    void removeServerSettings(const int&);
+    void removeServerSettings(const int &);
 
     int readServerNumberSettings();
-    void writeServerNumberSettings(const int&);
-    int serverConnectionNumber(const int&);
-    QString tabName(const int&, const QString&);
+    void writeServerNumberSettings(const int &);
+    int serverConnectionNumber(const int &);
+    QString tabName(const int &, const QString &);
 
-    void writeSideBarDisplay(const bool&);
+    void writeSideBarDisplay(const bool &);
     bool readSideBarDisplay();
-    void writeSideBarTabOnlyDisplay(const bool&);
+    void writeSideBarTabOnlyDisplay(const bool &);
     bool readSideBarTabOnlyDisplay();
 
-    void writeSideBarServerIndex(const int&);
+    void writeSideBarServerIndex(const int &);
     int readSideBarServerIndex();
 
-    void writeMainWindowHiddenOnExit(const bool&);
+    void writeMainWindowHiddenOnExit(const bool &);
     bool readMainWindowHiddenOnExit();
 
-
 private:
-    static KConfigGroupHandler* instance;
+    static KConfigGroupHandler *instance;
     QPointer<KWallet::Wallet> wallet;
-    MainWindow* mainWindow;
+    MainWindow *mainWindow;
     int dialogButtonCode;
     bool useKwallet;
 
     bool openWallet();
     void openWalletFails();
-    QString readPassword(const int&, KConfigGroup&);
-    void writePassword(const int&, KConfigGroup&, const QString&);
-    void removePasswordEntry(KConfigGroup&);
-    ServerData fillServerData(const int&, KConfigGroup&, const PasswordData&);
-
+    QString readPassword(const int &, KConfigGroup &);
+    void writePassword(const int &, KConfigGroup &, const QString &);
+    void removePasswordEntry(KConfigGroup &);
+    ServerData fillServerData(const int &, KConfigGroup &, const PasswordData &);
 
 public Q_SLOTS:
     void settingsChangedSlot();

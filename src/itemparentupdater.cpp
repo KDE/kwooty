@@ -32,8 +32,8 @@
 #include "data/itemstatusdata.h"
 #include "kwootysettings.h"
 
-
-ItemParentUpdater::ItemParentUpdater(Core* parent) : ItemAbstractUpdater (parent->getDownloadModel(), ItemAbstractUpdater::Parent) {
+ItemParentUpdater::ItemParentUpdater(Core *parent) : ItemAbstractUpdater(parent->getDownloadModel(), ItemAbstractUpdater::Parent)
+{
 
     this->parent = parent;
 
@@ -47,44 +47,46 @@ ItemParentUpdater::ItemParentUpdater(Core* parent) : ItemAbstractUpdater (parent
 
 }
 
-ItemPostDownloadUpdater* ItemParentUpdater::getItemPostDownloadUpdater() const{
+ItemPostDownloadUpdater *ItemParentUpdater::getItemPostDownloadUpdater() const
+{
     return this->itemPostDownloadUpdater;
 }
-ItemDownloadUpdater* ItemParentUpdater::getItemDownloadUpdater() const{
+ItemDownloadUpdater *ItemParentUpdater::getItemDownloadUpdater() const
+{
     return this->itemDownloadUpdater;
 }
-ItemChildrenManager* ItemParentUpdater::getItemChildrenManager() const{
+ItemChildrenManager *ItemParentUpdater::getItemChildrenManager() const
+{
     return this->itemChildrenManager;
 }
-StandardItemModel* ItemParentUpdater::getDownloadModel() const{
+StandardItemModel *ItemParentUpdater::getDownloadModel() const
+{
     return this->downloadModel;
 }
 
+void ItemParentUpdater::setupConnections()
+{
 
-void ItemParentUpdater::setupConnections() {
-
-
-    connect (itemDownloadUpdater,
-             SIGNAL(statusBarDecrementSignal(quint64,int)),
-             parent->getClientsObserver(),
-             SLOT(decrementSlot(quint64,int)));
+    connect(itemDownloadUpdater,
+            SIGNAL(statusBarDecrementSignal(quint64,int)),
+            parent->getClientsObserver(),
+            SLOT(decrementSlot(quint64,int)));
 
     // download par2 files if crc check failed during archive download :
-    connect (this,
-             SIGNAL(downloadWaitingPar2Signal()),
-             parent,
-             SLOT(downloadWaitingPar2Slot()));
+    connect(this,
+            SIGNAL(downloadWaitingPar2Signal()),
+            parent,
+            SLOT(downloadWaitingPar2Slot()));
 
 }
 
-
-void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex) {
+void ItemParentUpdater::updateNzbItems(const QModelIndex &nzbIndex)
+{
 
     // variable initialisation
     this->clear();
     quint64 totalProgress  = 0;
     this->isItemUpdated = false;
-
 
     // get itemStatusData :
     ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex);
@@ -107,7 +109,6 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex) {
 
     }
 
-
     // 1. try to set status item as "DECODE"
     nzbItemStatusData = this->updateItemsDecode(nzbItemStatusData, rowNumber);
 
@@ -127,21 +128,18 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex& nzbIndex) {
         emit downloadWaitingPar2Signal();
     }
 
-
-
 }
-
 
 //==============================================================================================//
 //                            Verify/Repair - Extract related updates                           //
 //==============================================================================================//
 
-void ItemParentUpdater::updateNzbItemsPostDecode(const PostDownloadInfoData& repairDecompressInfoData) {
+void ItemParentUpdater::updateNzbItemsPostDecode(const PostDownloadInfoData &repairDecompressInfoData)
+{
 
     UtilityNamespace::ItemStatus status = repairDecompressInfoData.getStatus();
     QModelIndex nzbIndex = repairDecompressInfoData.getModelIndex();
     int progression = repairDecompressInfoData.getProgression();
-
 
     // post processing is currently performing, update post process status :
     if (!repairDecompressInfoData.isPostProcessFinish()) {
@@ -173,34 +171,32 @@ void ItemParentUpdater::updateNzbItemsPostDecode(const PostDownloadInfoData& rep
 
 }
 
-
 //==============================================================================================//
 //                                   Decoding related updates                                   //
 //==============================================================================================//
 
-
-ItemStatusData ItemParentUpdater::updateItemsDecode(ItemStatusData& nzbItemStatusData, const int rowNumber) {
+ItemStatusData ItemParentUpdater::updateItemsDecode(ItemStatusData &nzbItemStatusData, const int rowNumber)
+{
 
     // update status item :
     return this->updateStatusItemDecode(nzbItemStatusData, rowNumber);
 }
 
-
-ItemStatusData ItemParentUpdater::updateStatusItemDecode(ItemStatusData& nzbItemStatusData, const int rowNumber) {
+ItemStatusData ItemParentUpdater::updateStatusItemDecode(ItemStatusData &nzbItemStatusData, const int rowNumber)
+{
 
     // if all children have been decoded :
     if (this->downloadItemNumber == 0) {
 
-        if ( (this->decodeErrorItemNumber > 0) &&
-             (rowNumber == this->decodeErrorItemNumber + this->articleNotFoundNumber) ) {
+        if ((this->decodeErrorItemNumber > 0) &&
+                (rowNumber == this->decodeErrorItemNumber + this->articleNotFoundNumber)) {
 
             nzbItemStatusData.setStatus(DecodeErrorStatus);
             this->isItemUpdated = true;
-        }
-        else if ( (this->decodeFinishItemNumber > 0) &&
-                  (rowNumber == (this->decodeErrorItemNumber +
-                                 this->articleNotFoundNumber +
-                                 this->decodeFinishItemNumber)) ) {
+        } else if ((this->decodeFinishItemNumber > 0) &&
+                   (rowNumber == (this->decodeErrorItemNumber +
+                                  this->articleNotFoundNumber +
+                                  this->decodeFinishItemNumber))) {
 
             nzbItemStatusData.setStatus(DecodeFinishStatus);
             this->isItemUpdated = true;
@@ -211,19 +207,18 @@ ItemStatusData ItemParentUpdater::updateStatusItemDecode(ItemStatusData& nzbItem
     return nzbItemStatusData;
 }
 
-
-
 //==============================================================================================//
 //                                   Downloading related updates                                //
 //==============================================================================================//
 
-ItemStatusData ItemParentUpdater::updateItemsDownload(ItemStatusData& nzbItemStatusData, const int rowNumber, const QModelIndex& nzbIndex, const quint64 totalProgress) {
+ItemStatusData ItemParentUpdater::updateItemsDownload(ItemStatusData &nzbItemStatusData, const int rowNumber, const QModelIndex &nzbIndex, const quint64 totalProgress)
+{
 
     // calculate progression % :
 
     quint64 nzbSize = this->downloadModel->getSizeValueFromIndex(nzbIndex);
     nzbSize = qMax(nzbSize, (quint64)1); // avoid division by zero (should never happen)
-    this->progressNumber = qMin( qRound((qreal)(totalProgress / nzbSize)), PROGRESS_COMPLETE );
+    this->progressNumber = qMin(qRound((qreal)(totalProgress / nzbSize)), PROGRESS_COMPLETE);
 
     // set progress to item :
     this->downloadModel->updateProgressItem(nzbIndex, this->progressNumber);
@@ -237,10 +232,8 @@ ItemStatusData ItemParentUpdater::updateItemsDownload(ItemStatusData& nzbItemSta
     return nzbItemStatusData;
 }
 
-
-
-ItemStatusData ItemParentUpdater::updateStatusItemDownload(ItemStatusData& nzbItemStatusData, const int rowNumber) {
-
+ItemStatusData ItemParentUpdater::updateStatusItemDownload(ItemStatusData &nzbItemStatusData, const int rowNumber)
+{
 
     // if all children have been downloaded :
     if (rowNumber == this->downloadFinishItemNumber) {
@@ -263,14 +256,11 @@ ItemStatusData ItemParentUpdater::updateStatusItemDownload(ItemStatusData& nzbIt
         else {
             if (this->pausingItemNumber > 0) {
                 nzbItemStatusData.setStatus(PausingStatus);
-            }
-            else if (this->pauseItemNumber > 0) {
+            } else if (this->pauseItemNumber > 0) {
                 nzbItemStatusData.setStatus(PauseStatus);
-            }
-            else if (this->decodeItemNumber > 0) {
+            } else if (this->decodeItemNumber > 0) {
                 nzbItemStatusData.setStatus(DecodeStatus);
-            }
-            else if (this->scanItemNumber > 0) {
+            } else if (this->scanItemNumber > 0) {
                 nzbItemStatusData.setStatus(ScanStatus);
             }
         }
@@ -280,9 +270,8 @@ ItemStatusData ItemParentUpdater::updateStatusItemDownload(ItemStatusData& nzbIt
     return nzbItemStatusData;
 }
 
-
-
-ItemStatusData ItemParentUpdater::updateDataStatus(ItemStatusData& nzbItemStatusData) {
+ItemStatusData ItemParentUpdater::updateDataStatus(ItemStatusData &nzbItemStatusData)
+{
 
     // determine if current file has segments that are not present on server :
     if (nzbItemStatusData.getStatus() == DownloadStatus) {
@@ -292,8 +281,7 @@ ItemStatusData ItemParentUpdater::updateDataStatus(ItemStatusData& nzbItemStatus
 
             if (this->articleFoundNumber == 0) {
                 nzbItemStatusData.setDataStatus(NoData);
-            }
-            else{
+            } else {
                 nzbItemStatusData.setDataStatus(DataIncomplete);
             }
         }
@@ -307,18 +295,16 @@ ItemStatusData ItemParentUpdater::updateDataStatus(ItemStatusData& nzbItemStatus
     return nzbItemStatusData;
 }
 
-
-
-quint64 ItemParentUpdater::calculateDownloadProgress(const QModelIndex& nzbIndex, const ItemStatusData& itemStatusData, const int i) {
+quint64 ItemParentUpdater::calculateDownloadProgress(const QModelIndex &nzbIndex, const ItemStatusData &itemStatusData, const int i)
+{
 
     // calculate progression :
     quint64 totalProgress = 0;
     int fileProgress = nzbIndex.child(i, PROGRESS_COLUMN).data(ProgressRole).toInt();
     quint64 fileSize = nzbIndex.child(i, SIZE_COLUMN).data(SizeRole).toULongLong();
 
-
     // file has been already downloaded :
-    if (itemStatusData.isDownloadFinish()){
+    if (itemStatusData.isDownloadFinish()) {
         totalProgress += PROGRESS_COMPLETE * fileSize;
     }
     // else the file is currently being downloaded :
@@ -330,15 +316,14 @@ quint64 ItemParentUpdater::calculateDownloadProgress(const QModelIndex& nzbIndex
 
 }
 
-
-
-ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusData, const int rowNumber, const QModelIndex& nzbIndex, PostProcessBehavior postProcessBehavior) {
+ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData &nzbItemStatusData, const int rowNumber, const QModelIndex &nzbIndex, PostProcessBehavior postProcessBehavior)
+{
 
     // nzb files have been decoded, it's time to repair them.
     // Check that decode has just finished and that process has not already been performed,
     // otherwise perform post process when manually triggered by the user :
-    if ( (postProcessBehavior == ForcePostProcess) ||
-         ((nzbItemStatusData.getStatus() == DecodeFinishStatus) && !nzbItemStatusData.isDecodeFinish()) ) {
+    if ((postProcessBehavior == ForcePostProcess) ||
+            ((nzbItemStatusData.getStatus() == DecodeFinishStatus) && !nzbItemStatusData.isDecodeFinish())) {
 
         // set decode finish to true in order to emit repairing signal only once :
         nzbItemStatusData.setDecodeFinish(true);
@@ -354,7 +339,6 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
             QModelIndex childIndex = nzbIndex.child(i, FILE_NAME_COLUMN);
             NzbFileData currentNzbFileData = this->downloadModel->getNzbFileDataFromIndex(childIndex);
 
-
             // get itemStatusData :
             ItemStatusData childItemStatusData = this->downloadModel->getStatusDataFromIndex(childIndex);
 
@@ -369,10 +353,9 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
 
             }
 
-
             // if current item is a par2 file, check if it status is Idle or WaitForPar2IdleStatus :
-            if ( currentNzbFileData.isPar2File() &&
-                 (childItemStatusData.getStatus() == WaitForPar2IdleStatus) )  {
+            if (currentNzbFileData.isPar2File() &&
+                    (childItemStatusData.getStatus() == WaitForPar2IdleStatus))  {
 
                 par2FileStatus = WaitForPar2IdleStatus;
 
@@ -396,7 +379,6 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
             nzbCollectionData.setExtractProcessAllowed(true);
         }
 
-
         //qCDebug(KWOOTY_LOG) << "UUID : " << this->downloadModel->getUuidStrFromIndex(nzbIndex);
 
         // send nzbCollectionData to repairDecompressThread class :
@@ -407,8 +389,8 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData& nzbItemStatusDa
     return nzbItemStatusData;
 }
 
-
-void ItemParentUpdater::triggerPostProcessManually(const QStandardItem* nzbItem) {
+void ItemParentUpdater::triggerPostProcessManually(const QStandardItem *nzbItem)
+{
 
     ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbItem->index());
 
@@ -420,14 +402,14 @@ void ItemParentUpdater::triggerPostProcessManually(const QStandardItem* nzbItem)
 
 }
 
-
-void ItemParentUpdater::recalculateNzbSize(const QModelIndex& nzbIndex){
+void ItemParentUpdater::recalculateNzbSize(const QModelIndex &nzbIndex)
+{
 
     // variable initialisation
     quint64 size = 0;
 
     // retrieve size related item :
-    QStandardItem* sizeItem = this->downloadModel->getSizeItemFromIndex(nzbIndex);
+    QStandardItem *sizeItem = this->downloadModel->getSizeItemFromIndex(nzbIndex);
 
     // get size of all nzb children :
     int rowNumber = this->downloadModel->itemFromIndex(nzbIndex)->rowCount();
@@ -450,8 +432,8 @@ void ItemParentUpdater::recalculateNzbSize(const QModelIndex& nzbIndex){
 
 }
 
-
-void ItemParentUpdater::countGlobalItemStatus(const ItemStatusData& itemStatusData) {
+void ItemParentUpdater::countGlobalItemStatus(const ItemStatusData &itemStatusData)
+{
 
     // count number of files present / not present :
     if (itemStatusData.getDataStatus() == NoData) {
@@ -467,8 +449,8 @@ void ItemParentUpdater::countGlobalItemStatus(const ItemStatusData& itemStatusDa
 
 }
 
-
-bool ItemParentUpdater::updatePar2ItemsIfCrcFailed(ItemStatusData& nzbItemStatusData, const int rowNumber, const QModelIndex& nzbIndex) {
+bool ItemParentUpdater::updatePar2ItemsIfCrcFailed(ItemStatusData &nzbItemStatusData, const int rowNumber, const QModelIndex &nzbIndex)
+{
 
     bool par2FilesUpdated = false;
 
@@ -482,8 +464,8 @@ bool ItemParentUpdater::updatePar2ItemsIfCrcFailed(ItemStatusData& nzbItemStatus
                 ItemStatusData itemStatusData = nzbIndex.child(i, STATE_COLUMN).data(StatusRole).value<ItemStatusData>();
 
                 // if a children has an incorrect crc, set the crc of the parent as incorrect :
-                if ( (itemStatusData.getCrc32Match() == CrcKo) ||
-                     (itemStatusData.getDataStatus() == NoData) ){
+                if ((itemStatusData.getCrc32Match() == CrcKo) ||
+                        (itemStatusData.getDataStatus() == NoData)) {
 
                     nzbItemStatusData.setCrc32Match(CrcKo);
                     break;
@@ -505,11 +487,11 @@ bool ItemParentUpdater::updatePar2ItemsIfCrcFailed(ItemStatusData& nzbItemStatus
     return par2FilesUpdated;
 }
 
+void ItemParentUpdater::updateItemsIfDirectExtractFailed(const QModelIndex nzbIndex, UtilityNamespace::ItemStatus status)
+{
 
-void ItemParentUpdater::updateItemsIfDirectExtractFailed(const QModelIndex nzbIndex, UtilityNamespace::ItemStatus status) {
-
-    if ( (status == ExtractFinishedStatus) &&
-         Settings::smartPar2Download() ) {
+    if ((status == ExtractFinishedStatus) &&
+            Settings::smartPar2Download()) {
 
         bool par2NotDownloaded = this->itemChildrenManager->resetItemStatusIfExtractFail(nzbIndex);
 
@@ -530,13 +512,12 @@ void ItemParentUpdater::updateItemsIfDirectExtractFailed(const QModelIndex nzbIn
     }
 }
 
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void ItemParentUpdater::recalculateNzbSizeSlot(const QModelIndex &index) {
+void ItemParentUpdater::recalculateNzbSizeSlot(const QModelIndex &index)
+{
 
     this->recalculateNzbSize(index);
     this->updateNzbItems(index);

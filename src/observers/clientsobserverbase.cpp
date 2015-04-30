@@ -18,15 +18,15 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "clientsobserverbase.h"
 
-ClientsObserverBase::ClientsObserverBase(QObject *parent) : QObject(parent) {
+ClientsObserverBase::ClientsObserverBase(QObject *parent) : QObject(parent)
+{
 
 }
 
-
-void ClientsObserverBase::resetVariables() {
+void ClientsObserverBase::resetVariables()
+{
 
     this->totalBytesDownloaded = 0;
     this->totalConnections = 0;
@@ -37,29 +37,30 @@ void ClientsObserverBase::resetVariables() {
 
 }
 
-
-void ClientsObserverBase::addBytesDownloaded(const int& bytesDownloaded) {
+void ClientsObserverBase::addBytesDownloaded(const int &bytesDownloaded)
+{
     this->totalBytesDownloaded += bytesDownloaded;
 }
 
+void ClientsObserverBase::updateTotalConnections(const int &connectionStatus)
+{
 
-void ClientsObserverBase::updateTotalConnections(const int& connectionStatus) {
-
-    if (connectionStatus == Connected){
+    if (connectionStatus == Connected) {
         this->totalConnections++;
     }
 
-    if (connectionStatus == Disconnected){
+    if (connectionStatus == Disconnected) {
         this->totalConnections--;
     }
 }
 
-void ClientsObserverBase::setNntpErrorStatus(const int& nttpErrorStatus) {
+void ClientsObserverBase::setNntpErrorStatus(const int &nttpErrorStatus)
+{
     this->nttpErrorStatus = nttpErrorStatus;
 }
 
-
-void ClientsObserverBase::setSslHandshakeParameters(const bool& sslActive, const QString& encryptionMethod, const bool& certificateVerified, const QString& issuerOrgranisation, const QStringList& sslErrors) {
+void ClientsObserverBase::setSslHandshakeParameters(const bool &sslActive, const QString &encryptionMethod, const bool &certificateVerified, const QString &issuerOrgranisation, const QStringList &sslErrors)
+{
     this->encryptionMethod = encryptionMethod;
     this->sslActive = sslActive;
     this->certificateVerified = certificateVerified;
@@ -67,39 +68,44 @@ void ClientsObserverBase::setSslHandshakeParameters(const bool& sslActive, const
     this->sslErrors = sslErrors;
 }
 
-
-bool ClientsObserverBase::isConnected() const {
+bool ClientsObserverBase::isConnected() const
+{
 
     return (this->totalConnections > 0);
 }
 
-
-QString ClientsObserverBase::getEncryptionMethod() const {
+QString ClientsObserverBase::getEncryptionMethod() const
+{
     return this->encryptionMethod;
 }
 
-QString ClientsObserverBase::getIssuerOrgranisation() const {
+QString ClientsObserverBase::getIssuerOrgranisation() const
+{
     return this->issuerOrgranisation;
 }
 
-QStringList ClientsObserverBase::getSslErrors() const {
+QStringList ClientsObserverBase::getSslErrors() const
+{
     return this->sslErrors;
 }
 
-int ClientsObserverBase::getTotalConnections() const {
+int ClientsObserverBase::getTotalConnections() const
+{
     return this->totalConnections;
 }
 
-
-bool ClientsObserverBase::isCertificateVerified() const {
+bool ClientsObserverBase::isCertificateVerified() const
+{
     return this->certificateVerified;
 }
 
-int ClientsObserverBase::getNttpErrorStatus() const {
+int ClientsObserverBase::getNttpErrorStatus() const
+{
     return this->nttpErrorStatus;
 }
 
-quint64 ClientsObserverBase::getTotalBytesDownloaded() const {
+quint64 ClientsObserverBase::getTotalBytesDownloaded() const
+{
     return this->totalBytesDownloaded;
 }
 

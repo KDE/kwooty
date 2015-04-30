@@ -29,23 +29,21 @@
 class ItemStatusData;
 class SegmentData;
 
-
 class ItemDownloadUpdater : public ItemAbstractUpdater
 {
 
     Q_OBJECT
 
 public:
-    ItemDownloadUpdater(ItemParentUpdater*);
-    void updateItems(const QModelIndex&, const NzbFileData&);
+    ItemDownloadUpdater(ItemParentUpdater *);
+    void updateItems(const QModelIndex &, const NzbFileData &);
 
-private:    
-    ItemStatusData updateStatusNzbChildrenItem(ItemStatusData&, const int&);
-    ItemStatusData updateDataStatus(ItemStatusData&);
-    ItemStatusData postDownloadProcessing(const QModelIndex&, const NzbFileData&, ItemStatusData&);
-    void updateNzbChildrenItems(const NzbFileData&, const QModelIndex&);
-    void countGlobalItemStatus(const SegmentData&);
-
+private:
+    ItemStatusData updateStatusNzbChildrenItem(ItemStatusData &, const int &);
+    ItemStatusData updateDataStatus(ItemStatusData &);
+    ItemStatusData postDownloadProcessing(const QModelIndex &, const NzbFileData &, ItemStatusData &);
+    void updateNzbChildrenItems(const NzbFileData &, const QModelIndex &);
+    void countGlobalItemStatus(const SegmentData &);
 
 Q_SIGNALS:
     void statusBarDecrementSignal(quint64, int);

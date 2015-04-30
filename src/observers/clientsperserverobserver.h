@@ -18,10 +18,8 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef CLIENTSPERSERVEROBSERVER_H
 #define CLIENTSPERSERVEROBSERVER_H
-
 
 #include "clientsobserverbase.h"
 #include "data/segmentinfodata.h"
@@ -32,9 +30,8 @@ class ClientsPerServerObserver : public ClientsObserverBase
 {
     Q_OBJECT
 
-
 public:
-    ClientsPerServerObserver(ServerGroup*);
+    ClientsPerServerObserver(ServerGroup *);
 
     quint64 getDownloadSpeed() const;
     quint64 getAverageDownloadSpeed() const;
@@ -44,9 +41,8 @@ public:
     bool isSslActive() const;
     bool isDownloading() const;
 
-
 private:
-    ServerGroup* parent;
+    ServerGroup *parent;
     SegmentInfoData segmentInfoData;
     quint64 downloadSpeed;
     quint64 averageDownloadSpeed;
@@ -56,7 +52,6 @@ private:
 
     void setupConnections();
     void resetVariables();
-
 
 Q_SIGNALS:
 
@@ -70,7 +65,7 @@ public Q_SLOTS:
 
     void nntpClientSpeedPerServerSlot(const SegmentInfoData);
     void connectionStatusPerServerSlot(const int);
-    void encryptionStatusPerServerSlot(const bool, const QString &, const bool, const QString& , const QStringList& );
+    void encryptionStatusPerServerSlot(const bool, const QString &, const bool, const QString &, const QStringList &);
     void nntpErrorPerServerSlot(const int);
 
 private Q_SLOTS:

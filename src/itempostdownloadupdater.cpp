@@ -33,17 +33,15 @@
 #include "widgets/mytreeview.h"
 #include "fileoperations.h"
 
-
-ItemPostDownloadUpdater::ItemPostDownloadUpdater(ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater->getDownloadModel(), ItemAbstractUpdater::Child) {
+ItemPostDownloadUpdater::ItemPostDownloadUpdater(ItemParentUpdater *itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater->getDownloadModel(), ItemAbstractUpdater::Child)
+{
 
     this->itemParentUpdater = itemParentUpdater;
 
 }
 
-
-
-
-void ItemPostDownloadUpdater::updateItems(const PostDownloadInfoData& postDownloadInfoData) {
+void ItemPostDownloadUpdater::updateItems(const PostDownloadInfoData &postDownloadInfoData)
+{
 
     UtilityNamespace::ItemStatus status = postDownloadInfoData.getStatus();
 
@@ -54,8 +52,8 @@ void ItemPostDownloadUpdater::updateItems(const PostDownloadInfoData& postDownlo
 
     }
     // if status comes from *verify/repair* or *extract* process :
-    else if ( (status >= VerifyStatus) &&
-              (status <= SevenZipProgramMissing) ) {
+    else if ((status >= VerifyStatus) &&
+             (status <= SevenZipProgramMissing)) {
 
         this->updateRepairExtractItems(postDownloadInfoData);
 
@@ -63,14 +61,12 @@ void ItemPostDownloadUpdater::updateItems(const PostDownloadInfoData& postDownlo
 
 }
 
-
-
-void ItemPostDownloadUpdater::updateDecodeItems(const PostDownloadInfoData& repairDecompressInfoData) {
+void ItemPostDownloadUpdater::updateDecodeItems(const PostDownloadInfoData &repairDecompressInfoData)
+{
 
     UtilityNamespace::ItemStatus status = repairDecompressInfoData.getStatus() ;
     QModelIndex parentModelIndex = repairDecompressInfoData.getModelIndex();
     int progression = repairDecompressInfoData.getProgression();
-
 
     // if item has been decoded store this status (useful for download retry feature) :
     if (status == DecodeFinishStatus) {
@@ -80,23 +76,20 @@ void ItemPostDownloadUpdater::updateDecodeItems(const PostDownloadInfoData& repa
         this->downloadModel->updateStatusDataFromIndex(parentModelIndex, itemStatusData);
     }
 
-
     // set progress to item :
     this->downloadModel->updateProgressItem(parentModelIndex, progression);
 
     // set status to items :
     this->downloadModel->updateStateItem(parentModelIndex, status);
 
-
     // move item to bottom of the list when decoding is finished :
     if (progression == PROGRESS_COMPLETE) {
 
         // retrieve state item :
-        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(parentModelIndex);
+        QStandardItem *stateItem = this->downloadModel->getStateItemFromIndex(parentModelIndex);
 
-        QStandardItem* nzbItem = stateItem->parent();
+        QStandardItem *nzbItem = stateItem->parent();
         nzbItem->appendRow(nzbItem->takeRow(stateItem->row()));
-
 
     }
 
@@ -105,16 +98,13 @@ void ItemPostDownloadUpdater::updateDecodeItems(const PostDownloadInfoData& repa
 
 }
 
-
-
-
-void ItemPostDownloadUpdater::updateRepairExtractItems(const PostDownloadInfoData& repairDecompressInfoData) {
+void ItemPostDownloadUpdater::updateRepairExtractItems(const PostDownloadInfoData &repairDecompressInfoData)
+{
 
     UtilityNamespace::ItemStatus status = repairDecompressInfoData.getStatus() ;
     QModelIndex parentModelIndex = repairDecompressInfoData.getModelIndex();
     int progression = repairDecompressInfoData.getProgression();
     UtilityNamespace::ItemTarget itemTarget = repairDecompressInfoData.getItemTarget();
-
 
     // update child and parent items :
     if (itemTarget == UtilityNamespace::BothItemsTarget) {
@@ -143,13 +133,12 @@ void ItemPostDownloadUpdater::updateRepairExtractItems(const PostDownloadInfoDat
         // update parent (nzb item) status :
         this->updateRepairExtractParentItems(repairDecompressInfoData);
 
-
     }
 
 }
 
-
-void ItemPostDownloadUpdater::updateRepairExtractParentItems(const PostDownloadInfoData& repairDecompressInfoData) {
+void ItemPostDownloadUpdater::updateRepairExtractParentItems(const PostDownloadInfoData &repairDecompressInfoData)
+{
 
     PostDownloadInfoData repairDecompressParentInfoData = repairDecompressInfoData;
 
@@ -160,12 +149,10 @@ void ItemPostDownloadUpdater::updateRepairExtractParentItems(const PostDownloadI
 
 }
 
+void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData &decodeInfoData)
+{
 
-
-void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData& decodeInfoData) {
-
-
-    QStandardItem* fileNameItem = this->downloadModel->itemFromIndex(decodeInfoData.getModelIndex());
+    QStandardItem *fileNameItem = this->downloadModel->itemFromIndex(decodeInfoData.getModelIndex());
     QString decodedFileName = decodeInfoData.getDecodedFileName();
 
     NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
@@ -176,8 +163,8 @@ void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData& decode
         nzbFileData.setDecodedFileName(decodedFileName);
 
         // add info about type of file (par2 or rar file) :
-        if ( !nzbFileData.isPar2File() &&
-             !nzbFileData.isArchiveFile() ) {
+        if (!nzbFileData.isPar2File() &&
+                !nzbFileData.isArchiveFile()) {
 
             QFile decodedFile(Utility::buildFullPath(nzbFileData.getFileSavePath(), nzbFileData.getDecodedFileName()));
             if (decodedFile.exists()) {
@@ -196,14 +183,14 @@ void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData& decode
 
                     // set a filter to file name extension in order to not extract zipped files
                     // that are not intended to be extracted as .jar, .war, ... files :
-                    if ( (fileExtension == UtilityNamespace::zipFileExt) ||
-                         (fileExtension == UtilityNamespace::sevenZipFileExt) ||
-                         FileOperations::isSplitFileFormat(decodedFile) ) {
+                    if ((fileExtension == UtilityNamespace::zipFileExt) ||
+                            (fileExtension == UtilityNamespace::sevenZipFileExt) ||
+                            FileOperations::isSplitFileFormat(decodedFile)) {
 
                         nzbFileData.setArchiveFormat(ZipOrSevenZipFormat);
                     }
 
-                }                
+                }
 
                 // check if it is a 7z file :
                 else if (decodedFile.peek(sevenZipFileMagicNumber.size()) == sevenZipFileMagicNumber) {
@@ -211,10 +198,9 @@ void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData& decode
                     nzbFileData.setArchiveFormat(ZipOrSevenZipFormat);
                 }
 
-
                 // check if it is a par2 file :
-                else if ( (decodedFile.peek(par2FileMagicNumber.size()) == par2FileMagicNumber) ||
-                          decodedFileName.endsWith(par2FileExt, Qt::CaseInsensitive)) {
+                else if ((decodedFile.peek(par2FileMagicNumber.size()) == par2FileMagicNumber) ||
+                         decodedFileName.endsWith(par2FileExt, Qt::CaseInsensitive)) {
 
                     nzbFileData.setPar2File(true);
                 }
@@ -225,17 +211,14 @@ void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData& decode
 
                 }
 
-
                 decodedFile.close();
             }
         }
 
     }
 
-
     // update the nzbFileData of current fileNameItem and its corresponding items :
     this->downloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
-
 
     // set the name of the decoded file :
     if (!decodedFileName.isEmpty()) {
@@ -250,8 +233,7 @@ void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData& decode
         // indicate type of article encoding :
         itemStatusData.setArticleEncodingType(decodeInfoData.getArticleEncodingType());
 
-
-        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(fileNameItem->index());
+        QStandardItem *stateItem = this->downloadModel->getStateItemFromIndex(fileNameItem->index());
         this->downloadModel->storeStatusDataToItem(stateItem, itemStatusData);
 
     }

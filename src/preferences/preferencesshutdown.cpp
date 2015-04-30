@@ -27,8 +27,8 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
-PreferencesShutdown::PreferencesShutdown(Core* core) {
+PreferencesShutdown::PreferencesShutdown(Core *core)
+{
 
     setupUi(this);
     this->setupConnections();
@@ -50,20 +50,19 @@ PreferencesShutdown::PreferencesShutdown(Core* core) {
 
 }
 
-
-void PreferencesShutdown::setupConnections() {
+void PreferencesShutdown::setupConnections()
+{
 
     // update text when shutdown method is changed :
-    connect (kcfg_shutdownMethods, SIGNAL(currentIndexChanged(int)), this, SLOT(currentIndexChangedSlot()));
+    connect(kcfg_shutdownMethods, SIGNAL(currentIndexChanged(int)), this, SLOT(currentIndexChangedSlot()));
 
     // enable/disable pausedShutdown option :
-    connect (kcfg_jobsRadioButton, SIGNAL(toggled(bool)), this, SLOT(radioButtonToggledSlot()));
-    connect (kcfg_timerRadioButton, SIGNAL(toggled(bool)), this, SLOT(radioButtonToggledSlot()));
+    connect(kcfg_jobsRadioButton, SIGNAL(toggled(bool)), this, SLOT(radioButtonToggledSlot()));
+    connect(kcfg_timerRadioButton, SIGNAL(toggled(bool)), this, SLOT(radioButtonToggledSlot()));
 }
 
-
-
-void PreferencesShutdown::currentIndexChangedSlot() {
+void PreferencesShutdown::currentIndexChangedSlot()
+{
 
     // set text timerRadioButton text according to choosen shutdown method :
     kcfg_timerRadioButton->setText(i18nc("%1 = Shutdown/Suspend to RAM/Suspend to disk",
@@ -72,7 +71,6 @@ void PreferencesShutdown::currentIndexChangedSlot() {
     // set text jobsRadioButton text according to choosen shutdown method :
     kcfg_jobsRadioButton->setText(i18nc("%1 = Shutdown/Suspend to RAM/Suspend to disk",
                                         "%1 when all jobs are finished", kcfg_shutdownMethods->currentText()));
-
 
     // set text pausedShutdown text according to choosen shutdown method :
     QString shutdownMethodText = kcfg_shutdownMethods->currentText();
@@ -83,20 +81,15 @@ void PreferencesShutdown::currentIndexChangedSlot() {
 
 }
 
-
-void PreferencesShutdown::radioButtonToggledSlot() {
+void PreferencesShutdown::radioButtonToggledSlot()
+{
 
     // enable adavanced option if jobsRadioButton is checked :
     if (kcfg_jobsRadioButton->isChecked()) {
         kcfg_pausedShutdown->setEnabled(true);
-    }
-    else {
+    } else {
         kcfg_pausedShutdown->setEnabled(false);
     }
 
 }
-
-
-
-
 

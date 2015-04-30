@@ -48,7 +48,6 @@ PreferencesPrograms::PreferencesPrograms()
     this->verifyProcessPriorityChangedSlot();
     this->extractProcessPriorityChangedSlot();
 
-
     iconLoader = new KIconLoader();
 }
 
@@ -57,9 +56,8 @@ PreferencesPrograms::~PreferencesPrograms()
     delete iconLoader;
 }
 
-
-
-void PreferencesPrograms::aboutToShowSettingsSlot(){
+void PreferencesPrograms::aboutToShowSettingsSlot()
+{
 
     QString labelIcon;
     QString labelText;
@@ -76,7 +74,6 @@ void PreferencesPrograms::aboutToShowSettingsSlot(){
     programPath = Utility::searchExternalPrograms(UtilityNamespace::rarExtractProgram, isProgramFound);
     this->displayProgramInfo(isProgramFound, programPath, unrarLabelIcon, unrarLabelText, UtilityNamespace::rarExtractProgram);
 
-
     // display information about 7z program :
     isProgramFound = false;
     programPath = Utility::searchExternalPrograms(UtilityNamespace::sevenZipExtractProgram, isProgramFound);
@@ -85,8 +82,7 @@ void PreferencesPrograms::aboutToShowSettingsSlot(){
 
     if (!programPath.isEmpty()) {
         programName = programPath.split("/").takeLast();
-    }
-    else {
+    } else {
         programName = UtilityNamespace::sevenZipExtractProgram.split(";").takeFirst();
     }
 
@@ -94,20 +90,17 @@ void PreferencesPrograms::aboutToShowSettingsSlot(){
 
 }
 
-
-void PreferencesPrograms::setupConnections() {
+void PreferencesPrograms::setupConnections()
+{
 
     // show/hide text when priority method is changed :
-    connect (kcfg_verifyProcessValues, SIGNAL(currentIndexChanged(int)), this, SLOT(verifyProcessPriorityChangedSlot()));
-    connect (kcfg_extractProcessValues, SIGNAL(currentIndexChanged(int)), this, SLOT(extractProcessPriorityChangedSlot()));
-
+    connect(kcfg_verifyProcessValues, SIGNAL(currentIndexChanged(int)), this, SLOT(verifyProcessPriorityChangedSlot()));
+    connect(kcfg_extractProcessValues, SIGNAL(currentIndexChanged(int)), this, SLOT(extractProcessPriorityChangedSlot()));
 
 }
 
-
-
-
-void PreferencesPrograms::displayProgramInfo(const bool isProgramFound, const QString& path, QLabel* labelIcon, QLabel* labelText, const QString& program){
+void PreferencesPrograms::displayProgramInfo(const bool isProgramFound, const QString &path, QLabel *labelIcon, QLabel *labelText, const QString &program)
+{
 
     // indicate path to binary file if program has been found :
     if (isProgramFound) {
@@ -130,8 +123,8 @@ void PreferencesPrograms::displayProgramInfo(const bool isProgramFound, const QS
 
 }
 
-
-void PreferencesPrograms::enableGroupBox(bool isEnabled, const QString& program) {
+void PreferencesPrograms::enableGroupBox(bool isEnabled, const QString &program)
+{
 
     // enable/disable auto repair settings if par2 program found/not found :
     if (program == UtilityNamespace::repairProgram) {
@@ -150,42 +143,36 @@ void PreferencesPrograms::enableGroupBox(bool isEnabled, const QString& program)
 
 }
 
-
-
-
-
-void PreferencesPrograms::verifyProcessPriorityChangedSlot() {
+void PreferencesPrograms::verifyProcessPriorityChangedSlot()
+{
 
     // custom priority is not selected, hide nice process comboBox :
     if (kcfg_verifyProcessValues->currentIndex() != (kcfg_verifyProcessValues->count() - 1)) {
         verifyNiceValueText->hide();
         kcfg_verifyNiceValue->hide();
-    }
-    else if (verifyNiceValueText->isHidden()) {
+    } else if (verifyNiceValueText->isHidden()) {
         verifyNiceValueText->show();
         kcfg_verifyNiceValue->show();
     }
 
-
 }
 
-void PreferencesPrograms::extractProcessPriorityChangedSlot() {
+void PreferencesPrograms::extractProcessPriorityChangedSlot()
+{
 
     // custom priority is not selected, hide nice process comboBox :
     if (kcfg_extractProcessValues->currentIndex() != (kcfg_extractProcessValues->count() - 1)) {
         extractNiceValueText->hide();
         kcfg_extractNiceValue->hide();
-    }
-    else if (extractNiceValueText->isHidden()) {
+    } else if (extractNiceValueText->isHidden()) {
         extractNiceValueText->show();
         kcfg_extractNiceValue->show();
     }
 
 }
 
-
-
-QString PreferencesPrograms::buildNicePriorityToolTip() {
+QString PreferencesPrograms::buildNicePriorityToolTip()
+{
 
     QString currentTip;
     currentTip.append("<table style='white-space: nowrap'>");

@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "segmentdecoderuuenc.h"
 
 #include "kwooty_debug.h"
@@ -26,16 +25,16 @@
 #include "kwootysettings.h"
 #include "segmentsdecoderthread.h"
 
-
-
-SegmentDecoderUUEnc::SegmentDecoderUUEnc(SegmentsDecoderThread* parent) : SegmentDecoderBase(parent) {
+SegmentDecoderUUEnc::SegmentDecoderUUEnc(SegmentsDecoderThread *parent) : SegmentDecoderBase(parent)
+{
 }
 
-SegmentDecoderUUEnc::~SegmentDecoderUUEnc() {
+SegmentDecoderUUEnc::~SegmentDecoderUUEnc()
+{
 }
 
-
-void SegmentDecoderUUEnc::decodeProgression(PostDownloadInfoData& decodeInfoData) {
+void SegmentDecoderUUEnc::decodeProgression(PostDownloadInfoData &decodeInfoData)
+{
 
     decodeInfoData.setCrc32Match(this->crc32Match);
     decodeInfoData.setArticleEncodingType(ArticleEncodingUUEnc);
@@ -44,20 +43,17 @@ void SegmentDecoderUUEnc::decodeProgression(PostDownloadInfoData& decodeInfoData
 
 }
 
-
-
-void SegmentDecoderUUEnc::decodeSegments(NzbFileData currentNzbFileData, const QString& fileNameStr) {
+void SegmentDecoderUUEnc::decodeSegments(NzbFileData currentNzbFileData, const QString &fileNameStr)
+{
 
     // init variables :
     this->parentIdentifer = currentNzbFileData.getUniqueIdentifier();
     this->segmentDataList = currentNzbFileData.getSegmentList();
     this->crc32Match = false;
 
-
     // decodeInfoData sent by defaut :
     PostDownloadInfoData decodeInfoData;
     decodeInfoData.initDecode(this->parentIdentifer, PROGRESS_COMPLETE, DecodeErrorStatus);
-
 
     QString fileSavePath = currentNzbFileData.getFileSavePath();
     if (Utility::createFolder(fileSavePath)) {
@@ -82,7 +78,6 @@ void SegmentDecoderUUEnc::decodeSegments(NzbFileData currentNzbFileData, const Q
                 this->decodeProgression(decodeInfoData);
             }
 
-
             // close the file :
             targetFile.close();
 
@@ -101,18 +96,14 @@ void SegmentDecoderUUEnc::decodeSegments(NzbFileData currentNzbFileData, const Q
         this->segmentsDecoderThread->emitSaveFileError();
     }
 
-
-
     // clear variables :
     this->parentIdentifer.clear();
     this->segmentDataList.clear();
 
 }
 
-
-
-
-bool SegmentDecoderUUEnc::decodeSegmentFiles(QFile& targetFile) {
+bool SegmentDecoderUUEnc::decodeSegmentFiles(QFile &targetFile)
+{
 
     bool encodedDataFound = false;
     bool writeError = false;
@@ -157,12 +148,10 @@ bool SegmentDecoderUUEnc::decodeSegmentFiles(QFile& targetFile) {
 
     }
 
-
     // if all segments have a correct crc32 :
     if (segmentDataList.size() != segmentCrc32MatchNumber) {
         this->crc32Match = false;
     }
-
 
     // end of decoding management :
     if (writeError) {
@@ -177,12 +166,8 @@ bool SegmentDecoderUUEnc::decodeSegmentFiles(QFile& targetFile) {
 
 }
 
-
-
-
-
-void SegmentDecoderUUEnc::decodeEncodedData(QFile& targetFile, SegmentData& currentSegment, int& segmentCrc32MatchNumber, const QByteArray& segmentByteArray, bool& encodedDataFound, bool& writeError) {
-
+void SegmentDecoderUUEnc::decodeEncodedData(QFile &targetFile, SegmentData &currentSegment, int &segmentCrc32MatchNumber, const QByteArray &segmentByteArray, bool &encodedDataFound, bool &writeError)
+{
 
     // crc32 can not be checked for uu encoded files, set it to false :
     this->crc32Match = false;
@@ -198,9 +183,8 @@ void SegmentDecoderUUEnc::decodeEncodedData(QFile& targetFile, SegmentData& curr
 
 }
 
-
-
-bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& targetFile, const int& elementInList) {
+bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray &captureArray, QFile &targetFile, const int &elementInList)
+{
 
     bool writeError = false;
 
@@ -220,7 +204,7 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
             for (int i = 1; i < uuLine.size() - 1; ++i) {
 
                 // skip current loop (get groups of 4 bytes):
-                if ( counter == 3) {
+                if (counter == 3) {
                     counter = 0;
                 }
                 // process decoding :
@@ -228,9 +212,8 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
                     int shiftLeft = (2 * counter) + 2;
                     int shiftRight = 6 - shiftLeft;
 
-                    decodeArray.append( ((uuLine.at(i) - 32) & 077) << shiftLeft |
-                                        ((uuLine.at(i + 1) - 32) & 077 )>> shiftRight );
-
+                    decodeArray.append(((uuLine.at(i) - 32) & 077) << shiftLeft |
+                                       ((uuLine.at(i + 1) - 32) & 077) >> shiftRight);
 
                     counter++;
                 }
@@ -240,7 +223,6 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
         }
 
     }
-
 
     // write decoded array in the target file :
     if (targetFile.write(decodeArray) == -1) {
@@ -256,19 +238,17 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray& captureArray, QFile& tar
 
 }
 
-
-
-
-bool SegmentDecoderUUEnc::isUUEncodedLine(QByteArray& currentLine) {
+bool SegmentDecoderUUEnc::isUUEncodedLine(QByteArray &currentLine)
+{
 
     bool uuEncodedLine = false;
 
     // If line is size 61, first character should be "M" :
-    if ( (currentLine.size() == UUMaxEncodedLineSize) && (currentLine.at(0) == 'M') ) {
+    if ((currentLine.size() == UUMaxEncodedLineSize) && (currentLine.at(0) == 'M')) {
         uuEncodedLine = true;
     }
     // If size is lower, check first character :
-    else if ( (currentLine.size() > 0) && (currentLine.size() < UUMaxEncodedLineSize) ) {
+    else if ((currentLine.size() > 0) && (currentLine.size() < UUMaxEncodedLineSize)) {
 
         int dataSize = (int)(currentLine.at(0) - 32);
         int dataSizeComputed = (currentLine.size() - 1) * 3 / 4;
@@ -278,8 +258,8 @@ bool SegmentDecoderUUEnc::isUUEncodedLine(QByteArray& currentLine) {
         }
 
         // if dataSizeComputed is bigger, maybe padding characters have been added :
-        else if ( (dataSizeComputed > dataSize) &&
-                  (dataSize > 0) && (dataSize < UUMaxDecodedLineSize) ) {
+        else if ((dataSizeComputed > dataSize) &&
+                 (dataSize > 0) && (dataSize < UUMaxDecodedLineSize)) {
 
             int paddedCharSize = dataSizeComputed - dataSize;
 
@@ -297,17 +277,16 @@ bool SegmentDecoderUUEnc::isUUEncodedLine(QByteArray& currentLine) {
     // if line match previous criteria, check that all characters belong to uuencode character table :
     if (uuEncodedLine) {
 
-        foreach (const char& currentChar, currentLine) {
+        foreach (const char &currentChar, currentLine) {
 
             // if characters are out of scope, this is not a uuEncoded line :
-            if ( (currentChar < ' ') ||
-                 ((currentChar > '_') && (currentChar != '`')) ) {
+            if ((currentChar < ' ') ||
+                    ((currentChar > '_') && (currentChar != '`'))) {
 
                 uuEncodedLine = false;
                 break;
 
             }
-
 
         }
     }
@@ -316,12 +295,11 @@ bool SegmentDecoderUUEnc::isUUEncodedLine(QByteArray& currentLine) {
 
 }
 
-
-QString SegmentDecoderUUEnc::searchPattern(QIODevice* segmentFile) {
+QString SegmentDecoderUUEnc::searchPattern(QIODevice *segmentFile)
+{
 
     QString fileName;
     bool uuEncodedDataFound = false;
-
 
     while (!segmentFile->atEnd()) {
 
@@ -330,7 +308,7 @@ QString SegmentDecoderUUEnc::searchPattern(QIODevice* segmentFile) {
         QByteArray lineArray = segmentFile->readLine().trimmed();
 
         // if 'begin' pattern has been found, retrieve the file name :
-        if (lineArray.contains(uuNamePattern) && !lineArray.contains(yNamePattern) ) {
+        if (lineArray.contains(uuNamePattern) && !lineArray.contains(yNamePattern)) {
 
             // pattern expected : "begin 644 fileName"
             QList<QByteArray> wordList =  lineArray.split(' ');
@@ -372,5 +350,4 @@ QString SegmentDecoderUUEnc::searchPattern(QIODevice* segmentFile) {
     return fileName;
 
 }
-
 

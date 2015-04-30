@@ -18,15 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SCHEDULERPLUGIN_H
 #define SCHEDULERPLUGIN_H
 
-
 #include "plugin.h"
 #include "scheduler.h"
-
-
 
 class SchedulerPlugin : public Plugin
 {
@@ -35,25 +31,22 @@ class SchedulerPlugin : public Plugin
 
 public:
 
-    SchedulerPlugin(QObject*, const QList<QVariant>&);
+    SchedulerPlugin(QObject *, const QList<QVariant> &);
     ~SchedulerPlugin();
-
 
 private:
 
-    Scheduler* scheduler;
+    Scheduler *scheduler;
 
     void load();
     void unload();
     void configUpdated();
-
 
 Q_SIGNALS:
 
 public Q_SLOTS:
 
 private Q_SLOTS:
-
 
 };
 

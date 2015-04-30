@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "textpushbuttonwidget.h"
 
 #include <QIcon>
@@ -27,9 +26,8 @@
 #include "utilities/utilityiconpainting.h"
 #include "serverstatuswidget.h"
 
-
-TextPushButtonWidget::TextPushButtonWidget(QWidget* parent) : QWidget(parent) {
-
+TextPushButtonWidget::TextPushButtonWidget(QWidget *parent) : QWidget(parent)
+{
 
     this->textLabel = new QLabel(this);
     this->pushButton = new QPushButton(this);
@@ -51,28 +49,26 @@ TextPushButtonWidget::TextPushButtonWidget(QWidget* parent) : QWidget(parent) {
 
 }
 
-
-
-void TextPushButtonWidget::setupConnections() {
+void TextPushButtonWidget::setupConnections()
+{
 
     // forward pushButton pressed signal :
-    connect (this->pushButton, SIGNAL(clicked(bool)), (ServerStatusWidget*)this->parent(), SLOT(buttonPressedSlot()));
+    connect(this->pushButton, SIGNAL(clicked(bool)), (ServerStatusWidget *)this->parent(), SLOT(buttonPressedSlot()));
 
 }
 
-
-
-void TextPushButtonWidget::showIcon() {
+void TextPushButtonWidget::showIcon()
+{
     this->pushButton->show();
 }
 
-
-void TextPushButtonWidget::hideIcon() {
+void TextPushButtonWidget::hideIcon()
+{
     this->pushButton->hide();
 }
 
-
-void TextPushButtonWidget::setIcon(const ServerConnectionIcon& serverConnectionIcon) {
+void TextPushButtonWidget::setIcon(const ServerConnectionIcon &serverConnectionIcon)
+{
 
     // avoid useless icon drawing :
     if (this->serverConnectionIcon != serverConnectionIcon) {
@@ -82,16 +78,15 @@ void TextPushButtonWidget::setIcon(const ServerConnectionIcon& serverConnectionI
 
     }
 
-
 }
 
-
-void TextPushButtonWidget::setText(const QString& text) {
+void TextPushButtonWidget::setText(const QString &text)
+{
     this->textLabel->setText(text);
 }
 
-
-QString TextPushButtonWidget::getText() const {
+QString TextPushButtonWidget::getText() const
+{
     return this->textLabel->text();
 }
 

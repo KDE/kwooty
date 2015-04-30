@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef CATEGORIESFILEHANDLER_H
 #define CATEGORIESFILEHANDLER_H
 
@@ -28,37 +27,34 @@
 
 class CategoriesModel;
 
-
-class CategoriesFileHandler : public QObject {
+class CategoriesFileHandler : public QObject
+{
 
     Q_OBJECT
 
 public:
 
-    CategoriesFileHandler(QObject*);
+    CategoriesFileHandler(QObject *);
     CategoriesFileHandler();
-    
-    CategoriesModel* loadModelFromFile(QObject*);
-    QStringList retrieveMainTypeList();
-    void saveModelToFile(CategoriesModel*);
-    void addListToModel(CategoriesModel*, const QStringList&);
-    void reloadModel(CategoriesModel*);
 
+    CategoriesModel *loadModelFromFile(QObject *);
+    QStringList retrieveMainTypeList();
+    void saveModelToFile(CategoriesModel *);
+    void addListToModel(CategoriesModel *, const QStringList &);
+    void reloadModel(CategoriesModel *);
 
 private:
 
-    void fillModel(CategoriesModel*);
+    void fillModel(CategoriesModel *);
     QString retrieveCategoriesFilePath();
-    QString readNextCharacters(QXmlStreamReader&);
-    bool isStartElement(QXmlStreamReader&, const QString&);
-    bool isEndElement(QXmlStreamReader&, const QString&);
-
+    QString readNextCharacters(QXmlStreamReader &);
+    bool isStartElement(QXmlStreamReader &, const QString &);
+    bool isEndElement(QXmlStreamReader &, const QString &);
 
 Q_SIGNALS:
-    
 
 public Q_SLOTS:
-    
+
 };
 
 #endif // CATEGORIESFILEHANDLER_H

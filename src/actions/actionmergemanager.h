@@ -18,41 +18,38 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef ACTIONMERGEMANAGER_H
 #define ACTIONMERGEMANAGER_H
 
 #include "actionfilemanagerbase.h"
 
-
-class ActionMergeManager : public ActionFileManagerBase {
+class ActionMergeManager : public ActionFileManagerBase
+{
 
     Q_OBJECT
 
 public:
-    explicit ActionMergeManager(ActionsManager*);
-    QList<QStandardItem*> checkMergeCandidates(bool&);
+    explicit ActionMergeManager(ActionsManager *);
+    QList<QStandardItem *> checkMergeCandidates(bool &);
 
 private:
 
     QString selectedItemUuid;
     QString targetItemUuid;
 
-    bool isMergeAllowed(QStandardItem*) const;
-    void processMerge(QStandardItem*, QStandardItem*);
+    bool isMergeAllowed(QStandardItem *) const;
+    void processMerge(QStandardItem *, QStandardItem *);
     void launchProcess() Q_DECL_OVERRIDE;
     void setupConnections();
-
 
 Q_SIGNALS:
     void recalculateNzbSizeSignal(const QModelIndex);
 
-
 public Q_SLOTS:
     void mergeSubMenuAboutToShowSlot();
     void actionTriggeredSlot() Q_DECL_OVERRIDE;
-    void actionTriggeredSlot(QAction*);
-    void handleResultSlot(KJob*);
+    void actionTriggeredSlot(QAction *);
+    void handleResultSlot(KJob *);
 };
 
 #endif // ACTIONMERGEMANAGER_H

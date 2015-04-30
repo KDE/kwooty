@@ -18,49 +18,54 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "jobnotifydata.h"
 
-JobNotifyData::JobNotifyData(){
+JobNotifyData::JobNotifyData()
+{
 
 }
 
-
-QString JobNotifyData::getParentUniqueIdentifier() const {
+QString JobNotifyData::getParentUniqueIdentifier() const
+{
     return this->mParentUniqueIdentifier;
 }
 
-void JobNotifyData::setParentUniqueIdentifier(const QString& parentUniqueIdentifier) {
+void JobNotifyData::setParentUniqueIdentifier(const QString &parentUniqueIdentifier)
+{
     this->mParentUniqueIdentifier = parentUniqueIdentifier;
 }
 
-
-UtilityNamespace::ItemStatus JobNotifyData::getStatus() const {
+UtilityNamespace::ItemStatus JobNotifyData::getStatus() const
+{
     return this->mStatus;
 }
 
-void JobNotifyData::setStatus(const UtilityNamespace::ItemStatus& status) {
+void JobNotifyData::setStatus(const UtilityNamespace::ItemStatus &status)
+{
     this->mStatus = status;
 }
 
-
-QDateTime JobNotifyData::getDateTime() const {
+QDateTime JobNotifyData::getDateTime() const
+{
     return this->mDateTime;
 }
 
-void JobNotifyData::setDateTime(const QDateTime& dateTime) {
+void JobNotifyData::setDateTime(const QDateTime &dateTime)
+{
     this->mDateTime = dateTime;
 }
 
-
-QString JobNotifyData::getNzbFileName() const {
+QString JobNotifyData::getNzbFileName() const
+{
     return this->mNzbFileName;
 }
 
-void JobNotifyData::setNzbFileName(const QString& nzbFileName) {
+void JobNotifyData::setNzbFileName(const QString &nzbFileName)
+{
     this->mNzbFileName = nzbFileName;
 }
 
-bool JobNotifyData::operator==(const JobNotifyData& jobNotifyDataToCompare) {
+bool JobNotifyData::operator==(const JobNotifyData &jobNotifyDataToCompare)
+{
     return (this->getParentUniqueIdentifier() == jobNotifyDataToCompare.getParentUniqueIdentifier());
 }

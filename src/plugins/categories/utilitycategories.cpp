@@ -18,40 +18,38 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "utilitycategories.h"
 
 #include "kwooty_debug.h"
 
 #include "mimedata.h"
 
-
-UtilityCategories::UtilityCategories() {
+UtilityCategories::UtilityCategories()
+{
 
 }
 
-
-
-QString UtilityCategories::buildMaincategoryPattern(const QString& mimeType) {
+QString UtilityCategories::buildMaincategoryPattern(const QString &mimeType)
+{
 
     return UtilityCategories::buildPattern(mimeType, 0);
 }
 
-
-QString UtilityCategories::buildSubcategoryPattern(const QString& mimeType) {
+QString UtilityCategories::buildSubcategoryPattern(const QString &mimeType)
+{
 
     return UtilityCategories::buildPattern(mimeType, 1);
 
 }
 
-
-QString UtilityCategories::buildPattern(const QString& mimeType, const int& position) {
+QString UtilityCategories::buildPattern(const QString &mimeType, const int &position)
+{
 
     QString subcategory;
 
     QStringList tempList = mimeType.split("/");
 
-    if (tempList.size() > position ) {
+    if (tempList.size() > position) {
 
         subcategory = tempList.at(position);
     }
@@ -59,8 +57,8 @@ QString UtilityCategories::buildPattern(const QString& mimeType, const int& posi
     return subcategory;
 }
 
-
-QString UtilityCategories::buildFullCategoryPattern(CategoriesModel* categoriesModel, QStandardItem* selectedItem, const QString& subcategory) {
+QString UtilityCategories::buildFullCategoryPattern(CategoriesModel *categoriesModel, QStandardItem *selectedItem, const QString &subcategory)
+{
 
     QString fullCategoryPattern;
 
@@ -72,15 +70,14 @@ QString UtilityCategories::buildFullCategoryPattern(CategoriesModel* categoriesM
 
 }
 
-
-QString UtilityCategories::buildFullCategoryPattern(const QString& category, const QString& subcategory) {
+QString UtilityCategories::buildFullCategoryPattern(const QString &category, const QString &subcategory)
+{
 
     return QString(Utility::buildFullPath(category, subcategory));
 }
 
-
-
-QString UtilityCategories::buildTextToDisplay(const QString& category, const QString& subcategory) {
+QString UtilityCategories::buildTextToDisplay(const QString &category, const QString &subcategory)
+{
 #if 0 //PORT KF5
     QString textToDisplay;
     KSharedPtr<KMimeType> mimeType = KMimeType::mimeType(UtilityCategories::buildFullCategoryPattern(category, subcategory));
@@ -95,8 +92,8 @@ QString UtilityCategories::buildTextToDisplay(const QString& category, const QSt
 #endif
 }
 
-
-QString UtilityCategories::buildTextToDisplayFromFullCategoryPattern(const QString& fullCategory) {
+QString UtilityCategories::buildTextToDisplayFromFullCategoryPattern(const QString &fullCategory)
+{
 #if 0 //PORT KF5
     QString textToDisplay;
     KSharedPtr<KMimeType> mimeType = KMimeType::mimeType(fullCategory);
@@ -111,9 +108,8 @@ QString UtilityCategories::buildTextToDisplayFromFullCategoryPattern(const QStri
 #endif
 }
 
-
-
-QString UtilityCategories::builExtensionStringFromMimeType(KSharedPtr<KMimeType> mimeType) {
+QString UtilityCategories::builExtensionStringFromMimeType(KSharedPtr<KMimeType> mimeType)
+{
 
     QString extensionString;
 
@@ -124,8 +120,8 @@ QString UtilityCategories::builExtensionStringFromMimeType(KSharedPtr<KMimeType>
     return extensionString;
 }
 
-
-void UtilityCategories::builPartialMimeData(MimeData& mimeData) {
+void UtilityCategories::builPartialMimeData(MimeData &mimeData)
+{
 
 #if 0 //PORT KF5
     QString fullCategory = UtilityCategories::buildFullCategoryPattern(mimeData.getMainCategory(), mimeData.getSubCategory());
@@ -142,18 +138,17 @@ void UtilityCategories::builPartialMimeData(MimeData& mimeData) {
 #endif
 }
 
-
-
-QStringList UtilityCategories::retrieveMainCategoryList() {
+QStringList UtilityCategories::retrieveMainCategoryList()
+{
 
     QStringList parentTypeList;
 #if 0 //PORT KF5
-    foreach (const KSharedPtr<KMimeType>& mimeType,  KMimeType::allMimeTypes()) {
+    foreach (const KSharedPtr<KMimeType> &mimeType,  KMimeType::allMimeTypes()) {
 
         QStringList tempList = mimeType->name().split("/");
 
-        if ( (tempList.size() > 1 )&&
-             !parentTypeList.contains(tempList.at(0))) {
+        if ((tempList.size() > 1) &&
+                !parentTypeList.contains(tempList.at(0))) {
 
             // do not include "all" main category that include all mime types :
             if (tempList.at(0) != "all") {
@@ -173,8 +168,8 @@ QStringList UtilityCategories::retrieveMainCategoryList() {
     return parentTypeList;
 }
 
-
-QStringList UtilityCategories::retrieveFilteredMainCategoryList(CategoriesModel* categoriesModel) {
+QStringList UtilityCategories::retrieveFilteredMainCategoryList(CategoriesModel *categoriesModel)
+{
 
     QStringList filteredMainCategoryList = UtilityCategories::retrieveMainCategoryList();
 

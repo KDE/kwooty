@@ -33,26 +33,21 @@
 #include "kwootysettings.h"
 #include "utilities/utility.h"
 
-
-
-
-NzbFileHandler::NzbFileHandler(Core* parent) : QObject (parent) {
+NzbFileHandler::NzbFileHandler(Core *parent) : QObject(parent)
+{
     this->parent = parent;
 }
 
+bool sortingOrderLessThan(const GlobalFileData &globalFileData1, const GlobalFileData &globalFileData2)
+{
 
-
-bool sortingOrderLessThan(const GlobalFileData& globalFileData1, const GlobalFileData& globalFileData2) {
-
-  return (globalFileData1.getNzbFileData().getFileName() < globalFileData2.getNzbFileData().getFileName());
+    return (globalFileData1.getNzbFileData().getFileName() < globalFileData2.getNzbFileData().getFileName());
 
 }
 
+QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile &file, const QString &nzbName)
+{
 
-
-QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString& nzbName) {
-
-    
     // variables definition :
     QMap<int, SegmentData> segmentMap;
     QList<GlobalFileData> globalFileDataList;
@@ -70,7 +65,7 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
         file.reset();
     }
 
-    QXmlStreamReader stream (&file);
+    QXmlStreamReader stream(&file);
 
     while (!stream.atEnd()) {
 
@@ -97,8 +92,8 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
                 }
 
                 // if reduced file name seems to be valid :
-                if ( !reducedFileName.isEmpty() &&
-                     !QFileInfo(reducedFileName).suffix().isEmpty() ) {
+                if (!reducedFileName.isEmpty() &&
+                        !QFileInfo(reducedFileName).suffix().isEmpty()) {
 
                     nzbFileData.setReducedFileName(reducedFileName);
 
@@ -139,7 +134,6 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
                 SegmentData segmentData(bytes, number, part, UtilityNamespace::IdleStatus);
                 segmentData.setProgress(PROGRESS_INIT);
                 segmentData.setElementInList(elementInList++);
-
 
                 // segmentData is stored in a map in order to sort segments in ascending order :
                 segmentMap.insert(number.toInt(), segmentData);
@@ -186,7 +180,7 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
                     globalPar2DataList.append(GlobalFileData(nzbFileData));
                 }
 
-                // clear variables :    
+                // clear variables :
                 NzbFileData nzbFileDataTemp;
                 nzbFileData = nzbFileDataTemp;
                 segmentMap.clear();
@@ -195,12 +189,10 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
 
             }
 
-
-            else if ( tokenType == QXmlStreamReader::Invalid ) {
+            else if (tokenType == QXmlStreamReader::Invalid) {
                 fileSucessfulyProcessed = false;
             }
         }
-
 
         if (stream.hasError()) {
             fileSucessfulyProcessed = false;
@@ -211,11 +203,10 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
     QList<GlobalFileData> globalFileDataOrderedList;
 
     // if error occured display error message box :
-    if(!fileSucessfulyProcessed) {
+    if (!fileSucessfulyProcessed) {
         this->parent->getCentralWidget()->displayNzbHandleErrorMessageBox(file.fileName());
 
-    }
-    else {
+    } else {
 
         qSort(globalFileDataList.begin(), globalFileDataList.end(), sortingOrderLessThan);
         qSort(globalPar2DataList.begin(), globalPar2DataList.end(), sortingOrderLessThan);
@@ -225,9 +216,7 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile& file, const QString&
 
     }
 
-
     return globalFileDataOrderedList;
 
 }
-
 

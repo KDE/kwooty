@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "nntpsocket.h"
 
 #include "kwooty_debug.h"
@@ -27,8 +26,8 @@
 #include "clientmanagerconn.h"
 #include "data/serverdata.h"
 
-
-NntpSocket::NntpSocket(ClientManagerConn* parent) : QSslSocket(parent) {
+NntpSocket::NntpSocket(ClientManagerConn *parent) : QSslSocket(parent)
+{
 
     this->parent = parent;
 
@@ -61,14 +60,14 @@ NntpSocket::NntpSocket(ClientManagerConn* parent) : QSslSocket(parent) {
 
 }
 
-NntpSocket::~NntpSocket() {
+NntpSocket::~NntpSocket()
+{
 
     this->stopAllTimers();
 }
 
-
-
-void NntpSocket::stopAllTimers() {
+void NntpSocket::stopAllTimers()
+{
 
     // stop all timers :
     this->idleTimeOutTimer->stop();
@@ -77,23 +76,23 @@ void NntpSocket::stopAllTimers() {
 
 }
 
-
-void NntpSocket::abort() {
+void NntpSocket::abort()
+{
 
     this->stopAllTimers();
     QSslSocket::abort();
 }
 
-
-void NntpSocket::quitAndReconnectInMs(const int& reconnectSeconds) {
+void NntpSocket::quitAndReconnectInMs(const int &reconnectSeconds)
+{
 
     this->sendQuitCommandToServer();
     this->abort();
     QTimer::singleShot(reconnectSeconds, this, SLOT(answerTimeOutSlot()));
 }
 
-
-void NntpSocket::setupConnections() {
+void NntpSocket::setupConnections()
+{
 
     // timer connections :
     connect(this->tryToReconnectTimer, SIGNAL(timeout()), this, SLOT(tryToReconnectSlot()));
@@ -101,23 +100,23 @@ void NntpSocket::setupConnections() {
     connect(this->serverAnswerTimer, SIGNAL(timeout()), this, SLOT(answerTimeOutSlot()));
     connect(this->rateControlTimer, SIGNAL(timeout()), this, SLOT(rateControlSlot()));
 
-    connect (this, SIGNAL(encrypted()), this, SLOT(socketEncryptedSlot()));
-    connect (this, SIGNAL(peerVerifyError(QSslError)), this, SLOT(peerVerifyErrorSlot()));
+    connect(this, SIGNAL(encrypted()), this, SLOT(socketEncryptedSlot()));
+    connect(this, SIGNAL(peerVerifyError(QSslError)), this, SLOT(peerVerifyErrorSlot()));
 
 }
 
-
-bool NntpSocket::isSocketUnconnected() const {
+bool NntpSocket::isSocketUnconnected() const
+{
     return (this->state() == QAbstractSocket::UnconnectedState);
 }
 
-
-bool NntpSocket::isSocketConnected() const {
+bool NntpSocket::isSocketConnected() const
+{
     return (this->state() == QAbstractSocket::ConnectedState);
 }
 
-
-void NntpSocket::dataReadArrived() {
+void NntpSocket::dataReadArrived()
+{
 
     // answer received before time-out : OK
     if (this->serverAnswerTimer->isActive()) {
@@ -126,15 +125,15 @@ void NntpSocket::dataReadArrived() {
 
 }
 
-
-void NntpSocket::dataReadPending() {
+void NntpSocket::dataReadPending()
+{
 
     this->serverAnswerTimer->start();
 
 }
 
-
-void NntpSocket::dataReadComplete() {
+void NntpSocket::dataReadComplete()
+{
 
     // if segment data has been fully transferred and connection is encrypted :
     if (this->isEncrypted()) {
@@ -148,16 +147,16 @@ void NntpSocket::dataReadComplete() {
 
 }
 
-
-int NntpSocket::readAnswer() {
+int NntpSocket::readAnswer()
+{
 
     int answer = this->readLine().left(3).toInt();
 
     // stop reconnect timer if authentication has been rejected :
-    if ( answer == NntpClient::AuthenticationRequired   ||
-         answer == NntpClient::PasswordRequested        ||
-         answer == NntpClient::AuthenticationDenied     ||
-         answer == NntpClient::AuthenticationRejected ) {
+    if (answer == NntpClient::AuthenticationRequired   ||
+            answer == NntpClient::PasswordRequested        ||
+            answer == NntpClient::AuthenticationDenied     ||
+            answer == NntpClient::AuthenticationRejected) {
 
         this->serverAnswerTimer->stop();
     }
@@ -165,36 +164,34 @@ int NntpSocket::readAnswer() {
     return answer;
 }
 
-
-void NntpSocket::connected() {
+void NntpSocket::connected()
+{
 
     this->tryToReconnectTimer->stop();
     this->idleTimeOutTimer->start();
 
 }
 
-
-void NntpSocket::tryToReconnect() {
+void NntpSocket::tryToReconnect()
+{
 
     if (this->idleTimeOutTimer->isActive()) {
         this->idleTimeOutTimer->stop();
-    }
-    else if (!this->tryToReconnectTimer->isActive()) {
+    } else if (!this->tryToReconnectTimer->isActive()) {
         this->tryToReconnectTimer->start();
     }
 
 }
 
-
-void NntpSocket::retryDownloadDelayed() {
+void NntpSocket::retryDownloadDelayed()
+{
 
     this->serverAnswerTimer->stop();
     this->idleTimeOutTimer->stop();
 }
 
-
-
-void NntpSocket::connectToHost() {
+void NntpSocket::connectToHost()
+{
 
     if (this->isSocketUnconnected()) {
 
@@ -213,8 +210,7 @@ void NntpSocket::connectToHost() {
             this->certificateVerified = true;
             QSslSocket::connectToHostEncrypted(serverData.getHostName(), serverData.getPort(), ReadWrite);
 
-        }
-        else {
+        } else {
 
             QSslSocket::connectToHost(serverData.getHostName(), serverData.getPort(), ReadWrite);
             // SSL is disabled :
@@ -225,9 +221,8 @@ void NntpSocket::connectToHost() {
     }
 }
 
-
-
-void NntpSocket::notifyClientStatus(NntpClient::NntpClientStatus nntpClientStatus, NntpClient::TimerJob timerJob) {
+void NntpSocket::notifyClientStatus(NntpClient::NntpClientStatus nntpClientStatus, NntpClient::TimerJob timerJob)
+{
 
     // start/stop timers according to where this method has been called :
     if (timerJob == NntpClient::StartStopTimers) {
@@ -257,8 +252,8 @@ void NntpSocket::notifyClientStatus(NntpClient::NntpClientStatus nntpClientStatu
 
 }
 
-
-QByteArray NntpSocket::readAll() {
+QByteArray NntpSocket::readAll()
+{
 
     this->dataReadArrived();
 
@@ -266,15 +261,15 @@ QByteArray NntpSocket::readAll() {
 
 }
 
-
-QByteArray NntpSocket::readChunck(const qint64& speedLimitInBytes, const int& enabledClientNumber) {
+QByteArray NntpSocket::readChunck(const qint64 &speedLimitInBytes, const int &enabledClientNumber)
+{
 
     this->dataReadArrived();
 
     this->manageBuffer(NntpSocket::SegmentDownloading);
 
     // compute maximum byte to fetch :
-    qint64 maxReadbytes = ( speedLimitInBytes * this->rateControlTimer->interval() ) / ( enabledClientNumber * 1000 ) + this->missingBytes;
+    qint64 maxReadbytes = (speedLimitInBytes * this->rateControlTimer->interval()) / (enabledClientNumber * 1000) + this->missingBytes;
     QByteArray chunckData = this->read(maxReadbytes);
 
     this->missingBytes = qMax(maxReadbytes - chunckData.size(), static_cast<qint64>(0));
@@ -282,20 +277,20 @@ QByteArray NntpSocket::readChunck(const qint64& speedLimitInBytes, const int& en
     return chunckData;
 }
 
-
-void NntpSocket::checkRateControlTimer() {
+void NntpSocket::checkRateControlTimer()
+{
 
     // bandwidth control has been disabled :
-    if ( this->parent->isBandwidthFull() &&
-         this->rateControlTimer->isActive() ) {
+    if (this->parent->isBandwidthFull() &&
+            this->rateControlTimer->isActive()) {
 
         this->setReadBufferSize(0);
         this->rateControlTimer->stop();
 
     }
     // bandwidth control has been enabled :
-    else if ( this->parent->isBandwidthLimited() &&
-              !this->rateControlTimer->isActive() ) {
+    else if (this->parent->isBandwidthLimited() &&
+             !this->rateControlTimer->isActive()) {
 
         this->missingBytes = 0;
         this->rateControlTimer->start();
@@ -303,8 +298,8 @@ void NntpSocket::checkRateControlTimer() {
 
 }
 
-
-void NntpSocket::manageBuffer(const SegmentDownload& segmentDownload) {
+void NntpSocket::manageBuffer(const SegmentDownload &segmentDownload)
+{
 
     int readBufferSize = 0;
 
@@ -327,7 +322,8 @@ void NntpSocket::manageBuffer(const SegmentDownload& segmentDownload) {
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-void NntpSocket::tryToReconnectSlot() {
+void NntpSocket::tryToReconnectSlot()
+{
 
     // try to connect, be sure to be unconnected before :
     if (this->isSocketUnconnected()) {
@@ -336,16 +332,16 @@ void NntpSocket::tryToReconnectSlot() {
 
 }
 
-
-void NntpSocket::idleTimeOutSlot() {
+void NntpSocket::idleTimeOutSlot()
+{
 
     this->sendQuitCommandToServer();
     this->disconnectFromHost();
 
 }
 
-
-void NntpSocket::answerTimeOutSlot() {
+void NntpSocket::answerTimeOutSlot()
+{
 
     //qCDebug(KWOOTY_LOG) << "Host answer time out, reconnecting..., groupId : " << this->parent->getServerGroup()->getRealServerGroupId();
     this->serverAnswerTimer->stop();
@@ -358,16 +354,16 @@ void NntpSocket::answerTimeOutSlot() {
 
 }
 
-
-void NntpSocket::rateControlSlot() {
+void NntpSocket::rateControlSlot()
+{
 
     if (this->bytesAvailable() > 0) {
         emit downloadSegmentFromServerSignal();
     }
 }
 
-
-void NntpSocket::peerVerifyErrorSlot() {
+void NntpSocket::peerVerifyErrorSlot()
+{
 
     // error occured during certificate verifying, set verify mode to QueryPeer in order to establish connection
     // but inform the user that certificate is not verified by tooltip in status bar :
@@ -377,8 +373,8 @@ void NntpSocket::peerVerifyErrorSlot() {
 
 }
 
-
-void NntpSocket::socketEncryptedSlot() {
+void NntpSocket::socketEncryptedSlot()
+{
 
     QStringList issuerOrgranisation = QStringList() <<  "Unknown";
 
@@ -393,7 +389,7 @@ void NntpSocket::socketEncryptedSlot() {
     // retrieve errors occured during ssl handshake :
     QStringList sslErrors;
 
-    foreach (const QSslError& currentSslError, this->sslErrors()) {
+    foreach (const QSslError &currentSslError, this->sslErrors()) {
         sslErrors.append(currentSslError.errorString());
     }
 
@@ -403,37 +399,39 @@ void NntpSocket::socketEncryptedSlot() {
 
 }
 
-
-
 //============================================================================================================//
 //                                            host commands                                                   //
 //============================================================================================================//
 
-
-void NntpSocket::sendBodyCommandToServer(const QString& part) {
+void NntpSocket::sendBodyCommandToServer(const QString &part)
+{
     QString commandStr("BODY <" + part + ">\r\n");
     this->sendCommand(commandStr);
     this->serverAnswerTimer->start();
 }
 
-void NntpSocket::sendUserCommandToServer(const QString& login) {
+void NntpSocket::sendUserCommandToServer(const QString &login)
+{
     QString commandStr("AUTHINFO USER " + login + "\r\n");
     this->sendCommand(commandStr);
     this->serverAnswerTimer->start();
 }
 
-void NntpSocket::sendPasswordCommandToServer(const QString& password) {
+void NntpSocket::sendPasswordCommandToServer(const QString &password)
+{
     QString commandStr("AUTHINFO PASS " + password + "\r\n");
     this->sendCommand(commandStr);
     this->serverAnswerTimer->start();
 }
 
-void NntpSocket::sendQuitCommandToServer() {
+void NntpSocket::sendQuitCommandToServer()
+{
     QString commandStr("QUIT\r\n");
     this->sendCommand(commandStr);
 }
 
-void NntpSocket::sendCommand(const QString& commandStr) {
+void NntpSocket::sendCommand(const QString &commandStr)
+{
     this->write(commandStr.toLatin1(), commandStr.size());
 }
 

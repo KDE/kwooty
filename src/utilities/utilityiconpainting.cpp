@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "utilityiconpainting.h"
 
 #include "kwooty_debug.h"
@@ -30,8 +29,8 @@
 
 #include "preferences/preferencesserver.h"
 
-
-UtilityIconPainting::UtilityIconPainting() : QObject(qApp) {
+UtilityIconPainting::UtilityIconPainting() : QObject(qApp)
+{
 
     // build map in order to display status icon near to each child file name item :
     statusIconStrMap.insert(DownloadStatus,            "mail-receive");
@@ -64,17 +63,15 @@ UtilityIconPainting::UtilityIconPainting() : QObject(qApp) {
     parentStatusIconStrMap.insert(DownloadStatus,       "go-next-view");
     parentStatusIconStrMap.insert(VerifyFinishedStatus, "dialog-ok");
     parentStatusIconStrMap.insert(RepairFinishedStatus, "dialog-ok");
-    parentStatusIconStrMap.insert(ExtractFinishedStatus,"dialog-ok");
+    parentStatusIconStrMap.insert(ExtractFinishedStatus, "dialog-ok");
     parentStatusIconStrMap.insert(DownloadFinishStatus, "go-next-view");
 
-
-
     // build a map to store every used icons in memory according to their names :
-    foreach (const QString& iconName, statusIconStrMap.values()) {
+    foreach (const QString &iconName, statusIconStrMap.values()) {
         iconStrIconImageMap.insert(iconName, QIcon::fromTheme(iconName));
     }
 
-    foreach (const QString& iconName, parentStatusIconStrMap.values()) {
+    foreach (const QString &iconName, parentStatusIconStrMap.values()) {
         iconStrIconImageMap.insert(iconName, QIcon::fromTheme(iconName));
     }
     iconStrIconImageMap.insert("mail-reply-list",       QIcon::fromTheme("mail-reply-list"));
@@ -87,12 +84,11 @@ UtilityIconPainting::UtilityIconPainting() : QObject(qApp) {
     iconStrIconImageMap.insert("go-next-view-transparent", QIcon(this->instance->buildSemiTransparentIcon("go-next-view")));
 }
 
-
 UtilityIconPainting::~UtilityIconPainting() {}
 
-
-UtilityIconPainting* UtilityIconPainting::instance = 0;
-UtilityIconPainting* UtilityIconPainting::getInstance() {
+UtilityIconPainting *UtilityIconPainting::instance = 0;
+UtilityIconPainting *UtilityIconPainting::getInstance()
+{
 
     if (!instance) {
         instance = new UtilityIconPainting();
@@ -102,35 +98,32 @@ UtilityIconPainting* UtilityIconPainting::getInstance() {
 
 }
 
-
-
-
-bool UtilityIconPainting::retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus& status, QIcon& icon) {
+bool UtilityIconPainting::retrieveParentIconFromStatus(const UtilityNamespace::ItemStatus &status, QIcon &icon)
+{
 
     icon = this->iconStrIconImageMap.value(this->parentStatusIconStrMap.value(status));
     return this->parentStatusIconStrMap.contains(status);
 
 }
 
-bool UtilityIconPainting::retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus& status, QIcon& icon) {
+bool UtilityIconPainting::retrieveChildIconFromStatus(const UtilityNamespace::ItemStatus &status, QIcon &icon)
+{
 
     icon = this->iconStrIconImageMap.value(this->statusIconStrMap.value(status));
     return this->statusIconStrMap.contains(status);
 
 }
 
-
-bool UtilityIconPainting::retrieveIconFromString(const QString& iconName, QIcon& icon) {
+bool UtilityIconPainting::retrieveIconFromString(const QString &iconName, QIcon &icon)
+{
 
     icon = this->iconStrIconImageMap.value(iconName);
     return this->iconStrIconImageMap.contains(iconName);
 
 }
 
-
-
-
-QPixmap UtilityIconPainting::blendOverLayEmblem(const QString& overlayIconStr, const QPixmap* pixmap) {
+QPixmap UtilityIconPainting::blendOverLayEmblem(const QString &overlayIconStr, const QPixmap *pixmap)
+{
 
     QPixmap finalIcon;
 
@@ -151,33 +144,32 @@ QPixmap UtilityIconPainting::blendOverLayEmblem(const QString& overlayIconStr, c
 
 }
 
-
-QPixmap UtilityIconPainting::blendOverLayEmblem(const QString& overlayIconStr, const QIcon& icon) {
+QPixmap UtilityIconPainting::blendOverLayEmblem(const QString &overlayIconStr, const QIcon &icon)
+{
 
     QPixmap pixmap = icon.pixmap(KIconLoader::SizeSmall);
 
     return UtilityIconPainting::getInstance()->blendOverLayEmblem(overlayIconStr, &pixmap);
 
-
 }
 
-QPixmap UtilityIconPainting::buildNormalIcon(const QString& sourceIconStr) {
+QPixmap UtilityIconPainting::buildNormalIcon(const QString &sourceIconStr)
+{
 
     return KIconLoader::global()->loadIcon(sourceIconStr, KIconLoader::Small);
 
 }
 
-
-
-QPixmap UtilityIconPainting::buildGrayIcon(const QString& sourceIconStr) {
+QPixmap UtilityIconPainting::buildGrayIcon(const QString &sourceIconStr)
+{
 
     QPixmap pixmap = KIconLoader::global()->loadIcon(sourceIconStr, KIconLoader::Small);
     return this->instance->buildGrayIcon(pixmap);
 
 }
 
-
-QPixmap UtilityIconPainting::buildGrayIcon(const QPixmap& sourceIcon) {
+QPixmap UtilityIconPainting::buildGrayIcon(const QPixmap &sourceIcon)
+{
 
     QImage clearImage = sourceIcon.toImage();
     KIconEffect::toGray(clearImage, 0.60);
@@ -186,7 +178,8 @@ QPixmap UtilityIconPainting::buildGrayIcon(const QPixmap& sourceIcon) {
 
 }
 
-QPixmap UtilityIconPainting::buildClearIcon(const QPixmap& sourceIcon) {
+QPixmap UtilityIconPainting::buildClearIcon(const QPixmap &sourceIcon)
+{
 
     QImage clearImage = sourceIcon.toImage();
     KIconEffect::toGamma(clearImage, 0.80);
@@ -194,15 +187,16 @@ QPixmap UtilityIconPainting::buildClearIcon(const QPixmap& sourceIcon) {
 
 }
 
-
-QPixmap UtilityIconPainting::buildSemiTransparentIcon(const QString& sourceIconStr) {
+QPixmap UtilityIconPainting::buildSemiTransparentIcon(const QString &sourceIconStr)
+{
 
     QPixmap pixmap = KIconLoader::global()->loadIcon(sourceIconStr, KIconLoader::Small);
     return this->instance->buildSemiTransparentIcon(pixmap);
 
 }
 
-QPixmap UtilityIconPainting::buildSemiTransparentIcon(const QPixmap& sourceIcon) {
+QPixmap UtilityIconPainting::buildSemiTransparentIcon(const QPixmap &sourceIcon)
+{
 
     QImage clearImage = sourceIcon.toImage();
     KIconEffect::semiTransparent(clearImage);
@@ -210,9 +204,8 @@ QPixmap UtilityIconPainting::buildSemiTransparentIcon(const QPixmap& sourceIcon)
 
 }
 
-
-
-QPixmap UtilityIconPainting::blendOverLayTopRight(const QString& mainIconStr, const QString& overlayIconStr) {
+QPixmap UtilityIconPainting::blendOverLayTopRight(const QString &mainIconStr, const QString &overlayIconStr)
+{
 
     QPixmap pixmap;
     QString keyStr = mainIconStr + overlayIconStr;
@@ -221,8 +214,7 @@ QPixmap UtilityIconPainting::blendOverLayTopRight(const QString& mainIconStr, co
 
         pixmap = UtilityIconPainting::getInstance()->textIconMap.value(keyStr);
 
-    }
-    else {
+    } else {
 
         QIcon overlayIcon = QIcon::fromTheme(overlayIconStr);
 
@@ -242,15 +234,13 @@ QPixmap UtilityIconPainting::blendOverLayTopRight(const QString& mainIconStr, co
 
     }
 
-
     return pixmap;
 }
 
+QLabel *UtilityIconPainting::buildLighterTextLabel(const QString &text, QWidget *parentWidget)
+{
 
-
-QLabel* UtilityIconPainting::buildLighterTextLabel(const QString& text, QWidget* parentWidget) {
-
-    QLabel* textLabel = new QLabel(text, parentWidget);
+    QLabel *textLabel = new QLabel(text, parentWidget);
 
     QPalette textLabelPalette = textLabel->palette();
     QColor fgcolor = KColorUtils::tint(textLabelPalette.color(QPalette::Disabled, QPalette::WindowText),
@@ -264,8 +254,8 @@ QLabel* UtilityIconPainting::buildLighterTextLabel(const QString& text, QWidget*
     return textLabel;
 }
 
-
-QColor UtilityIconPainting::lighterColor(const qreal& amount) {
+QColor UtilityIconPainting::lighterColor(const qreal &amount)
+{
 
     QPalette textLabelPalette = qApp->palette();
     return KColorUtils::tint(textLabelPalette.color(QPalette::Disabled, QPalette::WindowText),
@@ -274,8 +264,8 @@ QColor UtilityIconPainting::lighterColor(const qreal& amount) {
 
 }
 
-
-void UtilityIconPainting::displayLighterText(QStandardItem* item) {
+void UtilityIconPainting::displayLighterText(QStandardItem *item)
+{
 
     QBrush itemBrush = item->foreground();
     itemBrush.setColor(this->lighterColor(0.4));

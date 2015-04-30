@@ -36,8 +36,8 @@
 #include "data/itemstatusdata.h"
 #include "data/globalfiledata.h"
 
-
-DataRestorer::DataRestorer(Core* parent) : QObject (parent) {
+DataRestorer::DataRestorer(Core *parent) : QObject(parent)
+{
 
     this->parent = parent;
     this->downloadModel = parent->getDownloadModel();
@@ -48,7 +48,6 @@ DataRestorer::DataRestorer(Core* parent) : QObject (parent) {
     // set a timer to save pending data to be downloaded every 5 minutes :
     dataSaverTimer = new QTimer(this);
     dataSaverTimer->start(5 * UtilityNamespace::MINUTES_TO_MILLISECONDS);
-
 
     magicNumber = 0xC82F1D37;
 
@@ -62,8 +61,8 @@ DataRestorer::DataRestorer(Core* parent) : QObject (parent) {
 
 }
 
-
-void DataRestorer::setupConnections() {
+void DataRestorer::setupConnections()
+{
 
     // initialisation is finished, restore pending data from previous session :
     connect(this->parent->getMainWindow(),
@@ -83,12 +82,10 @@ void DataRestorer::setupConnections() {
             this,
             SLOT(parentStatusItemChangedSlot(QStandardItem*,ItemStatusData)));
 
-
 }
 
-
-
-int DataRestorer::saveQueueData(const SaveFileBehavior& saveFileBehavior) {
+int DataRestorer::saveQueueData(const SaveFileBehavior &saveFileBehavior)
+{
 
     int answer = KMessageBox::Yes;
 
@@ -127,24 +124,21 @@ int DataRestorer::saveQueueData(const SaveFileBehavior& saveFileBehavior) {
 
     return answer;
 
-
 }
 
-
-void DataRestorer::removePendingDataFile() {
+void DataRestorer::removePendingDataFile()
+{
 
     // no more pendings jobs, remove eventual previously saved file :
     Utility::removeData(this->getPendingFileStr());
 
 }
 
-
-
-void DataRestorer::writeDataToDisk() {
+void DataRestorer::writeDataToDisk()
+{
 
     // global list of items to save :
     QList< QList<GlobalFileData> > nzbFileList;
-
 
     // get nzb items whose download is not complete :
     for (int i = 0; i < downloadModel->rowCount(); ++i) {
@@ -152,7 +146,7 @@ void DataRestorer::writeDataToDisk() {
         QList<GlobalFileData> globalFileDataList;
 
         // retrieve nzb parent item :
-        QStandardItem* parentFileNameItem = this->downloadModel->item(i, FILE_NAME_COLUMN);
+        QStandardItem *parentFileNameItem = this->downloadModel->item(i, FILE_NAME_COLUMN);
 
         // get status of the parent item (the nzb file) :
         ItemStatusData parentStatusData = this->downloadModel->getStatusDataFromIndex(parentFileNameItem->index());
@@ -173,7 +167,6 @@ void DataRestorer::writeDataToDisk() {
 
                 //append to list :
                 globalFileDataList.append(GlobalFileData(currentNzbFileData, currentStatusData, currentDownloadProgress));
-
 
             }
 
@@ -215,16 +208,12 @@ void DataRestorer::writeDataToDisk() {
         file.write(byteArray);
         file.close();
 
-
     }
-
-
-
 
 }
 
-
-bool DataRestorer::isHeaderOk(QDataStream& dataStreamIn) const {
+bool DataRestorer::isHeaderOk(QDataStream &dataStreamIn) const
+{
 
     bool headerOk = true;
 
@@ -239,23 +228,18 @@ bool DataRestorer::isHeaderOk(QDataStream& dataStreamIn) const {
         headerOk = false;
     }
 
-
     if (appVersion != applicationVersion1) {
         qCDebug(KWOOTY_LOG) << "temporary file can not be processed (version changed)";
         headerOk = false;
-    }
-    else {
+    } else {
         dataStreamIn.setVersion(versionStreamMap.value(applicationVersion1));
     }
-
 
     return headerOk;
 }
 
-
-
-
-void DataRestorer::resetDataForDecodingFile(NzbFileData& currentNzbFileData, ItemStatusData& currentStatusData, int& currentDownloadProgress) {
+void DataRestorer::resetDataForDecodingFile(NzbFileData &currentNzbFileData, ItemStatusData &currentStatusData, int &currentDownloadProgress)
+{
 
     // set currentStatusData to default values :
     currentStatusData.init();
@@ -279,11 +263,10 @@ void DataRestorer::resetDataForDecodingFile(NzbFileData& currentNzbFileData, Ite
     // update segment list :
     currentNzbFileData.setSegmentList(segmentDataList);
 
-
 }
 
-
-void DataRestorer::resetDataForDownloadingFile(NzbFileData& currentNzbFileData, ItemStatusData& currentStatusData) {
+void DataRestorer::resetDataForDownloadingFile(NzbFileData &currentNzbFileData, ItemStatusData &currentStatusData)
+{
 
     // retrieve parent status :
     UtilityNamespace::ItemStatus parentItemStatus = currentStatusData.getStatus();
@@ -296,7 +279,6 @@ void DataRestorer::resetDataForDownloadingFile(NzbFileData& currentNzbFileData, 
     if (Utility::isPaused(parentItemStatus)) {
         currentStatusData.setStatus(PauseStatus);
     }
-
 
     // set corresponding segments being downloaded to Idle, keep the status of the previous downloaded ones :
     QList<SegmentData> segmentDataList = currentNzbFileData.getSegmentList();
@@ -329,10 +311,8 @@ void DataRestorer::resetDataForDownloadingFile(NzbFileData& currentNzbFileData, 
     currentNzbFileData.setSegmentList(segmentDataList);
 }
 
-
-
-
-void DataRestorer::preprocessAndHandleData(const QList< QList<GlobalFileData> >& nzbFileList) {
+void DataRestorer::preprocessAndHandleData(const QList< QList<GlobalFileData> > &nzbFileList)
+{
 
     // get nzb items whose download is not complete :
     for (int i = 0; i < nzbFileList.size(); ++i) {
@@ -354,10 +334,9 @@ void DataRestorer::preprocessAndHandleData(const QList< QList<GlobalFileData> >&
             ItemStatusData currentStatusData = currentGlobalFileData.getItemStatusData();
             UtilityNamespace::ItemStatus itemStatus = currentStatusData.getStatus();
 
-
             // - case 1: if file is currently being decoded, file shall be downloaded again next time :
-            if ( Utility::isDecoding(itemStatus) ||
-                 Utility::isWaitingForDecode(itemStatus, currentStatusData.getDataStatus()) ) {
+            if (Utility::isDecoding(itemStatus) ||
+                    Utility::isWaitingForDecode(itemStatus, currentStatusData.getDataStatus())) {
                 this->resetDataForDecodingFile(currentNzbFileData, currentStatusData, currentDownloadProgress);
             }
 
@@ -375,7 +354,6 @@ void DataRestorer::preprocessAndHandleData(const QList< QList<GlobalFileData> >&
             currentGlobalFileData.setItemStatusData(currentStatusData);
             currentGlobalFileData.setProgressValue(currentDownloadProgress);
 
-
             //update global data to the list :
             globalFileDataList.replace(j, currentGlobalFileData);
 
@@ -392,16 +370,15 @@ void DataRestorer::preprocessAndHandleData(const QList< QList<GlobalFileData> >&
 
 }
 
-
-
-bool DataRestorer::isDataToSaveExist() const {
+bool DataRestorer::isDataToSaveExist() const
+{
 
     bool dataToSaveExist = false;
 
     for (int i = 0; i < downloadModel->rowCount(); ++i) {
 
         // retrieve nzb parent item :
-        QStandardItem* parentFileNameItem = this->downloadModel->item(i, FILE_NAME_COLUMN);
+        QStandardItem *parentFileNameItem = this->downloadModel->item(i, FILE_NAME_COLUMN);
 
         // get status of the parent item (the nzb file) :
         ItemStatusData parentStatusData = this->downloadModel->getStatusDataFromIndex(parentFileNameItem->index());
@@ -418,23 +395,22 @@ bool DataRestorer::isDataToSaveExist() const {
     return dataToSaveExist;
 }
 
-
-void DataRestorer::setActive(const bool active) {
+void DataRestorer::setActive(const bool active)
+{
     this->active = active;
 }
 
-
-QString DataRestorer::getPendingFileStr() const {
+QString DataRestorer::getPendingFileStr() const
+{
     return Utility::buildFullPath(Settings::temporaryFolder().path(), UtilityNamespace::remainingDownloadsFile);
 }
 
-
-
-void DataRestorer::requestSuppressOldOrphanedSegments() {
+void DataRestorer::requestSuppressOldOrphanedSegments()
+{
 
     // kwooty could just have been launched from another app (with "open with...") at this stage
     // so check that nothing new is being downloading before removing old segments :
-    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+    QStandardItem *rootItem = this->downloadModel->invisibleRootItem();
 
     // just check that model is empty :
     if (rootItem->rowCount() == 0) {
@@ -443,17 +419,12 @@ void DataRestorer::requestSuppressOldOrphanedSegments() {
 
 }
 
-
-
-
-
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void DataRestorer::readDataFromDiskSlot() {
+void DataRestorer::readDataFromDiskSlot()
+{
 
     bool removeOldFiles = true;
 
@@ -496,8 +467,7 @@ void DataRestorer::readDataFromDiskSlot() {
                         // reset some data belonging to pending items and populate treeview :
                         this->preprocessAndHandleData(nzbFileList);
 
-                    }
-                    else {
+                    } else {
                         qCDebug(KWOOTY_LOG) << "data can not be restored, checksum ko !!!" << checksumFromFile << checksumCompute;
                     }
 
@@ -516,11 +486,10 @@ void DataRestorer::readDataFromDiskSlot() {
         this->requestSuppressOldOrphanedSegments();
     }
 
-
 }
 
-
-void DataRestorer::parentStatusItemChangedSlot(QStandardItem*, ItemStatusData parentItemStatusData) {
+void DataRestorer::parentStatusItemChangedSlot(QStandardItem *, ItemStatusData parentItemStatusData)
+{
 
     // file download has just finished, be sure that it will not be reloaded
     // at the next kwooty session :
@@ -536,9 +505,8 @@ void DataRestorer::parentStatusItemChangedSlot(QStandardItem*, ItemStatusData pa
 
 }
 
-
-
-void DataRestorer::saveQueueDataSilentlySlot() {
+void DataRestorer::saveQueueDataSilentlySlot()
+{
 
     if (Settings::restoreDownloads()) {
 

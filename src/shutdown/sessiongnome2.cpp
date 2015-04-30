@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "sessiongnome2.h"
 
 #include "kwooty_debug.h"
@@ -26,14 +25,14 @@
 #include <KStandardDirs>
 #include <KProcess>
 
-
-SessionGnome2::SessionGnome2(ShutdownManager* parent) : SessionBase(parent) {
+SessionGnome2::SessionGnome2(ShutdownManager *parent) : SessionBase(parent)
+{
 
     qCDebug(KWOOTY_LOG);
 }
 
-
-QList<UtilityNamespace::SystemShutdownType> SessionGnome2::retrieveAvailableShutdownMethods() {
+QList<UtilityNamespace::SystemShutdownType> SessionGnome2::retrieveAvailableShutdownMethods()
+{
 
     QList<UtilityNamespace::SystemShutdownType> indexShutdownTypeList;
 
@@ -41,7 +40,7 @@ QList<UtilityNamespace::SystemShutdownType> SessionGnome2::retrieveAvailableShut
     indexShutdownTypeList.append(UtilityNamespace::Shutdown);
 
     // then add supported sleep types by system :
-    foreach (const SleepState& sleepState, Solid::PowerManagement::supportedSleepStates()) {
+    foreach (const SleepState &sleepState, Solid::PowerManagement::supportedSleepStates()) {
 
         // add standby :
         if (sleepState == StandbyState) {
@@ -61,28 +60,26 @@ QList<UtilityNamespace::SystemShutdownType> SessionGnome2::retrieveAvailableShut
 
 }
 
-
-void SessionGnome2::requestShutdown() {
+void SessionGnome2::requestShutdown()
+{
 
     // halt the system now :
-    KProcess* shutdowProcess = new KProcess(this);
+    KProcess *shutdowProcess = new KProcess(this);
     shutdowProcess->setProgram(KStandardDirs::findExe("gnome-session-save"),
                                QStringList() << "--shutdown-dialog");
 
     shutdowProcess->start();
     shutdowProcess->closeWriteChannel();
 
-
 }
 
-
-void SessionGnome2::requestSuspend() {
+void SessionGnome2::requestSuspend()
+{
 
     Solid::PowerManagement::SleepState suspendMethod = StandbyState;
 
     // get type of system shutdown :
     switch (this->getChosenShutdownType()) {
-
 
     case UtilityNamespace::Standby: {
         suspendMethod = Solid::PowerManagement::StandbyState;
@@ -106,8 +103,5 @@ void SessionGnome2::requestSuspend() {
     // requests a suspend of the system :
     Solid::PowerManagement::requestSleep(suspendMethod, 0, 0);
 
-
 }
-
-
 

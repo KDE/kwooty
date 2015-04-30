@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "concatsplitfilesjob.h"
 
 #include <KUrl>
@@ -31,26 +30,26 @@
 #include "fileoperations.h"
 #include "extractsplit.h"
 
-
-ConcatSplitFilesJob::ConcatSplitFilesJob(ExtractSplit* parent) {
+ConcatSplitFilesJob::ConcatSplitFilesJob(ExtractSplit *parent)
+{
 
     this->dedicatedThread = new QThread();
     this->moveToThread(this->dedicatedThread);
 
     qRegisterMetaType< QList<NzbFileData> >("QList<NzbFileData>");
     // launch joining process from parent :
-    connect (parent,
-             &ExtractSplit::joinFilesSignal,
-             this,
-             &ConcatSplitFilesJob::joinFilesSlot);
+    connect(parent,
+            &ExtractSplit::joinFilesSignal,
+            this,
+            &ConcatSplitFilesJob::joinFilesSlot);
 
     // start current thread :
     this->dedicatedThread->start();
 
 }
 
-
-ConcatSplitFilesJob::~ConcatSplitFilesJob() {
+ConcatSplitFilesJob::~ConcatSplitFilesJob()
+{
 
     this->dedicatedThread->quit();
     // if query close is requested during joining file process,
@@ -60,8 +59,8 @@ ConcatSplitFilesJob::~ConcatSplitFilesJob() {
     delete this->dedicatedThread;
 }
 
-
-void ConcatSplitFilesJob::joinFilesSlot(const QList<NzbFileData> &nzbFileDataList, const QString &fileSavePath, const QString &joinFileName) {
+void ConcatSplitFilesJob::joinFilesSlot(const QList<NzbFileData> &nzbFileDataList, const QString &fileSavePath, const QString &joinFileName)
+{
 
     this->nzbFileDataList = nzbFileDataList;
     this->fileSavePath = fileSavePath;
@@ -79,14 +78,14 @@ void ConcatSplitFilesJob::joinFilesSlot(const QList<NzbFileData> &nzbFileDataLis
     emit resultSignal(error);
 }
 
-
-bool ConcatSplitFilesJob::joinSplittedFiles() {
+bool ConcatSplitFilesJob::joinSplittedFiles()
+{
 
     bool processFailed = false;
     int fileProcessedNumber = 0;
 
     // retrieve and open joined file :
-    QFile joinFile( Utility::buildFullPath(this->fileSavePath, this->joinFileName) );
+    QFile joinFile(Utility::buildFullPath(this->fileSavePath, this->joinFileName));
 
     // check if file already exists :
     bool joinFileExists = joinFile.exists();
@@ -94,7 +93,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
     joinFile.open(QIODevice::WriteOnly | QIODevice::Append);
 
     // join splitted files (list of files is assumed to be ordered at this stage) :
-    foreach (const NzbFileData& currentNzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData &currentNzbFileData, this->nzbFileDataList) {
 
         fileProcessedNumber++;
 
@@ -119,7 +118,6 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
                 processFailed = true;
                 break;
             }
-
 
             QFile currentSplitFile(fullPathArchiveName);
 
@@ -152,7 +150,6 @@ bool ConcatSplitFilesJob::joinSplittedFiles() {
     if (processFailed) {
         joinFile.remove();
     }
-
 
     return processFailed;
 

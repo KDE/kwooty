@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "extractzip.h"
 
 #include "kwooty_debug.h"
@@ -28,28 +27,26 @@
 #include "kwootysettings.h"
 #include "data/nzbfiledata.h"
 
-
-ExtractZip::ExtractZip(RepairDecompressThread* parent) : ExtractBase(parent) {
+ExtractZip::ExtractZip(RepairDecompressThread *parent) : ExtractBase(parent)
+{
 
     this->archiveFormat = ZipOrSevenZipFormat;
 
-    connect (this->extractProcess, SIGNAL(started()), this, SLOT(startedSlot()));
+    connect(this->extractProcess, SIGNAL(started()), this, SLOT(startedSlot()));
 
 }
 
-
 ExtractZip::~ExtractZip() { }
 
-
-
-QStringList ExtractZip::createProcessArguments(const QString& archiveName, const QString& fileSavePath, const bool& passwordEnteredByUSer, const QString& passwordStr) {
+QStringList ExtractZip::createProcessArguments(const QString &archiveName, const QString &fileSavePath, const bool &passwordEnteredByUSer, const QString &passwordStr)
+{
 
     QStringList args;
     // first pass : check if archive is passworded :
     if (this->archivePasswordStatus == ExtractBase::ArchiveCheckIfPassworded) {
         args.append("l");
         args.append("-slt");
-        args.append( Utility::buildFullPath(fileSavePath, archiveName) );
+        args.append(Utility::buildFullPath(fileSavePath, archiveName));
     }
     // second pass : extract archive with or without a password :
     else {
@@ -86,8 +83,7 @@ QStringList ExtractZip::createProcessArguments(const QString& archiveName, const
         // set output directory :
         args.append("-o" + fileSavePath);
 
-        args.append( Utility::buildFullPath(fileSavePath,archiveName) );
-
+        args.append(Utility::buildFullPath(fileSavePath, archiveName));
 
     }
 
@@ -95,9 +91,8 @@ QStringList ExtractZip::createProcessArguments(const QString& archiveName, const
 
 }
 
-
-
-void ExtractZip::startedSlot() {
+void ExtractZip::startedSlot()
+{
 
     // readyread slots for 7z command are only received when 7z command is about to finish
     // no status notifying is received during extract process, so set archive files as being extracted
@@ -130,12 +125,8 @@ void ExtractZip::startedSlot() {
 
 }
 
-
-
-
-
-void ExtractZip::extractUpdate(const QString& line) {
-
+void ExtractZip::extractUpdate(const QString &line)
+{
 
     if (line.contains("Wrong password")) {
 
@@ -149,42 +140,35 @@ void ExtractZip::extractUpdate(const QString& line) {
         this->extractProgressValue = PROGRESS_COMPLETE;
 
         // set each file currently as "Extracting" to "Bad Crc" status :
-        foreach (const NzbFileData& nzbFileData, this->nzbFileDataList) {
+        foreach (const NzbFileData &nzbFileData, this->nzbFileDataList) {
             this->findItemAndNotifyUser(nzbFileData.getDecodedFileName(), ExtractBadCrcStatus, ChildItemTarget);
         }
 
     }
 
-
 }
 
-
-
-void ExtractZip::checkIfArchivePassworded(const QString& currentLine, bool& passwordCheckIsNextLine) {
-
+void ExtractZip::checkIfArchivePassworded(const QString &currentLine, bool &passwordCheckIsNextLine)
+{
 
     // if line contains "Encrypted", search if it contains "+" or "-" :
     if (currentLine.contains("Encrypted")) {
 
         if (currentLine.right(1) == "+") {
             this->archivePasswordStatus = ExtractBase::ArchiveIsPassworded;
-        }
-        else {
+        } else {
             // the archive is not passworded :
             this->archivePasswordStatus = ExtractBase::ArchiveIsNotPassworded;
         }
     }
-
 
     // not needed for 7z, leave it to false :
     passwordCheckIsNextLine = false;
 
 }
 
-
-
-
-void ExtractZip::sendExtractProgramNotFoundNotification() {
+void ExtractZip::sendExtractProgramNotFoundNotification()
+{
 
     // notify parent that program is missing :
     NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
@@ -196,7 +180,7 @@ void ExtractZip::sendExtractProgramNotFoundNotification() {
 
 }
 
-
-QString ExtractZip::searchExtractProgram() {
+QString ExtractZip::searchExtractProgram()
+{
     return Utility::searchExternalPrograms(UtilityNamespace::sevenZipExtractProgram, this->isExtractProgramFound);
 }

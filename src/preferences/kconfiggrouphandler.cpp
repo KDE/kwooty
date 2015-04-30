@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "kconfiggrouphandler.h"
 
 #include <KGlobal>
@@ -34,8 +33,8 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
-KConfigGroupHandler::KConfigGroupHandler(MainWindow* mainwindow) : QObject(qApp) {
+KConfigGroupHandler::KConfigGroupHandler(MainWindow *mainwindow) : QObject(qApp)
+{
 
     this->mainWindow = mainwindow;
     this->wallet = 0;
@@ -46,27 +45,25 @@ KConfigGroupHandler::KConfigGroupHandler(MainWindow* mainwindow) : QObject(qApp)
 
 }
 
-KConfigGroupHandler* KConfigGroupHandler::instance = 0;
-KConfigGroupHandler* KConfigGroupHandler::getInstance() {
+KConfigGroupHandler *KConfigGroupHandler::instance = 0;
+KConfigGroupHandler *KConfigGroupHandler::getInstance()
+{
     return instance;
 }
 
-
-
-
-KConfigGroupHandler::~KConfigGroupHandler() {
+KConfigGroupHandler::~KConfigGroupHandler()
+{
     if (this->wallet) {
         delete this->wallet;
     }
 }
 
-
-
 //======================================================================================//
 //                                    SLOTS :                                           //
 //======================================================================================//
 
-void KConfigGroupHandler::settingsChangedSlot() {
+void KConfigGroupHandler::settingsChangedSlot()
+{
 
     // switch passwords between config file and kwallet :
     if (this->useKwallet != Settings::useKwallet() && this->openWallet()) {
@@ -102,31 +99,26 @@ void KConfigGroupHandler::settingsChangedSlot() {
 
 }
 
-
-
-void KConfigGroupHandler::walletClosedSlot() {
+void KConfigGroupHandler::walletClosedSlot()
+{
     // if wallet is closed, delete the current one to reopen later a new one if needed :
     delete this->wallet;
 }
-
-
-
 
 //======================================================================================//
 //                                    KWallet :                                         //
 //======================================================================================//
 
-
-void KConfigGroupHandler::openWalletFails() {
+void KConfigGroupHandler::openWalletFails()
+{
 
     if (this->dialogButtonCode == 0) {
 
-
         this->dialogButtonCode = KMessageBox::Cancel;
         this->dialogButtonCode = KMessageBox::messageBox(0,
-                                                         KMessageBox::Sorry,
-                                                         i18n("No running KWallet found. Passwords will be saved in plaintext."),
-                                                         i18n("KWallet is not running"));
+                                 KMessageBox::Sorry,
+                                 i18n("No running KWallet found. Passwords will be saved in plaintext."),
+                                 i18n("KWallet is not running"));
 
         // disable kwallet usage :
         Settings::setUseKwallet(false);
@@ -140,8 +132,8 @@ void KConfigGroupHandler::openWalletFails() {
 
 }
 
-
-bool KConfigGroupHandler::openWallet() {
+bool KConfigGroupHandler::openWallet()
+{
 
     bool walletOpen = false;
 
@@ -153,7 +145,7 @@ bool KConfigGroupHandler::openWallet() {
             this->wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), this->mainWindow->winId());
 
             // be notified that the wallet has been closed :
-            connect (this->wallet, SIGNAL(walletClosed()), this, SLOT(walletClosedSlot()));
+            connect(this->wallet, SIGNAL(walletClosed()), this, SLOT(walletClosedSlot()));
         }
 
         // if wallet has been successfully open :
@@ -164,7 +156,7 @@ bool KConfigGroupHandler::openWallet() {
 
             // check if wallet is open and current folder properly set :
             if (this->wallet->isOpen() &&
-                this->wallet->currentFolder() == entryStr) {
+                    this->wallet->currentFolder() == entryStr) {
                 walletOpen = true;
             }
             // create and set wallet in proper folder :
@@ -197,10 +189,8 @@ bool KConfigGroupHandler::openWallet() {
 
 }
 
-
-
-
-QString KConfigGroupHandler::readPassword(const int& serverId, KConfigGroup& configGroup) {
+QString KConfigGroupHandler::readPassword(const int &serverId, KConfigGroup &configGroup)
+{
 
     QString password = "";
 
@@ -222,8 +212,8 @@ QString KConfigGroupHandler::readPassword(const int& serverId, KConfigGroup& con
     return password;
 }
 
-
-void KConfigGroupHandler::writePassword(const int& serverId, KConfigGroup& configGroup, const QString& password) {
+void KConfigGroupHandler::writePassword(const int &serverId, KConfigGroup &configGroup, const QString &password)
+{
 
     // write password to kwallet if enabled in settings :
     if (this->useKwallet) {
@@ -244,17 +234,14 @@ void KConfigGroupHandler::writePassword(const int& serverId, KConfigGroup& confi
         configGroup.writeEntry("password", password);
     }
 
-
 }
-
-
 
 //======================================================================================//
 //                              Multi-server settings :                                 //
 //======================================================================================//
 
-
-ServerData KConfigGroupHandler::readServerSettings(int serverId, const PasswordData& passwordData) {
+ServerData KConfigGroupHandler::readServerSettings(int serverId, const PasswordData &passwordData)
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
 
@@ -268,23 +255,20 @@ ServerData KConfigGroupHandler::readServerSettings(int serverId, const PasswordD
         firstLaunchFromPreviousVersion = true;
     }
 
-
     // read data from config file and kwallet :
     ServerData serverData = this->fillServerData(serverId, configGroup, passwordData);
-
 
     // remove previous kwooty version server group if any :
     if (firstLaunchFromPreviousVersion) {
         configGroup.deleteGroup();
     }
 
-
     return serverData;
 
 }
 
-
-ServerData KConfigGroupHandler::fillServerData(const int& serverId, KConfigGroup& configGroup, const PasswordData& passwordData) {
+ServerData KConfigGroupHandler::fillServerData(const int &serverId, KConfigGroup &configGroup, const PasswordData &passwordData)
+{
 
     ServerData serverData;
 
@@ -314,9 +298,8 @@ ServerData KConfigGroupHandler::fillServerData(const int& serverId, KConfigGroup
 
 }
 
-
-
-void KConfigGroupHandler::writeServerSettings(int serverId, ServerData serverData) {
+void KConfigGroupHandler::writeServerSettings(int serverId, ServerData serverData)
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
 
@@ -338,17 +321,16 @@ void KConfigGroupHandler::writeServerSettings(int serverId, ServerData serverDat
 
 }
 
-
-
-void KConfigGroupHandler::writeServerNumberSettings(const int& serverNumber) {
+void KConfigGroupHandler::writeServerNumberSettings(const int &serverNumber)
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("NumberOfServers"));
     configGroup.writeEntry("serverNumber", serverNumber);
     configGroup.sync();
 }
 
-
-int KConfigGroupHandler::readServerNumberSettings() {
+int KConfigGroupHandler::readServerNumberSettings()
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("NumberOfServers"));
     int serverNumber = configGroup.readEntry("serverNumber", 1);
@@ -357,8 +339,8 @@ int KConfigGroupHandler::readServerNumberSettings() {
 
 }
 
-
-void KConfigGroupHandler::removeServerSettings(const int& serverId) {
+void KConfigGroupHandler::removeServerSettings(const int &serverId)
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
 
@@ -368,9 +350,8 @@ void KConfigGroupHandler::removeServerSettings(const int& serverId) {
 
 }
 
-
-
-void KConfigGroupHandler::removePasswordEntry(KConfigGroup& configGroup) {
+void KConfigGroupHandler::removePasswordEntry(KConfigGroup &configGroup)
+{
 
     QString passwordStr = "password";
 
@@ -381,90 +362,88 @@ void KConfigGroupHandler::removePasswordEntry(KConfigGroup& configGroup) {
 
 }
 
-
-int KConfigGroupHandler::serverConnectionNumber(const int& serverId) {
+int KConfigGroupHandler::serverConnectionNumber(const int &serverId)
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
     return configGroup.readEntry("connectionNumber", 4);
 
 }
 
-
-QString KConfigGroupHandler::tabName(const int& serverId, const QString& tabText) {
+QString KConfigGroupHandler::tabName(const int &serverId, const QString &tabText)
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
     return configGroup.readEntry("serverName", tabText);
 }
 
-
-
-
 //======================================================================================//
 //                              Side bar states :                                       //
 //======================================================================================//
 
-void KConfigGroupHandler::writeSideBarDisplay(const bool& display) {
+void KConfigGroupHandler::writeSideBarDisplay(const bool &display)
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
     configGroup.writeEntry("sideBarDisplay", display);
     configGroup.sync();
 }
 
-
-bool KConfigGroupHandler::readSideBarDisplay() {
+bool KConfigGroupHandler::readSideBarDisplay()
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
     return configGroup.readEntry("sideBarDisplay", false);
 
 }
 
-
-void KConfigGroupHandler::writeSideBarTabOnlyDisplay(const bool& tabOnlyDisplay) {
+void KConfigGroupHandler::writeSideBarTabOnlyDisplay(const bool &tabOnlyDisplay)
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
     configGroup.writeEntry("sideBarTabOnlyDisplay", tabOnlyDisplay);
     configGroup.sync();
 }
 
-
-bool KConfigGroupHandler::readSideBarTabOnlyDisplay() {
+bool KConfigGroupHandler::readSideBarTabOnlyDisplay()
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
     return configGroup.readEntry("sideBarTabOnlyDisplay", false);
 
 }
 
-
-void KConfigGroupHandler::writeSideBarServerIndex(const int& index) {
+void KConfigGroupHandler::writeSideBarServerIndex(const int &index)
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
     configGroup.writeEntry("sideBarServerIndex", index);
     configGroup.sync();
 }
 
-
-int KConfigGroupHandler::readSideBarServerIndex() {
+int KConfigGroupHandler::readSideBarServerIndex()
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("SideBar"));
 
     // be sure that returned index is not negative :
-    return qMax (configGroup.readEntry("sideBarServerIndex", 0), 0);
+    return qMax(configGroup.readEntry("sideBarServerIndex", 0), 0);
 
 }
-
 
 //======================================================================================//
 //                              mainwindow display :                                    //
 //======================================================================================//
-bool KConfigGroupHandler::readMainWindowHiddenOnExit() {
+bool KConfigGroupHandler::readMainWindowHiddenOnExit()
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("MainWindow"));
     return configGroup.readEntry("MainWindowHiddenOnExit", true);
 
 }
 
-
-void KConfigGroupHandler::writeMainWindowHiddenOnExit(const bool& hiddenOnExit) {
+void KConfigGroupHandler::writeMainWindowHiddenOnExit(const bool &hiddenOnExit)
+{
 
     KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("MainWindow"));
     configGroup.writeEntry("MainWindowHiddenOnExit", hiddenOnExit);

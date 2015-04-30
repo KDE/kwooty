@@ -18,22 +18,20 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SCHEDULERFILEHANDLER_H
 #define SCHEDULERFILEHANDLER_H
 
 #include <QObject>
 #include <QStandardItemModel>
 
-
-namespace SchedulerNamespace {
+namespace SchedulerNamespace
+{
 
 enum DownloadLimitStatus {
     NoLimitDownload,
     LimitDownload,
     DisabledDownload
 };
-
 
 // custom roles used for storing data in items :
 enum SchedulerRoles {
@@ -44,27 +42,24 @@ static const int HEADER_ROW_SCHEDULER = 0;
 static const int ROW_NUMBER_SCHEDULER = 8;
 static const int COLUMN_NUMBER_SCHEDULER = 48;
 
-
 }
 
-
-class SchedulerFileHandler : public QObject {
+class SchedulerFileHandler : public QObject
+{
 
     Q_OBJECT
 
-
 public:
-    SchedulerFileHandler(QObject*);
+    SchedulerFileHandler(QObject *);
     SchedulerFileHandler();
 
-    QStandardItemModel* loadModelFromFile(QObject*);
-    void reloadModel(QStandardItemModel*);
-    void saveModelToFile(QStandardItemModel*);
+    QStandardItemModel *loadModelFromFile(QObject *);
+    void reloadModel(QStandardItemModel *);
+    void saveModelToFile(QStandardItemModel *);
 
 private:
     QString retrieveSchedulerFilePath();
-    void fillModel(QStandardItemModel*);
-
+    void fillModel(QStandardItemModel *);
 
 Q_SIGNALS:
 

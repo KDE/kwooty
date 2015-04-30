@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "autoretryplugin.h"
 
 #include "kwooty_debug.h"
@@ -28,34 +27,31 @@
 #include "mainwindow.h"
 #include "core.h"
 
-
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<AutoRetryPlugin>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_autoretryplugin"))
 
-
-AutoRetryPlugin::AutoRetryPlugin(QObject* parent, const QList<QVariant>&) : Plugin(parent)
+AutoRetryPlugin::AutoRetryPlugin(QObject *parent, const QList<QVariant> &) : Plugin(parent)
 {
 
 }
-
 
 AutoRetryPlugin::~AutoRetryPlugin()
 {
 
 }
 
-
-
-void AutoRetryPlugin::load() {
+void AutoRetryPlugin::load()
+{
     this->mAutoRetry = new AutoRetry(this);
 }
 
-void AutoRetryPlugin::unload() {
+void AutoRetryPlugin::unload()
+{
     delete this->mAutoRetry;
 }
 
-
-void AutoRetryPlugin::configUpdated() {
+void AutoRetryPlugin::configUpdated()
+{
     this->mAutoRetry->settingsChanged();
 }
 #include "autoretryplugin.moc"

@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "extractrar.h"
 
 #include "kwooty_debug.h"
@@ -27,18 +26,16 @@
 #include "kwootysettings.h"
 #include "data/nzbfiledata.h"
 
-
-ExtractRar::ExtractRar(RepairDecompressThread* parent) : ExtractBase(parent) {
+ExtractRar::ExtractRar(RepairDecompressThread *parent) : ExtractBase(parent)
+{
 
     this->archiveFormat = RarFormat;
 }
 
-
 ExtractRar::~ExtractRar() { }
 
-
-
-QStringList ExtractRar::createProcessArguments(const QString& archiveName, const QString& fileSavePath, const bool& passwordEnteredByUSer, const QString& passwordStr) {
+QStringList ExtractRar::createProcessArguments(const QString &archiveName, const QString &fileSavePath, const bool &passwordEnteredByUSer, const QString &passwordStr)
+{
 
     QStringList args;
     // first pass : check if archive is passworded :
@@ -80,17 +77,14 @@ QStringList ExtractRar::createProcessArguments(const QString& archiveName, const
 
     }
 
-
     qCDebug(KWOOTY_LOG) << args;
 
     return args;
 
-
 }
 
-
-
-void ExtractRar::extractUpdate(const QString& line) {
+void ExtractRar::extractUpdate(const QString &line)
+{
 
     // get extraction progress :
     if (line.contains("%")) {
@@ -113,7 +107,6 @@ void ExtractRar::extractUpdate(const QString& line) {
         this->archivePasswordStatus = ExtractBase::ArchiveIsPassworded;
         qCDebug(KWOOTY_LOG) << "password incorrect";
     }
-
 
     // get files with crc errors :
     else if (line.contains("CRC failed")) {
@@ -143,20 +136,17 @@ void ExtractRar::extractUpdate(const QString& line) {
         }
     }
 
-
 }
 
-
-
-void ExtractRar::checkIfArchivePassworded(const QString& currentLine, bool& passwordCheckIsNextLine) {
+void ExtractRar::checkIfArchivePassworded(const QString &currentLine, bool &passwordCheckIsNextLine)
+{
 
     if (passwordCheckIsNextLine) {
 
         // "*" means the archive is passworded, look for it :
         if (currentLine.left(1) == "*") {
             this->archivePasswordStatus = ExtractBase::ArchiveIsPassworded;
-        }
-        else {
+        } else {
             // the archive is not passworded :
             this->archivePasswordStatus = ExtractBase::ArchiveIsNotPassworded;
         }
@@ -167,8 +157,8 @@ void ExtractRar::checkIfArchivePassworded(const QString& currentLine, bool& pass
     QString unrar4PasswordPattern = "------------------";
     QString unrar5PasswordPattern = "----------- ---------";
 
-    if ( currentLine.contains(unrar4PasswordPattern) ||
-         currentLine.contains(unrar5PasswordPattern) ) {
+    if (currentLine.contains(unrar4PasswordPattern) ||
+            currentLine.contains(unrar5PasswordPattern)) {
 
         passwordCheckIsNextLine = true;
 
@@ -176,9 +166,8 @@ void ExtractRar::checkIfArchivePassworded(const QString& currentLine, bool& pass
 
 }
 
-
-
-void ExtractRar::sendExtractProgramNotFoundNotification() {
+void ExtractRar::sendExtractProgramNotFoundNotification()
+{
 
     // notify parent that program is missing :
     NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
@@ -190,8 +179,8 @@ void ExtractRar::sendExtractProgramNotFoundNotification() {
 
 }
 
-
-QString ExtractRar::searchExtractProgram() {
+QString ExtractRar::searchExtractProgram()
+{
     return Utility::searchExternalPrograms(UtilityNamespace::rarExtractProgram, this->isExtractProgramFound);
 
 }

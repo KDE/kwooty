@@ -27,9 +27,8 @@
 #include "utilities/utilityiconpainting.h"
 #include "data/nzbfiledata.h"
 
-
-
-ItemAbstractUpdater::ItemAbstractUpdater(StandardItemModel* downloadModel, ItemHierarchy itemHierarchy) : QObject (downloadModel){
+ItemAbstractUpdater::ItemAbstractUpdater(StandardItemModel *downloadModel, ItemHierarchy itemHierarchy) : QObject(downloadModel)
+{
 
     this->downloadModel = downloadModel;
 
@@ -37,31 +36,28 @@ ItemAbstractUpdater::ItemAbstractUpdater(StandardItemModel* downloadModel, ItemH
     // update icon near child file name item :
     if (itemHierarchy == ItemAbstractUpdater::Child) {
 
-        connect (this->downloadModel,
-                 SIGNAL(childStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
-                 this,
-                 SLOT(childStatusIconUpdateSlot(QStandardItem*,ItemStatusData)));
+        connect(this->downloadModel,
+                SIGNAL(childStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
+                this,
+                SLOT(childStatusIconUpdateSlot(QStandardItem*,ItemStatusData)));
 
     }
     // update icon near parent file name item :
     else if (itemHierarchy == ItemAbstractUpdater::Parent) {
 
-        connect (this->downloadModel,
-                 SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
-                 this,
-                 SLOT(parentStatusIconUpdateSlot(QStandardItem*,ItemStatusData)));
+        connect(this->downloadModel,
+                SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
+                this,
+                SLOT(parentStatusIconUpdateSlot(QStandardItem*,ItemStatusData)));
 
     }
 
 }
 
-
-
 ItemAbstractUpdater::ItemAbstractUpdater() { }
 
-
-
-void ItemAbstractUpdater::clear() {
+void ItemAbstractUpdater::clear()
+{
 
     this->downloadItemNumber = 0;
     this->pauseItemNumber = 0;
@@ -80,10 +76,8 @@ void ItemAbstractUpdater::clear() {
 
 }
 
-
-
-void ItemAbstractUpdater::countItemStatus(const int& status) {
-
+void ItemAbstractUpdater::countItemStatus(const int &status)
+{
 
     switch (status) {
 
@@ -144,10 +138,10 @@ void ItemAbstractUpdater::countItemStatus(const int& status) {
 
 }
 
+void ItemAbstractUpdater::setIcon(QStandardItem *stateItem, const QString &iconName)
+{
 
-void ItemAbstractUpdater::setIcon(QStandardItem* stateItem, const QString& iconName) {
-
-    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
+    QStandardItem *fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
 
     QIcon icon;
     bool iconFound = UtilityIconPainting::getInstance()->retrieveIconFromString(iconName, icon);
@@ -158,9 +152,10 @@ void ItemAbstractUpdater::setIcon(QStandardItem* stateItem, const QString& iconN
 
 }
 
-void ItemAbstractUpdater::setIcon(QStandardItem* stateItem, const UtilityNamespace::ItemStatus& status) {
+void ItemAbstractUpdater::setIcon(QStandardItem *stateItem, const UtilityNamespace::ItemStatus &status)
+{
 
-    QStandardItem* fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
+    QStandardItem *fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
 
     // if item is the parent item :
     if (this->downloadModel->isNzbItem(fileNameItem)) {
@@ -189,13 +184,12 @@ void ItemAbstractUpdater::setIcon(QStandardItem* stateItem, const UtilityNamespa
 
 }
 
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void ItemAbstractUpdater::parentStatusIconUpdateSlot(QStandardItem* stateItem, ItemStatusData itemStatusData) {
+void ItemAbstractUpdater::parentStatusIconUpdateSlot(QStandardItem *stateItem, ItemStatusData itemStatusData)
+{
 
     UtilityNamespace::ItemStatus status = itemStatusData.getStatus();
 
@@ -236,8 +230,8 @@ void ItemAbstractUpdater::parentStatusIconUpdateSlot(QStandardItem* stateItem, I
 
 }
 
-
-void ItemAbstractUpdater::childStatusIconUpdateSlot(QStandardItem* stateItem, ItemStatusData itemStatusData) {
+void ItemAbstractUpdater::childStatusIconUpdateSlot(QStandardItem *stateItem, ItemStatusData itemStatusData)
+{
 
     UtilityNamespace::ItemStatus status = itemStatusData.getStatus();
 
@@ -259,8 +253,7 @@ void ItemAbstractUpdater::childStatusIconUpdateSlot(QStandardItem* stateItem, It
             return;
         }
 
-    }
-    else if (Utility::isDecodeFinish(status)) {
+    } else if (Utility::isDecodeFinish(status)) {
         // get final status :
 
         if (Utility::isBadCrcForYencArticle(itemStatusData.getCrc32Match(), itemStatusData.getArticleEncodingType())) {
@@ -274,7 +267,5 @@ void ItemAbstractUpdater::childStatusIconUpdateSlot(QStandardItem* stateItem, It
     // get fileName item and set corresponding icon :
     this->setIcon(stateItem, status);
 
-
 }
-
 

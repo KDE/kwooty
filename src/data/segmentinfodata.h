@@ -18,38 +18,37 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SEGMENTINFODATA_H
 #define SEGMENTINFODATA_H
 
 #include <QObject>
 #include <QString>
 
-class SegmentInfoData {
+class SegmentInfoData
+{
 
 public:
     SegmentInfoData();
-    SegmentInfoData(const QString&, const int&, const int&);
+    SegmentInfoData(const QString &, const int &, const int &);
     void reset();
 
-    void setNzbFileName(const QString&);
+    void setNzbFileName(const QString &);
     QString getNzbFileName() const;
 
     QString getTemporaryFileName() const;
-    void setTemporaryFileName(const QString&);
+    void setTemporaryFileName(const QString &);
 
     QString getDestinationFileSavePath() const;
-    void setDestinationFileSavePath(const QString&);
+    void setDestinationFileSavePath(const QString &);
 
-    void setNzbRowModelPosition(const int&);
+    void setNzbRowModelPosition(const int &);
     int getNzbRowModelPosition() const;
 
-    void setFileNameItemRowModelPosition(const int&);
+    void setFileNameItemRowModelPosition(const int &);
     int getFileNameItemRowModelPosition() const;
 
-    void setBytesDownloaded(const int&);
+    void setBytesDownloaded(const int &);
     int getBytesDownloaded() const;
-
 
 private:
     QString nzbFileName;

@@ -18,47 +18,45 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef MIMEDATA_H
 #define MIMEDATA_H
 
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
-class MimeData {
+class MimeData
+{
 
 public:
 
     // category hierarchy :
     enum HierarchyCategory {
-       MainCategory,
-       SubCategory
+        MainCategory,
+        SubCategory
     };
 
-    MimeData(MimeData::HierarchyCategory, const QString& = QString());
+    MimeData(MimeData::HierarchyCategory, const QString & = QString());
     MimeData();
 
     QString getMainCategory() const;
-    void setMainCategory(const QString&);
+    void setMainCategory(const QString &);
 
     QString getSubCategory() const;
-    void setSubCategory(const QString&);
+    void setSubCategory(const QString &);
 
-    void setPatterns(const QString&);
+    void setPatterns(const QString &);
     QString getPatterns() const;
 
-    void setMoveFolderPath(const QString&);
+    void setMoveFolderPath(const QString &);
     QString getMoveFolderPath() const;
 
-    void setComments(const QString&);
+    void setComments(const QString &);
     QString getComments() const;
 
-    void setDisplayedText(const QString&);
+    void setDisplayedText(const QString &);
     QString getDisplayedText();
 
-    bool isCategoryMatch(const QString&);
-
+    bool isCategoryMatch(const QString &);
 
 private:
 
@@ -69,7 +67,6 @@ private:
     QString mMoveFolderPath;
     QString mComments;
     QString mDisplayedText;
-
 
 };
 

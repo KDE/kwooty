@@ -24,26 +24,25 @@
 #include <QFile>
 #include <QFileInfo>
 
-
 class GlobalFileData;
 class Core;
 
-class NzbFileHandler  : public QObject {
+class NzbFileHandler  : public QObject
+{
 
-Q_OBJECT
+    Q_OBJECT
 
 public:
 
-    explicit NzbFileHandler(Core*);
-    QList<GlobalFileData> processNzbFile(QFile&, const QString&);
+    explicit NzbFileHandler(Core *);
+    QList<GlobalFileData> processNzbFile(QFile &, const QString &);
 
 private:
-    Core* parent;
-
+    Core *parent;
 
 Q_SIGNALS:
-    void displayMessageBoxSignal(const QString&);
-    
+    void displayMessageBoxSignal(const QString &);
+
 };
 
 #endif // NZBFILEHANDLER_H

@@ -20,8 +20,7 @@
 
 #include "globalfiledata.h"
 
-
-GlobalFileData::GlobalFileData(const NzbFileData& nzbFileData, const ItemStatusData& itemStatusData, int progressValue)
+GlobalFileData::GlobalFileData(const NzbFileData &nzbFileData, const ItemStatusData &itemStatusData, int progressValue)
 {
     mNzbFileData = nzbFileData;
     mItemStatusData = itemStatusData;
@@ -32,42 +31,42 @@ GlobalFileData::GlobalFileData()
 {
 }
 
-
 GlobalFileData::~GlobalFileData()
 {
 }
 
-
-
-NzbFileData GlobalFileData::getNzbFileData() const {
+NzbFileData GlobalFileData::getNzbFileData() const
+{
     return mNzbFileData;
 }
 
-void GlobalFileData::setNzbFileData(const NzbFileData& nzbFileData) {
+void GlobalFileData::setNzbFileData(const NzbFileData &nzbFileData)
+{
     mNzbFileData = nzbFileData;
 }
 
-
-ItemStatusData GlobalFileData::getItemStatusData() const {
+ItemStatusData GlobalFileData::getItemStatusData() const
+{
     return mItemStatusData;
 }
 
-void GlobalFileData::setItemStatusData(const ItemStatusData& itemStatusData) {
+void GlobalFileData::setItemStatusData(const ItemStatusData &itemStatusData)
+{
     mItemStatusData = itemStatusData;
 }
 
-
-int GlobalFileData::getProgressValue() const {
+int GlobalFileData::getProgressValue() const
+{
     return mProgressValue;
 }
 
-void GlobalFileData::setProgressValue(int progressValue) {
+void GlobalFileData::setProgressValue(int progressValue)
+{
     mProgressValue = progressValue;
 }
 
-
-
-QDataStream& operator<<(QDataStream& out, const GlobalFileData& globalFileData) {
+QDataStream &operator<<(QDataStream &out, const GlobalFileData &globalFileData)
+{
 
     out << globalFileData.getNzbFileData()
         << globalFileData.getItemStatusData()
@@ -76,9 +75,7 @@ QDataStream& operator<<(QDataStream& out, const GlobalFileData& globalFileData) 
     return out;
 }
 
-
-
-QDataStream& operator>>(QDataStream& in, GlobalFileData& globalFileData)
+QDataStream &operator>>(QDataStream &in, GlobalFileData &globalFileData)
 {
     NzbFileData nzbFileData;
     ItemStatusData itemStatusData;
@@ -94,5 +91,4 @@ QDataStream& operator>>(QDataStream& in, GlobalFileData& globalFileData)
 
     return in;
 }
-
 

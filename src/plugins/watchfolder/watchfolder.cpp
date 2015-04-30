@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "watchfolder.h"
 
 #include "kwooty_debug.h"
@@ -34,8 +33,8 @@
 #include "kwooty_watchfoldersettings.h"
 #include "fileoperations.h"
 
-
-WatchFolder::WatchFolder(WatchFolderPlugin* parent) :  QObject(parent) {
+WatchFolder::WatchFolder(WatchFolderPlugin *parent) :  QObject(parent)
+{
 
     this->core = parent->getMainWindow()->getCore();
 
@@ -53,26 +52,25 @@ WatchFolder::WatchFolder(WatchFolderPlugin* parent) :  QObject(parent) {
 
 }
 
-
-WatchFolder::~WatchFolder() {
+WatchFolder::~WatchFolder()
+{
 
 }
 
-
-void WatchFolder::setupConnections() {
+void WatchFolder::setupConnections()
+{
 
     // kDirWatch notify that a file has been created :
-    connect (this->kDirWatch,
-             SIGNAL(created(QString)),
-             this,
-             SLOT(watchFileSlot(QString)));
-
+    connect(this->kDirWatch,
+            SIGNAL(created(QString)),
+            this,
+            SLOT(watchFileSlot(QString)));
 
     // kDirWatch notify that a file has changed :
-    connect (this->kDirWatch,
-             SIGNAL(dirty(QString)),
-             this,
-             SLOT(watchFileSlot(QString)));
+    connect(this->kDirWatch,
+            SIGNAL(dirty(QString)),
+            this,
+            SLOT(watchFileSlot(QString)));
 
     // when time-out occurs, check if nzb files from list can be processed
     connect(this->fileCompleteTimer,
@@ -80,12 +78,10 @@ void WatchFolder::setupConnections() {
             this,
             SLOT(fileCompleteTimerSlot()));
 
-
 }
 
-
-
-QSet<QString> WatchFolder::getNzbFileSetFromWatchFolder() {
+QSet<QString> WatchFolder::getNzbFileSetFromWatchFolder()
+{
 
     QDir watchFolderDir(WatchFolderSettings::watchFolder().path());
     QStringList filters;
@@ -97,9 +93,8 @@ QSet<QString> WatchFolder::getNzbFileSetFromWatchFolder() {
 
 }
 
-
-
-void WatchFolder::appendFileToList(const QString& filePath) {
+void WatchFolder::appendFileToList(const QString &filePath)
+{
 
     bool allowEnqueue = true;
 
@@ -118,7 +113,6 @@ void WatchFolder::appendFileToList(const QString& filePath) {
         }
     }
 
-
     // if nzb file is not contained in the list :
     if (!this->nzbFileList.contains(filePath) && allowEnqueue) {
 
@@ -134,14 +128,12 @@ void WatchFolder::appendFileToList(const QString& filePath) {
 
 }
 
-
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void WatchFolder::watchFileSlot(const QString& filePath) {
+void WatchFolder::watchFileSlot(const QString &filePath)
+{
 
     // filter by .nzb extension :
     if (filePath.endsWith(".nzb", Qt::CaseInsensitive)) {
@@ -162,7 +154,7 @@ void WatchFolder::watchFileSlot(const QString& filePath) {
         // filter with only new nzb files added from watch folder :
         QSet<QString> newNzbFiles = currentNzbFileInWatchFolderSet.subtract(this->nzbFileInWatchFolderSet);
 
-        foreach (const QString& nzbFile, newNzbFiles) {
+        foreach (const QString &nzbFile, newNzbFiles) {
 
             QString nzbfilePath = Utility::buildFullPath(WatchFolderSettings::watchFolder().path(), nzbFile);
             this->appendFileToList(nzbfilePath);
@@ -176,14 +168,13 @@ void WatchFolder::watchFileSlot(const QString& filePath) {
 
 }
 
-
-
-void WatchFolder::fileCompleteTimerSlot() {
+void WatchFolder::fileCompleteTimerSlot()
+{
 
     QStringList pendingFileList;
 
     // check if nzb files contained is the list are complete :
-    foreach (const QString& nzbFilePath, this->nzbFileList) {
+    foreach (const QString &nzbFilePath, this->nzbFileList) {
 
         bool fileEnqueued = false;
 
@@ -192,7 +183,7 @@ void WatchFolder::fileCompleteTimerSlot() {
         QDateTime lastModifiedDateTime = fileInfo.lastModified();
 
         // if file has not been modified since 1 second :
-        if ( lastModifiedDateTime.secsTo(QDateTime::currentDateTime()) > 1 ) {
+        if (lastModifiedDateTime.secsTo(QDateTime::currentDateTime()) > 1) {
 
             // open the nzb file :
             QFile file(nzbFilePath);
@@ -229,7 +220,6 @@ void WatchFolder::fileCompleteTimerSlot() {
 
         }
 
-
         // file has not been enqueued yet :
         if (!fileEnqueued) {
             pendingFileList.append(nzbFilePath);
@@ -243,19 +233,16 @@ void WatchFolder::fileCompleteTimerSlot() {
         this->nzbFileInWatchFolderSet = this->getNzbFileSetFromWatchFolder();
     }
 
-
     // update nzb pending list :
     this->nzbFileList = pendingFileList;
 
 }
 
-
-
-void WatchFolder::settingsChanged() {
+void WatchFolder::settingsChanged()
+{
 
     // reload settings from just saved config file :
     WatchFolderSettings::self()->load();
-
 
     // if directory to watch has been changed, update it :
     if (WatchFolderSettings::watchFolder().path() != this->currentWatchDir) {
@@ -283,5 +270,4 @@ void WatchFolder::settingsChanged() {
     this->kDirWatch->startScan();
 
 }
-
 

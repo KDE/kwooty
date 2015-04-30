@@ -25,23 +25,21 @@
 #include <KIconLoader>
 #include "ui_preferencesprograms.h"
 
-
 class PreferencesPrograms : public QWidget, public Ui::PreferencesPrograms
 {
 
     Q_OBJECT
-
 
 public:
     PreferencesPrograms();
     ~PreferencesPrograms();
 
 private:
-    KIconLoader* iconLoader;
+    KIconLoader *iconLoader;
 
     void setupConnections();
-    void displayProgramInfo(const bool, const QString&, QLabel*, QLabel*, const QString&);
-    void enableGroupBox(bool, const QString&);
+    void displayProgramInfo(const bool, const QString &, QLabel *, QLabel *, const QString &);
+    void enableGroupBox(bool, const QString &);
     QString buildNicePriorityToolTip();
 
 public Q_SLOTS:
@@ -50,7 +48,6 @@ public Q_SLOTS:
 private Q_SLOTS:
     void verifyProcessPriorityChangedSlot();
     void extractProcessPriorityChangedSlot();
-
 
 };
 

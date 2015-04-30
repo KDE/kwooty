@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SERVERSPEEDMANAGER_H
 #define SERVERSPEEDMANAGER_H
 
@@ -28,20 +27,20 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
 class ServerGroup;
 
-class ServerSpeedManager : public QObject {
+class ServerSpeedManager : public QObject
+{
 
     Q_OBJECT
 
 public:
-    explicit ServerSpeedManager(ServerGroup* parent);
+    explicit ServerSpeedManager(ServerGroup *parent);
 
-    void setDownloadSpeedLimitInBytes(const qint64&);
+    void setDownloadSpeedLimitInBytes(const qint64 &);
     qint64 getDownloadSpeedLimitInBytes() const;
     int getEnabledClientNumber() const;
-    void setBandwidthMode(const BandwidthClientMode&);
+    void setBandwidthMode(const BandwidthClientMode &);
 
 private:
 
@@ -59,8 +58,8 @@ private:
 
     static const int SPEED_MONITORING_TIME = 15;
 
-    ServerGroup* parent;
-    QTimer* downloadSpeedTimer;
+    ServerGroup *parent;
+    QTimer *downloadSpeedTimer;
     qint64 downloadSpeedLimitInBytes;
     ClientSpeedPriority clientSpeedPriority;
     SpeedManagementStatus speedManagementStatus;
@@ -68,15 +67,13 @@ private:
 
     bool disableClientForRateControl() const;
     void setupConnections();
-    void manageClientsNumber(const SpeedManagementStatus&);
+    void manageClientsNumber(const SpeedManagementStatus &);
     void resetVariables();
-
 
 Q_SIGNALS:
     void limitDownloadSpeedSignal(BandwidthClientMode);
 private Q_SLOTS:
     void adjustDownloadSpeedSlot();
-
 
 };
 

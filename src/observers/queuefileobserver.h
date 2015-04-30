@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef QUEUEFILEOBSERVER_H
 #define QUEUEFILEOBSERVER_H
 
@@ -38,28 +37,27 @@ class StandardItemModel;
 class StandardItemModelQuery;
 class MyTreeView;
 
-
-class KWOOTY_EXPORT QueueFileObserver : public QObject {
+class KWOOTY_EXPORT QueueFileObserver : public QObject
+{
 
     Q_OBJECT
 
 public:
 
-    explicit QueueFileObserver(Core*);
+    explicit QueueFileObserver(Core *);
     UtilityNamespace::ItemStatus getFocusedItemStatus() const;
     int getFocusedProgressValue() const;
     bool isPluginJobRunning();
-
 
 private:
 
     static const int MAX_LIST_SIZE = 10;
 
-    StandardItemModel* downloadModel;
-    StandardItemModelQuery* modelQuery;
-    MyTreeView* treeView;
-    QStandardItem* parentItem;
-    QTimer* jobNotifyTimer;
+    StandardItemModel *downloadModel;
+    StandardItemModelQuery *modelQuery;
+    MyTreeView *treeView;
+    QStandardItem *parentItem;
+    QTimer *jobNotifyTimer;
     QList<JobNotifyData> jobNotifyDataList;
     UtilityNamespace::ItemStatus focusedItemStatus;
     int focusedProgressValue;
@@ -68,10 +66,9 @@ private:
 
     void setupConnections();
 
-    void checkProgressItemValue(QStandardItem*);
-    JobNotifyData retrieveJobNotifyData(QStandardItem*, UtilityNamespace::ItemStatus);
-    void addToList(const JobNotifyData&);
-
+    void checkProgressItemValue(QStandardItem *);
+    JobNotifyData retrieveJobNotifyData(QStandardItem *, UtilityNamespace::ItemStatus);
+    void addToList(const JobNotifyData &);
 
 Q_SIGNALS:
 
@@ -82,16 +79,12 @@ Q_SIGNALS:
 public Q_SLOTS:
 
     void parentItemChangedSlot();
-    void jobFinishStatusSlot(QStandardItem*);
+    void jobFinishStatusSlot(QStandardItem *);
     void pluginJobRunningSlot(bool);
-
 
 private Q_SLOTS:
 
-
     void checkJobFinishSlot();
-
-
 
 };
 

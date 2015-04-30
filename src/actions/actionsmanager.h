@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef ACTIONSMANAGER_H
 #define ACTIONSMANAGER_H
 
@@ -39,24 +38,24 @@ class ActionMergeManager;
 class ActionRenameManager;
 class ActionFileDeleteManager;
 
-class KWOOTY_EXPORT ActionsManager : public QObject {
+class KWOOTY_EXPORT ActionsManager : public QObject
+{
 
     Q_OBJECT
 
 public:
-    ActionsManager(Core*);
-    Core* getCore() const;
-    ActionButtonsManager* getActionButtonsManager() const;
-    ActionMergeManager* getActionMergeManager() const;
-    ActionRenameManager* getActionRenameManager() const;
-    ActionFileDeleteManager* getActionFileDeleteManager() const;
+    ActionsManager(Core *);
+    Core *getCore() const;
+    ActionButtonsManager *getActionButtonsManager() const;
+    ActionMergeManager *getActionMergeManager() const;
+    ActionRenameManager *getActionRenameManager() const;
+    ActionFileDeleteManager *getActionFileDeleteManager() const;
     void setStartPauseDownloadAllItems(const UtilityNamespace::ItemStatus);
-    void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QList<QModelIndex>&);
-    void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QModelIndex&);
-    void retryDownload(const QModelIndexList&);
+    void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QList<QModelIndex> &);
+    void setStartPauseDownload(const UtilityNamespace::ItemStatus, const QModelIndex &);
+    void retryDownload(const QModelIndexList &);
     void changePar2FilesStatus(const QModelIndex, UtilityNamespace::ItemStatus);
-    void removeRow(const QList<QModelIndex>&);
-
+    void removeRow(const QList<QModelIndex> &);
 
 private:
 
@@ -67,20 +66,18 @@ private:
         MoveRowsBottom
     };
 
-
     void setupConnections();
     void moveRow(ActionsManager::MoveRowType);
 
-    Core* core;
-    MyTreeView* treeView;
-    StandardItemModel* downloadModel;
-    StandardItemModelQuery* modelQuery;
-    ActionMergeManager* actionMergeManager;
-    ActionButtonsManager* actionButtonsManager;
-    ActionRenameManager* actionRenameManager;
-    ActionFileDeleteManager* actionFileDeleteManager;
+    Core *core;
+    MyTreeView *treeView;
+    StandardItemModel *downloadModel;
+    StandardItemModelQuery *modelQuery;
+    ActionMergeManager *actionMergeManager;
+    ActionButtonsManager *actionButtonsManager;
+    ActionRenameManager *actionRenameManager;
+    ActionFileDeleteManager *actionFileDeleteManager;
 
-    
 Q_SIGNALS:
     void statusBarFileSizeUpdateSignal(StatusBarUpdateType);
     void allRowRemovedSignal();
@@ -88,7 +85,6 @@ Q_SIGNALS:
     void changePar2FilesStatusSignal(const QModelIndex &, UtilityNamespace::ItemStatus);
     void startPauseAboutToBeTriggeredSignal(UtilityNamespace::ItemStatus, const QList<QModelIndex> &);
     void startPauseTriggeredSignal(UtilityNamespace::ItemStatus);
-
 
 public Q_SLOTS:
     void moveToTopSlot();
@@ -104,7 +100,6 @@ public Q_SLOTS:
     void pauseAllDownloadSlot();
     void retryDownloadSlot();
     void manualExtractSlot();
-
 
 };
 

@@ -42,15 +42,16 @@ class MainWindow;
 class StandardItemModel;
 class QMenu;
 
-class KWOOTY_EXPORT MyTreeView : public QTreeView {
+class KWOOTY_EXPORT MyTreeView : public QTreeView
+{
 
     Q_OBJECT
 
 public:
-    MyTreeView(MainWindow*);
+    MyTreeView(MainWindow *);
     void achieveInit();
     void setHeaderLabels();
-    QString getDisplayedFileName(const NzbFileData&) const;
+    QString getDisplayedFileName(const NzbFileData &) const;
 
 private:
 
@@ -61,29 +62,26 @@ private:
         MoveRowsBottom
     };
 
-
-    MainWindow* mainWindow;
+    MainWindow *mainWindow;
     bool displayTinyFileName;
 
     void setupConnections();
     void displayLongOrTinyFileName();
-    StandardItemModel* getDownloadModel();
-    Core* getCore();
-
+    StandardItemModel *getDownloadModel();
+    Core *getCore();
 
 protected:
-    void contextMenuEvent(QContextMenuEvent*) Q_DECL_OVERRIDE;
-    void dragEnterEvent(QDragEnterEvent*) Q_DECL_OVERRIDE;
-    void dragMoveEvent(QDragMoveEvent*) Q_DECL_OVERRIDE;
-    void dropEvent(QDropEvent*) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *) Q_DECL_OVERRIDE;
+    void dragEnterEvent(QDragEnterEvent *) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent *) Q_DECL_OVERRIDE;
+    void dropEvent(QDropEvent *) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
-    void addExternalActionSignal(QMenu*, QStandardItem*);
-
+    void addExternalActionSignal(QMenu *, QStandardItem *);
 
 public Q_SLOTS:
     void settingsChangedSlot();
-    void expandedSlot(const QModelIndex&);
+    void expandedSlot(const QModelIndex &);
 };
 
 #endif // MYTREEVIEW_H

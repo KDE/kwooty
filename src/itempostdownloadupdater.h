@@ -27,22 +27,21 @@ using namespace UtilityNamespace;
 
 class PostDownloadInfoData;
 
-
-class ItemPostDownloadUpdater : public ItemAbstractUpdater {
+class ItemPostDownloadUpdater : public ItemAbstractUpdater
+{
 
 public:
 
-    ItemPostDownloadUpdater(ItemParentUpdater*);
-    void updateItems(const PostDownloadInfoData&);
-    void addFileTypeInfo(const PostDownloadInfoData&);
+    ItemPostDownloadUpdater(ItemParentUpdater *);
+    void updateItems(const PostDownloadInfoData &);
+    void addFileTypeInfo(const PostDownloadInfoData &);
 
 private:
 
-    void updateNzbChildrenItems(const QModelIndex&, const int, const int);
-    void updateDecodeItems(const PostDownloadInfoData&);
-    void updateRepairExtractItems(const PostDownloadInfoData&);
-    void updateRepairExtractParentItems(const PostDownloadInfoData&);
-
+    void updateNzbChildrenItems(const QModelIndex &, const int, const int);
+    void updateDecodeItems(const PostDownloadInfoData &);
+    void updateRepairExtractItems(const PostDownloadInfoData &);
+    void updateRepairExtractParentItems(const PostDownloadInfoData &);
 
 };
 

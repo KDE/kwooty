@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef NNTPSOCKET_H
 #define NNTPSOCKET_H
 
@@ -33,8 +32,8 @@ using namespace UtilityNamespace;
 
 class ClientManagerConn;
 
-class NntpSocket : public QSslSocket {
-
+class NntpSocket : public QSslSocket
+{
 
     Q_OBJECT
 
@@ -42,48 +41,45 @@ public:
 
     enum SegmentDownload { SegmentDownloading,
                            SegmentDownloadFinished
-                       };
+                         };
 
-
-    NntpSocket(ClientManagerConn* parent);
+    NntpSocket(ClientManagerConn *parent);
     ~NntpSocket();
     bool isSocketUnconnected() const;
     bool isSocketConnected() const;
-    void sendBodyCommandToServer(const QString&);
+    void sendBodyCommandToServer(const QString &);
     void sendQuitCommandToServer();
-    void sendUserCommandToServer(const QString&);
-    void sendPasswordCommandToServer(const QString&);
+    void sendUserCommandToServer(const QString &);
+    void sendPasswordCommandToServer(const QString &);
     void tryToReconnect();
     void connectToHost();
     void connected();
     void abort();
     void retryDownloadDelayed();
     void checkRateControlTimer();
-    QByteArray readChunck(const qint64&, const int&);
+    QByteArray readChunck(const qint64 &, const int &);
     QByteArray readAll();
-    void manageBuffer(const SegmentDownload&);
+    void manageBuffer(const SegmentDownload &);
     void notifyClientStatus(NntpClient::NntpClientStatus, NntpClient::TimerJob);
     int readAnswer();
-    void quitAndReconnectInMs(const int&);
+    void quitAndReconnectInMs(const int &);
     void dataReadPending();
     void dataReadComplete();
 
-
 private:
 
-    ClientManagerConn* parent;
-    QTimer* tryToReconnectTimer;
-    QTimer* idleTimeOutTimer;
-    QTimer* serverAnswerTimer;
-    QTimer* rateControlTimer;
+    ClientManagerConn *parent;
+    QTimer *tryToReconnectTimer;
+    QTimer *idleTimeOutTimer;
+    QTimer *serverAnswerTimer;
+    QTimer *rateControlTimer;
     int missingBytes;
     bool certificateVerified;
 
     void setupConnections();
     void stopAllTimers();
-    void sendCommand(const QString&);
+    void sendCommand(const QString &);
     void dataReadArrived();
-
 
 Q_SIGNALS:
     void downloadSegmentFromServerSignal();
@@ -91,7 +87,6 @@ Q_SIGNALS:
     void socketEncryptedInfoSignal(bool, QString, QString, QStringList);
     void encryptionStatusPerServerSignal(const bool, const QString = QString(), const bool = false, const QString = QString(), const QStringList = QStringList());
     void tryToReconnectSignal();
-
 
 public Q_SLOTS:
     void answerTimeOutSlot();

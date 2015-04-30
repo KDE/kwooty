@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SESSIONBASE_H
 #define SESSIONBASE_H
 
@@ -30,22 +29,21 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class SessionBase : public QObject {
+class SessionBase : public QObject
+{
 
     Q_OBJECT
 
 public:
 
-    SessionBase(ShutdownManager*);
+    SessionBase(ShutdownManager *);
     UtilityNamespace::SystemShutdownType getChosenShutdownType();
     void launchSystemShutdown();
     virtual QList<UtilityNamespace::SystemShutdownType> retrieveAvailableShutdownMethods() = 0;
 
-
-
 protected:
 
-    ShutdownManager* shutdownManager;
+    ShutdownManager *shutdownManager;
 
     virtual void requestShutdown() = 0;
     virtual void requestSuspend() = 0;

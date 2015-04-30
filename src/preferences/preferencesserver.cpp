@@ -32,8 +32,8 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
-PreferencesServer::PreferencesServer(KConfigDialog* dialog) {
+PreferencesServer::PreferencesServer(KConfigDialog *dialog)
+{
 
     this->dialog = dialog;
 
@@ -51,51 +51,47 @@ PreferencesServer::PreferencesServer(KConfigDialog* dialog) {
             this,
             SLOT(configButtonClickedSlot(KDialog::ButtonCode)));
 
-
     this->loadSettings();
 
 }
 
-
-
-void PreferencesServer::configButtonClickedSlot(KDialog::ButtonCode button) {
-
+void PreferencesServer::configButtonClickedSlot(KDialog::ButtonCode button)
+{
 
     switch (button) {
 
     case KDialog::Cancel: case KDialog::Close: {
 
-            // restore previous settings :
-            this->restorePreviousSettings();
-            break;
-        }
+        // restore previous settings :
+        this->restorePreviousSettings();
+        break;
+    }
 
     case KDialog::Ok: case KDialog::Apply: {
 
-            // save them :
-            this->saveSettings();
-            break;
-        }
+        // save them :
+        this->saveSettings();
+        break;
+    }
 
     case KDialog::Default: {
 
-            // restore default settings :
-            this->defaultSettings();
-            break;
-        }
+        // restore default settings :
+        this->defaultSettings();
+        break;
+    }
 
     default: {
-            break;
+        break;
 
-        }
+    }
 
     }
 
 }
 
-
-
-void PreferencesServer::restorePreviousSettings() {
+void PreferencesServer::restorePreviousSettings()
+{
 
     // restore settings previously saved in file :
     while (this->tabWidget->count() != 0) {
@@ -106,8 +102,8 @@ void PreferencesServer::restorePreviousSettings() {
     this->loadSettings();
 }
 
-
-void PreferencesServer::loadSettings() {
+void PreferencesServer::loadSettings()
+{
 
     int serverNumber = KConfigGroupHandler::getInstance()->readServerNumberSettings();
 
@@ -117,13 +113,13 @@ void PreferencesServer::loadSettings() {
 
 }
 
-
-void PreferencesServer::saveSettings() {
-   emit saveDataSignal();
+void PreferencesServer::saveSettings()
+{
+    emit saveDataSignal();
 }
 
-
-void PreferencesServer::defaultSettings() {
+void PreferencesServer::defaultSettings()
+{
 
     // set default settings :
     while (this->tabWidget->count() != 0) {
@@ -133,5 +129,4 @@ void PreferencesServer::defaultSettings() {
 
     this->tabWidget->addDefaultTab();
 }
-
 

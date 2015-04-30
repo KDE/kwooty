@@ -18,15 +18,11 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef AUTORETRYPLUGIN_H
 #define AUTORETRYPLUGIN_H
 
-
 #include "plugin.h"
 #include "autoretry.h"
-
-
 
 class AutoRetryPlugin : public Plugin
 {
@@ -35,13 +31,12 @@ class AutoRetryPlugin : public Plugin
 
 public:
 
-    AutoRetryPlugin(QObject*, const QList<QVariant>&);
+    AutoRetryPlugin(QObject *, const QList<QVariant> &);
     ~AutoRetryPlugin();
-
 
 private:
 
-    AutoRetry* mAutoRetry;
+    AutoRetry *mAutoRetry;
 
     void load();
     void unload();

@@ -37,9 +37,8 @@
 #include "observers/clientsperserverobserver.h"
 #include "preferences/kconfiggrouphandler.h"
 
-
-
-ClientManagerConn::ClientManagerConn(ServerGroup* parent, int clientId, int connectionDelay) : QObject(parent) {
+ClientManagerConn::ClientManagerConn(ServerGroup *parent, int clientId, int connectionDelay) : QObject(parent)
+{
 
     this->nntpClient = 0;
     this->parent = parent;
@@ -60,150 +59,149 @@ ClientManagerConn::ClientManagerConn(ServerGroup* parent, int clientId, int conn
 
 }
 
-
 ClientManagerConn::~ClientManagerConn()
 {
 }
 
-ServerGroup* ClientManagerConn::getServerGroup() {
+ServerGroup *ClientManagerConn::getServerGroup()
+{
     return this->parent;
 }
 
+void ClientManagerConn::initSlot()
+{
 
+    Core *core = this->parent->getCore();
 
-void ClientManagerConn::initSlot() {
-
-    Core* core = this->parent->getCore();
-
-    connect (core->getMainWindow(),
-             SIGNAL(startupCompleteSignal()),
-             this,
-             SLOT(startupCompleteSlot()));
+    connect(core->getMainWindow(),
+            SIGNAL(startupCompleteSignal()),
+            this,
+            SLOT(startupCompleteSlot()));
 
     // ServerGroup notify all nntpClient instances that connection settings changed :
-    connect (core,
-             SIGNAL(dataHasArrivedSignal()),
-             this,
-             SLOT(dataHasArrivedSlot()));
+    connect(core,
+            SIGNAL(dataHasArrivedSignal()),
+            this,
+            SLOT(dataHasArrivedSlot()));
 
     // ServerGroup asked for connection reset :
-    connect (this->parent,
-             SIGNAL(resetConnectionSignal()),
-             this,
-             SLOT(resetConnectionSlot()));
+    connect(this->parent,
+            SIGNAL(resetConnectionSignal()),
+            this,
+            SLOT(resetConnectionSlot()));
 
     // ServerGroup asked for clients disconnection :
-    connect (this->parent,
-             SIGNAL(disconnectRequestSignal()),
-             this,
-             SLOT(disconnectRequestSlot()));
+    connect(this->parent,
+            SIGNAL(disconnectRequestSignal()),
+            this,
+            SLOT(disconnectRequestSlot()));
 
     // ServerGroup asked for clients connection :
-    connect (this->parent,
-             SIGNAL(connectRequestSignal()),
-             this,
-             SLOT(connectRequestSlot()));
+    connect(this->parent,
+            SIGNAL(connectRequestSignal()),
+            this,
+            SLOT(connectRequestSlot()));
 
     // manage bandwidth download speed:
-    connect (this->parent->getServerSpeedManager(),
-             SIGNAL(limitDownloadSpeedSignal(BandwidthClientMode)),
-             this,
-             SLOT(limitDownloadSpeedSlot(BandwidthClientMode)));
+    connect(this->parent->getServerSpeedManager(),
+            SIGNAL(limitDownloadSpeedSignal(BandwidthClientMode)),
+            this,
+            SLOT(limitDownloadSpeedSlot(BandwidthClientMode)));
 
     // ask to segment manager to send a new segment to download :
-    connect (this->nntpClient,
-             SIGNAL(getNextSegmentSignal(ClientManagerConn*)),
-             core->getSegmentManager(),
-             SLOT(getNextSegmentSlot(ClientManagerConn*)));
+    connect(this->nntpClient,
+            SIGNAL(getNextSegmentSignal(ClientManagerConn*)),
+            core->getSegmentManager(),
+            SLOT(getNextSegmentSlot(ClientManagerConn*)));
 
     // send to segmentManager segment data update :
     qRegisterMetaType<SegmentData>("SegmentData");
-    connect (this->nntpClient,
-             SIGNAL(updateDownloadSegmentSignal(SegmentData)),
-             core->getSegmentManager(),
-             SLOT(updateDownloadSegmentSlot(SegmentData)));
+    connect(this->nntpClient,
+            SIGNAL(updateDownloadSegmentSignal(SegmentData)),
+            core->getSegmentManager(),
+            SLOT(updateDownloadSegmentSlot(SegmentData)));
 
     // send connection status (connected, deconnected) to client observer for the current server :
-    connect (this->nntpClient,
-             SIGNAL(connectionStatusPerServerSignal(int)),
-             this->parent->getClientsPerServerObserver(),
-             SLOT(connectionStatusPerServerSlot(int)));
+    connect(this->nntpClient,
+            SIGNAL(connectionStatusPerServerSignal(int)),
+            this->parent->getClientsPerServerObserver(),
+            SLOT(connectionStatusPerServerSlot(int)));
 
     // send type of encryption used by host with ssl connection to client observer for the current server :
-    connect (this->nntpClient->getTcpSocket(),
-             SIGNAL(encryptionStatusPerServerSignal(bool,QString,bool,QString,QStringList)),
-             this->parent->getClientsPerServerObserver(),
-             SLOT(encryptionStatusPerServerSlot(bool,QString,bool,QString,QStringList)));
+    connect(this->nntpClient->getTcpSocket(),
+            SIGNAL(encryptionStatusPerServerSignal(bool,QString,bool,QString,QStringList)),
+            this->parent->getClientsPerServerObserver(),
+            SLOT(encryptionStatusPerServerSlot(bool,QString,bool,QString,QStringList)));
 
     // send eventual socket error to client observer for the current server :
-    connect (this->nntpClient,
-             SIGNAL(nntpErrorPerServerSignal(int)),
-             this->parent->getClientsPerServerObserver(),
-             SLOT(nntpErrorPerServerSlot(int)));
+    connect(this->nntpClient,
+            SIGNAL(nntpErrorPerServerSignal(int)),
+            this->parent->getClientsPerServerObserver(),
+            SLOT(nntpErrorPerServerSlot(int)));
 
     // send bytes downloaded to client observer for the current server :
     qRegisterMetaType<SegmentInfoData>("SegmentInfoData");
-    connect (this->nntpClient,
-             SIGNAL(speedPerServerSignal(SegmentInfoData)),
-             this->parent->getClientsPerServerObserver(),
-             SLOT(nntpClientSpeedPerServerSlot(SegmentInfoData)));
-
+    connect(this->nntpClient,
+            SIGNAL(speedPerServerSignal(SegmentInfoData)),
+            this->parent->getClientsPerServerObserver(),
+            SLOT(nntpClientSpeedPerServerSlot(SegmentInfoData)));
 
 }
 
-
-
-void ClientManagerConn::noSegmentAvailable() {
+void ClientManagerConn::noSegmentAvailable()
+{
     // if the getNextSegmentSignal returns this method, there is no item to download
     // set the client to Idle Status :
     this->nntpClient->noSegmentAvailable();
 
 }
 
-
-void ClientManagerConn::processNextSegment(const SegmentData& inCurrentSegmentData){
+void ClientManagerConn::processNextSegment(const SegmentData &inCurrentSegmentData)
+{
     this->nntpClient->downloadNextSegment(inCurrentSegmentData);
 
 }
 
-
-NntpClient* ClientManagerConn::getNntpClient() {
+NntpClient *ClientManagerConn::getNntpClient()
+{
     return this->nntpClient;
 }
 
-
-int ClientManagerConn::getClientId() const {
+int ClientManagerConn::getClientId() const
+{
     return this->clientId;
 }
 
-
-int ClientManagerConn::getConnectionDelay() const {
+int ClientManagerConn::getConnectionDelay() const
+{
     return this->connectionDelay;
 }
 
-ServerData ClientManagerConn::getServerData() const {
+ServerData ClientManagerConn::getServerData() const
+{
     return this->parent->getServerData();
 }
 
-
-bool ClientManagerConn::isMasterServer() const {
+bool ClientManagerConn::isMasterServer() const
+{
     return this->parent->isMasterServer();
 }
 
-bool ClientManagerConn::isDisabledBackupServer() const {
+bool ClientManagerConn::isDisabledBackupServer() const
+{
     return this->parent->isDisabledBackupServer();
 }
 
-
-void ClientManagerConn::handleFirstConnection() {
+void ClientManagerConn::handleFirstConnection()
+{
 
     // read data with password in order to open kwallet dialog box (if needed)
     // only when the first connection to server is performed :
     this->parent->readDataWithPassword();
 }
 
-
-bool ClientManagerConn::isClientReady() const {
+bool ClientManagerConn::isClientReady() const
+{
 
     bool clientReady = false;
 
@@ -217,8 +215,8 @@ bool ClientManagerConn::isClientReady() const {
 
 }
 
-
-void ClientManagerConn::setBandwidthMode(const BandwidthClientMode& bandwidthClientMode) {
+void ClientManagerConn::setBandwidthMode(const BandwidthClientMode &bandwidthClientMode)
+{
 
     BandwidthClientMode bandwidthClientModeOld = this->bandwidthClientMode;
     this->bandwidthClientMode = bandwidthClientMode;
@@ -231,26 +229,27 @@ void ClientManagerConn::setBandwidthMode(const BandwidthClientMode& bandwidthCli
 
 }
 
-
-bool ClientManagerConn::isBandwidthNotNeeded() const {
+bool ClientManagerConn::isBandwidthNotNeeded() const
+{
     return this->bandwidthClientMode == BandwidthNotNeeded;
 }
 
-
-bool ClientManagerConn::isBandwidthLimited() const {
+bool ClientManagerConn::isBandwidthLimited() const
+{
     return this->bandwidthClientMode == BandwidthLimited;
 }
 
-bool ClientManagerConn::isBandwidthFull() const {
+bool ClientManagerConn::isBandwidthFull() const
+{
     return this->bandwidthClientMode == BandwidthFull;
 }
-
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-void ClientManagerConn::startupCompleteSlot() {
+void ClientManagerConn::startupCompleteSlot()
+{
 
     // when startup is complete, do not connect to servers if session has been restored
     // and there is nothing to download :
@@ -260,7 +259,8 @@ void ClientManagerConn::startupCompleteSlot() {
 
 }
 
-void ClientManagerConn::dataHasArrivedSlot() {
+void ClientManagerConn::dataHasArrivedSlot()
+{
 
     // this slot is called each time segments have been set pending for backup servers by ServerGroup,
     // if client is currently not used for limit speed purposes (disconnected), do not go further
@@ -271,8 +271,8 @@ void ClientManagerConn::dataHasArrivedSlot() {
 
 }
 
-
-void ClientManagerConn::resetConnectionSlot() {
+void ClientManagerConn::resetConnectionSlot()
+{
 
     // in case of retry action, reset connection between client and server to ensure that
     // the connection was not broken :
@@ -283,24 +283,24 @@ void ClientManagerConn::resetConnectionSlot() {
         // reconnect :
         QTimer::singleShot(this->connectionDelay, this, SLOT(connectRequestSlot()));
 
-    }
-    else {
+    } else {
         this->connectRequestSlot();
     }
 
 }
 
-
-void ClientManagerConn::disconnectRequestSlot() {
+void ClientManagerConn::disconnectRequestSlot()
+{
     this->nntpClient->disconnectRequestByManager();
 }
 
-void ClientManagerConn::connectRequestSlot() {
+void ClientManagerConn::connectRequestSlot()
+{
     this->nntpClient->connectRequestByManager();
 }
 
-
-void ClientManagerConn::limitDownloadSpeedSlot(BandwidthClientMode bandwidthClientMode) {
+void ClientManagerConn::limitDownloadSpeedSlot(BandwidthClientMode bandwidthClientMode)
+{
     this->setBandwidthMode(bandwidthClientMode);
 }
 

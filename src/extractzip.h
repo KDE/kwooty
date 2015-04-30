@@ -18,27 +18,24 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef EXTRACTZIP_H
 #define EXTRACTZIP_H
 
-
 #include "extractbase.h"
-
 
 class ExtractZip : public ExtractBase
 {
-        Q_OBJECT
+    Q_OBJECT
 
 public:
-    explicit ExtractZip(RepairDecompressThread*);
+    explicit ExtractZip(RepairDecompressThread *);
     ~ExtractZip();
 
 private:
 
-    QStringList createProcessArguments(const QString&, const QString&, const bool&, const QString&)  Q_DECL_OVERRIDE;
-    void extractUpdate(const QString&) Q_DECL_OVERRIDE;
-    void checkIfArchivePassworded(const QString&, bool&) Q_DECL_OVERRIDE;
+    QStringList createProcessArguments(const QString &, const QString &, const bool &, const QString &)  Q_DECL_OVERRIDE;
+    void extractUpdate(const QString &) Q_DECL_OVERRIDE;
+    void checkIfArchivePassworded(const QString &, bool &) Q_DECL_OVERRIDE;
     void sendExtractProgramNotFoundNotification() Q_DECL_OVERRIDE;
     QString searchExtractProgram();
 private Q_SLOTS:

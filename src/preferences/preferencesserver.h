@@ -30,18 +30,17 @@
 
 class ServerTabWidget;
 
+class PreferencesServer : public QWidget, public Ui::PreferencesServer
+{
 
-class PreferencesServer : public QWidget, public Ui::PreferencesServer {
-
-     Q_OBJECT
+    Q_OBJECT
 
 public:
-    explicit PreferencesServer(KConfigDialog*);
-
+    explicit PreferencesServer(KConfigDialog *);
 
 private:
-    ServerTabWidget* tabWidget;
-    KConfigDialog* dialog;
+    ServerTabWidget *tabWidget;
+    KConfigDialog *dialog;
 
     void loadSettings();
     void saveSettings();
@@ -52,7 +51,6 @@ private Q_SLOTS:
     void configButtonClickedSlot(KDialog::ButtonCode);
 Q_SIGNALS:
     void saveDataSignal();
-
 
 };
 

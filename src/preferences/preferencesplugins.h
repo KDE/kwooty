@@ -18,16 +18,13 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef PREFERENCESPLUGINS_H
 #define PREFERENCESPLUGINS_H
-
 
 #include <kpluginselector.h>
 #include <KConfigDialog>
 #include <KDialog>
 #include <QWidget>
-
 
 class PluginManager;
 
@@ -36,18 +33,15 @@ class PreferencesPlugins : public QWidget
 
     Q_OBJECT
 
-
 public:
 
-    explicit PreferencesPlugins(KConfigDialog*, PluginManager*);
-
+    explicit PreferencesPlugins(KConfigDialog *, PluginManager *);
 
 private:
 
-    PluginManager* pluginManager;
-    KPluginSelector* kPluginSelector;
-    KConfigDialog* kConfigDialog;
-
+    PluginManager *pluginManager;
+    KPluginSelector *kPluginSelector;
+    KConfigDialog *kConfigDialog;
 
 public Q_SLOTS:
 

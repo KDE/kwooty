@@ -34,26 +34,25 @@ class ItemParentUpdater;
 class StandardItemModel;
 class ItemStatusData;
 
-
-class ItemAbstractUpdater : public QObject {
+class ItemAbstractUpdater : public QObject
+{
 
     Q_OBJECT
     Q_ENUMS(ItemHierarchy)
 
-
 public:
 
-    enum ItemHierarchy{ Parent,
-                        Child
-                      };
+    enum ItemHierarchy { Parent,
+                         Child
+                       };
 
-    ItemAbstractUpdater(StandardItemModel*, ItemHierarchy);
+    ItemAbstractUpdater(StandardItemModel *, ItemHierarchy);
     ItemAbstractUpdater();
 
 protected:
 
-    StandardItemModel* downloadModel;
-    ItemParentUpdater* itemParentUpdater;
+    StandardItemModel *downloadModel;
+    ItemParentUpdater *itemParentUpdater;
 
     int downloadItemNumber;
     int progressNumber;
@@ -73,16 +72,14 @@ protected:
     int pendingSegmentsOnBackupNumber;
 
     void clear();
-    void countItemStatus(const int&);
-    void setIcon(QStandardItem*, const UtilityNamespace::ItemStatus&);
-    void setIcon(QStandardItem*, const QString&);
-
+    void countItemStatus(const int &);
+    void setIcon(QStandardItem *, const UtilityNamespace::ItemStatus &);
+    void setIcon(QStandardItem *, const QString &);
 
 protected Q_SLOTS:
 
-    void parentStatusIconUpdateSlot(QStandardItem*, ItemStatusData);
-    void childStatusIconUpdateSlot(QStandardItem*, ItemStatusData);
-
+    void parentStatusIconUpdateSlot(QStandardItem *, ItemStatusData);
+    void childStatusIconUpdateSlot(QStandardItem *, ItemStatusData);
 
 };
 

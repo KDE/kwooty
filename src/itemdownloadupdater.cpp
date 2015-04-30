@@ -32,16 +32,15 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
-ItemDownloadUpdater::ItemDownloadUpdater(ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater->getDownloadModel(), ItemAbstractUpdater::Child) {
+ItemDownloadUpdater::ItemDownloadUpdater(ItemParentUpdater *itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater->getDownloadModel(), ItemAbstractUpdater::Child)
+{
 
     this->itemParentUpdater = itemParentUpdater;
 
 }
 
-
-
-void ItemDownloadUpdater::updateItems(const QModelIndex& parentModelIndex, const NzbFileData& nzbFileData){
+void ItemDownloadUpdater::updateItems(const QModelIndex &parentModelIndex, const NzbFileData &nzbFileData)
+{
 
     // update children items status :
     this->updateNzbChildrenItems(nzbFileData, parentModelIndex);
@@ -51,9 +50,8 @@ void ItemDownloadUpdater::updateItems(const QModelIndex& parentModelIndex, const
 
 }
 
-
-
-void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData, const QModelIndex& parentModelIndex){
+void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData &nzbFileData, const QModelIndex &parentModelIndex)
+{
 
     // variable initialisation
     this->clear();
@@ -69,7 +67,7 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
     QList<SegmentData> segmentList = nzbFileData.getSegmentList();
 
     // get progression and status of all segments :
-    foreach (const SegmentData& currentSegmentData, segmentList) {
+    foreach (const SegmentData &currentSegmentData, segmentList) {
 
         // calculate progression :
         totalProgress += currentSegmentData.getProgress();
@@ -80,7 +78,6 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
         nextServerIdMin = qMin(nextServerIdMin, currentSegmentData.getServerGroupTarget());
 
     }
-
 
     // when all pending segments have been scanned by one server, set next backup server ID
     // in order to speed up segment searching in "SegmentManager" by using filtering in getNextSegmentSlot();
@@ -106,8 +103,8 @@ void ItemDownloadUpdater::updateNzbChildrenItems(const NzbFileData& nzbFileData,
 
 }
 
-
-ItemStatusData ItemDownloadUpdater::updateStatusNzbChildrenItem(ItemStatusData& itemStatusData, const int& rowNumber) {
+ItemStatusData ItemDownloadUpdater::updateStatusNzbChildrenItem(ItemStatusData &itemStatusData, const int &rowNumber)
+{
 
     // if all segments have been downloaded :
     if (rowNumber == this->downloadFinishItemNumber) {
@@ -117,10 +114,9 @@ ItemStatusData ItemDownloadUpdater::updateStatusNzbChildrenItem(ItemStatusData& 
     // if some segments are being downloaded :
     if (this->downloadItemNumber > 0) {
 
-        if ( this->pauseItemNumber == 0) {
+        if (this->pauseItemNumber == 0) {
             itemStatusData.setStatus(DownloadStatus);
-        }
-        else {
+        } else {
             itemStatusData.setStatus(PausingStatus);
         }
     }
@@ -138,12 +134,12 @@ ItemStatusData ItemDownloadUpdater::updateStatusNzbChildrenItem(ItemStatusData& 
     return itemStatusData;
 }
 
-
-ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusData) {
+ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData &itemStatusData)
+{
 
     // item has not been updated, check if pending data exist :
-    if ( Utility::isInQueue(itemStatusData.getStatus()) &&
-         this->pendingSegmentsOnBackupNumber > 0 ) {
+    if (Utility::isInQueue(itemStatusData.getStatus()) &&
+            this->pendingSegmentsOnBackupNumber > 0) {
 
         itemStatusData.setDataStatus(DataPendingBackupServer);
     }
@@ -157,8 +153,7 @@ ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusD
         // at least one segment has been found on server :
         else if (this->downloadFinishItemNumber > this->articleFoundNumber) {
             itemStatusData.setDataStatus(DataIncomplete);
-        }
-        else if (this->downloadFinishItemNumber == this->articleFoundNumber) {
+        } else if (this->downloadFinishItemNumber == this->articleFoundNumber) {
             itemStatusData.setDataStatus(DataComplete);
         }
 
@@ -168,9 +163,8 @@ ItemStatusData ItemDownloadUpdater::updateDataStatus(ItemStatusData& itemStatusD
 
 }
 
-
-
-ItemStatusData ItemDownloadUpdater::postDownloadProcessing(const QModelIndex& index, const NzbFileData& nzbFileData, ItemStatusData& itemStatusData){
+ItemStatusData ItemDownloadUpdater::postDownloadProcessing(const QModelIndex &index, const NzbFileData &nzbFileData, ItemStatusData &itemStatusData)
+{
 
     QList<SegmentData> segmentList = nzbFileData.getSegmentList();
 
@@ -178,12 +172,12 @@ ItemStatusData ItemDownloadUpdater::postDownloadProcessing(const QModelIndex& in
     if (segmentList.size() == this->downloadFinishItemNumber) {
 
         // retrieve current progression and status related items :
-        QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(index);
+        QStandardItem *stateItem = this->downloadModel->getStateItemFromIndex(index);
 
         // item has been downloaded, notify status bar :
-        if (!itemStatusData.isDownloadFinish() ) {
+        if (!itemStatusData.isDownloadFinish()) {
 
-            QStandardItem* sizeItem = this->downloadModel->getSizeItemFromIndex(stateItem->index());
+            QStandardItem *sizeItem = this->downloadModel->getSizeItemFromIndex(stateItem->index());
             quint64 size = sizeItem->data(SizeRole).toULongLong();
 
             emit statusBarDecrementSignal(size, 1);
@@ -208,8 +202,8 @@ ItemStatusData ItemDownloadUpdater::postDownloadProcessing(const QModelIndex& in
 
 }
 
-
-void ItemDownloadUpdater::countGlobalItemStatus(const SegmentData& segmentData) {
+void ItemDownloadUpdater::countGlobalItemStatus(const SegmentData &segmentData)
+{
 
     // count number of files present / not present :
     if (segmentData.getArticlePresenceOnServer() == Present) {
@@ -221,7 +215,7 @@ void ItemDownloadUpdater::countGlobalItemStatus(const SegmentData& segmentData) 
     }
 
     if (segmentData.getServerGroupTarget() != MasterServer &&
-        Utility::isInQueue(segmentData.getStatus())) {
+            Utility::isInQueue(segmentData.getStatus())) {
 
         this->pendingSegmentsOnBackupNumber++;
 

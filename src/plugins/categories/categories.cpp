@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "categories.h"
 
 #include "kwooty_debug.h"
@@ -43,9 +42,8 @@
 #include "kwootysettings.h"
 #include "kwooty_categoriessettings.h"
 
-
-
-Categories::Categories(CategoriesPlugin* parent) :  QObject(parent) {
+Categories::Categories(CategoriesPlugin *parent) :  QObject(parent)
+{
 
     this->core = parent->getMainWindow()->getCore();
 
@@ -72,7 +70,6 @@ Categories::Categories(CategoriesPlugin* parent) :  QObject(parent) {
     this->moveStatusTextMap.insert(MoveInsufficientDiskSpaceErrorStatus,   i18n("Transfer error (insufficient disk space)"));
     this->moveStatusTextMap.insert(MoveUnknownErrorStatus,                 i18n("Transfer error"));
 
-
     // associate color to display according to item status :
     this->moveStatusColorMap.insert(NoMoveStatus,                           QPalette().color(QPalette::WindowText));
     this->moveStatusColorMap.insert(MovingStatus,                           QPalette().color(QPalette::WindowText));
@@ -85,10 +82,8 @@ Categories::Categories(CategoriesPlugin* parent) :  QObject(parent) {
 
 }
 
-
-
-
-Categories::~Categories() {
+Categories::~Categories()
+{
 
     // if moving job is running when plugin is unselected,
     // be sure to notify plugin manager that jobs are no more running :
@@ -96,17 +91,19 @@ Categories::~Categories() {
     this->setJobProcessing(false);
 }
 
-void Categories::unload() {
+void Categories::unload()
+{
     this->categoriesManual->unload();
 }
 
-Core* Categories::getCore() {
+Core *Categories::getCore()
+{
     return this->core;
 
 }
 
-
-void Categories::setupConnections() {
+void Categories::setupConnections()
+{
 
     connect(this->core->getDownloadModel(),
             SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
@@ -121,19 +118,18 @@ void Categories::setupConnections() {
 
 }
 
+void Categories::launchPreProcess()
+{
 
-void Categories::launchPreProcess() {
-
-    if ( !this->jobProcessing &&
-         this->uuidItemList.size() > 0 ) {
+    if (!this->jobProcessing &&
+            this->uuidItemList.size() > 0) {
 
         MimeData mimeDataChildFound(MimeData::SubCategory);
 
-        StandardItemModel* downloadModel = this->core->getDownloadModel();
+        StandardItemModel *downloadModel = this->core->getDownloadModel();
 
         this->currentUuidItem = this->uuidItemList.takeFirst();
-        QStandardItem* parentFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->currentUuidItem);
-
+        QStandardItem *parentFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->currentUuidItem);
 
         // retrieve downloaded folder path :
         NzbFileData parentNzbFileData = downloadModel->getNzbFileDataFromIndex(parentFileNameItem->index());
@@ -153,7 +149,7 @@ void Categories::launchPreProcess() {
             QString subCategory = UtilityCategories::buildSubcategoryPattern(mimeName);
 
             // search corresponding main category in model :
-            QStandardItem* categoryItem = this->categoriesModel->retrieveItemFromCategory(mainCategory);
+            QStandardItem *categoryItem = this->categoriesModel->retrieveItemFromCategory(mainCategory);
 
             // if main category has been defined :
             if (categoryItem) {
@@ -164,7 +160,7 @@ void Categories::launchPreProcess() {
                 QList<MimeData> mimeDataChildList = this->categoriesModel->retrieveMimeDataListFromItem(categoryItem);
 
                 // compare subcategories stored with guessed subcategory :
-                foreach (const MimeData& mimeDataChild, mimeDataChildList) {
+                foreach (const MimeData &mimeDataChild, mimeDataChildList) {
 
                     // if subCategory has been found :
                     if (subCategory == mimeDataChild.getSubCategory()) {
@@ -179,13 +175,12 @@ void Categories::launchPreProcess() {
         }
 
         // if no category found, check if default transfer folder is enabled :
-        if ( ( !CategoriesSettings::defineCategories() ||
-               mimeDataChildFound.getMoveFolderPath().isEmpty() ) &&
-             CategoriesSettings::enableDefaultTransfer() ) {
+        if ((!CategoriesSettings::defineCategories() ||
+                mimeDataChildFound.getMoveFolderPath().isEmpty()) &&
+                CategoriesSettings::enableDefaultTransfer()) {
 
             mimeDataChildFound.setMoveFolderPath(CategoriesSettings::defaultTransferFolder().path());
         }
-
 
         // override automatic move folder path by the one selected by the user if any :
         if (this->categoriesManual->isManualFolderSelected(this->currentUuidItem)) {
@@ -193,7 +188,6 @@ void Categories::launchPreProcess() {
             mimeDataChildFound.setMoveFolderPath(this->categoriesManual->getMoveFolderPath(this->currentUuidItem));
 
         }
-
 
         // prepare folder moving :
         this->moveJobStatus = NoMoveStatus;
@@ -214,22 +208,19 @@ void Categories::launchPreProcess() {
                 // mime type has been identified, downloaded files can be moved to target folder :
                 this->launchMoveProcess(mimeDataChildFound, nzbFileSavepath);
 
-            }
-            else {
+            } else {
                 this->moveJobStatus = MoveInsufficientDiskSpaceErrorStatus;
             }
 
             this->notifyMoveProcessing();
         }
 
-
     } // if post processing correct
 
 }
 
-
-
-void Categories::launchMoveProcess(const MimeData& mimeData, const QString& nzbFileSavepath) {
+void Categories::launchMoveProcess(const MimeData &mimeData, const QString &nzbFileSavepath)
+{
 
     this->setJobProcessing(true);
 
@@ -253,24 +244,22 @@ void Categories::launchMoveProcess(const MimeData& mimeData, const QString& nzbF
     Utility::createFolder(mimeData.getMoveFolderPath());
 
     // create job :
-    KIO::CopyJob* moveJob = KIO::move(KUrl(nzbFileSavepath), KUrl(mimeData.getMoveFolderPath()), jobFlag);
+    KIO::CopyJob *moveJob = KIO::move(KUrl(nzbFileSavepath), KUrl(mimeData.getMoveFolderPath()), jobFlag);
     moveJob->setAutoRename(automaticRename);
 
     // ensure to not ask any question to user during move process (disable interactive mode) :
     moveJob->setUiDelegate(0);
 
-
     // setup connections with job :
     connect(moveJob, SIGNAL(result(KJob*)), this, SLOT(handleResultSlot(KJob*)));
     connect(moveJob, SIGNAL(moving(KIO::Job*,KUrl,KUrl)), this, SLOT(jobProgressionSlot(KIO::Job*)));
-
 
     moveJob->start();
 
 }
 
-
-QString Categories::guessMainMimeName(const QHash<QString, quint64>& mimeNameSizeMap) {
+QString Categories::guessMainMimeName(const QHash<QString, quint64> &mimeNameSizeMap)
+{
 
     QString guessedMainMimeName;
 
@@ -290,13 +279,13 @@ QString Categories::guessMainMimeName(const QHash<QString, quint64>& mimeNameSiz
 
 }
 
-
-bool Categories::checkDiskSpace(const MimeData& mimeData, const QString& nzbFileSavepath, const QList<quint64>& sizeList) {
+bool Categories::checkDiskSpace(const MimeData &mimeData, const QString &nzbFileSavepath, const QList<quint64> &sizeList)
+{
 
     // compute the total size of files to be moved :
     quint64 totalSizeToMove = 0;
 
-    foreach (const quint64& currentSize, sizeList) {
+    foreach (const quint64 &currentSize, sizeList) {
         totalSizeToMove += currentSize;
     }
 
@@ -306,8 +295,8 @@ bool Categories::checkDiskSpace(const MimeData& mimeData, const QString& nzbFile
     bool sufficientDiskSpace = false;
 
     // if move folder has to be performed on the same mount point :
-    if ( KDiskFreeSpaceInfo::freeSpaceInfo(nzbFileSavepath).mountPoint() ==
-         KDiskFreeSpaceInfo::freeSpaceInfo(mimeData.getMoveFolderPath()).mountPoint() ) {
+    if (KDiskFreeSpaceInfo::freeSpaceInfo(nzbFileSavepath).mountPoint() ==
+            KDiskFreeSpaceInfo::freeSpaceInfo(mimeData.getMoveFolderPath()).mountPoint()) {
 
         qDebug() << "same mount point :" << KDiskFreeSpaceInfo::freeSpaceInfo(nzbFileSavepath).mountPoint();
 
@@ -316,17 +305,15 @@ bool Categories::checkDiskSpace(const MimeData& mimeData, const QString& nzbFile
             sufficientDiskSpace = true;
         }
 
-    }
-    else {
+    } else {
 
         qDebug() << "different mount point :" << KDiskFreeSpaceInfo::freeSpaceInfo(nzbFileSavepath).mountPoint() << KDiskFreeSpaceInfo::freeSpaceInfo(mimeData.getMoveFolderPath()).mountPoint();
 
         // if the mount point is different, check that at least all total size to move is available on target :
-        if ( availableFreeDiskSpace > (totalSizeToMove + totalSizeToMove / 100) ) {
+        if (availableFreeDiskSpace > (totalSizeToMove + totalSizeToMove / 100)) {
             sufficientDiskSpace = true;
 
-        }
-        else {
+        } else {
             qDebug() << "not enough free space" << availableFreeDiskSpace << totalSizeToMove;
         }
 
@@ -336,9 +323,8 @@ bool Categories::checkDiskSpace(const MimeData& mimeData, const QString& nzbFile
 
 }
 
-
-
-KSharedPtr<KMimeType> Categories::retrieveFileMimeType(const QString& currentFileStr, const QString& nzbFileSavepath) {
+KSharedPtr<KMimeType> Categories::retrieveFileMimeType(const QString &currentFileStr, const QString &nzbFileSavepath)
+{
 #if 0 //PORT KF5
     QString absoluteFilePath = Utility::buildFullPath(nzbFileSavepath, currentFileStr);
 
@@ -346,8 +332,8 @@ KSharedPtr<KMimeType> Categories::retrieveFileMimeType(const QString& currentFil
     KSharedPtr<KMimeType> mimeType = KMimeType::findByUrl(KUrl(absoluteFilePath), 0, true, false);
 
     // if mime type has not been identified :
-    if ( !mimeType.isNull() &&
-         mimeType->isDefault() ) {
+    if (!mimeType.isNull() &&
+            mimeType->isDefault()) {
 
         qCDebug(KWOOTY_LOG) << "mime type not identified !!" << mimeType->name() << mimeType->isDefault();
         qCDebug(KWOOTY_LOG) << "try to get mime type from content file :" << absoluteFilePath;
@@ -362,14 +348,13 @@ KSharedPtr<KMimeType> Categories::retrieveFileMimeType(const QString& currentFil
     }
 
     return mimeType;
-#else 
+#else
     return KSharedPtr<KMimeType>();
 #endif
 }
 
-
-
-QHash<QString, quint64> Categories::scanDownloadedFiles(const QString& nzbFileSavepath) {
+QHash<QString, quint64> Categories::scanDownloadedFiles(const QString &nzbFileSavepath)
+{
 
     // collect total file size for earch different mime type :
     QHash<QString, quint64> mimeNameSizeMap;
@@ -389,13 +374,13 @@ QHash<QString, quint64> Categories::scanDownloadedFiles(const QString& nzbFileSa
 
         // get mime type of each file :
         QFileInfo fileInfo;
-        foreach (const QString& currentFileStr, currentFileList) {
+        foreach (const QString &currentFileStr, currentFileList) {
 
             KSharedPtr<KMimeType> mimeType = this->retrieveFileMimeType(currentFileStr, nzbFileSavepath);
 
             // mime type has been identified :
-            if ( !mimeType.isNull() &&
-                 !mimeType->isDefault() ) {
+            if (!mimeType.isNull() &&
+                    !mimeType->isDefault()) {
 
                 fileInfo.setFile(Utility::buildFullPath(currentDirectory, currentFileStr));
 
@@ -415,14 +400,13 @@ QHash<QString, quint64> Categories::scanDownloadedFiles(const QString& nzbFileSa
     return mimeNameSizeMap;
 }
 
+void Categories::notifyMoveProcessing(int progress)
+{
 
-
-void Categories::notifyMoveProcessing(int progress) {
-
-    QStandardItem* stateItem = 0;
+    QStandardItem *stateItem = 0;
 
     // retrieve nzb file name item from its uuid :
-    QStandardItem* parentFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->currentUuidItem);
+    QStandardItem *parentFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->currentUuidItem);
 
     // if file name item has been found, then retrieve its corresponding state item :
     if (parentFileNameItem) {
@@ -452,8 +436,8 @@ void Categories::notifyMoveProcessing(int progress) {
 
 }
 
-
-void Categories::setJobProcessing(const bool& jobProcessing) {
+void Categories::setJobProcessing(const bool &jobProcessing)
+{
 
     this->jobProcessing = jobProcessing;
 
@@ -464,25 +448,23 @@ void Categories::setJobProcessing(const bool& jobProcessing) {
         // consider job as running from core point of view :
         emit pluginJobRunningSignal(true);
 
-    }
-    else {
+    } else {
         emit pluginJobRunningSignal(jobProcessing);
     }
 
 }
 
-
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-void Categories::parentStatusItemChangedSlot(QStandardItem* stateItem, ItemStatusData itemStatusData) {
+void Categories::parentStatusItemChangedSlot(QStandardItem *stateItem, ItemStatusData itemStatusData)
+{
 
     // if post-processing of nzb file is correct, try to move downloaded folder into target folder :
-    if ( itemStatusData.getStatus() == ExtractFinishedStatus &&
-         itemStatusData.isPostProcessFinish() &&
-         itemStatusData.areAllPostProcessingCorrect() ) {
+    if (itemStatusData.getStatus() == ExtractFinishedStatus &&
+            itemStatusData.isPostProcessFinish() &&
+            itemStatusData.areAllPostProcessingCorrect()) {
 
         qDebug() << "post processing correct";
 
@@ -501,8 +483,8 @@ void Categories::parentStatusItemChangedSlot(QStandardItem* stateItem, ItemStatu
 
 }
 
-
-void Categories::handleResultSlot(KJob* moveJob) {
+void Categories::handleResultSlot(KJob *moveJob)
+{
 
     int error = moveJob->error();
 
@@ -530,8 +512,7 @@ void Categories::handleResultSlot(KJob* moveJob) {
 
     if (error > 0) {
         qDebug() << "move job error :" << moveJob->errorText();
-    }
-    else {
+    } else {
         this->moveJobStatus = MoveSuccessStatus;
     }
 
@@ -540,33 +521,29 @@ void Categories::handleResultSlot(KJob* moveJob) {
     // job has ended, no more notifying have to be done :
     this->setJobProcessing(false);
 
-
     // check if there is another item waiting :
     this->launchPreProcess();
 
-
 }
 
-
-void Categories::jobProgressionSlot(KIO::Job* moveJob) {
+void Categories::jobProgressionSlot(KIO::Job *moveJob)
+{
 
     this->notifyMoveProcessing(static_cast<int>(moveJob->percent()));
 }
 
-
-void Categories::settingsChanged() {
+void Categories::settingsChanged()
+{
 
     // reload settings from just saved config file :
     CategoriesSettings::self()->load();
 
     CategoriesFileHandler().reloadModel(this->categoriesModel);
 
-
 }
 
-
-
-KIO::CopyJob* Categories::moveJobLegacy(const MimeData& mimeData, const QString& nzbFileSavepath, KIO::JobFlag jobFlag) {
+KIO::CopyJob *Categories::moveJobLegacy(const MimeData &mimeData, const QString &nzbFileSavepath, KIO::JobFlag jobFlag)
+{
 
     // get name of the folder to transfer :
     QString folderName = QDir(nzbFileSavepath).dirName();
@@ -593,6 +570,6 @@ KIO::CopyJob* Categories::moveJobLegacy(const MimeData& mimeData, const QString&
     }
 
     // create job :
-     return KIO::move(KUrl(nzbFileSavepath), KUrl(moveFolderPath), jobFlag);
+    return KIO::move(KUrl(nzbFileSavepath), KUrl(moveFolderPath), jobFlag);
 }
 

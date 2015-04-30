@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef FILEOPERATIONS_H
 #define FILEOPERATIONS_H
 
@@ -33,21 +32,22 @@ using namespace UtilityNamespace;
 
 class Core;
 
-class KWOOTY_EXPORT FileOperations : public QObject {
+class KWOOTY_EXPORT FileOperations : public QObject
+{
 
     Q_OBJECT
 
 public:
 
-    explicit FileOperations(Core*);
+    explicit FileOperations(Core *);
     void openFile();
     void openFileWithFileMode(const KUrl &, UtilityNamespace::OpenFileMode);
 
-    static bool isSplitFileFormat(const QFile&);
+    static bool isSplitFileFormat(const QFile &);
 
 private:
-    Core* core;
-    void openUrl(const KUrl &, bool&, UtilityNamespace::OpenFileMode);
+    Core *core;
+    void openUrl(const KUrl &, bool &, UtilityNamespace::OpenFileMode);
 };
 
 #endif // FILEOPERATIONS_H

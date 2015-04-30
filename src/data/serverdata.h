@@ -18,52 +18,51 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SERVERDATA_H
 #define SERVERDATA_H
 
 #include <QString>
 
-class ServerData {
+class ServerData
+{
 
 public:
     ServerData();
 
-    void setServerId(const int&);
+    void setServerId(const int &);
     int getServerId() const;
 
-    void setServerName(const QString&);
+    void setServerName(const QString &);
     QString getServerName() const;
 
-    void setHostName(const QString&);
+    void setHostName(const QString &);
     QString getHostName() const;
 
-    void setLogin(const QString&);
+    void setLogin(const QString &);
     QString getLogin() const;
 
-    void setPassword(const QString&);
+    void setPassword(const QString &);
     QString getPassword() const;
 
-    void setPort(const uint&);
+    void setPort(const uint &);
     uint getPort() const;
 
-    void setDisconnectTimeout(const uint&);
+    void setDisconnectTimeout(const uint &);
     uint getDisconnectTimeout() const;
 
-    void setAuthentication(const bool&);
+    void setAuthentication(const bool &);
     bool isAuthentication() const;
 
-    void setEnableSSL(const bool&);
+    void setEnableSSL(const bool &);
     bool isEnableSSL() const;
 
-    void setConnectionNumber(const uint&);
+    void setConnectionNumber(const uint &);
     uint getConnectionNumber() const;
 
-    void setServerModeIndex(const uint&);
+    void setServerModeIndex(const uint &);
     uint getServerModeIndex() const;
 
-
-    bool operator!=(const ServerData&);
+    bool operator!=(const ServerData &);
 
 private:
 
@@ -78,7 +77,6 @@ private:
     bool enableSSL;
     uint connectionNumber;
     uint serverModeIndex;
-
 
 };
 

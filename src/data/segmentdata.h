@@ -27,24 +27,23 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class SegmentData {
-
+class SegmentData
+{
 
 public:
-    SegmentData(const QString&, const QString&, const QString&, const UtilityNamespace::ItemStatus);
+    SegmentData(const QString &, const QString &, const QString &, const UtilityNamespace::ItemStatus);
     SegmentData();
-    void setReadyForNewServer(const int&);
-    void setDownloadFinished(const int&);
+    void setReadyForNewServer(const int &);
+    void setDownloadFinished(const int &);
     bool isInitialized();
 
-
-    void setBytes(const QString&);
+    void setBytes(const QString &);
     QString getBytes() const;
 
-    void setNumber(const QString&);
+    void setNumber(const QString &);
     QString getNumber() const;
 
-    void setPart(const QString&);
+    void setPart(const QString &);
     QString getPart() const;
 
     void setStatus(const UtilityNamespace::ItemStatus);
@@ -59,24 +58,23 @@ public:
     void setElementInList(const int);
     int getElementInList() const;
 
-    void setParentUniqueIdentifier(const QVariant&);
+    void setParentUniqueIdentifier(const QVariant &);
     QVariant getParentUniqueIdentifier() const;
 
     void setArticlePresenceOnServer(const int);
     int getArticlePresenceOnServer() const;
 
     SegmentInfoData getSegmentInfoData() const;
-    void setSegmentInfoData(const SegmentInfoData&);
+    void setSegmentInfoData(const SegmentInfoData &);
 
-    QIODevice* getIoDevice();
-    void setIoDevice(QIODevice*);
+    QIODevice *getIoDevice();
+    void setIoDevice(QIODevice *);
 
     int getDataSize() const;
-    void setDataSize(const int&);
+    void setDataSize(const int &);
 
     UtilityNamespace::CrcNotify getCrc32Match() const;
     void setCrc32Match(const UtilityNamespace::CrcNotify);
-
 
 private:
     QString bytes;
@@ -85,7 +83,7 @@ private:
     QVariant parentUniqueIdentifier;
     SegmentInfoData segmentInfoData;
     UtilityNamespace::ItemStatus status;
-    QIODevice* ioDevice;
+    QIODevice *ioDevice;
     int elementInList;
     int serverGroupTarget;
     int progress;
@@ -95,9 +93,8 @@ private:
 
 };
 
-QDataStream& operator<<(QDataStream&, const SegmentData&);
-QDataStream& operator>>(QDataStream&, SegmentData&);
-
+QDataStream &operator<<(QDataStream &, const SegmentData &);
+QDataStream &operator>>(QDataStream &, SegmentData &);
 
 Q_DECLARE_METATYPE(SegmentData)
 

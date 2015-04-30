@@ -18,42 +18,38 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef PLUGIN_H
 #define PLUGIN_H
-
 
 #include <QObject>
 #include <kxmlguiclient.h>
 #include "kwooty_export.h"
 class MainWindow;
 
-
-class KWOOTY_EXPORT Plugin : public QObject, public KXMLGUIClient {
+class KWOOTY_EXPORT Plugin : public QObject, public KXMLGUIClient
+{
 
     Q_OBJECT
 
 public:
 
-    Plugin(QObject*);
-    void setCore(MainWindow*);
-    MainWindow* getMainWindow();
+    Plugin(QObject *);
+    void setCore(MainWindow *);
+    MainWindow *getMainWindow();
 
     virtual void load() = 0;
     virtual void unload() = 0;
     virtual void configUpdated() = 0;
 
-
 private:
 
-    MainWindow* core;
+    MainWindow *core;
 
 Q_SIGNALS:
 
 public Q_SLOTS:
 
 private Q_SLOTS:
-
 
 };
 

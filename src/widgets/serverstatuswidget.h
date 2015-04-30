@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SERVERSTATUSWIDGET_H
 #define SERVERSTATUSWIDGET_H
 
@@ -28,7 +27,8 @@
 
 #include "utilities/utilityserverstatus.h"
 
-class ServerStatusWidget : public QDockWidget {
+class ServerStatusWidget : public QDockWidget
+{
 
     Q_OBJECT
 
@@ -52,27 +52,24 @@ public:
         RowRight
     };
 
-    explicit ServerStatusWidget(QWidget*);
+    explicit ServerStatusWidget(QWidget *);
 
-    void updateLeftLabelField(const int&, const QString&, const QString& = QString());
-    void updateRightLabelField(const int&, const QString&, const QString& = QString());
-    void updateTextPushButtonField(const int&, const QString&,  const bool&, const ServerConnectionIcon&, const QString&);
-
+    void updateLeftLabelField(const int &, const QString &, const QString & = QString());
+    void updateRightLabelField(const int &, const QString &, const QString & = QString());
+    void updateTextPushButtonField(const int &, const QString &,  const bool &, const ServerConnectionIcon &, const QString &);
 
 private:
-    QFormLayout* formLayoutLeft;
-    QFormLayout* formLayoutRight;
+    QFormLayout *formLayoutLeft;
+    QFormLayout *formLayoutRight;
     QString sslConnectionInfo;
 
-    void updateLabelField(QLabel*, const QString&, const QString& = QString());
-    void formatLayout(QFormLayout*);
-    void insertLeftRowFormLayout(ServerStatusWidget::RowItemsLeft, QFormLayout*, const QString&, QWidget*);
-    void insertRightRowFormLayout(ServerStatusWidget::RowItemsRight, QFormLayout*, const QString&, QWidget*);
-
+    void updateLabelField(QLabel *, const QString &, const QString & = QString());
+    void formatLayout(QFormLayout *);
+    void insertLeftRowFormLayout(ServerStatusWidget::RowItemsLeft, QFormLayout *, const QString &, QWidget *);
+    void insertRightRowFormLayout(ServerStatusWidget::RowItemsRight, QFormLayout *, const QString &, QWidget *);
 
 public Q_SLOTS:
     void buttonPressedSlot();
-
 
 };
 

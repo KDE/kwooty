@@ -29,8 +29,7 @@
 #include "uniqueapp.h"
 #include "mainwindow.h"
 
-
-int main (int argc, char** argv)
+int main(int argc, char **argv)
 {
     Kdelibs4ConfigMigrator migrate(QStringLiteral("kwooty"));
 
@@ -39,22 +38,21 @@ int main (int argc, char** argv)
     migrate.migrate();
 
     K4AboutData aboutData("kwooty",
-                         "",
-                         ki18n("Kwooty"), "1.1.0",
-                         ki18n("Kwooty is a friendly nzb usenet binary downloader.\n It also supports automatic file repairing and archive extraction."),
-                         K4AboutData::License_GPL,
-                         ki18n("Copyright (c) 2012-2015 Xavier Lefage"),
-                         KLocalizedString(),
-                         "http://kwooty.sourceforge.net/");
-    aboutData.addAuthor(ki18n("Xavier Lefage"),ki18n("Maintainer, Lead Developer"), "xavier.kwooty@gmail.com");
-
+                          "",
+                          ki18n("Kwooty"), "1.1.0",
+                          ki18n("Kwooty is a friendly nzb usenet binary downloader.\n It also supports automatic file repairing and archive extraction."),
+                          K4AboutData::License_GPL,
+                          ki18n("Copyright (c) 2012-2015 Xavier Lefage"),
+                          KLocalizedString(),
+                          "http://kwooty.sourceforge.net/");
+    aboutData.addAuthor(ki18n("Xavier Lefage"), ki18n("Maintainer, Lead Developer"), "xavier.kwooty@gmail.com");
 
     aboutData.addCredit(ki18n("Michael Wiescholek"),
                         ki18n("For the first German translation."),
-                        "Michael.Wiescholek@gmail.com" );
+                        "Michael.Wiescholek@gmail.com");
     aboutData.addCredit(ki18n("Guillaume Pujol"),
                         ki18n("For his patches."),
-                        "guill.p@gmail.com" );
+                        "guill.p@gmail.com");
 
     aboutData.setBugAddress("http://sourceforge.net/projects/kwooty");
     aboutData.setCustomAuthorText(ki18n("Please report bugs to http://sourceforge.net/projects/kwooty"),
@@ -66,11 +64,10 @@ int main (int argc, char** argv)
     options.add("+[Url]", ki18n("Document to open"));
     KCmdLineArgs::addCmdLineOptions(options);
 
-
     if (!UniqueApp::start()) {
         fprintf(stderr, "kwooty is already running!\n");
         return 0;
-     }
+    }
 
     UniqueApp app;
     return app.exec();

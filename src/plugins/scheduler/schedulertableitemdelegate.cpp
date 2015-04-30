@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "schedulertableitemdelegate.h"
 
 #include "kwooty_debug.h"
@@ -32,9 +31,8 @@
 #include <QStyleOptionHeader>
 #include <QTime>
 
-
-
-SchedulerTableItemDelegate::SchedulerTableItemDelegate(QObject *parent) : QStyledItemDelegate(parent) {
+SchedulerTableItemDelegate::SchedulerTableItemDelegate(QObject *parent) : QStyledItemDelegate(parent)
+{
 
     // associate color to display according to item status :
     this->statusColorMap.insert(NoLimitDownload,    KColorUtils::lighten(QColor(Qt::green), 0.40));
@@ -43,9 +41,8 @@ SchedulerTableItemDelegate::SchedulerTableItemDelegate(QObject *parent) : QStyle
 
 }
 
-
-
-void SchedulerTableItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+void SchedulerTableItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+{
 
     // draw horizontal header :
     if (index.row() == 0) {
@@ -81,13 +78,12 @@ void SchedulerTableItemDelegate::paint(QPainter *painter, const QStyleOptionView
             painter->fillRect(option.rect, this->statusColorMap.value(downloadLimit));
         }
 
-
     }
 
 }
 
-
-bool SchedulerTableItemDelegate::isSchedulerEnabled() const {
-    return (static_cast<QTableView*>(this->parent()))->isEnabled();
+bool SchedulerTableItemDelegate::isSchedulerEnabled() const
+{
+    return (static_cast<QTableView *>(this->parent()))->isEnabled();
 }
 

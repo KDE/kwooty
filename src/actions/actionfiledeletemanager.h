@@ -18,32 +18,31 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef ACTIONFILEDELETEMANAGER_H
 #define ACTIONFILEDELETEMANAGER_H
 
 #include "actionfilemanagerbase.h"
 
-
-class ActionFileDeleteManager : public ActionFileManagerBase {
+class ActionFileDeleteManager : public ActionFileManagerBase
+{
 
     Q_OBJECT
 
 public:
-    explicit ActionFileDeleteManager(ActionsManager*);
+    explicit ActionFileDeleteManager(ActionsManager *);
 
 private:
 
     QStringList selectedItemUuidList;
 
-    QString retrieveFileSavePath(QStandardItem*) const;
-    bool isDeleteAllowed(QStandardItem*) const;
+    QString retrieveFileSavePath(QStandardItem *) const;
+    bool isDeleteAllowed(QStandardItem *) const;
     void removeRowDeleteFile();
     void launchProcess() Q_DECL_OVERRIDE;
     void resetState();
 
 private Q_SLOTS:
-    void handleResultSlot(KJob*);
+    void handleResultSlot(KJob *);
     void actionTriggeredSlot();
 
 };

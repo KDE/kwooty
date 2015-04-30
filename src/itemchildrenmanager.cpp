@@ -30,8 +30,8 @@
 #include "segmentmanager.h"
 #include "kwootysettings.h"
 
-
-ItemChildrenManager::ItemChildrenManager(Core* parent, ItemParentUpdater* itemParentUpdater) : ItemAbstractUpdater (parent->getDownloadModel(), ItemAbstractUpdater::Child) {
+ItemChildrenManager::ItemChildrenManager(Core *parent, ItemParentUpdater *itemParentUpdater) : ItemAbstractUpdater(parent->getDownloadModel(), ItemAbstractUpdater::Child)
+{
 
     this->mParent = parent;
     this->itemParentUpdater = itemParentUpdater;
@@ -44,32 +44,31 @@ ItemChildrenManager::ItemChildrenManager(Core* parent, ItemParentUpdater* itemPa
 
 }
 
-
-void ItemChildrenManager::setupConnections() {
+void ItemChildrenManager::setupConnections()
+{
 
     // parent notify that settings have been changed :
-    connect (mParent,
-             SIGNAL(settingsChangedSignal()),
-             this,
-             SLOT(settingsChangedSlot()));
+    connect(mParent,
+            SIGNAL(settingsChangedSignal()),
+            this,
+            SLOT(settingsChangedSlot()));
 
     // download par2 files if crc check failed during archive download :
-    connect (this,
-             SIGNAL(downloadWaitingPar2Signal()),
-             itemParentUpdater,
-             SIGNAL(downloadWaitingPar2Signal()));
+    connect(this,
+            SIGNAL(downloadWaitingPar2Signal()),
+            itemParentUpdater,
+            SIGNAL(downloadWaitingPar2Signal()));
 
 }
 
-
-
-bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex &index) {
+bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex &index)
+{
 
     bool par2NotDownloaded = false;
     bool extractFail = false;
 
     // check if some par2 files have not been downloaded :
-    QStandardItem* parentItem = this->downloadModel->itemFromIndex(index);
+    QStandardItem *parentItem = this->downloadModel->itemFromIndex(index);
 
     for (int i = 0; i < parentItem->rowCount(); ++i) {
 
@@ -80,12 +79,11 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex &index)
             par2NotDownloaded = true;
         }
 
-        if ( (childItemStatus == ExtractFailedStatus) ||
-             (childItemStatus == ExtractBadCrcStatus) ) {
+        if ((childItemStatus == ExtractFailedStatus) ||
+                (childItemStatus == ExtractBadCrcStatus)) {
 
             extractFail = true;
         }
-
 
     }
 
@@ -104,13 +102,13 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex &index)
             QModelIndex childIndex = index.child(i, FILE_NAME_COLUMN);
 
             // get current item status :
-            QStandardItem* stateItem = this->downloadModel->getStateItemFromIndex(childIndex);
+            QStandardItem *stateItem = this->downloadModel->getStateItemFromIndex(childIndex);
             UtilityNamespace::ItemStatus childItemStatus = this->downloadModel->getStatusFromStateItem(stateItem);
 
             // reset item whose extracting failed to DecodeStatus
             // in order to verify them when par2 download is complete :
-            if ( (childItemStatus == ExtractFailedStatus) ||
-                 (childItemStatus == ExtractBadCrcStatus) ) {
+            if ((childItemStatus == ExtractFailedStatus) ||
+                    (childItemStatus == ExtractBadCrcStatus)) {
 
                 this->downloadModel->updateStateItem(childIndex, DecodeFinishStatus);
 
@@ -126,14 +124,12 @@ bool ItemChildrenManager::resetItemStatusIfExtractFail(const QModelIndex &index)
 
 }
 
-
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex &index, UtilityNamespace::ItemStatus itemStatus) {
+void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex &index, UtilityNamespace::ItemStatus itemStatus)
+{
 
     // get itemStatusData :
     ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(index);
@@ -156,8 +152,8 @@ void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex &index, Ut
                 // get itemStatusData :
                 ItemStatusData childItemStatusData = this->downloadModel->getStatusDataFromIndex(childIndex);
 
-                if ( !childItemStatusData.isDownloadFinish() &&
-                     !Utility::isPausedOrPausing(childItemStatusData.getStatus()) ) {
+                if (!childItemStatusData.isDownloadFinish() &&
+                        !Utility::isPausedOrPausing(childItemStatusData.getStatus())) {
 
                     // set par2 item from IdleStatus to WaitForPar2IdleStatus and vice versa :
                     this->downloadModel->updateStateItem(childIndex, itemStatus);
@@ -181,10 +177,8 @@ void ItemChildrenManager::changePar2FilesStatusSlot(const QModelIndex &index, Ut
 
 }
 
-
-
-
-void ItemChildrenManager::resetItemStatusToTarget(QStandardItem* fileNameItem, const ItemStatus& itemStatusResetTarget) {
+void ItemChildrenManager::resetItemStatusToTarget(QStandardItem *fileNameItem, const ItemStatus &itemStatusResetTarget)
+{
 
     // if current item has to be downloaded again :
     if (itemStatusResetTarget == IdleStatus) {
@@ -202,23 +196,21 @@ void ItemChildrenManager::resetItemStatusToTarget(QStandardItem* fileNameItem, c
 
     this->downloadModel->updateStatusDataFromIndex(fileNameItem->index(), itemStatusData);
 
-
 }
 
-
-
-void ItemChildrenManager::resetFinishedChildrenItemToDecodeFinish(QStandardItem* fileNameItem) {
+void ItemChildrenManager::resetFinishedChildrenItemToDecodeFinish(QStandardItem *fileNameItem)
+{
 
     for (int i = 0; i < fileNameItem->rowCount(); ++i) {
 
-        QStandardItem* nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
+        QStandardItem *nzbChildrenItem = fileNameItem->child(i, FILE_NAME_COLUMN);
 
         ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(nzbChildrenItem->index());
         UtilityNamespace::ItemStatus nzbChildrenStatus = itemStatusData.getStatus();
 
         // if current file has already been decoded but post processing failed :
-        if ( itemStatusData.isDecodeFinish() &&
-             Utility::isPostDownloadFailed(nzbChildrenStatus) ) {
+        if (itemStatusData.isDecodeFinish() &&
+                Utility::isPostDownloadFailed(nzbChildrenStatus)) {
 
             // reset item to decode finish :
             itemStatusData.downloadRetry(DecodeFinishStatus);
@@ -229,21 +221,19 @@ void ItemChildrenManager::resetFinishedChildrenItemToDecodeFinish(QStandardItem*
 
 }
 
-
-
-
-void ItemChildrenManager::settingsChangedSlot() {
+void ItemChildrenManager::settingsChangedSlot()
+{
 
     // settings have been changed, enable or disable smart par2 download :
     if (this->smartPar2Download != Settings::smartPar2Download()) {
 
         // get the root model :
-        QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+        QStandardItem *rootItem = this->downloadModel->invisibleRootItem();
 
         // for each parent item, update it children :
         for (int i = 0; i < rootItem->rowCount(); ++i) {
 
-            QStandardItem* parentItem = rootItem->child(i, FILE_NAME_COLUMN);
+            QStandardItem *parentItem = rootItem->child(i, FILE_NAME_COLUMN);
 
             // enable or disable smart par2 download :
             UtilityNamespace::ItemStatus itemStatus = IdleStatus;
@@ -267,7 +257,4 @@ void ItemChildrenManager::settingsChangedSlot() {
     }
 
 }
-
-
-
 

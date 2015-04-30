@@ -29,14 +29,12 @@
 #include <KPluginFactory>
 #include <KPluginLoader>
 
-
-
 class PreferencesWatchFolder : public KCModule
 {
     Q_OBJECT
 
 public:
-    PreferencesWatchFolder(QWidget* = 0, const QVariantList& = QVariantList());
+    PreferencesWatchFolder(QWidget * = 0, const QVariantList & = QVariantList());
     ~PreferencesWatchFolder();
 
     virtual void save();
@@ -44,7 +42,6 @@ public:
 
 private:
     Ui_PreferencesWatchFolder preferencesWatchFolderUi;
-
 
 Q_SIGNALS:
 

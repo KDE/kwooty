@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "autoretry.h"
 
 #include "kwooty_debug.h"
@@ -32,9 +31,8 @@
 #include "data/itemstatusdata.h"
 #include "kwooty_autoretrysettings.h"
 
-
-
-AutoRetry::AutoRetry(AutoRetryPlugin* parent) :  QObject(parent) {
+AutoRetry::AutoRetry(AutoRetryPlugin *parent) :  QObject(parent)
+{
 
     this->core = parent->getMainWindow()->getCore();
 
@@ -46,13 +44,13 @@ AutoRetry::AutoRetry(AutoRetryPlugin* parent) :  QObject(parent) {
 
 }
 
-
-AutoRetry::~AutoRetry() {
+AutoRetry::~AutoRetry()
+{
 
 }
 
-
-void AutoRetry::setupConnections() {
+void AutoRetry::setupConnections()
+{
 
     connect(this->core->getDownloadModel(),
             SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
@@ -66,15 +64,14 @@ void AutoRetry::setupConnections() {
 
 }
 
-
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-void AutoRetry::parentStatusItemChangedSlot(QStandardItem* stateItem) {
+void AutoRetry::parentStatusItemChangedSlot(QStandardItem *stateItem)
+{
 
-    StandardItemModel* downloadModel = this->core->getDownloadModel();
+    StandardItemModel *downloadModel = this->core->getDownloadModel();
     ItemStatusData itemStatusData = downloadModel->getStatusDataFromIndex(stateItem->index());
 
     //qCDebug(KWOOTY_LOG) <<  itemStatusData.isPostProcessFinish() << itemStatusData.getStatus() <<  itemStatusData.getDataStatus() ;
@@ -85,11 +82,11 @@ void AutoRetry::parentStatusItemChangedSlot(QStandardItem* stateItem) {
         // if status has just not be set to be ready for downloading again :
         ItemStatus itemStatus = itemStatusData.getStatus();
 
-        if ( itemStatus == VerifyFinishedStatus ||
-             itemStatus == ExtractFinishedStatus ) {
+        if (itemStatus == VerifyFinishedStatus ||
+                itemStatus == ExtractFinishedStatus) {
 
-            if ( itemStatusData.isPostProcessFinish() &&
-                 !itemStatusData.areAllPostProcessingCorrect() ) {
+            if (itemStatusData.isPostProcessFinish() &&
+                    !itemStatusData.areAllPostProcessingCorrect()) {
 
                 qDebug() << "post process finished, retry counter :" << itemStatusData.getDownloadRetryCounter();
 
@@ -103,19 +100,16 @@ void AutoRetry::parentStatusItemChangedSlot(QStandardItem* stateItem) {
 
 }
 
+void AutoRetry::childStatusItemChangedSlot(QStandardItem *stateItem)
+{
 
-
-void AutoRetry::childStatusItemChangedSlot(QStandardItem* stateItem) {
-
-
-    StandardItemModel* downloadModel = this->core->getDownloadModel();
+    StandardItemModel *downloadModel = this->core->getDownloadModel();
     ItemStatusData itemStatusData = downloadModel->getStatusDataFromIndex(stateItem->index());
-
 
     if (itemStatusData.getDownloadRetryCounter() <= AutoRetrySettings::retryNoPar2Files()) {
 
-        if ( Utility::isDecodeFinish(itemStatusData.getStatus()) &&
-             itemStatusData.getCrc32Match() != CrcOk ) {
+        if (Utility::isDecodeFinish(itemStatusData.getStatus()) &&
+                itemStatusData.getCrc32Match() != CrcOk) {
 
             // if nzb file does not contain any par2 files, reset in queue corrupted decoded file :
             if (!this->core->getModelQuery()->isParentContainsPar2File(stateItem)) {
@@ -130,12 +124,12 @@ void AutoRetry::childStatusItemChangedSlot(QStandardItem* stateItem) {
         }
 
         // no data found, try to download files again :
-        else if ( Utility::isFileNotFound(itemStatusData.getStatus(), itemStatusData.getDataStatus()) ) {
+        else if (Utility::isFileNotFound(itemStatusData.getStatus(), itemStatusData.getDataStatus())) {
 
             // if nzb file does not contain any par2 files, reset in queue corrupted decoded file :
             if (!this->core->getModelQuery()->isParentContainsPar2File(stateItem)) {
 
-                qDebug() << "Decode Finished No par2 files - retry!"<< itemStatusData.getDownloadRetryCounter();
+                qDebug() << "Decode Finished No par2 files - retry!" << itemStatusData.getDownloadRetryCounter();
 
                 // select all rows in order to set them to paused or Idle :
                 this->retryDownload(stateItem);
@@ -145,12 +139,10 @@ void AutoRetry::childStatusItemChangedSlot(QStandardItem* stateItem) {
 
     }
 
-
 }
 
-
-
-void AutoRetry::retryDownload(QStandardItem* stateItem) {
+void AutoRetry::retryDownload(QStandardItem *stateItem)
+{
 
     QList<QModelIndex> indexesList;
     indexesList.append(stateItem->index());
@@ -159,12 +151,11 @@ void AutoRetry::retryDownload(QStandardItem* stateItem) {
 
 }
 
-
-void AutoRetry::settingsChanged() {
+void AutoRetry::settingsChanged()
+{
 
     // reload settings from just saved config file :
     AutoRetrySettings::self()->load();
 
 }
-
 

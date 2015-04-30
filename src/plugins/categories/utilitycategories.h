@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef UTILITYCATEGORIES_H
 #define UTILITYCATEGORIES_H
 
@@ -28,25 +27,25 @@
 #include "categoriesmodel.h"
 #include "mimedata.h"
 
-class UtilityCategories {
+class UtilityCategories
+{
 
 public:
     UtilityCategories();
 
-    static QString buildSubcategoryPattern(const QString&);
-    static QString buildMaincategoryPattern(const QString&);
-    static QString buildFullCategoryPattern(CategoriesModel*, QStandardItem*, const QString&);
+    static QString buildSubcategoryPattern(const QString &);
+    static QString buildMaincategoryPattern(const QString &);
+    static QString buildFullCategoryPattern(CategoriesModel *, QStandardItem *, const QString &);
     static QString builExtensionStringFromMimeType(KSharedPtr< KMimeType>);
-    static QString buildFullCategoryPattern(const QString&, const QString&);
-    static QString buildTextToDisplay(const QString&, const QString&);
-    static QString buildTextToDisplayFromFullCategoryPattern(const QString&);
-    static void builPartialMimeData(MimeData&);
+    static QString buildFullCategoryPattern(const QString &, const QString &);
+    static QString buildTextToDisplay(const QString &, const QString &);
+    static QString buildTextToDisplayFromFullCategoryPattern(const QString &);
+    static void builPartialMimeData(MimeData &);
     static QStringList retrieveMainCategoryList();
-    static QStringList retrieveFilteredMainCategoryList(CategoriesModel*);
-
+    static QStringList retrieveFilteredMainCategoryList(CategoriesModel *);
 
 private:
-    static QString buildPattern(const QString&, const int&);
+    static QString buildPattern(const QString &, const int &);
 
 };
 

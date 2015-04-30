@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "clientsobserver.h"
 
 #include "kwooty_debug.h"
@@ -26,12 +25,11 @@
 #include "core.h"
 #include "servermanager.h"
 #include "servergroup.h"
-#include "statsinfobuilder.h"   
+#include "statsinfobuilder.h"
 #include "kwootysettings.h"
 
-
-
-ClientsObserver::ClientsObserver(Core* parent) : ClientsObserverBase(parent) {
+ClientsObserver::ClientsObserver(Core *parent) : ClientsObserverBase(parent)
+{
 
     this->parent = parent;
 
@@ -41,9 +39,8 @@ ClientsObserver::ClientsObserver(Core* parent) : ClientsObserverBase(parent) {
 
 }
 
-
-
-void ClientsObserver::resetVariables() {
+void ClientsObserver::resetVariables()
+{
 
     ClientsObserverBase::resetVariables();
 
@@ -52,9 +49,8 @@ void ClientsObserver::resetVariables() {
 
 }
 
-
-
-void ClientsObserver::sendFullUpdate() {
+void ClientsObserver::sendFullUpdate()
+{
 
     // send reset values to status bar :
     emit updateFileSizeInfoSignal(this->totalFiles, this->totalSize);
@@ -62,16 +58,15 @@ void ClientsObserver::sendFullUpdate() {
 
     this->statsInfoBuilder->sendFullUpdate();
 
-
 }
 
-
-void ClientsObserver::nntpClientSpeedSlot(const int bytesDownloaded) {
+void ClientsObserver::nntpClientSpeedSlot(const int bytesDownloaded)
+{
     this->addBytesDownloaded(bytesDownloaded);
 }
 
-
-void ClientsObserver::decrementSlot(const quint64 size, const int fileNumber = 1) {
+void ClientsObserver::decrementSlot(const quint64 size, const int fileNumber = 1)
+{
 
     this->totalFiles -= fileNumber;
     this->totalSize -= size;
@@ -81,8 +76,8 @@ void ClientsObserver::decrementSlot(const quint64 size, const int fileNumber = 1
 
 }
 
-
-void ClientsObserver::fullFileSizeUpdate(const quint64 size, const quint64 files) {
+void ClientsObserver::fullFileSizeUpdate(const quint64 size, const quint64 files)
+{
 
     this->totalSize = size;
     this->totalFiles = files;
@@ -92,9 +87,8 @@ void ClientsObserver::fullFileSizeUpdate(const quint64 size, const quint64 files
 
 }
 
-
-
-void ClientsObserver::connectionStatusSlot(const int connectionStatus) {
+void ClientsObserver::connectionStatusSlot(const int connectionStatus)
+{
 
     this->updateTotalConnections(connectionStatus);
 
@@ -102,8 +96,8 @@ void ClientsObserver::connectionStatusSlot(const int connectionStatus) {
 
 }
 
-
-void ClientsObserver::nntpErrorSlot(const int nttpErrorStatus) {
+void ClientsObserver::nntpErrorSlot(const int nttpErrorStatus)
+{
 
     this->setNntpErrorStatus(nttpErrorStatus);
 
@@ -111,7 +105,8 @@ void ClientsObserver::nntpErrorSlot(const int nttpErrorStatus) {
 
 }
 
-void ClientsObserver::encryptionStatusSlot(const bool sslActive, const QString &encryptionMethod, const bool certificateVerified, const QString &issuerOrgranisation, const QStringList &sslErrors) {
+void ClientsObserver::encryptionStatusSlot(const bool sslActive, const QString &encryptionMethod, const bool certificateVerified, const QString &issuerOrgranisation, const QStringList &sslErrors)
+{
 
     //qCDebug(KWOOTY_LOG) << "sslActive : " << sslActive << "encryptionMethod" << encryptionMethod;
 
@@ -120,13 +115,12 @@ void ClientsObserver::encryptionStatusSlot(const bool sslActive, const QString &
 
 }
 
-
-
-bool ClientsObserver::isSingleServer(QString& hostName) const {
+bool ClientsObserver::isSingleServer(QString &hostName) const
+{
 
     bool singleServer = true;
 
-    ServerManager* serverManager = this->parent->getServerManager();
+    ServerManager *serverManager = this->parent->getServerManager();
 
     if (serverManager->getServerNumber() > 1) {
         singleServer = false;
@@ -140,23 +134,23 @@ bool ClientsObserver::isSingleServer(QString& hostName) const {
     return singleServer;
 }
 
-
-bool ClientsObserver::isSslActive() const {
+bool ClientsObserver::isSslActive() const
+{
     return this->parent->getServerManager()->areAllServersEncrypted();
 }
 
-
-
-void ClientsObserver::resetTotalBytesDownloaded() {
+void ClientsObserver::resetTotalBytesDownloaded()
+{
     this->totalBytesDownloaded = 0;
 }
 
-quint64 ClientsObserver::getTotalSize() const {
+quint64 ClientsObserver::getTotalSize() const
+{
     return this->totalSize;
 }
 
-StatsInfoBuilder* ClientsObserver::getStatsInfoBuilder() const {
+StatsInfoBuilder *ClientsObserver::getStatsInfoBuilder() const
+{
     return this->statsInfoBuilder;
 }
-
 

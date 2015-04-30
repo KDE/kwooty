@@ -18,14 +18,12 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef UTILITYSERVERSTATUS_H
 #define UTILITYSERVERSTATUS_H
 
 #include <QIcon>
 
 #include "observers/clientsobserverbase.h"
-
 
 namespace UtilityServerStatusNamespace
 {
@@ -40,13 +38,12 @@ enum ServerConnectionIcon {
     ConnectedDownloadingIcon
 };
 
-
 }
 
 using namespace UtilityServerStatusNamespace;
 
-
-class UtilityServerStatus {
+class UtilityServerStatus
+{
 
 public:
 
@@ -57,11 +54,11 @@ public:
         DoNotDisplayEncryptionMethod
     };
 
-    static QIcon getConnectionIcon(const ServerConnectionIcon&);
-    static QPixmap getConnectionPixmap(const ServerConnectionIcon&);
-    static ServerConnectionIcon buildConnectionStringFromStatus(const ClientsObserverBase*, QString&, EncryptionMethodDisplay = DisplayEncryptionMethod);
-    static QString buildSslHandshakeStatus(const ClientsObserverBase*);
-    static QString buildConnectionToolTip(const ClientsObserverBase*, const QString&, const QString&);
+    static QIcon getConnectionIcon(const ServerConnectionIcon &);
+    static QPixmap getConnectionPixmap(const ServerConnectionIcon &);
+    static ServerConnectionIcon buildConnectionStringFromStatus(const ClientsObserverBase *, QString &, EncryptionMethodDisplay = DisplayEncryptionMethod);
+    static QString buildSslHandshakeStatus(const ClientsObserverBase *);
+    static QString buildConnectionToolTip(const ClientsObserverBase *, const QString &, const QString &);
     static QString getServerModeString(UtilityNamespace::BackupServerMode);
 };
 

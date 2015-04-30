@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef POSTDOWNLOADINFODATA_H
 #define POSTDOWNLOADINFODATA_H
 
@@ -29,41 +28,42 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-class PostDownloadInfoData {
+class PostDownloadInfoData
+{
 
 public:
     PostDownloadInfoData();
-    void initRepairDecompress(const QVariant&, const int&, const UtilityNamespace::ItemStatus&, const UtilityNamespace::ItemTarget&);
-    void initDecode(const QVariant&, const int&, const UtilityNamespace::ItemStatus&, const QString& = QString());
+    void initRepairDecompress(const QVariant &, const int &, const UtilityNamespace::ItemStatus &, const UtilityNamespace::ItemTarget &);
+    void initDecode(const QVariant &, const int &, const UtilityNamespace::ItemStatus &, const QString & = QString());
 
     QModelIndex getModelIndex() const;
-    void setModelIndex(const QModelIndex&);
+    void setModelIndex(const QModelIndex &);
 
-    void setParentIdentifer(const QVariant&);
+    void setParentIdentifer(const QVariant &);
     QVariant getParentIdentifer() const;
 
-    void setProgression(const int&);
+    void setProgression(const int &);
     int getProgression() const;
 
-    void setStatus(const UtilityNamespace::ItemStatus&);
+    void setStatus(const UtilityNamespace::ItemStatus &);
     UtilityNamespace::ItemStatus getStatus() const;
 
-    void setItemTarget(const UtilityNamespace::ItemTarget&);
+    void setItemTarget(const UtilityNamespace::ItemTarget &);
     UtilityNamespace::ItemTarget getItemTarget() const;
 
-    void setDecodedFileName(const QString&);
+    void setDecodedFileName(const QString &);
     QString getDecodedFileName() const;
 
-    void setCrc32Match(const bool&);
+    void setCrc32Match(const bool &);
     bool isCrc32Match() const;
 
-    void setAllPostProcessingCorrect(const bool&);
+    void setAllPostProcessingCorrect(const bool &);
     bool areAllPostProcessingCorrect() const;
 
-    void setPostProcessFinish(const bool&);
+    void setPostProcessFinish(const bool &);
     bool isPostProcessFinish() const;
 
-    void setArticleEncodingType(const UtilityNamespace::ArticleEncodingType&);
+    void setArticleEncodingType(const UtilityNamespace::ArticleEncodingType &);
     UtilityNamespace::ArticleEncodingType getArticleEncodingType() const;
 
 private:

@@ -33,23 +33,23 @@
 #include "schedulerfilehandler.h"
 using namespace SchedulerNamespace;
 
-
-class PreferencesScheduler : public KCModule {
+class PreferencesScheduler : public KCModule
+{
 
     Q_OBJECT
     Q_ENUMS(DownloadLimitStatus)
 
 public:
 
-    PreferencesScheduler(QWidget* = 0, const QVariantList& = QVariantList());
+    PreferencesScheduler(QWidget * = 0, const QVariantList & = QVariantList());
     ~PreferencesScheduler();
 
     virtual void save();
     virtual void load();
 
-private:  
+private:
 
-    QStandardItemModel* schedulerModel;
+    QStandardItemModel *schedulerModel;
     Ui_PreferencesScheduler preferencesSchedulerUi;
     int mousePressedRow;
     int mousePressedColumn;
@@ -59,14 +59,13 @@ private:
     void assignDownloadRateToCell(int, int);
     void setupConnections();
 
-
 Q_SIGNALS:
 
 public Q_SLOTS:
 
 private Q_SLOTS:
-    void cellEnteredSlot(const QModelIndex&);
-    void cellPressedSlot(const QModelIndex&);
+    void cellEnteredSlot(const QModelIndex &);
+    void cellPressedSlot(const QModelIndex &);
     void downloadLimitValueChangedSlot(int);
     void schedulerToggledSlot(bool);
     void schedulerPressedSlot();

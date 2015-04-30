@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SYSTRAY_H
 #define SYSTRAY_H
 
@@ -34,34 +33,32 @@ class ClientsObserver;
 class StatsInfoBuilder;
 class MainWindow;
 
-
 class SysTray : public KStatusNotifierItem
 {
 
     Q_OBJECT
 
 public:
-    explicit SysTray(MainWindow*);
-
+    explicit SysTray(MainWindow *);
 
 private:
 
-    MainWindow* mParent;
-    QueueFileObserver* mQueueFileObserver;
-    ClientsObserver* mClientsObserver;
-    StatsInfoBuilder* mStatsInfoBuilder;
+    MainWindow *mParent;
+    QueueFileObserver *mQueueFileObserver;
+    ClientsObserver *mClientsObserver;
+    StatsInfoBuilder *mStatsInfoBuilder;
     QPixmap mNormalBaseIcon;
     QPixmap mGrayedBaseIcon;
     QPixmap mRenderedIcon;
     int mOldMergePos;
 
-    bool updateIconStatus(const UtilityNamespace::ItemStatus&);
-    bool blendOverlay(const QPixmap&);
+    bool updateIconStatus(const UtilityNamespace::ItemStatus &);
+    bool blendOverlay(const QPixmap &);
     void setupConnections();
     void setupActions();
     void initPixmaps();
     void initShow();
-    void updateIconProgress(const int&);
+    void updateIconProgress(const int &);
     void createToolTip();
 public Q_SLOTS:
 

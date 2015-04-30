@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SEGMENTDECODERBASE_H
 #define SEGMENTDECODERBASE_H
 
@@ -34,28 +33,25 @@ using namespace UtilityNamespace;
 
 class SegmentsDecoderThread;
 
+class SegmentDecoderBase : public QObject
+{
 
-class SegmentDecoderBase : public QObject {
-
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-    explicit SegmentDecoderBase(SegmentsDecoderThread*);
+    explicit SegmentDecoderBase(SegmentsDecoderThread *);
 
-
-    QString scanSegmentFiles(const NzbFileData&);
-    QString scanCurrentSegment(SegmentData&);
-
+    QString scanSegmentFiles(const NzbFileData &);
+    QString scanCurrentSegment(SegmentData &);
 
 protected:
-    virtual QString searchPattern(QIODevice*) = 0;
-    virtual void decodeProgression(PostDownloadInfoData& decodeInfoData) = 0;
+    virtual QString searchPattern(QIODevice *) = 0;
+    virtual void decodeProgression(PostDownloadInfoData &decodeInfoData) = 0;
 
-    SegmentsDecoderThread* segmentsDecoderThread;
+    SegmentsDecoderThread *segmentsDecoderThread;
     QList<SegmentData> segmentDataList;
     QVariant parentIdentifer;
     bool crc32Match;
-
 
 Q_SIGNALS:
 

@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef TEXTPUSHBUTTONWIDGET_H
 #define TEXTPUSHBUTTONWIDGET_H
 
@@ -29,31 +28,28 @@
 
 #include "utilities/utilityserverstatus.h"
 
-class TextPushButtonWidget : public QWidget {
-
+class TextPushButtonWidget : public QWidget
+{
 
     Q_OBJECT
 
-
 public:
 
-    explicit TextPushButtonWidget(QWidget*);
+    explicit TextPushButtonWidget(QWidget *);
 
-    void setIcon(const ServerConnectionIcon&);
-    void setText(const QString&);
+    void setIcon(const ServerConnectionIcon &);
+    void setText(const QString &);
     QString getText() const;
     void showIcon();
     void hideIcon();
 private:
 
-    QLabel* textLabel;
-    QPushButton* pushButton;
-    QHBoxLayout* hBoxLayout;
+    QLabel *textLabel;
+    QPushButton *pushButton;
+    QHBoxLayout *hBoxLayout;
     ServerConnectionIcon serverConnectionIcon;
 
     void setupConnections();
-
-
 
 Q_SIGNALS:
 

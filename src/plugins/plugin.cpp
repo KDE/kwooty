@@ -18,17 +18,14 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "plugin.h"
-
 
 #include "kwooty_debug.h"
 #include <QObject>
 
 #include "mainwindow.h"
 
-
-Plugin::Plugin(QObject* parent): QObject(parent), KXMLGUIClient()
+Plugin::Plugin(QObject *parent): QObject(parent), KXMLGUIClient()
 {
 
     //qCDebug(KWOOTY_LOG) << instance.componentName();
@@ -36,15 +33,13 @@ Plugin::Plugin(QObject* parent): QObject(parent), KXMLGUIClient()
 
 }
 
-
-
-void Plugin::setCore(MainWindow* core) {
+void Plugin::setCore(MainWindow *core)
+{
     this->core = core;
 }
 
-
-MainWindow* Plugin::getMainWindow() {
+MainWindow *Plugin::getMainWindow()
+{
     return this->core;
 }
-
 

@@ -21,7 +21,6 @@
 #ifndef ITEMDELEGATE_H
 #define ITEMDELEGATE_H
 
-
 #include <QStyledItemDelegate>
 #include <QStyleOptionViewItem>
 #include <QPainter>
@@ -31,11 +30,10 @@ class ItemDelegate : public QStyledItemDelegate
 {
 
 public:
-    ItemDelegate(QWidget*);
-    void paint(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const Q_DECL_OVERRIDE;
-    void drawProgressBar(QPainter*, const QStyleOptionViewItem&, const QModelIndex&) const;
-    QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const Q_DECL_OVERRIDE;
-
+    ItemDelegate(QWidget *);
+    void paint(QPainter *, const QStyleOptionViewItem &, const QModelIndex &) const Q_DECL_OVERRIDE;
+    void drawProgressBar(QPainter *, const QStyleOptionViewItem &, const QModelIndex &) const;
+    QSize sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const Q_DECL_OVERRIDE;
 
 private:
     static const int PARENT_ROW_PADDING = 5;

@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "preferencesplugins.h"
 
 #include <KPluginInfo>
@@ -30,9 +29,8 @@
 
 #include "plugins/pluginmanager.h"
 
-
-PreferencesPlugins::PreferencesPlugins(KConfigDialog* kConfigDialog, PluginManager* pluginManager) {
-
+PreferencesPlugins::PreferencesPlugins(KConfigDialog *kConfigDialog, PluginManager *pluginManager)
+{
 
     this->kConfigDialog = kConfigDialog;
     this->pluginManager = pluginManager;
@@ -41,7 +39,7 @@ PreferencesPlugins::PreferencesPlugins(KConfigDialog* kConfigDialog, PluginManag
     this->kPluginSelector->addPlugins(this->pluginManager->getPluginInfoList(), KPluginSelector::ReadConfigFile, i18n("General Plugins"));
 
     // setup layout :
-    QVBoxLayout* layout = new QVBoxLayout(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setMargin(0);
     layout->addWidget(this->kPluginSelector);
 
@@ -57,37 +55,35 @@ PreferencesPlugins::PreferencesPlugins(KConfigDialog* kConfigDialog, PluginManag
 
 }
 
-
-
-void PreferencesPlugins::configButtonClickedSlot(KDialog::ButtonCode button) {
+void PreferencesPlugins::configButtonClickedSlot(KDialog::ButtonCode button)
+{
 
     switch (button) {
 
     case KDialog::Cancel: case KDialog::Close: {
 
-            // plugins settings may have been changed but user cancel changes,
-            // reload plugins to previous states :
-            this->kPluginSelector->load();
-            break;
-        }
+        // plugins settings may have been changed but user cancel changes,
+        // reload plugins to previous states :
+        this->kPluginSelector->load();
+        break;
+    }
 
     case KDialog::Ok: case KDialog::Apply: {
 
-            // plugins settings have been changed, save them and update plugins loading :
-            this->kPluginSelector->save();
+        // plugins settings have been changed, save them and update plugins loading :
+        this->kPluginSelector->save();
 
-            // update plugins to load/unload :
-            this->pluginManager->loadPlugins();
-            break;
-        }
+        // update plugins to load/unload :
+        this->pluginManager->loadPlugins();
+        break;
+    }
 
     default: {
-            break;
+        break;
 
-        }
+    }
 
     }
 
 }
-
 

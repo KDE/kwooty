@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "serverspeedmanager.h"
 
 #include "kwooty_debug.h"
@@ -27,8 +26,8 @@
 #include "clientmanagerconn.h"
 #include "observers/clientsperserverobserver.h"
 
-
-ServerSpeedManager::ServerSpeedManager(ServerGroup* parent) : QObject(parent) {
+ServerSpeedManager::ServerSpeedManager(ServerGroup *parent) : QObject(parent)
+{
 
     this->parent = parent;
     // check average download speed every 15 seconds :
@@ -40,14 +39,14 @@ ServerSpeedManager::ServerSpeedManager(ServerGroup* parent) : QObject(parent) {
 
 }
 
-
-void ServerSpeedManager::setupConnections() {
+void ServerSpeedManager::setupConnections()
+{
     // adjust download speed :
     connect(downloadSpeedTimer, SIGNAL(timeout()), this, SLOT(adjustDownloadSpeedSlot()));
 }
 
-
-void ServerSpeedManager::resetVariables() {
+void ServerSpeedManager::resetVariables()
+{
 
     this->speedTooLowCounter = 0;
     this->clientSpeedPriority = NoPriorityClient;
@@ -56,27 +55,24 @@ void ServerSpeedManager::resetVariables() {
 
 }
 
-
-
-void ServerSpeedManager::setDownloadSpeedLimitInBytes(const qint64& downloadSpeedLimitInBytes) {
+void ServerSpeedManager::setDownloadSpeedLimitInBytes(const qint64 &downloadSpeedLimitInBytes)
+{
     this->downloadSpeedLimitInBytes = downloadSpeedLimitInBytes;
 }
 
-
-qint64 ServerSpeedManager::getDownloadSpeedLimitInBytes() const {
+qint64 ServerSpeedManager::getDownloadSpeedLimitInBytes() const
+{
     return this->downloadSpeedLimitInBytes;
 }
 
-
-
-void ServerSpeedManager::setBandwidthMode(const BandwidthClientMode& bandwidthClientMode) {
+void ServerSpeedManager::setBandwidthMode(const BandwidthClientMode &bandwidthClientMode)
+{
 
     //qCDebug(KWOOTY_LOG) << "group : " << this->parent->getServerGroupId() << "BandwidthMode : " << bandwidthClientMode;
 
     if (bandwidthClientMode == BandwidthLimited) {
         this->downloadSpeedTimer->start();
-    }
-    else if (bandwidthClientMode == BandwidthFull) {
+    } else if (bandwidthClientMode == BandwidthFull) {
         this->downloadSpeedTimer->stop();
         this->resetVariables();
     }
@@ -86,12 +82,12 @@ void ServerSpeedManager::setBandwidthMode(const BandwidthClientMode& bandwidthCl
 
 }
 
-
-int ServerSpeedManager::getEnabledClientNumber() const {
+int ServerSpeedManager::getEnabledClientNumber() const
+{
 
     int clientNumber = 0;
 
-    foreach (ClientManagerConn* clientManagerConn, this->parent->getClientManagerConnList()) {
+    foreach (ClientManagerConn *clientManagerConn, this->parent->getClientManagerConnList()) {
 
         // if client is not disabled for speed limit :
         if (!clientManagerConn->isBandwidthNotNeeded()) {
@@ -102,20 +98,19 @@ int ServerSpeedManager::getEnabledClientNumber() const {
     return clientNumber;
 }
 
-
-
-bool ServerSpeedManager::disableClientForRateControl() const {
+bool ServerSpeedManager::disableClientForRateControl() const
+{
 
     bool changeSuccessful = false;
 
-    QList<ClientManagerConn*> clientManagerConnList = this->parent->getClientManagerConnList();
+    QList<ClientManagerConn *> clientManagerConnList = this->parent->getClientManagerConnList();
 
     // disable client for speed limit :
     if (this->speedManagementStatus == ReduceSpeed) {
 
         for (int i = clientManagerConnList.size() - 1; i >= 0; i--) {
 
-            ClientManagerConn* clientManagerConn = clientManagerConnList.at(i);
+            ClientManagerConn *clientManagerConn = clientManagerConnList.at(i);
 
             if (clientManagerConn->isBandwidthLimited() && this->getEnabledClientNumber() > 1) {
 
@@ -129,7 +124,7 @@ bool ServerSpeedManager::disableClientForRateControl() const {
     // enable client for speed limit :
     else if (this->speedManagementStatus == IncreaseSpeed) {
 
-        foreach (ClientManagerConn* clientManagerConn, clientManagerConnList) {
+        foreach (ClientManagerConn *clientManagerConn, clientManagerConnList) {
 
             // is current client has been disabled for speed limit purposes, enable it :
             if (clientManagerConn->isBandwidthNotNeeded()) {
@@ -145,11 +140,8 @@ bool ServerSpeedManager::disableClientForRateControl() const {
     return changeSuccessful;
 }
 
-
-
-
-
-void ServerSpeedManager::manageClientsNumber(const SpeedManagementStatus& speedManagementStatusOld) {
+void ServerSpeedManager::manageClientsNumber(const SpeedManagementStatus &speedManagementStatusOld)
+{
 
     // get number of used clients :
     int enabledClientNumber = this->getEnabledClientNumber();
@@ -168,7 +160,6 @@ void ServerSpeedManager::manageClientsNumber(const SpeedManagementStatus& speedM
         else if (this->clientSpeedPriority == LowPriorityClient) {
             this->clientSpeedPriority = HighPriorityClient;
         }
-
 
         int clientToChangeNumber = 0;
 
@@ -191,7 +182,6 @@ void ServerSpeedManager::manageClientsNumber(const SpeedManagementStatus& speedM
             clientToChangeNumber = 1;
         }
 
-
         while (clientToChangeNumber > 0) {
 
             // disable/enable clients :
@@ -206,18 +196,15 @@ void ServerSpeedManager::manageClientsNumber(const SpeedManagementStatus& speedM
 
 }
 
-
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void ServerSpeedManager::adjustDownloadSpeedSlot() {
+void ServerSpeedManager::adjustDownloadSpeedSlot()
+{
 
     // compute current average download speed :
     quint64 meanDownloadSpeedInBytes = this->parent->getClientsPerServerObserver()->getAverageDownloadSpeed();
-
 
     // if server group is downloading :
     if (meanDownloadSpeedInBytes > 0) {
@@ -276,5 +263,4 @@ void ServerSpeedManager::adjustDownloadSpeedSlot() {
     }
 
 }
-
 

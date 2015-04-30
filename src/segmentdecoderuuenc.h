@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef SEGMENTDECODERUUENC_H
 #define SEGMENTDECODERUUENC_H
 
@@ -30,24 +29,22 @@ class SegmentDecoderUUEnc : public SegmentDecoderBase
     Q_OBJECT
 
 public:
-    explicit SegmentDecoderUUEnc(SegmentsDecoderThread*);
+    explicit SegmentDecoderUUEnc(SegmentsDecoderThread *);
     ~SegmentDecoderUUEnc();
-    void decodeSegments(NzbFileData, const QString&);
-
+    void decodeSegments(NzbFileData, const QString &);
 
 private:
     enum UUValues {
-                    UUMaxDecodedLineSize = 45,
-                    UUMaxEncodedLineSize = 61
-                  };
+        UUMaxDecodedLineSize = 45,
+        UUMaxEncodedLineSize = 61
+    };
 
-    void decodeEncodedData(QFile&, SegmentData&, int&, const QByteArray& , bool&, bool&);
-    QString searchPattern(QIODevice* segmentFile);
-    bool decodeUUenc(const QByteArray&, QFile&, const int&);
-    bool isUUEncodedLine(QByteArray&);
-    void decodeProgression(PostDownloadInfoData&);
-    bool decodeSegmentFiles(QFile&);
-
+    void decodeEncodedData(QFile &, SegmentData &, int &, const QByteArray &, bool &, bool &);
+    QString searchPattern(QIODevice *segmentFile);
+    bool decodeUUenc(const QByteArray &, QFile &, const int &);
+    bool isUUEncodedLine(QByteArray &);
+    void decodeProgression(PostDownloadInfoData &);
+    bool decodeSegmentFiles(QFile &);
 
 };
 

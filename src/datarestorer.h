@@ -45,20 +45,20 @@ class DataRestorer : public QObject
 
 public:
 
-    enum PendingDownloadsManagement{ WithConfirmation,
-                                     Automatically
+    enum PendingDownloadsManagement { WithConfirmation,
+                                      Automatically
                                     };
 
-    DataRestorer(Core*);
+    DataRestorer(Core *);
     DataRestorer();
-    int saveQueueData(const SaveFileBehavior&);
+    int saveQueueData(const SaveFileBehavior &);
     void setActive(const bool);
 
 private:
 
-    Core* parent;
-    StandardItemModel* downloadModel;
-    QTimer* dataSaverTimer;
+    Core *parent;
+    StandardItemModel *downloadModel;
+    QTimer *dataSaverTimer;
     QHash<quint32, int> versionStreamMap;
     quint32 magicNumber;
     quint32 applicationVersion1;
@@ -66,24 +66,20 @@ private:
 
     QString getPendingFileStr() const;
     bool isDataToSaveExist() const;
-    bool isHeaderOk(QDataStream&) const;
+    bool isHeaderOk(QDataStream &) const;
     void setupConnections();
-    void resetDataForDecodingFile(NzbFileData&, ItemStatusData&, int&);
-    void resetDataForDownloadingFile(NzbFileData&, ItemStatusData&);
-    void preprocessAndHandleData(const QList< QList<GlobalFileData> >&);
+    void resetDataForDecodingFile(NzbFileData &, ItemStatusData &, int &);
+    void resetDataForDownloadingFile(NzbFileData &, ItemStatusData &);
+    void preprocessAndHandleData(const QList< QList<GlobalFileData> > &);
     void writeDataToDisk();
     void requestSuppressOldOrphanedSegments();
     void removePendingDataFile();
 
-
-
-
 Q_SIGNALS:
     void suppressOldOrphanedSegmentsSignal();
 
-
 public Q_SLOTS:
-    void parentStatusItemChangedSlot(QStandardItem*, ItemStatusData);
+    void parentStatusItemChangedSlot(QStandardItem *, ItemStatusData);
 
 private Q_SLOTS:
     void readDataFromDiskSlot();

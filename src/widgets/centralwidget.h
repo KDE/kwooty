@@ -31,27 +31,26 @@ using namespace UtilityNamespace;
 
 class MainWindow;
 
-
-class CentralWidget : public QWidget {
+class CentralWidget : public QWidget
+{
 
     Q_OBJECT
 
 public:
-    explicit CentralWidget(MainWindow*);
+    explicit CentralWidget(MainWindow *);
 
-    QString extractPasswordRequired(const QString&, bool&);
+    QString extractPasswordRequired(const QString &, bool &);
     int displayRestoreMessageBox();
     int displaySaveMessageBox(SaveFileBehavior);
-    int displayAboutToShutdownMessageBox(const QString&);
+    int displayAboutToShutdownMessageBox(const QString &);
     int displayRemoveAllFilesMessageBox();
     int displayRemoveSelectedFilesMessageBox();
-    int displayMergeItemsMessageBox(const QString&, const QString&);
+    int displayMergeItemsMessageBox(const QString &, const QString &);
     bool isDialogExisting();
     void saveFileError(const int);
-    void displaySorryMessageBox(const QString&);
+    void displaySorryMessageBox(const QString &);
     void closeAboutToShutdownMessageBox();
-    void displayNzbHandleErrorMessageBox(const QString&);
-
+    void displayNzbHandleErrorMessageBox(const QString &);
 
 private:
     int saveErrorButtonCode;

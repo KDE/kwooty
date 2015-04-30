@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "notificationmanager.h"
 
 #include <KLocalizedString>
@@ -30,9 +29,8 @@
 #include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
 
-
-
-NotificationManager::NotificationManager(Core* parent) : QObject(parent) {
+NotificationManager::NotificationManager(Core *parent) : QObject(parent)
+{
 
     this->parent = parent;
 
@@ -40,9 +38,8 @@ NotificationManager::NotificationManager(Core* parent) : QObject(parent) {
     this->setupConnections();
 }
 
-
-
-void NotificationManager::init() {
+void NotificationManager::init()
+{
 
     this->finishSatusTextMap.insert(DownloadFinishStatus,      i18n("Download finished"));
     this->finishSatusTextMap.insert(DecodeFinishStatus,        i18n("Decoding finished"));
@@ -52,7 +49,8 @@ void NotificationManager::init() {
 
 }
 
-void NotificationManager::setupConnections() {
+void NotificationManager::setupConnections()
+{
 
     // queueFileObserver emit signal when a job is finished :
     connect(this->parent->getQueueFileObserver(),
@@ -60,36 +58,32 @@ void NotificationManager::setupConnections() {
             this,
             SLOT(jobFinishSlot(UtilityNamespace::ItemStatus,QString)));
 
-
     // statsInfoBuilder emit signal when a disk space is insufficient :
     connect(this->parent->getClientsObserver()->getStatsInfoBuilder(),
             SIGNAL(insufficientDiskSpaceSignal(QString)),
             this,
             SLOT(insufficientDiskSpaceSlot(QString)));
 
-
 }
 
-
-
-void NotificationManager::jobFinishSlot(const UtilityNamespace::ItemStatus status, const QString &message) {
+void NotificationManager::jobFinishSlot(const UtilityNamespace::ItemStatus status, const QString &message)
+{
     this->sendEvent("jobFinished", QStringLiteral("%1 - %2").arg(this->finishSatusTextMap.value(status)).arg(message));
 }
 
-
-void NotificationManager::insufficientDiskSpaceSlot(const QString &message) {
+void NotificationManager::insufficientDiskSpaceSlot(const QString &message)
+{
     this->sendEvent("insufficientDiskSpace", message, KNotification::Persistent);
 }
 
-
-
-void NotificationManager::sendEvent(const QString& eventId, const QString& message, KNotification::NotificationFlags notificationFlag) {
+void NotificationManager::sendEvent(const QString &eventId, const QString &message, KNotification::NotificationFlags notificationFlag)
+{
 
     // if notifications have to be displayed :
     if (Settings::notification()) {
 
         // send event :
-        KNotification::event(eventId, message, QPixmap(), (QWidget*)this->parent->parent(), notificationFlag);
+        KNotification::event(eventId, message, QPixmap(), (QWidget *)this->parent->parent(), notificationFlag);
 
     }
 

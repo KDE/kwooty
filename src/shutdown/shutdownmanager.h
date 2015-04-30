@@ -33,22 +33,23 @@ using namespace UtilityNamespace;
 class Core;
 class SessionBase;
 
-class ShutdownManager : public QObject {
+class ShutdownManager : public QObject
+{
 
     Q_OBJECT
 
 public:
 
-    explicit ShutdownManager(Core*);
+    explicit ShutdownManager(Core *);
     QMap<QString, QString> retrieveIconAvailableShutdownMap();
-    void handleShutdownError(const QString&);
+    void handleShutdownError(const QString &);
 
 private:
 
-    Core* mParent;
-    SessionBase* mSession;
-    QTimer* mActivityMonitorTimer;
-    QTimer* mLaunchShutdownTimer;
+    Core *mParent;
+    SessionBase *mSession;
+    QTimer *mActivityMonitorTimer;
+    QTimer *mLaunchShutdownTimer;
     QString mScheduleDateTimeStr;
     int mNoActivityCounter;
     int mShutdownTimerInterval;
@@ -64,7 +65,6 @@ private:
     void storeSettings();
     void updateStatusBar();
     void setupConnections();
-
 
 Q_SIGNALS:
     void setShutdownButtonCheckedSignal(bool);

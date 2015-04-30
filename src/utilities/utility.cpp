@@ -31,23 +31,22 @@
 #include <QStandardPaths>
 #include "kwootysettings.h"
 
-
 using namespace UtilityNamespace;
 
 Utility::Utility() { }
 
-
-QString Utility::convertByteHumanReadable(const quint64 sizeInByte) {
+QString Utility::convertByteHumanReadable(const quint64 sizeInByte)
+{
 
     // compute the file size :
     QString sizeUnit(i18n(" GiB"));
     double fileSize = sizeInByte / NBR_BYTES_IN_GB;
 
-    if (fileSize < ONE_UNIT){
+    if (fileSize < ONE_UNIT) {
         sizeUnit = i18n(" MiB");
         fileSize = sizeInByte / NBR_BYTES_IN_MB;
-        
-        if (fileSize < ONE_UNIT){
+
+        if (fileSize < ONE_UNIT) {
             fileSize = sizeInByte / NBR_BYTES_IN_KB;
             sizeUnit = i18n(" KiB");
         }
@@ -56,156 +55,156 @@ QString Utility::convertByteHumanReadable(const quint64 sizeInByte) {
 
 }
 
-
-QString Utility::convertDownloadSpeedHumanReadable(const quint64 downloadSpeedInByte) {
+QString Utility::convertDownloadSpeedHumanReadable(const quint64 downloadSpeedInByte)
+{
 
     QString downloadSpeedStr;
     double fileSize = downloadSpeedInByte / NBR_BYTES_IN_MB;
 
-    if (fileSize > ONE_UNIT){
+    if (fileSize > ONE_UNIT) {
         downloadSpeedStr = i18n("%1 MiB/s", QString("%1").arg(fileSize, 0, 'f', 2));
-    }
-    else {
+    } else {
         downloadSpeedStr = i18n("%1 KiB/s", static_cast<int>(downloadSpeedInByte / NBR_BYTES_IN_KB));
     }
 
     return downloadSpeedStr;
 }
 
+bool Utility::isInDownloadProcess(const UtilityNamespace::ItemStatus statusItem)
+{
 
-
-
-bool Utility::isInDownloadProcess(const UtilityNamespace::ItemStatus statusItem) {
-
-    return ( isReadyToDownload(statusItem) ||
-             isPaused(statusItem)          ||
-             isPausing(statusItem) );
+    return (isReadyToDownload(statusItem) ||
+            isPaused(statusItem)          ||
+            isPausing(statusItem));
 }
 
+bool Utility::isPostDownloadFailed(const UtilityNamespace::ItemStatus statusItem)
+{
 
-bool Utility::isPostDownloadFailed(const UtilityNamespace::ItemStatus statusItem) {
-
-    return ( statusItem >= DecodeErrorStatus &&
-             statusItem != ExtractSuccessStatus &&
-             statusItem != VerifyFinishedStatus &&
-             statusItem != DecodeFinishStatus &&
-             !Utility::isDecoding(statusItem) );
-
-}
-
-
-bool Utility::isVerifyFileCorrect(const UtilityNamespace::ItemStatus statusItem) {
-
-    return ( statusItem == VerifyFoundStatus ||
-             statusItem == VerifyMatchStatus );
+    return (statusItem >= DecodeErrorStatus &&
+            statusItem != ExtractSuccessStatus &&
+            statusItem != VerifyFinishedStatus &&
+            statusItem != DecodeFinishStatus &&
+            !Utility::isDecoding(statusItem));
 
 }
 
+bool Utility::isVerifyFileCorrect(const UtilityNamespace::ItemStatus statusItem)
+{
 
-
-bool Utility::isReadyToDownload(const UtilityNamespace::ItemStatus statusItem) {
-
-    return ( statusItem == IdleStatus ||
-             statusItem == DownloadStatus );
-
-}
-
-bool Utility::isInQueue(const UtilityNamespace::ItemStatus statusItem) {
-
-    return ( statusItem == IdleStatus ||
-             statusItem == PauseStatus );
+    return (statusItem == VerifyFoundStatus ||
+            statusItem == VerifyMatchStatus);
 
 }
 
-bool Utility::isDownloadOrPausing(const UtilityNamespace::ItemStatus statusItem) {
+bool Utility::isReadyToDownload(const UtilityNamespace::ItemStatus statusItem)
+{
 
-    return ( statusItem == DownloadStatus ||
-             isPausing(statusItem) );
-
-}
-
-
-
-bool Utility::isPausedOrPausing(const UtilityNamespace::ItemStatus statusItem) {
-
-    return ( Utility::isPaused(statusItem) || Utility::isPausing(statusItem) );
+    return (statusItem == IdleStatus ||
+            statusItem == DownloadStatus);
 
 }
 
-bool Utility::isPaused(const UtilityNamespace::ItemStatus statusItem) {
+bool Utility::isInQueue(const UtilityNamespace::ItemStatus statusItem)
+{
+
+    return (statusItem == IdleStatus ||
+            statusItem == PauseStatus);
+
+}
+
+bool Utility::isDownloadOrPausing(const UtilityNamespace::ItemStatus statusItem)
+{
+
+    return (statusItem == DownloadStatus ||
+            isPausing(statusItem));
+
+}
+
+bool Utility::isPausedOrPausing(const UtilityNamespace::ItemStatus statusItem)
+{
+
+    return (Utility::isPaused(statusItem) || Utility::isPausing(statusItem));
+
+}
+
+bool Utility::isPaused(const UtilityNamespace::ItemStatus statusItem)
+{
 
     return (statusItem == PauseStatus);
 
 }
 
-bool Utility::isPausing(const UtilityNamespace::ItemStatus statusItem) {
+bool Utility::isPausing(const UtilityNamespace::ItemStatus statusItem)
+{
 
     return (statusItem == PausingStatus);
 
 }
 
+bool Utility::isDecoding(const UtilityNamespace::ItemStatus statusItem)
+{
 
-bool Utility::isDecoding(const UtilityNamespace::ItemStatus statusItem) {
-
-    return ( statusItem == DecodeStatus ||
-             statusItem == ScanStatus);
+    return (statusItem == DecodeStatus ||
+            statusItem == ScanStatus);
 
 }
 
-bool Utility::isDecodeFinish(const UtilityNamespace::ItemStatus statusItem) {
+bool Utility::isDecodeFinish(const UtilityNamespace::ItemStatus statusItem)
+{
 
     return (statusItem == DecodeFinishStatus);
 
 }
 
+bool Utility::isWaitingForDecode(const UtilityNamespace::ItemStatus statusItem, const UtilityNamespace::Data data)
+{
 
-bool Utility::isWaitingForDecode(const UtilityNamespace::ItemStatus statusItem, const UtilityNamespace::Data data) {
-
-    return ( statusItem == DownloadFinishStatus &&
-             data != NoData );
+    return (statusItem == DownloadFinishStatus &&
+            data != NoData);
 }
 
+bool Utility::isFileNotFound(const UtilityNamespace::ItemStatus statusItem, const UtilityNamespace::Data data)
+{
 
-bool Utility::isFileNotFound(const UtilityNamespace::ItemStatus statusItem, const UtilityNamespace::Data data) {
-
-    return ( statusItem == DownloadFinishStatus &&
-             data == NoData );
+    return (statusItem == DownloadFinishStatus &&
+            data == NoData);
 }
 
-
-
-bool Utility::isDownloadFinish(const UtilityNamespace::ItemStatus statusItem) {
+bool Utility::isDownloadFinish(const UtilityNamespace::ItemStatus statusItem)
+{
 
     return (statusItem == DownloadFinishStatus);
 
 }
 
-bool Utility::isPostDownloadProcessing(const UtilityNamespace::ItemStatus statusItem) {
+bool Utility::isPostDownloadProcessing(const UtilityNamespace::ItemStatus statusItem)
+{
 
-    return ( statusItem == VerifyStatus  ||
-             statusItem == RepairStatus  ||
-             statusItem == ExtractStatus );
-
-}
-
-
-bool Utility::isJobFinish(const UtilityNamespace::ItemStatus statusItem) {
-
-    return ( statusItem == DownloadFinishStatus    ||
-             statusItem == DecodeFinishStatus      ||
-             statusItem == VerifyFinishedStatus    ||
-             statusItem == RepairFinishedStatus    ||
-             statusItem == ExtractFinishedStatus );
+    return (statusItem == VerifyStatus  ||
+            statusItem == RepairStatus  ||
+            statusItem == ExtractStatus);
 
 }
 
+bool Utility::isJobFinish(const UtilityNamespace::ItemStatus statusItem)
+{
 
-bool Utility::isBadCrcForYencArticle(const UtilityNamespace::CrcNotify& crcNotify, const UtilityNamespace::ArticleEncodingType& articleEncodingType) {
+    return (statusItem == DownloadFinishStatus    ||
+            statusItem == DecodeFinishStatus      ||
+            statusItem == VerifyFinishedStatus    ||
+            statusItem == RepairFinishedStatus    ||
+            statusItem == ExtractFinishedStatus);
+
+}
+
+bool Utility::isBadCrcForYencArticle(const UtilityNamespace::CrcNotify &crcNotify, const UtilityNamespace::ArticleEncodingType &articleEncodingType)
+{
 
     bool badCrcForYencArticle = false;
 
-    if ( (crcNotify != CrcOk) &&
-         (articleEncodingType == ArticleEncodingYEnc) ) {
+    if ((crcNotify != CrcOk) &&
+            (articleEncodingType == ArticleEncodingYEnc)) {
 
         badCrcForYencArticle = true;
     }
@@ -214,7 +213,8 @@ bool Utility::isBadCrcForYencArticle(const UtilityNamespace::CrcNotify& crcNotif
 
 }
 
-bool Utility::saveData(const QString& fileSavePath, const QString& fileName, const QByteArray& segmentData) {
+bool Utility::saveData(const QString &fileSavePath, const QString &fileName, const QByteArray &segmentData)
+{
 
     bool isSaveSucceeded = false;
 
@@ -224,7 +224,7 @@ bool Utility::saveData(const QString& fileSavePath, const QString& fileName, con
     if (isSaveSucceeded) {
 
         // open file in write mode :
-        QFile file( Utility::buildFullPath(fileSavePath, fileName) );
+        QFile file(Utility::buildFullPath(fileSavePath, fileName));
         isSaveSucceeded = file.open(QIODevice::WriteOnly);
 
         if (isSaveSucceeded) {
@@ -240,9 +240,8 @@ bool Utility::saveData(const QString& fileSavePath, const QString& fileName, con
     return isSaveSucceeded;
 }
 
-
-
-bool Utility::createFolder(const QString& fileSavePath) {
+bool Utility::createFolder(const QString &fileSavePath)
+{
 
     bool folderExists = true;
 
@@ -256,8 +255,8 @@ bool Utility::createFolder(const QString& fileSavePath) {
     return folderExists;
 }
 
-
-bool Utility::isFolderExists(const QString& fileSavePath) {
+bool Utility::isFolderExists(const QString &fileSavePath)
+{
 
     // check if the folder exists :
     QDir directory(fileSavePath);
@@ -265,9 +264,8 @@ bool Utility::isFolderExists(const QString& fileSavePath) {
     return directory.exists();
 }
 
-
-
-bool Utility::removeData(const QString& fileName) {
+bool Utility::removeData(const QString &fileName)
+{
 
     QFile file(fileName);
     bool isFileRemoved = false;
@@ -278,8 +276,8 @@ bool Utility::removeData(const QString& fileName) {
     return isFileRemoved;
 }
 
-
-bool Utility::rename(const QString& temporaryFileStr, const QString& destinationFileStr) {
+bool Utility::rename(const QString &temporaryFileStr, const QString &destinationFileStr)
+{
 
     bool success = false;
     if (QFile::exists(temporaryFileStr)) {
@@ -294,16 +292,15 @@ bool Utility::rename(const QString& temporaryFileStr, const QString& destination
 
 }
 
-
-
-QString Utility::searchExternalPrograms(const QString& programToSearch, bool& programFound) {
+QString Utility::searchExternalPrograms(const QString &programToSearch, bool &programFound)
+{
 
     QString programPathName;
     QStringList searchPathList = Settings::searchPathList();
 
     QStringList programsWithDifferentNames = programToSearch.split(";");
 
-    foreach (const QString& currentProgramName, programsWithDifferentNames) {
+    foreach (const QString &currentProgramName, programsWithDifferentNames) {
 
         foreach (QString searchPath, searchPathList) {
 
@@ -330,12 +327,11 @@ QString Utility::searchExternalPrograms(const QString& programToSearch, bool& pr
 
     }
 
-
     return programPathName;
 }
 
-
-QString Utility::getSystemTimeFormat(const QString& dateFormat) {
+QString Utility::getSystemTimeFormat(const QString &dateFormat)
+{
 
     QString properDateFormat = dateFormat;
 
@@ -348,23 +344,21 @@ QString Utility::getSystemTimeFormat(const QString& dateFormat) {
     return properDateFormat;
 }
 
-
-QString Utility::buildFullPath(const QString& path, const QString& fileName) {
+QString Utility::buildFullPath(const QString &path, const QString &fileName)
+{
 
     return (path + '/' + fileName);
 }
 
-
-QString Utility::buildToolTipRow(const QString& label, const QString& value) {
+QString Utility::buildToolTipRow(const QString &label, const QString &value)
+{
 
     QString toolRipRow = "<tr><td>" + label + "</td><td>" + value + "</td></tr>";
     return toolRipRow;
 }
 
-
-
-QStringList Utility::buildPriorityArgument(const int& processPriority, const int& niceValue) {
-
+QStringList Utility::buildPriorityArgument(const int &processPriority, const int &niceValue)
+{
 
     QStringList niceProcessArgs;
 
@@ -393,7 +387,6 @@ QStringList Utility::buildPriorityArgument(const int& processPriority, const int
     }
     }
 
-
     // if program has not been found, clear argument list :
     if (nicePath.isEmpty()) {
         niceProcessArgs.clear();
@@ -403,12 +396,13 @@ QStringList Utility::buildPriorityArgument(const int& processPriority, const int
 
 }
 
-
-bool Utility::isTemporaryFolderDiskFull() {
+bool Utility::isTemporaryFolderDiskFull()
+{
     return (KDiskFreeSpaceInfo::freeSpaceInfo(Settings::temporaryFolder().path()).available() == 0);
 }
 
-bool Utility::isCompletedFolderDiskFull() {
+bool Utility::isCompletedFolderDiskFull()
+{
     return (KDiskFreeSpaceInfo::freeSpaceInfo(Settings::completedFolder().path()).available() == 0);
 }
 

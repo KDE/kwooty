@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef CATEGORIES_H
 #define CATEGORIES_H
 
@@ -40,18 +39,17 @@ class CategoriesPlugin;
 class CategoriesModel;
 class CategoriesManual;
 
-
-class Categories : public QObject {
+class Categories : public QObject
+{
 
     Q_OBJECT
 
 public:
-    Categories(CategoriesPlugin*);
-    Core* getCore();
+    Categories(CategoriesPlugin *);
+    Core *getCore();
     ~Categories();
     void unload();
     void settingsChanged();
-
 
 private:
 
@@ -67,20 +65,20 @@ private:
         MoveUnknownErrorStatus
     };
 
-    KSharedPtr<KMimeType> retrieveFileMimeType(const QString&, const QString&);
-    QHash<QString, quint64> scanDownloadedFiles(const QString&);
-    QString guessMainMimeName(const QHash<QString, quint64>&);
-    bool checkDiskSpace(const MimeData&, const QString&, const QList<quint64>&);
+    KSharedPtr<KMimeType> retrieveFileMimeType(const QString &, const QString &);
+    QHash<QString, quint64> scanDownloadedFiles(const QString &);
+    QString guessMainMimeName(const QHash<QString, quint64> &);
+    bool checkDiskSpace(const MimeData &, const QString &, const QList<quint64> &);
     void setupConnections();
-    void launchMoveProcess(const MimeData&, const QString&);
+    void launchMoveProcess(const MimeData &, const QString &);
     void notifyMoveProcessing(int = UtilityNamespace::PROGRESS_UNKNOWN);
     void launchPreProcess();
-    void setJobProcessing(const bool&);
-    KIO::CopyJob* moveJobLegacy(const MimeData&, const QString&, KIO::JobFlag);
+    void setJobProcessing(const bool &);
+    KIO::CopyJob *moveJobLegacy(const MimeData &, const QString &, KIO::JobFlag);
 
-    Core* core;
-    CategoriesModel* categoriesModel;
-    CategoriesManual* categoriesManual;
+    Core *core;
+    CategoriesModel *categoriesModel;
+    CategoriesManual *categoriesManual;
     MoveJobStatus moveJobStatus;
     QHash<int, QString> moveStatusTextMap;
     QHash<int, QColor> moveStatusColorMap;
@@ -92,11 +90,11 @@ Q_SIGNALS:
     void pluginJobRunningSignal(bool);
 
 public Q_SLOTS:
-    void handleResultSlot(KJob*);
-    void jobProgressionSlot(KIO::Job*);
+    void handleResultSlot(KJob *);
+    void jobProgressionSlot(KIO::Job *);
 
 private Q_SLOTS:
-    void parentStatusItemChangedSlot(QStandardItem*, ItemStatusData);
+    void parentStatusItemChangedSlot(QStandardItem *, ItemStatusData);
 
 };
 

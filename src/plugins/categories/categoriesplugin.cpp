@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "categoriesplugin.h"
 
 #include "kwooty_debug.h"
@@ -29,37 +28,34 @@
 #include "mainwindow.h"
 #include "core.h"
 
-
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<CategoriesPlugin>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_categoriesplugin"))
 
-
-CategoriesPlugin::CategoriesPlugin(QObject* parent, const QList<QVariant>&) : Plugin( parent)
+CategoriesPlugin::CategoriesPlugin(QObject *parent, const QList<QVariant> &) : Plugin(parent)
 {
 
 }
-
 
 CategoriesPlugin::~CategoriesPlugin()
 {
 
 }
 
-
-
-void CategoriesPlugin::load() {
+void CategoriesPlugin::load()
+{
     this->categories = new Categories(this);
 }
 
-void CategoriesPlugin::unload() {
+void CategoriesPlugin::unload()
+{
 
     this->categories->unload();
     delete this->categories;
 
 }
 
-
-void CategoriesPlugin::configUpdated() {
+void CategoriesPlugin::configUpdated()
+{
     this->categories->settingsChanged();
 }
 #include "categoriesplugin.moc"

@@ -60,12 +60,10 @@
 #include "preferences/preferencesshutdown.h"
 #include "preferences/preferencesplugins.h"
 
-
 #include "systray.h"
 
-
-
-MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent) {
+MainWindow::MainWindow(QWidget *parent): KXmlGuiWindow(parent)
+{
 
     this->initVariables();
 
@@ -87,9 +85,8 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent) {
     // setup side bar manager :
     this->mSideBar = new SideBar(this);
 
-
     // create the user interface :
-    QWidget* widget = new QWidget(this);
+    QWidget *widget = new QWidget(this);
     this->buildLayout(widget);
     this->setCentralWidget(widget);
 
@@ -109,8 +106,8 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent) {
     this->mQuitSelected = false;
 
     // hide main window when session is restored and systray icon is checked, else show main window :
-    if ( !(kapp->isSessionRestored() && Settings::sysTray()) ||
-         (kapp->isSessionRestored() && !this->mKConfigGroupHandler->readMainWindowHiddenOnExit()) ) {
+    if (!(kapp->isSessionRestored() && Settings::sysTray()) ||
+            (kapp->isSessionRestored() && !this->mKConfigGroupHandler->readMainWindowHiddenOnExit())) {
 
         this->show();
     }
@@ -120,22 +117,23 @@ MainWindow::MainWindow(QWidget* parent): KXmlGuiWindow(parent) {
 
 }
 
-
-MainWindow::~MainWindow(){
+MainWindow::~MainWindow()
+{
 
 }
 
-void MainWindow::initVariables() {
+void MainWindow::initVariables()
+{
     this->mCore = 0;
     this->mCentralWidget = 0;
     this->mTreeView = 0;
     this->mSideBar = 0;
 }
 
+void MainWindow::buildLayout(QWidget *widget)
+{
 
-void MainWindow::buildLayout(QWidget* widget) {
-
-    QVBoxLayout* mainVBoxLayout = new QVBoxLayout(widget);
+    QVBoxLayout *mainVBoxLayout = new QVBoxLayout(widget);
     mainVBoxLayout->setSpacing(2);
     mainVBoxLayout->setMargin(1);
 
@@ -144,43 +142,48 @@ void MainWindow::buildLayout(QWidget* widget) {
 
 }
 
-
-MyStatusBar* MainWindow::getStatusBar() const {
-    Q_ASSERT (this->mStatusBar != 0);
+MyStatusBar *MainWindow::getStatusBar() const
+{
+    Q_ASSERT(this->mStatusBar != 0);
     return this->mStatusBar;
 }
 
-SideBar* MainWindow::getSideBar() const {
-    Q_ASSERT (this->mSideBar != 0);
+SideBar *MainWindow::getSideBar() const
+{
+    Q_ASSERT(this->mSideBar != 0);
     return this->mSideBar;
 }
 
-CentralWidget* MainWindow::getCentralWidget() const {
-    Q_ASSERT (this->mCentralWidget != 0);
+CentralWidget *MainWindow::getCentralWidget() const
+{
+    Q_ASSERT(this->mCentralWidget != 0);
     return this->mCentralWidget;
 }
 
-Core* MainWindow::getCore() const{
-    Q_ASSERT (this->mCore != 0);
+Core *MainWindow::getCore() const
+{
+    Q_ASSERT(this->mCore != 0);
     return this->mCore;
 }
 
-MyTreeView* MainWindow::getTreeView() const{
-    Q_ASSERT (this->mTreeView != 0);
+MyTreeView *MainWindow::getTreeView() const
+{
+    Q_ASSERT(this->mTreeView != 0);
     return this->mTreeView;
 }
 
-void MainWindow::setupActions() {
+void MainWindow::setupActions()
+{
 
-    ActionsManager* actionsManager = this->mCore->getActionsManager();
-    ActionButtonsManager* actionButtonsManager = actionsManager->getActionButtonsManager();
+    ActionsManager *actionsManager = this->mCore->getActionsManager();
+    ActionButtonsManager *actionButtonsManager = actionsManager->getActionButtonsManager();
 
     //-----------------
     // custom Actions :
     //-----------------
 
     // clearAction :
-    QAction * clearAction = new QAction(this);
+    QAction *clearAction = new QAction(this);
     clearAction->setText(i18n("Clear"));
     clearAction->setIcon(QIcon::fromTheme("edit-clear-list"));
     clearAction->setToolTip(i18n("Remove all rows"));
@@ -189,7 +192,7 @@ void MainWindow::setupActions() {
     connect(clearAction, SIGNAL(triggered(bool)), actionsManager, SLOT(clearSlot()));
 
     // startDownloadAction :
-    QAction * startDownloadAction = new QAction(this);
+    QAction *startDownloadAction = new QAction(this);
     startDownloadAction->setText(i18n("Start"));
     startDownloadAction->setIcon(QIcon::fromTheme("media-playback-start"));
     startDownloadAction->setToolTip(i18n("Start download of selected rows"));
@@ -197,10 +200,10 @@ void MainWindow::setupActions() {
     startDownloadAction->setEnabled(false);
     actionCollection()->addAction("start", startDownloadAction);
     connect(startDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(startDownloadSlot()));
-    connect(actionButtonsManager, SIGNAL(setStartButtonEnabledSignal(bool)), startDownloadAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setStartButtonEnabledSignal(bool)), startDownloadAction, SLOT(setEnabled(bool)));
 
     // pauseDownloadAction :
-    QAction * pauseDownloadAction = new QAction(this);
+    QAction *pauseDownloadAction = new QAction(this);
     pauseDownloadAction->setText(i18n("Pause"));
     pauseDownloadAction->setIcon(QIcon::fromTheme("media-playback-pause"));
     pauseDownloadAction->setToolTip(i18n("Pause download of selected rows"));
@@ -208,10 +211,10 @@ void MainWindow::setupActions() {
     pauseDownloadAction->setEnabled(false);
     actionCollection()->addAction("pause", pauseDownloadAction);
     connect(pauseDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(pauseDownloadSlot()));
-    connect(actionButtonsManager, SIGNAL(setPauseButtonEnabledSignal(bool)), pauseDownloadAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setPauseButtonEnabledSignal(bool)), pauseDownloadAction, SLOT(setEnabled(bool)));
 
     // removeItemAction :
-    QAction * removeItemAction = new QAction(this);
+    QAction *removeItemAction = new QAction(this);
     removeItemAction->setText(i18n("Remove"));
     removeItemAction->setIcon(QIcon::fromTheme("list-remove"));
     removeItemAction->setToolTip(i18n("Remove all selected rows"));
@@ -219,11 +222,11 @@ void MainWindow::setupActions() {
     removeItemAction->setEnabled(false);
     actionCollection()->addAction("remove", removeItemAction);
     connect(removeItemAction, SIGNAL(triggered(bool)), actionsManager, SLOT(removeRowSlot()));
-    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
-    connect(actionButtonsManager, SIGNAL(setRemoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)));
+    connect(actionButtonsManager, SIGNAL(setRemoveButtonEnabledSignal(bool)), removeItemAction, SLOT(setEnabled(bool)));
 
     // removeItemDeleteFileAction :
-    QAction * removeItemDeleteFileAction = new QAction(this);
+    QAction *removeItemDeleteFileAction = new QAction(this);
     removeItemDeleteFileAction->setText(i18n("Remove data"));
     removeItemDeleteFileAction->setIcon(QIcon::fromTheme("edit-delete"));
     removeItemDeleteFileAction->setToolTip(i18n("Remove all selected rows and respective downloaded contents"));
@@ -231,11 +234,11 @@ void MainWindow::setupActions() {
     removeItemDeleteFileAction->setEnabled(false);
     actionCollection()->addAction("removeItemDeleteFile", removeItemDeleteFileAction);
     connect(removeItemDeleteFileAction, SIGNAL(triggered(bool)), actionsManager->getActionFileDeleteManager(), SLOT(actionTriggeredSlot()));
-    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemDeleteFileAction, SLOT(setEnabled(bool)) );
-    connect(actionButtonsManager, SIGNAL(setRemoveDeleteFileButtonEnabledSignal(bool)), removeItemDeleteFileAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), removeItemDeleteFileAction, SLOT(setEnabled(bool)));
+    connect(actionButtonsManager, SIGNAL(setRemoveDeleteFileButtonEnabledSignal(bool)), removeItemDeleteFileAction, SLOT(setEnabled(bool)));
 
     // moveUpAction :
-    QAction * moveUpAction = new QAction(this);
+    QAction *moveUpAction = new QAction(this);
     moveUpAction->setText(i18n("Up"));
     moveUpAction->setIcon(QIcon::fromTheme("go-up"));
     moveUpAction->setToolTip(i18n("Go up all selected rows"));
@@ -243,10 +246,10 @@ void MainWindow::setupActions() {
     moveUpAction->setEnabled(false);
     actionCollection()->addAction("moveUp", moveUpAction);
     connect(moveUpAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveUpSlot()));
-    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveUpAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveUpAction, SLOT(setEnabled(bool)));
 
     // moveToTopAction :
-    QAction * moveToTopAction = new QAction(this);
+    QAction *moveToTopAction = new QAction(this);
     moveToTopAction->setText(i18n("Top"));
     moveToTopAction->setIcon(QIcon::fromTheme("go-top"));
     moveToTopAction->setToolTip(i18n("Move all selected rows to the top of the list"));
@@ -254,10 +257,10 @@ void MainWindow::setupActions() {
     moveToTopAction->setEnabled(false);
     actionCollection()->addAction("moveTop", moveToTopAction);
     connect(moveToTopAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveToTopSlot()));
-    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToTopAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToTopAction, SLOT(setEnabled(bool)));
 
     // moveDownAction :
-    QAction * moveDownAction = new QAction(this);
+    QAction *moveDownAction = new QAction(this);
     moveDownAction->setText(i18n("Down"));
     moveDownAction->setIcon(QIcon::fromTheme("go-down"));
     moveDownAction->setToolTip(i18n("Go down all selected rows"));
@@ -265,10 +268,10 @@ void MainWindow::setupActions() {
     moveDownAction->setEnabled(false);
     actionCollection()->addAction("moveDown", moveDownAction);
     connect(moveDownAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveDownSlot()));
-    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveDownAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveDownAction, SLOT(setEnabled(bool)));
 
     // moveToBottomAction :
-    QAction * moveToBottomAction = new QAction(this);
+    QAction *moveToBottomAction = new QAction(this);
     moveToBottomAction->setText(i18n("Bottom"));
     moveToBottomAction->setIcon(QIcon::fromTheme("go-bottom"));
     moveToBottomAction->setToolTip(i18n("Move all selected rows to the bottom of the list"));
@@ -276,10 +279,10 @@ void MainWindow::setupActions() {
     moveToBottomAction->setEnabled(false);
     actionCollection()->addAction("moveBottom", moveToBottomAction);
     connect(moveToBottomAction, SIGNAL(triggered(bool)), actionsManager, SLOT(moveToBottomSlot()));
-    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToBottomAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setMoveButtonEnabledSignal(bool)), moveToBottomAction, SLOT(setEnabled(bool)));
 
     // openFolderAction :
-    QAction * openFolderAction = new QAction(this);
+    QAction *openFolderAction = new QAction(this);
     openFolderAction->setText(i18n("Downloads"));
     openFolderAction->setIcon(QIcon::fromTheme("folder-downloads"));
     openFolderAction->setToolTip(i18n("Open current download folder"));
@@ -289,7 +292,7 @@ void MainWindow::setupActions() {
     connect(openFolderAction, SIGNAL(triggered(bool)), actionsManager, SLOT(openFolderSlot()));
 
     // shutdownAction :
-    QAction * shutdownAction = new QAction(this);
+    QAction *shutdownAction = new QAction(this);
     shutdownAction->setText(i18n("Shutdown"));
     shutdownAction->setIcon(QIcon::fromTheme("system-shutdown"));
     shutdownAction->setToolTip(i18n("Schedule system shutdown"));
@@ -299,30 +302,30 @@ void MainWindow::setupActions() {
     actionCollection()->addAction("shutdown", shutdownAction);
     connect(shutdownAction, SIGNAL(triggered(bool)), mCore->getShutdownManager(), SLOT(enableSystemShutdownSlot(bool)));
     connect(mCore->getShutdownManager(), SIGNAL(setShutdownButtonCheckedSignal(bool)), shutdownAction, SLOT(setChecked(bool)));
-    connect(mCore->getShutdownManager(), SIGNAL(setShutdownButtonEnabledSignal(bool)), shutdownAction, SLOT(setEnabled(bool)) );
+    connect(mCore->getShutdownManager(), SIGNAL(setShutdownButtonEnabledSignal(bool)), shutdownAction, SLOT(setEnabled(bool)));
 
     // startAllDownloadAction :
-    QAction * startAllDownloadAction = new QAction(this);
+    QAction *startAllDownloadAction = new QAction(this);
     startAllDownloadAction->setText(i18n("Start all"));
     startAllDownloadAction->setIcon(QIcon::fromTheme("media-playback-start"));
     startAllDownloadAction->setToolTip(i18n("Start all paused downloads"));
     startAllDownloadAction->setEnabled(false);
     actionCollection()->addAction("startAll", startAllDownloadAction);
     connect(startAllDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(startAllDownloadSlot()));
-    connect(actionButtonsManager, SIGNAL(setStartAllButtonEnabledSignal(bool)), startAllDownloadAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setStartAllButtonEnabledSignal(bool)), startAllDownloadAction, SLOT(setEnabled(bool)));
 
     // pauseAllDownloadAction :
-    QAction * pauseAllDownloadAction = new QAction(this);
+    QAction *pauseAllDownloadAction = new QAction(this);
     pauseAllDownloadAction->setText(i18n("Pause all"));
     pauseAllDownloadAction->setIcon(QIcon::fromTheme("media-playback-pause"));
     pauseAllDownloadAction->setToolTip(i18n("Pause all pending downloads"));
     pauseAllDownloadAction->setEnabled(false);
     actionCollection()->addAction("pauseAll", pauseAllDownloadAction);
     connect(pauseAllDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(pauseAllDownloadSlot()));
-    connect(actionButtonsManager, SIGNAL(setPauseAllButtonEnabledSignal(bool)), pauseAllDownloadAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setPauseAllButtonEnabledSignal(bool)), pauseAllDownloadAction, SLOT(setEnabled(bool)));
 
     // retryDownloadAction :
-    QAction * retryDownloadAction = new QAction(this);
+    QAction *retryDownloadAction = new QAction(this);
     retryDownloadAction->setText(i18n("Retry"));
     retryDownloadAction->setIcon(QIcon::fromTheme("edit-redo"));
     retryDownloadAction->setToolTip(i18n("Retry to download selected rows"));
@@ -330,10 +333,10 @@ void MainWindow::setupActions() {
     retryDownloadAction->setEnabled(false);
     actionCollection()->addAction("retryDownload", retryDownloadAction);
     connect(retryDownloadAction, SIGNAL(triggered(bool)), actionsManager, SLOT(retryDownloadSlot()));
-    connect(actionButtonsManager, SIGNAL(setRetryButtonEnabledSignal(bool)), retryDownloadAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setRetryButtonEnabledSignal(bool)), retryDownloadAction, SLOT(setEnabled(bool)));
 
     // manualExtractAction :
-    QAction * manualExtractAction = new QAction(this);
+    QAction *manualExtractAction = new QAction(this);
     manualExtractAction->setText(i18n("Repair and extract"));
     manualExtractAction->setIcon(QIcon::fromTheme("archive-extract"));
     manualExtractAction->setToolTip(i18n("Manually verify and extract selected item"));
@@ -341,19 +344,19 @@ void MainWindow::setupActions() {
     manualExtractAction->setEnabled(false);
     actionCollection()->addAction("manualExtract", manualExtractAction);
     connect(manualExtractAction, SIGNAL(triggered(bool)), actionsManager, SLOT(manualExtractSlot()));
-    connect(actionButtonsManager, SIGNAL(setManualExtractActionSignal(bool)), manualExtractAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setManualExtractActionSignal(bool)), manualExtractAction, SLOT(setEnabled(bool)));
 
     // mergeNzbAction :
-    QAction * mergeNzbAction = new QAction(this);
+    QAction *mergeNzbAction = new QAction(this);
     mergeNzbAction->setText(i18n("Merge with..."));
     mergeNzbAction->setIcon(QIcon::fromTheme("mail-message-new"));
     mergeNzbAction->setToolTip(i18n("Merge nzb content into another nzb"));
     mergeNzbAction->setEnabled(false);
     actionCollection()->addAction("mergeNzb", mergeNzbAction);
-    connect(actionButtonsManager, SIGNAL(setMergeNzbButtonEnabledSignal(bool)), mergeNzbAction, SLOT(setEnabled(bool)) );
+    connect(actionButtonsManager, SIGNAL(setMergeNzbButtonEnabledSignal(bool)), mergeNzbAction, SLOT(setEnabled(bool)));
 
     // add a submenu that will be filled dynamically :
-    QMenu* mergeSubMenu = new QMenu(this);
+    QMenu *mergeSubMenu = new QMenu(this);
     mergeNzbAction->setMenu(mergeSubMenu);
 
     // prepare corresponding submenu :
@@ -362,9 +365,8 @@ void MainWindow::setupActions() {
     // retrieve selected action from submenu :
     connect(mergeSubMenu, SIGNAL(triggered(QAction*)), actionsManager->getActionMergeManager(), SLOT(actionTriggeredSlot(QAction*)));
 
-
     // renameNzbAction :
-    QAction * renameNzbAction = new QAction(this);
+    QAction *renameNzbAction = new QAction(this);
     renameNzbAction->setText(i18n("Rename..."));
     renameNzbAction->setIcon(QIcon::fromTheme("edit-rename"));
     renameNzbAction->setToolTip(i18n("Rename nzb and its corresponding download folder"));
@@ -372,9 +374,7 @@ void MainWindow::setupActions() {
     renameNzbAction->setEnabled(false);
     actionCollection()->addAction("renameNzb", renameNzbAction);
     connect(renameNzbAction, SIGNAL(triggered(bool)), actionsManager->getActionRenameManager(), SLOT(actionTriggeredSlot()));
-    connect(actionButtonsManager, SIGNAL(setRenameNzbButtonEnabledSignal(bool)), renameNzbAction, SLOT(setEnabled(bool)) );
-
-
+    connect(actionButtonsManager, SIGNAL(setRenameNzbButtonEnabledSignal(bool)), renameNzbAction, SLOT(setEnabled(bool)));
 
     //-------------------
     // standard Actions :
@@ -392,21 +392,19 @@ void MainWindow::setupActions() {
     // shown menuBar action :
     KStandardAction::showMenubar(this, SLOT(toggleShowMenuBar()), actionCollection());
 
-
     setupGUI();
-
 
 }
 
-
-QAction* MainWindow::getActionFromName(const QString& actionName) {
+QAction *MainWindow::getActionFromName(const QString &actionName)
+{
 
     return actionCollection()->action(actionName);
 
 }
 
-
-void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage) {
+void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage)
+{
 
     // if instance has already been created :
     if (KConfigDialog::exists("settings")) {
@@ -420,36 +418,34 @@ void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage)
 
         KConfigDialog::showDialog("settings");
 
-    }
-    else {
+    } else {
 
         // dialog instance is not et created, create it :
-        KConfigDialog* dialog = new KConfigDialog(this, "settings", Settings::self());
+        KConfigDialog *dialog = new KConfigDialog(this, "settings", Settings::self());
 
-        PreferencesGeneral* preferencesGeneral = new PreferencesGeneral();
-        KPageWidgetItem* preferencesGeneralPage = dialog->addPage(preferencesGeneral, i18n("General"), "preferences-system", i18n("General Setup"));
+        PreferencesGeneral *preferencesGeneral = new PreferencesGeneral();
+        KPageWidgetItem *preferencesGeneralPage = dialog->addPage(preferencesGeneral, i18n("General"), "preferences-system", i18n("General Setup"));
         this->mPreferencesPagesMap.insert(GeneralPage, preferencesGeneralPage);
 
-        PreferencesServer* preferencesServer = new PreferencesServer(dialog);
-        KPageWidgetItem* preferencesServerPage = dialog->addPage(preferencesServer, i18n("Connection"), "network-workgroup", i18n("Setup Server Connection"));
+        PreferencesServer *preferencesServer = new PreferencesServer(dialog);
+        KPageWidgetItem *preferencesServerPage = dialog->addPage(preferencesServer, i18n("Connection"), "network-workgroup", i18n("Setup Server Connection"));
         this->mPreferencesPagesMap.insert(ServerPage, preferencesServerPage);
 
-        PreferencesPrograms* preferencesPrograms = new PreferencesPrograms();
-        KPageWidgetItem* preferencesProgramsPage = dialog->addPage(preferencesPrograms, i18n("Programs"), "system-run", i18n("Setup External Programs"));
+        PreferencesPrograms *preferencesPrograms = new PreferencesPrograms();
+        KPageWidgetItem *preferencesProgramsPage = dialog->addPage(preferencesPrograms, i18n("Programs"), "system-run", i18n("Setup External Programs"));
         this->mPreferencesPagesMap.insert(ProgramsPage, preferencesProgramsPage);
 
-        PreferencesDisplay* preferencesDisplay = new PreferencesDisplay();
-        KPageWidgetItem* preferencesDisplayPage = dialog->addPage(preferencesDisplay, i18n("Display modes"), "view-choose", i18n("Setup Display Modes"));
+        PreferencesDisplay *preferencesDisplay = new PreferencesDisplay();
+        KPageWidgetItem *preferencesDisplayPage = dialog->addPage(preferencesDisplay, i18n("Display modes"), "view-choose", i18n("Setup Display Modes"));
         this->mPreferencesPagesMap.insert(DisplayPage, preferencesDisplayPage);
 
-        PreferencesShutdown* preferencesShutdown = new PreferencesShutdown(this->mCore);
-        KPageWidgetItem* preferencesShutdownPage = dialog->addPage(preferencesShutdown, i18n("Shutdown"), "system-shutdown", i18n("Setup System Shutdown"));
+        PreferencesShutdown *preferencesShutdown = new PreferencesShutdown(this->mCore);
+        KPageWidgetItem *preferencesShutdownPage = dialog->addPage(preferencesShutdown, i18n("Shutdown"), "system-shutdown", i18n("Setup System Shutdown"));
         this->mPreferencesPagesMap.insert(ShutdownPage, preferencesShutdownPage);
 
-        PreferencesPlugins* preferencesPlugins = new PreferencesPlugins(dialog, this->mPluginManager);
-        KPageWidgetItem* preferencesPluginsPage = dialog->addPage(preferencesPlugins, i18n("Plugins"), "preferences-plugin", i18n("Plugins Setup"));
+        PreferencesPlugins *preferencesPlugins = new PreferencesPlugins(dialog, this->mPluginManager);
+        KPageWidgetItem *preferencesPluginsPage = dialog->addPage(preferencesPlugins, i18n("Plugins"), "preferences-plugin", i18n("Plugins Setup"));
         this->mPreferencesPagesMap.insert(PluginsPage, preferencesPluginsPage);
-
 
         connect(dialog, SIGNAL(settingsChanged(QString)), this->mCore, SLOT(updateSettingsSlot()));
         connect(dialog, SIGNAL(settingsChanged(QString)), this->mKConfigGroupHandler, SLOT(settingsChangedSlot()));
@@ -462,50 +458,44 @@ void MainWindow::showSettings(UtilityNamespace::PreferencesPage preferencesPage)
 
     }
 
-
 }
 
-
-QSize MainWindow::sizeHint() const {
+QSize MainWindow::sizeHint() const
+{
     return QSize(QApplication::desktop()->screenGeometry(this).width() / 1.5,
                  QApplication::desktop()->screenGeometry(this).height() / 2);
 }
-
-
-
-
 
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-void MainWindow::toggleShowMenuBar() {
+void MainWindow::toggleShowMenuBar()
+{
 
     if (this->menuBar()->isVisible()) {
         this->menuBar()->hide();
-    }
-    else {
+    } else {
         this->menuBar()->show();
     }
 }
 
-
-
-void MainWindow::openFile() {
+void MainWindow::openFile()
+{
 
     this->mCore->getFileOperations()->openFile();
 
 }
 
-void MainWindow::openFileWithFileMode(const KUrl &nzbUrl, UtilityNamespace::OpenFileMode openFileMode) {
+void MainWindow::openFileWithFileMode(const KUrl &nzbUrl, UtilityNamespace::OpenFileMode openFileMode)
+{
 
     this->mCore->getFileOperations()->openFileWithFileMode(nzbUrl, openFileMode);
 
 }
 
-
-
-void MainWindow::quit() {
+void MainWindow::quit()
+{
 
     // quit has been requested :
     this->mQuitSelected = true;
@@ -517,9 +507,8 @@ void MainWindow::quit() {
 
 }
 
-
-
-bool MainWindow::queryClose() {
+bool MainWindow::queryClose()
+{
 
     // by default quit the application :
     bool confirmQuit = true;
@@ -528,16 +517,16 @@ bool MainWindow::queryClose() {
     if (!kapp->sessionSaving()) {
 
         // if the main window is just closed :
-        if (!this->mQuitSelected ) {
+        if (!this->mQuitSelected) {
 
             // if system tray icon exists :
             if (Settings::sysTray()) {
 
                 // display a warning message :
-                KMessageBox::information( this,
-                                          i18n( "<qt>Closing the main window will keep Kwooty running in the System Tray. "
-                                                "Use <B>Quit</B> from the menu or the Kwooty tray icon to exit the application.</qt>" ),
-                                          i18n( "Docking in System Tray" ), "hideOnCloseInfo" );
+                KMessageBox::information(this,
+                                         i18n("<qt>Closing the main window will keep Kwooty running in the System Tray. "
+                                              "Use <B>Quit</B> from the menu or the Kwooty tray icon to exit the application.</qt>"),
+                                         i18n("Docking in System Tray"), "hideOnCloseInfo");
 
                 // hide the main window and don't quit :
                 this->hide();
@@ -562,8 +551,8 @@ bool MainWindow::queryClose() {
 
 }
 
-
-bool MainWindow::queryExit() {
+bool MainWindow::queryExit()
+{
 
     this->mKConfigGroupHandler->writeMainWindowHiddenOnExit(this->isHidden());
     this->mSideBar->saveState();
@@ -571,8 +560,8 @@ bool MainWindow::queryExit() {
     return true;
 }
 
-
-void MainWindow::askForSavingDownloads(bool& confirmQuit) {
+void MainWindow::askForSavingDownloads(bool &confirmQuit)
+{
 
     int answer = mCore->savePendingDownloads();
 
@@ -583,8 +572,8 @@ void MainWindow::askForSavingDownloads(bool& confirmQuit) {
 
 }
 
-
-void MainWindow::systraySlot() {
+void MainWindow::systraySlot()
+{
 
     // remove system tray if requested by user :
     if (!Settings::sysTray() && this->mSysTray) {
@@ -596,5 +585,4 @@ void MainWindow::systraySlot() {
     }
 
 }
-
 

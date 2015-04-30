@@ -23,8 +23,7 @@
 #include "core.h"
 #include "data/nzbfiledata.h"
 
-
-StandardItemModel::StandardItemModel(Core* parent) : QStandardItemModel (parent)
+StandardItemModel::StandardItemModel(Core *parent) : QStandardItemModel(parent)
 {
 }
 
@@ -32,19 +31,18 @@ StandardItemModel::StandardItemModel()
 {
 }
 
+QStandardItem *StandardItemModel::getParentItem(const QModelIndex &index) const
+{
 
-
-QStandardItem* StandardItemModel::getParentItem(const QModelIndex& index) const{
-
-    QStandardItem* parentItem = 0;
+    QStandardItem *parentItem = 0;
 
     if (index.isValid()) {
         // if the parent has been selected (a nzb item):
-        if (index.parent() == QModelIndex()){
+        if (index.parent() == QModelIndex()) {
             parentItem = this->invisibleRootItem();
         }
         // else files of the parent (nzb item) has been selected :
-        else{
+        else {
             parentItem = this->itemFromIndex(index.parent());
         }
 
@@ -53,15 +51,15 @@ QStandardItem* StandardItemModel::getParentItem(const QModelIndex& index) const{
     return parentItem;
 }
 
+QStandardItem *StandardItemModel::getColumnItem(const QModelIndex &index, const int column) const
+{
 
-QStandardItem* StandardItemModel::getColumnItem(const QModelIndex& index, const int column) const {
-
-    QStandardItem* item = 0;
+    QStandardItem *item = 0;
 
     if (index.isValid()) {
 
         // get parent item :
-        QStandardItem* parentItem = this->getParentItem(index);
+        QStandardItem *parentItem = this->getParentItem(index);
 
         // get child at the corresponding column :
         item = parentItem->child(index.row(), column);
@@ -70,12 +68,11 @@ QStandardItem* StandardItemModel::getColumnItem(const QModelIndex& index, const 
     return item;
 }
 
-
-
-void StandardItemModel::updateStateItem(const QModelIndex& index, const UtilityNamespace::ItemStatus status) {
+void StandardItemModel::updateStateItem(const QModelIndex &index, const UtilityNamespace::ItemStatus status)
+{
 
     // retrieve current progression and status related items :
-    QStandardItem* stateItem = this->getStateItemFromIndex(index);
+    QStandardItem *stateItem = this->getStateItemFromIndex(index);
 
     // get itemstatusdata from stateItem :
     ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
@@ -88,10 +85,10 @@ void StandardItemModel::updateStateItem(const QModelIndex& index, const UtilityN
 
 }
 
+void StandardItemModel::updateProgressItem(const QModelIndex &index, const int progressNumber)
+{
 
-void StandardItemModel::updateProgressItem(const QModelIndex& index, const int progressNumber) {
-
-    QStandardItem* progressItem = this->getProgressItemFromIndex(index);
+    QStandardItem *progressItem = this->getProgressItemFromIndex(index);
 
     int currentDownloadProgress = progressItem->data(ProgressRole).toInt();
 
@@ -108,34 +105,30 @@ void StandardItemModel::updateProgressItem(const QModelIndex& index, const int p
 
 }
 
+void StandardItemModel::updateStatusDataFromIndex(const QModelIndex &index, const ItemStatusData &itemStatusData)
+{
 
-
-void StandardItemModel::updateStatusDataFromIndex(const QModelIndex& index, const ItemStatusData& itemStatusData) {
-
-    QStandardItem* stateItem = this->getStateItemFromIndex(index);
+    QStandardItem *stateItem = this->getStateItemFromIndex(index);
     this->storeStatusDataToItem(stateItem, itemStatusData);
 
 }
 
-
-
-void StandardItemModel::initStatusDataToItem(QStandardItem* stateItem, const ItemStatusData& itemStatusData) {
+void StandardItemModel::initStatusDataToItem(QStandardItem *stateItem, const ItemStatusData &itemStatusData)
+{
 
     // convenience method to force signal to be emitted upon first data storage :
     this->storeStatusDataToItem(stateItem, itemStatusData);
 
     if (this->isNzbItem(stateItem)) {
         emit parentStatusItemChangedSignal(stateItem, itemStatusData);
-    }
-    else {
+    } else {
         emit childStatusItemChangedSignal(stateItem, itemStatusData);
     }
 
 }
 
-
-
-void StandardItemModel::storeStatusDataToItem(QStandardItem* stateItem, const ItemStatusData& itemStatusData) {
+void StandardItemModel::storeStatusDataToItem(QStandardItem *stateItem, const ItemStatusData &itemStatusData)
+{
 
     // get itemstatusdata from stateItem :
     ItemStatusData currentItemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
@@ -160,50 +153,49 @@ void StandardItemModel::storeStatusDataToItem(QStandardItem* stateItem, const It
 
 }
 
-
-
-void StandardItemModel::updateNzbFileDataToItem(QStandardItem* item, const NzbFileData& nzbFileData) {
+void StandardItemModel::updateNzbFileDataToItem(QStandardItem *item, const NzbFileData &nzbFileData)
+{
     // set nzbFileData to item :
     QVariant variant;
     variant.setValue(nzbFileData);
     item->setData(variant, NzbFileDataRole);
 }
 
-
-
-UtilityNamespace::ItemStatus StandardItemModel::getStatusFromStateItem(QStandardItem* stateItem) const {
+UtilityNamespace::ItemStatus StandardItemModel::getStatusFromStateItem(QStandardItem *stateItem) const
+{
     ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
     return itemStatusData.getStatus();
 }
 
-
-UtilityNamespace::ItemStatus StandardItemModel::getChildStatusFromNzbIndex(const QModelIndex& index, int i) const {
+UtilityNamespace::ItemStatus StandardItemModel::getChildStatusFromNzbIndex(const QModelIndex &index, int i) const
+{
 
     // get corresponding file name index :
     QModelIndex fileNameIndex = index.child(i, FILE_NAME_COLUMN);
 
     // get current item status :
-    QStandardItem* stateItem = this->getStateItemFromIndex(fileNameIndex);
+    QStandardItem *stateItem = this->getStateItemFromIndex(fileNameIndex);
 
     return this->getStatusFromStateItem(stateItem);
 
 }
 
-QStandardItem* StandardItemModel::getNzbItem(const QModelIndex& index) const {
+QStandardItem *StandardItemModel::getNzbItem(const QModelIndex &index) const
+{
 
     return this->getNzbItem(this->itemFromIndex(index));
 
 }
 
-QStandardItem* StandardItemModel::getNzbItem(QStandardItem* item) const {
+QStandardItem *StandardItemModel::getNzbItem(QStandardItem *item) const
+{
 
-    QStandardItem* parentFileNameItem;
+    QStandardItem *parentFileNameItem;
 
     // if current item is a child, retrieve its parent :
     if (!this->isNzbItem(item)) {
         parentFileNameItem = this->getFileNameItemFromIndex(item->parent()->index());
-    }
-    else {
+    } else {
         parentFileNameItem = this->getFileNameItemFromIndex(item->index());
     }
 
@@ -211,53 +203,56 @@ QStandardItem* StandardItemModel::getNzbItem(QStandardItem* item) const {
 
 }
 
-ItemStatusData StandardItemModel::getStatusDataFromIndex(const QModelIndex& index) const {
+ItemStatusData StandardItemModel::getStatusDataFromIndex(const QModelIndex &index) const
+{
 
-    QStandardItem* stateItem = this->getStateItemFromIndex(index);
+    QStandardItem *stateItem = this->getStateItemFromIndex(index);
     return stateItem->data(StatusRole).value<ItemStatusData>();
 
 }
 
+NzbFileData StandardItemModel::getNzbFileDataFromIndex(const QModelIndex &index) const
+{
 
-NzbFileData StandardItemModel::getNzbFileDataFromIndex(const QModelIndex& index) const {
-
-    QStandardItem* fileNameItem = this->getFileNameItemFromIndex(index);
+    QStandardItem *fileNameItem = this->getFileNameItemFromIndex(index);
     return fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
 
 }
 
+int StandardItemModel::getProgressValueFromIndex(const QModelIndex &index) const
+{
 
-int StandardItemModel::getProgressValueFromIndex(const QModelIndex& index) const {
-
-    QStandardItem* progressItem = this->getProgressItemFromIndex(index);
+    QStandardItem *progressItem = this->getProgressItemFromIndex(index);
     return progressItem->data(ProgressRole).toInt();
 
 }
 
-
-quint64 StandardItemModel::getSizeValueFromIndex(const QModelIndex& index) const {
-    QStandardItem* sizeItem = this->getSizeItemFromIndex(index);
+quint64 StandardItemModel::getSizeValueFromIndex(const QModelIndex &index) const
+{
+    QStandardItem *sizeItem = this->getSizeItemFromIndex(index);
     return sizeItem->data(SizeRole).toULongLong();
 }
 
-QString StandardItemModel::getUuidStrFromIndex(const QModelIndex& index) const {
+QString StandardItemModel::getUuidStrFromIndex(const QModelIndex &index) const
+{
 
-    QStandardItem* nzbFileName = this->getFileNameItemFromIndex(index);
+    QStandardItem *nzbFileName = this->getFileNameItemFromIndex(index);
     return nzbFileName->data(IdentifierRole).toString();
 
 }
 
-QString StandardItemModel::getParentFileSavePathFromIndex(const QModelIndex& index) const {
+QString StandardItemModel::getParentFileSavePathFromIndex(const QModelIndex &index) const
+{
 
-    QStandardItem* parentNzbFileNameItem = this->getNzbItem(index);
+    QStandardItem *parentNzbFileNameItem = this->getNzbItem(index);
     return this->getNzbFileDataFromIndex(parentNzbFileNameItem->index()).getFileSavePath();
 
 }
 
+void StandardItemModel::updateParentFileSavePathFromIndex(const QModelIndex &index, const NzbFileData &nzbFileData)
+{
 
-void StandardItemModel::updateParentFileSavePathFromIndex(const QModelIndex& index, const NzbFileData& nzbFileData) {
-
-    QStandardItem* parentNzbFileNameItem = this->getNzbItem(index);
+    QStandardItem *parentNzbFileNameItem = this->getNzbItem(index);
 
     NzbFileData parentNzbFileData = this->getNzbFileDataFromIndex(parentNzbFileNameItem->index());
     parentNzbFileData.updateFileSavePath(nzbFileData);
@@ -266,34 +261,32 @@ void StandardItemModel::updateParentFileSavePathFromIndex(const QModelIndex& ind
 
 }
 
-
-
-QStandardItem* StandardItemModel::getStateItemFromIndex(const QModelIndex& index) const {
+QStandardItem *StandardItemModel::getStateItemFromIndex(const QModelIndex &index) const
+{
     return this->getColumnItem(index, STATE_COLUMN);
 }
 
-
-QStandardItem* StandardItemModel::getFileNameItemFromIndex(const QModelIndex& index) const {
+QStandardItem *StandardItemModel::getFileNameItemFromIndex(const QModelIndex &index) const
+{
     return this->getColumnItem(index, FILE_NAME_COLUMN);
 }
 
-
-QStandardItem* StandardItemModel::getProgressItemFromIndex(const QModelIndex& index) const {
+QStandardItem *StandardItemModel::getProgressItemFromIndex(const QModelIndex &index) const
+{
     return this->getColumnItem(index, PROGRESS_COLUMN);
 }
 
-
-QStandardItem* StandardItemModel::getSizeItemFromIndex(const QModelIndex& index) const {
+QStandardItem *StandardItemModel::getSizeItemFromIndex(const QModelIndex &index) const
+{
     return this->getColumnItem(index, SIZE_COLUMN);
 }
 
-
-QStandardItem* StandardItemModel::getFileNameItemFromRowNumber(const int& row) const {
+QStandardItem *StandardItemModel::getFileNameItemFromRowNumber(const int &row) const
+{
     return this->item(row, FILE_NAME_COLUMN);
 }
 
-
-
-bool StandardItemModel::isNzbItem(QStandardItem* item) const {
+bool StandardItemModel::isNzbItem(QStandardItem *item) const
+{
     return (item->parent() == 0);
 }

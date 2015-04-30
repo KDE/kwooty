@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef ACTIONBUTTONSMANAGER_H
 #define ACTIONBUTTONSMANAGER_H
 
@@ -27,29 +26,27 @@
 #include "utilities/utility.h"
 using namespace UtilityNamespace;
 
-
 class ActionsManager;
 class Core;
 class MyTreeView;
 class StandardItemModel;
 class StandardItemModelQuery;
 
-class ActionButtonsManager : public QObject {
+class ActionButtonsManager : public QObject
+{
 
     Q_OBJECT
 
 public:
-    explicit ActionButtonsManager(ActionsManager*);
-
+    explicit ActionButtonsManager(ActionsManager *);
 
 private:
-    ActionsManager* mActionsManager;
-    Core* mCore;
-    MyTreeView* mTreeView;
-    StandardItemModel* mDownloadModel;
-    StandardItemModelQuery* mDownloadModelQuery;
+    ActionsManager *mActionsManager;
+    Core *mCore;
+    MyTreeView *mTreeView;
+    StandardItemModel *mDownloadModel;
+    StandardItemModelQuery *mDownloadModelQuery;
 
-    
 Q_SIGNALS:
     void setMoveButtonEnabledSignal(bool);
     void setPauseButtonEnabledSignal(bool);
@@ -63,10 +60,9 @@ Q_SIGNALS:
     void setManualExtractActionSignal(bool);
     void setRemoveDeleteFileButtonEnabledSignal(bool);
 
-    
 public Q_SLOTS:
     void selectedItemSlot();
-    
+
 };
 
 #endif // ACTIONBUTTONSMANAGER_H

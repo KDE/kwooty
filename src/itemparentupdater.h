@@ -37,22 +37,21 @@ class StandardItemModel;
 class ItemDownloadUpdater;
 class ItemChildrenManager;
 
-class ItemParentUpdater : public ItemAbstractUpdater {
+class ItemParentUpdater : public ItemAbstractUpdater
+{
 
     Q_OBJECT
 
 public:
-    ItemParentUpdater(Core*);
-    ItemPostDownloadUpdater* getItemPostDownloadUpdater() const;
-    ItemDownloadUpdater* getItemDownloadUpdater() const;
-    ItemChildrenManager* getItemChildrenManager() const;
-    StandardItemModel* getDownloadModel() const;
-    void updateNzbItems(const QModelIndex&);
-    void updateNzbItemsPostDecode(const PostDownloadInfoData&);
-    void recalculateNzbSize(const QModelIndex&);
-    void triggerPostProcessManually(const QStandardItem*);
-
-
+    ItemParentUpdater(Core *);
+    ItemPostDownloadUpdater *getItemPostDownloadUpdater() const;
+    ItemDownloadUpdater *getItemDownloadUpdater() const;
+    ItemChildrenManager *getItemChildrenManager() const;
+    StandardItemModel *getDownloadModel() const;
+    void updateNzbItems(const QModelIndex &);
+    void updateNzbItemsPostDecode(const PostDownloadInfoData &);
+    void recalculateNzbSize(const QModelIndex &);
+    void triggerPostProcessManually(const QStandardItem *);
 
 private:
 
@@ -62,22 +61,22 @@ private:
         AutomaticPostProcess
     };
 
-    Core* parent;
-    ItemPostDownloadUpdater* itemPostDownloadUpdater;
-    ItemDownloadUpdater* itemDownloadUpdater;
-    ItemChildrenManager* itemChildrenManager;
+    Core *parent;
+    ItemPostDownloadUpdater *itemPostDownloadUpdater;
+    ItemDownloadUpdater *itemDownloadUpdater;
+    ItemChildrenManager *itemChildrenManager;
     bool isItemUpdated;
 
-    ItemStatusData updateItemsDownload(ItemStatusData&, const int, const QModelIndex&, const quint64);
-    ItemStatusData updateStatusItemDownload(ItemStatusData&, const int);
-    ItemStatusData updateItemsDecode(ItemStatusData&, const int);
-    ItemStatusData updateStatusItemDecode(ItemStatusData&, const int);
-    ItemStatusData postProcessing(ItemStatusData&, const int, const QModelIndex&, PostProcessBehavior = AutomaticPostProcess);
-    ItemStatusData updateDataStatus(ItemStatusData&);
-    quint64 calculateDownloadProgress(const QModelIndex&, const ItemStatusData&, const int);
-    void countGlobalItemStatus(const ItemStatusData&);
+    ItemStatusData updateItemsDownload(ItemStatusData &, const int, const QModelIndex &, const quint64);
+    ItemStatusData updateStatusItemDownload(ItemStatusData &, const int);
+    ItemStatusData updateItemsDecode(ItemStatusData &, const int);
+    ItemStatusData updateStatusItemDecode(ItemStatusData &, const int);
+    ItemStatusData postProcessing(ItemStatusData &, const int, const QModelIndex &, PostProcessBehavior = AutomaticPostProcess);
+    ItemStatusData updateDataStatus(ItemStatusData &);
+    quint64 calculateDownloadProgress(const QModelIndex &, const ItemStatusData &, const int);
+    void countGlobalItemStatus(const ItemStatusData &);
     void setupConnections();
-    bool updatePar2ItemsIfCrcFailed(ItemStatusData&, const int rowNumber, const QModelIndex&);
+    bool updatePar2ItemsIfCrcFailed(ItemStatusData &, const int rowNumber, const QModelIndex &);
     void updateItemsIfDirectExtractFailed(const QModelIndex, UtilityNamespace::ItemStatus);
 
 Q_SIGNALS:

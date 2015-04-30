@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "standarditemmodelquery.h"
 
 #include "standarditemmodel.h"
@@ -27,26 +26,26 @@
 #include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
 
-
-StandardItemModelQuery::StandardItemModelQuery(Core* core) : QObject(core) {
+StandardItemModelQuery::StandardItemModelQuery(Core *core) : QObject(core)
+{
 
     this->mCore = core;
     this->mDownloadModel = core->getDownloadModel();
 
 }
 
+QStandardItem *StandardItemModelQuery::searchParentItem(const SearchItemStatus &searchItemStatus)
+{
 
-QStandardItem* StandardItemModelQuery::searchParentItem(const SearchItemStatus& searchItemStatus) {
-
-    QStandardItem* stateItem = 0;
+    QStandardItem *stateItem = 0;
 
     // get the root model :
-    QStandardItem* rootItem = this->mDownloadModel->invisibleRootItem();
+    QStandardItem *rootItem = this->mDownloadModel->invisibleRootItem();
 
     // get the first parent with download active :
     for (int i = 0; i < rootItem->rowCount(); ++i) {
 
-        QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
+        QStandardItem *parentStateItem = rootItem->child(i, STATE_COLUMN);
         UtilityNamespace::ItemStatus currentStatus = this->mDownloadModel->getStatusFromStateItem(parentStateItem);
 
         if (searchItemStatus == SearchItemIdle) {
@@ -57,8 +56,7 @@ QStandardItem* StandardItemModelQuery::searchParentItem(const SearchItemStatus& 
                 stateItem = parentStateItem;
                 break;
             }
-        }
-        else if (searchItemStatus == SearchItemDownloadOrPausing) {
+        } else if (searchItemStatus == SearchItemDownloadOrPausing) {
 
             // check if parent status is either downloading or pausing :
             if (Utility::isDownloadOrPausing(currentStatus)) {
@@ -66,8 +64,7 @@ QStandardItem* StandardItemModelQuery::searchParentItem(const SearchItemStatus& 
                 stateItem = parentStateItem;
                 break;
             }
-        }
-        else if (searchItemStatus == SearchItemPause) {
+        } else if (searchItemStatus == SearchItemPause) {
 
             // check if parent status is either in pause :
             if (Utility::isPaused(currentStatus)) {
@@ -75,8 +72,7 @@ QStandardItem* StandardItemModelQuery::searchParentItem(const SearchItemStatus& 
                 stateItem = parentStateItem;
                 break;
             }
-        }
-        else if (searchItemStatus == SearchItemPostDownloadProcessing) {
+        } else if (searchItemStatus == SearchItemPostDownloadProcessing) {
 
             // check if parent status is currently being post processed :
             if (Utility::isPostDownloadProcessing(currentStatus)) {
@@ -92,25 +88,28 @@ QStandardItem* StandardItemModelQuery::searchParentItem(const SearchItemStatus& 
 
 }
 
-
-QStandardItem* StandardItemModelQuery::searchParentItemIdle() {
+QStandardItem *StandardItemModelQuery::searchParentItemIdle()
+{
     return this->searchParentItem(SearchItemIdle);
 }
 
-QStandardItem* StandardItemModelQuery::searchParentItemDownloadOrPausing() {
+QStandardItem *StandardItemModelQuery::searchParentItemDownloadOrPausing()
+{
     return this->searchParentItem(SearchItemDownloadOrPausing);
 }
 
-QStandardItem* StandardItemModelQuery::searchParentItemPause() {
+QStandardItem *StandardItemModelQuery::searchParentItemPause()
+{
     return this->searchParentItem(SearchItemPause);
 }
 
-QStandardItem* StandardItemModelQuery::searchParentItemPostDownloadProcessing() {
+QStandardItem *StandardItemModelQuery::searchParentItemPostDownloadProcessing()
+{
     return this->searchParentItem(SearchItemPostDownloadProcessing);
 }
 
-
-QList<QModelIndex> StandardItemModelQuery::retrieveDecodeFinishParentIndexList() const {
+QList<QModelIndex> StandardItemModelQuery::retrieveDecodeFinishParentIndexList() const
+{
 
     QList<QModelIndex> downloadFinishParentIndexList;
 
@@ -131,9 +130,10 @@ QList<QModelIndex> StandardItemModelQuery::retrieveDecodeFinishParentIndexList()
 
 }
 
-QStandardItem* StandardItemModelQuery::retrieveParentFileNameItemFromUuid(const QString& parentUuidStr) {
+QStandardItem *StandardItemModelQuery::retrieveParentFileNameItemFromUuid(const QString &parentUuidStr)
+{
 
-    QStandardItem* parentFileNameItem = 0;
+    QStandardItem *parentFileNameItem = 0;
 
     for (int i = 0; i < this->mDownloadModel->rowCount(); ++i) {
 
@@ -148,9 +148,8 @@ QStandardItem* StandardItemModelQuery::retrieveParentFileNameItemFromUuid(const 
     return parentFileNameItem;
 }
 
-
-
-QList<QModelIndex> StandardItemModelQuery::retrieveStartPauseIndexList(const UtilityNamespace::ItemStatus targetStatus) const {
+QList<QModelIndex> StandardItemModelQuery::retrieveStartPauseIndexList(const UtilityNamespace::ItemStatus targetStatus) const
+{
 
     // select all rows in order to set them to paused or Idle :
     QList<QModelIndex> indexesList;
@@ -159,12 +158,12 @@ QList<QModelIndex> StandardItemModelQuery::retrieveStartPauseIndexList(const Uti
     for (int i = 0; i < rowNumber; ++i) {
 
         QModelIndex currentIndex = this->mDownloadModel->item(i)->index();
-        QStandardItem* stateItem = this->mDownloadModel->getStateItemFromIndex(currentIndex);
+        QStandardItem *stateItem = this->mDownloadModel->getStateItemFromIndex(currentIndex);
 
         UtilityNamespace::ItemStatus currentStatus = this->mDownloadModel->getStatusFromStateItem(stateItem);
 
-        if ( ( (targetStatus == PauseStatus) && Utility::isReadyToDownload(currentStatus) ) ||
-             ( (targetStatus == IdleStatus)  && Utility::isPausedOrPausing(currentStatus) ) ) {
+        if (((targetStatus == PauseStatus) && Utility::isReadyToDownload(currentStatus)) ||
+                ((targetStatus == IdleStatus)  && Utility::isPausedOrPausing(currentStatus))) {
 
             indexesList.append(currentIndex);
 
@@ -174,13 +173,13 @@ QList<QModelIndex> StandardItemModelQuery::retrieveStartPauseIndexList(const Uti
     return indexesList;
 }
 
-
-bool StandardItemModelQuery::isRootModelEmpty() const {
+bool StandardItemModelQuery::isRootModelEmpty() const
+{
     return (!this->mDownloadModel->invisibleRootItem()->hasChildren());
 }
 
-
-bool StandardItemModelQuery::areJobsFinished() const {
+bool StandardItemModelQuery::areJobsFinished() const
+{
 
     bool jobFinished = true;
 
@@ -192,26 +191,26 @@ bool StandardItemModelQuery::areJobsFinished() const {
 
     else {
         // get the root model :
-        QStandardItem* rootItem = this->mDownloadModel->invisibleRootItem();
+        QStandardItem *rootItem = this->mDownloadModel->invisibleRootItem();
 
         // for each parent item, get its current status :
         for (int i = 0; i < rootItem->rowCount(); ++i) {
 
-            QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
+            QStandardItem *parentStateItem = rootItem->child(i, STATE_COLUMN);
             UtilityNamespace::ItemStatus currentStatus = this->mDownloadModel->getStatusFromStateItem(parentStateItem);
 
             // check parent status activity :
-            if ( Utility::isReadyToDownload(currentStatus)       ||
-                 Utility::isPausing(currentStatus)               ||
-                 Utility::isDecoding(currentStatus)              ||
-                 Utility::isPostDownloadProcessing(currentStatus) ) {
+            if (Utility::isReadyToDownload(currentStatus)       ||
+                    Utility::isPausing(currentStatus)               ||
+                    Utility::isDecoding(currentStatus)              ||
+                    Utility::isPostDownloadProcessing(currentStatus)) {
 
                 jobFinished = false;
                 break;
             }
 
             // if do not shutdown system if paused items found :
-            if ( Settings::pausedShutdown() && Utility::isPaused(currentStatus) ) {
+            if (Settings::pausedShutdown() && Utility::isPaused(currentStatus)) {
 
                 jobFinished = false;
                 break;
@@ -224,9 +223,8 @@ bool StandardItemModelQuery::areJobsFinished() const {
     return jobFinished;
 }
 
-
-
-bool StandardItemModelQuery::haveItemsSameParent(const QList<QModelIndex>& indexesList) {
+bool StandardItemModelQuery::haveItemsSameParent(const QList<QModelIndex> &indexesList)
+{
 
     bool sameParent = true;
 
@@ -245,8 +243,7 @@ bool StandardItemModelQuery::haveItemsSameParent(const QList<QModelIndex>& index
                 break;
             }
         }
-    }
-    else {
+    } else {
         sameParent = false;
     }
 
@@ -254,17 +251,17 @@ bool StandardItemModelQuery::haveItemsSameParent(const QList<QModelIndex>& index
 
 }
 
-
-bool StandardItemModelQuery::isParentContainsPar2File(QStandardItem* item) const {
+bool StandardItemModelQuery::isParentContainsPar2File(QStandardItem *item) const
+{
 
     bool containsPar2File = false;
 
     // if current item is a child, retrieve its parent :
-    QStandardItem* parentFileNameItem = this->mDownloadModel->getNzbItem(item);
+    QStandardItem *parentFileNameItem = this->mDownloadModel->getNzbItem(item);
 
     for (int i = 0; i < parentFileNameItem->rowCount(); ++i) {
 
-        QStandardItem* nzbChildrenItem = parentFileNameItem->child(i, FILE_NAME_COLUMN);
+        QStandardItem *nzbChildrenItem = parentFileNameItem->child(i, FILE_NAME_COLUMN);
         NzbFileData nzbFileData = this->mDownloadModel->getNzbFileDataFromIndex(nzbChildrenItem->index());
 
         if (nzbFileData.isPar2File()) {
@@ -278,8 +275,8 @@ bool StandardItemModelQuery::isParentContainsPar2File(QStandardItem* item) const
 
 }
 
-
-ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNameItem, bool* allowRetry) {
+ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem *fileNameItem, bool *allowRetry)
+{
 
     bool changeItemStatus = false;
 
@@ -289,7 +286,6 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
     ItemStatusData itemStatusData = this->mDownloadModel->getStatusDataFromIndex(fileNameItem->index());
     //qCDebug(KWOOTY_LOG) <<  "status:" << itemStatusData.getDataStatus() << "crc:" << itemStatusData.getCrc32Match() << "decodeFinish:" << itemStatusData.isDecodeFinish() << "downloadFinish:" <<itemStatusData.isDownloadFinish();
 
-
     ItemStatusData parentItemStatusData = itemStatusData;
     // if current item is a child, retrieve its parent :
     if (!mDownloadModel->isNzbItem(fileNameItem)) {
@@ -298,8 +294,8 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
 
     // only allow to retry download if post download processing is not running and
     // post processing failed for at least some items :
-    if ( !Utility::isPostDownloadProcessing(parentItemStatusData.getStatus()) &&
-         !parentItemStatusData.areAllPostProcessingCorrect() ) {
+    if (!Utility::isPostDownloadProcessing(parentItemStatusData.getStatus()) &&
+            !parentItemStatusData.areAllPostProcessingCorrect()) {
 
         // item has been postprocessed :
         if (itemStatusData.getStatus() >= VerifyStatus) {
@@ -308,8 +304,7 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
             // but item have to be set to DecodeFinish status if retry action comes from parent item :
             if (Utility::isVerifyFileCorrect(itemStatusData.getStatus())) {
                 itemStatusResetTarget = DecodeFinishStatus;
-            }
-            else if (Utility::isPostDownloadFailed(itemStatusData.getStatus())) {
+            } else if (Utility::isPostDownloadFailed(itemStatusData.getStatus())) {
                 changeItemStatus = true;
             }
         }
@@ -330,15 +325,15 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
         // else item may have been downloaded but not decoded due to missing segments :
         else if (itemStatusData.isDownloadFinish()) {
 
-            if ( itemStatusData.getDataStatus() == NoData ||
-                 itemStatusData.getDataStatus() == DataIncomplete ) {
+            if (itemStatusData.getDataStatus() == NoData ||
+                    itemStatusData.getDataStatus() == DataIncomplete) {
                 changeItemStatus = true;
             }
         }
 
         // if item have to be changed :
-        if ( changeItemStatus &&
-             itemStatusResetTarget == ExtractFinishedStatus ) {
+        if (changeItemStatus &&
+                itemStatusResetTarget == ExtractFinishedStatus) {
 
             itemStatusResetTarget = IdleStatus;
         }
@@ -349,13 +344,12 @@ ItemStatus StandardItemModelQuery::isRetryDownloadAllowed(QStandardItem* fileNam
         *allowRetry = changeItemStatus;
     }
 
-
     return itemStatusResetTarget;
 
 }
 
-
-bool StandardItemModelQuery::isManualRepairExtractAllowed(QStandardItem* fileNameItem) const {
+bool StandardItemModelQuery::isManualRepairExtractAllowed(QStandardItem *fileNameItem) const
+{
 
     bool manualRepairExtractAllowed = false;
 
@@ -366,8 +360,8 @@ bool StandardItemModelQuery::isManualRepairExtractAllowed(QStandardItem* fileNam
 
         // if parent status is "DecodeFinish" and automatic post process is disabled,
         // manual extract is allowed :
-        if ( nzbItemStatusData.isPostProcessFinish() &&
-             nzbItemStatusData.getStatus() != ExtractFinishedStatus ) {
+        if (nzbItemStatusData.isPostProcessFinish() &&
+                nzbItemStatusData.getStatus() != ExtractFinishedStatus) {
 
             manualRepairExtractAllowed = true;
         }
@@ -378,18 +372,18 @@ bool StandardItemModelQuery::isManualRepairExtractAllowed(QStandardItem* fileNam
 
 }
 
-
-bool StandardItemModelQuery::isParentFileNameExists(const QString& nzbName) const {
+bool StandardItemModelQuery::isParentFileNameExists(const QString &nzbName) const
+{
 
     bool parentFileNameExists = false;
 
     // get the root model :
-    QStandardItem* rootItem = this->mDownloadModel->invisibleRootItem();
+    QStandardItem *rootItem = this->mDownloadModel->invisibleRootItem();
 
     // for each parent item, get its current nzb file name :
     for (int i = 0; i < rootItem->rowCount(); ++i) {
 
-        QStandardItem* parentFileNameItem = rootItem->child(i, FILE_NAME_COLUMN);
+        QStandardItem *parentFileNameItem = rootItem->child(i, FILE_NAME_COLUMN);
 
         if (parentFileNameItem->text() == nzbName) {
 

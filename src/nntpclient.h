@@ -81,22 +81,20 @@ public:
                               ServerDisconnected
                             };
 
-
-    NntpClient(ClientManagerConn*);
+    NntpClient(ClientManagerConn *);
     ~NntpClient();
-    void downloadNextSegment(const SegmentData&);
+    void downloadNextSegment(const SegmentData &);
     void noSegmentAvailable();
     bool isClientReady();
     void disconnectRequestByManager();
     void connectRequestByManager();
-    NntpSocket* getTcpSocket();
-
+    NntpSocket *getTcpSocket();
 
 private:
     static const int MAX_CONNECTING_LOOP = 5;
 
-    ClientManagerConn* parent;
-    NntpSocket* tcpSocket;
+    ClientManagerConn *parent;
+    NntpSocket *tcpSocket;
     QByteArray segmentByteArray;
     SegmentData currentSegmentData;
     NntpClient::NntpClientStatus clientStatus;
@@ -116,20 +114,17 @@ private:
     void requestNewSegment();
     void postProcessIfBackupServer(NewSegmentRequest = RequestNewSegment);
     void updateServerAnswerStatus(const ServerAnswerStatus);
-    void retryDownloadDelayed(const int&);
-
+    void retryDownloadDelayed(const int &);
 
 Q_SIGNALS:
-    void getNextSegmentSignal(ClientManagerConn*);
+    void getNextSegmentSignal(ClientManagerConn *);
     void updateDownloadSegmentSignal(SegmentData);
     void connectionStatusPerServerSignal(int);
     void speedPerServerSignal(const SegmentInfoData);
     void nntpErrorPerServerSignal(const int);
 
-
 public Q_SLOTS:
     void dataHasArrivedSlot();
-
 
 private Q_SLOTS:
     void connectToHostSlot();

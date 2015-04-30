@@ -20,7 +20,6 @@
 
 #include "preferencescategories.h"
 
-
 #include "kwooty_debug.h"
 #include <KGlobal>
 #include <KInputDialog>
@@ -38,23 +37,21 @@
 #include "utilitycategories.h"
 #include "kwooty_categoriessettings.h"
 
-
-
-
 K_PLUGIN_FACTORY(PluginFactory, registerPlugin<PreferencesCategories>();)
 K_EXPORT_PLUGIN(PluginFactory("kwooty_categoriessettings"))
 
-PreferencesCategories::PreferencesCategories(QWidget* parent, const QVariantList& args) : KCModule(parent, args) {
+PreferencesCategories::PreferencesCategories(QWidget *parent, const QVariantList &args) : KCModule(parent, args)
+{
 
     this->saveChangesRequested = false;
 
     // set layout config layout :
-    QHBoxLayout* layout = new QHBoxLayout(this);
+    QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
 
     // setup ui file :
     int defaultWidth = 500;
-    QWidget* widget = new QWidget(this);
+    QWidget *widget = new QWidget(this);
     widget->setMinimumSize(defaultWidth, 350);
 
     this->preferencesCategoriesUi.setupUi(widget);
@@ -65,22 +62,20 @@ PreferencesCategories::PreferencesCategories(QWidget* parent, const QVariantList
     this->preferencesCategoriesUi.kcfg_transferManagement->addItem(i18n("Overwrite"));
 
     // set mode to folder mode :
-    this->preferencesCategoriesUi.kurlrequester->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
-    this->preferencesCategoriesUi.kcfg_defaultTransferFolder->setMode(KFile::Directory|KFile::ExistingOnly|KFile::LocalOnly);
+    this->preferencesCategoriesUi.kurlrequester->setMode(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
+    this->preferencesCategoriesUi.kcfg_defaultTransferFolder->setMode(KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly);
 
     // add main kconfigskeleton :
     this->addConfig(CategoriesSettings::self(), widget);
 
-
     // setup treeView behaviour :
-    QTreeView* mimeTreeView = this->preferencesCategoriesUi.mimeTreeView;
+    QTreeView *mimeTreeView = this->preferencesCategoriesUi.mimeTreeView;
     mimeTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
     mimeTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mimeTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
     mimeTreeView->setSelectionBehavior(QAbstractItemView::SelectRows);
     mimeTreeView->setUniformRowHeights(false);
     mimeTreeView->setAllColumnsShowFocus(true);
-
 
     // retrieve model from saved file :
     this->categoriesModel = CategoriesFileHandler().loadModelFromFile(this);
@@ -117,63 +112,62 @@ PreferencesCategories::PreferencesCategories(QWidget* parent, const QVariantList
 
 }
 
-
-PreferencesCategories::~PreferencesCategories() {
+PreferencesCategories::~PreferencesCategories()
+{
 
 }
 
-
-void PreferencesCategories::load() {
+void PreferencesCategories::load()
+{
     KCModule::load();
 }
 
-
-void PreferencesCategories::save() {
+void PreferencesCategories::save()
+{
     CategoriesFileHandler().saveModelToFile(this->categoriesModel);
     KCModule::save();
 }
 
-
-void PreferencesCategories::setupConnections() {
+void PreferencesCategories::setupConnections()
+{
 
     // enable or disable buttons according to selected items :
-    connect (this->preferencesCategoriesUi.mimeTreeView->selectionModel(),
-             SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-             this,
-             SLOT(categoryWidgetsSlot()));
+    connect(this->preferencesCategoriesUi.mimeTreeView->selectionModel(),
+            SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+            this,
+            SLOT(categoryWidgetsSlot()));
 
-    connect (this->preferencesCategoriesUi.toolButtonAdd,
-             SIGNAL(clicked(bool)),
-             this,
-             SLOT(toolButtonAddClickSlot()));
+    connect(this->preferencesCategoriesUi.toolButtonAdd,
+            SIGNAL(clicked(bool)),
+            this,
+            SLOT(toolButtonAddClickSlot()));
 
-    connect (this->preferencesCategoriesUi.toolButtonEditSubcategory,
-             SIGNAL(clicked(bool)),
-             this,
-             SLOT(toolButtonEditSubcategoryClickSlot()));
+    connect(this->preferencesCategoriesUi.toolButtonEditSubcategory,
+            SIGNAL(clicked(bool)),
+            this,
+            SLOT(toolButtonEditSubcategoryClickSlot()));
 
-    connect (this->preferencesCategoriesUi.toolButtonRemove,
-             SIGNAL(clicked(bool)),
-             this,
-             SLOT(toolButtonRemoveClickSlot()));
+    connect(this->preferencesCategoriesUi.toolButtonRemove,
+            SIGNAL(clicked(bool)),
+            this,
+            SLOT(toolButtonRemoveClickSlot()));
 
-    connect (this->preferencesCategoriesUi.kurlrequester,
-             SIGNAL(textChanged(QString)),
-             this,
-             SLOT(urlChangedSlot(QString)));
+    connect(this->preferencesCategoriesUi.kurlrequester,
+            SIGNAL(textChanged(QString)),
+            this,
+            SLOT(urlChangedSlot(QString)));
 
-    connect (this->preferencesCategoriesUi.kcfg_enableDefaultTransfer,
-             SIGNAL(stateChanged(int)),
-             this,
-             SLOT(defaultTransferValueButtonToggledSlot()));
+    connect(this->preferencesCategoriesUi.kcfg_enableDefaultTransfer,
+            SIGNAL(stateChanged(int)),
+            this,
+            SLOT(defaultTransferValueButtonToggledSlot()));
 
 }
 
+QStandardItem *PreferencesCategories::getSelectedItem()
+{
 
-
-QStandardItem* PreferencesCategories::getSelectedItem() {
-
-    QStandardItem* selectedItem = 0;
+    QStandardItem *selectedItem = 0;
     // get selected items :
     QList<QModelIndex> indexesList = this->preferencesCategoriesUi.mimeTreeView->selectionModel()->selectedRows();
 
@@ -184,21 +178,19 @@ QStandardItem* PreferencesCategories::getSelectedItem() {
     return selectedItem;
 }
 
-
-
-void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
+void PreferencesCategories::addMimeTypeToGroup(QStandardItem *parentItem)
+{
 
     QString mainCategory = this->categoriesModel->getMainCategory(parentItem);
 
     // display mimeTypeChooser dialog :
-    KMimeTypeChooserDialog dialog (i18n("Mime Type Selection"),
-                                   i18n("Add or Remove Subcategories"),
-                                   this->retrieveSelectionList(parentItem),
-                                   mainCategory,
-                                   QStringList() << mainCategory,
-                                   KMimeTypeChooser::Comments|KMimeTypeChooser::Patterns,
-                                   this);
-
+    KMimeTypeChooserDialog dialog(i18n("Mime Type Selection"),
+                                  i18n("Add or Remove Subcategories"),
+                                  this->retrieveSelectionList(parentItem),
+                                  mainCategory,
+                                  QStringList() << mainCategory,
+                                  KMimeTypeChooser::Comments | KMimeTypeChooser::Patterns,
+                                  this);
 
     // retrieve all subCategories selected by user :
     QStringList subcategorySelectedList;
@@ -207,7 +199,7 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
     // dialog has not been canceled, do process :
     if (dialog.exec() == QDialog::Accepted) {
 
-        foreach (const QString& mimeType, dialog.chooser()->mimeTypes()) {
+        foreach (const QString &mimeType, dialog.chooser()->mimeTypes()) {
 
             QString subCategory = UtilityCategories::buildSubcategoryPattern(mimeType);
 
@@ -216,8 +208,7 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
             }
         }
 
-
-        foreach (const QString& subCategorySelected, subcategorySelectedList) {
+        foreach (const QString &subCategorySelected, subcategorySelectedList) {
 
             if (!this->categoriesModel->isDuplicateSubCategory(parentItem, subCategorySelected)) {
 
@@ -227,12 +218,12 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
                 UtilityCategories::builPartialMimeData(mimeData);
 
                 // place the current item at the right lexical order :
-                QStandardItem* categoryItem = this->categoriesModel->getCategoryItem(parentItem);
+                QStandardItem *categoryItem = this->categoriesModel->getCategoryItem(parentItem);
                 int position = this->categoriesModel->retrieveLexicalTextPosition(mimeData.getDisplayedText(), categoryItem);
 
                 // build category and target items :
-                QList<QStandardItem*> childItemList;
-                QStandardItem* childCategoryItem = new QStandardItem(mimeData.getDisplayedText());
+                QList<QStandardItem *> childItemList;
+                QStandardItem *childCategoryItem = new QStandardItem(mimeData.getDisplayedText());
                 childItemList.append(childCategoryItem);
                 childItemList.append(new QStandardItem(mimeData.getMoveFolderPath()));
 
@@ -255,19 +246,18 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
 
         }
 
-
         // retrieve subCategories actually stored :
-        QStandardItem* categoryItem = this->categoriesModel->getCategoryItem(parentItem);
+        QStandardItem *categoryItem = this->categoriesModel->getCategoryItem(parentItem);
         QList<MimeData> mimeDataChildList = this->categoriesModel->retrieveMimeDataListFromItem(categoryItem);
 
         // compare subCategories stored with subCategories selected :
-        foreach (const MimeData& mimeDataChild, mimeDataChildList) {
+        foreach (const MimeData &mimeDataChild, mimeDataChildList) {
 
             // if subCategory stored is no more selected, user has deselected it :
             if (!subcategorySelectedList.contains(mimeDataChild.getSubCategory())) {
 
                 // remove it from model :
-                QStandardItem* itemToRemove = this->categoriesModel->retrieveItemFromCategory(mimeDataChild.getSubCategory(), parentItem);
+                QStandardItem *itemToRemove = this->categoriesModel->retrieveItemFromCategory(mimeDataChild.getSubCategory(), parentItem);
 
                 if (itemToRemove) {
                     this->categoriesModel->removeRow(itemToRemove->row(), itemToRemove->parent()->index());
@@ -275,14 +265,13 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
             }
         }
 
-
         // expand item to display subcategories :
         this->preferencesCategoriesUi.mimeTreeView->setExpanded(parentItem->index(), true);
 
         // finally set the first item added as automatically selected :
         if (!firstMimeDataToDisplay.getSubCategory().isEmpty()) {
 
-            QStandardItem* subcategorySelectItem = this->categoriesModel->retrieveItemFromCategory(firstMimeDataToDisplay.getSubCategory(), parentItem);
+            QStandardItem *subcategorySelectItem = this->categoriesModel->retrieveItemFromCategory(firstMimeDataToDisplay.getSubCategory(), parentItem);
 
             if (subcategorySelectItem) {
 
@@ -295,21 +284,19 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem* parentItem) {
             }
         }
 
-
     } //  end if (dialog.exec() == QDialog::Accepted)
 
 }
 
-
-
-QStringList PreferencesCategories::retrieveSelectionList(QStandardItem* selectedItem) {
+QStringList PreferencesCategories::retrieveSelectionList(QStandardItem *selectedItem)
+{
 
     // retrieve all full gategories from parent item :
     QStringList selectionList;
 
     for (int i = 0; i < selectedItem->rowCount(); ++i) {
 
-        QStandardItem* childItem = selectedItem->child(i);
+        QStandardItem *childItem = selectedItem->child(i);
         MimeData mimeData = this->categoriesModel->loadMimeData(childItem);
 
         selectionList.append(UtilityCategories::buildFullCategoryPattern(mimeData.getMainCategory(), mimeData.getSubCategory()));
@@ -319,8 +306,8 @@ QStringList PreferencesCategories::retrieveSelectionList(QStandardItem* selected
     return selectionList;
 }
 
-
-QString PreferencesCategories::buildGroupBoxTitle(const QString& subCategoryComment) {
+QString PreferencesCategories::buildGroupBoxTitle(const QString &subCategoryComment)
+{
 
     QString text = subCategoryComment;
 
@@ -331,9 +318,8 @@ QString PreferencesCategories::buildGroupBoxTitle(const QString& subCategoryComm
     return i18nc("%1 = type of subcategory", "Subcategory: %1", text);
 }
 
-
-
-void PreferencesCategories::saveChanges() {
+void PreferencesCategories::saveChanges()
+{
 
     if (!this->saveChangesRequested) {
 
@@ -343,42 +329,40 @@ void PreferencesCategories::saveChanges() {
     }
 }
 
-void PreferencesCategories::subCategoryWidgets(const QModelIndex& activatedIndex) {
+void PreferencesCategories::subCategoryWidgets(const QModelIndex &activatedIndex)
+{
 
     QModelIndex activatedCategoryIndex = this->categoriesModel->getCategoryItem(activatedIndex)->index();
 
     MimeData currentMimeData = this->categoriesModel->loadMimeData(activatedCategoryIndex);
     this->preferencesCategoriesUi.kurlrequester->setUrl(KUrl(currentMimeData.getMoveFolderPath()));
 
-
     if (this->categoriesModel->isSelectedItemParent(activatedCategoryIndex)) {
         this->preferencesCategoriesUi.groupBoxCategory->setDisabled(true);
         this->preferencesCategoriesUi.groupBoxCategory->setTitle(this->buildGroupBoxTitle());
-    }
-    else {
+    } else {
         this->preferencesCategoriesUi.groupBoxCategory->setEnabled(true);
         this->preferencesCategoriesUi.groupBoxCategory->setTitle(this->buildGroupBoxTitle(currentMimeData.getComments()));
     }
 
 }
 
-
 //============================================================================================================//
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-
-void PreferencesCategories::toolButtonAddClickSlot() {
+void PreferencesCategories::toolButtonAddClickSlot()
+{
 
     bool ok = false;
 
     QStringList selectedCategories = KInputDialog::getItemList(i18n("Mime Type Selection"),
-                                                               i18n("Select Main Category"),
-                                                               UtilityCategories::retrieveFilteredMainCategoryList(this->categoriesModel),
-                                                               QStringList(),
-                                                               true,
-                                                               &ok,
-                                                               this);
+                                     i18n("Select Main Category"),
+                                     UtilityCategories::retrieveFilteredMainCategoryList(this->categoriesModel),
+                                     QStringList(),
+                                     true,
+                                     &ok,
+                                     this);
 
     // add main categories to model :
     this->categoriesModel->addParentCategoryListToModel(selectedCategories);
@@ -387,7 +371,7 @@ void PreferencesCategories::toolButtonAddClickSlot() {
     if (!selectedCategories.isEmpty()) {
 
         qSort(selectedCategories);
-        QStandardItem* selectItem = this->categoriesModel->retrieveItemFromCategory(selectedCategories.at(0));
+        QStandardItem *selectItem = this->categoriesModel->retrieveItemFromCategory(selectedCategories.at(0));
 
         if (selectItem) {
 
@@ -400,22 +384,20 @@ void PreferencesCategories::toolButtonAddClickSlot() {
         }
     }
 
-
     // the model has been updated, emit signal that will call save() when "ok" button will be pressed :
     this->saveChanges();
 
 }
 
-
-
-void PreferencesCategories::toolButtonEditSubcategoryClickSlot() {
+void PreferencesCategories::toolButtonEditSubcategoryClickSlot()
+{
 
     // get selected items :
-    QStandardItem* selectedItem = this->getSelectedItem();
+    QStandardItem *selectedItem = this->getSelectedItem();
 
     if (selectedItem) {
 
-        QStandardItem* categoryItem = this->categoriesModel->getCategoryItem(selectedItem);
+        QStandardItem *categoryItem = this->categoriesModel->getCategoryItem(selectedItem);
 
         if (categoryItem) {
 
@@ -435,11 +417,11 @@ void PreferencesCategories::toolButtonEditSubcategoryClickSlot() {
     this->saveChanges();
 }
 
-
-void PreferencesCategories::toolButtonRemoveClickSlot() {
+void PreferencesCategories::toolButtonRemoveClickSlot()
+{
 
     // get selected items :
-    QStandardItem* selectedItem = this->getSelectedItem();
+    QStandardItem *selectedItem = this->getSelectedItem();
 
     // remove row :
     if (selectedItem) {
@@ -451,11 +433,10 @@ void PreferencesCategories::toolButtonRemoveClickSlot() {
 
 }
 
+void PreferencesCategories::urlChangedSlot(const QString &changedUrl)
+{
 
-
-void PreferencesCategories::urlChangedSlot(const QString& changedUrl) {
-
-    QStandardItem* selectedItem = this->getSelectedItem();
+    QStandardItem *selectedItem = this->getSelectedItem();
 
     MimeData currentMimeData = this->categoriesModel->loadMimeData(selectedItem);
     currentMimeData.setMoveFolderPath(changedUrl);
@@ -467,11 +448,11 @@ void PreferencesCategories::urlChangedSlot(const QString& changedUrl) {
 
 }
 
-
-void PreferencesCategories::categoryWidgetsSlot() {
+void PreferencesCategories::categoryWidgetsSlot()
+{
 
     // get selected items :
-    QStandardItem* selectedItem = this->getSelectedItem();
+    QStandardItem *selectedItem = this->getSelectedItem();
 
     if (selectedItem) {
 
@@ -494,8 +475,8 @@ void PreferencesCategories::categoryWidgetsSlot() {
 
 }
 
-
-void PreferencesCategories::defaultTransferValueButtonToggledSlot() {
+void PreferencesCategories::defaultTransferValueButtonToggledSlot()
+{
 
     // enable default folder widget if enableDefaultTransfer is checked :
     this->preferencesCategoriesUi.kcfg_defaultTransferFolder->setEnabled(this->preferencesCategoriesUi.kcfg_enableDefaultTransfer->isChecked());

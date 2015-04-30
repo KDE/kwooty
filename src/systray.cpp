@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "systray.h"
 
 #include "kwooty_debug.h"
@@ -39,12 +38,12 @@
 #include "observers/queuefileobserver.h"
 #include "kwootysettings.h"
 
-
-SysTray::SysTray(MainWindow* parent) : KStatusNotifierItem(parent) {
+SysTray::SysTray(MainWindow *parent) : KStatusNotifierItem(parent)
+{
 
     this->mParent = parent;
 
-    Core* core = parent->getCore();
+    Core *core = parent->getCore();
     this->mQueueFileObserver = core->getQueueFileObserver();
     this->mClientsObserver = core->getClientsObserver();
     this->mStatsInfoBuilder = core->getClientsObserver()->getStatsInfoBuilder();
@@ -55,55 +54,52 @@ SysTray::SysTray(MainWindow* parent) : KStatusNotifierItem(parent) {
     this->initPixmaps();
     this->initShow();
 
-
 }
 
-
-
-void SysTray::setupActions() {   
+void SysTray::setupActions()
+{
 
     this->contextMenu()->addAction(this->mParent->actionCollection()->action("startAll"));
     this->contextMenu()->addAction(this->mParent->actionCollection()->action("pauseAll"));
     this->contextMenu()->addSeparator();
     this->contextMenu()->addAction(this->mParent->actionCollection()->action("downloadFolder"));
 #if 0 //PORT KF5
-    QList<QAction*> sysTrayActionCollection = this->actionCollection();
+    QList<QAction *> sysTrayActionCollection = this->actionCollection();
     KStandardAction::quit(this->parent, SLOT(quit()), sysTrayActionCollection);
 #endif
 }
 
-
-
-void SysTray::setupConnections() {
+void SysTray::setupConnections()
+{
 
     // update systray icon when download progress has changed :
-    connect (this->mQueueFileObserver,
-             SIGNAL(progressUpdateSignal(int)),
-             this,
-             SLOT(progressUpdateSlot(int)));
+    connect(this->mQueueFileObserver,
+            SIGNAL(progressUpdateSignal(int)),
+            this,
+            SLOT(progressUpdateSlot(int)));
 
     // update status icon overlay when status has changed :
-    connect (this->mQueueFileObserver,
-             SIGNAL(statusUpdateSignal(UtilityNamespace::ItemStatus)),
-             this,
-             SLOT(statusUpdateSlot(UtilityNamespace::ItemStatus)));
+    connect(this->mQueueFileObserver,
+            SIGNAL(statusUpdateSignal(UtilityNamespace::ItemStatus)),
+            this,
+            SLOT(statusUpdateSlot(UtilityNamespace::ItemStatus)));
 
     // update tooltip when download speed has been updated :
-    connect (this->mStatsInfoBuilder,
-             SIGNAL(updateDownloadSpeedInfoSignal(QString)),
-             this,
-             SLOT(updateDownloadSpeedInfoSlot()));
+    connect(this->mStatsInfoBuilder,
+            SIGNAL(updateDownloadSpeedInfoSignal(QString)),
+            this,
+            SLOT(updateDownloadSpeedInfoSlot()));
 
     // update tooltip if connection server has changed :
-    connect (this->mClientsObserver,
-             SIGNAL(updateConnectionStatusSignal()),
-             this,
-             SLOT(updateConnectionStatusSlot()));
+    connect(this->mClientsObserver,
+            SIGNAL(updateConnectionStatusSignal()),
+            this,
+            SLOT(updateConnectionStatusSlot()));
 
 }
 
-
-void SysTray::initShow() {
+void SysTray::initShow()
+{
 
     this->setStatus(KStatusNotifierItem::Active);
     this->setCategory(KStatusNotifierItem::ApplicationStatus);
@@ -121,30 +117,30 @@ void SysTray::initShow() {
 
 }
 
-
-void SysTray::progressUpdateSlot(const int progress) {
+void SysTray::progressUpdateSlot(const int progress)
+{
     this->updateIconProgress(progress);
     this->createToolTip();
 }
 
-
-void SysTray::statusUpdateSlot(const UtilityNamespace::ItemStatus itemStatus) {
+void SysTray::statusUpdateSlot(const UtilityNamespace::ItemStatus itemStatus)
+{
     this->updateIconStatus(itemStatus);
     this->createToolTip();
 }
 
-
-void SysTray::updateDownloadSpeedInfoSlot() {
+void SysTray::updateDownloadSpeedInfoSlot()
+{
     this->createToolTip();
 }
 
-void SysTray::updateConnectionStatusSlot() {
+void SysTray::updateConnectionStatusSlot()
+{
     this->createToolTip();
 }
 
-
-
-void SysTray::initPixmaps() {
+void SysTray::initPixmaps()
+{
 
     this->mNormalBaseIcon = KIconLoader::global()->loadIcon("kwooty", KIconLoader::Panel, KIconLoader::SizeSmallMedium);
     this->setIconByName("kwooty");
@@ -158,31 +154,30 @@ void SysTray::initPixmaps() {
 
 }
 
-
-bool SysTray::updateIconStatus(const UtilityNamespace::ItemStatus& itemStatus) {
+bool SysTray::updateIconStatus(const UtilityNamespace::ItemStatus &itemStatus)
+{
 
     QIcon icon;
 
     // get the proper icon according to item status :
-    switch(itemStatus) {
+    switch (itemStatus) {
 
-    case UtilityNamespace::DownloadStatus:{
+    case UtilityNamespace::DownloadStatus: {
 
-            icon = QIcon::fromTheme("mail-receive");
-            break;
-        }
-
-    case UtilityNamespace::PauseStatus: {
-            icon = QIcon::fromTheme("media-playback-pause");
-            break;
-        }
-
-    default: {
-            break;
-        }
-
+        icon = QIcon::fromTheme("mail-receive");
+        break;
     }
 
+    case UtilityNamespace::PauseStatus: {
+        icon = QIcon::fromTheme("media-playback-pause");
+        break;
+    }
+
+    default: {
+        break;
+    }
+
+    }
 
     bool iconSet = false;
     if (!icon.isNull()) {
@@ -196,9 +191,8 @@ bool SysTray::updateIconStatus(const UtilityNamespace::ItemStatus& itemStatus) {
 
 }
 
-
-
-void SysTray::updateIconProgress(const int& progress) {
+void SysTray::updateIconProgress(const int &progress)
+{
     // - Icon painting has been adapted from amarok -
 
     // if  progress is unknown, reset icon :
@@ -208,8 +202,7 @@ void SysTray::updateIconProgress(const int& progress) {
         this->setIconByName("kwooty");
         this->setOverlayIconByName(QString());
 
-    }
-    else {
+    } else {
         int mergePos = qRound((qreal)(progress * (this->mNormalBaseIcon.height() - 1)) / 100);
 
         // update icon only if merge positions are different :
@@ -219,7 +212,7 @@ void SysTray::updateIconProgress(const int& progress) {
             this->mRenderedIcon = this->mGrayedBaseIcon;
 
             QPainter p(&this->mRenderedIcon);
-            p.drawPixmap( 0, 0, this->mNormalBaseIcon, 0, 0, 0, this->mNormalBaseIcon.height() - mergePos );
+            p.drawPixmap(0, 0, this->mNormalBaseIcon, 0, 0, 0, this->mNormalBaseIcon.height() - mergePos);
             p.end();
 
             // draw kwooty icon with status overlay :
@@ -227,7 +220,7 @@ void SysTray::updateIconProgress(const int& progress) {
 
             // if status icon has not been set, just set the rendered icon without status overlay :
             if (!iconStatusSet) {
-                this->setIconByPixmap (this->mRenderedIcon);
+                this->setIconByPixmap(this->mRenderedIcon);
             }
 
             this->mOldMergePos = mergePos;
@@ -238,7 +231,8 @@ void SysTray::updateIconProgress(const int& progress) {
 
 }
 
-bool SysTray::blendOverlay(const QPixmap& overlay) {
+bool SysTray::blendOverlay(const QPixmap &overlay)
+{
 
     bool iconSet = false;
 
@@ -260,11 +254,8 @@ bool SysTray::blendOverlay(const QPixmap& overlay) {
     return iconSet;
 }
 
-
-
-
-
-void SysTray::createToolTip() {
+void SysTray::createToolTip()
+{
 
     QString currentTip;
     currentTip.append("<table style='white-space: nowrap'>");
@@ -277,21 +268,19 @@ void SysTray::createToolTip() {
     // current status is either download or pause :
     if (focusedItem == UtilityNamespace::DownloadStatus) {
         globalStatusValue = i18n("Downloading");
-    }
-    else if (focusedItem == UtilityNamespace::PauseStatus)  {
+    } else if (focusedItem == UtilityNamespace::PauseStatus)  {
         globalStatusValue = i18n("Pause");
     }
     // check if disconnected from server :
     else if (!this->mClientsObserver->isConnected()) {
-            globalStatusValue = i18n("Disconnected");
+        globalStatusValue = i18n("Disconnected");
     }
 
     currentTip.append(Utility::buildToolTipRow(i18n("Status: "), globalStatusValue));
 
-
     // 2. add additional info if status is either download or pause :
-    if ( (focusedItem == UtilityNamespace::DownloadStatus) ||
-         (focusedItem == UtilityNamespace::PauseStatus) ) {
+    if ((focusedItem == UtilityNamespace::DownloadStatus) ||
+            (focusedItem == UtilityNamespace::PauseStatus)) {
 
         // add download speed :
         QString downloadSpeed = this->mStatsInfoBuilder->getDownloadSpeedReadableStr();
@@ -325,5 +314,4 @@ void SysTray::createToolTip() {
     this->setToolTipSubTitle(currentTip);
 
 }
-
 

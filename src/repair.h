@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef REPAIR_H
 #define REPAIR_H
 
@@ -35,56 +34,53 @@ using namespace UtilityNamespace;
 class NzbFileData;
 class RepairDecompressThread;
 
-
 class Repair : public QObject
 {
 
- Q_OBJECT
- Q_ENUMS(InternalRepairStatus)
+    Q_OBJECT
+    Q_ENUMS(InternalRepairStatus)
 
+public:
 
- public:
+    enum InternalRepairStatus { IdleRepair,
+                                Verifying,
+                                Repairing,
+                                RepairingNotPossible,
+                                RepairComplete
+                              };
 
-   enum InternalRepairStatus{ IdleRepair,
-                              Verifying,
-                              Repairing,
-                              RepairingNotPossible,
-                              RepairComplete
-        };
-
-    Repair(RepairDecompressThread*);
+    Repair(RepairDecompressThread *);
     ~Repair();
-    void launchProcess(const NzbCollectionData&);
+    void launchProcess(const NzbCollectionData &);
     bool isProcessing();
 
 private:
     QString par2ProgramPath;
-    KProcess* repairProcess;
+    KProcess *repairProcess;
     QList<NzbFileData> nzbFileDataList;
     NzbCollectionData nzbCollectionData;
     QMap<QString, UtilityNamespace::ItemStatus> statusEnumMap;
     QStringList par2FilesOrderedList;
     QString stdOutputLines;
-    RepairDecompressThread* parent;
+    RepairDecompressThread *parent;
     int repairStatus;
     int repairProgressValueOld;
     bool isPar2ProgramFound;
     bool isProcessingStatus;
 
     void setupConnections();
-    void verifyUpdate(const QString&);
-    void repairUpdate(const QString&);
-    void sendVerifyNotification(const QString&, const QString&, const UtilityNamespace::ItemStatus);
+    void verifyUpdate(const QString &);
+    void repairUpdate(const QString &);
+    void sendVerifyNotification(const QString &, const QString &, const UtilityNamespace::ItemStatus);
     void sendMissingFilesNotification();
     void sendVerifyingFilesNotification();
     void sendPar2ProgramNotFoundNotification();
     void resetVariables();
-    void updateNzbFileDataInList(NzbFileData&, const UtilityNamespace::ItemStatus, const int);
+    void updateNzbFileDataInList(NzbFileData &, const UtilityNamespace::ItemStatus, const int);
     void removePar2Files();
-    void emitProcessUpdate(const QVariant&, const int&, const UtilityNamespace::ItemStatus&, const UtilityNamespace::ItemTarget&);
+    void emitProcessUpdate(const QVariant &, const int &, const UtilityNamespace::ItemStatus &, const UtilityNamespace::ItemTarget &);
     QString sortPar2FilesBySize();
-    UtilityNamespace::ItemTarget getItemTarget(const NzbFileData&);
-
+    UtilityNamespace::ItemTarget getItemTarget(const NzbFileData &);
 
 Q_SIGNALS:
     void repairProcessEndedSignal(NzbCollectionData);
@@ -93,6 +89,5 @@ public Q_SLOTS:
     void repairReadyReadSlot();
     void repairFinishedSlot(int, QProcess::ExitStatus);
 };
-
 
 #endif // REPAIR_H

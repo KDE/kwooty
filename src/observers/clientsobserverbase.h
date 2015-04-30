@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #ifndef CLIENTSOBSERVERBASE_H
 #define CLIENTSOBSERVERBASE_H
 
@@ -34,7 +33,7 @@ class ClientsObserverBase : public QObject
     Q_OBJECT
 public:
 
-    explicit ClientsObserverBase(QObject*);
+    explicit ClientsObserverBase(QObject *);
     int getTotalConnections() const;
     bool isCertificateVerified() const;
     int getNttpErrorStatus() const;
@@ -44,7 +43,6 @@ public:
     quint64 getTotalBytesDownloaded() const;
     bool isConnected() const;
     virtual bool isSslActive() const = 0;
-
 
 protected:
     quint64 totalBytesDownloaded;
@@ -57,10 +55,10 @@ protected:
     bool certificateVerified;
 
     void resetVariables();
-    void addBytesDownloaded(const int&);
-    void updateTotalConnections(const int&);
-    void setNntpErrorStatus(const int&);
-    void setSslHandshakeParameters(const bool&, const QString&, const bool&, const QString&, const QStringList&);
+    void addBytesDownloaded(const int &);
+    void updateTotalConnections(const int &);
+    void setNntpErrorStatus(const int &);
+    void setSslHandshakeParameters(const bool &, const QString &, const bool &, const QString &, const QStringList &);
 };
 
 #endif // CLIENTSOBSERVERBASE_H

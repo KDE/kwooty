@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "actionbuttonsmanager.h"
 
 #include "core.h"
@@ -31,7 +30,8 @@
 #include "widgets/mytreeview.h"
 #include "kwootysettings.h"
 
-ActionButtonsManager::ActionButtonsManager(ActionsManager* actionsManager) : QObject(actionsManager) {
+ActionButtonsManager::ActionButtonsManager(ActionsManager *actionsManager) : QObject(actionsManager)
+{
 
     this->mActionsManager = actionsManager;
     this->mCore = actionsManager->getCore();
@@ -41,8 +41,8 @@ ActionButtonsManager::ActionButtonsManager(ActionsManager* actionsManager) : QOb
 
 }
 
-
-void ActionButtonsManager::selectedItemSlot() {
+void ActionButtonsManager::selectedItemSlot()
+{
 
     bool sameParents = true;
     bool enableStartButton = false;
@@ -64,7 +64,6 @@ void ActionButtonsManager::selectedItemSlot() {
         emit setMoveButtonEnabledSignal(sameParents);
     }
 
-
     // enable/disable start-pause buttons :
     if (!sameParents) {
         emit setPauseButtonEnabledSignal(false);
@@ -73,18 +72,17 @@ void ActionButtonsManager::selectedItemSlot() {
         emit setMergeNzbButtonEnabledSignal(false);
         emit setRenameNzbButtonEnabledSignal(false);
         emit setManualExtractActionSignal(false);
-    }
-    else {
+    } else {
 
         for (int i = 0; i < indexesList.size(); ++i) {
 
             QModelIndex currentModelIndex = indexesList.at(i);
-            QStandardItem* stateItem = this->mDownloadModel->getStateItemFromIndex(currentModelIndex);
+            QStandardItem *stateItem = this->mDownloadModel->getStateItemFromIndex(currentModelIndex);
             UtilityNamespace::ItemStatus currentStatus = this->mDownloadModel->getStatusFromStateItem(stateItem);
 
             // enable start button if selected item is paused/pausing
             if (!enableStartButton) {
-                enableStartButton = ( Utility::isPaused(currentStatus) || Utility::isPausing(currentStatus) );
+                enableStartButton = (Utility::isPaused(currentStatus) || Utility::isPausing(currentStatus));
             }
 
             // enable pause button if selected item is idle/download
@@ -93,9 +91,9 @@ void ActionButtonsManager::selectedItemSlot() {
             }
 
             // disable remove button when download has been accomplished :
-            if ( !this->mDownloadModel->isNzbItem(stateItem) &&
-                 !Utility::isInDownloadProcess(currentStatus) &&
-                 currentStatus != UtilityNamespace::WaitForPar2IdleStatus ) {
+            if (!this->mDownloadModel->isNzbItem(stateItem) &&
+                    !Utility::isInDownloadProcess(currentStatus) &&
+                    currentStatus != UtilityNamespace::WaitForPar2IdleStatus) {
 
                 emit setRemoveButtonEnabledSignal(false);
 
@@ -108,26 +106,24 @@ void ActionButtonsManager::selectedItemSlot() {
 
             }
 
-
             // enable retry button if current item is parent :
             if (this->mDownloadModel->isNzbItem(stateItem)) {
 
-                QStandardItem* fileNameItem = this->mDownloadModel->getFileNameItemFromIndex(currentModelIndex);
+                QStandardItem *fileNameItem = this->mDownloadModel->getFileNameItemFromIndex(currentModelIndex);
 
                 for (int j = 0; j < fileNameItem->rowCount(); j++) {
 
                     if (!enableRetryButton) {
-                        QStandardItem* nzbChildrenItem = fileNameItem->child(j, FILE_NAME_COLUMN);
+                        QStandardItem *nzbChildrenItem = fileNameItem->child(j, FILE_NAME_COLUMN);
                         this->mDownloadModelQuery->isRetryDownloadAllowed(nzbChildrenItem, &enableRetryButton);
                     }
                 }
             }
             // else enable retry button if current item is a child :
-            else if (!enableRetryButton){
+            else if (!enableRetryButton) {
                 this->mDownloadModelQuery->isRetryDownloadAllowed(stateItem, &enableRetryButton);
 
             }
-
 
         } // end of loop
 
@@ -140,14 +136,12 @@ void ActionButtonsManager::selectedItemSlot() {
             emit setStartButtonEnabledSignal(enableStartButton);
         }
 
-
-
         // enable/disable "start all" / "pause all" buttons :
         bool downloadItemsFound = false;
         bool pauseItemsFound = false;
 
-        if ( this->mDownloadModelQuery->searchParentItemDownloadOrPausing() ||
-             this->mDownloadModelQuery->searchParentItemIdle() ) {
+        if (this->mDownloadModelQuery->searchParentItemDownloadOrPausing() ||
+                this->mDownloadModelQuery->searchParentItemIdle()) {
 
             downloadItemsFound = true;
         }
@@ -159,27 +153,23 @@ void ActionButtonsManager::selectedItemSlot() {
         emit setStartAllButtonEnabledSignal(pauseItemsFound);
         emit setPauseAllButtonEnabledSignal(downloadItemsFound);
 
-
         // enable/disable retry action :
         emit setRetryButtonEnabledSignal(enableRetryButton);
-
 
         // enable/disable nzb merging action :
         this->mActionsManager->getActionMergeManager()->checkMergeCandidates(mergeAvailable);
         emit setMergeNzbButtonEnabledSignal(mergeAvailable);
 
-
         // enable/disable nzb renaming action :
         this->mActionsManager->getActionRenameManager()->checkRenameCandidates(renameAvailable);
         emit setRenameNzbButtonEnabledSignal(renameAvailable);
 
-
         // enable/disable manual extract action (available only if automatic post process has been disabled) :
-        if ( ( !Settings::groupBoxAutoDecompress() ||
-               !Settings::groupBoxAutoRepair() ) &&
-             !indexesList.isEmpty() ) {
+        if ((!Settings::groupBoxAutoDecompress() ||
+                !Settings::groupBoxAutoRepair()) &&
+                !indexesList.isEmpty()) {
 
-            QStandardItem* fileNameItem = this->mDownloadModel->getFileNameItemFromIndex(indexesList.first());
+            QStandardItem *fileNameItem = this->mDownloadModel->getFileNameItemFromIndex(indexesList.first());
             emit setManualExtractActionSignal(this->mDownloadModelQuery->isManualRepairExtractAllowed(fileNameItem));
 
         }

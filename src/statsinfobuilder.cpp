@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 #include "statsinfobuilder.h"
 
 #include "kwooty_debug.h"
@@ -34,8 +33,8 @@
 #include "observers/clientsobserver.h"
 #include "kwootysettings.h"
 
-
-StatsInfoBuilder::StatsInfoBuilder(ClientsObserver* clientsObserver, Core* parent)  : QObject(parent) {
+StatsInfoBuilder::StatsInfoBuilder(ClientsObserver *clientsObserver, Core *parent)  : QObject(parent)
+{
 
     this->parent = parent;
     this->clientsObserver = clientsObserver;
@@ -51,7 +50,8 @@ StatsInfoBuilder::StatsInfoBuilder(ClientsObserver* clientsObserver, Core* paren
 
 }
 
-void StatsInfoBuilder::sendFullUpdate() {
+void StatsInfoBuilder::sendFullUpdate()
+{
 
     this->updateDownloadSpeedSlot();
     this->computeTimeInfo();
@@ -59,32 +59,38 @@ void StatsInfoBuilder::sendFullUpdate() {
 
 }
 
-QString StatsInfoBuilder::getTimeLabel() const {
+QString StatsInfoBuilder::getTimeLabel() const
+{
     return this->timeLabel;
 }
 
-QString StatsInfoBuilder::getTotalTimeValue() const {
+QString StatsInfoBuilder::getTotalTimeValue() const
+{
     return this->totalTimeValue;
 }
 
-QString StatsInfoBuilder::getCurrentTimeValue() const {
+QString StatsInfoBuilder::getCurrentTimeValue() const
+{
     return this->currentTimeValue;
 }
 
-QString StatsInfoBuilder::getNzbNameDownloading() const {
+QString StatsInfoBuilder::getNzbNameDownloading() const
+{
     return this->nzbNameDownloading;
 }
 
-QString StatsInfoBuilder::getDownloadSpeedReadableStr() const {
+QString StatsInfoBuilder::getDownloadSpeedReadableStr() const
+{
     return this->downloadSpeedReadableStr;
 }
 
-QTimer* StatsInfoBuilder::getDownloadSpeedTimer() const {
+QTimer *StatsInfoBuilder::getDownloadSpeedTimer() const
+{
     return this->downloadSpeedTimer;
 }
 
-
-void StatsInfoBuilder::resetVariables() {
+void StatsInfoBuilder::resetVariables()
+{
 
     this->meanDownloadSpeedTotal = 0;
     this->meanDownloadSpeedCurrent = 0;
@@ -102,22 +108,22 @@ void StatsInfoBuilder::resetVariables() {
 
 }
 
-
-void StatsInfoBuilder::setupConnections() {
+void StatsInfoBuilder::setupConnections()
+{
 
     // calculate average download speed for all nntp client instances :
     connect(this->downloadSpeedTimer, SIGNAL(timeout()), this, SLOT(updateDownloadSpeedSlot()));
 
     // parent notify that settings have been changed :
-    connect (parent,
-             SIGNAL(settingsChangedSignal()),
-             this,
-             SLOT(settingsChangedSlot()));
+    connect(parent,
+            SIGNAL(settingsChangedSignal()),
+            this,
+            SLOT(settingsChangedSlot()));
 
 }
 
-
-void StatsInfoBuilder::settingsChangedSlot() {
+void StatsInfoBuilder::settingsChangedSlot()
+{
 
     // "remaining time" or "estimated time of arrival" could have been chosen, update text :
     this->computeTimeInfo();
@@ -133,26 +139,24 @@ void StatsInfoBuilder::settingsChangedSlot() {
 
 }
 
-
-
-void StatsInfoBuilder::computeMeanSpeed(const quint64& downloadSpeed, quint64& meanDownloadSpeed) {
+void StatsInfoBuilder::computeMeanSpeed(const quint64 &downloadSpeed, quint64 &meanDownloadSpeed)
+{
     float alpha = 0.2;
     meanDownloadSpeed = alpha * downloadSpeed + (1 - alpha) * meanDownloadSpeed;
 }
 
-
-
-void StatsInfoBuilder::updateDownloadSpeedSlot() {
+void StatsInfoBuilder::updateDownloadSpeedSlot()
+{
 
     // 1. calculate average download speed for the current nzb item downloaded
     // (in case of multiserver usage, it can happens that several servers download the same nzb item simultaneously,
     // retrieve the download speed of these servers to get the overall download speed of the current nzb item) :
-    ServerManager* serverManager = this->parent->getServerManager();
+    ServerManager *serverManager = this->parent->getServerManager();
 
     if (serverManager) {
 
         // search first current item being downloading :
-        QStandardItem* stateItem = this->parent->getModelQuery()->searchParentItemDownloadOrPausing();
+        QStandardItem *stateItem = this->parent->getModelQuery()->searchParentItemDownloadOrPausing();
 
         // if item has been found :
         if (stateItem) {
@@ -167,8 +171,6 @@ void StatsInfoBuilder::updateDownloadSpeedSlot() {
 
     }
 
-
-
     // 2. calculate average download speed for remaining time calculation for total remaining nzb items :
     this->computeMeanSpeed(this->downloadSpeedTotal, this->meanDownloadSpeedTotal);
 
@@ -181,7 +183,6 @@ void StatsInfoBuilder::updateDownloadSpeedSlot() {
 
     // reset number of bytes downloaded after text update :
     this->clientsObserver->resetTotalBytesDownloaded();
-
 
     // at download begining mean speed equals current downloadSpeed in order to
     // not get too lag before reaching a proper mean speed value :
@@ -198,18 +199,17 @@ void StatsInfoBuilder::updateDownloadSpeedSlot() {
         this->meanSpeedActiveCounter = 0;
     }
 
-
     // synchronize remaining time calculation and free disk space with this slot :
 
     // call retrieveCurrentRemainingSize() every 2 * SPEED_AVERAGE_SECONDS (4 secs) :
-    if ( (this->timeoutCounter % 2) == 0 ) {
+    if ((this->timeoutCounter % 2) == 0) {
 
         this->computeTimeInfo();
 
     }
 
     // call retrieveFreeDiskSpace() every 5 * SPEED_AVERAGE_SECONDS (10 secs):
-    if ( (this->timeoutCounter % 10) == 0 ) {
+    if ((this->timeoutCounter % 10) == 0) {
 
         this->retrieveFreeDiskSpace();
 
@@ -219,23 +219,19 @@ void StatsInfoBuilder::updateDownloadSpeedSlot() {
 
     this->timeoutCounter++;
 
-
-
 }
 
-
-
-void StatsInfoBuilder::retrieveQueuedFilesInfo(bool& parentDownloadingFound, bool& parentQueuedFound) {
+void StatsInfoBuilder::retrieveQueuedFilesInfo(bool &parentDownloadingFound, bool &parentQueuedFound)
+{
 
     // get the root model :
-    QStandardItem* rootItem = this->downloadModel->invisibleRootItem();
+    QStandardItem *rootItem = this->downloadModel->invisibleRootItem();
 
     // get the first parent with download active :
     for (int i = 0; i < rootItem->rowCount(); ++i) {
 
-        QStandardItem* parentStateItem = rootItem->child(i, STATE_COLUMN);
+        QStandardItem *parentStateItem = rootItem->child(i, STATE_COLUMN);
         UtilityNamespace::ItemStatus currentStatus = this->parent->getDownloadModel()->getStatusFromStateItem(parentStateItem);
-
 
         // check if parent status is either downloading or pausing :
         if (!parentDownloadingFound && Utility::isDownloadOrPausing(currentStatus)) {
@@ -264,12 +260,10 @@ void StatsInfoBuilder::retrieveQueuedFilesInfo(bool& parentDownloadingFound, boo
 
     }
 
-
 }
 
-
-
-void StatsInfoBuilder::computeTimeInfo() {
+void StatsInfoBuilder::computeTimeInfo()
+{
 
     this->currentTimeValue = QString();
     this->totalTimeValue = QString();
@@ -293,7 +287,7 @@ void StatsInfoBuilder::computeTimeInfo() {
             quint64 nzbSize = this->downloadModel->getSizeValueFromIndex(this->parentStateIndex);
 
             // compute *current* remaining download time (sec) :
-            quint32 currentRemainingTimeSec = qRound((double)(nzbSize * (PROGRESS_COMPLETE - downloadProgress) / (this->meanDownloadSpeedCurrent * PROGRESS_COMPLETE )));
+            quint32 currentRemainingTimeSec = qRound((double)(nzbSize * (PROGRESS_COMPLETE - downloadProgress) / (this->meanDownloadSpeedCurrent * PROGRESS_COMPLETE)));
 
             // calculate Estimated Time of Arrival :
             if (Settings::etaRadioButton()) {
@@ -330,7 +324,6 @@ void StatsInfoBuilder::computeTimeInfo() {
             }
         }
 
-
     }
 
     // send time info signal :
@@ -338,8 +331,8 @@ void StatsInfoBuilder::computeTimeInfo() {
 
 }
 
-
-QString StatsInfoBuilder::calculateArrivalTime(const quint32& remainingSeconds) {
+QString StatsInfoBuilder::calculateArrivalTime(const quint32 &remainingSeconds)
+{
 
     QDateTime dateTimeETA = QDateTime::currentDateTime();
     dateTimeETA = dateTimeETA.addSecs(remainingSeconds);
@@ -348,17 +341,15 @@ QString StatsInfoBuilder::calculateArrivalTime(const quint32& remainingSeconds) 
 
 }
 
-
-
-QString StatsInfoBuilder::calculateRemainingTime(const quint32& remainingSeconds) {
+QString StatsInfoBuilder::calculateRemainingTime(const quint32 &remainingSeconds)
+{
 
     QString remainingTimeStr;
 
     // calculate remaining days, hours, minutes :
     int remainingDays = remainingSeconds / SECONDS_IN_DAY;
     int remainingHours = (remainingSeconds - (remainingDays * SECONDS_IN_DAY)) / SECONDS_IN_HOUR;
-    int remainingMinutes = (remainingSeconds - ( (remainingDays * SECONDS_IN_DAY) + remainingHours * SECONDS_IN_HOUR) ) / SECONDS_IN_MINUTE;
-
+    int remainingMinutes = (remainingSeconds - ((remainingDays * SECONDS_IN_DAY) + remainingHours * SECONDS_IN_HOUR)) / SECONDS_IN_MINUTE;
 
     // display number of remaining days if any :
     if (remainingDays > 0) {
@@ -378,13 +369,12 @@ QString StatsInfoBuilder::calculateRemainingTime(const quint32& remainingSeconds
         remainingTimeStr = i18n("less than 1 minute");
     }
 
-
     return remainingTimeStr;
 
 }
 
-
-void StatsInfoBuilder::retrieveFreeDiskSpace() {
+void StatsInfoBuilder::retrieveFreeDiskSpace()
+{
 
     if (Settings::displayCapacityBar()) {
 
@@ -418,7 +408,7 @@ void StatsInfoBuilder::retrieveFreeDiskSpace() {
             QString freeSpaceStr = i18nc("free disk space available", "%1 free", Utility::convertByteHumanReadable(freeSpaceVal));
 
             // calculate percentage of used disk :
-            int usedDiskPercentage = qMin( qRound(static_cast<qreal>(usedVal * 100 / sizeVal)), PROGRESS_COMPLETE );
+            int usedDiskPercentage = qMin(qRound(static_cast<qreal>(usedVal * 100 / sizeVal)), PROGRESS_COMPLETE);
 
             emit updateFreeSpaceSignal(diskSpaceStatus, freeSpaceStr, usedDiskPercentage);
 
@@ -432,8 +422,6 @@ void StatsInfoBuilder::retrieveFreeDiskSpace() {
             emit updateFreeSpaceSignal(UnknownDiskSpace);
         }
 
-
     }
-
 
 }
