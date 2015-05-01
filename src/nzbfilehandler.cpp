@@ -202,10 +202,9 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile &file, const QString 
 
     QList<GlobalFileData> globalFileDataOrderedList;
 
-    // if error occured display error message box :
+    // if error occurred display error message box :
     if (!fileSucessfulyProcessed) {
         this->mParent->getCentralWidget()->displayNzbHandleErrorMessageBox(file.fileName());
-
     } else {
 
         qSort(globalFileDataList.begin(), globalFileDataList.end(), sortingOrderLessThan);

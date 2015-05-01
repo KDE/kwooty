@@ -1,28 +1,40 @@
 [Global]
 IconName=kwooty
 Comment=Kwooty
+Comment[cs]=Kwooty
 Comment[de]=Kwooty
 Comment[nl]=Kwooty
 Comment[pl]=Kwooty
+Comment[pt]=Kwooty
+Comment[pt_BR]=Kwooty
 Comment[sk]=Kwooty
+Comment[sv]=Kwooty
 Comment[uk]=Kwooty
 Comment[x-test]=xxKwootyxx
 
 [Event/jobFinished]
 Name=Job Finished
+Name[cs]=Úloha byla dokončena
 Name[nl]=Job voltooid
 Name[pl]=Ukończono zadanie
+Name[pt]=Tarefa Terminada
+Name[pt_BR]=Tarefa concluída
 Name[sk]=Úloha ukončená
+Name[sv]=Jobb klart
 Name[uk]=Завдання виконано
 Name[x-test]=xxJob Finishedxx
 Action=Popup
 
 [Event/insufficientDiskSpace]
 Name=Insufficient Disk Space
+Name[cs]=Nedostatek místa na disku
 Name[de]=Unzureichender Plattenplatz
 Name[nl]=Onvoldoende schijfruimte
 Name[pl]=Brak wystarczającej przestrzeni na dysku
+Name[pt]=Espaço em Disco Insuficiente
+Name[pt_BR]=Espaço em disco insuficiente
 Name[sk]=Nedostatok miesta na disku
+Name[sv]=Otillräckligt diskutrymme
 Name[uk]=Недостатньо місця на диску
 Name[x-test]=xxInsufficient Disk Spacexx
 Action=Popup

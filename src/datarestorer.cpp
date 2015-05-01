@@ -51,7 +51,7 @@ DataRestorer::DataRestorer(Core *parent) : QObject(parent)
 
     magicNumber = 0xC82F1D37;
 
-    // should be upgraded everytime a change is done in data stream :
+    // should be upgraded anytime a change is done in data stream :
     applicationVersion1 = 9;
 
     // map kwooty serialization version and its corresponding dataStream version

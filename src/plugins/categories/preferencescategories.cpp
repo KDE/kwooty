@@ -233,7 +233,7 @@ void PreferencesCategories::addMimeTypeToGroup(QStandardItem *parentItem)
                 // set mime data to item :
                 this->categoriesModel->storeMimeData(childCategoryItem, mimeData);
 
-                // retrieve the first diplayed text sorted alphabetically :
+                // retrieve the first displayed text sorted alphabetically :
                 if (firstMimeDataToDisplay.getDisplayedText().isEmpty()) {
                     firstMimeDataToDisplay = mimeData;
                 }

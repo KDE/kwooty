@@ -155,7 +155,7 @@ NzbFileData ExtractBase::getFirstArchiveFileFromList(const QList<NzbFileData> &c
     foreach (const NzbFileData &nzbFileData, currentNzbFileDataList) {
 
         if (nzbFileData.isArchiveFile()) {
-            //return the first achive file from list :
+            //return the first archive file from list :
             currentNzbFileData = nzbFileData;
             break;
         }
@@ -382,8 +382,8 @@ void ExtractBase::findItemAndNotifyUser(const QString &fileNameStr, const Utilit
         // if nzbFileData has been identified :
         if (nzbFileData.match(fileNameStr)) {
 
-            // used for 7z splitted files for eg
-            // 7z splitted archive file is only the first field, set also the others one as archive files :
+            // used for 7z split files for eg
+            // 7z split archive file is only the first field, set also the others one as archive files :
             nzbFileData.setArchiveFile(true);
 
             // update status for the corresponding nzbFileData :

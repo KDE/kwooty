@@ -77,7 +77,7 @@ QList<NzbFileData> ExtractSplit::retrieveSplitFilesOnly(const QString &fileSaveP
         // get current file :
         QFile currentSplitFile(Utility::buildFullPath(fileSavePath, currentNzbFileData.getDecodedFileName()));
 
-        // check if it is a splitted file (check for .001, .002, etc... pattern) :
+        // check if it is a split file (check for .001, .002, etc... pattern) :
         if (FileOperations::isSplitFileFormat(currentSplitFile)) {
             nzbFileDataFilteredList.append(currentNzbFileData);
         }
@@ -101,7 +101,7 @@ void ExtractSplit::removeRenamedArchiveFile(const NzbFileData &)
 {
 
     // /!\  reimplemented from ExtractBase : at this stage if renamedFileName is not empty,
-    // it may probably correspond to the 'joined file' name if repair processing previously occured.
+    // it may probably correspond to the 'joined file' name if repair processing previously occurred.
     // it is important to not try to remove the 'joined file', in that case nothing have to be done.
 
 }
@@ -135,12 +135,12 @@ void ExtractSplit::jobPercentSlot(int progress, const QString &fileNameStr)
 void ExtractSplit::jobFinishSlot(int errorCode)
 {
 
-    // post processing when job is complete (if no error occured during the job, job->error() == 0) :
+    // post processing when job is complete (if no error occurred during the job, job->error() == 0) :
     this->extractFinishedSlot(errorCode, QProcess::NormalExit);
 
 }
 
-// the following methods are not used for joining splitted files job :
+// the following methods are not used for joining split files job :
 QStringList ExtractSplit::createProcessArguments(const QString &, const QString &, const bool &, const QString &)
 {
     return QStringList();

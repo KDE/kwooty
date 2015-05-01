@@ -194,7 +194,7 @@ int Core::savePendingDownloads(UtilityNamespace::SystemShutdownType systemShutdo
 void Core::restoreDataFromPreviousSession(const QList<GlobalFileData> &globalFileDataList)
 {
 
-    // instanciate a QFile to only get the name of the nzb needed by handleNzbFile();
+    // instantiate a QFile to only get the name of the nzb needed by handleNzbFile();
     NzbFileData nzbFileData = globalFileDataList.at(0).getNzbFileData();
     QFile nzbFile(nzbFileData.getNzbName());
 

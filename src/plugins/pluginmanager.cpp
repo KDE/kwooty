@@ -86,8 +86,8 @@ void PluginManager::loadCurrentPlugin(const KPluginInfo &currentPluginInfo)
     KPluginFactory *factory = KPluginLoader(currentPluginInfo.service()->library()).factory();
     if (factory) {
 
-        // instanciate plugin :
-        Plugin *plugin = factory->create<Plugin>(this);
+        // instantiate plugin :
+        Plugin* plugin = factory->create<Plugin>(this);
 
         if (plugin) {
 

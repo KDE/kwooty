@@ -148,7 +148,7 @@ void RepairDecompressThread::preRepairProcessing(const NzbCollectionData &curren
     // check archive format :
     ExtractBase *extracter = this->retrieveCorrespondingExtracter(currentNzbCollectionData);
 
-    // if format is splitted files only, check that the joined file does not exists already (may happen when a .nzb is dowloaded twice)
+    // if format is split files only, check that the joined file does not exists already (may happen when a .nzb is dowloaded twice)
     // this is required by extraSplit job in order to know if joined file has been created during repair process or not :
     if (extracter) {
         extracter->preRepairProcessing(currentNzbCollectionData);
@@ -246,7 +246,7 @@ QString RepairDecompressThread::getBaseNameFromPar2(const NzbFileData &nzbFileDa
     // remove .par2 extension :
     par2FileWithoutExtension.chop(par2FileExt.size());
 
-    // supress .volxxx-+xxx extension :
+    // suppress .volxxx-+xxx extension :
     if (par2FileWithoutExtension.contains("vol")) {
 
         QRegExp regExp("(.*)(\\.vol\\d+.\\d+)");
@@ -371,7 +371,7 @@ void RepairDecompressThread::processRarFilesFromDifferentGroups(const QStringLis
                 nzbCollectionData.setPar2BaseName(par2BaseName);
 
                 // sort file list by alphabetical order
-                // in order to get achives files sorted from the first one to the last one (eg split.001, split.002, etc...):
+                // in order to get archives files sorted from the first one to the last one (eg split.001, split.002, etc...):
                 qSort(groupedFileList);
                 nzbCollectionData.setNzbFileDataList(groupedFileList);
 
@@ -423,7 +423,7 @@ void RepairDecompressThread::processRarFilesFromSameGroup(NzbCollectionData &nzb
         nzbCollectionData.setPar2BaseName(par2BaseName);
 
         // sort file list by alphabetical order
-        // in order to get achives files sorted from the first one to the last one (eg split.001, split.002, etc...):
+        // in order to get archives files sorted from the first one to the last one (eg split.001, split.002, etc...):
         qSort(groupedFileList);
         nzbCollectionData.setNzbFileDataList(groupedFileList);
 
@@ -544,7 +544,7 @@ void RepairDecompressThread::startRepairSlot()
         // get nzbCollectionData to be verified from list :
         NzbCollectionData currentNzbCollectionData = this->filesToRepairList.takeFirst();
 
-        // perform some pre-processing dedicated to "splitted-only" files :
+        // perform some pre-processing dedicated to "split-only" files :
         this->preRepairProcessing(currentNzbCollectionData);
 
         // verify data only if par has been found :

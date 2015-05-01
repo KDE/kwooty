@@ -37,7 +37,7 @@ ItemParentUpdater::ItemParentUpdater(Core *parent) : ItemAbstractUpdater(parent-
 
     this->parent = parent;
 
-    // instanciate item updater classes :
+    // instantiate item updater classes :
     this->itemPostDownloadUpdater = new ItemPostDownloadUpdater(this);
     this->itemDownloadUpdater = new ItemDownloadUpdater(this);
     this->itemChildrenManager = new ItemChildrenManager(parent, this);

@@ -48,7 +48,7 @@ MyTreeView::MyTreeView(MainWindow *_mainWindow) : QTreeView(_mainWindow->getCent
     // Avoid rows editing:
     setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    // Allowing mutiple row selection :
+    // Allowing multiple row selection :
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     setSelectionBehavior(QAbstractItemView::SelectRows);
     setUniformRowHeights(false);
