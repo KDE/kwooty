@@ -24,8 +24,8 @@ ItemStatusData::ItemStatusData()
 {
 
     this->init();
-    this->downloadRetryCounter = 0;
-    this->articleEncodingType = UtilityNamespace::ArticleEncodingUnknown;
+    this->mDownloadRetryCounter = 0;
+    this->mArticleEncodingType = UtilityNamespace::ArticleEncodingUnknown;
 }
 
 ItemStatusData::~ItemStatusData()
@@ -35,14 +35,14 @@ ItemStatusData::~ItemStatusData()
 void ItemStatusData::init()
 {
 
-    this->status = IdleStatus;
-    this->downloadFinish = false;
-    this->decodeFinish = false;
-    this->postProcessFinish = false;
-    this->allPostProcessingCorrect = false;
-    this->crc32Match = CrcOk;
-    this->data = DataComplete;
-    this->nextServerId = UtilityNamespace::MasterServer;
+    this->mStatus = IdleStatus;
+    this->mDownloadFinish = false;
+    this->mDecodeFinish = false;
+    this->mPostProcessFinish = false;
+    this->mAllPostProcessingCorrect = false;
+    this->mCrc32Match = CrcOk;
+    this->mData = DataComplete;
+    this->mNextServerId = UtilityNamespace::MasterServer;
 
 }
 
@@ -53,15 +53,15 @@ void ItemStatusData::downloadRetry(const ItemStatus &itemStatusResetTarget)
 
     // item has to be reset to IdleStatus, meaning that download must be performed another time :
     if (itemStatusResetTarget == IdleStatus) {
-        this->downloadRetryCounter++;
+        this->mDownloadRetryCounter++;
     }
     // else the current item has been correctly downloaded, set it status to DecodeFinishStatus
     // in order to reenable post processing (repair/extract) :
     else if (itemStatusResetTarget == DecodeFinishStatus) {
 
-        this->status = DecodeFinishStatus;
-        this->downloadFinish = true;
-        this->decodeFinish = true;
+        this->mStatus = DecodeFinishStatus;
+        this->mDownloadFinish = true;
+        this->mDecodeFinish = true;
 
     }
 
@@ -69,96 +69,96 @@ void ItemStatusData::downloadRetry(const ItemStatus &itemStatusResetTarget)
 
 UtilityNamespace::Data ItemStatusData::getDataStatus() const
 {
-    return this->data;
+    return this->mData;
 }
 
 void ItemStatusData::setDataStatus(const UtilityNamespace::Data data)
 {
-    this->data = data;
+    this->mData = data;
 }
 
 bool ItemStatusData::isDownloadFinish() const
 {
-    return this->downloadFinish;
+    return this->mDownloadFinish;
 }
 
 void ItemStatusData::setDownloadFinish(const bool downloadFinish)
 {
-    this->downloadFinish = downloadFinish;
+    this->mDownloadFinish = downloadFinish;
 }
 
 bool ItemStatusData::isDecodeFinish() const
 {
-    return this->decodeFinish;
+    return this->mDecodeFinish;
 }
 
 void ItemStatusData::setDecodeFinish(const bool decodeFinish)
 {
-    this->decodeFinish = decodeFinish;
+    this->mDecodeFinish = decodeFinish;
 }
 
 bool ItemStatusData::isPostProcessFinish() const
 {
-    return this->postProcessFinish;
+    return this->mPostProcessFinish;
 }
 
 void ItemStatusData::setPostProcessFinish(const bool postProcessFinish)
 {
-    this->postProcessFinish = postProcessFinish;
+    this->mPostProcessFinish = postProcessFinish;
 }
 
 bool ItemStatusData::areAllPostProcessingCorrect() const
 {
-    return this->allPostProcessingCorrect;
+    return this->mAllPostProcessingCorrect;
 }
 
 void ItemStatusData::setAllPostProcessingCorrect(const bool &allPostProcessingCorrect)
 {
-    this->allPostProcessingCorrect = allPostProcessingCorrect;
+    this->mAllPostProcessingCorrect = allPostProcessingCorrect;
 }
 
 UtilityNamespace::CrcNotify ItemStatusData::getCrc32Match() const
 {
-    return this->crc32Match;
+    return this->mCrc32Match;
 }
 
 void ItemStatusData::setCrc32Match(const UtilityNamespace::CrcNotify crc32Match)
 {
-    this->crc32Match = crc32Match;
+    this->mCrc32Match = crc32Match;
 }
 
 UtilityNamespace::ArticleEncodingType ItemStatusData::getArticleEncodingType() const
 {
-    return this->articleEncodingType;
+    return this->mArticleEncodingType;
 }
 
 void ItemStatusData::setArticleEncodingType(const UtilityNamespace::ArticleEncodingType articleEncodingType)
 {
-    this->articleEncodingType = articleEncodingType;
+    this->mArticleEncodingType = articleEncodingType;
 }
 
 void ItemStatusData::setStatus(const UtilityNamespace::ItemStatus status)
 {
-    this->status = status;
+    this->mStatus = status;
 }
 
 UtilityNamespace::ItemStatus ItemStatusData::getStatus() const
 {
-    return this->status;
+    return this->mStatus;
 }
 
 int ItemStatusData::getNextServerId() const
 {
-    return this->nextServerId;
+    return this->mNextServerId;
 }
 void ItemStatusData::setNextServerId(const int &nextServerId)
 {
-    this->nextServerId = nextServerId;
+    this->mNextServerId = nextServerId;
 }
 
 int ItemStatusData::getDownloadRetryCounter() const
 {
-    return this->downloadRetryCounter;
+    return this->mDownloadRetryCounter;
 }
 
 bool ItemStatusData::operator!=(const ItemStatusData &itemStatusDataToCompare)
@@ -166,15 +166,15 @@ bool ItemStatusData::operator!=(const ItemStatusData &itemStatusDataToCompare)
 
     bool different = false;
 
-    if ((this->status               != itemStatusDataToCompare.getStatus())                 ||
-            (this->data                 != itemStatusDataToCompare.getDataStatus())             ||
-            (this->downloadFinish       != itemStatusDataToCompare.isDownloadFinish())          ||
-            (this->decodeFinish         != itemStatusDataToCompare.isDecodeFinish())            ||
-            (this->postProcessFinish    != itemStatusDataToCompare.isPostProcessFinish())       ||
-            (this->crc32Match           != itemStatusDataToCompare.getCrc32Match())             ||
-            (this->articleEncodingType  != itemStatusDataToCompare.getArticleEncodingType())    ||
-            (this->nextServerId         != itemStatusDataToCompare.getNextServerId())           ||
-            (this->downloadRetryCounter != itemStatusDataToCompare.getDownloadRetryCounter())) {
+    if ((this->mStatus               != itemStatusDataToCompare.getStatus())                 ||
+            (this->mData                 != itemStatusDataToCompare.getDataStatus())             ||
+            (this->mDownloadFinish       != itemStatusDataToCompare.isDownloadFinish())          ||
+            (this->mDecodeFinish         != itemStatusDataToCompare.isDecodeFinish())            ||
+            (this->mPostProcessFinish    != itemStatusDataToCompare.isPostProcessFinish())       ||
+            (this->mCrc32Match           != itemStatusDataToCompare.getCrc32Match())             ||
+            (this->mArticleEncodingType  != itemStatusDataToCompare.getArticleEncodingType())    ||
+            (this->mNextServerId         != itemStatusDataToCompare.getNextServerId())           ||
+            (this->mDownloadRetryCounter != itemStatusDataToCompare.getDownloadRetryCounter())) {
 
         different = true;
     }

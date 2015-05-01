@@ -32,7 +32,7 @@
 NotificationManager::NotificationManager(Core *parent) : QObject(parent)
 {
 
-    this->parent = parent;
+    this->mParent = parent;
 
     this->init();
     this->setupConnections();
@@ -41,11 +41,11 @@ NotificationManager::NotificationManager(Core *parent) : QObject(parent)
 void NotificationManager::init()
 {
 
-    this->finishSatusTextMap.insert(DownloadFinishStatus,      i18n("Download finished"));
-    this->finishSatusTextMap.insert(DecodeFinishStatus,        i18n("Decoding finished"));
-    this->finishSatusTextMap.insert(VerifyFinishedStatus,      i18n("Verify finished"));
-    this->finishSatusTextMap.insert(RepairFinishedStatus,      i18n("Repair complete"));
-    this->finishSatusTextMap.insert(ExtractFinishedStatus,     i18n("Extract finished"));
+    this->mFinishSatusTextMap.insert(DownloadFinishStatus,      i18n("Download finished"));
+    this->mFinishSatusTextMap.insert(DecodeFinishStatus,        i18n("Decoding finished"));
+    this->mFinishSatusTextMap.insert(VerifyFinishedStatus,      i18n("Verify finished"));
+    this->mFinishSatusTextMap.insert(RepairFinishedStatus,      i18n("Repair complete"));
+    this->mFinishSatusTextMap.insert(ExtractFinishedStatus,     i18n("Extract finished"));
 
 }
 
@@ -53,13 +53,13 @@ void NotificationManager::setupConnections()
 {
 
     // queueFileObserver emit signal when a job is finished :
-    connect(this->parent->getQueueFileObserver(),
+    connect(this->mParent->getQueueFileObserver(),
             SIGNAL(jobFinishSignal(UtilityNamespace::ItemStatus,QString)),
             this,
             SLOT(jobFinishSlot(UtilityNamespace::ItemStatus,QString)));
 
     // statsInfoBuilder emit signal when a disk space is insufficient :
-    connect(this->parent->getClientsObserver()->getStatsInfoBuilder(),
+    connect(this->mParent->getClientsObserver()->getStatsInfoBuilder(),
             SIGNAL(insufficientDiskSpaceSignal(QString)),
             this,
             SLOT(insufficientDiskSpaceSlot(QString)));
@@ -68,7 +68,7 @@ void NotificationManager::setupConnections()
 
 void NotificationManager::jobFinishSlot(const UtilityNamespace::ItemStatus status, const QString &message)
 {
-    this->sendEvent("jobFinished", QStringLiteral("%1 - %2").arg(this->finishSatusTextMap.value(status)).arg(message));
+    this->sendEvent("jobFinished", QStringLiteral("%1 - %2").arg(this->mFinishSatusTextMap.value(status)).arg(message));
 }
 
 void NotificationManager::insufficientDiskSpaceSlot(const QString &message)
@@ -83,7 +83,7 @@ void NotificationManager::sendEvent(const QString &eventId, const QString &messa
     if (Settings::notification()) {
 
         // send event :
-        KNotification::event(eventId, message, QPixmap(), (QWidget *)this->parent->parent(), notificationFlag);
+        KNotification::event(eventId, message, QPixmap(), (QWidget *)this->mParent->parent(), notificationFlag);
 
     }
 

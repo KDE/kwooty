@@ -67,16 +67,16 @@ public:
     bool operator!=(const ItemStatusData &);
 
 private:
-    UtilityNamespace::ItemStatus status;
-    UtilityNamespace::Data data;
-    bool downloadFinish;
-    bool decodeFinish;
-    bool postProcessFinish;
-    bool allPostProcessingCorrect;
-    UtilityNamespace::CrcNotify crc32Match;
-    UtilityNamespace::ArticleEncodingType articleEncodingType;
-    int nextServerId;
-    int downloadRetryCounter;
+    UtilityNamespace::ItemStatus mStatus;
+    UtilityNamespace::Data mData;
+    bool mDownloadFinish;
+    bool mDecodeFinish;
+    bool mPostProcessFinish;
+    bool mAllPostProcessingCorrect;
+    UtilityNamespace::CrcNotify mCrc32Match;
+    UtilityNamespace::ArticleEncodingType mArticleEncodingType;
+    int mNextServerId;
+    int mDownloadRetryCounter;
 
 };
 

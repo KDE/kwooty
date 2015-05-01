@@ -38,7 +38,7 @@ public:
     QList<GlobalFileData> processNzbFile(QFile &, const QString &);
 
 private:
-    Core *parent;
+    Core *mParent;
 
 Q_SIGNALS:
     void displayMessageBoxSignal(const QString &);

@@ -41,13 +41,6 @@ private:
     quint32 computeCrc32Part(const quint32 &, const unsigned char &);
     qint64 getPatternValue(const QByteArray &, const QString &, const int & = 10);
     void decodeProgression(PostDownloadInfoData &);
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
-private Q_SLOTS:
-
 };
 
 namespace crc

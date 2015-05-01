@@ -35,7 +35,7 @@
 
 NzbFileHandler::NzbFileHandler(Core *parent) : QObject(parent)
 {
-    this->parent = parent;
+    this->mParent = parent;
 }
 
 bool sortingOrderLessThan(const GlobalFileData &globalFileData1, const GlobalFileData &globalFileData2)
@@ -204,7 +204,7 @@ QList<GlobalFileData> NzbFileHandler::processNzbFile(QFile &file, const QString 
 
     // if error occured display error message box :
     if (!fileSucessfulyProcessed) {
-        this->parent->getCentralWidget()->displayNzbHandleErrorMessageBox(file.fileName());
+        this->mParent->getCentralWidget()->displayNzbHandleErrorMessageBox(file.fileName());
 
     } else {
 

@@ -84,8 +84,8 @@ private:
 Q_SIGNALS:
     void downloadSegmentFromServerSignal();
     void answerTimeOutSignal();
-    void socketEncryptedInfoSignal(bool, QString, QString, QStringList);
-    void encryptionStatusPerServerSignal(const bool, const QString = QString(), const bool = false, const QString = QString(), const QStringList = QStringList());
+    void socketEncryptedInfoSignal(bool, const QString &, const QString &, const QStringList &);
+    void encryptionStatusPerServerSignal(const bool, const QString & = QString(), const bool = false, const QString & = QString(), const QStringList & = QStringList());
     void tryToReconnectSignal();
 
 public Q_SLOTS:

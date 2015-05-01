@@ -41,21 +41,16 @@ public:
 
 private:
 
-    Core *parent;
-    QHash<UtilityNamespace::ItemStatus, QString> finishSatusTextMap;
+    Core *mParent;
+    QHash<UtilityNamespace::ItemStatus, QString> mFinishSatusTextMap;
 
     void init();
     void setupConnections();
     void sendEvent(const QString &, const QString &, KNotification::NotificationFlags = KNotification::CloseOnTimeout);
 
-Q_SIGNALS:
-
 public Q_SLOTS:
     void jobFinishSlot(const UtilityNamespace::ItemStatus, const QString &);
     void insufficientDiskSpaceSlot(const QString &);
-
-private Q_SLOTS:
-
 };
 
 #endif // NOTIFICATIONMANAGER_H

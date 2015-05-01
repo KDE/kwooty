@@ -40,7 +40,7 @@ class KWOOTY_EXPORT StandardItemModel : public QStandardItemModel
     Q_OBJECT
 
 public:
-    StandardItemModel(Core *);
+    explicit StandardItemModel(Core *);
     StandardItemModel();
     QStandardItem *getParentItem(const QModelIndex &) const;
     QStandardItem *getStateItemFromIndex(const QModelIndex &) const;
