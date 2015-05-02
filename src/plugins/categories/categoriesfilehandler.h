@@ -34,7 +34,7 @@ class CategoriesFileHandler : public QObject
 
 public:
 
-    CategoriesFileHandler(QObject *);
+    explicit CategoriesFileHandler(QObject *);
     CategoriesFileHandler();
 
     CategoriesModel *loadModelFromFile(QObject *);
@@ -50,11 +50,6 @@ private:
     QString readNextCharacters(QXmlStreamReader &);
     bool isStartElement(QXmlStreamReader &, const QString &);
     bool isEndElement(QXmlStreamReader &, const QString &);
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
 };
 
 #endif // CATEGORIESFILEHANDLER_H

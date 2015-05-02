@@ -31,16 +31,17 @@
 #include "data/itemstatusdata.h"
 #include "kwooty_autoretrysettings.h"
 
-AutoRetry::AutoRetry(AutoRetryPlugin *parent) :  QObject(parent)
+AutoRetry::AutoRetry(AutoRetryPlugin *parent)
+    :  QObject(parent)
 {
 
-    this->core = parent->getMainWindow()->getCore();
+    mCore = parent->getMainWindow()->getCore();
 
     // init folder to watch :
-    this->settingsChanged();
+    settingsChanged();
 
     // setup signals/slots connections :
-    this->setupConnections();
+    setupConnections();
 
 }
 
@@ -52,15 +53,15 @@ AutoRetry::~AutoRetry()
 void AutoRetry::setupConnections()
 {
 
-    connect(this->core->getDownloadModel(),
-            SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
+    connect(mCore->getDownloadModel(),
+            &StandardItemModel::parentStatusItemChangedSignal,
             this,
-            SLOT(parentStatusItemChangedSlot(QStandardItem*)));
+            &AutoRetry::parentStatusItemChangedSlot);
 
-    connect(this->core->getDownloadModel(),
-            SIGNAL(childStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
+    connect(mCore->getDownloadModel(),
+            &StandardItemModel::childStatusItemChangedSignal,
             this,
-            SLOT(childStatusItemChangedSlot(QStandardItem*)));
+            &AutoRetry::childStatusItemChangedSlot);
 
 }
 
@@ -71,7 +72,7 @@ void AutoRetry::setupConnections()
 void AutoRetry::parentStatusItemChangedSlot(QStandardItem *stateItem)
 {
 
-    StandardItemModel *downloadModel = this->core->getDownloadModel();
+    StandardItemModel *downloadModel = mCore->getDownloadModel();
     ItemStatusData itemStatusData = downloadModel->getStatusDataFromIndex(stateItem->index());
 
     //qCDebug(KWOOTY_LOG) <<  itemStatusData.isPostProcessFinish() << itemStatusData.getStatus() <<  itemStatusData.getDataStatus() ;
@@ -90,7 +91,7 @@ void AutoRetry::parentStatusItemChangedSlot(QStandardItem *stateItem)
 
                 qDebug() << "post process finished, retry counter :" << itemStatusData.getDownloadRetryCounter();
 
-                this->retryDownload(stateItem);
+                retryDownload(stateItem);
 
             }
 
@@ -103,7 +104,7 @@ void AutoRetry::parentStatusItemChangedSlot(QStandardItem *stateItem)
 void AutoRetry::childStatusItemChangedSlot(QStandardItem *stateItem)
 {
 
-    StandardItemModel *downloadModel = this->core->getDownloadModel();
+    StandardItemModel *downloadModel = mCore->getDownloadModel();
     ItemStatusData itemStatusData = downloadModel->getStatusDataFromIndex(stateItem->index());
 
     if (itemStatusData.getDownloadRetryCounter() <= AutoRetrySettings::retryNoPar2Files()) {
@@ -112,12 +113,12 @@ void AutoRetry::childStatusItemChangedSlot(QStandardItem *stateItem)
                 itemStatusData.getCrc32Match() != CrcOk) {
 
             // if nzb file does not contain any par2 files, reset in queue corrupted decoded file :
-            if (!this->core->getModelQuery()->isParentContainsPar2File(stateItem)) {
+            if (!mCore->getModelQuery()->isParentContainsPar2File(stateItem)) {
 
                 qDebug() << "Decode Finished No par2 files - retry!";
 
                 // select all rows in order to set them to paused or Idle :
-                this->retryDownload(stateItem);
+                retryDownload(stateItem);
 
             }
 
@@ -127,12 +128,12 @@ void AutoRetry::childStatusItemChangedSlot(QStandardItem *stateItem)
         else if (Utility::isFileNotFound(itemStatusData.getStatus(), itemStatusData.getDataStatus())) {
 
             // if nzb file does not contain any par2 files, reset in queue corrupted decoded file :
-            if (!this->core->getModelQuery()->isParentContainsPar2File(stateItem)) {
+            if (!mCore->getModelQuery()->isParentContainsPar2File(stateItem)) {
 
                 qDebug() << "Decode Finished No par2 files - retry!" << itemStatusData.getDownloadRetryCounter();
 
                 // select all rows in order to set them to paused or Idle :
-                this->retryDownload(stateItem);
+                retryDownload(stateItem);
 
             }
         }
@@ -147,7 +148,7 @@ void AutoRetry::retryDownload(QStandardItem *stateItem)
     QList<QModelIndex> indexesList;
     indexesList.append(stateItem->index());
 
-    this->core->getActionsManager()->retryDownload(indexesList);
+    mCore->getActionsManager()->retryDownload(indexesList);
 
 }
 

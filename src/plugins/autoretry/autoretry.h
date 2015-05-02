@@ -36,13 +36,13 @@ class AutoRetry : public QObject
     Q_OBJECT
 
 public:
-    AutoRetry(AutoRetryPlugin *);
+    explicit AutoRetry(AutoRetryPlugin *);
     ~AutoRetry();
     void settingsChanged();
 
 private:
 
-    Core *core;
+    Core *mCore;
 
     void setupConnections();
     void retryDownload(QStandardItem *);

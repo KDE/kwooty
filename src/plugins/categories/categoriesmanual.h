@@ -47,10 +47,10 @@ private:
     void updateNzbFileNameToolTip(QStandardItem *, const QString & = QString());
     bool isActionAllowed(QStandardItem *) const;
 
-    Core *core;
-    MyTreeView *treeView;
-    StandardItemModel *downloadModel;
-    QHash<QString, QString> uuidFolderMap;
+    Core *mCore;
+    MyTreeView *mTreeView;
+    StandardItemModel *mDownloadModel;
+    QHash<QString, QString> mUuidFolderMap;
 public Q_SLOTS:
     void addExternalActionSlot(QMenu *, QStandardItem *);
     void manualTransferFolderSlot();
