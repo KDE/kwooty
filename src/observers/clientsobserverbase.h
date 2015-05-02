@@ -45,14 +45,14 @@ public:
     virtual bool isSslActive() const = 0;
 
 protected:
-    quint64 totalBytesDownloaded;
-    QStringList sslErrors;
-    QString encryptionMethod;
-    QString issuerOrgranisation;
-    int totalConnections;
-    int nttpErrorStatus;
-    bool sslActive;
-    bool certificateVerified;
+    quint64 mTotalBytesDownloaded;
+    QStringList mSslErrors;
+    QString mEncryptionMethod;
+    QString mIssuerOrgranisation;
+    int mTotalConnections;
+    int mNttpErrorStatus;
+    bool mSslActive;
+    bool mCertificateVerified;
 
     void resetVariables();
     void addBytesDownloaded(const int &);

@@ -42,13 +42,13 @@ public:
     bool isDownloading() const;
 
 private:
-    ServerGroup *parent;
-    SegmentInfoData segmentInfoData;
-    quint64 downloadSpeed;
-    quint64 averageDownloadSpeed;
-    quint64 effectiveMeanDownloadSpeed;
-    quint64 bytesDownloadedForCurrentSession;
-    quint64 meanDownloadSpeedCounter;
+    ServerGroup *mParent;
+    SegmentInfoData mSegmentInfoData;
+    quint64 mDownloadSpeed;
+    quint64 mAverageDownloadSpeed;
+    quint64 mEffectiveMeanDownloadSpeed;
+    quint64 mBytesDownloadedForCurrentSession;
+    quint64 mMeanDownloadSpeedCounter;
 
     void setupConnections();
     void resetVariables();

@@ -31,7 +31,7 @@ class ClientsObserver : public ClientsObserverBase
     Q_OBJECT
 
 public:
-    ClientsObserver(Core *);
+    explicit ClientsObserver(Core *);
     StatsInfoBuilder *getStatsInfoBuilder() const;
     void fullFileSizeUpdate(const quint64, const quint64);
     void sendFullUpdate();
@@ -42,10 +42,10 @@ public:
 
 private:
 
-    Core *parent;
-    StatsInfoBuilder *statsInfoBuilder;
-    quint64 totalFiles;
-    quint64 totalSize;
+    Core *mParent;
+    StatsInfoBuilder *mStatsInfoBuilder;
+    quint64 mTotalFiles;
+    quint64 mTotalSize;
 
     void resetVariables();
 

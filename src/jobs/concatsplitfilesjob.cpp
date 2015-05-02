@@ -33,8 +33,8 @@
 ConcatSplitFilesJob::ConcatSplitFilesJob(ExtractSplit *parent)
 {
 
-    this->mDedicatedThread = new QThread();
-    this->moveToThread(this->mDedicatedThread);
+    mDedicatedThread = new QThread();
+    moveToThread(mDedicatedThread);
 
     qRegisterMetaType< QList<NzbFileData> >("QList<NzbFileData>");
     // launch joining process from parent :
@@ -44,30 +44,30 @@ ConcatSplitFilesJob::ConcatSplitFilesJob(ExtractSplit *parent)
             &ConcatSplitFilesJob::joinFilesSlot);
 
     // start current thread :
-    this->mDedicatedThread->start();
+    mDedicatedThread->start();
 
 }
 
 ConcatSplitFilesJob::~ConcatSplitFilesJob()
 {
 
-    this->mDedicatedThread->quit();
+    mDedicatedThread->quit();
     // if query close is requested during joining file process,
     // forces kwooty to close by terminating the running thread (maximum 3 seconds later) :
-    this->mDedicatedThread->wait(3000);
+    mDedicatedThread->wait(3000);
 
-    delete this->mDedicatedThread;
+    delete mDedicatedThread;
 }
 
 void ConcatSplitFilesJob::joinFilesSlot(const QList<NzbFileData> &nzbFileDataList, const QString &fileSavePath, const QString &joinFileName)
 {
 
-    this->mNzbFileDataList = nzbFileDataList;
-    this->mFileSavePath = fileSavePath;
-    this->mJoinFileName = joinFileName;
+    mNzbFileDataList = nzbFileDataList;
+    mFileSavePath = fileSavePath;
+    mJoinFileName = joinFileName;
 
     // join split files together :
-    bool processFailed = this->joinSplittedFiles();
+    bool processFailed = joinSplittedFiles();
 
     int error = QProcess::NormalExit;
     if (processFailed) {
@@ -85,7 +85,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles()
     int fileProcessedNumber = 0;
 
     // retrieve and open joined file :
-    QFile joinFile(Utility::buildFullPath(this->mFileSavePath, this->mJoinFileName));
+    QFile joinFile(Utility::buildFullPath(mFileSavePath, mJoinFileName));
 
     // check if file already exists :
     bool joinFileExists = joinFile.exists();
@@ -93,14 +93,14 @@ bool ConcatSplitFilesJob::joinSplittedFiles()
     joinFile.open(QIODevice::WriteOnly | QIODevice::Append);
 
     // join split files (list of files is assumed to be ordered at this stage) :
-    foreach (const NzbFileData& currentNzbFileData, this->mNzbFileDataList) {
+    foreach (const NzbFileData& currentNzbFileData, mNzbFileDataList) {
 
         fileProcessedNumber++;
 
         // get current archive name :
         QString archiveName = currentNzbFileData.getDecodedFileName();
 
-        QString fullPathArchiveName = Utility::buildFullPath(this->mFileSavePath, archiveName);
+        QString fullPathArchiveName = Utility::buildFullPath(mFileSavePath, archiveName);
 
         // if file already exists, it means that it has been created during repair processing.
         // in that case target file is already joined and this process does not have to be done :
@@ -138,7 +138,7 @@ bool ConcatSplitFilesJob::joinSplittedFiles()
         }
 
         // emit progress percentage :
-        int progress = qRound((double)(fileProcessedNumber * PROGRESS_COMPLETE / this->mNzbFileDataList.size()));
+        int progress = qRound((double)(fileProcessedNumber * PROGRESS_COMPLETE / mNzbFileDataList.size()));
         emit progressPercentSignal(progress, archiveName);
 
     }

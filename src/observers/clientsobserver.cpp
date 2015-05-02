@@ -31,11 +31,11 @@
 ClientsObserver::ClientsObserver(Core *parent) : ClientsObserverBase(parent)
 {
 
-    this->parent = parent;
+    mParent = parent;
 
-    this->resetVariables();
+    resetVariables();
 
-    this->statsInfoBuilder = new StatsInfoBuilder(this, parent);
+    mStatsInfoBuilder = new StatsInfoBuilder(this, parent);
 
 }
 
@@ -44,8 +44,8 @@ void ClientsObserver::resetVariables()
 
     ClientsObserverBase::resetVariables();
 
-    this->totalFiles = 0;
-    this->totalSize = 0;
+    mTotalFiles = 0;
+    mTotalSize = 0;
 
 }
 
@@ -53,44 +53,44 @@ void ClientsObserver::sendFullUpdate()
 {
 
     // send reset values to status bar :
-    emit updateFileSizeInfoSignal(this->totalFiles, this->totalSize);
+    emit updateFileSizeInfoSignal(mTotalFiles, mTotalSize);
     emit updateConnectionStatusSignal();
 
-    this->statsInfoBuilder->sendFullUpdate();
+    mStatsInfoBuilder->sendFullUpdate();
 
 }
 
 void ClientsObserver::nntpClientSpeedSlot(const int bytesDownloaded)
 {
-    this->addBytesDownloaded(bytesDownloaded);
+    addBytesDownloaded(bytesDownloaded);
 }
 
 void ClientsObserver::decrementSlot(const quint64 size, const int fileNumber = 1)
 {
 
-    this->totalFiles -= fileNumber;
-    this->totalSize -= size;
+    mTotalFiles -= fileNumber;
+    mTotalSize -= size;
 
     // status bar updates :
-    emit updateFileSizeInfoSignal(this->totalFiles, this->totalSize);
+    emit updateFileSizeInfoSignal(mTotalFiles, mTotalSize);
 
 }
 
 void ClientsObserver::fullFileSizeUpdate(const quint64 size, const quint64 files)
 {
 
-    this->totalSize = size;
-    this->totalFiles = files;
+    mTotalSize = size;
+    mTotalFiles = files;
 
     // status bar updates :
-    emit updateFileSizeInfoSignal(this->totalFiles, this->totalSize);
+    emit updateFileSizeInfoSignal(mTotalFiles, mTotalSize);
 
 }
 
 void ClientsObserver::connectionStatusSlot(const int connectionStatus)
 {
 
-    this->updateTotalConnections(connectionStatus);
+    updateTotalConnections(connectionStatus);
 
     emit updateConnectionStatusSignal();
 
@@ -99,7 +99,7 @@ void ClientsObserver::connectionStatusSlot(const int connectionStatus)
 void ClientsObserver::nntpErrorSlot(const int nttpErrorStatus)
 {
 
-    this->setNntpErrorStatus(nttpErrorStatus);
+    setNntpErrorStatus(nttpErrorStatus);
 
     emit updateConnectionStatusSignal();
 
@@ -110,7 +110,7 @@ void ClientsObserver::encryptionStatusSlot(const bool sslActive, const QString &
 
     //qCDebug(KWOOTY_LOG) << "sslActive : " << sslActive << "encryptionMethod" << encryptionMethod;
 
-    this->setSslHandshakeParameters(sslActive, encryptionMethod, certificateVerified, issuerOrgranisation, sslErrors);
+    setSslHandshakeParameters(sslActive, encryptionMethod, certificateVerified, issuerOrgranisation, sslErrors);
     emit updateConnectionStatusSignal();
 
 }
@@ -120,7 +120,7 @@ bool ClientsObserver::isSingleServer(QString &hostName) const
 
     bool singleServer = true;
 
-    ServerManager *serverManager = this->parent->getServerManager();
+    ServerManager *serverManager = mParent->getServerManager();
 
     if (serverManager->getServerNumber() > 1) {
         singleServer = false;
@@ -136,21 +136,21 @@ bool ClientsObserver::isSingleServer(QString &hostName) const
 
 bool ClientsObserver::isSslActive() const
 {
-    return this->parent->getServerManager()->areAllServersEncrypted();
+    return mParent->getServerManager()->areAllServersEncrypted();
 }
 
 void ClientsObserver::resetTotalBytesDownloaded()
 {
-    this->totalBytesDownloaded = 0;
+    mTotalBytesDownloaded = 0;
 }
 
 quint64 ClientsObserver::getTotalSize() const
 {
-    return this->totalSize;
+    return mTotalSize;
 }
 
 StatsInfoBuilder *ClientsObserver::getStatsInfoBuilder() const
 {
-    return this->statsInfoBuilder;
+    return mStatsInfoBuilder;
 }
 

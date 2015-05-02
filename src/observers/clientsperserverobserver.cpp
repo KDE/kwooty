@@ -33,7 +33,7 @@
 ClientsPerServerObserver::ClientsPerServerObserver(ServerGroup *parent) : ClientsObserverBase(parent)
 {
 
-    this->parent = parent;
+    this->mParent = parent;
 
     this->resetVariables();
     this->setupConnections();
@@ -43,7 +43,7 @@ ClientsPerServerObserver::ClientsPerServerObserver(ServerGroup *parent) : Client
 void ClientsPerServerObserver::setupConnections()
 {
 
-    ClientsObserver *clientsObserver = this->parent->getCore()->getClientsObserver();
+    ClientsObserver *clientsObserver = this->mParent->getCore()->getClientsObserver();
     // send connection status (connected, deconnected) to client observer for the current server :
     connect(this,
             SIGNAL(connectionStatusSignal(int)),
@@ -71,7 +71,7 @@ void ClientsPerServerObserver::setupConnections()
     // notify sidebar that some nntpClient info have been updated :
     connect(this,
             SIGNAL(serverStatisticsUpdateSignal(int)),
-            this->parent->getCore(),
+            this->mParent->getCore(),
             SLOT(serverStatisticsUpdateSlot(int)));
 
     // calculate average download speed for all nntp client instances of this server group :
@@ -86,12 +86,12 @@ void ClientsPerServerObserver::resetVariables()
 
     ClientsObserverBase::resetVariables() ;
 
-    this->downloadSpeed = 0;
-    this->averageDownloadSpeed = 0;
-    this->effectiveMeanDownloadSpeed = 0;
-    this->segmentInfoData = SegmentInfoData();
-    this->bytesDownloadedForCurrentSession = 0;
-    this->meanDownloadSpeedCounter = 0;
+    this->mDownloadSpeed = 0;
+    this->mAverageDownloadSpeed = 0;
+    this->mEffectiveMeanDownloadSpeed = 0;
+    this->mSegmentInfoData = SegmentInfoData();
+    this->mBytesDownloadedForCurrentSession = 0;
+    this->mMeanDownloadSpeedCounter = 0;
 
 }
 
@@ -103,10 +103,10 @@ void ClientsPerServerObserver::nntpClientSpeedPerServerSlot(const SegmentInfoDat
     this->addBytesDownloaded(bytesDownloaded);
 
     // store the number of bytes downloaded for the whole session in order to display it in sidebar :
-    this->bytesDownloadedForCurrentSession += bytesDownloaded;
+    this->mBytesDownloadedForCurrentSession += bytesDownloaded;
 
     // store info to compute remaining time and to display additional data in side bar :
-    this->segmentInfoData = segmentInfoData;
+    this->mSegmentInfoData = segmentInfoData;
 
     // forward current server download speed to global observer :
     emit speedSignal(bytesDownloaded);
@@ -121,7 +121,7 @@ void ClientsPerServerObserver::connectionStatusPerServerSlot(const int connectio
     // forward current server download speed to global observer :
     emit connectionStatusSignal(connectionStatus);
 
-    emit serverStatisticsUpdateSignal(this->parent->getRealServerGroupId());
+    emit serverStatisticsUpdateSignal(this->mParent->getRealServerGroupId());
 
 }
 
@@ -145,66 +145,66 @@ void ClientsPerServerObserver::encryptionStatusPerServerSlot(const bool sslActiv
     // forward current server download speed to global observer :
     emit encryptionStatusSignal(sslActive, encryptionMethod, certificateVerified, issuerOrgranisation, sslErrors);
 
-    emit serverStatisticsUpdateSignal(this->parent->getRealServerGroupId());
+    emit serverStatisticsUpdateSignal(this->mParent->getRealServerGroupId());
 }
 
 void ClientsPerServerObserver::updateDownloadSpeedSlot()
 {
 
     // get current download speed :
-    this->downloadSpeed = this->totalBytesDownloaded / StatsInfoBuilder::SPEED_AVERAGE_SECONDS;
+    this->mDownloadSpeed = this->mTotalBytesDownloaded / StatsInfoBuilder::SPEED_AVERAGE_SECONDS;
 
     // compute average download speed :
-    this->averageDownloadSpeed = (this->averageDownloadSpeed + this->downloadSpeed) / 2;
+    this->mAverageDownloadSpeed = (this->mAverageDownloadSpeed + this->mDownloadSpeed) / 2;
 
     // compute the effective mean download speed :
     if (this->isDownloading()) {
 
-        this->effectiveMeanDownloadSpeed = (this->effectiveMeanDownloadSpeed * this->meanDownloadSpeedCounter + this->downloadSpeed) / (this->meanDownloadSpeedCounter + 1);
-        this->meanDownloadSpeedCounter++;
+        this->mEffectiveMeanDownloadSpeed = (this->mEffectiveMeanDownloadSpeed * this->mMeanDownloadSpeedCounter + this->mDownloadSpeed) / (this->mMeanDownloadSpeedCounter + 1);
+        this->mMeanDownloadSpeedCounter++;
 
     }
 
     // notify side bar that download speed has been updated :
-    emit serverStatisticsUpdateSignal(this->parent->getRealServerGroupId());
+    emit serverStatisticsUpdateSignal(this->mParent->getRealServerGroupId());
 
     // reset number of bytes downloaded after text update :
-    this->totalBytesDownloaded = 0;
+    this->mTotalBytesDownloaded = 0;
 
 }
 
 bool ClientsPerServerObserver::isSslActive() const
 {
-    return this->sslActive;
+    return this->mSslActive;
 }
 
 bool ClientsPerServerObserver::isDownloading() const
 {
-    return (this->downloadSpeed > 0);
+    return (this->mDownloadSpeed > 0);
 }
 
 quint64 ClientsPerServerObserver::getDownloadSpeed() const
 {
-    return this->downloadSpeed;
+    return this->mDownloadSpeed;
 }
 
 quint64 ClientsPerServerObserver::getAverageDownloadSpeed() const
 {
-    return this->averageDownloadSpeed;
+    return this->mAverageDownloadSpeed;
 }
 
 quint64 ClientsPerServerObserver::getEffectiveMeanDownloadSpeed() const
 {
-    return this->effectiveMeanDownloadSpeed;
+    return this->mEffectiveMeanDownloadSpeed;
 }
 
 SegmentInfoData ClientsPerServerObserver::getSegmentInfoData() const
 {
-    return this->segmentInfoData;
+    return this->mSegmentInfoData;
 }
 
 quint64 ClientsPerServerObserver::getBytesDownloadedForCurrentSession() const
 {
-    return this->bytesDownloadedForCurrentSession;
+    return this->mBytesDownloadedForCurrentSession;
 }
 

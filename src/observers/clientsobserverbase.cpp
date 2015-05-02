@@ -28,84 +28,84 @@ ClientsObserverBase::ClientsObserverBase(QObject *parent) : QObject(parent)
 void ClientsObserverBase::resetVariables()
 {
 
-    this->totalBytesDownloaded = 0;
-    this->totalConnections = 0;
-    this->sslActive = false;
-    this->certificateVerified = false;
-    this->sslErrors = QStringList();
-    this->nttpErrorStatus = NoError;
+    mTotalBytesDownloaded = 0;
+    mTotalConnections = 0;
+    mSslActive = false;
+    mCertificateVerified = false;
+    mSslErrors = QStringList();
+    mNttpErrorStatus = NoError;
 
 }
 
 void ClientsObserverBase::addBytesDownloaded(const int &bytesDownloaded)
 {
-    this->totalBytesDownloaded += bytesDownloaded;
+    mTotalBytesDownloaded += bytesDownloaded;
 }
 
 void ClientsObserverBase::updateTotalConnections(const int &connectionStatus)
 {
 
     if (connectionStatus == Connected) {
-        this->totalConnections++;
+        mTotalConnections++;
     }
 
     if (connectionStatus == Disconnected) {
-        this->totalConnections--;
+        mTotalConnections--;
     }
 }
 
 void ClientsObserverBase::setNntpErrorStatus(const int &nttpErrorStatus)
 {
-    this->nttpErrorStatus = nttpErrorStatus;
+    mNttpErrorStatus = nttpErrorStatus;
 }
 
 void ClientsObserverBase::setSslHandshakeParameters(const bool &sslActive, const QString &encryptionMethod, const bool &certificateVerified, const QString &issuerOrgranisation, const QStringList &sslErrors)
 {
-    this->encryptionMethod = encryptionMethod;
-    this->sslActive = sslActive;
-    this->certificateVerified = certificateVerified;
-    this->issuerOrgranisation = issuerOrgranisation;
-    this->sslErrors = sslErrors;
+    mEncryptionMethod = encryptionMethod;
+    mSslActive = sslActive;
+    mCertificateVerified = certificateVerified;
+    mIssuerOrgranisation = issuerOrgranisation;
+    mSslErrors = sslErrors;
 }
 
 bool ClientsObserverBase::isConnected() const
 {
 
-    return (this->totalConnections > 0);
+    return (mTotalConnections > 0);
 }
 
 QString ClientsObserverBase::getEncryptionMethod() const
 {
-    return this->encryptionMethod;
+    return mEncryptionMethod;
 }
 
 QString ClientsObserverBase::getIssuerOrgranisation() const
 {
-    return this->issuerOrgranisation;
+    return mIssuerOrgranisation;
 }
 
 QStringList ClientsObserverBase::getSslErrors() const
 {
-    return this->sslErrors;
+    return mSslErrors;
 }
 
 int ClientsObserverBase::getTotalConnections() const
 {
-    return this->totalConnections;
+    return mTotalConnections;
 }
 
 bool ClientsObserverBase::isCertificateVerified() const
 {
-    return this->certificateVerified;
+    return mCertificateVerified;
 }
 
 int ClientsObserverBase::getNttpErrorStatus() const
 {
-    return this->nttpErrorStatus;
+    return mNttpErrorStatus;
 }
 
 quint64 ClientsObserverBase::getTotalBytesDownloaded() const
 {
-    return this->totalBytesDownloaded;
+    return mTotalBytesDownloaded;
 }
 
