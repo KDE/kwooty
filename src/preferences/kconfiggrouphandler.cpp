@@ -36,10 +36,10 @@ using namespace UtilityNamespace;
 KConfigGroupHandler::KConfigGroupHandler(MainWindow *mainwindow) : QObject(qApp)
 {
 
-    this->mainWindow = mainwindow;
-    this->wallet = 0;
-    this->dialogButtonCode = 0;
-    this->useKwallet = Settings::useKwallet();
+    mMainWindow = mainwindow;
+    mWallet = 0;
+    mDialogButtonCode = 0;
+    mUseKwallet = Settings::useKwallet();
 
     instance = this;
 
@@ -53,8 +53,8 @@ KConfigGroupHandler *KConfigGroupHandler::getInstance()
 
 KConfigGroupHandler::~KConfigGroupHandler()
 {
-    if (this->wallet) {
-        delete this->wallet;
+    if (mWallet) {
+        delete mWallet;
     }
 }
 
@@ -66,35 +66,35 @@ void KConfigGroupHandler::settingsChangedSlot()
 {
 
     // switch passwords between config file and kwallet :
-    if (this->useKwallet != Settings::useKwallet() && this->openWallet()) {
+    if (mUseKwallet != Settings::useKwallet() && openWallet()) {
 
         // avoid to display dialog box during synchronization :
-        this->dialogButtonCode = KMessageBox::Ok;
+        mDialogButtonCode = KMessageBox::Ok;
 
-        for (int serverId = 0; serverId < this->readServerNumberSettings(); serverId++) {
+        for (int serverId = 0; serverId < readServerNumberSettings(); serverId++) {
 
             // set old value right now :
-            this->useKwallet = !Settings::useKwallet();
+            mUseKwallet = !Settings::useKwallet();
 
             KConfigGroup configGroup = KConfigGroup(KSharedConfig::openConfig(), QString::fromLatin1("Server_%1").arg(serverId));
 
             // read password from plain text or kwallet :
-            QString password = this->readPassword(serverId, configGroup);
+            QString password = readPassword(serverId, configGroup);
 
             // set new value right now :
-            this->useKwallet = Settings::useKwallet();
+            mUseKwallet = Settings::useKwallet();
 
             // write password kwallet or plain text :
-            this->writePassword(serverId, configGroup, password);
+            writePassword(serverId, configGroup, password);
 
             configGroup.sync();
 
         }
 
         // store new setting value :
-        this->useKwallet = Settings::useKwallet();
+        mUseKwallet = Settings::useKwallet();
 
-        this->dialogButtonCode = 0;
+        mDialogButtonCode = 0;
     }
 
 }
@@ -102,7 +102,7 @@ void KConfigGroupHandler::settingsChangedSlot()
 void KConfigGroupHandler::walletClosedSlot()
 {
     // if wallet is closed, delete the current one to reopen later a new one if needed :
-    delete this->wallet;
+    delete mWallet;
 }
 
 //======================================================================================//
@@ -112,20 +112,20 @@ void KConfigGroupHandler::walletClosedSlot()
 void KConfigGroupHandler::openWalletFails()
 {
 
-    if (this->dialogButtonCode == 0) {
+    if (mDialogButtonCode == 0) {
 
-        this->dialogButtonCode = KMessageBox::Cancel;
-        this->dialogButtonCode = KMessageBox::messageBox(0,
+        mDialogButtonCode = KMessageBox::Cancel;
+        mDialogButtonCode = KMessageBox::messageBox(0,
                                  KMessageBox::Sorry,
                                  i18n("No running KWallet found. Passwords will be saved in plaintext."),
                                  i18n("KWallet is not running"));
 
         // disable kwallet usage :
         Settings::setUseKwallet(false);
-        this->useKwallet = Settings::useKwallet();
+        mUseKwallet = Settings::useKwallet();
 
-        if (this->dialogButtonCode == KMessageBox::Ok) {
-            this->dialogButtonCode = 0;
+        if (mDialogButtonCode == KMessageBox::Ok) {
+            mDialogButtonCode = 0;
         }
 
     }
@@ -137,39 +137,39 @@ bool KConfigGroupHandler::openWallet()
 
     bool walletOpen = false;
 
-    if (this->mainWindow) {
+    if (mMainWindow) {
 
         // open the wallet if not open :
-        if (!this->wallet) {
+        if (!mWallet) {
 
-            this->wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), this->mainWindow->winId());
+            mWallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), mMainWindow->winId());
 
             // be notified that the wallet has been closed :
-            connect(this->wallet, SIGNAL(walletClosed()), this, SLOT(walletClosedSlot()));
+            connect(mWallet, SIGNAL(walletClosed()), this, SLOT(walletClosedSlot()));
         }
 
         // if wallet has been successfully open :
-        if (this->wallet) {
+        if (mWallet) {
 
             // check if kwooty's entry exists :
             QString entryStr = "kwooty";
 
             // check if wallet is open and current folder properly set :
-            if (this->wallet->isOpen() &&
-                    this->wallet->currentFolder() == entryStr) {
+            if (mWallet->isOpen() &&
+                    mWallet->currentFolder() == entryStr) {
                 walletOpen = true;
             }
             // create and set wallet in proper folder :
             else {
 
                 // create the entry if it not already exists :
-                if (!this->wallet->hasEntry(entryStr)) {
-                    this->wallet->createFolder(entryStr);
+                if (!mWallet->hasEntry(entryStr)) {
+                    mWallet->createFolder(entryStr);
                 }
 
                 // set the current working folder :
-                if (!this->wallet->hasEntry(entryStr)) {
-                    walletOpen = this->wallet->setFolder(entryStr);
+                if (!mWallet->hasEntry(entryStr)) {
+                    walletOpen = mWallet->setFolder(entryStr);
                 }
             }
         }
@@ -181,7 +181,7 @@ bool KConfigGroupHandler::openWallet()
     }
 
     if (!walletOpen) {
-        this->openWalletFails();
+        openWalletFails();
 
     }
 
@@ -195,12 +195,12 @@ QString KConfigGroupHandler::readPassword(const int &serverId, KConfigGroup &con
     QString password = "";
 
     // read password from kwallet if enabled in settings :
-    if (this->useKwallet) {
+    if (mUseKwallet) {
 
-        if (this->openWallet()) {
+        if (openWallet()) {
 
             QString passwordAlias = QString("PasswordServer_%1").arg(serverId);
-            this->wallet->readPassword(passwordAlias, password);
+            mWallet->readPassword(passwordAlias, password);
         }
 
     }
@@ -216,16 +216,16 @@ void KConfigGroupHandler::writePassword(const int &serverId, KConfigGroup &confi
 {
 
     // write password to kwallet if enabled in settings :
-    if (this->useKwallet) {
+    if (mUseKwallet) {
 
-        if (this->openWallet()) {
+        if (openWallet()) {
 
             QString passwordAlias = QString("PasswordServer_%1").arg(serverId);
-            int writeSuccessful = this->wallet->writePassword(passwordAlias, password);
+            int writeSuccessful = mWallet->writePassword(passwordAlias, password);
 
             // password has been successfully written in wallet, remove eventual plain text password :
             if (writeSuccessful == 0) {
-                this->removePasswordEntry(configGroup);
+                removePasswordEntry(configGroup);
             }
         }
     }
@@ -256,7 +256,7 @@ ServerData KConfigGroupHandler::readServerSettings(int serverId, const PasswordD
     }
 
     // read data from config file and kwallet :
-    ServerData serverData = this->fillServerData(serverId, configGroup, passwordData);
+    ServerData serverData = fillServerData(serverId, configGroup, passwordData);
 
     // remove previous kwooty version server group if any :
     if (firstLaunchFromPreviousVersion) {
@@ -285,7 +285,7 @@ ServerData KConfigGroupHandler::fillServerData(const int &serverId, KConfigGroup
 
     // read password with Kwallet or kconfig file :
     if (passwordData == ReadPasswordData) {
-        serverData.setPassword(this->readPassword(serverId, configGroup));
+        serverData.setPassword(readPassword(serverId, configGroup));
     }
 
     // if this is the first kwooty launch, config file is new and server name will be empty
@@ -315,7 +315,7 @@ void KConfigGroupHandler::writeServerSettings(int serverId, ServerData serverDat
     configGroup.writeEntry("serverModeIndex", serverData.getServerModeIndex());
 
     // write password with Kwallet or kconfig file :
-    this->writePassword(serverId, configGroup, serverData.getPassword());
+    writePassword(serverId, configGroup, serverData.getPassword());
 
     configGroup.sync();
 

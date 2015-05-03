@@ -22,7 +22,7 @@
 
 #include <QIcon>
 #include <KCmdLineArgs>
-#include <KDebug>
+#include <QDebug>
 #include <KUrl>
 #include <kstartupinfo.h>
 
@@ -30,13 +30,13 @@
 
 UniqueApp::UniqueApp() : KUniqueApplication()
 {
-    this->mKwootyInstance = false;
+    mKwootyInstance = false;
 }
 
 UniqueApp::~UniqueApp()
 {
-    if (this->mMainWindow) {
-        delete this->mMainWindow;
+    if (mMainWindow) {
+        delete mMainWindow;
     }
 }
 
@@ -44,25 +44,25 @@ int UniqueApp::newInstance()
 {
 
     // create a new instance :
-    if (!this->mKwootyInstance) {
+    if (!mKwootyInstance) {
 
-        this->setWindowIcon(QIcon::fromTheme("kwooty"));
-        this->mKwootyInstance = true;
-        this->mMainWindow = new MainWindow();
+        setWindowIcon(QIcon::fromTheme("kwooty"));
+        mKwootyInstance = true;
+        mMainWindow = new MainWindow();
 
     }
 
     // instance already exists :
-    if (this->mKwootyInstance) {
+    if (mKwootyInstance) {
 
-        if (this->mMainWindow) {
+        if (mMainWindow) {
 
             KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
             // open nzb files set as argument :
             for (int i = 0; i < args->count(); ++i) {
 
-                this->mMainWindow->openFileWithFileMode(args->url(i), UtilityNamespace::OpenWith);
+                mMainWindow->openFileWithFileMode(args->url(i), UtilityNamespace::OpenWith);
 
             }
 
@@ -70,10 +70,10 @@ int UniqueApp::newInstance()
             if (args->count() == 0) {
 
                 // display main window if it only visible is systray :
-                if (!this->isSessionRestored() &&
-                        !this->mMainWindow->isVisible()) {
+                if (!isSessionRestored() &&
+                        !mMainWindow->isVisible()) {
 
-                    this->mMainWindow->show();
+                    mMainWindow->show();
 
                 }
             }
@@ -82,19 +82,19 @@ int UniqueApp::newInstance()
             else {
 
                 // shown only main window if it is not only present in systray :
-                if (this->mMainWindow->isVisible()) {
-                    this->mMainWindow->show();
+                if (mMainWindow->isVisible()) {
+                    mMainWindow->show();
                 }
 
                 args->clear();
 
-                KStartupInfo::setNewStartupId(this->mMainWindow, this->startupId());
+                KStartupInfo::setNewStartupId(mMainWindow, startupId());
             }
 
         }
         // main window may not exist yet if for instance kwallet promps the user to open the wallet :
         else {
-            kDebug() << "mainWindow not ready yet !";
+            qDebug() << "mainWindow not ready yet !";
         }
 
     }

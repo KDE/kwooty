@@ -70,10 +70,10 @@ public:
 
 private:
     static KConfigGroupHandler *instance;
-    QPointer<KWallet::Wallet> wallet;
-    MainWindow *mainWindow;
-    int dialogButtonCode;
-    bool useKwallet;
+    QPointer<KWallet::Wallet> mWallet;
+    MainWindow *mMainWindow;
+    int mDialogButtonCode;
+    bool mUseKwallet;
 
     bool openWallet();
     void openWalletFails();
