@@ -35,12 +35,12 @@ public:
     void finishDecodingJob(const NzbFileData &nzbFileData);
 
 private:
-    QString searchPattern(QIODevice *);
+    QString searchPattern(QIODevice *) Q_DECL_OVERRIDE;
     QByteArray decodeYenc(QByteArray &, const quint32 &);
     QByteArray getLineByteArray(const QString &, const QByteArray &, int &);
     quint32 computeCrc32Part(const quint32 &, const unsigned char &);
     qint64 getPatternValue(const QByteArray &, const QString &, const int & = 10);
-    void decodeProgression(PostDownloadInfoData &);
+    void decodeProgression(PostDownloadInfoData &) Q_DECL_OVERRIDE;
 };
 
 namespace crc

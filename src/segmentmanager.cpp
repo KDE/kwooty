@@ -372,7 +372,7 @@ void SegmentManager::getNextSegmentSlot(ClientManagerConn *currentClientManagerC
 
 }
 
-void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, QString decodedFileName)
+void SegmentManager::updateDownloadSegmentSlot(SegmentData segmentData, const QString &decodedFileName)
 {
 
     // fast search index :

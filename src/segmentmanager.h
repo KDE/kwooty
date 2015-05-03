@@ -61,7 +61,7 @@ private:
     bool sendNextIdleSegment(QStandardItem *, ClientManagerConn *, SegmentInfoData);
 
 public Q_SLOTS:
-    void updateDownloadSegmentSlot(SegmentData,  QString = QString());
+    void updateDownloadSegmentSlot(SegmentData,  const QString & = QString());
     void getNextSegmentSlot(ClientManagerConn *);
     void updateDecodeSegmentSlot(PostDownloadInfoData repairDecompressInfoData);
     void updateRepairExtractSegmentSlot(PostDownloadInfoData repairDecompressInfoData);

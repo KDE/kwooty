@@ -40,10 +40,10 @@ private:
     };
 
     void decodeEncodedData(QFile &, SegmentData &, int &, const QByteArray &, bool &, bool &);
-    QString searchPattern(QIODevice *segmentFile);
+    QString searchPattern(QIODevice *segmentFile) Q_DECL_OVERRIDE;
     bool decodeUUenc(const QByteArray &, QFile &, const int &);
     bool isUUEncodedLine(QByteArray &);
-    void decodeProgression(PostDownloadInfoData &);
+    void decodeProgression(PostDownloadInfoData &) Q_DECL_OVERRIDE;
     bool decodeSegmentFiles(QFile &);
 
 };

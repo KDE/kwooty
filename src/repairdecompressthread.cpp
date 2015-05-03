@@ -35,49 +35,49 @@ RepairDecompressThread::RepairDecompressThread() {}
 RepairDecompressThread::RepairDecompressThread(Core *parent)
 {
 
-    this->parent = parent;
+    this->mParent = parent;
 
     this->init();
 
-    this->dedicatedThread = new QThread();
-    this->moveToThread(this->dedicatedThread);
+    this->mDedicatedThread = new QThread();
+    this->moveToThread(this->mDedicatedThread);
 
     // start current thread :
-    this->dedicatedThread->start();
+    this->mDedicatedThread->start();
 
 }
 
 RepairDecompressThread::~RepairDecompressThread()
 {
 
-    this->dedicatedThread->quit();
-    this->dedicatedThread->wait();
+    this->mDedicatedThread->quit();
+    this->mDedicatedThread->wait();
 
-    delete this->dedicatedThread;
+    delete this->mDedicatedThread;
 
 }
 
 Core *RepairDecompressThread::getCore()
 {
 
-    return this->parent;
+    return this->mParent;
 
 }
 
 void RepairDecompressThread::init()
 {
 
-    this->waitForNextProcess = false;
+    this->mWaitForNextProcess = false;
 
     // create verify/repair instance :
-    repair = new Repair(this);
+    mRepair = new Repair(this);
 
     // create extract instances :
-    this->extracterList.append(new ExtractRar(this));
-    this->extracterList.append(new ExtractZip(this));
-    this->extracterList.append(new ExtractSplit(this));
+    this->mExtracterList.append(new ExtractRar(this));
+    this->mExtracterList.append(new ExtractZip(this));
+    this->mExtracterList.append(new ExtractSplit(this));
 
-    this->repairDecompressTimer = new QTimer(this);
+    this->mRepairDecompressTimer = new QTimer(this);
 
     // setup connections :
     this->setupConnections();
@@ -88,14 +88,14 @@ void RepairDecompressThread::setupConnections()
 {
 
     // check if there are data to repair :
-    connect(this->repairDecompressTimer ,
+    connect(this->mRepairDecompressTimer ,
             SIGNAL(timeout()),
             this,
             SLOT(processJobSlot()));
 
     // receive data to repair and decompress from ItemParentUpdater :
     qRegisterMetaType<NzbCollectionData>("NzbCollectionData");
-    connect(this->parent->getItemParentUpdater(),
+    connect(this->mParent->getItemParentUpdater(),
             SIGNAL(repairDecompressSignal(NzbCollectionData)),
             this,
             SLOT(repairDecompressSlot(NzbCollectionData)));
@@ -105,7 +105,7 @@ void RepairDecompressThread::setupConnections()
     qRegisterMetaType<UtilityNamespace::ItemTarget>("UtilityNamespace::ItemTarget");
 
     // begin file extraction when end repair signal has been received :
-    connect(repair,
+    connect(mRepair,
             SIGNAL(repairProcessEndedSignal(NzbCollectionData)),
             this,
             SLOT(repairProcessEndedSlot(NzbCollectionData)));
@@ -114,7 +114,7 @@ void RepairDecompressThread::setupConnections()
     qRegisterMetaType<PostDownloadInfoData>("PostDownloadInfoData");
     connect(this,
             SIGNAL(updateRepairExtractSegmentSignal(PostDownloadInfoData)),
-            this->parent->getSegmentManager(),
+            this->mParent->getSegmentManager(),
             SLOT(updateRepairExtractSegmentSlot(PostDownloadInfoData)));
 
 }
@@ -128,7 +128,7 @@ ExtractBase *RepairDecompressThread::retrieveCorrespondingExtracter(const NzbCol
     UtilityNamespace::ArchiveFormat archiveFormat = this->getArchiveFormatFromList(currentNzbCollectionData.getNzbFileDataList());
 
     // return the associated extracter according to archive format :
-    foreach (ExtractBase *extracter, this->extracterList) {
+    foreach (ExtractBase *extracter, this->mExtracterList) {
 
         if (extracter->canHandleFormat(archiveFormat)) {
 
@@ -375,7 +375,7 @@ void RepairDecompressThread::processRarFilesFromDifferentGroups(const QStringLis
                 qSort(groupedFileList);
                 nzbCollectionData.setNzbFileDataList(groupedFileList);
 
-                this->filesToRepairList.append(nzbCollectionData);
+                this->mFilesToRepairList.append(nzbCollectionData);
             }
         }
 
@@ -427,7 +427,7 @@ void RepairDecompressThread::processRarFilesFromSameGroup(NzbCollectionData &nzb
         qSort(groupedFileList);
         nzbCollectionData.setNzbFileDataList(groupedFileList);
 
-        this->filesToRepairList.append(nzbCollectionData);
+        this->mFilesToRepairList.append(nzbCollectionData);
     }
 
 }
@@ -467,8 +467,8 @@ void RepairDecompressThread::notifyNzbProcessEnded(const NzbCollectionData &nzbC
     // to passworded files. Do not go further and let the user decides what to do with this nzb content now :
     if (!nzbCollectionData.getNzbParentId().isEmpty()) {
 
-        if (!this->filesToRepairList.contains(nzbCollectionData) &&
-                !this->filesToExtractList.contains(nzbCollectionData)) {
+        if (!this->mFilesToRepairList.contains(nzbCollectionData) &&
+                !this->mFilesToExtractList.contains(nzbCollectionData)) {
 
             PostDownloadInfoData repairDecompressInfoData;
             repairDecompressInfoData.initRepairDecompress(nzbCollectionData.getFirstChildUniqueIdentifier(), PROGRESS_COMPLETE, ExtractSuccessStatus, ParentItemTarget);
@@ -484,8 +484,8 @@ void RepairDecompressThread::notifyNzbProcessEnded(const NzbCollectionData &nzbC
         }
 
         // if post process has failed, notify of failure in other nzbCollectionData from the same nzb set :
-        this->propagatePostProcessFailureToPendingCollection(this->filesToRepairList, nzbCollectionData);
-        this->propagatePostProcessFailureToPendingCollection(this->filesToExtractList, nzbCollectionData);
+        this->propagatePostProcessFailureToPendingCollection(this->mFilesToRepairList, nzbCollectionData);
+        this->propagatePostProcessFailureToPendingCollection(this->mFilesToExtractList, nzbCollectionData);
 
     }
 
@@ -523,12 +523,12 @@ void RepairDecompressThread::processJobSlot()
     this->startExtractSlot();
 
     // stop timer if there is no more pending jobs :
-    if (!this->waitForNextProcess &&
-            this->filesToRepairList.isEmpty() &&
-            this->filesToExtractList.isEmpty() &&
-            this->filesToProcessList.isEmpty()) {
+    if (!this->mWaitForNextProcess &&
+            this->mFilesToRepairList.isEmpty() &&
+            this->mFilesToExtractList.isEmpty() &&
+            this->mFilesToProcessList.isEmpty()) {
 
-        this->repairDecompressTimer->stop();
+        this->mRepairDecompressTimer->stop();
     }
 
 }
@@ -537,12 +537,12 @@ void RepairDecompressThread::startRepairSlot()
 {
 
     // if no data is currently being verified :
-    if (!this->waitForNextProcess && !this->filesToRepairList.isEmpty()) {
+    if (!this->mWaitForNextProcess && !this->mFilesToRepairList.isEmpty()) {
 
-        this->waitForNextProcess = true;
+        this->mWaitForNextProcess = true;
 
         // get nzbCollectionData to be verified from list :
-        NzbCollectionData currentNzbCollectionData = this->filesToRepairList.takeFirst();
+        NzbCollectionData currentNzbCollectionData = this->mFilesToRepairList.takeFirst();
 
         // perform some pre-processing dedicated to "split-only" files :
         this->preRepairProcessing(currentNzbCollectionData);
@@ -551,7 +551,7 @@ void RepairDecompressThread::startRepairSlot()
         if (!currentNzbCollectionData.getPar2BaseName().isEmpty() &&
                 currentNzbCollectionData.isRepairProcessAllowed()) {
 
-            repair->launchProcess(currentNzbCollectionData);
+            mRepair->launchProcess(currentNzbCollectionData);
         } else {
 
             currentNzbCollectionData.setVerifyRepairTerminateStatus(RepairFinishedStatus);
@@ -566,9 +566,9 @@ void RepairDecompressThread::startExtractSlot()
 {
 
     // if no data is currently being verified :
-    if (!this->filesToExtractList.isEmpty()) {
+    if (!this->mFilesToExtractList.isEmpty()) {
 
-        NzbCollectionData nzbCollectionDataToExtract = this->filesToExtractList.takeFirst();
+        NzbCollectionData nzbCollectionDataToExtract = this->mFilesToExtractList.takeFirst();
 
         // extract data :
         if (!nzbCollectionDataToExtract.getNzbFileDataList().isEmpty() &&
@@ -600,12 +600,12 @@ void RepairDecompressThread::repairProcessEndedSlot(const NzbCollectionData &nzb
 
     // if verify/repair ok, launch archive extraction :
     if (repairStatus == RepairFinishedStatus) {
-        this->filesToExtractList.append(nzbCollectionDataToExtract);
+        this->mFilesToExtractList.append(nzbCollectionDataToExtract);
     }
 
     // if verify/repair ko, do not launch archive extraction and verify next pending items :
     if (repairStatus == RepairFailedStatus) {
-        this->waitForNextProcess = false;
+        this->mWaitForNextProcess = false;
     }
 
     // if repair has failed, notify that nzb processing has ended now :
@@ -625,8 +625,8 @@ void RepairDecompressThread::extractProcessEndedSlot(const NzbCollectionData &nz
             (nzbCollectionData.getPar2FileDownloadStatus() == WaitForPar2IdleStatus)) {
 
         // remove multi nzb-parts with the same parent ID :
-        if (filesToRepairList.contains(nzbCollectionData)) {
-            filesToRepairList.removeAll(nzbCollectionData);
+        if (mFilesToRepairList.contains(nzbCollectionData)) {
+            mFilesToRepairList.removeAll(nzbCollectionData);
         }
 
         triggerPar2Download = true;
@@ -637,7 +637,7 @@ void RepairDecompressThread::extractProcessEndedSlot(const NzbCollectionData &nz
         this->notifyNzbProcessEnded(nzbCollectionData);
     }
 
-    this->waitForNextProcess = false;
+    this->mWaitForNextProcess = false;
 
 }
 
@@ -646,11 +646,11 @@ void RepairDecompressThread::repairDecompressSlot(const NzbCollectionData &nzbCo
 
     // all files have been downloaded and decoded, set them in the pending list
     // in order to process them :
-    this->filesToProcessList.append(nzbCollectionData);
+    this->mFilesToProcessList.append(nzbCollectionData);
 
     // start timer in order to process pending jobs :
-    if (!this->repairDecompressTimer->isActive()) {
-        this->repairDecompressTimer->start(100);
+    if (!this->mRepairDecompressTimer->isActive()) {
+        this->mRepairDecompressTimer->start(100);
     }
 
 }
@@ -658,10 +658,10 @@ void RepairDecompressThread::repairDecompressSlot(const NzbCollectionData &nzbCo
 void RepairDecompressThread::processPendingFiles()
 {
 
-    if (!this->filesToProcessList.isEmpty()) {
+    if (!this->mFilesToProcessList.isEmpty()) {
 
         // get nzbFileDataList to verify and repair :
-        NzbCollectionData nzbCollectionData = this->filesToProcessList.takeFirst();
+        NzbCollectionData nzbCollectionData = this->mFilesToProcessList.takeFirst();
 
         // if the list contains rar files belonging to one group :
         if (!this->isListContainsdifferentGroups(nzbCollectionData.getNzbFileDataList())) {

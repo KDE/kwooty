@@ -83,7 +83,7 @@ private:
     UtilityNamespace::ItemTarget getItemTarget(const NzbFileData &);
 
 Q_SIGNALS:
-    void repairProcessEndedSignal(NzbCollectionData);
+    void repairProcessEndedSignal(const NzbCollectionData &);
 
 public Q_SLOTS:
     void repairReadyReadSlot();

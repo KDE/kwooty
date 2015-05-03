@@ -31,29 +31,29 @@
 SegmentDecoderBase::SegmentDecoderBase(SegmentsDecoderThread *parent) : QObject(parent)
 {
 
-    this->segmentsDecoderThread = parent;
+    this->mSegmentsDecoderThread = parent;
 
 }
 
 QString SegmentDecoderBase::scanSegmentFiles(const NzbFileData &currentNzbFileData)
 {
 
-    this->parentIdentifer = currentNzbFileData.getUniqueIdentifier();
-    this->segmentDataList = currentNzbFileData.getSegmentList();
+    this->mParentIdentifer = currentNzbFileData.getUniqueIdentifier();
+    this->mSegmentDataList = currentNzbFileData.getSegmentList();
 
     QString fileName;
 
     //notify item that list of files is being scanned :
-    if (!this->segmentDataList.isEmpty()) {
+    if (!this->mSegmentDataList.isEmpty()) {
 
         PostDownloadInfoData decodeInfoData;
-        decodeInfoData.initDecode(this->parentIdentifer, PROGRESS_INIT, ScanStatus);
+        decodeInfoData.initDecode(this->mParentIdentifer, PROGRESS_INIT, ScanStatus);
         this->decodeProgression(decodeInfoData);
 
     }
 
     // scan every files to be decoded :
-    foreach (const SegmentData &currentSegment, this->segmentDataList) {
+    foreach (const SegmentData &currentSegment, this->mSegmentDataList) {
 
         // if segment has been downloaded :
         if (currentSegment.getArticlePresenceOnServer() == Present) {

@@ -36,10 +36,10 @@ SegmentDecoderUUEnc::~SegmentDecoderUUEnc()
 void SegmentDecoderUUEnc::decodeProgression(PostDownloadInfoData &decodeInfoData)
 {
 
-    decodeInfoData.setCrc32Match(this->crc32Match);
+    decodeInfoData.setCrc32Match(this->mCrc32Match);
     decodeInfoData.setArticleEncodingType(ArticleEncodingUUEnc);
 
-    this->segmentsDecoderThread->emitDecodeProgression(decodeInfoData);
+    this->mSegmentsDecoderThread->emitDecodeProgression(decodeInfoData);
 
 }
 
@@ -47,13 +47,13 @@ void SegmentDecoderUUEnc::decodeSegments(NzbFileData currentNzbFileData, const Q
 {
 
     // init variables :
-    this->parentIdentifer = currentNzbFileData.getUniqueIdentifier();
-    this->segmentDataList = currentNzbFileData.getSegmentList();
-    this->crc32Match = false;
+    this->mParentIdentifer = currentNzbFileData.getUniqueIdentifier();
+    this->mSegmentDataList = currentNzbFileData.getSegmentList();
+    this->mCrc32Match = false;
 
     // decodeInfoData sent by defaut :
     PostDownloadInfoData decodeInfoData;
-    decodeInfoData.initDecode(this->parentIdentifer, PROGRESS_COMPLETE, DecodeErrorStatus);
+    decodeInfoData.initDecode(this->mParentIdentifer, PROGRESS_COMPLETE, DecodeErrorStatus);
 
     QString fileSavePath = currentNzbFileData.getFileSavePath();
     if (Utility::createFolder(fileSavePath)) {
@@ -93,12 +93,12 @@ void SegmentDecoderUUEnc::decodeSegments(NzbFileData currentNzbFileData, const Q
     // notify user of the issue :
     else {
         this->decodeProgression(decodeInfoData);
-        this->segmentsDecoderThread->emitSaveFileError();
+        this->mSegmentsDecoderThread->emitSaveFileError();
     }
 
     // clear variables :
-    this->parentIdentifer.clear();
-    this->segmentDataList.clear();
+    this->mParentIdentifer.clear();
+    this->mSegmentDataList.clear();
 
 }
 
@@ -110,7 +110,7 @@ bool SegmentDecoderUUEnc::decodeSegmentFiles(QFile &targetFile)
 
     // decoding is starting :
     PostDownloadInfoData decodeInfoData;
-    decodeInfoData.initDecode(this->parentIdentifer, PROGRESS_INIT, DecodeStatus);
+    decodeInfoData.initDecode(this->mParentIdentifer, PROGRESS_INIT, DecodeStatus);
 
     this->decodeProgression(decodeInfoData);
 
@@ -118,7 +118,7 @@ bool SegmentDecoderUUEnc::decodeSegmentFiles(QFile &targetFile)
     int segmentCrc32MatchNumber = 0;
 
     // scan every files to decode :
-    foreach (SegmentData currentSegment, this->segmentDataList) {
+    foreach (SegmentData currentSegment, this->mSegmentDataList) {
 
         // if segment has been downloaded :
         if (currentSegment.getArticlePresenceOnServer() == Present) {
@@ -143,23 +143,23 @@ bool SegmentDecoderUUEnc::decodeSegmentFiles(QFile &targetFile)
         // if the segment was not present on the server :
         else {
             // file shall be repaired, set crc32Match to false :
-            this->crc32Match = false;
+            this->mCrc32Match = false;
         }
 
     }
 
     // if all segments have a correct crc32 :
-    if (segmentDataList.size() != segmentCrc32MatchNumber) {
-        this->crc32Match = false;
+    if (mSegmentDataList.size() != segmentCrc32MatchNumber) {
+        this->mCrc32Match = false;
     }
 
     // end of decoding management :
     if (writeError) {
 
         encodedDataFound = false;
-        this->crc32Match = false;
+        this->mCrc32Match = false;
 
-        this->segmentsDecoderThread->emitSaveFileError();
+        this->mSegmentsDecoderThread->emitSaveFileError();
     }
 
     return encodedDataFound;
@@ -170,7 +170,7 @@ void SegmentDecoderUUEnc::decodeEncodedData(QFile &targetFile, SegmentData &curr
 {
 
     // crc32 can not be checked for uu encoded files, set it to false :
-    this->crc32Match = false;
+    this->mCrc32Match = false;
 
     // decode encoded data and check crc :
     writeError = this->decodeUUenc(segmentByteArray, targetFile, currentSegment.getElementInList());
@@ -231,7 +231,7 @@ bool SegmentDecoderUUEnc::decodeUUenc(const QByteArray &captureArray, QFile &tar
 
     // send decoding progression :
     PostDownloadInfoData decodeInfoData;
-    decodeInfoData.initDecode(this->parentIdentifer, qRound(((double)(elementInList * 100) / (double)(this->segmentDataList.size()))), DecodeStatus);
+    decodeInfoData.initDecode(this->mParentIdentifer, qRound(((double)(elementInList * 100) / (double)(this->mSegmentDataList.size()))), DecodeStatus);
     this->decodeProgression(decodeInfoData);
 
     return writeError;

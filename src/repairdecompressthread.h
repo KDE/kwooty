@@ -47,15 +47,15 @@ public:
     void emitProcessUpdate(const PostDownloadInfoData &);
 
 private:
-    QThread *dedicatedThread;
-    QTimer *repairDecompressTimer;
-    Core *parent;
-    Repair *repair;
-    QList<ExtractBase *> extracterList;
-    QList<NzbCollectionData> filesToRepairList;
-    QList<NzbCollectionData> filesToExtractList;
-    QList<NzbCollectionData> filesToProcessList;
-    bool waitForNextProcess;
+    QThread *mDedicatedThread;
+    QTimer *mRepairDecompressTimer;
+    Core *mParent;
+    Repair *mRepair;
+    QList<ExtractBase *> mExtracterList;
+    QList<NzbCollectionData> mFilesToRepairList;
+    QList<NzbCollectionData> mFilesToExtractList;
+    QList<NzbCollectionData> mFilesToProcessList;
+    bool mWaitForNextProcess;
 
     void init();
     void setupConnections();
@@ -74,7 +74,7 @@ private:
     ExtractBase *retrieveCorrespondingExtracter(const NzbCollectionData &);
 
 Q_SIGNALS:
-    void updateRepairExtractSegmentSignal(PostDownloadInfoData);
+    void updateRepairExtractSegmentSignal(const PostDownloadInfoData &);
 
 public Q_SLOTS:
     void repairDecompressSlot(const NzbCollectionData &);

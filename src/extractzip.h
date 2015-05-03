@@ -37,7 +37,7 @@ private:
     void extractUpdate(const QString &) Q_DECL_OVERRIDE;
     void checkIfArchivePassworded(const QString &, bool &) Q_DECL_OVERRIDE;
     void sendExtractProgramNotFoundNotification() Q_DECL_OVERRIDE;
-    QString searchExtractProgram();
+    QString searchExtractProgram() Q_DECL_OVERRIDE;
 private Q_SLOTS:
     void startedSlot();
 

@@ -48,13 +48,10 @@ protected:
     virtual QString searchPattern(QIODevice *) = 0;
     virtual void decodeProgression(PostDownloadInfoData &decodeInfoData) = 0;
 
-    SegmentsDecoderThread *segmentsDecoderThread;
-    QList<SegmentData> segmentDataList;
-    QVariant parentIdentifer;
-    bool crc32Match;
-
-Q_SIGNALS:
-
+    SegmentsDecoderThread *mSegmentsDecoderThread;
+    QList<SegmentData> mSegmentDataList;
+    QVariant mParentIdentifer;
+    bool mCrc32Match;
 };
 
 #endif // SEGMENTDECODERBASE_H

@@ -37,16 +37,16 @@ SegmentDecoderYEnc::~SegmentDecoderYEnc()
 void SegmentDecoderYEnc::decodeProgression(PostDownloadInfoData &decodeInfoData)
 {
 
-    decodeInfoData.setCrc32Match(this->crc32Match);
+    decodeInfoData.setCrc32Match(this->mCrc32Match);
     decodeInfoData.setArticleEncodingType(ArticleEncodingYEnc);
 
-    this->segmentsDecoderThread->emitDecodeProgression(decodeInfoData);
+    this->mSegmentsDecoderThread->emitDecodeProgression(decodeInfoData);
 }
 
 bool SegmentDecoderYEnc::decodeEncodedData(const QString &temporaryFolder, SegmentData &segmentData, const QString &decodedFileName, bool &writeSuccess)
 {
 
-    this->crc32Match = false;
+    this->mCrc32Match = false;
 
     // /!\ be sure that destination file has not already been moved in target folder.
     // this can happen only when a retry action has been performed :
@@ -120,7 +120,7 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString &temporaryFolder, Segme
         if (!captureArray.isEmpty()) {
 
             // at this stage set crc32 value at false by default :
-            this->crc32Match = false;
+            this->mCrc32Match = false;
 
             // set the position to the right place in file to write data, return data is unchecked
             // for desperate mode : write data even if retrieved beginValue is incorrect (ie : corrupted segment) :
@@ -161,7 +161,7 @@ bool SegmentDecoderYEnc::decodeEncodedData(const QString &temporaryFolder, Segme
     segmentData.getIoDevice()->close();
     temporaryFile.close();
 
-    return this->crc32Match;
+    return this->mCrc32Match;
 }
 
 qint64 SegmentDecoderYEnc::getPatternValue(const QByteArray &yPartArray, const QString &pattern, const int &base)
@@ -247,7 +247,7 @@ QByteArray SegmentDecoderYEnc::decodeYenc(QByteArray &captureArray, const quint3
 
     //check crc32 values :
     if (crc32FromFile == crc32Computed) {
-        this->crc32Match = true;
+        this->mCrc32Match = true;
     }
 
     // return only useful data :
@@ -264,12 +264,12 @@ void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData &nzbFileData)
 {
 
     // init variables :
-    this->parentIdentifer = nzbFileData.getUniqueIdentifier();
-    this->crc32Match = false;
+    this->mParentIdentifer = nzbFileData.getUniqueIdentifier();
+    this->mCrc32Match = false;
 
     // decodeInfoData sent by defaut :
     PostDownloadInfoData decodeInfoData;
-    decodeInfoData.initDecode(this->parentIdentifer, PROGRESS_COMPLETE, DecodeErrorStatus);
+    decodeInfoData.initDecode(this->mParentIdentifer, PROGRESS_COMPLETE, DecodeErrorStatus);
 
     // move decoded file to destination folder :
     QString temporaryFileStr = Utility::buildFullPath(Settings::temporaryFolder().path(), nzbFileData.getTemporaryFileName());
@@ -285,11 +285,11 @@ void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData &nzbFileData)
             // the global crc for the file is considered as incorrect :
             if (segmentData.getCrc32Match() == CrcOk) {
 
-                this->crc32Match = true;
+                this->mCrc32Match = true;
 
             } else {
 
-                this->crc32Match = false;
+                this->mCrc32Match = false;
                 break;
 
             }
@@ -325,11 +325,11 @@ void SegmentDecoderYEnc::finishDecodingJob(const NzbFileData &nzbFileData)
     // notify user of the issue :
     else {
         this->decodeProgression(decodeInfoData);
-        this->segmentsDecoderThread->emitSaveFileError();
+        this->mSegmentsDecoderThread->emitSaveFileError();
     }
 
     // clear variables :
-    this->parentIdentifer.clear();
+    this->mParentIdentifer.clear();
 
 }
 
