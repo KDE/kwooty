@@ -38,15 +38,9 @@ private:
 
     Scheduler *scheduler;
 
-    void load();
-    void unload();
-    void configUpdated();
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
-private Q_SLOTS:
+    void load() Q_DECL_OVERRIDE;
+    void unload() Q_DECL_OVERRIDE;
+    void configUpdated() Q_DECL_OVERRIDE;
 
 };
 

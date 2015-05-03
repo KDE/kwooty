@@ -32,33 +32,23 @@ class MainWindow;
 
 class KWOOTY_EXPORT PluginManager : public QObject
 {
-
     Q_OBJECT
-
 public:
-
-    PluginManager(MainWindow *);
+    explicit PluginManager(MainWindow *);
     ~PluginManager();
     QList<KPluginInfo> getPluginInfoList();
     void loadPlugins();
 
 private:
-
-    MainWindow *core;
-    QList<KPluginInfo> pluginInfoList;
-    QMap<KPluginInfo, Plugin *> loadedInfoPluginMap;
+    MainWindow *mCore;
+    QList<KPluginInfo> mPluginInfoList;
+    QMap<KPluginInfo, Plugin *> mLoadedInfoPluginMap;
 
     void loadCurrentPlugin(const KPluginInfo &);
     void unloadCurrentPlugin(const KPluginInfo &);
-
-Q_SIGNALS:
-
 public Q_SLOTS:
 
     void configCommittedSlot(const QByteArray &);
-
-private Q_SLOTS:
-
 };
 
 #endif // PLUGINMANAGER_H

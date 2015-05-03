@@ -35,11 +35,11 @@ Plugin::Plugin(QObject *parent): QObject(parent), KXMLGUIClient()
 
 void Plugin::setCore(MainWindow *core)
 {
-    this->core = core;
+    this->mCore = core;
 }
 
 MainWindow *Plugin::getMainWindow()
 {
-    return this->core;
+    return this->mCore;
 }
 

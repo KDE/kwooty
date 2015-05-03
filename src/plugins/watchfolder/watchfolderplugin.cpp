@@ -43,16 +43,16 @@ WatchFolderPlugin::~WatchFolderPlugin()
 
 void WatchFolderPlugin::load()
 {
-    this->watchFolder = new WatchFolder(this);
+    mWatchFolder = new WatchFolder(this);
 }
 
 void WatchFolderPlugin::unload()
 {
-    delete this->watchFolder;
+    delete mWatchFolder;
 }
 
 void WatchFolderPlugin::configUpdated()
 {
-    this->watchFolder->settingsChanged();
+    mWatchFolder->settingsChanged();
 }
 #include "watchfolderplugin.moc"

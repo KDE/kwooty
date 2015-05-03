@@ -38,9 +38,9 @@ private:
 
     AutoRetry *mAutoRetry;
 
-    void load();
-    void unload();
-    void configUpdated();
+    void load() Q_DECL_OVERRIDE;
+    void unload() Q_DECL_OVERRIDE;
+    void configUpdated() Q_DECL_OVERRIDE;
 };
 
 #endif // AUTORETRYPLUGIN_H

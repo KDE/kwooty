@@ -33,7 +33,7 @@ class KWOOTY_EXPORT Plugin : public QObject, public KXMLGUIClient
 
 public:
 
-    Plugin(QObject *);
+    explicit Plugin(QObject *);
     void setCore(MainWindow *);
     MainWindow *getMainWindow();
 
@@ -43,14 +43,7 @@ public:
 
 private:
 
-    MainWindow *core;
-
-Q_SIGNALS:
-
-public Q_SLOTS:
-
-private Q_SLOTS:
-
+    MainWindow *mCore;
 };
 
 #endif // PLUGIN_H
