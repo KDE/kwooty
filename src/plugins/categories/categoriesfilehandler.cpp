@@ -46,7 +46,7 @@ CategoriesFileHandler::CategoriesFileHandler()
 
 QString CategoriesFileHandler::retrieveCategoriesFilePath()
 {
-    return KStandardDirs::locateLocal("appdata", QString::fromLatin1("categories.xml"));
+    return KStandardDirs::locateLocal("appdata", QStringLiteral("categories.xml"));
 }
 
 bool CategoriesFileHandler::isStartElement(QXmlStreamReader &stream, const QString &element)

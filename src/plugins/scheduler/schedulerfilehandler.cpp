@@ -205,6 +205,6 @@ void SchedulerFileHandler::saveModelToFile(QStandardItemModel *schedulerModel)
 
 QString SchedulerFileHandler::retrieveSchedulerFilePath()
 {
-    return KStandardDirs::locateLocal("appdata", QString::fromLatin1("scheduler.xml"));
+    return KStandardDirs::locateLocal("appdata", QStringLiteral("scheduler.xml"));
 }
 
