@@ -51,7 +51,7 @@ public:
     void addDefaultTab();
     void deleteAndRemoveTab(const int &);
     void setServerTabIcon(const int &, const int &);
-    QMap<int, QString> getComboBoxIconTextMap();
+    QMap<int, QString> getComboBoxIconTextMap() const;
 
 private:
     QToolButton *newTab;

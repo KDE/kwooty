@@ -22,7 +22,7 @@
 
 #include "kwooty_debug.h"
 #include <QIcon>
-#include <KInputDialog>
+#include <QInputDialog>
 #include <KMessageBox>
 
 #include <QTabBar>
@@ -94,7 +94,7 @@ void ServerTabWidget::setupConnections()
 
 }
 
-QMap<int, QString> ServerTabWidget::getComboBoxIconTextMap()
+QMap<int, QString> ServerTabWidget::getComboBoxIconTextMap() const
 {
     return this->comboBoxIconTextMap;
 }
@@ -111,12 +111,12 @@ void ServerTabWidget::addDefaultTab()
 
 QString ServerTabWidget::displayEditDialogBox()
 {
-    return KInputDialog::getText(i18n("Backup server name"), i18n("Please enter backup server name:"));
+    return QInputDialog::getText(this, i18n("Backup server name"), i18n("Please enter backup server name:"));
 }
 
 QString ServerTabWidget::displayRenameTabDialogBox()
 {
-    return KInputDialog::getText(i18n("Rename server"), i18n("Rename server:"), this->tabText(this->currentIndex()).remove("&"));
+    return QInputDialog::getText(this, i18n("Rename server"), i18n("Rename server:"), QLineEdit::Normal, this->tabText(this->currentIndex()).remove("&"));
 }
 
 void ServerTabWidget::setServerTabText(const ServerTabNaming &serverTabNaming)
