@@ -66,18 +66,17 @@ public:
 
 private:
 
-    int serverId;
     QString serverName;
     QString hostName;
     QString login;
     QString password;
+    int serverId;
     uint port;
     uint disconnectTimeout;
-    bool authentication;
-    bool enableSSL;
     uint connectionNumber;
     uint serverModeIndex;
-
+    bool authentication;
+    bool enableSSL;
 };
 
 #endif // SERVERDATA_H

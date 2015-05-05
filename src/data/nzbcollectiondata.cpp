@@ -23,20 +23,20 @@
 NzbCollectionData::NzbCollectionData()
 {
 
-    this->par2FileDownloadStatus = DownloadFinishStatus;
-    this->extractTerminateStatus = ExtractSuccessStatus;
-    this->verifyRepairTerminateStatus = RepairFinishedStatus;
-    this->allPostProcessingCorrect = true;
-    this->extractProcessAllowed = false;
-    this->repairProcessAllowed = false;
+    nPar2FileDownloadStatus = DownloadFinishStatus;
+    mExtractTerminateStatus = ExtractSuccessStatus;
+    mVerifyRepairTerminateStatus = RepairFinishedStatus;
+    mAllPostProcessingCorrect = true;
+    mExtractProcessAllowed = false;
+    mRepairProcessAllowed = false;
 
 }
 
 QList<NzbFileData> NzbCollectionData::takeNzbFileDataList()
 {
 
-    QList<NzbFileData> tempList = this->nzbFileDataList;
-    this->nzbFileDataList.clear();
+    QList<NzbFileData> tempList = mNzbFileDataList;
+    mNzbFileDataList.clear();
     return tempList;
 }
 
@@ -45,106 +45,106 @@ QVariant NzbCollectionData::getFirstChildUniqueIdentifier() const
 
     QVariant uniqueIdentifier;
 
-    if (!this->nzbFileDataList.isEmpty()) {
-        uniqueIdentifier = this->nzbFileDataList.at(0).getUniqueIdentifier();
+    if (!mNzbFileDataList.isEmpty()) {
+        uniqueIdentifier = mNzbFileDataList.at(0).getUniqueIdentifier();
     }
     return uniqueIdentifier;
 }
 
 QList<NzbFileData> NzbCollectionData::getNzbFileDataList() const
 {
-    return this->nzbFileDataList;
+    return mNzbFileDataList;
 }
 void NzbCollectionData::setNzbFileDataList(const QList<NzbFileData> &nzbFileDataList)
 {
-    this->nzbFileDataList = nzbFileDataList;
+    mNzbFileDataList = nzbFileDataList;
 }
 
 void NzbCollectionData::setNzbParentId(const QString &nzbParentId)
 {
-    this->nzbParentId = nzbParentId;
+    mNzbParentId = nzbParentId;
 }
 QString NzbCollectionData::getNzbParentId() const
 {
-    return this->nzbParentId;
+    return mNzbParentId;
 }
 
 void NzbCollectionData::setPar2FileDownloadStatus(const UtilityNamespace::ItemStatus par2FileDownloadStatus)
 {
-    this->par2FileDownloadStatus = par2FileDownloadStatus;
+    nPar2FileDownloadStatus = par2FileDownloadStatus;
 }
 UtilityNamespace::ItemStatus NzbCollectionData::getPar2FileDownloadStatus() const
 {
-    return this->par2FileDownloadStatus;
+    return nPar2FileDownloadStatus;
 }
 
 void NzbCollectionData::setPar2BaseName(const QString &par2BaseName)
 {
-    this->par2BaseName = par2BaseName;
+    mPar2BaseName = par2BaseName;
 }
 QString NzbCollectionData::getPar2BaseName() const
 {
-    return this->par2BaseName;
+    return mPar2BaseName;
 }
 
 void NzbCollectionData::setExtractTerminateStatus(const UtilityNamespace::ItemStatus extractTerminateStatus)
 {
-    this->extractTerminateStatus = extractTerminateStatus;
+    mExtractTerminateStatus = extractTerminateStatus;
 
     if (extractTerminateStatus == ExtractFailedStatus) {
-        this->allPostProcessingCorrect = false;
+        mAllPostProcessingCorrect = false;
     }
 
 }
 UtilityNamespace::ItemStatus NzbCollectionData::getExtractTerminateStatus() const
 {
-    return this->extractTerminateStatus;
+    return mExtractTerminateStatus;
 }
 
 void NzbCollectionData::setVerifyRepairTerminateStatus(const UtilityNamespace::ItemStatus verifyRepairTerminateStatus)
 {
-    this->verifyRepairTerminateStatus = verifyRepairTerminateStatus;
+    mVerifyRepairTerminateStatus = verifyRepairTerminateStatus;
 
     if (verifyRepairTerminateStatus == RepairFailedStatus) {
-        this->allPostProcessingCorrect = false;
+        mAllPostProcessingCorrect = false;
     }
 
 }
 UtilityNamespace::ItemStatus NzbCollectionData::getVerifyRepairTerminateStatus() const
 {
-    return this->verifyRepairTerminateStatus;
+    return mVerifyRepairTerminateStatus;
 }
 
 void NzbCollectionData::setAllPostProcessingCorrect(const bool &allPostProcessingCorrect)
 {
-    this->allPostProcessingCorrect = allPostProcessingCorrect;
+    mAllPostProcessingCorrect = allPostProcessingCorrect;
 }
 bool NzbCollectionData::isAllPostProcessingCorrect() const
 {
-    return this->allPostProcessingCorrect;
+    return mAllPostProcessingCorrect;
 }
 
 bool NzbCollectionData::isExtractProcessAllowed() const
 {
-    return this->extractProcessAllowed;
+    return mExtractProcessAllowed;
 }
 
 void NzbCollectionData::setExtractProcessAllowed(const bool &extractProcessAllowed)
 {
-    this->extractProcessAllowed = extractProcessAllowed;
+    mExtractProcessAllowed = extractProcessAllowed;
 }
 
 bool NzbCollectionData::isRepairProcessAllowed() const
 {
-    return this->repairProcessAllowed;
+    return mRepairProcessAllowed;
 }
 
 void NzbCollectionData::setRepairProcessAllowed(const bool &repairProcessAllowed)
 {
-    this->repairProcessAllowed = repairProcessAllowed;
+    mRepairProcessAllowed = repairProcessAllowed;
 }
 
 bool NzbCollectionData::operator==(const NzbCollectionData &nzbCollectionDataToCompare)
 {
-    return (this->getNzbParentId() == nzbCollectionDataToCompare.getNzbParentId());
+    return (getNzbParentId() == nzbCollectionDataToCompare.getNzbParentId());
 }

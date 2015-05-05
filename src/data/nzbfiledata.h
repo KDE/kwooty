@@ -95,24 +95,24 @@ public:
     bool operator<(const NzbFileData &) const;
 
 private:
-    QString fileName;
-    QString reducedFileName;
-    QString decodedFileName;
-    QString temporaryFileName;
-    QString renamedFileName;
-    QStringList possibleFileNameList;
-    QString baseName;
-    QString nzbName;
-    QString downloadFolderPath;
-    QStringList groupList;
-    QList<SegmentData> segmentList;
-    QVariant uniqueIdentifier;
-    quint64 size;
-    UtilityNamespace::ItemStatus verifyProgressionStep;
-    UtilityNamespace::ItemStatus extractProgressionStep;
-    UtilityNamespace::ArchiveFormat archiveFormat;
-    bool par2File;
-    bool archiveFile;
+    QString mFileName;
+    QString mReducedFileName;
+    QString mDecodedFileName;
+    QString mTemporaryFileName;
+    QString mRenamedFileName;
+    QStringList mPossibleFileNameList;
+    QString mBaseName;
+    QString mNzbName;
+    QString mDownloadFolderPath;
+    QStringList mGroupList;
+    QList<SegmentData> mSegmentList;
+    QVariant mUniqueIdentifier;
+    quint64 mSize;
+    UtilityNamespace::ItemStatus mVerifyProgressionStep;
+    UtilityNamespace::ItemStatus mExtractProgressionStep;
+    UtilityNamespace::ArchiveFormat mArchiveFormat;
+    bool mPar2File;
+    bool mArchiveFile;
 
 };
 

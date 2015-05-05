@@ -55,15 +55,15 @@ public:
     bool operator==(const NzbCollectionData &);
 
 private:
-    QList<NzbFileData> nzbFileDataList;
-    QString nzbParentId;
-    UtilityNamespace::ItemStatus par2FileDownloadStatus;
-    UtilityNamespace::ItemStatus extractTerminateStatus;
-    UtilityNamespace::ItemStatus verifyRepairTerminateStatus;
-    QString par2BaseName;
-    bool allPostProcessingCorrect;
-    bool extractProcessAllowed;
-    bool repairProcessAllowed;
+    QList<NzbFileData> mNzbFileDataList;
+    QString mNzbParentId;
+    UtilityNamespace::ItemStatus nPar2FileDownloadStatus;
+    UtilityNamespace::ItemStatus mExtractTerminateStatus;
+    UtilityNamespace::ItemStatus mVerifyRepairTerminateStatus;
+    QString mPar2BaseName;
+    bool mAllPostProcessingCorrect;
+    bool mExtractProcessAllowed;
+    bool mRepairProcessAllowed;
 
 };
 
