@@ -144,7 +144,7 @@ void Repair::launchProcess(const NzbCollectionData &nzbCollectionData)
     }
 }
 
-bool Repair::isProcessing()
+bool Repair::isProcessing() const
 {
     return this->isProcessingStatus;
 }

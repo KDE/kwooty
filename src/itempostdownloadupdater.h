@@ -32,7 +32,7 @@ class ItemPostDownloadUpdater : public ItemAbstractUpdater
 
 public:
 
-    ItemPostDownloadUpdater(ItemParentUpdater *);
+    explicit ItemPostDownloadUpdater(ItemParentUpdater *);
     void updateItems(const PostDownloadInfoData &);
     void addFileTypeInfo(const PostDownloadInfoData &);
 

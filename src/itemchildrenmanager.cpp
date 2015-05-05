@@ -37,7 +37,7 @@ ItemChildrenManager::ItemChildrenManager(Core *parent, ItemParentUpdater *itemPa
     this->itemParentUpdater = itemParentUpdater;
 
     // set smartPar2Download setting value :
-    this->smartPar2Download = Settings::smartPar2Download();
+    this->mSmartPar2Download = Settings::smartPar2Download();
 
     // setup connections :
     this->setupConnections();
@@ -225,7 +225,7 @@ void ItemChildrenManager::settingsChangedSlot()
 {
 
     // settings have been changed, enable or disable smart par2 download :
-    if (this->smartPar2Download != Settings::smartPar2Download()) {
+    if (this->mSmartPar2Download != Settings::smartPar2Download()) {
 
         // get the root model :
         QStandardItem *rootItem = this->downloadModel->invisibleRootItem();
@@ -252,7 +252,7 @@ void ItemChildrenManager::settingsChangedSlot()
         emit downloadWaitingPar2Signal();
 
         // update smartPar2Download :
-        this->smartPar2Download = Settings::smartPar2Download();
+        this->mSmartPar2Download = Settings::smartPar2Download();
 
     }
 

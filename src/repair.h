@@ -52,7 +52,7 @@ public:
     Repair(RepairDecompressThread *);
     ~Repair();
     void launchProcess(const NzbCollectionData &);
-    bool isProcessing();
+    bool isProcessing() const;
 
 private:
     QString par2ProgramPath;

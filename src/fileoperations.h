@@ -46,7 +46,7 @@ public:
     static bool isSplitFileFormat(const QFile &);
 
 private:
-    Core *core;
+    Core *mCore;
     void openUrl(const KUrl &, bool &, UtilityNamespace::OpenFileMode);
 };
 

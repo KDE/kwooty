@@ -55,8 +55,8 @@ public:
     void updatePendingSegmentsToTargetServer(const int &, const int &, const PendingSegments = UpdateSegments);
 
 private:
-    StandardItemModel *downloadModel;
-    ItemParentUpdater *itemParentUpdater;
+    StandardItemModel *mDownloadModel;
+    ItemParentUpdater *mItemParentUpdater;
 
     bool sendNextIdleSegment(QStandardItem *, ClientManagerConn *, SegmentInfoData);
 

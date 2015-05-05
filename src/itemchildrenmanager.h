@@ -43,7 +43,7 @@ public:
 
 private:
     Core *mParent;
-    bool smartPar2Download;
+    bool mSmartPar2Download;
 
     void setupConnections();
 

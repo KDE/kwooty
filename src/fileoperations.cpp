@@ -35,7 +35,7 @@
 FileOperations::FileOperations(Core *core) : QObject(core)
 {
 
-    this->core = core;
+    this->mCore = core;
 
 }
 
@@ -44,7 +44,7 @@ void FileOperations::openFile()
 
     bool isWrongUrl = false;
 
-    QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(KUrl(), i18n("*.nzb|nzb files"), this->core->getCentralWidget());
+    QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(KUrl(), i18n("*.nzb|nzb files"), this->mCore->getCentralWidget());
 
     // process selected file(s) :
     foreach (const QString &fileNameFromDialog, fileNameFromDialogList) {
@@ -57,7 +57,7 @@ void FileOperations::openFile()
 
         // If url cannot be reached open an error message box
         if (isWrongUrl) {
-            KMessageBox::error(this->core->getCentralWidget() , KIO::NetAccess::lastErrorString());
+            KMessageBox::error(this->mCore->getCentralWidget() , KIO::NetAccess::lastErrorString());
         }
 
     }
@@ -74,7 +74,7 @@ void FileOperations::openFileWithFileMode(const KUrl &nzbUrl, UtilityNamespace::
 
     // If url cannot be reached open an error message box
     if (isWrongUrl) {
-        KMessageBox::error(this->core->getCentralWidget(), KIO::NetAccess::lastErrorString());
+        KMessageBox::error(this->mCore->getCentralWidget(), KIO::NetAccess::lastErrorString());
     }
 
 }
@@ -84,13 +84,13 @@ void FileOperations::openUrl(const KUrl &url, bool &isWrongUrl, UtilityNamespace
 
     QString downloadFile;
 
-    if (KIO::NetAccess::download(url, downloadFile, this->core->getCentralWidget())) {
+    if (KIO::NetAccess::download(url, downloadFile, this->mCore->getCentralWidget())) {
 
         QFile file(downloadFile);
 
         // Open the nzb file :
         if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            KMessageBox::error(this->core->getCentralWidget(), KIO::NetAccess::lastErrorString());
+            KMessageBox::error(this->mCore->getCentralWidget(), KIO::NetAccess::lastErrorString());
         }
 
         // if the current nzb file has the same name as a previous nzb file :
@@ -99,7 +99,7 @@ void FileOperations::openUrl(const KUrl &url, bool &isWrongUrl, UtilityNamespace
 
         int counter = 1;
         while (counter < 100 &&
-                this->core->getModelQuery()->isParentFileNameExists(nzbBaseName)) {
+                this->mCore->getModelQuery()->isParentFileNameExists(nzbBaseName)) {
 
             // add a suffix to distinguish files between each others :
             nzbBaseName = nzbRealBaseName + "-" + QString::number(counter++);
@@ -107,7 +107,7 @@ void FileOperations::openUrl(const KUrl &url, bool &isWrongUrl, UtilityNamespace
         }
 
         // add nzbFile data to the view :
-        this->core->handleNzbFile(file, nzbBaseName);
+        this->mCore->handleNzbFile(file, nzbBaseName);
 
         file.close();
 
