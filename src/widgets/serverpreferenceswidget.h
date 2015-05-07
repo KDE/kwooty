@@ -45,10 +45,10 @@ public:
     void setGroupBoxTitle(const int &);
 
 private:
-    Ui_ServerSettings *serverSettingsUi;
-    PreferencesServer *preferencesServer;
-    ServerTabWidget *serverTabWidget;
-    int tabIndex;
+    Ui_ServerSettings *mServerSettingsUi;
+    PreferencesServer *mPreferencesServer;
+    ServerTabWidget *mServerTabWidget;
+    int mTabIndex;
 
     bool checkFormText(const QString &);
     void setupConnections();

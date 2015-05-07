@@ -48,7 +48,7 @@ class KWOOTY_EXPORT MyTreeView : public QTreeView
     Q_OBJECT
 
 public:
-    MyTreeView(MainWindow *);
+    explicit MyTreeView(MainWindow *);
     void achieveInit();
     void setHeaderLabels();
     QString getDisplayedFileName(const NzbFileData &) const;

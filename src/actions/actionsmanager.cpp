@@ -579,7 +579,7 @@ void ActionsManager::openFolderSlot()
     }
 
     // do not manage delete as KRun uses auto deletion by default :
-    new KRun(KUrl(fileSavePath), this->treeView);
+    new KRun(QUrl::fromLocalFile(fileSavePath), this->treeView);
 
 }
 

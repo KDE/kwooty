@@ -21,7 +21,6 @@
 #ifndef WATCHFOLDER_H
 #define WATCHFOLDER_H
 
-#include <KUrl>
 #include <kdirwatch.h>
 
 #include <QObject>

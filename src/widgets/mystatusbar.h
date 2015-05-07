@@ -52,14 +52,14 @@ public:
     ~MyStatusBar();
 
 private:
-    ClientsObserver *clientsObserver;
-    IconTextWidget *sizeLabel;
-    IconTextWidget *speedLabel;
-    IconTextWidget *connectionWidget;
-    IconTextWidget *shutdownWidget;
-    IconTextWidget *timeInfoWidget;
-    IconTextWidget *infoBarWidget;
-    IconCapacityWidget *iconCapacityWidget;
+    ClientsObserver *mClientsObserver;
+    IconTextWidget *mSizeLabel;
+    IconTextWidget *mSpeedLabel;
+    IconTextWidget *mConnectionWidget;
+    IconTextWidget *mShutdownWidget;
+    IconTextWidget *mTimeInfoWidget;
+    IconTextWidget *mInfoBarWidget;
+    IconCapacityWidget *mIconCapacityWidget;
 
     void setupConnections();
     void setConnectionWidget();

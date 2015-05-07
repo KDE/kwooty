@@ -40,20 +40,20 @@ ServerPreferencesWidget::ServerPreferencesWidget(ServerTabWidget *parent,
         const ServerTabWidget::ServerNameQuery serverNameQuery) : QWidget(parent)
 {
 
-    this->serverTabWidget = parent;
-    this->preferencesServer = preferencesServer;
-    this->tabIndex = tabIndex;
+    mServerTabWidget = parent;
+    mPreferencesServer = preferencesServer;
+    mTabIndex = tabIndex;
 
-    this->serverSettingsUi = new Ui_ServerSettings();
-    this->serverSettingsUi->setupUi(this);
+    mServerSettingsUi = new Ui_ServerSettings();
+    mServerSettingsUi->setupUi(this);
 
     // hide server mode settings for master server :
-    this->hideWidgets(tabIndex);
+    hideWidgets(tabIndex);
 
     // setup help push button and server modes combo box:
-    this->setupButtons();
+    setupButtons();
 
-    this->setupConnections();
+    setupConnections();
 
     // ensure that default values are displayed if a new tab has been created by user
     // or default settings have been requested :
@@ -64,36 +64,36 @@ ServerPreferencesWidget::ServerPreferencesWidget(ServerTabWidget *parent,
     }
 
     // fill previously stored data in forms :
-    this->setData(tabIndex);
+    setData(tabIndex);
 
     // finally check if fields contents contain whitespace :
-    this->formEditingFinishedSlot();
+    formEditingFinishedSlot();
 
 }
 
 ServerPreferencesWidget::~ServerPreferencesWidget()
 {
-    delete this->serverSettingsUi;
+    delete mServerSettingsUi;
 }
 
 int ServerPreferencesWidget::getTabIndex()
 {
-    return this->tabIndex;
+    return mTabIndex;
 }
 
 void ServerPreferencesWidget::setupButtons()
 {
 
     // set icon for info button :
-    this->serverSettingsUi->pushButtonInfo->setIcon(QIcon::fromTheme("system-help"));
+    mServerSettingsUi->pushButtonInfo->setIcon(QIcon::fromTheme("system-help"));
 
     // set icon and text for server mode combo box :
-    QMap<int, QString> comboBoxIconTextMap = this->serverTabWidget->getComboBoxIconTextMap();
+    QMap<int, QString> comboBoxIconTextMap = mServerTabWidget->getComboBoxIconTextMap();
 
     foreach (const QString &iconStr, comboBoxIconTextMap.values()) {
 
         QString serverModeStr = UtilityServerStatus::getServerModeString((UtilityNamespace::BackupServerMode)comboBoxIconTextMap.key(iconStr));
-        this->serverSettingsUi->comboBoxServerMode->addItem(QIcon::fromTheme(iconStr), serverModeStr);
+        mServerSettingsUi->comboBoxServerMode->addItem(QIcon::fromTheme(iconStr), serverModeStr);
     }
 
 }
@@ -102,31 +102,31 @@ void ServerPreferencesWidget::setupConnections()
 {
 
     // check/uncheck ssl checkbox according to port value:
-    connect(this->serverSettingsUi->port, SIGNAL(valueChanged(int)), this, SLOT(portValueChangedSlot(int)));
+    connect(mServerSettingsUi->port, SIGNAL(valueChanged(int)), this, SLOT(portValueChangedSlot(int)));
 
-    connect(this->serverSettingsUi->comboBoxServerMode, SIGNAL(currentIndexChanged(int)), this, SLOT(serverModeValueChangedSlot(int)));
+    connect(mServerSettingsUi->comboBoxServerMode, SIGNAL(currentIndexChanged(int)), this, SLOT(serverModeValueChangedSlot(int)));
 
     // enable apply button when a setting has been changed :
-    connect(this->serverSettingsUi->port, SIGNAL(valueChanged(int)), this, SLOT(valueChangedSlot()));
-    connect(this->serverSettingsUi->connectionNumber, SIGNAL(valueChanged(int)), this, SLOT(valueChangedSlot()));
-    connect(this->serverSettingsUi->disconnectTimeout, SIGNAL(valueChanged(int)), this, SLOT(valueChangedSlot()));
+    connect(mServerSettingsUi->port, SIGNAL(valueChanged(int)), this, SLOT(valueChangedSlot()));
+    connect(mServerSettingsUi->connectionNumber, SIGNAL(valueChanged(int)), this, SLOT(valueChangedSlot()));
+    connect(mServerSettingsUi->disconnectTimeout, SIGNAL(valueChanged(int)), this, SLOT(valueChangedSlot()));
 
-    connect(this->serverSettingsUi->hostName, SIGNAL(textChanged(QString)), this, SLOT(valueChangedSlot()));
-    connect(this->serverSettingsUi->login, SIGNAL(textChanged(QString)), this, SLOT(valueChangedSlot()));
-    connect(this->serverSettingsUi->password, SIGNAL(textChanged(QString)), this, SLOT(valueChangedSlot()));
+    connect(mServerSettingsUi->hostName, SIGNAL(textChanged(QString)), this, SLOT(valueChangedSlot()));
+    connect(mServerSettingsUi->login, SIGNAL(textChanged(QString)), this, SLOT(valueChangedSlot()));
+    connect(mServerSettingsUi->password, SIGNAL(textChanged(QString)), this, SLOT(valueChangedSlot()));
 
-    connect(this->serverSettingsUi->groupBoxAuthentication, SIGNAL(clicked(bool)), this, SLOT(valueChangedSlot()));
-    connect(this->serverSettingsUi->enableSSL, SIGNAL(stateChanged(int)), this, SLOT(valueChangedSlot()));
+    connect(mServerSettingsUi->groupBoxAuthentication, &QGroupBox::clicked, this, &ServerPreferencesWidget::valueChangedSlot);
+    connect(mServerSettingsUi->enableSSL, &QCheckBox::stateChanged, this, &ServerPreferencesWidget::valueChangedSlot);
 
-    connect(this->serverSettingsUi->comboBoxServerMode, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChangedSlot()));
+    connect(mServerSettingsUi->comboBoxServerMode, SIGNAL(currentIndexChanged(int)), this, SLOT(valueChangedSlot()));
 
     // display information box when pushButtonInfo is clicked :
-    connect(this->serverSettingsUi->pushButtonInfo, SIGNAL(clicked(bool)), this, SLOT(pushButtonInfoClickedSlot()));
+    connect(mServerSettingsUi->pushButtonInfo, &QAbstractButton::clicked, this, &ServerPreferencesWidget::pushButtonInfoClickedSlot);
 
     // check if server name, login and password contain trailling white spaces when editing finished :
-    connect(this->serverSettingsUi->hostName, SIGNAL(editingFinished()), this, SLOT(formEditingFinishedSlot()));
-    connect(this->serverSettingsUi->login, SIGNAL(editingFinished()), this, SLOT(formEditingFinishedSlot()));
-    connect(this->serverSettingsUi->password, SIGNAL(editingFinished()), this, SLOT(formEditingFinishedSlot()));
+    connect(mServerSettingsUi->hostName, &QLineEdit::editingFinished, this, &ServerPreferencesWidget::formEditingFinishedSlot);
+    connect(mServerSettingsUi->login, &QLineEdit::editingFinished, this, &ServerPreferencesWidget::formEditingFinishedSlot);
+    connect(mServerSettingsUi->password, &QLineEdit::editingFinished, this, &ServerPreferencesWidget::formEditingFinishedSlot);
 
 }
 
@@ -162,7 +162,7 @@ void ServerPreferencesWidget::setGroupBoxTitle(const int &index)
 
     }
 
-    this->serverSettingsUi->groupBoxConfig->setTitle(i18n("%1 server configuration", serverStr));
+    mServerSettingsUi->groupBoxConfig->setTitle(i18n("%1 server configuration", serverStr));
 
 }
 
@@ -172,18 +172,18 @@ void ServerPreferencesWidget::setData(const int &tabIndex)
     // set all previously stored settings to widgets :
     ServerData serverData = KConfigGroupHandler::getInstance()->readServerSettings(tabIndex);
 
-    this->serverSettingsUi->hostName->setText(serverData.getHostName());
-    this->serverSettingsUi->login->setText(serverData.getLogin());
-    this->serverSettingsUi->password->setText(serverData.getPassword());
+    mServerSettingsUi->hostName->setText(serverData.getHostName());
+    mServerSettingsUi->login->setText(serverData.getLogin());
+    mServerSettingsUi->password->setText(serverData.getPassword());
 
-    this->serverSettingsUi->port->setValue(serverData.getPort());
-    this->serverSettingsUi->connectionNumber->setValue(serverData.getConnectionNumber());
-    this->serverSettingsUi->disconnectTimeout->setValue(serverData.getDisconnectTimeout());
+    mServerSettingsUi->port->setValue(serverData.getPort());
+    mServerSettingsUi->connectionNumber->setValue(serverData.getConnectionNumber());
+    mServerSettingsUi->disconnectTimeout->setValue(serverData.getDisconnectTimeout());
 
-    this->serverSettingsUi->groupBoxAuthentication->setChecked(serverData.isAuthentication());
-    this->serverSettingsUi->enableSSL->setChecked(serverData.isEnableSSL());
+    mServerSettingsUi->groupBoxAuthentication->setChecked(serverData.isAuthentication());
+    mServerSettingsUi->enableSSL->setChecked(serverData.isEnableSSL());
 
-    this->serverSettingsUi->comboBoxServerMode->setCurrentIndex(serverData.getServerModeIndex());
+    mServerSettingsUi->comboBoxServerMode->setCurrentIndex(serverData.getServerModeIndex());
 }
 
 ServerData ServerPreferencesWidget::getData()
@@ -192,20 +192,20 @@ ServerData ServerPreferencesWidget::getData()
     // get all settings from widgets :
     ServerData serverData;
 
-    this->serverSettingsUi->hostName->setText(this->serverSettingsUi->hostName->text());
-    serverData.setHostName(this->serverSettingsUi->hostName->text());
+    mServerSettingsUi->hostName->setText(mServerSettingsUi->hostName->text());
+    serverData.setHostName(mServerSettingsUi->hostName->text());
 
-    serverData.setLogin(this->serverSettingsUi->login->text());
-    serverData.setPassword(this->serverSettingsUi->password->text());
+    serverData.setLogin(mServerSettingsUi->login->text());
+    serverData.setPassword(mServerSettingsUi->password->text());
 
-    serverData.setPort(this->serverSettingsUi->port->value());
-    serverData.setConnectionNumber(this->serverSettingsUi->connectionNumber->value());
-    serverData.setDisconnectTimeout(this->serverSettingsUi->disconnectTimeout->value());
+    serverData.setPort(mServerSettingsUi->port->value());
+    serverData.setConnectionNumber(mServerSettingsUi->connectionNumber->value());
+    serverData.setDisconnectTimeout(mServerSettingsUi->disconnectTimeout->value());
 
-    serverData.setAuthentication(this->serverSettingsUi->groupBoxAuthentication->isChecked());
-    serverData.setEnableSSL(this->serverSettingsUi->enableSSL->isChecked());
+    serverData.setAuthentication(mServerSettingsUi->groupBoxAuthentication->isChecked());
+    serverData.setEnableSSL(mServerSettingsUi->enableSSL->isChecked());
 
-    serverData.setServerModeIndex(this->serverSettingsUi->comboBoxServerMode->currentIndex());
+    serverData.setServerModeIndex(mServerSettingsUi->comboBoxServerMode->currentIndex());
 
     return serverData;
 
@@ -214,23 +214,23 @@ ServerData ServerPreferencesWidget::getData()
 void ServerPreferencesWidget::enableWidgets(bool enable)
 {
 
-    this->serverSettingsUi->hostName->setEnabled(enable);
-    this->serverSettingsUi->login->setEnabled(enable);
-    this->serverSettingsUi->password->setEnabled(enable);
+    mServerSettingsUi->hostName->setEnabled(enable);
+    mServerSettingsUi->login->setEnabled(enable);
+    mServerSettingsUi->password->setEnabled(enable);
 
-    this->serverSettingsUi->port->setEnabled(enable);
-    this->serverSettingsUi->connectionNumber->setEnabled(enable);
-    this->serverSettingsUi->disconnectTimeout->setEnabled(enable);
+    mServerSettingsUi->port->setEnabled(enable);
+    mServerSettingsUi->connectionNumber->setEnabled(enable);
+    mServerSettingsUi->disconnectTimeout->setEnabled(enable);
 
-    this->serverSettingsUi->groupBoxAuthentication->setEnabled(enable);
-    this->serverSettingsUi->enableSSL->setEnabled(enable);
+    mServerSettingsUi->groupBoxAuthentication->setEnabled(enable);
+    mServerSettingsUi->enableSSL->setEnabled(enable);
 
-    this->serverSettingsUi->labelHost->setEnabled(enable);
-    this->serverSettingsUi->labelConnections->setEnabled(enable);
-    this->serverSettingsUi->labelPort->setEnabled(enable);
-    this->serverSettingsUi->labelLogin->setEnabled(enable);
-    this->serverSettingsUi->labelPassword->setEnabled(enable);
-    this->serverSettingsUi->labelDisconnect->setEnabled(enable);
+    mServerSettingsUi->labelHost->setEnabled(enable);
+    mServerSettingsUi->labelConnections->setEnabled(enable);
+    mServerSettingsUi->labelPort->setEnabled(enable);
+    mServerSettingsUi->labelLogin->setEnabled(enable);
+    mServerSettingsUi->labelPassword->setEnabled(enable);
+    mServerSettingsUi->labelDisconnect->setEnabled(enable);
 }
 
 void ServerPreferencesWidget::hideWidgets(const int &tabIndex)
@@ -238,9 +238,9 @@ void ServerPreferencesWidget::hideWidgets(const int &tabIndex)
 
     if (tabIndex == MasterServer) {
 
-        this->serverSettingsUi->labelServerMode->hide();
-        this->serverSettingsUi->comboBoxServerMode->hide();
-        this->serverSettingsUi->pushButtonInfo->hide();
+        mServerSettingsUi->labelServerMode->hide();
+        mServerSettingsUi->comboBoxServerMode->hide();
+        mServerSettingsUi->pushButtonInfo->hide();
 
     }
 
@@ -273,7 +273,7 @@ void ServerPreferencesWidget::clearWarningLabel(QLabel *label)
 
 void ServerPreferencesWidget::valueChangedSlot()
 {
-    preferencesServer->kcfg_serverChangesNotify->setText(QUuid::createUuid().toString());
+    mPreferencesServer->kcfg_serverChangesNotify->setText(QUuid::createUuid().toString());
 }
 
 void ServerPreferencesWidget::portValueChangedSlot(int portValue)
@@ -281,11 +281,11 @@ void ServerPreferencesWidget::portValueChangedSlot(int portValue)
 
     // if ports usually used for SSL are met :
     if (portValue == 563 || portValue == 443) {
-        this->serverSettingsUi->enableSSL->setCheckState(Qt::Checked);
+        mServerSettingsUi->enableSSL->setCheckState(Qt::Checked);
     }
     // else is ports usually used for normal connections are met :
     else {
-        this->serverSettingsUi->enableSSL->setCheckState(Qt::Unchecked);
+        mServerSettingsUi->enableSSL->setCheckState(Qt::Unchecked);
     }
 
 }
@@ -294,13 +294,13 @@ void ServerPreferencesWidget::serverModeValueChangedSlot(int serverModeIndex)
 {
 
     // update tab icon :
-    this->serverTabWidget->setServerTabIcon(this->serverTabWidget->indexOf(this), serverModeIndex);
+    mServerTabWidget->setServerTabIcon(mServerTabWidget->indexOf(this), serverModeIndex);
 
     // disable all settings if current server has been disabled :
     if (serverModeIndex == UtilityNamespace::DisabledServer) {
-        this->enableWidgets(false);
+        enableWidgets(false);
     } else {
-        this->enableWidgets(true);
+        enableWidgets(true);
     }
 
 }
@@ -309,24 +309,24 @@ void ServerPreferencesWidget::formEditingFinishedSlot()
 {
 
     // check if host field contains white-space :
-    if (this->checkFormText(this->serverSettingsUi->hostName->text())) {
-        this->fillWarningLabel(this->serverSettingsUi->hostCheckLabel, i18n("Host field contains white-space"));
+    if (checkFormText(mServerSettingsUi->hostName->text())) {
+        fillWarningLabel(mServerSettingsUi->hostCheckLabel, i18n("Host field contains white-space"));
     } else {
-        this->clearWarningLabel(this->serverSettingsUi->hostCheckLabel);
+        clearWarningLabel(mServerSettingsUi->hostCheckLabel);
     }
 
     // check if host login contains white-space :
-    if (this->checkFormText(this->serverSettingsUi->login->text())) {
-        this->fillWarningLabel(this->serverSettingsUi->loginCheckLabel, i18n("Login field contains white-space"));
+    if (checkFormText(mServerSettingsUi->login->text())) {
+        fillWarningLabel(mServerSettingsUi->loginCheckLabel, i18n("Login field contains white-space"));
     } else {
-        this->clearWarningLabel(this->serverSettingsUi->loginCheckLabel);
+        clearWarningLabel(mServerSettingsUi->loginCheckLabel);
     }
 
     // check if host password contains white-space :
-    if (this->checkFormText(this->serverSettingsUi->password->text())) {
-        this->fillWarningLabel(this->serverSettingsUi->passwordCheckLabel, i18n("Password field contains white-space"));
+    if (checkFormText(mServerSettingsUi->password->text())) {
+        fillWarningLabel(mServerSettingsUi->passwordCheckLabel, i18n("Password field contains white-space"));
     } else {
-        this->clearWarningLabel(this->serverSettingsUi->passwordCheckLabel);
+        clearWarningLabel(mServerSettingsUi->passwordCheckLabel);
     }
 
 }

@@ -44,7 +44,7 @@ void FileOperations::openFile()
 
     bool isWrongUrl = false;
 
-    QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(KUrl(), i18n("*.nzb|nzb files"), this->mCore->getCentralWidget());
+    QStringList fileNameFromDialogList = KFileDialog::getOpenFileNames(QUrl(), i18n("*.nzb|nzb files"), this->mCore->getCentralWidget());
 
     // process selected file(s) :
     foreach (const QString &fileNameFromDialog, fileNameFromDialogList) {

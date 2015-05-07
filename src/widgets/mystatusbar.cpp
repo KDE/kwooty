@@ -41,7 +41,7 @@
 MyStatusBar::MyStatusBar(MainWindow *parent) : QStatusBar(parent)
 {
 
-    clientsObserver = parent->getCore()->getClientsObserver();
+    mClientsObserver = parent->getCore()->getClientsObserver();
 
     // create connection widget at bottom left of status bar :
     setConnectionWidget();
@@ -53,16 +53,16 @@ MyStatusBar::MyStatusBar(MainWindow *parent) : QStatusBar(parent)
     setShutdownWidget();
 
     // add capacity bar widget :
-    iconCapacityWidget = new IconCapacityWidget(this, IconCapacityWidgetIdentity);
-    addPermanentWidget(iconCapacityWidget);
+    mIconCapacityWidget = new IconCapacityWidget(this, IconCapacityWidgetIdentity);
+    addPermanentWidget(mIconCapacityWidget);
 
     // add remaining download size item :
-    sizeLabel = new IconTextWidget(this, SizeWidgetIdentity);
-    addPermanentWidget(sizeLabel);
+    mSizeLabel = new IconTextWidget(this, SizeWidgetIdentity);
+    addPermanentWidget(mSizeLabel);
 
     // add download speed item :
-    speedLabel = new IconTextWidget(this, SpeedWidgetIdentity);
-    addPermanentWidget(speedLabel);
+    mSpeedLabel = new IconTextWidget(this, SpeedWidgetIdentity);
+    addPermanentWidget(mSpeedLabel);
 
     // add info bar widget :
     setInfoBarWidget();
@@ -70,7 +70,7 @@ MyStatusBar::MyStatusBar(MainWindow *parent) : QStatusBar(parent)
     setupConnections();
 
     // get current connection status, numbre of remainig files, etc... from clients observer :
-    clientsObserver->sendFullUpdate();
+    mClientsObserver->sendFullUpdate();
 
 }
 
@@ -80,31 +80,31 @@ MyStatusBar::~MyStatusBar() {}
 void MyStatusBar::setupConnections()
 {
 
-    connect(clientsObserver,
+    connect(mClientsObserver,
             &ClientsObserver::updateConnectionStatusSignal,
             this,
             &MyStatusBar::updateConnectionStatusSlot);
 
     // send remaining size to status bar :
-    connect(clientsObserver,
+    connect(mClientsObserver,
             &ClientsObserver::updateFileSizeInfoSignal,
             this,
             &MyStatusBar::updateFileSizeInfoSlot);
 
     // send download speed to status bar :
-    connect(clientsObserver->getStatsInfoBuilder(),
+    connect(mClientsObserver->getStatsInfoBuilder(),
             &StatsInfoBuilder::updateDownloadSpeedInfoSignal,
             this,
             &MyStatusBar::updateDownloadSpeedInfoSlot);
 
     // send ETA to status bar :
-    connect(clientsObserver->getStatsInfoBuilder(),
+    connect(mClientsObserver->getStatsInfoBuilder(),
             &StatsInfoBuilder::updateTimeInfoSignal,
             this,
             &MyStatusBar::updateTimeInfoSlot);
 
     // send free space to status bar :
-    connect(clientsObserver->getStatsInfoBuilder(),
+    connect(mClientsObserver->getStatsInfoBuilder(),
             &StatsInfoBuilder::updateFreeSpaceSignal,
             this,
             &MyStatusBar::updateFreeSpaceSlot);
@@ -122,7 +122,7 @@ void MyStatusBar::setupConnections()
             &MainWindow::showSettings);
 
     // show / hide sideBarWidget when button is toggled :
-    connect(infoBarWidget,
+    connect(mInfoBarWidget,
             &IconTextWidget::activeSignal,
             (static_cast<MainWindow *>(parentWidget()))->getSideBar(),
             &SideBar::activeSlot);
@@ -132,10 +132,10 @@ void MyStatusBar::setupConnections()
 void MyStatusBar::setConnectionWidget()
 {
 
-    connectionWidget = new IconTextWidget(this, ConnectionWidgetIdentity);
+    mConnectionWidget = new IconTextWidget(this, ConnectionWidgetIdentity);
 
     // add aggregated widget to the status bar :
-    addWidget(connectionWidget);
+    addWidget(mConnectionWidget);
 
     // set connection not active by default :
     updateConnectionStatusSlot();
@@ -145,21 +145,21 @@ void MyStatusBar::setConnectionWidget()
 void MyStatusBar::setTimeInfoWidget()
 {
 
-    timeInfoWidget = new IconTextWidget(this, TimeInfoWidgetIdentity);
-    timeInfoWidget->setIcon(QStringLiteral("user-away"));
+    mTimeInfoWidget = new IconTextWidget(this, TimeInfoWidgetIdentity);
+    mTimeInfoWidget->setIcon(QStringLiteral("user-away"));
 
     // add aggregated widget to the status bar :
-    addWidget(timeInfoWidget);
+    addWidget(mTimeInfoWidget);
 
 }
 
 void MyStatusBar::setShutdownWidget()
 {
 
-    shutdownWidget = new IconTextWidget(this, ShutdownWidgetIdentity);
+    mShutdownWidget = new IconTextWidget(this, ShutdownWidgetIdentity);
 
     // add aggregated widget to the status bar :
-    addWidget(shutdownWidget);
+    addWidget(mShutdownWidget);
 
 }
 
@@ -167,29 +167,29 @@ void MyStatusBar::setInfoBarWidget()
 {
 
     // add widget that will toggle info bar :
-    infoBarWidget = new IconTextWidget(this, InfoBarWidgetIdentity);
+    mInfoBarWidget = new IconTextWidget(this, InfoBarWidgetIdentity);
 
-    infoBarWidget->setIconMode(IconTextWidget::SwitchIcon);
-    infoBarWidget->setIconOnly(QStringLiteral("arrow-up-double"), QStringLiteral("arrow-down-double"));
+    mInfoBarWidget->setIconMode(IconTextWidget::SwitchIcon);
+    mInfoBarWidget->setIconOnly(QStringLiteral("arrow-up-double"), QStringLiteral("arrow-down-double"));
 
     bool sideBarDisplay = KConfigGroupHandler::getInstance()->readSideBarDisplay();
-    infoBarWidget->setActive(sideBarDisplay);
+    mInfoBarWidget->setActive(sideBarDisplay);
 
     // add aggregated widget to the right of status bar :
-    addPermanentWidget(infoBarWidget);
+    addPermanentWidget(mInfoBarWidget);
 
 }
 
 IconTextWidget *MyStatusBar::getInfoBarWidget()
 {
-    return infoBarWidget;
+    return mInfoBarWidget;
 }
 
 void MyStatusBar::statusBarShutdownInfoSlot(const QString &iconStr, const QString &text)
 {
 
-    shutdownWidget->setIcon(iconStr);
-    shutdownWidget->setText(text);
+    mShutdownWidget->setIcon(iconStr);
+    mShutdownWidget->setText(text);
 
 }
 
@@ -197,12 +197,12 @@ void MyStatusBar::updateConnectionStatusSlot()
 {
 
     QString connection;
-    ServerConnectionIcon serverConnectionIcon = UtilityServerStatus::buildConnectionStringFromStatus(clientsObserver, connection);
+    ServerConnectionIcon serverConnectionIcon = UtilityServerStatus::buildConnectionStringFromStatus(mClientsObserver, connection);
 
     // set icon :
-    connectionWidget->setIcon(serverConnectionIcon);
+    mConnectionWidget->setIcon(serverConnectionIcon);
     // set text :
-    connectionWidget->setText(connection);
+    mConnectionWidget->setText(connection);
 
     // set tooltip to connection widget :
     buildConnWidgetToolTip(connection);
@@ -216,12 +216,12 @@ void MyStatusBar::buildConnWidgetToolTip(const QString &connection)
 
     // display tooltip connection only for a single server connection :
     QString hostName;
-    if (clientsObserver->isSingleServer(hostName)) {
-        toolTipStr = UtilityServerStatus::buildConnectionToolTip(clientsObserver, connection, hostName);
+    if (mClientsObserver->isSingleServer(hostName)) {
+        toolTipStr = UtilityServerStatus::buildConnectionToolTip(mClientsObserver, connection, hostName);
     }
 
     // set tooltip :
-    connectionWidget->setToolTip(toolTipStr);
+    mConnectionWidget->setToolTip(toolTipStr);
 
 }
 
@@ -231,13 +231,13 @@ void MyStatusBar::updateFileSizeInfoSlot(const quint64 totalFiles, const quint64
     // status bar update, display number of files and remianing size :
     const QString remainingFiles = i18n("Files: %1 (%2)", totalFiles, Utility::convertByteHumanReadable(totalSize));
 
-    sizeLabel->setTextOnly(remainingFiles);
+    mSizeLabel->setTextOnly(remainingFiles);
 }
 
 void MyStatusBar::updateDownloadSpeedInfoSlot(const QString &speedInKBStr)
 {
 
-    speedLabel->setTextOnly(i18n("Speed: %1", speedInKBStr));
+    mSpeedLabel->setTextOnly(i18n("Speed: %1", speedInKBStr));
 }
 
 void MyStatusBar::updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace diskSpaceStatus, const QString &availableVal, const int usedDiskPercentage)
@@ -246,34 +246,34 @@ void MyStatusBar::updateFreeSpaceSlot(const UtilityNamespace::FreeDiskSpace disk
     // diskspace is unknown, hide widgets :
     if (diskSpaceStatus == UnknownDiskSpace) {
 
-        iconCapacityWidget->hide();
+        mIconCapacityWidget->hide();
     }
 
     else {
 
         // if capacity bar was hidden because diskSpaceStatus was previously UnknownDiskSpace :
-        if (iconCapacityWidget->isHidden()) {
-            iconCapacityWidget->show();
+        if (mIconCapacityWidget->isHidden()) {
+            mIconCapacityWidget->show();
         }
 
         // if free disk space is not sufficient display warning icon :
         if (diskSpaceStatus == InsufficientDiskSpace) {
 
-            iconCapacityWidget->setIcon(QStringLiteral("dialog-warning"));
-            iconCapacityWidget->setToolTip(i18n("Insufficient disk space"));
+            mIconCapacityWidget->setIcon(QStringLiteral("dialog-warning"));
+            mIconCapacityWidget->setToolTip(i18n("Insufficient disk space"));
 
         }
 
         // if free disk space is not sufficient do not display icon :
         if (diskSpaceStatus == SufficientDiskSpace) {
 
-            iconCapacityWidget->setIcon(QString());
-            iconCapacityWidget->setToolTip(QString());
+            mIconCapacityWidget->setIcon(QString());
+            mIconCapacityWidget->setToolTip(QString());
 
         }
 
         // set text and repaint widget :
-        iconCapacityWidget->updateCapacity(availableVal, usedDiskPercentage);
+        mIconCapacityWidget->updateCapacity(availableVal, usedDiskPercentage);
 
     }
 
@@ -285,19 +285,19 @@ void MyStatusBar::updateTimeInfoSlot(const bool parentDownloadingFound)
     QString timeInfoStr;
     QString timeInfoToolTip;
 
-    QString currentTimeValue = clientsObserver->getStatsInfoBuilder()->getCurrentTimeValue();
-    QString totalTimeValue = clientsObserver->getStatsInfoBuilder()->getTotalTimeValue();
+    QString currentTimeValue = mClientsObserver->getStatsInfoBuilder()->getCurrentTimeValue();
+    QString totalTimeValue = mClientsObserver->getStatsInfoBuilder()->getTotalTimeValue();
 
     // build text and toolTip :
     if (!currentTimeValue.isEmpty()) {
 
         timeInfoStr.append(currentTimeValue);
 
-        QString timeLabel = clientsObserver->getStatsInfoBuilder()->getTimeLabel();
+        QString timeLabel = mClientsObserver->getStatsInfoBuilder()->getTimeLabel();
         timeInfoToolTip.append(QStringLiteral("<b>%1</b>").arg(timeLabel));
 
         timeInfoToolTip.append(QStringLiteral("<table style='white-space: nowrap'>"));
-        QString nzbNameDownloading = clientsObserver->getStatsInfoBuilder()->getNzbNameDownloading();
+        QString nzbNameDownloading = mClientsObserver->getStatsInfoBuilder()->getNzbNameDownloading();
         timeInfoToolTip.append(Utility::buildToolTipRow(QStringLiteral("%1:").arg(currentTimeValue), nzbNameDownloading));
 
     }
@@ -317,16 +317,16 @@ void MyStatusBar::updateTimeInfoSlot(const bool parentDownloadingFound)
         timeInfoToolTip.clear();
     }
 
-    timeInfoWidget->setText(timeInfoStr);
-    timeInfoWidget->setToolTip(timeInfoToolTip);
+    mTimeInfoWidget->setText(timeInfoStr);
+    mTimeInfoWidget->setToolTip(timeInfoToolTip);
 
     // if download is not active, hide the widget :
     if (!parentDownloadingFound) {
-        timeInfoWidget->hide();
+        mTimeInfoWidget->hide();
     }
     // else display it :
-    else if (timeInfoWidget->isHidden()) {
-        timeInfoWidget->show();
+    else if (mTimeInfoWidget->isHidden()) {
+        mTimeInfoWidget->show();
     }
 
 }

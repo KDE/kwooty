@@ -184,7 +184,7 @@ void CategoriesManual::manualTransferFolderSlot()
                     startDirectory = storedDirectory;
                 }
 
-                QString directory = KFileDialog::getExistingDirectory(KUrl(startDirectory),
+                QString directory = KFileDialog::getExistingDirectory(QUrl::fromLocalFile(startDirectory),
                                     static_cast<QWidget *>(mCore->getCentralWidget()),
                                     i18n("Select transfer folder"));
                 // target folder has been selected :
