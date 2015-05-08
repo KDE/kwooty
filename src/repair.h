@@ -49,7 +49,7 @@ public:
                                 RepairComplete
                               };
 
-    Repair(RepairDecompressThread *);
+    explicit Repair(RepairDecompressThread *);
     ~Repair();
     void launchProcess(const NzbCollectionData &);
     bool isProcessing() const;

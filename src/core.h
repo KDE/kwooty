@@ -87,22 +87,22 @@ public:
     CentralWidget *getCentralWidget() const;
 
 private:
-    MainWindow *mainWindow;
-    DataRestorer *dataRestorer;
-    ServerManager *serverManager;
-    ActionsManager *actionsManager;
-    NzbFileHandler *nzbFileHandler;
-    SegmentManager *segmentManager;
-    FileOperations *fileOperations;
-    ShutdownManager *shutdownManager;
-    StandardItemModel *downloadModel;
-    ClientsObserver *clientsObserver;
-    StandardItemModelQuery *modelQuery;
-    QueueFileObserver *queueFileObserver;
-    ItemParentUpdater *itemParentUpdater;
-    NotificationManager *notificationManager;
-    SegmentsDecoderThread *segmentsDecoderThread;
-    RepairDecompressThread *repairDecompressThread;
+    MainWindow *mMainWindow;
+    DataRestorer *mDataRestorer;
+    ServerManager *mServerManager;
+    ActionsManager *mActionsManager;
+    NzbFileHandler *mNzbFileHandler;
+    SegmentManager *mSegmentManager;
+    FileOperations *mFileOperations;
+    ShutdownManager *mShutdownManager;
+    StandardItemModel *mDownloadModel;
+    ClientsObserver *mClientsObserver;
+    StandardItemModelQuery *mModelQuery;
+    QueueFileObserver *mQueueFileObserver;
+    ItemParentUpdater *mItemParentUpdater;
+    NotificationManager *mNotificationManager;
+    SegmentsDecoderThread *mSegmentsDecoderThread;
+    RepairDecompressThread *mRepairDecompressThread;
 
     QModelIndex setDataToModel(const QList<GlobalFileData> &, const QString &);
 
@@ -124,9 +124,6 @@ public Q_SLOTS:
     void statusBarFileSizeUpdateSlot(StatusBarUpdateType);
     void serverStatisticsUpdateSlot(const int);
     void extractPasswordRequiredSlot(const QString &);
-
-private Q_SLOTS:
-
 };
 
 #endif // core_H

@@ -78,8 +78,8 @@ protected:
 
 protected Q_SLOTS:
 
-    void parentStatusIconUpdateSlot(QStandardItem *, ItemStatusData);
-    void childStatusIconUpdateSlot(QStandardItem *, ItemStatusData);
+    void parentStatusIconUpdateSlot(QStandardItem *, const ItemStatusData &);
+    void childStatusIconUpdateSlot(QStandardItem *, const ItemStatusData &);
 
 };
 

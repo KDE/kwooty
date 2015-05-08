@@ -488,7 +488,7 @@ void DataRestorer::readDataFromDiskSlot()
 
 }
 
-void DataRestorer::parentStatusItemChangedSlot(QStandardItem *, ItemStatusData parentItemStatusData)
+void DataRestorer::parentStatusItemChangedSlot(QStandardItem *, const ItemStatusData &parentItemStatusData)
 {
 
     // file download has just finished, be sure that it will not be reloaded

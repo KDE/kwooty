@@ -35,7 +35,7 @@ class ItemDownloadUpdater : public ItemAbstractUpdater
     Q_OBJECT
 
 public:
-    ItemDownloadUpdater(ItemParentUpdater *);
+    explicit ItemDownloadUpdater(ItemParentUpdater *);
     void updateItems(const QModelIndex &, const NzbFileData &);
 
 private:
@@ -47,7 +47,7 @@ private:
 
 Q_SIGNALS:
     void statusBarDecrementSignal(quint64, int);
-    void decodeSegmentsSignal(NzbFileData);
+    void decodeSegmentsSignal(const NzbFileData &);
 };
 
 #endif // ITEMDOWNLOADUPDATER_H

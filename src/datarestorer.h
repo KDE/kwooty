@@ -49,7 +49,7 @@ public:
                                       Automatically
                                     };
 
-    DataRestorer(Core *);
+    explicit DataRestorer(Core *);
     DataRestorer();
     int saveQueueData(const SaveFileBehavior &);
     void setActive(const bool);
@@ -79,7 +79,7 @@ Q_SIGNALS:
     void suppressOldOrphanedSegmentsSignal();
 
 public Q_SLOTS:
-    void parentStatusItemChangedSlot(QStandardItem *, ItemStatusData);
+    void parentStatusItemChangedSlot(QStandardItem *, const ItemStatusData&);
 
 private Q_SLOTS:
     void readDataFromDiskSlot();

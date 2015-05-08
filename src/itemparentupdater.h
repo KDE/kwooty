@@ -43,7 +43,7 @@ class ItemParentUpdater : public ItemAbstractUpdater
     Q_OBJECT
 
 public:
-    ItemParentUpdater(Core *);
+    explicit ItemParentUpdater(Core *);
     ItemPostDownloadUpdater *getItemPostDownloadUpdater() const;
     ItemDownloadUpdater *getItemDownloadUpdater() const;
     ItemChildrenManager *getItemChildrenManager() const;
@@ -81,7 +81,7 @@ private:
 
 Q_SIGNALS:
 
-    void repairDecompressSignal(NzbCollectionData);
+    void repairDecompressSignal(const NzbCollectionData &);
     void downloadWaitingPar2Signal();
 
 public Q_SLOTS:

@@ -188,7 +188,7 @@ void ItemAbstractUpdater::setIcon(QStandardItem *stateItem, const UtilityNamespa
 //                                               SLOTS                                                        //
 //============================================================================================================//
 
-void ItemAbstractUpdater::parentStatusIconUpdateSlot(QStandardItem *stateItem, ItemStatusData itemStatusData)
+void ItemAbstractUpdater::parentStatusIconUpdateSlot(QStandardItem *stateItem, const ItemStatusData &itemStatusData)
 {
 
     UtilityNamespace::ItemStatus status = itemStatusData.getStatus();
@@ -230,7 +230,7 @@ void ItemAbstractUpdater::parentStatusIconUpdateSlot(QStandardItem *stateItem, I
 
 }
 
-void ItemAbstractUpdater::childStatusIconUpdateSlot(QStandardItem *stateItem, ItemStatusData itemStatusData)
+void ItemAbstractUpdater::childStatusIconUpdateSlot(QStandardItem *stateItem, const ItemStatusData &itemStatusData)
 {
 
     UtilityNamespace::ItemStatus status = itemStatusData.getStatus();

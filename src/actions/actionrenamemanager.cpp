@@ -198,7 +198,7 @@ void ActionRenameManager::actionTriggeredSlot()
 
         this->mInput = KInputDialog::getText(i18n("Rename Folder"), xi18nc("@label:textbox",
                                             "Rename the folder %1 to:",
-                                            "<filename>" + selectedFileNameItem->text() + "</filename>"),
+                                            selectedFileNameItem->text()),
                                             selectedFileNameItem->text());
 
         if (!this->mInput.isEmpty() &&
