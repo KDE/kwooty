@@ -27,7 +27,7 @@
 class PreferencesDisplay : public QWidget, public Ui::PreferencesDisplay
 {
 public:
-    PreferencesDisplay();
+    explicit PreferencesDisplay(QWidget *parent = Q_NULLPTR);
 };
 
 #endif // PREFERENCESDISPLAY_H

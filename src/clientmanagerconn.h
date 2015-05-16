@@ -36,7 +36,7 @@ class ClientManagerConn : public QObject
     Q_OBJECT
 
 public:
-    ClientManagerConn(ServerGroup *, int, int);
+    explicit ClientManagerConn(ServerGroup *, int, int);
     ~ClientManagerConn();
     NntpClient *getNntpClient();
     ServerGroup *getServerGroup();
@@ -55,11 +55,11 @@ public:
     void handleFirstConnection();
 
 private:
-    NntpClient *nntpClient;
-    ServerGroup *parent;
-    BandwidthClientMode bandwidthClientMode;
-    int clientId;
-    int connectionDelay;
+    NntpClient *mNntpClient;
+    ServerGroup *mParent;
+    BandwidthClientMode mBandwidthClientMode;
+    int mClientId;
+    int mConnectionDelay;
 
 public Q_SLOTS:
     void dataHasArrivedSlot();

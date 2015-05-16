@@ -20,7 +20,8 @@
 
 #include "preferencesdisplay.h"
 
-PreferencesDisplay::PreferencesDisplay()
+PreferencesDisplay::PreferencesDisplay(QWidget *parent)
+    : QWidget(parent)
 {
     setupUi(this);
 }
