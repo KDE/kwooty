@@ -29,8 +29,6 @@ Plugin::Plugin(QObject *parent): QObject(parent), KXMLGUIClient()
 {
 
     //qCDebug(KWOOTY_LOG) << instance.componentName();
-    //PORT KF5 this->setComponentData(instance);
-
 }
 
 void Plugin::setCore(MainWindow *core)

@@ -179,7 +179,6 @@ int CentralWidget::displayMergeItemsMessageBox(const QString &selectedNzbFileNam
 int CentralWidget::displayAboutToShutdownMessageBox(const QString &shutdownMethodText)
 {
 
-#if 0 //PORT KF5
     // create kdialog :
     aboutToShutdownDialog = new KDialog(this, Qt::Dialog);
     aboutToShutdownDialog->setCaption(i18n("Warning"));
@@ -198,6 +197,8 @@ int CentralWidget::displayAboutToShutdownMessageBox(const QString &shutdownMetho
     bool checkboxReturn = false;
     QString status = i18nc("%1 = shutdown/suspend to RAM/suspend to disk",
                            "Kwooty is about to %1 system. Continue?", shutdownMethodText.toLower());
+#if 0 //PORT KF5
+
     return KMessageBox::createKMessageBox(aboutToShutdownDialog,
                                           QMessageBox::Warning,
                                           status,

@@ -132,8 +132,7 @@ QStringList UtilityCategories::retrieveMainCategoryList()
 {
 
     QStringList parentTypeList;
-#if 0 //PORT KF5
-    foreach (const KSharedPtr<KMimeType> &mimeType,  KMimeType::allMimeTypes()) {
+    foreach (const KMimeType::Ptr &mimeType,  KMimeType::allMimeTypes()) {
 
         QStringList tempList = mimeType->name().split("/");
 
@@ -149,12 +148,11 @@ QStringList UtilityCategories::retrieveMainCategoryList()
     }
 
     if (parentTypeList.isEmpty()) {
-        qCDebug(KWOOTY_LOG) << "error retrieving mime type list !";
+        qDebug() << "error retrieving mime type list !";
     }
 
     // return main category list sorted by alphabetical order :
     qSort(parentTypeList);
-#endif
     return parentTypeList;
 }
 
