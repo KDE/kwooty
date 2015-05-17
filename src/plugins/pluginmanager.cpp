@@ -135,15 +135,13 @@ void PluginManager::configCommittedSlot(const QByteArray &componentName)
 
     // look for plugin whose config has been updated :
     foreach (Plugin *currentPlugin, mLoadedInfoPluginMap.values()) {
-#if 0 //PORT KF5
         // corresponding plugin has been found :
-        if (componentName == currentPlugin->componentData().componentName()) {
+        if (componentName == currentPlugin->componentName()) {
 
             // update settings to current plugin :
             currentPlugin->configUpdated();
             break;
         }
-#endif
     }
 
 }

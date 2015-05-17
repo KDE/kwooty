@@ -64,7 +64,7 @@ void SysTray::setupActions()
     this->contextMenu()->addSeparator();
     this->contextMenu()->addAction(this->mParent->actionCollection()->action("downloadFolder"));
 #if 0 //PORT KF5
-    QList<QAction *> sysTrayActionCollection = this->actionCollection();
+    QList<QAction *> sysTrayActionCollection = actionCollection();
     KStandardAction::quit(this->parent, SLOT(quit()), sysTrayActionCollection);
 #endif
 }
