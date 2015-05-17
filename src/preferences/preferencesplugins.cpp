@@ -25,6 +25,7 @@
 #include <KSharedConfig>
 #include <kpluginfactory.h>
 #include <KLocalizedString>
+#include <QPushButton>
 #include <QVBoxLayout>
 
 #include "plugins/pluginmanager.h"
@@ -45,45 +46,60 @@ PreferencesPlugins::PreferencesPlugins(KConfigDialog *kConfigDialog, PluginManag
 
     // update buttons when plugins settings have changed :
     connect(this->kPluginSelector, SIGNAL(changed(bool)), this->kConfigDialog, SLOT(updateButtons()));
-    connect(this->kPluginSelector, SIGNAL(changed(bool)), this->kConfigDialog, SLOT(enableButtonApply(bool)));
+    connect(this->kPluginSelector, SIGNAL(changed(bool)), this, SLOT(slotEnableButtonApply(bool)));
 
     // config plugin has been committed, inform plugin manager :
     connect(this->kPluginSelector, SIGNAL(configCommitted(QByteArray)), this->pluginManager, SLOT(configCommittedSlot(QByteArray)));
 
-    // feedback from kConfigDialog, choose action according to button clicked by user :
-    connect(this->kConfigDialog, SIGNAL(buttonClicked(KDialog::ButtonCode)), this, SLOT(configButtonClickedSlot(KDialog::ButtonCode)));
+    connect(this->kConfigDialog->button(QDialogButtonBox::Ok), SIGNAL(clicked(bool)),
+            this,
+            SLOT(slotOkClicked()));
+    connect(this->kConfigDialog->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
+            this,
+            SLOT(slotApplyClicked()));
+    connect(this->kConfigDialog->button(QDialogButtonBox::Cancel), SIGNAL(clicked(bool)),
+            this,
+            SLOT(slotCancelClicked()));
+
+    connect(this->kConfigDialog->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)),
+            this,
+            SLOT(slotDefaultClicked()));
 
 }
 
-void PreferencesPlugins::configButtonClickedSlot(KDialog::ButtonCode button)
+void PreferencesPlugins::slotEnableButtonApply(bool enable)
 {
-
-    switch (button) {
-
-    case KDialog::Cancel: case KDialog::Close: {
-
-        // plugins settings may have been changed but user cancel changes,
-        // reload plugins to previous states :
-        this->kPluginSelector->load();
-        break;
-    }
-
-    case KDialog::Ok: case KDialog::Apply: {
-
-        // plugins settings have been changed, save them and update plugins loading :
-        this->kPluginSelector->save();
-
-        // update plugins to load/unload :
-        this->pluginManager->loadPlugins();
-        break;
-    }
-
-    default: {
-        break;
-
-    }
-
-    }
-
+    this->kConfigDialog->button(QDialogButtonBox::Apply)->setEnabled(enable);
 }
 
+void PreferencesPlugins::slotDefaultClicked()
+{
+    //TODO ?
+}
+
+void PreferencesPlugins::slotCancelClicked()
+{
+    // plugins settings may have been changed but user cancel changes,
+    // reload plugins to previous states :
+    this->kPluginSelector->load();
+    this->kConfigDialog->reject();
+}
+
+void PreferencesPlugins::slotApplyClicked()
+{
+    // plugins settings have been changed, save them and update plugins loading :
+    this->kPluginSelector->save();
+
+    // update plugins to load/unload :
+    this->pluginManager->loadPlugins();
+}
+
+void PreferencesPlugins::slotOkClicked()
+{
+    // plugins settings have been changed, save them and update plugins loading :
+    this->kPluginSelector->save();
+
+    // update plugins to load/unload :
+    this->pluginManager->loadPlugins();
+    this->kConfigDialog->accept();
+}

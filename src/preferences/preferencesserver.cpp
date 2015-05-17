@@ -46,48 +46,44 @@ PreferencesServer::PreferencesServer(KConfigDialog *dialog)
     this->tabWidget = new ServerTabWidget(this);
 
     // feedback from kConfigDialog, choose action according to button clicked by user :
-    connect(this->dialog,
-            SIGNAL(buttonClicked(KDialog::ButtonCode)),
+    connect(this->dialog->button(QDialogButtonBox::Ok), SIGNAL(clicked(bool)),
             this,
-            SLOT(configButtonClickedSlot(KDialog::ButtonCode)));
+            SLOT(slotOkClicked()));
+    connect(this->dialog->button(QDialogButtonBox::Apply), SIGNAL(clicked(bool)),
+            this,
+            SLOT(slotApplyClicked()));
+    connect(this->dialog->button(QDialogButtonBox::Cancel), SIGNAL(clicked(bool)),
+            this,
+            SLOT(slotCancelClicked()));
+
+    connect(this->dialog->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked(bool)),
+            this,
+            SLOT(slotDefaultClicked()));
 
     this->loadSettings();
 
 }
 
-void PreferencesServer::configButtonClickedSlot(KDialog::ButtonCode button)
+void PreferencesServer::slotDefaultClicked()
 {
+    defaultSettings();
+}
 
-    switch (button) {
+void PreferencesServer::slotCancelClicked()
+{
+    restorePreviousSettings();
+    this->dialog->reject();
+}
 
-    case KDialog::Cancel: case KDialog::Close: {
+void PreferencesServer::slotApplyClicked()
+{
+    saveSettings();
+}
 
-        // restore previous settings :
-        this->restorePreviousSettings();
-        break;
-    }
-
-    case KDialog::Ok: case KDialog::Apply: {
-
-        // save them :
-        this->saveSettings();
-        break;
-    }
-
-    case KDialog::Default: {
-
-        // restore default settings :
-        this->defaultSettings();
-        break;
-    }
-
-    default: {
-        break;
-
-    }
-
-    }
-
+void PreferencesServer::slotOkClicked()
+{
+    saveSettings();
+    this->dialog->accept();
 }
 
 void PreferencesServer::restorePreviousSettings()

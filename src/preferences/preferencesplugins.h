@@ -43,10 +43,12 @@ private:
     KPluginSelector *kPluginSelector;
     KConfigDialog *kConfigDialog;
 
-public Q_SLOTS:
-
-    void configButtonClickedSlot(KDialog::ButtonCode);
-
+private slots:
+    void slotDefaultClicked();
+    void slotCancelClicked();
+    void slotApplyClicked();
+    void slotOkClicked();
+    void slotEnableButtonApply(bool enable);
 };
 
 #endif // PREFERENCESPLUGINS_H

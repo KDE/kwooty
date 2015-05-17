@@ -24,7 +24,6 @@
 #include <QWidget>
 
 #include <KConfigDialog>
-#include <KDialog>
 #include "ui_serversettings.h"
 #include "ui_preferencesserver.h"
 
@@ -48,7 +47,10 @@ private:
     void defaultSettings();
 
 private Q_SLOTS:
-    void configButtonClickedSlot(KDialog::ButtonCode);
+    void slotApplyClicked();
+    void slotOkClicked();
+    void slotDefaultClicked();
+    void slotCancelClicked();
 Q_SIGNALS:
     void saveDataSignal();
 
