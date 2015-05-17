@@ -78,37 +78,29 @@ QString UtilityCategories::buildFullCategoryPattern(const QString &category, con
 
 QString UtilityCategories::buildTextToDisplay(const QString &category, const QString &subcategory)
 {
-#if 0 //PORT KF5
     QString textToDisplay;
-    KSharedPtr<KMimeType> mimeType = KMimeType::mimeType(UtilityCategories::buildFullCategoryPattern(category, subcategory));
+    KMimeType::Ptr mimeType = KMimeType::mimeType(UtilityCategories::buildFullCategoryPattern(category, subcategory));
 
     if (!mimeType.isNull()) {
         textToDisplay = mimeType->comment() + " (" + UtilityCategories::builExtensionStringFromMimeType(mimeType) + ")";
     }
 
     return textToDisplay;
-#else
-    return QString();
-#endif
 }
 
 QString UtilityCategories::buildTextToDisplayFromFullCategoryPattern(const QString &fullCategory)
 {
-#if 0 //PORT KF5
     QString textToDisplay;
-    KSharedPtr<KMimeType> mimeType = KMimeType::mimeType(fullCategory);
+    KMimeType::Ptr mimeType = KMimeType::mimeType(fullCategory);
 
     if (!mimeType.isNull()) {
         textToDisplay = mimeType->comment() + " (" + UtilityCategories::builExtensionStringFromMimeType(mimeType) + ")";
     }
 
     return textToDisplay;
-#else
-    return QString();
-#endif
 }
 
-QString UtilityCategories::builExtensionStringFromMimeType(KSharedPtr<KMimeType> mimeType)
+QString UtilityCategories::builExtensionStringFromMimeType(KMimeType::Ptr mimeType)
 {
 
     QString extensionString;
@@ -123,10 +115,9 @@ QString UtilityCategories::builExtensionStringFromMimeType(KSharedPtr<KMimeType>
 void UtilityCategories::builPartialMimeData(MimeData &mimeData)
 {
 
-#if 0 //PORT KF5
     QString fullCategory = UtilityCategories::buildFullCategoryPattern(mimeData.getMainCategory(), mimeData.getSubCategory());
 
-    KSharedPtr<KMimeType> mimeType = KMimeType::mimeType(fullCategory);
+    KMimeType::Ptr mimeType = KMimeType::mimeType(fullCategory);
 
     if (!mimeType.isNull()) {
 
@@ -135,7 +126,6 @@ void UtilityCategories::builPartialMimeData(MimeData &mimeData)
         mimeData.setDisplayedText(UtilityCategories::buildTextToDisplayFromFullCategoryPattern(fullCategory));
 
     }
-#endif
 }
 
 QStringList UtilityCategories::retrieveMainCategoryList()

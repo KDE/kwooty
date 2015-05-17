@@ -36,7 +36,7 @@ public:
     static QString buildSubcategoryPattern(const QString &);
     static QString buildMaincategoryPattern(const QString &);
     static QString buildFullCategoryPattern(CategoriesModel *, QStandardItem *, const QString &);
-    static QString builExtensionStringFromMimeType(KSharedPtr< KMimeType>);
+    static QString builExtensionStringFromMimeType(KMimeType::Ptr);
     static QString buildFullCategoryPattern(const QString &, const QString &);
     static QString buildTextToDisplay(const QString &, const QString &);
     static QString buildTextToDisplayFromFullCategoryPattern(const QString &);
