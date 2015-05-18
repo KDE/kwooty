@@ -51,16 +51,16 @@ public:
 
 private:
 
-    QList<SegmentData> segmentDataList;
-    QList<NzbFileData> nzbFileDataList;
-    Core *core;
-    ServerManager *serverManager;
-    qint64 dataSizeCounter;
-    int requestNextSegmentDelaySec;
-    bool segmentDecoderIdle;
-    bool finalizeLocked;
-    bool finalizeDecodeIdle;
-    bool bufferFull;
+    QList<SegmentData> mSegmentDataList;
+    QList<NzbFileData> mnZbFileDataList;
+    Core *mCore;
+    ServerManager *mServerManager;
+    qint64 mDataSizeCounter;
+    int mRequestNextSegmentDelaySec;
+    bool mSegmentDecoderIdle;
+    bool mFinalizeLocked;
+    bool mFinalizeDecodeIdle;
+    bool mBufferFull;
 
     void setupConnections();
     void sendDataToFinalizeDecode();

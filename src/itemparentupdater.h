@@ -61,11 +61,11 @@ private:
         AutomaticPostProcess
     };
 
-    Core *parent;
-    ItemPostDownloadUpdater *itemPostDownloadUpdater;
-    ItemDownloadUpdater *itemDownloadUpdater;
-    ItemChildrenManager *itemChildrenManager;
-    bool isItemUpdated;
+    Core *mParent;
+    ItemPostDownloadUpdater *mItemPostDownloadUpdater;
+    ItemDownloadUpdater *mItemDownloadUpdater;
+    ItemChildrenManager *mItemChildrenManager;
+    bool mIsItemUpdated;
 
     ItemStatusData updateItemsDownload(ItemStatusData &, const int, const QModelIndex &, const quint64);
     ItemStatusData updateStatusItemDownload(ItemStatusData &, const int);

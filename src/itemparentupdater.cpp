@@ -35,12 +35,12 @@
 ItemParentUpdater::ItemParentUpdater(Core *parent) : ItemAbstractUpdater(parent->getDownloadModel(), ItemAbstractUpdater::Parent)
 {
 
-    this->parent = parent;
+    this->mParent = parent;
 
     // instantiate item updater classes :
-    this->itemPostDownloadUpdater = new ItemPostDownloadUpdater(this);
-    this->itemDownloadUpdater = new ItemDownloadUpdater(this);
-    this->itemChildrenManager = new ItemChildrenManager(parent, this);
+    this->mItemPostDownloadUpdater = new ItemPostDownloadUpdater(this);
+    this->mItemDownloadUpdater = new ItemDownloadUpdater(this);
+    this->mItemChildrenManager = new ItemChildrenManager(parent, this);
 
     // setup connections :
     this->setupConnections();
@@ -49,15 +49,15 @@ ItemParentUpdater::ItemParentUpdater(Core *parent) : ItemAbstractUpdater(parent-
 
 ItemPostDownloadUpdater *ItemParentUpdater::getItemPostDownloadUpdater() const
 {
-    return this->itemPostDownloadUpdater;
+    return this->mItemPostDownloadUpdater;
 }
 ItemDownloadUpdater *ItemParentUpdater::getItemDownloadUpdater() const
 {
-    return this->itemDownloadUpdater;
+    return this->mItemDownloadUpdater;
 }
 ItemChildrenManager *ItemParentUpdater::getItemChildrenManager() const
 {
-    return this->itemChildrenManager;
+    return this->mItemChildrenManager;
 }
 StandardItemModel *ItemParentUpdater::getDownloadModel() const
 {
@@ -67,15 +67,15 @@ StandardItemModel *ItemParentUpdater::getDownloadModel() const
 void ItemParentUpdater::setupConnections()
 {
 
-    connect(itemDownloadUpdater,
+    connect(mItemDownloadUpdater,
             SIGNAL(statusBarDecrementSignal(quint64,int)),
-            parent->getClientsObserver(),
+            mParent->getClientsObserver(),
             SLOT(decrementSlot(quint64,int)));
 
     // download par2 files if crc check failed during archive download :
     connect(this,
             SIGNAL(downloadWaitingPar2Signal()),
-            parent,
+            mParent,
             SLOT(downloadWaitingPar2Slot()));
 
 }
@@ -86,7 +86,7 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex &nzbIndex)
     // variable initialisation
     this->clear();
     quint64 totalProgress  = 0;
-    this->isItemUpdated = false;
+    this->mIsItemUpdated = false;
 
     // get itemStatusData :
     ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex);
@@ -113,7 +113,7 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex &nzbIndex)
     nzbItemStatusData = this->updateItemsDecode(nzbItemStatusData, rowNumber);
 
     // 2. else try to set status item as "DOWNLOAD"
-    if (!this->isItemUpdated) {
+    if (!this->mIsItemUpdated) {
         nzbItemStatusData = this->updateItemsDownload(nzbItemStatusData, rowNumber, nzbIndex, totalProgress);
     }
 
@@ -192,14 +192,14 @@ ItemStatusData ItemParentUpdater::updateStatusItemDecode(ItemStatusData &nzbItem
                 (rowNumber == this->decodeErrorItemNumber + this->articleNotFoundNumber)) {
 
             nzbItemStatusData.setStatus(DecodeErrorStatus);
-            this->isItemUpdated = true;
+            this->mIsItemUpdated = true;
         } else if ((this->decodeFinishItemNumber > 0) &&
                    (rowNumber == (this->decodeErrorItemNumber +
                                   this->articleNotFoundNumber +
                                   this->decodeFinishItemNumber))) {
 
             nzbItemStatusData.setStatus(DecodeFinishStatus);
-            this->isItemUpdated = true;
+            this->mIsItemUpdated = true;
 
         }
     }
@@ -476,7 +476,7 @@ bool ItemParentUpdater::updatePar2ItemsIfCrcFailed(ItemStatusData &nzbItemStatus
         // if parent crc has been set to incorrect par2 files are required, set them to IdleStatus :
         if (nzbItemStatusData.getCrc32Match() == CrcKo) {
 
-            itemChildrenManager->changePar2FilesStatusSlot(nzbIndex, IdleStatus);
+            mItemChildrenManager->changePar2FilesStatusSlot(nzbIndex, IdleStatus);
 
             nzbItemStatusData.setCrc32Match(CrcKoNotified);
             par2FilesUpdated = true;
@@ -493,7 +493,7 @@ void ItemParentUpdater::updateItemsIfDirectExtractFailed(const QModelIndex nzbIn
     if ((status == ExtractFinishedStatus) &&
             Settings::smartPar2Download()) {
 
-        bool par2NotDownloaded = this->itemChildrenManager->resetItemStatusIfExtractFail(nzbIndex);
+        bool par2NotDownloaded = this->mItemChildrenManager->resetItemStatusIfExtractFail(nzbIndex);
 
         if (par2NotDownloaded) {
 

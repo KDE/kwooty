@@ -43,7 +43,7 @@ public:
                            SegmentDownloadFinished
                          };
 
-    NntpSocket(ClientManagerConn *parent);
+    explicit NntpSocket(ClientManagerConn *parent);
     ~NntpSocket();
     bool isSocketUnconnected() const;
     bool isSocketConnected() const;

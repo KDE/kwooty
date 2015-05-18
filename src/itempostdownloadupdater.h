@@ -29,15 +29,12 @@ class PostDownloadInfoData;
 
 class ItemPostDownloadUpdater : public ItemAbstractUpdater
 {
-
 public:
-
     explicit ItemPostDownloadUpdater(ItemParentUpdater *);
     void updateItems(const PostDownloadInfoData &);
     void addFileTypeInfo(const PostDownloadInfoData &);
 
 private:
-
     void updateNzbChildrenItems(const QModelIndex &, const int, const int);
     void updateDecodeItems(const PostDownloadInfoData &);
     void updateRepairExtractItems(const PostDownloadInfoData &);

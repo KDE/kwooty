@@ -36,9 +36,7 @@ class KWOOTY_EXPORT FileOperations : public QObject
 {
 
     Q_OBJECT
-
 public:
-
     explicit FileOperations(Core *);
     void openFile();
     void openFileWithFileMode(const KUrl &, UtilityNamespace::OpenFileMode);
