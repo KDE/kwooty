@@ -32,20 +32,20 @@ CentralWidget::CentralWidget(MainWindow *parent) : QWidget(parent)
 {
 
     // init button code that avoid to display one message box per nntp client instance error :
-    saveErrorButtonCode = 0;
+    mSaveErrorButtonCode = 0;
 
 }
 
 bool CentralWidget::isDialogExisting()
 {
-    return !(saveErrorButtonCode == 0);
+    return !(mSaveErrorButtonCode == 0);
 }
 
 void CentralWidget::saveFileError(const int fromProcessing)
 {
 
     // notify user with a message box (and avoid multiple message box instances):
-    if (saveErrorButtonCode == 0) {
+    if (mSaveErrorButtonCode == 0) {
 
         QString saveErrorFolder;
 
@@ -56,15 +56,15 @@ void CentralWidget::saveFileError(const int fromProcessing)
             saveErrorFolder = i18n("temporary folder");
         }
 
-        saveErrorButtonCode = KMessageBox::Cancel;
-        saveErrorButtonCode = KMessageBox::messageBox(this,
+        mSaveErrorButtonCode = KMessageBox::Cancel;
+        mSaveErrorButtonCode = KMessageBox::messageBox(this,
                               KMessageBox::Sorry,
                               i18n("Write error in <b>%1</b>: disk drive may be full.<br>Downloads have been suspended.",
                                    saveErrorFolder),
                               i18n("Write error"));
 
-        if (saveErrorButtonCode == KMessageBox::Ok) {
-            saveErrorButtonCode = 0;
+        if (mSaveErrorButtonCode == KMessageBox::Ok) {
+            mSaveErrorButtonCode = 0;
         }
 
     }
@@ -180,18 +180,18 @@ int CentralWidget::displayAboutToShutdownMessageBox(const QString &shutdownMetho
 {
 
     // create kdialog :
-    aboutToShutdownDialog = new KDialog(this, Qt::Dialog);
-    aboutToShutdownDialog->setCaption(i18n("Warning"));
-    aboutToShutdownDialog->setButtons(KDialog::Yes | KDialog::No);
-    aboutToShutdownDialog->setModal(true);
+    mAboutToShutdownDialog = new KDialog(this, Qt::Dialog);
+    mAboutToShutdownDialog->setCaption(i18n("Warning"));
+    mAboutToShutdownDialog->setButtons(KDialog::Yes | KDialog::No);
+    mAboutToShutdownDialog->setModal(true);
 
     // display text for continue button
     KGuiItem buttonContinue = KStandardGuiItem::cont();
     buttonContinue.setText(shutdownMethodText);
-    aboutToShutdownDialog->setButtonGuiItem(KDialog::Yes, buttonContinue);
+    mAboutToShutdownDialog->setButtonGuiItem(KDialog::Yes, buttonContinue);
 
     // set cancel button :
-    aboutToShutdownDialog->setButtonGuiItem(KDialog::No, KStandardGuiItem::cancel());
+    mAboutToShutdownDialog->setButtonGuiItem(KDialog::No, KStandardGuiItem::cancel());
 
     // display kmessagebox :
     bool checkboxReturn = false;
@@ -214,8 +214,8 @@ int CentralWidget::displayAboutToShutdownMessageBox(const QString &shutdownMetho
 void CentralWidget::closeAboutToShutdownMessageBox()
 {
 
-    if (aboutToShutdownDialog) {
-        aboutToShutdownDialog->reject();
+    if (mAboutToShutdownDialog) {
+        mAboutToShutdownDialog->reject();
     }
 
 }

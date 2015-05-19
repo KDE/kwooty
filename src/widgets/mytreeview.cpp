@@ -40,7 +40,7 @@
 MyTreeView::MyTreeView(MainWindow *_mainWindow) : QTreeView(_mainWindow->getCentralWidget())
 {
 
-    mainWindow = _mainWindow;
+    mMainWindow = _mainWindow;
 
     // delegate for item rendering / displaying :
     setItemDelegate(new ItemDelegate(this));
@@ -57,7 +57,7 @@ MyTreeView::MyTreeView(MainWindow *_mainWindow) : QTreeView(_mainWindow->getCent
     setAcceptDrops(true);
 
     // retrieve setting about short or normal display for file names :
-    displayTinyFileName = Settings::displayTinyFileName();
+    mDisplayTinyFileName = Settings::displayTinyFileName();
 
 }
 
@@ -81,7 +81,7 @@ StandardItemModel *MyTreeView::getDownloadModel()
 
 Core *MyTreeView::getCore()
 {
-    return mainWindow->getCore();
+    return mMainWindow->getCore();
 }
 
 void MyTreeView::setupConnections()
@@ -111,7 +111,7 @@ void MyTreeView::contextMenuEvent(QContextMenuEvent *event)
 {
 
     QMenu contextMenu(this);
-    KActionCollection *actionCollection = mainWindow->actionCollection();
+    KActionCollection *actionCollection = mMainWindow->actionCollection();
 
     // search for pause parents :
     if (getCore()->getModelQuery()->searchParentItemPause()) {
@@ -285,7 +285,7 @@ void MyTreeView::expandedSlot(const QModelIndex &index)
 void MyTreeView::displayLongOrTinyFileName()
 {
 
-    if (displayTinyFileName != Settings::displayTinyFileName()) {
+    if (mDisplayTinyFileName != Settings::displayTinyFileName()) {
 
         StandardItemModel *downloadModel = getDownloadModel();
         // retrieve parent nzb :
@@ -308,7 +308,7 @@ void MyTreeView::displayLongOrTinyFileName()
             }
         }
 
-        displayTinyFileName = Settings::displayTinyFileName();
+        mDisplayTinyFileName = Settings::displayTinyFileName();
 
     }
 

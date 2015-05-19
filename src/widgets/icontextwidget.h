@@ -61,15 +61,15 @@ protected:
 
 private:
 
-    QLabel *iconLabel;
-    QLabel *textLabel;
-    QPixmap normalIcon;
-    QPixmap clearNormalIcon;
-    QPixmap clearActiveIcon;
-    QPixmap activeIcon;
-    IconMode iconMode;
-    ServerConnectionIcon serverConnectionIcon;
-    bool iconPressed;
+    QLabel *mIconLabel;
+    QLabel *mTextLabel;
+    QPixmap mNormalIcon;
+    QPixmap mClearNormalIcon;
+    QPixmap mClearActiveIcon;
+    QPixmap mActiveIcon;
+    IconMode mIconMode;
+    ServerConnectionIcon mServerConnectionIcon;
+    bool mIconPressed;
 
     void buildClearIcon(const QPixmap &, QPixmap &);
 

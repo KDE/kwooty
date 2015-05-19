@@ -53,8 +53,8 @@ public:
     void displayNzbHandleErrorMessageBox(const QString &);
 
 private:
-    int saveErrorButtonCode;
-    QPointer<KDialog> aboutToShutdownDialog;
+    int mSaveErrorButtonCode;
+    QPointer<KDialog> mAboutToShutdownDialog;
 
 };
 

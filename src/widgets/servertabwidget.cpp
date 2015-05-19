@@ -41,29 +41,29 @@ using namespace UtilityNamespace;
 ServerTabWidget::ServerTabWidget(PreferencesServer *parent) : KTabWidget(parent)
 {
 
-    this->preferencesServer = parent;
+    this->mPreferencesServer = parent;
 
     // add a button to add backup server :
-    this->newTab = new QToolButton(this);
-    this->newTab->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    this->newTab->setIcon(QIcon::fromTheme("list-add"));
-    this->newTab->setToolTip("Add a backup server");
+    this->mNewTab = new QToolButton(this);
+    this->mNewTab->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    this->mNewTab->setIcon(QIcon::fromTheme("list-add"));
+    this->mNewTab->setToolTip("Add a backup server");
 
     // add a button to remove backup server :
-    this->closeTab = new QToolButton(this);
-    this->closeTab->setToolButtonStyle(Qt::ToolButtonIconOnly);
-    this->closeTab->setIcon(QIcon::fromTheme("list-remove"));
-    this->closeTab->setToolTip("Remove current backup server");
+    this->mCloseTab = new QToolButton(this);
+    this->mCloseTab->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    this->mCloseTab->setIcon(QIcon::fromTheme("list-remove"));
+    this->mCloseTab->setToolTip("Remove current backup server");
 
     // create icons and associated texts for servers mode :
-    this->comboBoxIconTextMap.insert(PassiveServer,     QString("system-reboot"));
-    this->comboBoxIconTextMap.insert(ActiveServer,      QString("system-log-out"));
-    this->comboBoxIconTextMap.insert(FailoverServer,    QString("system-switch-user"));
-    this->comboBoxIconTextMap.insert(DisabledServer,    QString("system-shutdown"));
+    this->mComboBoxIconTextMap.insert(PassiveServer,     QString("system-reboot"));
+    this->mComboBoxIconTextMap.insert(ActiveServer,      QString("system-log-out"));
+    this->mComboBoxIconTextMap.insert(FailoverServer,    QString("system-switch-user"));
+    this->mComboBoxIconTextMap.insert(DisabledServer,    QString("system-shutdown"));
 
     // set buttons to right and left corners :
-    this->setCornerWidget(this->newTab, Qt::TopRightCorner);
-    this->setCornerWidget(this->closeTab, Qt::TopLeftCorner);
+    this->setCornerWidget(this->mNewTab, Qt::TopRightCorner);
+    this->setCornerWidget(this->mCloseTab, Qt::TopLeftCorner);
 
     parent->mainLayout->addWidget(this);
 
@@ -76,15 +76,15 @@ void ServerTabWidget::setupConnections()
 {
 
     // tab buttons have been clicked :
-    connect(this->newTab, SIGNAL(clicked(bool)), this, SLOT(newTabClickedSlot()));
-    connect(this->closeTab, SIGNAL(clicked(bool)), this, SLOT(closeTabClickedSlot()));
+    connect(this->mNewTab, SIGNAL(clicked(bool)), this, SLOT(newTabClickedSlot()));
+    connect(this->mCloseTab, SIGNAL(clicked(bool)), this, SLOT(closeTabClickedSlot()));
 
     // current tab has been moved by user :
     connect(this->tabBar(), SIGNAL(tabMoved(int,int)), this, SLOT(tabMovedSlot(int,int)));
     connect(this->tabBar(), SIGNAL(currentChanged(int)), this, SLOT(currentChangedSlot(int)));
 
     // save data asked from kConfigDialog :
-    connect(this->preferencesServer, SIGNAL(saveDataSignal()), this, SLOT(saveDataSlot()));
+    connect(this->mPreferencesServer, SIGNAL(saveDataSignal()), this, SLOT(saveDataSlot()));
 
     // notify changes in settings if tab has moved :
     connect(this->tabBar(), SIGNAL(tabMoved(int,int)), this, SLOT(valueChangedSlot()));
@@ -96,7 +96,7 @@ void ServerTabWidget::setupConnections()
 
 QMap<int, QString> ServerTabWidget::getComboBoxIconTextMap() const
 {
-    return this->comboBoxIconTextMap;
+    return this->mComboBoxIconTextMap;
 }
 
 void ServerTabWidget::addNewTab()
@@ -164,20 +164,20 @@ void ServerTabWidget::deleteAndRemoveTab(const int &index)
 void ServerTabWidget::enableDisableTabButtons()
 {
 
-    this->newTab->setEnabled(true);
-    this->closeTab->setEnabled(true);
+    this->mNewTab->setEnabled(true);
+    this->mCloseTab->setEnabled(true);
 
     // do not allow to add more than 5 servers :
     if (this->count() == UtilityNamespace::MAX_SERVERS) {
-        this->newTab->setEnabled(false);
+        this->mNewTab->setEnabled(false);
     }
     // do not allow to remove the master server :
     else if (this->count() == 1) {
-        this->closeTab->setEnabled(false);
+        this->mCloseTab->setEnabled(false);
     }
 
     if (this->currentIndex() == MasterServer) {
-        this->closeTab->setEnabled(false);
+        this->mCloseTab->setEnabled(false);
     }
 
 }
@@ -193,7 +193,7 @@ void ServerTabWidget::setServerTabIcon(const int &tabIndex, const int &serverMod
     }
     // adjust icon according to server mode :
     else {
-        iconStr = this->comboBoxIconTextMap.value(serverModeIndex);
+        iconStr = this->mComboBoxIconTextMap.value(serverModeIndex);
     }
 
     this->setTabIcon(tabIndex, QIcon::fromTheme(iconStr));
@@ -253,7 +253,7 @@ void ServerTabWidget::newTabClickedSlot(const ServerTabWidget::ServerNameQuery a
         if (!tabText.isEmpty()) {
 
             // add tab with new window widget :
-            ServerPreferencesWidget *serverPreferencesWidget = new ServerPreferencesWidget(this, this->preferencesServer, tabNumbers, askServerName);
+            ServerPreferencesWidget *serverPreferencesWidget = new ServerPreferencesWidget(this, this->mPreferencesServer, tabNumbers, askServerName);
 
             this->addTab(serverPreferencesWidget, tabText);
 
@@ -356,7 +356,7 @@ void ServerTabWidget::saveDataSlot()
 
 void ServerTabWidget::valueChangedSlot()
 {
-    preferencesServer->kcfg_serverChangesNotify->setText(QUuid::createUuid().toString());
+    mPreferencesServer->kcfg_serverChangesNotify->setText(QUuid::createUuid().toString());
 }
 
 void ServerTabWidget::renameTabSlot(QWidget *widget)

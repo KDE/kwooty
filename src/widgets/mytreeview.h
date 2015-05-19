@@ -62,8 +62,8 @@ private:
         MoveRowsBottom
     };
 
-    MainWindow *mainWindow;
-    bool displayTinyFileName;
+    MainWindow *mMainWindow;
+    bool mDisplayTinyFileName;
 
     void setupConnections();
     void displayLongOrTinyFileName();

@@ -54,10 +54,10 @@ public:
     QMap<int, QString> getComboBoxIconTextMap() const;
 
 private:
-    QToolButton *newTab;
-    QToolButton *closeTab;
-    PreferencesServer *preferencesServer;
-    QMap<int, QString> comboBoxIconTextMap;
+    QToolButton *mNewTab;
+    QToolButton *mCloseTab;
+    PreferencesServer *mPreferencesServer;
+    QMap<int, QString> mComboBoxIconTextMap;
 
     void setServerTabText(const ServerTabNaming & = CreateTab);
     void setupConnections();
