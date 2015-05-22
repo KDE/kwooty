@@ -21,7 +21,6 @@
 #include "clientmanagerconn.h"
 
 #include "kwooty_debug.h"
-#include <KGlobal>
 
 #include "kwootysettings.h"
 #include "core.h"

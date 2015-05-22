@@ -21,7 +21,6 @@
 #ifndef MYTREEVIEW_H
 #define MYTREEVIEW_H
 
-#include <KUrl>
 #include <QMenu>
 
 #include <QTreeView>

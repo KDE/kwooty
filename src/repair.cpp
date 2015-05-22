@@ -21,7 +21,6 @@
 #include "repair.h"
 
 #include "kwooty_debug.h"
-#include <KStandardDirs>
 #include <QFile>
 #include "kwootysettings.h"
 #include "repairdecompressthread.h"
