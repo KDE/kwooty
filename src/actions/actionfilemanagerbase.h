@@ -46,23 +46,21 @@ class ActionFileManagerBase : public QObject
     Q_OBJECT
 
 public:
-
     explicit ActionFileManagerBase(ActionsManager *);
 
 protected:
-
     enum ActionFileStep {
         ActionFileRequested,
         ActionFileProcessing,
         ActionFileIdle
     };
 
-    Core *core;
-    MyTreeView *treeView;
-    SegmentBuffer *segmentBuffer;
-    ActionsManager *actionsManager;
-    StandardItemModel *downloadModel;
-    ActionFileStep actionFileStep;
+    Core *mCore;
+    MyTreeView *mTreeView;
+    SegmentBuffer *mSegmentBuffer;
+    ActionsManager *mActionsManager;
+    StandardItemModel *mDownloadModel;
+    ActionFileStep mActionFileStep;
 
     void setupConnections();
     void displayMessage(const QString &);

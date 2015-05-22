@@ -40,12 +40,6 @@ class ActionButtonsManager : public QObject
 public:
     explicit ActionButtonsManager(ActionsManager *);
 
-private:
-    ActionsManager *mActionsManager;
-    Core *mCore;
-    MyTreeView *mTreeView;
-    StandardItemModel *mDownloadModel;
-    StandardItemModelQuery *mDownloadModelQuery;
 
 Q_SIGNALS:
     void setMoveButtonEnabledSignal(bool);
@@ -63,6 +57,12 @@ Q_SIGNALS:
 public Q_SLOTS:
     void selectedItemSlot();
 
+private:
+    ActionsManager *mActionsManager;
+    Core *mCore;
+    MyTreeView *mTreeView;
+    StandardItemModel *mDownloadModel;
+    StandardItemModelQuery *mDownloadModelQuery;
 };
 
 #endif // ACTIONBUTTONSMANAGER_H

@@ -38,18 +38,18 @@ void ActionRenameManager::checkRenameCandidates(bool &renameAvailable)
     QStandardItem *selectedFileNameItem = 0;
 
     // get selected rows :
-    QList<QModelIndex> selectedIndexList = this->treeView->selectionModel()->selectedRows();
+    QList<QModelIndex> selectedIndexList = this->mTreeView->selectionModel()->selectedRows();
 
     if (selectedIndexList.size() == 1) {
-        selectedFileNameItem = this->downloadModel->getFileNameItemFromIndex(selectedIndexList.at(0));
+        selectedFileNameItem = this->mDownloadModel->getFileNameItemFromIndex(selectedIndexList.at(0));
     }
 
     // rename is allowed for only one selected row :
     if (selectedFileNameItem &&
-            this->actionFileStep == ActionFileIdle) {
+            this->mActionFileStep == ActionFileIdle) {
 
         // first, be sure that selected item is a parent one (nzb) :
-        if (this->downloadModel->isNzbItem(selectedFileNameItem) &&
+        if (this->mDownloadModel->isNzbItem(selectedFileNameItem) &&
                 this->isRenameAllowed(selectedFileNameItem)) {
 
             renameAvailable = true;
@@ -63,7 +63,7 @@ bool ActionRenameManager::isRenameAllowed(QStandardItem *fileNameItem) const
 {
 
     // get current nzb item status :
-    ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
+    ItemStatusData itemStatusData = this->mDownloadModel->getStatusDataFromIndex(fileNameItem->index());
 
     // rename is allowed for nzb item in download or post-process finish states :
     return (Utility::isInDownloadProcess(itemStatusData.getStatus()) ||
@@ -77,14 +77,14 @@ bool ActionRenameManager::validateNewFolderName(QStandardItem *selectedFileNameI
     bool validate = true;
 
     // get the root item :
-    QStandardItem *rootItem = this->downloadModel->invisibleRootItem();
+    QStandardItem *rootItem = this->mDownloadModel->invisibleRootItem();
 
     // check state of each parent item :
     for (int i = 0; i < rootItem->rowCount(); ++i) {
 
         // get corresponding nzb file name item :
         QStandardItem *fileNameItem = rootItem->child(i, FILE_NAME_COLUMN);
-        NzbFileData parentNzbFileData = downloadModel->getNzbFileDataFromIndex(fileNameItem->index());
+        NzbFileData parentNzbFileData = mDownloadModel->getNzbFileDataFromIndex(fileNameItem->index());
 
         if (selectedFileNameItem != fileNameItem &&
                 parentNzbFileData.getNzbName() == this->mInput) {
@@ -102,7 +102,7 @@ bool ActionRenameManager::validateNewFolderName(QStandardItem *selectedFileNameI
 void ActionRenameManager::launchProcess()
 {
 
-    QStandardItem *selectedFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->mSelectedItemUuid);
+    QStandardItem *selectedFileNameItem = this->mCore->getModelQuery()->retrieveParentFileNameItemFromUuid(this->mSelectedItemUuid);
 
     if (selectedFileNameItem &&
             this->isRenameAllowed(selectedFileNameItem)) {
@@ -120,17 +120,17 @@ void ActionRenameManager::launchProcess()
 void ActionRenameManager::processRename(QStandardItem *selectedFileNameItem)
 {
 
-    this->actionFileStep = ActionFileProcessing;
+    this->mActionFileStep = ActionFileProcessing;
 
     // retrieve the file save path stored by parent item :
-    NzbFileData selectedNzbFileDataOld = this->downloadModel->getNzbFileDataFromIndex(this->downloadModel->getNzbItem(selectedFileNameItem)->index());
+    NzbFileData selectedNzbFileDataOld = this->mDownloadModel->getNzbFileDataFromIndex(this->mDownloadModel->getNzbItem(selectedFileNameItem)->index());
 
     // update new nzb name :
     NzbFileData selectedNzbFileData = selectedNzbFileDataOld;
     selectedNzbFileData.setNzbName(this->mInput);
 
     // update files with same parent waiting to be decoded with new nzb name folder :
-    this->segmentBuffer->updateDecodeWaitingQueue(selectedNzbFileDataOld, selectedNzbFileData);
+    this->mSegmentBuffer->updateDecodeWaitingQueue(selectedNzbFileDataOld, selectedNzbFileData);
 
     for (int i = 0; i < selectedFileNameItem->rowCount(); ++i) {
 
@@ -138,17 +138,17 @@ void ActionRenameManager::processRename(QStandardItem *selectedFileNameItem)
         QStandardItem *childFileNameItem = selectedFileNameItem->child(i, FILE_NAME_COLUMN);
 
         // update file save path from selected item to file save path from target item :
-        NzbFileData childNzbFileData = this->downloadModel->getNzbFileDataFromIndex(childFileNameItem->index());
+        NzbFileData childNzbFileData = this->mDownloadModel->getNzbFileDataFromIndex(childFileNameItem->index());
 
         // then update its file save path :
         childNzbFileData.setNzbName(this->mInput);
 
-        this->downloadModel->updateNzbFileDataToItem(childFileNameItem, childNzbFileData);
+        this->mDownloadModel->updateNzbFileDataToItem(childFileNameItem, childNzbFileData);
 
     }
 
     // also update parent nzb item :
-    this->downloadModel->updateParentFileSavePathFromIndex(selectedFileNameItem->index(), selectedNzbFileData);
+    this->mDownloadModel->updateParentFileSavePathFromIndex(selectedFileNameItem->index(), selectedNzbFileData);
 
     // then rename nzb folder with new folder name :
     KIO::CopyJob *moveJob = KIO::move(KUrl(selectedNzbFileDataOld.getFileSavePath()), KUrl(selectedNzbFileData.getFileSavePath()));
@@ -178,21 +178,21 @@ void ActionRenameManager::actionTriggeredSlot()
 
     // retrieve selected item and item corresponding to the action :
     QStandardItem *selectedFileNameItem = 0;
-    QList<QModelIndex> selectedIndexList = this->treeView->selectionModel()->selectedRows();
+    QList<QModelIndex> selectedIndexList = this->mTreeView->selectionModel()->selectedRows();
 
     if (!selectedIndexList.isEmpty()) {
 
-        selectedFileNameItem = this->downloadModel->getFileNameItemFromIndex(selectedIndexList.at(0));
+        selectedFileNameItem = this->mDownloadModel->getFileNameItemFromIndex(selectedIndexList.at(0));
 
         // be sure that the item selected is a nzb :
-        if (!this->downloadModel->isNzbItem(selectedFileNameItem)) {
+        if (!this->mDownloadModel->isNzbItem(selectedFileNameItem)) {
             selectedFileNameItem = 0;
         }
 
     }
 
     // if selected and target items have been found, merge is possible :
-    if (this->actionFileStep == ActionFileIdle &&
+    if (this->mActionFileStep == ActionFileIdle &&
             selectedFileNameItem &&
             selectedFileNameItem->rowCount() > 0) {
 
@@ -202,13 +202,13 @@ void ActionRenameManager::actionTriggeredSlot()
                                             selectedFileNameItem->text());
 
         if (!this->mInput.isEmpty() &&
-                this->downloadModel->getNzbFileDataFromIndex(selectedFileNameItem->index()).getNzbName() != this->mInput) {
+                this->mDownloadModel->getNzbFileDataFromIndex(selectedFileNameItem->index()).getNzbName() != this->mInput) {
 
             if (this->validateNewFolderName(selectedFileNameItem)) {
 
-                this->mSelectedItemUuid = this->downloadModel->getUuidStrFromIndex(selectedFileNameItem->index());
+                this->mSelectedItemUuid = this->mDownloadModel->getUuidStrFromIndex(selectedFileNameItem->index());
 
-                this->actionFileStep = ActionFileRequested;
+                this->mActionFileStep = ActionFileRequested;
                 this->processFileSlot();
 
             } else {
@@ -235,7 +235,7 @@ void ActionRenameManager::handleResultSlot(KJob *moveJob)
     }
 
     // job is finished :
-    this->actionFileStep = ActionFileIdle;
+    this->mActionFileStep = ActionFileIdle;
 
 }
 

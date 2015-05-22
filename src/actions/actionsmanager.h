@@ -69,14 +69,14 @@ private:
     void setupConnections();
     void moveRow(ActionsManager::MoveRowType);
 
-    Core *core;
-    MyTreeView *treeView;
-    StandardItemModel *downloadModel;
-    StandardItemModelQuery *modelQuery;
-    ActionMergeManager *actionMergeManager;
-    ActionButtonsManager *actionButtonsManager;
-    ActionRenameManager *actionRenameManager;
-    ActionFileDeleteManager *actionFileDeleteManager;
+    Core *mCore;
+    MyTreeView *mTreeView;
+    StandardItemModel *mDownloadModel;
+    StandardItemModelQuery *mModelQuery;
+    ActionMergeManager *mActionMergeManager;
+    ActionButtonsManager *mActionButtonsManager;
+    ActionRenameManager *mActionRenameManager;
+    ActionFileDeleteManager *mActionFileDeleteManager;
 
 Q_SIGNALS:
     void statusBarFileSizeUpdateSignal(StatusBarUpdateType);

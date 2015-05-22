@@ -36,17 +36,17 @@ ActionFileDeleteManager::ActionFileDeleteManager(ActionsManager *actionsManager)
 bool ActionFileDeleteManager::isDeleteAllowed(QStandardItem *selectedFileNameItem) const
 {
 
-    ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(selectedFileNameItem->index());
+    ItemStatusData itemStatusData = this->mDownloadModel->getStatusDataFromIndex(selectedFileNameItem->index());
 
     // check that selected row is a nzb item :
-    return (this->downloadModel->isNzbItem(selectedFileNameItem) &&
+    return (this->mDownloadModel->isNzbItem(selectedFileNameItem) &&
             !Utility::isPostDownloadProcessing(itemStatusData.getStatus()));
 
 }
 
 QString ActionFileDeleteManager::retrieveFileSavePath(QStandardItem *selectedFileNameItem) const
 {
-    return this->downloadModel->getNzbFileDataFromIndex(selectedFileNameItem->index()).getFileSavePath();
+    return this->mDownloadModel->getNzbFileDataFromIndex(selectedFileNameItem->index()).getFileSavePath();
 
 }
 
@@ -59,7 +59,7 @@ void ActionFileDeleteManager::launchProcess()
 void ActionFileDeleteManager::resetState()
 {
 
-    this->actionFileStep = ActionFileIdle;
+    this->mActionFileStep = ActionFileIdle;
     this->mSelectedItemUuidList.clear();
 
 }
@@ -67,7 +67,7 @@ void ActionFileDeleteManager::resetState()
 void ActionFileDeleteManager::removeRowDeleteFile()
 {
 
-    this->actionFileStep = ActionFileProcessing;
+    this->mActionFileStep = ActionFileProcessing;
 
     KUrl::List selectedUrlsCheck;
 
@@ -75,7 +75,7 @@ void ActionFileDeleteManager::removeRowDeleteFile()
 
     foreach (QString uuid, this->mSelectedItemUuidList) {
 
-        QStandardItem *selectedFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(uuid);
+        QStandardItem *selectedFileNameItem = this->mCore->getModelQuery()->retrieveParentFileNameItemFromUuid(uuid);
         QString fileSavePath = this->retrieveFileSavePath(selectedFileNameItem);
 
         // delete is allowed if row is not is post processing state :
@@ -88,8 +88,8 @@ void ActionFileDeleteManager::removeRowDeleteFile()
                     QDir(fileSavePath).exists()) {
 
                 // remove data pending to be decoded as folder need to be removed :
-                NzbFileData selectedNzbFileData = this->downloadModel->getNzbFileDataFromIndex(this->downloadModel->getNzbItem(selectedFileNameItem)->index());
-                this->segmentBuffer->removeDataFromDecodeWaitingQueue(selectedNzbFileData);
+                NzbFileData selectedNzbFileData = this->mDownloadModel->getNzbFileDataFromIndex(this->mDownloadModel->getNzbItem(selectedFileNameItem)->index());
+                this->mSegmentBuffer->removeDataFromDecodeWaitingQueue(selectedNzbFileData);
 
                 selectedUrlsCheck.append(KUrl(fileSavePath));
 
@@ -99,7 +99,7 @@ void ActionFileDeleteManager::removeRowDeleteFile()
     }
 
     // remove row from treeview :
-    this->actionsManager->removeRow(indexesListCheck);
+    this->mActionsManager->removeRow(indexesListCheck);
 
     // remove data :
     KIO::Job *job = KIO::del(selectedUrlsCheck);
@@ -122,20 +122,20 @@ void ActionFileDeleteManager::actionTriggeredSlot()
     bool deleteRequested = false;
 
     KUrl::List selectedUrls;
-    QList<QModelIndex> selectedIndexList = this->treeView->selectionModel()->selectedRows();
+    QList<QModelIndex> selectedIndexList = this->mTreeView->selectionModel()->selectedRows();
 
-    if (this->actionFileStep == ActionFileIdle  &&
-            this->core->getModelQuery()->haveItemsSameParent(selectedIndexList)) {
+    if (this->mActionFileStep == ActionFileIdle  &&
+            this->mCore->getModelQuery()->haveItemsSameParent(selectedIndexList)) {
 
         // store rows in a list :
         for (int i = 0; i < selectedIndexList.size(); ++i) {
 
-            QStandardItem *selectedFileNameItem = this->downloadModel->getFileNameItemFromIndex(selectedIndexList.at(i));
+            QStandardItem *selectedFileNameItem = this->mDownloadModel->getFileNameItemFromIndex(selectedIndexList.at(i));
 
             // delete is allowed if row is not is post processing state :
             if (this->isDeleteAllowed(selectedFileNameItem)) {
 
-                QString uuid = this->core->getDownloadModel()->getUuidStrFromIndex(selectedFileNameItem->index());
+                QString uuid = this->mCore->getDownloadModel()->getUuidStrFromIndex(selectedFileNameItem->index());
                 this->mSelectedItemUuidList.append(uuid);
 
                 QString fileSavePath = this->retrieveFileSavePath(selectedFileNameItem);
@@ -153,7 +153,7 @@ void ActionFileDeleteManager::actionTriggeredSlot()
 
             // ask confirmation to user :
             KIO::JobUiDelegate uiDelegate;
-            uiDelegate.setWindow(this->treeView);
+            uiDelegate.setWindow(this->mTreeView);
 
             deleteRequested = uiDelegate.askDeleteConfirmation(selectedUrls,
                               KIO::JobUiDelegate::Delete,
@@ -165,7 +165,7 @@ void ActionFileDeleteManager::actionTriggeredSlot()
     // if confirmed :
     if (deleteRequested) {
 
-        this->actionFileStep = ActionFileRequested;
+        this->mActionFileStep = ActionFileRequested;
         this->processFileSlot();
 
     } else {

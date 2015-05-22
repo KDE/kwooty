@@ -42,7 +42,7 @@ void ActionMergeManager::setupConnections()
     // recalculate full nzb size when merge has been done :
     connect(this,
             SIGNAL(recalculateNzbSizeSignal(QModelIndex)),
-            this->core->getItemParentUpdater(),
+            this->mCore->getItemParentUpdater(),
             SLOT(recalculateNzbSizeSlot(QModelIndex)));
 
 }
@@ -55,22 +55,22 @@ QList<QStandardItem *> ActionMergeManager::checkMergeCandidates(bool &mergeAvail
     QList<QStandardItem *> fileNameItemList;
 
     // get selected rows :
-    QList<QModelIndex> selectedIndexList = this->treeView->selectionModel()->selectedRows();
+    QList<QModelIndex> selectedIndexList = this->mTreeView->selectionModel()->selectedRows();
 
     if (selectedIndexList.size() == 1) {
-        selectedFileNameItem = this->downloadModel->getFileNameItemFromIndex(selectedIndexList.at(0));
+        selectedFileNameItem = this->mDownloadModel->getFileNameItemFromIndex(selectedIndexList.at(0));
     }
 
     // merge is allowed for only one selected row :
     if (selectedFileNameItem &&
-            this->actionFileStep == ActionFileIdle) {
+            this->mActionFileStep == ActionFileIdle) {
 
         // first, be sure that selected item is a parent one (nzb) :
-        if (this->downloadModel->isNzbItem(selectedFileNameItem) &&
+        if (this->mDownloadModel->isNzbItem(selectedFileNameItem) &&
                 this->isMergeAllowed(selectedFileNameItem)) {
 
             // get the root item :
-            QStandardItem *rootItem = this->downloadModel->invisibleRootItem();
+            QStandardItem *rootItem = this->mDownloadModel->invisibleRootItem();
 
             // check state of each parent item :
             for (int i = 0; i < rootItem->rowCount(); ++i) {
@@ -104,7 +104,7 @@ bool ActionMergeManager::isMergeAllowed(QStandardItem *fileNameItem) const
 {
 
     // get current nzb item status :
-    QStandardItem *stateItem = this->downloadModel->getStateItemFromIndex(fileNameItem->index());
+    QStandardItem *stateItem = this->mDownloadModel->getStateItemFromIndex(fileNameItem->index());
     ItemStatusData itemStatusData = stateItem->data(StatusRole).value<ItemStatusData>();
 
     // merge is allowed for nzb item in download or post-process failed states :
@@ -117,8 +117,8 @@ bool ActionMergeManager::isMergeAllowed(QStandardItem *fileNameItem) const
 void ActionMergeManager::launchProcess()
 {
 
-    QStandardItem *selectedFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->selectedItemUuid);
-    QStandardItem *targetFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(this->targetItemUuid);
+    QStandardItem *selectedFileNameItem = this->mCore->getModelQuery()->retrieveParentFileNameItemFromUuid(this->mSelectedItemUuid);
+    QStandardItem *targetFileNameItem = this->mCore->getModelQuery()->retrieveParentFileNameItemFromUuid(this->mTargetItemUuid);
 
     if (selectedFileNameItem &&
             targetFileNameItem) {
@@ -136,17 +136,17 @@ void ActionMergeManager::launchProcess()
 void ActionMergeManager::processMerge(QStandardItem *selectedFileNameItem, QStandardItem *targetFileNameItem)
 {
 
-    this->actionFileStep = ActionFileProcessing;
+    this->mActionFileStep = ActionFileProcessing;
 
     // get download folder from selected and target items :
-    NzbFileData selectedNzbFileData = this->downloadModel->getNzbFileDataFromIndex(selectedFileNameItem->child(0)->index());
-    NzbFileData targetNzbFileData = this->downloadModel->getNzbFileDataFromIndex(targetFileNameItem->child(0)->index());
+    NzbFileData selectedNzbFileData = this->mDownloadModel->getNzbFileDataFromIndex(selectedFileNameItem->child(0)->index());
+    NzbFileData targetNzbFileData = this->mDownloadModel->getNzbFileDataFromIndex(targetFileNameItem->child(0)->index());
 
     QString selectedFileSavePath = selectedNzbFileData.getFileSavePath();
     QString targetFileSavePath = targetNzbFileData.getFileSavePath();
 
     // update files with same parent waiting to be decoded with the target path :
-    this->segmentBuffer->updateDecodeWaitingQueue(selectedNzbFileData, targetNzbFileData);
+    this->mSegmentBuffer->updateDecodeWaitingQueue(selectedNzbFileData, targetNzbFileData);
 
     KUrl::List sourceFileList;
 
@@ -157,11 +157,11 @@ void ActionMergeManager::processMerge(QStandardItem *selectedFileNameItem, QStan
         QStandardItem *childFileNameItem = selectedFileNameItem->child(0, FILE_NAME_COLUMN);
 
         // update file save path from selected item to file save path from target item :
-        NzbFileData childNzbFileData = this->downloadModel->getNzbFileDataFromIndex(childFileNameItem->index());
+        NzbFileData childNzbFileData = this->mDownloadModel->getNzbFileDataFromIndex(childFileNameItem->index());
 
         // then update its file save path :
         childNzbFileData.updateFileSavePath(targetNzbFileData);
-        this->downloadModel->updateNzbFileDataToItem(childFileNameItem, childNzbFileData);
+        this->mDownloadModel->updateNzbFileDataToItem(childFileNameItem, childNzbFileData);
 
         // then move the whole row :
         targetFileNameItem->appendRow(selectedFileNameItem->takeRow(0));
@@ -204,13 +204,13 @@ void ActionMergeManager::processMerge(QStandardItem *selectedFileNameItem, QStan
     targetFileNameItem->setText(targetFileNameItem->text() + " + " + selectedFileNameItem->text());
 
     // remove the now empty source nzb item :
-    this->downloadModel->invisibleRootItem()->removeRow(selectedFileNameItem->row());
+    this->mDownloadModel->invisibleRootItem()->removeRow(selectedFileNameItem->row());
 
     // update nzb size column :
     emit recalculateNzbSizeSignal(targetFileNameItem->index());
 
     // finaly, launch retry process :
-    this->actionsManager->retryDownload(QList<QModelIndex>() << targetFileNameItem->index());
+    this->mActionsManager->retryDownload(QList<QModelIndex>() << targetFileNameItem->index());
 
 }
 
@@ -221,7 +221,7 @@ void ActionMergeManager::processMerge(QStandardItem *selectedFileNameItem, QStan
 void ActionMergeManager::mergeSubMenuAboutToShowSlot()
 {
 
-    QAction *mergeNzbAction = this->core->getMainWindow()->getActionFromName("mergeNzb");
+    QAction *mergeNzbAction = this->mCore->getMainWindow()->getActionFromName("mergeNzb");
 
     // retrieve action submenu and clear it :
     QMenu *mergeSubMenu = mergeNzbAction->menu();
@@ -240,7 +240,7 @@ void ActionMergeManager::mergeSubMenuAboutToShowSlot()
             QAction *currentAction = mergeSubMenu->addAction(fileNameItem->text());
 
             // set item uuid for identifying when user would select an action :
-            currentAction->setData(this->downloadModel->getUuidStrFromIndex(fileNameItem->index()));
+            currentAction->setData(this->mDownloadModel->getUuidStrFromIndex(fileNameItem->index()));
 
         }
 
@@ -264,14 +264,14 @@ void ActionMergeManager::actionTriggeredSlot(QAction *subMenuAction)
         QStandardItem *selectedFileNameItem = 0;
         QStandardItem *targetFileNameItem = 0;
 
-        QList<QModelIndex> selectedIndexList = this->treeView->selectionModel()->selectedRows();
+        QList<QModelIndex> selectedIndexList = this->mTreeView->selectionModel()->selectedRows();
 
         if (!selectedIndexList.isEmpty()) {
 
-            selectedFileNameItem = this->downloadModel->getFileNameItemFromIndex(selectedIndexList.at(0));
+            selectedFileNameItem = this->mDownloadModel->getFileNameItemFromIndex(selectedIndexList.at(0));
 
             // be sure that the item selected is a nzb :
-            if (!this->downloadModel->isNzbItem(selectedFileNameItem)) {
+            if (!this->mDownloadModel->isNzbItem(selectedFileNameItem)) {
                 selectedFileNameItem = 0;
             }
 
@@ -279,25 +279,25 @@ void ActionMergeManager::actionTriggeredSlot(QAction *subMenuAction)
 
         // load stored uuid from action :
         QString targetUuid = subMenuAction->data().toString();
-        targetFileNameItem = this->core->getModelQuery()->retrieveParentFileNameItemFromUuid(targetUuid);
+        targetFileNameItem = this->mCore->getModelQuery()->retrieveParentFileNameItemFromUuid(targetUuid);
 
         // if selected and target items have been found, merge is possible :
-        if (this->actionFileStep == ActionFileIdle &&
+        if (this->mActionFileStep == ActionFileIdle &&
                 selectedFileNameItem &&
                 targetFileNameItem &&
                 selectedFileNameItem->rowCount() > 0 &&
                 targetFileNameItem->rowCount() > 0) {
 
             // display merge confirmation dialog :
-            int answer = this->core->getCentralWidget()->displayMergeItemsMessageBox(selectedFileNameItem->text(), targetFileNameItem->text());
+            int answer = this->mCore->getCentralWidget()->displayMergeItemsMessageBox(selectedFileNameItem->text(), targetFileNameItem->text());
 
             if (answer == KMessageBox::Yes) {
 
-                this->selectedItemUuid = this->downloadModel->getUuidStrFromIndex(selectedFileNameItem->index());
-                this->targetItemUuid = this->downloadModel->getUuidStrFromIndex(targetFileNameItem->index());
+                this->mSelectedItemUuid = this->mDownloadModel->getUuidStrFromIndex(selectedFileNameItem->index());
+                this->mTargetItemUuid = this->mDownloadModel->getUuidStrFromIndex(targetFileNameItem->index());
 
                 // process to item merging :
-                this->actionFileStep = ActionFileRequested;
+                this->mActionFileStep = ActionFileRequested;
                 this->processFileSlot();
 
             }
@@ -336,7 +336,7 @@ void ActionMergeManager::handleResultSlot(KJob *moveJob)
     }
 
     // job is finished :
-    this->actionFileStep = ActionFileIdle;
+    this->mActionFileStep = ActionFileIdle;
 
 }
 

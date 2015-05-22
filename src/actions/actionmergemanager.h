@@ -34,8 +34,8 @@ public:
 
 private:
 
-    QString selectedItemUuid;
-    QString targetItemUuid;
+    QString mSelectedItemUuid;
+    QString mTargetItemUuid;
 
     bool isMergeAllowed(QStandardItem *) const;
     void processMerge(QStandardItem *, QStandardItem *);
@@ -43,13 +43,13 @@ private:
     void setupConnections();
 
 Q_SIGNALS:
-    void recalculateNzbSizeSignal(const QModelIndex);
+    void recalculateNzbSizeSignal(const QModelIndex &);
 
 public Q_SLOTS:
     void mergeSubMenuAboutToShowSlot();
     void actionTriggeredSlot() Q_DECL_OVERRIDE;
     void actionTriggeredSlot(QAction *);
-    void handleResultSlot(KJob *);
+    void handleResultSlot(KJob *) Q_DECL_OVERRIDE;
 };
 
 #endif // ACTIONMERGEMANAGER_H

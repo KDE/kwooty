@@ -69,16 +69,16 @@ public:
 private:
     void init();
 
-    UtilityNamespace::ArticleEncodingType articleEncodingType;
-    UtilityNamespace::ItemStatus status;
-    UtilityNamespace::ItemTarget itemTarget;
-    QModelIndex modelIndex;
-    QVariant parentIdentifer;
-    QString decodedFileName;
-    int progression;
-    bool crc32Match;
-    bool allPostProcessingCorrect;
-    bool postProcessFinish;
+    UtilityNamespace::ArticleEncodingType mArticleEncodingType;
+    UtilityNamespace::ItemStatus mStatus;
+    UtilityNamespace::ItemTarget mItemTarget;
+    QModelIndex mModelIndex;
+    QVariant mParentIdentifer;
+    QString mDecodedFileName;
+    int mProgression;
+    bool mCrc32Match;
+    bool mAllPostProcessingCorrect;
+    bool mPostProcessFinish;
 
 };
 

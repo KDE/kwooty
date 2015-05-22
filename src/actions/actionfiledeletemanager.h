@@ -31,8 +31,12 @@ class ActionFileDeleteManager : public ActionFileManagerBase
 public:
     explicit ActionFileDeleteManager(ActionsManager *);
 
-private:
 
+private Q_SLOTS:
+    void handleResultSlot(KJob *) Q_DECL_OVERRIDE;
+    void actionTriggeredSlot() Q_DECL_OVERRIDE;
+
+private:
     QStringList mSelectedItemUuidList;
 
     QString retrieveFileSavePath(QStandardItem *) const;
@@ -40,11 +44,6 @@ private:
     void removeRowDeleteFile();
     void launchProcess() Q_DECL_OVERRIDE;
     void resetState();
-
-private Q_SLOTS:
-    void handleResultSlot(KJob *) Q_DECL_OVERRIDE;
-    void actionTriggeredSlot() Q_DECL_OVERRIDE;
-
 };
 
 #endif // ACTIONFILEDELETEMANAGER_H

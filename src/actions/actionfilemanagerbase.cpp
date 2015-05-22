@@ -23,13 +23,13 @@
 ActionFileManagerBase::ActionFileManagerBase(ActionsManager *actionsManager) : QObject(actionsManager)
 {
 
-    this->actionsManager = actionsManager;
-    this->core = actionsManager->getCore();
-    this->treeView = this->core->getTreeView();
-    this->downloadModel = this->core->getDownloadModel();
-    this->segmentBuffer = this->core->getServerManager()->getSegmentBuffer();
+    this->mActionsManager = actionsManager;
+    this->mCore = actionsManager->getCore();
+    this->mTreeView = this->mCore->getTreeView();
+    this->mDownloadModel = this->mCore->getDownloadModel();
+    this->mSegmentBuffer = this->mCore->getServerManager()->getSegmentBuffer();
 
-    this->actionFileStep = ActionFileIdle;
+    this->mActionFileStep = ActionFileIdle;
 
     this->setupConnections();
 
@@ -39,7 +39,7 @@ void ActionFileManagerBase::setupConnections()
 {
 
     // process to renaming when segment buffer notifies that lock is enabled :
-    connect(this->segmentBuffer,
+    connect(this->mSegmentBuffer,
             SIGNAL(finalizeDecoderLockedSignal()),
             this,
             SLOT(processFileSlot()));
@@ -49,18 +49,18 @@ void ActionFileManagerBase::setupConnections()
 void ActionFileManagerBase::processFileSlot()
 {
 
-    if (this->actionFileStep == ActionFileRequested) {
+    if (this->mActionFileStep == ActionFileRequested) {
 
         // stop file data decoding from thread :
-        this->segmentBuffer->lockFinalizeDecode();
+        this->mSegmentBuffer->lockFinalizeDecode();
 
         // wait until decoder is idle :
-        if (this->segmentBuffer->isfinalizeDecodeIdle()) {
+        if (this->mSegmentBuffer->isfinalizeDecodeIdle()) {
 
             this->launchProcess();
 
             // notify decoder to process is done :
-            this->segmentBuffer->unlockFinalizeDecode();
+            this->mSegmentBuffer->unlockFinalizeDecode();
 
         }
 
@@ -71,8 +71,8 @@ void ActionFileManagerBase::processFileSlot()
 void ActionFileManagerBase::displayMessage(const QString &message)
 {
 
-    this->actionFileStep = ActionFileIdle;
-    this->core->getCentralWidget()->displaySorryMessageBox(message);
+    this->mActionFileStep = ActionFileIdle;
+    this->mCore->getCentralWidget()->displaySorryMessageBox(message);
 
 }
 
