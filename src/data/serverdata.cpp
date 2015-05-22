@@ -27,102 +27,102 @@ ServerData::ServerData()
 
 void ServerData::setServerId(const int &serverId)
 {
-    this->mServerId = serverId;
+    mServerId = serverId;
 }
 int ServerData::getServerId() const
 {
-    return this->mServerId;
+    return mServerId;
 }
 
 void ServerData::setServerName(const QString &serverName)
 {
-    this->mServerName = serverName;
+    mServerName = serverName;
 }
 QString ServerData::getServerName() const
 {
-    return this->mServerName;
+    return mServerName;
 }
 
 void ServerData::setHostName(const QString &hostName)
 {
-    this->mHostName = hostName;
+    mHostName = hostName;
 }
 QString ServerData::getHostName() const
 {
-    return this->mHostName;
+    return mHostName;
 }
 
 void ServerData::setLogin(const QString &login)
 {
-    this->mLogin = login;
+    mLogin = login;
 }
 QString ServerData::getLogin() const
 {
-    return this->mLogin;
+    return mLogin;
 }
 
 void ServerData::setPassword(const QString &password)
 {
-    this->mPassword = password;
+    mPassword = password;
 }
 QString ServerData::getPassword() const
 {
-    return this->mPassword;
+    return mPassword;
 }
 
 void ServerData::setPort(const uint &port)
 {
-    this->mPort = port;
+    mPort = port;
 }
 uint ServerData::getPort() const
 {
-    return this->mPort;
+    return mPort;
 }
 
 void ServerData::setDisconnectTimeout(const uint &disconnectTimeout)
 {
-    this->mDisconnectTimeout = disconnectTimeout;
+    mDisconnectTimeout = disconnectTimeout;
 }
 uint ServerData::getDisconnectTimeout() const
 {
-    return this->mDisconnectTimeout;
+    return mDisconnectTimeout;
 }
 
 void ServerData::setAuthentication(const bool &authentication)
 {
-    this->mAuthentication = authentication;
+    mAuthentication = authentication;
 }
 bool ServerData::isAuthentication() const
 {
-    return this->mAuthentication;
+    return mAuthentication;
 }
 
 void ServerData::setEnableSSL(const bool &enableSSL)
 {
-    this->mEnableSSL = enableSSL;
+    mEnableSSL = enableSSL;
 }
 bool ServerData::isEnableSSL() const
 {
-    return this->mEnableSSL;
+    return mEnableSSL;
 }
 
 void ServerData::setConnectionNumber(const uint &connectionNumber)
 {
-    this->mConnectionNumber = connectionNumber;
+    mConnectionNumber = connectionNumber;
 }
 uint ServerData::getConnectionNumber() const
 {
-    return this->mConnectionNumber;
+    return mConnectionNumber;
 }
 
 void ServerData::setServerModeIndex(const uint &serverModeIndex)
 {
-    this->mServerModeIndex = serverModeIndex;
+    mServerModeIndex = serverModeIndex;
 }
 
 uint ServerData::getServerModeIndex() const
 {
-    return this->mServerModeIndex;
+    return mServerModeIndex;
 }
 
 bool ServerData::operator!=(const ServerData &serverDataToCompare)

@@ -23,128 +23,128 @@
 PostDownloadInfoData::PostDownloadInfoData()
 {
 
-    this->init();
+    init();
 }
 
 void PostDownloadInfoData::initRepairDecompress(const QVariant &parentIdentifer, const int &progression, const UtilityNamespace::ItemStatus &status, const UtilityNamespace::ItemTarget &itemTarget)
 {
 
-    this->init();
+    init();
 
-    this->mParentIdentifer = parentIdentifer;
-    this->mProgression = progression;
-    this->mStatus = status;
-    this->mItemTarget = itemTarget;
+    mParentIdentifer = parentIdentifer;
+    mProgression = progression;
+    mStatus = status;
+    mItemTarget = itemTarget;
 }
 
 void PostDownloadInfoData::initDecode(const QVariant &parentIdentifer, const int &progression, const UtilityNamespace::ItemStatus &status, const QString &decodedFileName)
 {
 
-    this->init();
+    init();
 
-    this->mParentIdentifer = parentIdentifer;
-    this->mProgression = progression;
-    this->mStatus = status;
-    this->mDecodedFileName = decodedFileName;
-    this->mArticleEncodingType = ArticleEncodingUUEnc;
+    mParentIdentifer = parentIdentifer;
+    mProgression = progression;
+    mStatus = status;
+    mDecodedFileName = decodedFileName;
+    mArticleEncodingType = ArticleEncodingUUEnc;
 }
 
 void PostDownloadInfoData::init()
 {
 
-    this->mPostProcessFinish = false;
-    this->mAllPostProcessingCorrect = true;
+    mPostProcessFinish = false;
+    mAllPostProcessingCorrect = true;
 
 }
 
 void PostDownloadInfoData::setModelIndex(const QModelIndex &modelIndex)
 {
-    this->mModelIndex = modelIndex;
+    mModelIndex = modelIndex;
 }
 QModelIndex PostDownloadInfoData::getModelIndex() const
 {
-    return this->mModelIndex;
+    return mModelIndex;
 }
 
 void PostDownloadInfoData::setParentIdentifer(const QVariant &parentIdentifer)
 {
-    this->mParentIdentifer = parentIdentifer;
+    mParentIdentifer = parentIdentifer;
 }
 QVariant PostDownloadInfoData::getParentIdentifer() const
 {
-    return this->mParentIdentifer;
+    return mParentIdentifer;
 }
 
 void PostDownloadInfoData::setProgression(const int &progression)
 {
-    this->mProgression = progression;
+    mProgression = progression;
 }
 int PostDownloadInfoData::getProgression() const
 {
-    return this->mProgression;
+    return mProgression;
 }
 
 void PostDownloadInfoData::setStatus(const UtilityNamespace::ItemStatus &status)
 {
-    this->mStatus = status;
+    mStatus = status;
 }
 UtilityNamespace::ItemStatus PostDownloadInfoData::getStatus() const
 {
-    return this->mStatus;
+    return mStatus;
 }
 
 void PostDownloadInfoData::setItemTarget(const UtilityNamespace::ItemTarget &itemTarget)
 {
-    this->mItemTarget = itemTarget;
+    mItemTarget = itemTarget;
 }
 UtilityNamespace::ItemTarget PostDownloadInfoData::getItemTarget() const
 {
-    return this->mItemTarget;
+    return mItemTarget;
 }
 
 void PostDownloadInfoData::setDecodedFileName(const QString &decodedFileName)
 {
-    this->mDecodedFileName = decodedFileName;
+    mDecodedFileName = decodedFileName;
 }
 QString PostDownloadInfoData::getDecodedFileName() const
 {
-    return this->mDecodedFileName;
+    return mDecodedFileName;
 }
 
 void PostDownloadInfoData::setCrc32Match(const bool &crc32Match)
 {
-    this->mCrc32Match = crc32Match;
+    mCrc32Match = crc32Match;
 }
 bool PostDownloadInfoData::isCrc32Match() const
 {
-    return this->mCrc32Match;
+    return mCrc32Match;
 }
 
 bool PostDownloadInfoData::areAllPostProcessingCorrect() const
 {
-    return this->mAllPostProcessingCorrect;
+    return mAllPostProcessingCorrect;
 }
 
 void PostDownloadInfoData::setAllPostProcessingCorrect(const bool &allPostProcessingCorrect)
 {
-    this->mAllPostProcessingCorrect = allPostProcessingCorrect;
+    mAllPostProcessingCorrect = allPostProcessingCorrect;
 }
 
 void PostDownloadInfoData::setPostProcessFinish(const bool &postProcessFinish)
 {
-    this->mPostProcessFinish = postProcessFinish;
+    mPostProcessFinish = postProcessFinish;
 }
 bool PostDownloadInfoData::isPostProcessFinish() const
 {
-    return this->mPostProcessFinish;
+    return mPostProcessFinish;
 }
 
 void PostDownloadInfoData::setArticleEncodingType(const UtilityNamespace::ArticleEncodingType &articleEncodingType)
 {
-    this->mArticleEncodingType = articleEncodingType;
+    mArticleEncodingType = articleEncodingType;
 }
 UtilityNamespace::ArticleEncodingType PostDownloadInfoData::getArticleEncodingType() const
 {
-    return this->mArticleEncodingType;
+    return mArticleEncodingType;
 }
 
