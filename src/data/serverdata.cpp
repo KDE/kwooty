@@ -27,102 +27,102 @@ ServerData::ServerData()
 
 void ServerData::setServerId(const int &serverId)
 {
-    this->serverId = serverId;
+    this->mServerId = serverId;
 }
 int ServerData::getServerId() const
 {
-    return this->serverId;
+    return this->mServerId;
 }
 
 void ServerData::setServerName(const QString &serverName)
 {
-    this->serverName = serverName;
+    this->mServerName = serverName;
 }
 QString ServerData::getServerName() const
 {
-    return this->serverName;
+    return this->mServerName;
 }
 
 void ServerData::setHostName(const QString &hostName)
 {
-    this->hostName = hostName;
+    this->mHostName = hostName;
 }
 QString ServerData::getHostName() const
 {
-    return this->hostName;
+    return this->mHostName;
 }
 
 void ServerData::setLogin(const QString &login)
 {
-    this->login = login;
+    this->mLogin = login;
 }
 QString ServerData::getLogin() const
 {
-    return this->login;
+    return this->mLogin;
 }
 
 void ServerData::setPassword(const QString &password)
 {
-    this->password = password;
+    this->mPassword = password;
 }
 QString ServerData::getPassword() const
 {
-    return this->password;
+    return this->mPassword;
 }
 
 void ServerData::setPort(const uint &port)
 {
-    this->port = port;
+    this->mPort = port;
 }
 uint ServerData::getPort() const
 {
-    return this->port;
+    return this->mPort;
 }
 
 void ServerData::setDisconnectTimeout(const uint &disconnectTimeout)
 {
-    this->disconnectTimeout = disconnectTimeout;
+    this->mDisconnectTimeout = disconnectTimeout;
 }
 uint ServerData::getDisconnectTimeout() const
 {
-    return this->disconnectTimeout;
+    return this->mDisconnectTimeout;
 }
 
 void ServerData::setAuthentication(const bool &authentication)
 {
-    this->authentication = authentication;
+    this->mAuthentication = authentication;
 }
 bool ServerData::isAuthentication() const
 {
-    return this->authentication;
+    return this->mAuthentication;
 }
 
 void ServerData::setEnableSSL(const bool &enableSSL)
 {
-    this->enableSSL = enableSSL;
+    this->mEnableSSL = enableSSL;
 }
 bool ServerData::isEnableSSL() const
 {
-    return this->enableSSL;
+    return this->mEnableSSL;
 }
 
 void ServerData::setConnectionNumber(const uint &connectionNumber)
 {
-    this->connectionNumber = connectionNumber;
+    this->mConnectionNumber = connectionNumber;
 }
 uint ServerData::getConnectionNumber() const
 {
-    return this->connectionNumber;
+    return this->mConnectionNumber;
 }
 
 void ServerData::setServerModeIndex(const uint &serverModeIndex)
 {
-    this->serverModeIndex = serverModeIndex;
+    this->mServerModeIndex = serverModeIndex;
 }
 
 uint ServerData::getServerModeIndex() const
 {
-    return this->serverModeIndex;
+    return this->mServerModeIndex;
 }
 
 bool ServerData::operator!=(const ServerData &serverDataToCompare)
@@ -130,16 +130,16 @@ bool ServerData::operator!=(const ServerData &serverDataToCompare)
 
     bool different = false;
 
-    if ((serverId          != serverDataToCompare.getServerId())           ||
-            (hostName          != serverDataToCompare.getHostName())           ||
-            (login             != serverDataToCompare.getLogin())              ||
-            (password          != serverDataToCompare.getPassword())           ||
-            (port              != serverDataToCompare.getPort())               ||
-            (disconnectTimeout != serverDataToCompare.getDisconnectTimeout())  ||
-            (authentication    != serverDataToCompare.isAuthentication())      ||
-            (enableSSL         != serverDataToCompare.isEnableSSL())           ||
-            (connectionNumber  != serverDataToCompare.getConnectionNumber())   ||
-            (serverModeIndex   != serverDataToCompare.getServerModeIndex())) {
+    if ((mServerId          != serverDataToCompare.getServerId())           ||
+            (mHostName          != serverDataToCompare.getHostName())           ||
+            (mLogin             != serverDataToCompare.getLogin())              ||
+            (mPassword          != serverDataToCompare.getPassword())           ||
+            (mPort              != serverDataToCompare.getPort())               ||
+            (mDisconnectTimeout != serverDataToCompare.getDisconnectTimeout())  ||
+            (mAuthentication    != serverDataToCompare.isAuthentication())      ||
+            (mEnableSSL         != serverDataToCompare.isEnableSSL())           ||
+            (mConnectionNumber  != serverDataToCompare.getConnectionNumber())   ||
+            (mServerModeIndex   != serverDataToCompare.getServerModeIndex())) {
 
         different = true;
     }
@@ -147,4 +147,5 @@ bool ServerData::operator!=(const ServerData &serverDataToCompare)
     return different;
 
 }
+
 

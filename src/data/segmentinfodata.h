@@ -51,12 +51,12 @@ public:
     int getBytesDownloaded() const;
 
 private:
-    QString nzbFileName;
-    QString temporaryFileName;
-    QString destinationFileSavePath;
-    int nzbRowModelPosition;
-    int fileNameItemRowModelPosition;
-    int bytesDownloaded;
+    QString mNzbFileName;
+    QString mTemporaryFileName;
+    QString mDestinationFileSavePath;
+    int mNzbRowModelPosition;
+    int mFileNameItemRowModelPosition;
+    int mBytesDownloaded;
 };
 
 #endif // SEGMENTINFODATA_H

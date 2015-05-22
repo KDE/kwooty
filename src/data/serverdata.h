@@ -64,19 +64,20 @@ public:
 
     bool operator!=(const ServerData &);
 
-private:
 
-    QString serverName;
-    QString hostName;
-    QString login;
-    QString password;
-    int serverId;
-    uint port;
-    uint disconnectTimeout;
-    uint connectionNumber;
-    uint serverModeIndex;
-    bool authentication;
-    bool enableSSL;
+private:
+    
+    QString mServerName;
+    QString mHostName;
+    QString mLogin;
+    QString mPassword;
+    int mServerId;
+    uint mPort;
+    uint mDisconnectTimeout;
+    uint mConnectionNumber;
+    uint mServerModeIndex;
+    bool mAuthentication;
+    bool mEnableSSL;
 };
 
 #endif // SERVERDATA_H

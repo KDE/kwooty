@@ -29,81 +29,81 @@ SegmentInfoData::SegmentInfoData()
 SegmentInfoData::SegmentInfoData(const QString &nzbFileName, const int &nzbRowModelPosition, const int &fileNameItemRowModelPosition)
 {
 
-    this->nzbFileName = nzbFileName;
-    this->nzbRowModelPosition = nzbRowModelPosition;
-    this->fileNameItemRowModelPosition = fileNameItemRowModelPosition;
-    this->bytesDownloaded = 0;
+    this->mNzbFileName = nzbFileName;
+    this->mNzbRowModelPosition = nzbRowModelPosition;
+    this->mFileNameItemRowModelPosition = fileNameItemRowModelPosition;
+    this->mBytesDownloaded = 0;
 
 }
 
 void SegmentInfoData::reset()
 {
 
-    this->nzbFileName = QString();
-    this->temporaryFileName = QString();
-    this->destinationFileSavePath = QString();
-    this->nzbRowModelPosition = -1;
-    this->fileNameItemRowModelPosition = -1;
-    this->bytesDownloaded = 0;
+    this->mNzbFileName = QString();
+    this->mTemporaryFileName = QString();
+    this->mDestinationFileSavePath = QString();
+    this->mNzbRowModelPosition = -1;
+    this->mFileNameItemRowModelPosition = -1;
+    this->mBytesDownloaded = 0;
 }
 
 void SegmentInfoData::setNzbFileName(const QString &nzbFileName)
 {
-    this->nzbFileName = nzbFileName;
+    this->mNzbFileName = nzbFileName;
 }
 
 QString SegmentInfoData::getNzbFileName() const
 {
-    return this->nzbFileName;
+    return this->mNzbFileName;
 }
 
 QString SegmentInfoData::getTemporaryFileName() const
 {
-    return this->temporaryFileName;
+    return this->mTemporaryFileName;
 }
 
 void SegmentInfoData::setTemporaryFileName(const QString &temporaryFileName)
 {
-    this->temporaryFileName = temporaryFileName;
+    this->mTemporaryFileName = temporaryFileName;
 }
 
 QString SegmentInfoData::getDestinationFileSavePath() const
 {
-    return this->destinationFileSavePath;
+    return this->mDestinationFileSavePath;
 }
 
 void SegmentInfoData::setDestinationFileSavePath(const QString &destinationFileSavePath)
 {
-    this->destinationFileSavePath = destinationFileSavePath;
+    this->mDestinationFileSavePath = destinationFileSavePath;
 }
 
 void SegmentInfoData::setNzbRowModelPosition(const int &nzbRowModelPosition)
 {
-    this->nzbRowModelPosition = nzbRowModelPosition;
+    this->mNzbRowModelPosition = nzbRowModelPosition;
 }
 
 int SegmentInfoData::getNzbRowModelPosition() const
 {
-    return this->nzbRowModelPosition;
+    return this->mNzbRowModelPosition;
 }
 
 void SegmentInfoData::setFileNameItemRowModelPosition(const int &fileNameItemRowModelPosition)
 {
-    this->fileNameItemRowModelPosition = fileNameItemRowModelPosition;
+    this->mFileNameItemRowModelPosition = fileNameItemRowModelPosition;
 }
 
 int SegmentInfoData::getFileNameItemRowModelPosition() const
 {
-    return this->fileNameItemRowModelPosition;
+    return this->mFileNameItemRowModelPosition;
 }
 
 void SegmentInfoData::setBytesDownloaded(const int &bytesDownloaded)
 {
-    this->bytesDownloaded = bytesDownloaded;
+    this->mBytesDownloaded = bytesDownloaded;
 }
 
 int SegmentInfoData::getBytesDownloaded() const
 {
-    return this->bytesDownloaded;
+    return this->mBytesDownloaded;
 }
 

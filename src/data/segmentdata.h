@@ -77,19 +77,19 @@ public:
     void setCrc32Match(const UtilityNamespace::CrcNotify);
 
 private:
-    QString bytes;
-    QString number;
-    QString part;
-    QVariant parentUniqueIdentifier;
-    SegmentInfoData segmentInfoData;
-    UtilityNamespace::ItemStatus status;
-    QIODevice *ioDevice;
-    int elementInList;
-    int serverGroupTarget;
-    int progress;
-    int articlePresence;
-    int dataSize;
-    UtilityNamespace::CrcNotify crc32Match;
+    QString mBytes;
+    QString mNumber;
+    QString mPart;
+    QVariant mParentUniqueIdentifier;
+    SegmentInfoData mSegmentInfoData;
+    UtilityNamespace::ItemStatus mStatus;
+    QIODevice *mIoDevice;
+    int mElementInList;
+    int mServerGroupTarget;
+    int mProgress;
+    int mArticlePresence;
+    int mDataSize;
+    UtilityNamespace::CrcNotify mCrc32Match;
 
 };
 

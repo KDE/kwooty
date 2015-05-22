@@ -22,28 +22,28 @@
 
 SegmentData::SegmentData()
 {
-    this->parentUniqueIdentifier = QVariant();
-    this->elementInList = -1;
-    this->status = IdleStatus;
-    this->crc32Match = CrcUnknown;
-    this->dataSize = 0;
-    this->segmentInfoData.reset();
+    this->mParentUniqueIdentifier = QVariant();
+    this->mElementInList = -1;
+    this->mStatus = IdleStatus;
+    this->mCrc32Match = CrcUnknown;
+    this->mDataSize = 0;
+    this->mSegmentInfoData.reset();
 }
 
 SegmentData::SegmentData(const QString &bytes, const QString &number, const QString &part, const UtilityNamespace::ItemStatus status)
 {
-    this->bytes = bytes;
-    this->number = number;
-    this->part = part;
-    this->status = status;
-    this->crc32Match = CrcUnknown;
-    this->dataSize = 0;
+    this->mBytes = bytes;
+    this->mNumber = number;
+    this->mPart = part;
+    this->mStatus = status;
+    this->mCrc32Match = CrcUnknown;
+    this->mDataSize = 0;
 
-    this->serverGroupTarget = MasterServer;
-    this->articlePresence = Unknown;
-    this->parentUniqueIdentifier = QVariant();
-    this->elementInList = -1;
-    this->segmentInfoData.reset();
+    this->mServerGroupTarget = MasterServer;
+    this->mArticlePresence = Unknown;
+    this->mParentUniqueIdentifier = QVariant();
+    this->mElementInList = -1;
+    this->mSegmentInfoData.reset();
 }
 
 void SegmentData::setReadyForNewServer(const int &nextServerGroup)
@@ -65,137 +65,137 @@ void SegmentData::setDownloadFinished(const int &articlePresence)
 
 bool SegmentData::isInitialized()
 {
-    return this->parentUniqueIdentifier != QVariant();
+    return this->mParentUniqueIdentifier != QVariant();
 }
 
 void SegmentData::setBytes(const QString &bytes)
 {
-    this->bytes = bytes;
+    this->mBytes = bytes;
 }
 
 QString SegmentData::getBytes() const
 {
-    return this->bytes;
+    return this->mBytes;
 }
 
 void SegmentData::setNumber(const QString &number)
 {
-    this->number = number;
+    this->mNumber = number;
 }
 
 QString SegmentData::getNumber() const
 {
-    return this->number;
+    return this->mNumber;
 }
 
 void SegmentData::setPart(const QString &part)
 {
-    this->part = part;
+    this->mPart = part;
 }
 
 QString SegmentData::getPart() const
 {
-    return this->part;
+    return this->mPart;
 }
 
 UtilityNamespace::ItemStatus SegmentData::getStatus() const
 {
-    return this->status;
+    return this->mStatus;
 }
 
 void SegmentData::setStatus(const UtilityNamespace::ItemStatus status)
 {
-    this->status = status;
+    this->mStatus = status;
 }
 
 int SegmentData::getServerGroupTarget() const
 {
-    return this->serverGroupTarget;
+    return this->mServerGroupTarget;
 }
 
 void SegmentData::setServerGroupTarget(const int serverGroupTarget)
 {
-    this->serverGroupTarget = serverGroupTarget;
+    this->mServerGroupTarget = serverGroupTarget;
 }
 
 int SegmentData::getProgress() const
 {
-    return this->progress;
+    return this->mProgress;
 }
 
 void SegmentData::setProgress(const int progress)
 {
-    this->progress = progress;
+    this->mProgress = progress;
 }
 
 void SegmentData::setElementInList(const int elementInList)
 {
-    this->elementInList = elementInList;
+    this->mElementInList = elementInList;
 }
 
 int SegmentData::getElementInList() const
 {
-    return this->elementInList;
+    return this->mElementInList;
 }
 
 void SegmentData::setParentUniqueIdentifier(const QVariant &parentUniqueIdentifier)
 {
-    this->parentUniqueIdentifier = parentUniqueIdentifier;
+    this->mParentUniqueIdentifier = parentUniqueIdentifier;
 }
 
 QVariant SegmentData::getParentUniqueIdentifier() const
 {
-    return this->parentUniqueIdentifier;
+    return this->mParentUniqueIdentifier;
 }
 
 int SegmentData::getArticlePresenceOnServer() const
 {
-    return this->articlePresence;
+    return this->mArticlePresence;
 }
 
 void SegmentData::setArticlePresenceOnServer(const int articlePresence)
 {
-    this->articlePresence = articlePresence;
+    this->mArticlePresence = articlePresence;
 }
 
 SegmentInfoData SegmentData::getSegmentInfoData() const
 {
-    return this->segmentInfoData;
+    return this->mSegmentInfoData;
 }
 
 void SegmentData::setSegmentInfoData(const SegmentInfoData &segmentInfoData)
 {
-    this->segmentInfoData = segmentInfoData;
+    this->mSegmentInfoData = segmentInfoData;
 }
 
 QIODevice *SegmentData::getIoDevice()
 {
-    return this->ioDevice;
+    return this->mIoDevice;
 }
 
 void SegmentData::setIoDevice(QIODevice *ioDevice)
 {
-    this->ioDevice = ioDevice;
+    this->mIoDevice = ioDevice;
 }
 
 int SegmentData::getDataSize() const
 {
-    return this->dataSize;
+    return this->mDataSize;
 }
 
 void SegmentData::setDataSize(const int &dataSize)
 {
-    this->dataSize = dataSize;
+    this->mDataSize = dataSize;
 }
 
 UtilityNamespace::CrcNotify SegmentData::getCrc32Match() const
 {
-    return this->crc32Match;
+    return this->mCrc32Match;
 }
 
 void SegmentData::setCrc32Match(const UtilityNamespace::CrcNotify crc32Match)
 {
-    this->crc32Match = crc32Match;
+    this->mCrc32Match = crc32Match;
 }
 
 QDataStream &operator<<(QDataStream &out, const SegmentData &segmentData)
