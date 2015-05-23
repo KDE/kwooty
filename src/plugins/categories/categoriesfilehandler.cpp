@@ -236,7 +236,7 @@ void CategoriesFileHandler::saveModelToFile(CategoriesModel *categoriesModel)
 
         if (groupItem->hasChildren()) {
 
-            for (int j = 0; j < groupItem->rowCount(); j++) {
+            for (int j = 0; j < groupItem->rowCount(); ++j) {
 
                 QStandardItem *mimeItem = groupItem->child(j);
                 MimeData currentMimeData = categoriesModel->loadMimeData(mimeItem);
