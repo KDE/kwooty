@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 #include "mimedata.h"
-#include "kwooty_debug.h"
+#include "kwooty_categories_plugins_debug.h"
 
 MimeData::MimeData(MimeData::HierarchyCategory hierarchyCategory, const QString &mainCategory)
 {
@@ -31,7 +31,7 @@ MimeData::MimeData(MimeData::HierarchyCategory hierarchyCategory, const QString 
 MimeData::MimeData()
 {
 
-    qDebug() << "ooops, this constructor should not be called";
+    qCDebug(KWOOTY_CATEGORIES_PLUGIN_LOG) << "ooops, this constructor should not be called";
 }
 
 QString MimeData::getMainCategory() const

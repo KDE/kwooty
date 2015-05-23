@@ -5,6 +5,7 @@ set(Kwooty_categoriesglobal_SRCS
  mimedata.cpp
  categoriesmodel.cpp
  utilitycategories.cpp
+ kwooty_categories_plugins_debug.cpp
 )
 
 # plugin target :
