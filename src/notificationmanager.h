@@ -39,18 +39,17 @@ class NotificationManager : public QObject
 public:
     explicit NotificationManager(Core *);
 
+public Q_SLOTS:
+    void jobFinishSlot(const UtilityNamespace::ItemStatus, const QString &);
+    void insufficientDiskSpaceSlot(const QString &);
+
 private:
-
-    Core *mParent;
-    QHash<UtilityNamespace::ItemStatus, QString> mFinishSatusTextMap;
-
     void init();
     void setupConnections();
     void sendEvent(const QString &, const QString &, KNotification::NotificationFlags = KNotification::CloseOnTimeout);
 
-public Q_SLOTS:
-    void jobFinishSlot(const UtilityNamespace::ItemStatus, const QString &);
-    void insufficientDiskSpaceSlot(const QString &);
+    Core *mParent;
+    QHash<UtilityNamespace::ItemStatus, QString> mFinishSatusTextMap;
 };
 
 #endif // NOTIFICATIONMANAGER_H

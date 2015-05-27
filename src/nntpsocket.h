@@ -43,7 +43,7 @@ public:
                            SegmentDownloadFinished
                          };
 
-    explicit NntpSocket(ClientManagerConn *parent);
+    explicit NntpSocket(ClientManagerConn *mParent);
     ~NntpSocket();
     bool isSocketUnconnected() const;
     bool isSocketConnected() const;
@@ -68,13 +68,13 @@ public:
 
 private:
 
-    ClientManagerConn *parent;
-    QTimer *tryToReconnectTimer;
-    QTimer *idleTimeOutTimer;
-    QTimer *serverAnswerTimer;
-    QTimer *rateControlTimer;
-    int missingBytes;
-    bool certificateVerified;
+    ClientManagerConn *mParent;
+    QTimer *mTryToReconnectTimer;
+    QTimer *mIdleTimeOutTimer;
+    QTimer *mServerAnswerTimer;
+    QTimer *mRateControlTimer;
+    int mMissingBytes;
+    bool mCertificateVerified;
 
     void setupConnections();
     void stopAllTimers();

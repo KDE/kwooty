@@ -36,18 +36,18 @@
 NntpClient::NntpClient(ClientManagerConn *parent) : QObject(parent)
 {
 
-    this->parent = parent;
+    this->mParent = parent;
 
     // instantiate socket :
-    this->tcpSocket = new NntpSocket(parent);
+    this->mTcpSocket = new NntpSocket(parent);
 
-    this->authenticationDenied = false;
-    this->segmentProcessed = false;
-    this->nntpError = NoError;
+    this->mAuthenticationDenied = false;
+    this->mSegmentProcessed = false;
+    this->mNntpError = NoError;
     this->updateServerAnswerStatus(ServerDisconnected);
 
     // set client status to IdleStatus by default :
-    this->clientStatus = ClientIdle;
+    this->mClientStatus = ClientIdle;
 
     // set up connections with tcpSocket :
     this->setupConnections();
@@ -58,23 +58,23 @@ NntpClient::~NntpClient()
 {
 
     // quit :
-    this->segmentProcessed = true;
-    this->tcpSocket->sendQuitCommandToServer();
+    this->mSegmentProcessed = true;
+    this->mTcpSocket->sendQuitCommandToServer();
     this->segmentDataRollBack();
-    this->tcpSocket->abort();
+    this->mTcpSocket->abort();
 
 }
 
 void NntpClient::setupConnections()
 {
 
-    connect(this->tcpSocket, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
-    connect(this->tcpSocket, SIGNAL(connected()), this, SLOT(connectedSlot()));
-    connect(this->tcpSocket, SIGNAL(disconnected()), this, SLOT(disconnectedSlot()));
-    connect(this->tcpSocket, SIGNAL(tryToReconnectSignal()), this, SLOT(connectToHostSlot()));
-    connect(this->tcpSocket, SIGNAL(answerTimeOutSignal()), this, SLOT(answerTimeOutSlot()));
-    connect(this->tcpSocket, SIGNAL(downloadSegmentFromServerSignal()), this, SLOT(downloadSegmentFromServerSlot()));
-    connect(this->tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorSlot(QAbstractSocket::SocketError)));
+    connect(this->mTcpSocket, SIGNAL(readyRead()), this, SLOT(readyReadSlot()));
+    connect(this->mTcpSocket, SIGNAL(connected()), this, SLOT(connectedSlot()));
+    connect(this->mTcpSocket, SIGNAL(disconnected()), this, SLOT(disconnectedSlot()));
+    connect(this->mTcpSocket, SIGNAL(tryToReconnectSignal()), this, SLOT(connectToHostSlot()));
+    connect(this->mTcpSocket, SIGNAL(answerTimeOutSignal()), this, SLOT(answerTimeOutSlot()));
+    connect(this->mTcpSocket, SIGNAL(downloadSegmentFromServerSignal()), this, SLOT(downloadSegmentFromServerSlot()));
+    connect(this->mTcpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(errorSlot(QAbstractSocket::SocketError)));
 
 }
 
@@ -86,17 +86,17 @@ void NntpClient::connectToHostSlot()
 {
 
     // connect if this client belongs to master server or if the backup server is not disabled :
-    if (this->parent->isMasterServer() ||
-            !this->parent->isDisabledBackupServer()) {
+    if (this->mParent->isMasterServer() ||
+            !this->mParent->isDisabledBackupServer()) {
 
-        this->parent->handleFirstConnection();
+        this->mParent->handleFirstConnection();
 
         // set nntpError to noError by default before connection process :
         this->updateServerAnswerStatus(ServerDisconnected);
-        this->nntpError = NoError;
-        this->connectingLoopCounter = 0;
+        this->mNntpError = NoError;
+        this->mConnectingLoopCounter = 0;
 
-        this->tcpSocket->connectToHost();
+        this->mTcpSocket->connectToHost();
 
     }
 
@@ -109,7 +109,7 @@ void NntpClient::getAnswerFromServer()
     this->updateServerAnswerStatus(ServerFirstAnswerSent);
 
     // get answer from server :
-    int answer = this->tcpSocket->readAnswer();
+    int answer = this->mTcpSocket->readAnswer();
 
     switch (answer) {
 
@@ -126,14 +126,14 @@ void NntpClient::getAnswerFromServer()
     case AuthenticationRequired: {
         // authentication name requested :
 
-        if (this->parent->getServerData().isAuthentication()) {
-            this->tcpSocket->sendUserCommandToServer(parent->getServerData().getLogin());
+        if (this->mParent->getServerData().isAuthentication()) {
+            this->mTcpSocket->sendUserCommandToServer(mParent->getServerData().getLogin());
         } else {
             // group box is unchecked but authentication needed, inform the user :
-            this->nntpError = AuthenticationNeeded;
-            this->authenticationDenied = true;
+            this->mNntpError = AuthenticationNeeded;
+            this->mAuthenticationDenied = true;
 
-            this->tcpSocket->sendQuitCommandToServer();
+            this->mTcpSocket->sendQuitCommandToServer();
         }
         break;
     }
@@ -141,44 +141,44 @@ void NntpClient::getAnswerFromServer()
     case PasswordRequested: {
         // authentication password requested :
 
-        if (this->parent->getServerData().isAuthentication()) {
-            this->tcpSocket->sendPasswordCommandToServer(parent->getServerData().getPassword());
+        if (this->mParent->getServerData().isAuthentication()) {
+            this->mTcpSocket->sendPasswordCommandToServer(mParent->getServerData().getPassword());
         } else {
             // group box is uncheked but authentication needed, inform the user :
-            this->nntpError = AuthenticationNeeded;
-            this->authenticationDenied = true;
+            this->mNntpError = AuthenticationNeeded;
+            this->mAuthenticationDenied = true;
 
-            this->tcpSocket->sendQuitCommandToServer();
+            this->mTcpSocket->sendQuitCommandToServer();
         }
         break;
     }
 
     case AuthenticationAccepted: {
 
-        this->authenticationDenied = false;
+        this->mAuthenticationDenied = false;
 
-        this->tcpSocket->sendBodyCommandToServer(currentSegmentData.getPart());
+        this->mTcpSocket->sendBodyCommandToServer(mCurrentSegmentData.getPart());
         break;
     }
 
     case AuthenticationDenied: case AuthenticationRejected: {
 
-        this->authenticationDenied = true;
+        this->mAuthenticationDenied = true;
 
         // set type of error in order to notify status bar :
-        this->nntpError = AuthenticationFailed;
+        this->mNntpError = AuthenticationFailed;
 
         // In case of authentication denied, try to reconnect to host in 30 seconds :
         int reconnectSeconds = 30000;
 
         // if authentication denied on backup server, try to reconnect later :
-        if (!this->parent->isMasterServer()) {
+        if (!this->mParent->isMasterServer()) {
             reconnectSeconds = 3 * UtilityNamespace::MINUTES_TO_MILLISECONDS;
         }
 
-        this->tcpSocket->quitAndReconnectInMs(reconnectSeconds);
+        this->mTcpSocket->quitAndReconnectInMs(reconnectSeconds);
 
-        qCDebug(KWOOTY_LOG) << "AuthenticationDenied,  try to reconnect in " <<  reconnectSeconds << " seconds" << "group :" << parent->getServerGroup()->getRealServerGroupId();
+        qCDebug(KWOOTY_LOG) << "AuthenticationDenied,  try to reconnect in " <<  reconnectSeconds << " seconds" << "group :" << mParent->getServerGroup()->getRealServerGroupId();
         break;
     }
 
@@ -188,8 +188,8 @@ void NntpClient::getAnswerFromServer()
         this->setConnectedClientStatus(ClientDownload);
 
         // set file identifier in order to delete incomplete downloads at next launch :
-        this->segmentByteArray.clear();
-        this->segmentByteArray.append(applicationFileOwner);
+        this->mSegmentByteArray.clear();
+        this->mSegmentByteArray.append(applicationFileOwner);
 
         // manage download segment :
         this->downloadSegmentFromServerSlot();
@@ -220,7 +220,7 @@ void NntpClient::getAnswerFromServer()
     }
 
     default: {
-        qCDebug(KWOOTY_LOG) << "Answer from host : " << answer << " not handled !" << "group :" << parent->getServerGroup()->getRealServerGroupId();
+        qCDebug(KWOOTY_LOG) << "Answer from host : " << answer << " not handled !" << "group :" << mParent->getServerGroup()->getRealServerGroupId();
         // response not handled, consider that segment is not present :
         this->postDownloadProcess(NotPresent);
         break;
@@ -234,46 +234,46 @@ bool NntpClient::isClientReady()
     bool clientReady = true;
 
     // authentication denied, client is not ready :
-    if (this->authenticationDenied) {
+    if (this->mAuthenticationDenied) {
         clientReady = false;
     }
 
     // client is connected :
-    if (this->tcpSocket->isSocketConnected()) {
+    if (this->mTcpSocket->isSocketConnected()) {
 
         // reset connecting loop counter :
-        this->connectingLoopCounter = 0;
+        this->mConnectingLoopCounter = 0;
 
         // server did not answer yet, consider client as ready until first answer :
-        if (this->serverAnswerStatus == ServerFirstAnswerNotSent) {
+        if (this->mServerAnswerStatus == ServerFirstAnswerNotSent) {
             clientReady = true;
         }
         // server answered but posting is not ok :
-        else if (this->serverAnswerStatus != ServerConnectedPostingOk) {
+        else if (this->mServerAnswerStatus != ServerConnectedPostingOk) {
             clientReady = false;
         }
 
     }
     // client is not connected :
-    else if (this->tcpSocket->isSocketUnconnected()) {
+    else if (this->mTcpSocket->isSocketUnconnected()) {
 
         // reset connecting loop counter :
-        this->connectingLoopCounter = 0;
+        this->mConnectingLoopCounter = 0;
 
         // if client is not connected to server due to errors and posting was not ok when client
         // was previously connected :
-        if (this->tcpSocket->error() != QAbstractSocket::UnknownSocketError &&
-                this->serverAnswerStatus != ServerDisconnectedPostingOk) {
+        if (this->mTcpSocket->error() != QAbstractSocket::UnknownSocketError &&
+                this->mServerAnswerStatus != ServerDisconnectedPostingOk) {
 
             clientReady = false;
         }
     }
     // client is probably connecting, consider it as not ready after 5 consecutive probing :
     else {
-        if (this->connectingLoopCounter > MAX_CONNECTING_LOOP) {
+        if (this->mConnectingLoopCounter > MAX_CONNECTING_LOOP) {
             clientReady = false;
         } else {
-            this->connectingLoopCounter++;
+            this->mConnectingLoopCounter++;
         }
     }
 
@@ -295,24 +295,24 @@ void NntpClient::updateServerAnswerStatus(const ServerAnswerStatus serverAnswerS
 
         // if posting was ok when connected, set it as posting ok when disconnected
         // in order to consider this server as available even when disconnected (can happen after an idle timeout) :
-        if (this->serverAnswerStatus == ServerConnectedPostingOk) {
-            this->serverAnswerStatus = ServerDisconnectedPostingOk;
+        if (this->mServerAnswerStatus == ServerConnectedPostingOk) {
+            this->mServerAnswerStatus = ServerDisconnectedPostingOk;
         } else {
-            this->serverAnswerStatus = ServerDisconnected;
+            this->mServerAnswerStatus = ServerDisconnected;
         }
         break;
     }
 
     case ServerFirstAnswerSent: {
 
-        if (this->serverAnswerStatus == ServerFirstAnswerNotSent) {
-            this->serverAnswerStatus = ServerFirstAnswerSent;
+        if (this->mServerAnswerStatus == ServerFirstAnswerNotSent) {
+            this->mServerAnswerStatus = ServerFirstAnswerSent;
         }
         break;
     }
 
     default: {
-        this->serverAnswerStatus = serverAnswerStatus;
+        this->mServerAnswerStatus = serverAnswerStatus;
         break;
 
     }
@@ -324,30 +324,30 @@ void NntpClient::setConnectedClientStatus(const NntpClientStatus status, const T
 {
 
     // update client status :
-    this->clientStatus = status;
+    this->mClientStatus = status;
 
-    if (this->clientStatus != ClientDownload &&
-            this->currentSegmentData.isInitialized()) {
+    if (this->mClientStatus != ClientDownload &&
+            this->mCurrentSegmentData.isInitialized()) {
 
         this->postProcessIfBackupServer(DoNotRequestNewSegment);
         this->segmentDataRollBack();
 
     }
 
-    this->tcpSocket->notifyClientStatus(this->clientStatus, timerJob);
+    this->mTcpSocket->notifyClientStatus(this->mClientStatus, timerJob);
 
 }
 
 void NntpClient::disconnectRequestByManager()
 {
 
-    this->authenticationDenied = false;
+    this->mAuthenticationDenied = false;
     this->updateServerAnswerStatus(ServerDisconnected);
 
     this->segmentDataRollBack();
 
-    this->tcpSocket->sendQuitCommandToServer();
-    this->tcpSocket->abort();
+    this->mTcpSocket->sendQuitCommandToServer();
+    this->mTcpSocket->abort();
 }
 
 void NntpClient::connectRequestByManager()
@@ -357,7 +357,7 @@ void NntpClient::connectRequestByManager()
 
 NntpSocket *NntpClient::getTcpSocket()
 {
-    return this->tcpSocket;
+    return this->mTcpSocket;
 }
 
 //-------------------------------------------------------------------------------------//
@@ -367,15 +367,15 @@ NntpSocket *NntpClient::getTcpSocket()
 void NntpClient::requestNewSegment()
 {
 
-    if (this->serverAnswerStatus == ServerConnectedPostingOk) {
+    if (this->mServerAnswerStatus == ServerConnectedPostingOk) {
 
-        if (!this->parent->getServerGroup()->isBufferFull()) {
+        if (!this->mParent->getServerGroup()->isBufferFull()) {
 
             // set client ready for receiving next segment :
             this->setConnectedClientStatus(ClientSegmentRequest);
 
             // request a new segment :
-            emit getNextSegmentSignal(parent);
+            emit getNextSegmentSignal(mParent);
 
         }
         // buffer is full, lets time to decode pending segments,
@@ -396,7 +396,7 @@ void NntpClient::noSegmentAvailable()
 void NntpClient::retryDownloadDelayed(const int &seconds)
 {
 
-    this->tcpSocket->retryDownloadDelayed();
+    this->mTcpSocket->retryDownloadDelayed();
 
     // rollback segment right now :
     this->segmentDataRollBack();
@@ -413,23 +413,23 @@ void NntpClient::downloadNextSegment(const SegmentData &currentSegmentData)
     // ensure that previous segment has been proceeded :
     this->segmentDataRollBack();
 
-    this->currentSegmentData = currentSegmentData;
+    this->mCurrentSegmentData = currentSegmentData;
 
     // a new segment has arrived, indicate that this current segment has not been proceeded yet :
-    this->segmentProcessed = false;
+    this->mSegmentProcessed = false;
 
-    if (this->parent->isBandwidthNotNeeded()) {
+    if (this->mParent->isBandwidthNotNeeded()) {
 
         this->segmentDataRollBack();
-        this->tcpSocket->sendQuitCommandToServer();
+        this->mTcpSocket->sendQuitCommandToServer();
 
     } else {
 
         // should not occur but due to asynchronous call, check that the
         // socket is in connected state before further processing :
-        if (this->tcpSocket->isSocketConnected()) {
+        if (this->mTcpSocket->isSocketConnected()) {
             // get body message from server :
-            this->tcpSocket->sendBodyCommandToServer(currentSegmentData.getPart());
+            this->mTcpSocket->sendBodyCommandToServer(currentSegmentData.getPart());
         } else {
             this->postProcessIfBackupServer(DoNotRequestNewSegment);
             this->segmentDataRollBack();
@@ -441,35 +441,35 @@ void NntpClient::downloadNextSegment(const SegmentData &currentSegmentData)
 void NntpClient::downloadSegmentFromServerSlot()
 {
 
-    if (this->clientStatus == ClientDownload) {
+    if (this->mClientStatus == ClientDownload) {
 
         // read available data :
         QByteArray chunckData;
 
-        ServerSpeedManager *serverSpeedManager = this->parent->getServerGroup()->getServerSpeedManager();
+        ServerSpeedManager *serverSpeedManager = this->mParent->getServerGroup()->getServerSpeedManager();
         qint64 speedLimitInBytes = serverSpeedManager->getDownloadSpeedLimitInBytes();
 
         // if bandwidth is limited, read proper byte size :
-        if (!this->parent->isBandwidthFull() && speedLimitInBytes > 0) {
+        if (!this->mParent->isBandwidthFull() && speedLimitInBytes > 0) {
 
-            chunckData = this->tcpSocket->readChunck(speedLimitInBytes, serverSpeedManager->getEnabledClientNumber());
+            chunckData = this->mTcpSocket->readChunck(speedLimitInBytes, serverSpeedManager->getEnabledClientNumber());
 
         }
         // read all available data :
         else {
-            chunckData = this->tcpSocket->readAll();
+            chunckData = this->mTcpSocket->readAll();
         }
 
-        this->segmentByteArray.append(chunckData);
+        this->mSegmentByteArray.append(chunckData);
 
         // send size of downloaded data to status bar and side bar :
-        SegmentInfoData segmentInfoData = this->currentSegmentData.getSegmentInfoData();
+        SegmentInfoData segmentInfoData = this->mCurrentSegmentData.getSegmentInfoData();
         segmentInfoData.setBytesDownloaded(chunckData.size());
 
         emit speedPerServerSignal(segmentInfoData);
 
         // if end of download has been reached :
-        if (this->segmentByteArray.endsWith("\r\n.\r\n")) {
+        if (this->mSegmentByteArray.endsWith("\r\n.\r\n")) {
 
             this->postDownloadProcess(Present);
 
@@ -477,14 +477,14 @@ void NntpClient::downloadSegmentFromServerSlot()
         // data are pending, next readyRead signal is expected before time-out :
         else {
 
-            this->tcpSocket->dataReadPending();
+            this->mTcpSocket->dataReadPending();
 
-            if (this->segmentByteArray.size() > 10 * NBR_BYTES_IN_MB) {
+            if (this->mSegmentByteArray.size() > 10 * NBR_BYTES_IN_MB) {
 
                 // request new segment with short delay (10 seconds) :
-                this->segmentByteArray.clear();
+                this->mSegmentByteArray.clear();
                 this->retryDownloadDelayed(10);
-                qCDebug(KWOOTY_LOG) << "ooops, segment size probably too big : " << Utility::convertByteHumanReadable(this->segmentByteArray.size());
+                qCDebug(KWOOTY_LOG) << "ooops, segment size probably too big : " << Utility::convertByteHumanReadable(this->mSegmentByteArray.size());
             }
 
         }
@@ -496,9 +496,9 @@ void NntpClient::downloadSegmentFromServerSlot()
 void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePresence)
 {
 
-    if (!this->segmentProcessed) {
+    if (!this->mSegmentProcessed) {
 
-        this->tcpSocket->dataReadComplete();
+        this->mTcpSocket->dataReadComplete();
 
         // consider that data will be correctly saved by default :
         bool segmentDownloadFinished = true;
@@ -507,7 +507,7 @@ void NntpClient::postDownloadProcess(const UtilityNamespace::Article articlePres
         if (articlePresence == Present) {
 
             // replace new lines starting with double periods by a simple one (RFC 977)
-            this->segmentByteArray.replace("\r\n..", "\r\n.");
+            this->mSegmentByteArray.replace("\r\n..", "\r\n.");
 
         }
 
@@ -553,19 +553,19 @@ void NntpClient::segmentDataRollBack()
     // in case of download errors it can happen that segmentDataRollBack()
     // is called several times with the same segmentData instance
     // check that roll back occurs only once per segmentData :
-    if (!this->segmentProcessed) {
+    if (!this->mSegmentProcessed) {
 
-        if (this->currentSegmentData.getStatus() == DownloadStatus) {
+        if (this->mCurrentSegmentData.getStatus() == DownloadStatus) {
 
             //qCDebug(KWOOTY_LOG) << "segmentData roll back effective !";
 
-            this->currentSegmentData.setStatus(IdleStatus);
-            this->currentSegmentData.setProgress(PROGRESS_INIT);
+            this->mCurrentSegmentData.setStatus(IdleStatus);
+            this->mCurrentSegmentData.setProgress(PROGRESS_INIT);
 
             // update segment data status :
-            emit updateDownloadSegmentSignal(this->currentSegmentData);
+            emit updateDownloadSegmentSignal(this->mCurrentSegmentData);
 
-            this->segmentProcessed = true;
+            this->mSegmentProcessed = true;
         }
     }
 
@@ -574,11 +574,11 @@ void NntpClient::segmentDataRollBack()
 void NntpClient::postProcessIfBackupServer(NewSegmentRequest newSegmentRequest)
 {
 
-    if (!this->segmentProcessed) {
+    if (!this->mSegmentProcessed) {
 
         // this can occur with a backup server with incorrect settings or access denied,
         // skip the current segment and try to download with another backup server if any :
-        if (!this->parent->isMasterServer()) {
+        if (!this->mParent->isMasterServer()) {
 
             bool nextServerFound = this->downloadSegmentWithBackupServer();
 
@@ -604,20 +604,20 @@ bool NntpClient::downloadSegmentWithBackupServer()
     bool nextServerFound = false;
 
     // get server group of the next backup server :
-    ServerGroup *nextServerGroup = this->parent->getServerGroup()->getNextTargetServer();
+    ServerGroup *nextServerGroup = this->mParent->getServerGroup()->getNextTargetServer();
 
     // if another group of servers have been found :
     if (nextServerGroup) {
 
-        this->currentSegmentData.setReadyForNewServer(nextServerGroup->getServerGroupId());
+        this->mCurrentSegmentData.setReadyForNewServer(nextServerGroup->getServerGroupId());
 
         // update segmentData :
-        emit updateDownloadSegmentSignal(this->currentSegmentData);
+        emit updateDownloadSegmentSignal(this->mCurrentSegmentData);
 
         // tells clients connected to next server that this segment is pending :
         nextServerGroup->assignDownloadToReadyClients();
 
-        this->segmentProcessed = true;
+        this->mSegmentProcessed = true;
         nextServerFound = true;
 
     }
@@ -630,24 +630,24 @@ int NntpClient::notifyDownloadHasFinished(const UtilityNamespace::Article articl
 
     int downloadNextSegmentDelaySec = 0;
 
-    this->segmentProcessed = true;
-    this->currentSegmentData.setDownloadFinished(articlePresence);
+    this->mSegmentProcessed = true;
+    this->mCurrentSegmentData.setDownloadFinished(articlePresence);
 
     // segment is present and download is complete :
     if (articlePresence == Present) {
 
         // set pointer to data to be decoded by segmentDecoderThread :
         QBuffer *buffer = new QBuffer();
-        buffer->setData(this->segmentByteArray);
+        buffer->setData(this->mSegmentByteArray);
 
-        this->currentSegmentData.setIoDevice(buffer);
-        this->currentSegmentData.setDataSize(this->segmentByteArray.size());
+        this->mCurrentSegmentData.setIoDevice(buffer);
+        this->mCurrentSegmentData.setDataSize(this->mSegmentByteArray.size());
 
-        downloadNextSegmentDelaySec = this->parent->getServerGroup()->saveSegment(this->currentSegmentData);
+        downloadNextSegmentDelaySec = this->mParent->getServerGroup()->saveSegment(this->mCurrentSegmentData);
     }
     // else update current segment status :
     else {
-        emit updateDownloadSegmentSignal(this->currentSegmentData);
+        emit updateDownloadSegmentSignal(this->mCurrentSegmentData);
     }
 
     return downloadNextSegmentDelaySec;
@@ -661,9 +661,9 @@ void NntpClient::readyReadSlot()
 {
 
     // check that socket contains some data :
-    if (this->tcpSocket->bytesAvailable() > 0) {
+    if (this->mTcpSocket->bytesAvailable() > 0) {
 
-        switch (this->clientStatus) {
+        switch (this->mClientStatus) {
 
         case ClientIdle: case ClientSegmentRequest: {
 
@@ -673,10 +673,10 @@ void NntpClient::readyReadSlot()
 
         case ClientDownload: {
 
-            this->tcpSocket->checkRateControlTimer();
+            this->mTcpSocket->checkRateControlTimer();
 
             // if no download speed limit :
-            if (this->parent->isBandwidthFull()) {
+            if (this->mParent->isBandwidthFull()) {
                 this->downloadSegmentFromServerSlot();
             }
 
@@ -695,14 +695,14 @@ void NntpClient::dataHasArrivedSlot()
 {
 
     // try to connect if disconnected from server :
-    if (this->tcpSocket->isSocketUnconnected()) {
+    if (this->mTcpSocket->isSocketUnconnected()) {
         this->connectToHostSlot();
     }
 
     // if the client is not currently downloading, request another segment
     // only if socket is in connected state :
-    if ((this->clientStatus == ClientIdle) &&
-            this->tcpSocket->isSocketConnected()) {
+    if ((this->mClientStatus == ClientIdle) &&
+            this->mTcpSocket->isSocketConnected()) {
 
         this->requestNewSegment();
 
@@ -727,7 +727,7 @@ void NntpClient::connectedSlot()
     emit connectionStatusPerServerSignal(Connected);
 
     // if reconnection succeeded by timer :
-    this->tcpSocket->connected();
+    this->mTcpSocket->connected();
 
     // fetch new item :
     this->dataHasArrivedSlot();
@@ -742,12 +742,12 @@ void NntpClient::disconnectedSlot()
 
     // if disconnection comes after a socket error, notify type of error in status bar :
     // (if disconnection is normal, nntpError = NoError) :
-    emit nntpErrorPerServerSignal(this->nntpError);
+    emit nntpErrorPerServerSignal(this->mNntpError);
     emit connectionStatusPerServerSignal(Disconnected);
 
     // try to reconnect only if login and password are ok :
-    if (!this->authenticationDenied) {
-        this->tcpSocket->tryToReconnect();
+    if (!this->mAuthenticationDenied) {
+        this->mTcpSocket->tryToReconnect();
     }
 
 }
@@ -771,12 +771,12 @@ void NntpClient::errorSlot(QAbstractSocket::SocketError socketError)
 
     if (socketError == QAbstractSocket::RemoteHostClosedError) {
         // disconnection will occur after this slot, notify error only when disconnect occurs :
-        this->nntpError = RemoteHostClosed;
+        this->mNntpError = RemoteHostClosed;
     }
 
     if (socketError == QAbstractSocket::SslHandshakeFailedError) {
         // disconnection will occur after this slot, notify error only when disconnect occurs :
-        this->nntpError = SslHandshakeFailed;
+        this->mNntpError = SslHandshakeFailed;
     }
 
 }

@@ -93,16 +93,16 @@ public:
 private:
     static const int MAX_CONNECTING_LOOP = 5;
 
-    ClientManagerConn *parent;
-    NntpSocket *tcpSocket;
-    QByteArray segmentByteArray;
-    SegmentData currentSegmentData;
-    NntpClient::NntpClientStatus clientStatus;
-    NntpClient::ServerAnswerStatus serverAnswerStatus;
-    int nntpError;
-    int connectingLoopCounter;
-    bool authenticationDenied;
-    bool segmentProcessed;
+    ClientManagerConn *mParent;
+    NntpSocket *mTcpSocket;
+    QByteArray mSegmentByteArray;
+    SegmentData mCurrentSegmentData;
+    NntpClient::NntpClientStatus mClientStatus;
+    NntpClient::ServerAnswerStatus mServerAnswerStatus;
+    int mNntpError;
+    int mConnectingLoopCounter;
+    bool mAuthenticationDenied;
+    bool mSegmentProcessed;
 
     int notifyDownloadHasFinished(const UtilityNamespace::Article);
     bool downloadSegmentWithBackupServer();

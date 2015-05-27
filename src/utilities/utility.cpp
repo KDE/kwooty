@@ -347,13 +347,13 @@ QString Utility::getSystemTimeFormat(const QString &dateFormat)
 QString Utility::buildFullPath(const QString &path, const QString &fileName)
 {
 
-    return (path + '/' + fileName);
+    return (path + QLatin1Char('/') + fileName);
 }
 
 QString Utility::buildToolTipRow(const QString &label, const QString &value)
 {
 
-    QString toolRipRow = "<tr><td>" + label + "</td><td>" + value + "</td></tr>";
+    QString toolRipRow = QLatin1String("<tr><td>") + label + QLatin1String("</td><td>") + value + QLatin1String("</td></tr>");
     return toolRipRow;
 }
 

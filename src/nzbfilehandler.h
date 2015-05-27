@@ -37,12 +37,12 @@ public:
     explicit NzbFileHandler(Core *);
     QList<GlobalFileData> processNzbFile(QFile &, const QString &);
 
-private:
-    Core *mParent;
 
 Q_SIGNALS:
     void displayMessageBoxSignal(const QString &);
 
+private:
+    Core *mParent;
 };
 
 #endif // NZBFILEHANDLER_H

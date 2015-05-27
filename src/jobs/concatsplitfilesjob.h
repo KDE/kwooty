@@ -32,20 +32,10 @@ class ExtractSplit;
 
 class ConcatSplitFilesJob : public QObject
 {
-
     Q_OBJECT
-
 public:
     explicit ConcatSplitFilesJob(ExtractSplit *);
     ~ConcatSplitFilesJob();
-
-private:
-    QList<NzbFileData> mNzbFileDataList;
-    QString mFileSavePath;
-    QString mJoinFileName;
-    QThread *mDedicatedThread;
-
-    bool joinSplittedFiles();
 
 Q_SIGNALS:
     void progressPercentSignal(int, const QString &);
@@ -53,6 +43,14 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void joinFilesSlot(const QList<NzbFileData> &, const QString &, const QString &);
+
+private:
+    bool joinSplittedFiles();
+    QList<NzbFileData> mNzbFileDataList;
+    QString mFileSavePath;
+    QString mJoinFileName;
+    QThread *mDedicatedThread;
+
 };
 
 #endif // CONCATSPLITFILESJOB_H
