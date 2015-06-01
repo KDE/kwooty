@@ -23,6 +23,7 @@ Name[uk]=Автоматичні повторні спроби
 Name[x-test]=xxAutomatic Retryxx
 Comment=Re-download corrupted files automatically
 Comment[de]=Defekte Dateien automatisch wieder herunterladen
+Comment[nl]=Automatisch beschadigde bestanden opnieuw downloaden
 Comment[pl]=Samoczynnie wznów pobieranie uszkodzonego pliku
 Comment[pt]=Voltar a transferir automaticamente os ficheiros danificados
 Comment[pt_BR]=Baixar novamente os arquivos corrompidos

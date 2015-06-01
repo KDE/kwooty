@@ -15,6 +15,7 @@ Icon=folder-sync
 Name=Watch Folder
 Name[cs]=Sledovat složku
 Name[de]=Ordner überwachen
+Name[nl]=Map bewaken
 Name[pl]=Obserwowany katalog
 Name[pt]=Monitorização de Pastas
 Name[pt_BR]=Monitorar pasta
@@ -23,6 +24,7 @@ Name[uk]=Спостереження за текою
 Name[x-test]=xxWatch Folderxx
 
 Comment=Watch folder for nzb files and load them
+Comment[nl]=Map bewaken op nzb-bestanden en ze laden
 Comment[pl]=Obserwuj katalog na występowanie plików nzb i wczytuj je
 Comment[pt]=Sondar uma pasta à procura de ficheiros 'nzb' e carregá-los
 Comment[pt_BR]=Monitora a pasta por arquivos nzb e carrega-os
