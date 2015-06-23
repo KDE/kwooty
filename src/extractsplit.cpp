@@ -34,7 +34,7 @@
 ExtractSplit::ExtractSplit(RepairDecompressThread *parent): ExtractBase(parent)
 {
 
-    this->archiveFormat = SplitFileFormat;
+    this->mArchiveFormat = SplitFileFormat;
 
     this->mConcatSplitFilesJob = new ConcatSplitFilesJob(this);
 
@@ -54,16 +54,16 @@ ExtractSplit::~ExtractSplit()
 void ExtractSplit::launchProcess(const NzbCollectionData &nzbCollectionData, ExtractBase::ArchivePasswordStatus, bool, const QString &)
 {
 
-    this->nzbCollectionData = nzbCollectionData;
+    this->mNzbCollectionData = nzbCollectionData;
 
     // get archive saved path and joined target file name :
     QString joinFileName;
     QString fileSavePath;
     this->retrieveFullPathJoinFileName(nzbCollectionData, fileSavePath, joinFileName);
-    this->nzbFileDataList = this->retrieveSplitFilesOnly(fileSavePath);
+    this->mNzbFileDataList = this->retrieveSplitFilesOnly(fileSavePath);
 
     // start the job :
-    emit joinFilesSignal(this->nzbFileDataList, fileSavePath, joinFileName);
+    emit joinFilesSignal(this->mNzbFileDataList, fileSavePath, joinFileName);
 
 }
 
@@ -72,7 +72,7 @@ QList<NzbFileData> ExtractSplit::retrieveSplitFilesOnly(const QString &fileSaveP
 
     QList<NzbFileData> nzbFileDataFilteredList;
 
-    foreach (const NzbFileData &currentNzbFileData, this->nzbCollectionData.getNzbFileDataList()) {
+    foreach (const NzbFileData &currentNzbFileData, this->mNzbCollectionData.getNzbFileDataList()) {
 
         // get current file :
         QFile currentSplitFile(Utility::buildFullPath(fileSavePath, currentNzbFileData.getDecodedFileName()));

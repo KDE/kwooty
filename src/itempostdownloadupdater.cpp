@@ -36,7 +36,7 @@
 ItemPostDownloadUpdater::ItemPostDownloadUpdater(ItemParentUpdater *itemParentUpdater) : ItemAbstractUpdater(itemParentUpdater->getDownloadModel(), ItemAbstractUpdater::Child)
 {
 
-    this->itemParentUpdater = itemParentUpdater;
+    this->mItemParentUpdater = itemParentUpdater;
 
 }
 
@@ -71,22 +71,22 @@ void ItemPostDownloadUpdater::updateDecodeItems(const PostDownloadInfoData &repa
     // if item has been decoded store this status (useful for download retry feature) :
     if (status == DecodeFinishStatus) {
 
-        ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(parentModelIndex);
+        ItemStatusData itemStatusData = this->mDownloadModel->getStatusDataFromIndex(parentModelIndex);
         itemStatusData.setDecodeFinish(true);
-        this->downloadModel->updateStatusDataFromIndex(parentModelIndex, itemStatusData);
+        this->mDownloadModel->updateStatusDataFromIndex(parentModelIndex, itemStatusData);
     }
 
     // set progress to item :
-    this->downloadModel->updateProgressItem(parentModelIndex, progression);
+    this->mDownloadModel->updateProgressItem(parentModelIndex, progression);
 
     // set status to items :
-    this->downloadModel->updateStateItem(parentModelIndex, status);
+    this->mDownloadModel->updateStateItem(parentModelIndex, status);
 
     // move item to bottom of the list when decoding is finished :
     if (progression == PROGRESS_COMPLETE) {
 
         // retrieve state item :
-        QStandardItem *stateItem = this->downloadModel->getStateItemFromIndex(parentModelIndex);
+        QStandardItem *stateItem = this->mDownloadModel->getStateItemFromIndex(parentModelIndex);
 
         QStandardItem *nzbItem = stateItem->parent();
         nzbItem->appendRow(nzbItem->takeRow(stateItem->row()));
@@ -94,7 +94,7 @@ void ItemPostDownloadUpdater::updateDecodeItems(const PostDownloadInfoData &repa
     }
 
     // update parent (nzb item) status :
-    itemParentUpdater->updateNzbItems(parentModelIndex.parent());
+    mItemParentUpdater->updateNzbItems(parentModelIndex.parent());
 
 }
 
@@ -110,9 +110,9 @@ void ItemPostDownloadUpdater::updateRepairExtractItems(const PostDownloadInfoDat
     if (itemTarget == UtilityNamespace::BothItemsTarget) {
 
         // update item status :
-        this->downloadModel->updateStateItem(parentModelIndex, status);
+        this->mDownloadModel->updateStateItem(parentModelIndex, status);
         // set progress to item :
-        this->downloadModel->updateProgressItem(parentModelIndex, progression);
+        this->mDownloadModel->updateProgressItem(parentModelIndex, progression);
 
         // update parent (nzb item) status :
         this->updateRepairExtractParentItems(repairDecompressInfoData);
@@ -122,10 +122,10 @@ void ItemPostDownloadUpdater::updateRepairExtractItems(const PostDownloadInfoDat
     else if (itemTarget == UtilityNamespace::ChildItemTarget) {
 
         // update item status :
-        this->downloadModel->updateStateItem(parentModelIndex, status);
+        this->mDownloadModel->updateStateItem(parentModelIndex, status);
 
         // set progress to item :
-        this->downloadModel->updateProgressItem(parentModelIndex, progression);
+        this->mDownloadModel->updateProgressItem(parentModelIndex, progression);
     }
     // update only parent item :
     else if (itemTarget == UtilityNamespace::ParentItemTarget) {
@@ -145,14 +145,14 @@ void ItemPostDownloadUpdater::updateRepairExtractParentItems(const PostDownloadI
     // retrieve parent model index :
     repairDecompressParentInfoData.setModelIndex(repairDecompressInfoData.getModelIndex().parent());
 
-    itemParentUpdater->updateNzbItemsPostDecode(repairDecompressParentInfoData);
+    mItemParentUpdater->updateNzbItemsPostDecode(repairDecompressParentInfoData);
 
 }
 
 void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData &decodeInfoData)
 {
 
-    QStandardItem *fileNameItem = this->downloadModel->itemFromIndex(decodeInfoData.getModelIndex());
+    QStandardItem *fileNameItem = this->mDownloadModel->itemFromIndex(decodeInfoData.getModelIndex());
     QString decodedFileName = decodeInfoData.getDecodedFileName();
 
     NzbFileData nzbFileData = fileNameItem->data(NzbFileDataRole).value<NzbFileData>();
@@ -218,12 +218,12 @@ void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData &decode
     }
 
     // update the nzbFileData of current fileNameItem and its corresponding items :
-    this->downloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
+    this->mDownloadModel->updateNzbFileDataToItem(fileNameItem, nzbFileData);
 
     // set the name of the decoded file :
     if (!decodedFileName.isEmpty()) {
 
-        ItemStatusData itemStatusData = this->downloadModel->getStatusDataFromIndex(fileNameItem->index());
+        ItemStatusData itemStatusData = this->mDownloadModel->getStatusDataFromIndex(fileNameItem->index());
 
         // indicate if crc32 of the archive is ok :
         if (!decodeInfoData.isCrc32Match()) {
@@ -233,8 +233,8 @@ void ItemPostDownloadUpdater::addFileTypeInfo(const PostDownloadInfoData &decode
         // indicate type of article encoding :
         itemStatusData.setArticleEncodingType(decodeInfoData.getArticleEncodingType());
 
-        QStandardItem *stateItem = this->downloadModel->getStateItemFromIndex(fileNameItem->index());
-        this->downloadModel->storeStatusDataToItem(stateItem, itemStatusData);
+        QStandardItem *stateItem = this->mDownloadModel->getStateItemFromIndex(fileNameItem->index());
+        this->mDownloadModel->storeStatusDataToItem(stateItem, itemStatusData);
 
     }
 

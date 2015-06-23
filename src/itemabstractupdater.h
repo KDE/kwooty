@@ -51,25 +51,25 @@ public:
 
 protected:
 
-    StandardItemModel *downloadModel;
-    ItemParentUpdater *itemParentUpdater;
+    StandardItemModel *mDownloadModel;
+    ItemParentUpdater *mItemParentUpdater;
 
-    int downloadItemNumber;
-    int progressNumber;
-    int downloadFinishItemNumber;
-    int inQueueItemNumber;
-    int pauseItemNumber;
-    int pausingItemNumber;
-    int decodeFinishItemNumber;
-    int decodeErrorItemNumber;
-    int decodeItemNumber;
-    int scanItemNumber;
-    int verifyItemNumber;
-    int verifyFinishItemNumber;
-    int repairItemNumber;
-    int articleNotFoundNumber;
-    int articleFoundNumber;
-    int pendingSegmentsOnBackupNumber;
+    int mDownloadItemNumber;
+    int mProgressNumber;
+    int mDownloadFinishItemNumber;
+    int mInQueueItemNumber;
+    int mPauseItemNumber;
+    int mPausingItemNumber;
+    int mDecodeFinishItemNumber;
+    int mDecodeErrorItemNumber;
+    int mDecodeItemNumber;
+    int mScanItemNumber;
+    int mVerifyItemNumber;
+    int mVerifyFinishItemNumber;
+    int mRepairItemNumber;
+    int mArticleNotFoundNumber;
+    int mArticleFoundNumber;
+    int mPendingSegmentsOnBackupNumber;
 
     void clear();
     void countItemStatus(const int &);

@@ -56,13 +56,13 @@ public:
 
 private:
 
-    Core *parent;
-    StandardItemModel *downloadModel;
-    QTimer *dataSaverTimer;
-    QHash<quint32, int> versionStreamMap;
-    quint32 magicNumber;
-    quint32 applicationVersion1;
-    bool active;
+    Core *mParent;
+    StandardItemModel *mDownloadModel;
+    QTimer *mDataSaverTimer;
+    QHash<quint32, int> mVersionStreamMap;
+    quint32 mMagicNumber;
+    quint32 mApplicationVersion1;
+    bool mActive;
 
     QString getPendingFileStr() const;
     bool isDataToSaveExist() const;

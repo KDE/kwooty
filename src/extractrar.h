@@ -32,7 +32,7 @@ public:
 
 private:
 
-    QStringList createProcessArguments(const QString &, const QString &, const bool &, const QString &) ;
+    QStringList createProcessArguments(const QString &, const QString &, const bool &, const QString &)  Q_DECL_OVERRIDE;
     void extractUpdate(const QString &) Q_DECL_OVERRIDE;
     void checkIfArchivePassworded(const QString &, bool &) Q_DECL_OVERRIDE;
     void sendExtractProgramNotFoundNotification() Q_DECL_OVERRIDE;

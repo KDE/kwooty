@@ -31,22 +31,22 @@
 ExtractBase::ExtractBase(RepairDecompressThread *parent): QObject(parent)
 {
 
-    this->parent = parent;
+    mParent = parent;
 
-    this->extractProcess = new KProcess(this);
-    this->setupConnections();
-    this->resetVariables();
+    mExtractProcess = new KProcess(this);
+    setupConnections();
+    resetVariables();
 
 }
 
 ExtractBase::~ExtractBase()
 {
-    this->extractProcess->close();
+    mExtractProcess->close();
 }
 
 bool ExtractBase::canHandleFormat(UtilityNamespace::ArchiveFormat archiveFormat)
 {
-    return (this->archiveFormat == archiveFormat);
+    return (mArchiveFormat == archiveFormat);
 }
 
 void ExtractBase::preRepairProcessing(const NzbCollectionData &)
@@ -59,23 +59,23 @@ void ExtractBase::setupConnections()
 
     qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
 
-    connect(this->extractProcess, SIGNAL(readyRead()), this, SLOT(extractReadyReadSlot()));
-    connect(this->extractProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(extractFinishedSlot(int,QProcess::ExitStatus)));
+    connect(mExtractProcess, SIGNAL(readyRead()), this, SLOT(extractReadyReadSlot()));
+    connect(mExtractProcess, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(extractFinishedSlot(int,QProcess::ExitStatus)));
 
     // begin verify - repair process for new pending files when signal has been received :
     connect(this,
             SIGNAL(extractProcessEndedSignal(NzbCollectionData)),
-            this->parent,
+            mParent,
             SLOT(extractProcessEndedSlot(NzbCollectionData)));
 
     // display dialog box when password is required for archive extraction :
     connect(this,
             SIGNAL(extractPasswordRequiredSignal(QString)),
-            parent->getCore(),
+            mParent->getCore(),
             SLOT(extractPasswordRequiredSlot(QString)));
 
     // send password entered by the user :
-    connect(parent->getCore(),
+    connect(mParent->getCore(),
             SIGNAL(passwordEnteredByUserSignal(bool,QString)),
             this,
             SLOT(passwordEnteredByUserSlot(bool,QString)));
@@ -85,24 +85,24 @@ void ExtractBase::setupConnections()
 void ExtractBase::launchProcess(const NzbCollectionData &nzbCollectionData, ExtractBase::ArchivePasswordStatus archivePasswordStatus, bool passwordEnteredByUSer, const QString &passwordStr)
 {
 
-    this->nzbCollectionData = nzbCollectionData;
-    this->nzbFileDataList = nzbCollectionData.getNzbFileDataList();
+    mNzbCollectionData = nzbCollectionData;
+    mNzbFileDataList = nzbCollectionData.getNzbFileDataList();
 
-    this->archivePasswordStatus = archivePasswordStatus;
+    mArchivePasswordStatus = archivePasswordStatus;
 
     // search unrar program at each process launch in case settings have been changed at anytime :
-    this->extractProgramPath = this->searchExtractProgram();
+    mExtractProgramPath = searchExtractProgram();
 
     // launch extract if unrar program found :
-    if (this->isExtractProgramFound) {
+    if (mIsExtractProgramFound) {
 
-        NzbFileData currentNzbFileData = this->getFirstArchiveFileFromList();
+        NzbFileData currentNzbFileData = getFirstArchiveFileFromList();
 
         // get archive saved path :
         QString fileSavePath = currentNzbFileData.getFileSavePath();
 
         // look for archive name (renamed name or decoded name) to set as argument :
-        QString archiveName = this->getOriginalFileName(currentNzbFileData);
+        QString archiveName = getOriginalFileName(currentNzbFileData);
 
         // list of arguments for extract command line :
         QStringList args;
@@ -112,20 +112,20 @@ void ExtractBase::launchProcess(const NzbCollectionData &nzbCollectionData, Extr
             args.append(Utility::buildPriorityArgument(Settings::extractProcessValues(), Settings::extractNiceValue()));
         }
 
-        args.append(this->extractProgramPath);
-        args.append(this->createProcessArguments(archiveName, fileSavePath, passwordEnteredByUSer, passwordStr));
+        args.append(mExtractProgramPath);
+        args.append(createProcessArguments(archiveName, fileSavePath, passwordEnteredByUSer, passwordStr));
 
-        //qCDebug(KWOOTY_LOG) << "ARGS :" << this->extractProgramPath <<args;
+        //qCDebug(KWOOTY_LOG) << "ARGS :" << extractProgramPath <<args;
 
-        this->extractProcess->setOutputChannelMode(KProcess::MergedChannels);
-        this->extractProcess->setNextOpenMode(QIODevice::ReadWrite | QIODevice::Unbuffered);
-        this->extractProcess->setProgram(args);
-        this->extractProcess->start();
+        mExtractProcess->setOutputChannelMode(KProcess::MergedChannels);
+        mExtractProcess->setNextOpenMode(QIODevice::ReadWrite | QIODevice::Unbuffered);
+        mExtractProcess->setProgram(args);
+        mExtractProcess->start();
 
     }
     // unrar or 7z program has not been found, notify user :
     else {
-        this->sendExtractProgramNotFoundNotification();
+        sendExtractProgramNotFoundNotification();
     }
 
 }
@@ -166,32 +166,32 @@ NzbFileData ExtractBase::getFirstArchiveFileFromList(const QList<NzbFileData> &c
 
 NzbFileData ExtractBase::getFirstArchiveFileFromList() const
 {
-    return this->getFirstArchiveFileFromList(this->nzbFileDataList);
+    return getFirstArchiveFileFromList(mNzbFileDataList);
 }
 
 void ExtractBase::updateNzbFileDataInList(NzbFileData &currentNzbFileData, const UtilityNamespace::ItemStatus extractStep, const int index)
 {
 
     currentNzbFileData.setExtractProgressionStep(extractStep);
-    this->nzbFileDataList.replace(index, currentNzbFileData);
+    mNzbFileDataList.replace(index, currentNzbFileData);
 
 }
 
 void ExtractBase::resetVariables()
 {
 
-    this->isExtractProgramFound = false;
-    this->nzbCollectionData = NzbCollectionData();
-    this->nzbFileDataList.clear();
-    this->stdOutputLines.clear();
-    this->extractProcess->close();
-    this->extractProgressValue = PROGRESS_INIT;
+    mIsExtractProgramFound = false;
+    mNzbCollectionData = NzbCollectionData();
+    mNzbFileDataList.clear();
+    mStdOutputLines.clear();
+    mExtractProcess->close();
+    mExtractProgressValue = PROGRESS_INIT;
 }
 
 void ExtractBase::removeArchiveFiles()
 {
 
-    foreach (const NzbFileData &nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData &nzbFileData, mNzbFileDataList) {
 
         if (nzbFileData.getExtractProgressionStep() == ExtractStatus) {
 
@@ -203,7 +203,7 @@ void ExtractBase::removeArchiveFiles()
             Utility::removeData(fullPathFileName + ".1");
 
             // if file has been renamed, par2 may have created the archive with the original name suppress it :
-            this->removeRenamedArchiveFile(nzbFileData);
+            removeRenamedArchiveFile(nzbFileData);
         }
     }
 }
@@ -231,31 +231,31 @@ void ExtractBase::extractReadyReadSlot()
     bool passwordCheckIsNextLine = false;
 
     // process each lines received :
-    this->stdOutputLines += QString::fromUtf8(extractProcess->readAllStandardOutput());
+    mStdOutputLines += QString::fromUtf8(mExtractProcess->readAllStandardOutput());
 
-    QStringList lines = this->stdOutputLines.split("\n");
+    QStringList lines = mStdOutputLines.split("\n");
     foreach (QString line, lines) {
 
         if (!line.isEmpty()) {
 
             //qCDebug(KWOOTY_LOG) << "line : " << line;
 
-            if (this->archivePasswordStatus == ExtractBase::ArchiveCheckIfPassworded) {
-                this->checkIfArchivePassworded(line, passwordCheckIsNextLine);
+            if (mArchivePasswordStatus == ExtractBase::ArchiveCheckIfPassworded) {
+                checkIfArchivePassworded(line, passwordCheckIsNextLine);
             }
 
-            this->extractUpdate(line);
+            extractUpdate(line);
         }
 
     }
 
     // remove complete lines :
-    if (this->stdOutputLines.endsWith("\n")) {
-        this->stdOutputLines.clear();
+    if (mStdOutputLines.endsWith("\n")) {
+        mStdOutputLines.clear();
     }
     // keep last line which is not complete :
     else {
-        this->stdOutputLines = lines.takeLast();
+        mStdOutputLines = lines.takeLast();
     }
 
 }
@@ -266,18 +266,18 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
     //qCDebug(KWOOTY_LOG) << "exitCode" << exitCode << " exitStatus " << exitStatus;
 
     // password checking has ended, files are *not* passworded, launch extract now :
-    if (archivePasswordStatus == ExtractBase::ArchiveIsNotPassworded) {
+    if (mArchivePasswordStatus == ExtractBase::ArchiveIsNotPassworded) {
 
-        this->extractProcess->close();
+        mExtractProcess->close();
 
-        this->nzbCollectionData.setNzbFileDataList(this->nzbFileDataList);
-        this->launchProcess(this->nzbCollectionData, ExtractBase::ArchivePasswordCheckEnded);
+        mNzbCollectionData.setNzbFileDataList(mNzbFileDataList);
+        launchProcess(mNzbCollectionData, ExtractBase::ArchivePasswordCheckEnded);
 
     }
     // password checking has ended, files are passworded, display password box to user :
-    else if (this->archivePasswordStatus == ExtractBase::ArchiveIsPassworded) {
+    else if (mArchivePasswordStatus == ExtractBase::ArchiveIsPassworded) {
 
-        NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
+        NzbFileData nzbFileData = getFirstArchiveFileFromList();
         emit extractPasswordRequiredSignal(nzbFileData.getDecodedFileName());
 
     }
@@ -289,13 +289,13 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
         if (exitStatus == QProcess::NormalExit && exitCode == QProcess::NormalExit) {
 
             // notify repairDecompressThread that extraction is over :
-            this->nzbCollectionData.setExtractTerminateStatus(ExtractSuccessStatus);
+            mNzbCollectionData.setExtractTerminateStatus(ExtractSuccessStatus);
 
-            this->emitFinishToArchivesWithoutErrors(ExtractSuccessStatus, PROGRESS_COMPLETE);
+            emitFinishToArchivesWithoutErrors(ExtractSuccessStatus, PROGRESS_COMPLETE);
 
             // remove rar files if extract succeed :
             if (Settings::removeArchiveFiles()) {
-                this->removeArchiveFiles();
+                removeArchiveFiles();
             }
 
         }
@@ -306,20 +306,20 @@ void ExtractBase::extractFinishedSlot(const int exitCode, const QProcess::ExitSt
             // send nzbCollectionData in order to cancel extracting of pending multi-set nzb (with same parent)
             // if par2 have not been downloaded yet
             // par2 will the be downloaded and extraction of multi-set nzb will then be made at that time :
-            this->nzbCollectionData.setExtractTerminateStatus(ExtractFailedStatus);
+            mNzbCollectionData.setExtractTerminateStatus(ExtractFailedStatus);
 
-            this->emitFinishToArchivesWithoutErrors(ExtractFailedStatus, PROGRESS_COMPLETE);
+            emitFinishToArchivesWithoutErrors(ExtractFailedStatus, PROGRESS_COMPLETE);
 
         }
 
         // notify parent that extraction has finished :
-        NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
+        NzbFileData nzbFileData = getFirstArchiveFileFromList();
 
-        this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
+        emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
 
-        emit extractProcessEndedSignal(this->nzbCollectionData);
+        emit extractProcessEndedSignal(mNzbCollectionData);
 
-        this->resetVariables();
+        resetVariables();
 
     }
 
@@ -330,25 +330,25 @@ void ExtractBase::passwordEnteredByUserSlot(bool passwordEntered, const QString 
 
     // this slot is shared between 7zextract and rarextract instances
     // do processing for proper instance : the one whih archivePasswordStatus set to ArchiveIsPassworded :
-    if (this->archivePasswordStatus == ExtractBase::ArchiveIsPassworded) {
+    if (mArchivePasswordStatus == ExtractBase::ArchiveIsPassworded) {
 
         // set password entered by user to the extract process :
         if (passwordEntered) {
-            this->nzbCollectionData.setNzbFileDataList(this->nzbFileDataList);
-            this->launchProcess(this->nzbCollectionData, ExtractBase::ArchivePasswordCheckEnded, passwordEntered, password);
+            mNzbCollectionData.setNzbFileDataList(mNzbFileDataList);
+            launchProcess(mNzbCollectionData, ExtractBase::ArchivePasswordCheckEnded, passwordEntered, password);
         }
         // password has not been entered, stop extract process :
         else {
 
             // notify children that extraction failed :
-            this->emitStatusToAllArchives(PROGRESS_COMPLETE, ExtractFailedStatus, ChildItemTarget);
+            emitStatusToAllArchives(PROGRESS_COMPLETE, ExtractFailedStatus, ChildItemTarget);
 
             // notify parent that extraction has finished :
-            NzbFileData nzbFileData = this->getFirstArchiveFileFromList();
+            NzbFileData nzbFileData = getFirstArchiveFileFromList();
 
-            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
+            emitProcessUpdate(nzbFileData.getUniqueIdentifier(), PROGRESS_COMPLETE, ExtractFinishedStatus, ParentItemTarget);
 
-            this->resetVariables();
+            resetVariables();
 
             // notify repairDecompressThread that extraction is over :
             emit extractProcessEndedSignal();
@@ -364,7 +364,7 @@ void ExtractBase::emitProcessUpdate(const QVariant &parentIdentifer, const int &
 
     PostDownloadInfoData repairDecompressInfoData;
     repairDecompressInfoData.initRepairDecompress(parentIdentifer, progression, status, itemTarget);
-    this->parent->emitProcessUpdate(repairDecompressInfoData);
+    mParent->emitProcessUpdate(repairDecompressInfoData);
 
 }
 
@@ -375,9 +375,9 @@ void ExtractBase::emitProcessUpdate(const QVariant &parentIdentifer, const int &
 void ExtractBase::findItemAndNotifyUser(const QString &fileNameStr, const UtilityNamespace::ItemStatus status, UtilityNamespace::ItemTarget itemTarget)
 {
 
-    for (int i = 0; i < this->nzbFileDataList.size(); ++i) {
+    for (int i = 0; i < mNzbFileDataList.size(); ++i) {
 
-        NzbFileData nzbFileData = this->nzbFileDataList.at(i);
+        NzbFileData nzbFileData = mNzbFileDataList.at(i);
 
         // if nzbFileData has been identified :
         if (nzbFileData.match(fileNameStr)) {
@@ -387,24 +387,24 @@ void ExtractBase::findItemAndNotifyUser(const QString &fileNameStr, const Utilit
             nzbFileData.setArchiveFile(true);
 
             // update status for the corresponding nzbFileData :
-            this->updateNzbFileDataInList(nzbFileData, status, i);
+            updateNzbFileDataInList(nzbFileData, status, i);
 
         }
     }
 
     // notify user of the current file being processed :
-    this->emitProgressToArchivesWithCurrentStatus(status, itemTarget, this->extractProgressValue);
+    emitProgressToArchivesWithCurrentStatus(status, itemTarget, mExtractProgressValue);
 }
 
 void ExtractBase::emitProgressToArchivesWithCurrentStatus(const UtilityNamespace::ItemStatus status, const UtilityNamespace::ItemTarget itemTarget,  const int percentage)
 {
 
-    foreach (const NzbFileData &nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData &nzbFileData, mNzbFileDataList) {
 
         if (nzbFileData.getExtractProgressionStep() == status) {
 
             // notify user of current file status and of its progression :
-            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, status, itemTarget);
+            emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, status, itemTarget);
 
         }
 
@@ -415,7 +415,7 @@ void ExtractBase::emitProgressToArchivesWithCurrentStatus(const UtilityNamespace
 void ExtractBase::emitFinishToArchivesWithoutErrors(const UtilityNamespace::ItemStatus status, const int percentage)
 {
 
-    foreach (const NzbFileData &nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData &nzbFileData, mNzbFileDataList) {
 
         UtilityNamespace::ItemStatus nzbFileDataStatus = nzbFileData.getExtractProgressionStep();
 
@@ -424,13 +424,13 @@ void ExtractBase::emitFinishToArchivesWithoutErrors(const UtilityNamespace::Item
 
             if (nzbFileDataStatus == ExtractStatus) {
 
-                this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, status, ChildItemTarget);
+                emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, status, ChildItemTarget);
 
             }
         } else {
 
             // only used to send *progression %* value for files with extracting errors :
-            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, nzbFileData.getExtractProgressionStep(), ChildItemTarget);
+            emitProcessUpdate(nzbFileData.getUniqueIdentifier(), percentage, nzbFileData.getExtractProgressionStep(), ChildItemTarget);
 
         }
 
@@ -440,11 +440,11 @@ void ExtractBase::emitFinishToArchivesWithoutErrors(const UtilityNamespace::Item
 void ExtractBase::emitStatusToAllArchives(const int &progress, const UtilityNamespace::ItemStatus status, const UtilityNamespace::ItemTarget target)
 {
 
-    foreach (const NzbFileData &nzbFileData, this->nzbFileDataList) {
+    foreach (const NzbFileData &nzbFileData, mNzbFileDataList) {
 
         if (nzbFileData.isArchiveFile()) {
 
-            this->emitProcessUpdate(nzbFileData.getUniqueIdentifier(), progress, status, target);
+            emitProcessUpdate(nzbFileData.getUniqueIdentifier(), progress, status, target);
 
         }
 

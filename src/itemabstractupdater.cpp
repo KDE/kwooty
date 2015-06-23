@@ -30,13 +30,13 @@
 ItemAbstractUpdater::ItemAbstractUpdater(StandardItemModel *downloadModel, ItemHierarchy itemHierarchy) : QObject(downloadModel)
 {
 
-    this->downloadModel = downloadModel;
+    mDownloadModel = downloadModel;
 
     // setup connection in order to display proper icon near each file name according to its current status :
     // update icon near child file name item :
     if (itemHierarchy == ItemAbstractUpdater::Child) {
 
-        connect(this->downloadModel,
+        connect(mDownloadModel,
                 SIGNAL(childStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
                 this,
                 SLOT(childStatusIconUpdateSlot(QStandardItem*,ItemStatusData)));
@@ -45,7 +45,7 @@ ItemAbstractUpdater::ItemAbstractUpdater(StandardItemModel *downloadModel, ItemH
     // update icon near parent file name item :
     else if (itemHierarchy == ItemAbstractUpdater::Parent) {
 
-        connect(this->downloadModel,
+        connect(mDownloadModel,
                 SIGNAL(parentStatusItemChangedSignal(QStandardItem*,ItemStatusData)),
                 this,
                 SLOT(parentStatusIconUpdateSlot(QStandardItem*,ItemStatusData)));
@@ -59,20 +59,20 @@ ItemAbstractUpdater::ItemAbstractUpdater() { }
 void ItemAbstractUpdater::clear()
 {
 
-    this->downloadItemNumber = 0;
-    this->pauseItemNumber = 0;
-    this->progressNumber = 0;
-    this->downloadFinishItemNumber = 0;
-    this->inQueueItemNumber = 0;
-    this->pausingItemNumber = 0;
-    this->decodeFinishItemNumber = 0;
-    this->decodeErrorItemNumber = 0;
-    this->articleNotFoundNumber = 0;
-    this->articleFoundNumber = 0;
-    this->verifyItemNumber = 0;
-    this->verifyFinishItemNumber = 0;
-    this->repairItemNumber = 0;
-    this->pendingSegmentsOnBackupNumber = 0;
+    mDownloadItemNumber = 0;
+    mPauseItemNumber = 0;
+    mProgressNumber = 0;
+    mDownloadFinishItemNumber = 0;
+    mInQueueItemNumber = 0;
+    mPausingItemNumber = 0;
+    mDecodeFinishItemNumber = 0;
+    mDecodeErrorItemNumber = 0;
+    mArticleNotFoundNumber = 0;
+    mArticleFoundNumber = 0;
+    mVerifyItemNumber = 0;
+    mVerifyFinishItemNumber = 0;
+    mRepairItemNumber = 0;
+    mPendingSegmentsOnBackupNumber = 0;
 
 }
 
@@ -82,44 +82,44 @@ void ItemAbstractUpdater::countItemStatus(const int &status)
     switch (status) {
 
     case DownloadStatus: {
-        this->downloadItemNumber++;
+        mDownloadItemNumber++;
         break;
     };
 
     case DownloadFinishStatus: {
-        this->downloadFinishItemNumber++;
+        mDownloadFinishItemNumber++;
         break;
     };
     case IdleStatus: {
-        this->inQueueItemNumber++;
+        mInQueueItemNumber++;
         break;
     };
     case PauseStatus: {
-        this->pauseItemNumber++;
+        mPauseItemNumber++;
         break;
     };
     case PausingStatus: {
-        this->pausingItemNumber++;
+        mPausingItemNumber++;
         break;
     };
     case DecodeFinishStatus: {
-        this->decodeFinishItemNumber++;
+        mDecodeFinishItemNumber++;
         break;
     };
     case DecodeErrorStatus: {
-        this->decodeErrorItemNumber++;
+        mDecodeErrorItemNumber++;
         break;
     };
     case DecodeStatus: {
-        this->decodeItemNumber++;
+        mDecodeItemNumber++;
         break;
     };
     case ScanStatus: {
-        this->scanItemNumber++;
+        mScanItemNumber++;
         break;
     };
     case WaitForPar2IdleStatus: {
-        this->decodeFinishItemNumber++;
+        mDecodeFinishItemNumber++;
         break;
     };
 
@@ -130,7 +130,7 @@ void ItemAbstractUpdater::countItemStatus(const int &status)
     // par2 files are then downloaded for repairing of 2nd nzb-set.
     // => consider previously extracted files from 1st nzb-set as decodeFinish files :
     case ExtractSuccessStatus: {
-        this->decodeFinishItemNumber++;
+        mDecodeFinishItemNumber++;
         break;
     };
 
@@ -141,7 +141,7 @@ void ItemAbstractUpdater::countItemStatus(const int &status)
 void ItemAbstractUpdater::setIcon(QStandardItem *stateItem, const QString &iconName)
 {
 
-    QStandardItem *fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
+    QStandardItem *fileNameItem = mDownloadModel->getFileNameItemFromIndex(stateItem->index());
 
     QIcon icon;
     bool iconFound = UtilityIconPainting::getInstance()->retrieveIconFromString(iconName, icon);
@@ -155,10 +155,10 @@ void ItemAbstractUpdater::setIcon(QStandardItem *stateItem, const QString &iconN
 void ItemAbstractUpdater::setIcon(QStandardItem *stateItem, const UtilityNamespace::ItemStatus &status)
 {
 
-    QStandardItem *fileNameItem = this->downloadModel->getFileNameItemFromIndex(stateItem->index());
+    QStandardItem *fileNameItem = mDownloadModel->getFileNameItemFromIndex(stateItem->index());
 
     // if item is the parent item :
-    if (this->downloadModel->isNzbItem(fileNameItem)) {
+    if (mDownloadModel->isNzbItem(fileNameItem)) {
 
         // update its icon according to its current status :
         QIcon icon;
@@ -199,13 +199,13 @@ void ItemAbstractUpdater::parentStatusIconUpdateSlot(QStandardItem *stateItem, c
         if (itemStatusData.areAllPostProcessingCorrect()) {
 
             // get fileName item and set corresponding icon :
-            this->setIcon(stateItem, status);
+            setIcon(stateItem, status);
         }
 
         else {
 
             // get fileName item and set corresponding icon :
-            this->setIcon(stateItem, "dialog-warning");
+            setIcon(stateItem, "dialog-warning");
 
         }
 
@@ -213,18 +213,18 @@ void ItemAbstractUpdater::parentStatusIconUpdateSlot(QStandardItem *stateItem, c
 
     else if (Utility::isInQueue(status)) {
         // get fileName item and set corresponding icon :
-        this->setIcon(stateItem, "go-next-view-transparent");
+        setIcon(stateItem, "go-next-view-transparent");
     }
 
     // get fileName item and set corresponding icon :
     else if (Utility::isDownloadOrPausing(status)) {
-        this->setIcon(stateItem, status);
+        setIcon(stateItem, status);
     }
 
     else if (Utility::isDownloadFinish(status)) {
 
         if (itemStatusData.getDataStatus() == NoData) {
-            this->setIcon(stateItem, "dialog-cancel");
+            setIcon(stateItem, "dialog-cancel");
         }
     }
 
@@ -249,7 +249,7 @@ void ItemAbstractUpdater::childStatusIconUpdateSlot(QStandardItem *stateItem, co
 
         // get final status :
         if (itemStatusData.getDataStatus() == DataPendingBackupServer) {
-            this->setIcon(stateItem, "mail-reply-list");
+            setIcon(stateItem, "mail-reply-list");
             return;
         }
 
@@ -257,7 +257,7 @@ void ItemAbstractUpdater::childStatusIconUpdateSlot(QStandardItem *stateItem, co
         // get final status :
 
         if (Utility::isBadCrcForYencArticle(itemStatusData.getCrc32Match(), itemStatusData.getArticleEncodingType())) {
-            this->setIcon(stateItem, "mail-mark-important");
+            setIcon(stateItem, "mail-mark-important");
             return;
 
         }
@@ -265,7 +265,7 @@ void ItemAbstractUpdater::childStatusIconUpdateSlot(QStandardItem *stateItem, co
     }
 
     // get fileName item and set corresponding icon :
-    this->setIcon(stateItem, status);
+    setIcon(stateItem, status);
 
 }
 

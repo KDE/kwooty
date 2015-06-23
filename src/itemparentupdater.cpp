@@ -61,7 +61,7 @@ ItemChildrenManager *ItemParentUpdater::getItemChildrenManager() const
 }
 StandardItemModel *ItemParentUpdater::getDownloadModel() const
 {
-    return this->downloadModel;
+    return this->mDownloadModel;
 }
 
 void ItemParentUpdater::setupConnections()
@@ -89,10 +89,10 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex &nzbIndex)
     this->mIsItemUpdated = false;
 
     // get itemStatusData :
-    ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex);
+    ItemStatusData nzbItemStatusData = this->mDownloadModel->getStatusDataFromIndex(nzbIndex);
 
     // get number of rows :
-    int rowNumber = this->downloadModel->itemFromIndex(nzbIndex)->rowCount();
+    int rowNumber = this->mDownloadModel->itemFromIndex(nzbIndex)->rowCount();
 
     // smart par2 download, set them to Idle only if a file crc has failed :
     bool par2FilesUpdated = this->updatePar2ItemsIfCrcFailed(nzbItemStatusData, rowNumber, nzbIndex);
@@ -121,7 +121,7 @@ void ItemParentUpdater::updateNzbItems(const QModelIndex &nzbIndex)
     nzbItemStatusData = this->postProcessing(nzbItemStatusData, rowNumber, nzbIndex);
 
     // store statusData :
-    this->downloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
+    this->mDownloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
 
     // if crc fail, emit a signal in order to download par2 files :
     if (par2FilesUpdated) {
@@ -145,10 +145,10 @@ void ItemParentUpdater::updateNzbItemsPostDecode(const PostDownloadInfoData &rep
     if (!repairDecompressInfoData.isPostProcessFinish()) {
 
         // if child are being verified / repaired or extracted :
-        this->downloadModel->updateStateItem(nzbIndex, status);
+        this->mDownloadModel->updateStateItem(nzbIndex, status);
 
         // update progression :
-        this->downloadModel->updateProgressItem(nzbIndex, progression);
+        this->mDownloadModel->updateProgressItem(nzbIndex, progression);
 
         // if extract failed, download par2 files if there were considered as not required :
         this->updateItemsIfDirectExtractFailed(nzbIndex, status);
@@ -158,14 +158,14 @@ void ItemParentUpdater::updateNzbItemsPostDecode(const PostDownloadInfoData &rep
     else {
 
         // get itemStatusData :
-        ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex);
+        ItemStatusData nzbItemStatusData = this->mDownloadModel->getStatusDataFromIndex(nzbIndex);
 
         nzbItemStatusData.setPostProcessFinish(true);
         nzbItemStatusData.setAllPostProcessingCorrect(repairDecompressInfoData.areAllPostProcessingCorrect());
 
         //qCDebug(KWOOTY_LOG) << "NzbProcessFinishedStatus"  <<  nzbItemStatusData.isPostProcessFinish() <<  repairDecompressInfoData.areAllPostProcessingCorrect();
 
-        this->downloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
+        this->mDownloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
 
     }
 
@@ -186,17 +186,17 @@ ItemStatusData ItemParentUpdater::updateStatusItemDecode(ItemStatusData &nzbItem
 {
 
     // if all children have been decoded :
-    if (this->downloadItemNumber == 0) {
+    if (this->mDownloadItemNumber == 0) {
 
-        if ((this->decodeErrorItemNumber > 0) &&
-                (rowNumber == this->decodeErrorItemNumber + this->articleNotFoundNumber)) {
+        if ((this->mDecodeErrorItemNumber > 0) &&
+                (rowNumber == this->mDecodeErrorItemNumber + this->mArticleNotFoundNumber)) {
 
             nzbItemStatusData.setStatus(DecodeErrorStatus);
             this->mIsItemUpdated = true;
-        } else if ((this->decodeFinishItemNumber > 0) &&
-                   (rowNumber == (this->decodeErrorItemNumber +
-                                  this->articleNotFoundNumber +
-                                  this->decodeFinishItemNumber))) {
+        } else if ((this->mDecodeFinishItemNumber > 0) &&
+                   (rowNumber == (this->mDecodeErrorItemNumber +
+                                  this->mArticleNotFoundNumber +
+                                  this->mDecodeFinishItemNumber))) {
 
             nzbItemStatusData.setStatus(DecodeFinishStatus);
             this->mIsItemUpdated = true;
@@ -216,12 +216,12 @@ ItemStatusData ItemParentUpdater::updateItemsDownload(ItemStatusData &nzbItemSta
 
     // calculate progression % :
 
-    quint64 nzbSize = this->downloadModel->getSizeValueFromIndex(nzbIndex);
+    quint64 nzbSize = this->mDownloadModel->getSizeValueFromIndex(nzbIndex);
     nzbSize = qMax(nzbSize, (quint64)1); // avoid division by zero (should never happen)
-    this->progressNumber = qMin(qRound((qreal)(totalProgress / nzbSize)), PROGRESS_COMPLETE);
+    this->mProgressNumber = qMin(qRound((qreal)(totalProgress / nzbSize)), PROGRESS_COMPLETE);
 
     // set progress to item :
-    this->downloadModel->updateProgressItem(nzbIndex, this->progressNumber);
+    this->mDownloadModel->updateProgressItem(nzbIndex, this->mProgressNumber);
 
     // update status item :
     nzbItemStatusData = this->updateStatusItemDownload(nzbItemStatusData, rowNumber);
@@ -236,31 +236,31 @@ ItemStatusData ItemParentUpdater::updateStatusItemDownload(ItemStatusData &nzbIt
 {
 
     // if all children have been downloaded :
-    if (rowNumber == this->downloadFinishItemNumber) {
+    if (rowNumber == this->mDownloadFinishItemNumber) {
         nzbItemStatusData.setStatus(DownloadFinishStatus);
     }
 
     // if some children are being downloaded :
-    else if (this->downloadItemNumber > 0) {
+    else if (this->mDownloadItemNumber > 0) {
         nzbItemStatusData.setStatus(DownloadStatus);
     }
 
     // if no children are currently being downloaded :
-    else if (this->downloadItemNumber == 0) {
+    else if (this->mDownloadItemNumber == 0) {
 
         // if some children are Idle :
-        if (this->inQueueItemNumber > 0) {
+        if (this->mInQueueItemNumber > 0) {
             nzbItemStatusData.setStatus(IdleStatus);
         }
         // else if children are in pause :
         else {
-            if (this->pausingItemNumber > 0) {
+            if (this->mPausingItemNumber > 0) {
                 nzbItemStatusData.setStatus(PausingStatus);
-            } else if (this->pauseItemNumber > 0) {
+            } else if (this->mPauseItemNumber > 0) {
                 nzbItemStatusData.setStatus(PauseStatus);
-            } else if (this->decodeItemNumber > 0) {
+            } else if (this->mDecodeItemNumber > 0) {
                 nzbItemStatusData.setStatus(DecodeStatus);
-            } else if (this->scanItemNumber > 0) {
+            } else if (this->mScanItemNumber > 0) {
                 nzbItemStatusData.setStatus(ScanStatus);
             }
         }
@@ -277,9 +277,9 @@ ItemStatusData ItemParentUpdater::updateDataStatus(ItemStatusData &nzbItemStatus
     if (nzbItemStatusData.getStatus() == DownloadStatus) {
 
         // no segment founds on server for the current file :
-        if (this->articleNotFoundNumber > 0) {
+        if (this->mArticleNotFoundNumber > 0) {
 
-            if (this->articleFoundNumber == 0) {
+            if (this->mArticleFoundNumber == 0) {
                 nzbItemStatusData.setDataStatus(NoData);
             } else {
                 nzbItemStatusData.setDataStatus(DataIncomplete);
@@ -337,10 +337,10 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData &nzbItemStatusDa
         for (int i = 0; i < rowNumber; ++i) {
 
             QModelIndex childIndex = nzbIndex.child(i, FILE_NAME_COLUMN);
-            NzbFileData currentNzbFileData = this->downloadModel->getNzbFileDataFromIndex(childIndex);
+            NzbFileData currentNzbFileData = this->mDownloadModel->getNzbFileDataFromIndex(childIndex);
 
             // get itemStatusData :
-            ItemStatusData childItemStatusData = this->downloadModel->getStatusDataFromIndex(childIndex);
+            ItemStatusData childItemStatusData = this->mDownloadModel->getStatusDataFromIndex(childIndex);
 
             // if par2 files have been required after extracting of a 1st nzb-set
             // just append files of nzb-sets that have not been previously extracted :
@@ -367,7 +367,7 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData &nzbItemStatusDa
         NzbCollectionData nzbCollectionData;
         nzbCollectionData.setNzbFileDataList(nzbFileDataList);
         nzbCollectionData.setPar2FileDownloadStatus(par2FileStatus);
-        nzbCollectionData.setNzbParentId(this->downloadModel->getUuidStrFromIndex(nzbIndex));
+        nzbCollectionData.setNzbParentId(this->mDownloadModel->getUuidStrFromIndex(nzbIndex));
 
         if (postProcessBehavior == AutomaticPostProcess) {
             nzbCollectionData.setRepairProcessAllowed(Settings::groupBoxAutoRepair());
@@ -392,13 +392,13 @@ ItemStatusData ItemParentUpdater::postProcessing(ItemStatusData &nzbItemStatusDa
 void ItemParentUpdater::triggerPostProcessManually(const QStandardItem *nzbItem)
 {
 
-    ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbItem->index());
+    ItemStatusData nzbItemStatusData = this->mDownloadModel->getStatusDataFromIndex(nzbItem->index());
 
     // force post processing :
     this->postProcessing(nzbItemStatusData, nzbItem->rowCount(), nzbItem->index(), ForcePostProcess);
 
     // store statusData :
-    this->downloadModel->updateStatusDataFromIndex(nzbItem->index(), nzbItemStatusData);
+    this->mDownloadModel->updateStatusDataFromIndex(nzbItem->index(), nzbItemStatusData);
 
 }
 
@@ -409,15 +409,15 @@ void ItemParentUpdater::recalculateNzbSize(const QModelIndex &nzbIndex)
     quint64 size = 0;
 
     // retrieve size related item :
-    QStandardItem *sizeItem = this->downloadModel->getSizeItemFromIndex(nzbIndex);
+    QStandardItem *sizeItem = this->mDownloadModel->getSizeItemFromIndex(nzbIndex);
 
     // get size of all nzb children :
-    int rowNumber = this->downloadModel->itemFromIndex(nzbIndex)->rowCount();
+    int rowNumber = this->mDownloadModel->itemFromIndex(nzbIndex)->rowCount();
 
     for (int i = 0; i < rowNumber; ++i) {
 
         // get itemStatusData :
-        ItemStatusData childItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex.child(i, SIZE_COLUMN));
+        ItemStatusData childItemStatusData = this->mDownloadModel->getStatusDataFromIndex(nzbIndex.child(i, SIZE_COLUMN));
 
         // do not count size of par2 files with WaitForPar2IdleStatus as status :
         if (childItemStatusData.getStatus() != WaitForPar2IdleStatus) {
@@ -437,11 +437,11 @@ void ItemParentUpdater::countGlobalItemStatus(const ItemStatusData &itemStatusDa
 
     // count number of files present / not present :
     if (itemStatusData.getDataStatus() == NoData) {
-        this->articleNotFoundNumber++;
+        this->mArticleNotFoundNumber++;
     }
 
     if (itemStatusData.getDataStatus() != NoData) {
-        this->articleFoundNumber++;
+        this->mArticleFoundNumber++;
     }
 
     // count items status :
@@ -498,13 +498,13 @@ void ItemParentUpdater::updateItemsIfDirectExtractFailed(const QModelIndex nzbIn
         if (par2NotDownloaded) {
 
             // set nzbItem to IdleStatus in order to enable par2 file downloads :
-            this->downloadModel->updateStateItem(nzbIndex, IdleStatus);
+            this->mDownloadModel->updateStateItem(nzbIndex, IdleStatus);
 
             // set decodeFinish to false in order to allow post download process another time
             // and store statusData :
-            ItemStatusData nzbItemStatusData = this->downloadModel->getStatusDataFromIndex(nzbIndex);
+            ItemStatusData nzbItemStatusData = this->mDownloadModel->getStatusDataFromIndex(nzbIndex);
             nzbItemStatusData.setDecodeFinish(false);
-            this->downloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
+            this->mDownloadModel->updateStatusDataFromIndex(nzbIndex, nzbItemStatusData);
 
             emit downloadWaitingPar2Signal();
 

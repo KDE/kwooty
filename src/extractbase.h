@@ -63,17 +63,17 @@ public:
 
 protected:
 
-    KProcess *extractProcess;
-    NzbCollectionData nzbCollectionData;
-    QList<NzbFileData> nzbFileDataList;
-    QTimer *processWaitAnswerTimer;
-    ExtractBase::ArchivePasswordStatus  archivePasswordStatus;
-    QString extractProgramPath;
-    QString stdOutputLines;
-    int extractProgressValue;
-    bool isExtractProgramFound;
-    RepairDecompressThread *parent;
-    UtilityNamespace::ArchiveFormat archiveFormat;
+    KProcess *mExtractProcess;
+    NzbCollectionData mNzbCollectionData;
+    QList<NzbFileData> mNzbFileDataList;
+    QTimer *mProcessWaitAnswerTimer;
+    ExtractBase::ArchivePasswordStatus  mArchivePasswordStatus;
+    QString mExtractProgramPath;
+    QString mStdOutputLines;
+    int mExtractProgressValue;
+    bool mIsExtractProgramFound;
+    RepairDecompressThread *mParent;
+    UtilityNamespace::ArchiveFormat mArchiveFormat;
 
     void setupConnections();
     void resetVariables();

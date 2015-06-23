@@ -30,9 +30,9 @@
 ExtractZip::ExtractZip(RepairDecompressThread *parent) : ExtractBase(parent)
 {
 
-    this->archiveFormat = ZipOrSevenZipFormat;
+    this->mArchiveFormat = ZipOrSevenZipFormat;
 
-    connect(this->extractProcess, SIGNAL(started()), this, SLOT(startedSlot()));
+    connect(this->mExtractProcess, SIGNAL(started()), this, SLOT(startedSlot()));
 
 }
 
@@ -43,7 +43,7 @@ QStringList ExtractZip::createProcessArguments(const QString &archiveName, const
 
     QStringList args;
     // first pass : check if archive is passworded :
-    if (this->archivePasswordStatus == ExtractBase::ArchiveCheckIfPassworded) {
+    if (this->mArchivePasswordStatus == ExtractBase::ArchiveCheckIfPassworded) {
         args.append("l");
         args.append("-slt");
         args.append(Utility::buildFullPath(fileSavePath, archiveName));
@@ -51,7 +51,7 @@ QStringList ExtractZip::createProcessArguments(const QString &archiveName, const
     // second pass : extract archive with or without a password :
     else {
 
-        this->archivePasswordStatus = ArchivePasswordCheckEnded;
+        this->mArchivePasswordStatus = ArchivePasswordCheckEnded;
 
         args.append("x");
 
@@ -98,11 +98,11 @@ void ExtractZip::startedSlot()
     // no status notifying is received during extract process, so set archive files as being extracted
     // just after 7z command has been launched :
 
-    this->extractProgressValue = PROGRESS_UNKNOWN;
+    this->mExtractProgressValue = PROGRESS_UNKNOWN;
 
-    for (int i = 0; i < this->nzbFileDataList.size(); ++i) {
+    for (int i = 0; i < this->mNzbFileDataList.size(); ++i) {
 
-        NzbFileData nzbFileData = this->nzbFileDataList.at(i);
+        NzbFileData nzbFileData = this->mNzbFileDataList.at(i);
 
         // get file extension :
         QFileInfo fileInfo(nzbFileData.getDecodedFileName());
@@ -130,17 +130,17 @@ void ExtractZip::extractUpdate(const QString &line)
 
     if (line.contains("Wrong password")) {
 
-        this->archivePasswordStatus = ExtractBase::ArchiveIsPassworded;
+        this->mArchivePasswordStatus = ExtractBase::ArchiveIsPassworded;
         qCDebug(KWOOTY_LOG) << "password incorrect";
     }
 
     // search current processed archive :
     else if (line.contains("CRC Failed")) {
 
-        this->extractProgressValue = PROGRESS_COMPLETE;
+        this->mExtractProgressValue = PROGRESS_COMPLETE;
 
         // set each file currently as "Extracting" to "Bad Crc" status :
-        foreach (const NzbFileData &nzbFileData, this->nzbFileDataList) {
+        foreach (const NzbFileData &nzbFileData, this->mNzbFileDataList) {
             this->findItemAndNotifyUser(nzbFileData.getDecodedFileName(), ExtractBadCrcStatus, ChildItemTarget);
         }
 
@@ -155,10 +155,10 @@ void ExtractZip::checkIfArchivePassworded(const QString &currentLine, bool &pass
     if (currentLine.contains("Encrypted")) {
 
         if (currentLine.right(1) == "+") {
-            this->archivePasswordStatus = ExtractBase::ArchiveIsPassworded;
+            this->mArchivePasswordStatus = ExtractBase::ArchiveIsPassworded;
         } else {
             // the archive is not passworded :
-            this->archivePasswordStatus = ExtractBase::ArchiveIsNotPassworded;
+            this->mArchivePasswordStatus = ExtractBase::ArchiveIsNotPassworded;
         }
     }
 
@@ -182,5 +182,5 @@ void ExtractZip::sendExtractProgramNotFoundNotification()
 
 QString ExtractZip::searchExtractProgram()
 {
-    return Utility::searchExternalPrograms(UtilityNamespace::sevenZipExtractProgram, this->isExtractProgramFound);
+    return Utility::searchExternalPrograms(UtilityNamespace::sevenZipExtractProgram, this->mIsExtractProgramFound);
 }

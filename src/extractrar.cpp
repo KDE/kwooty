@@ -29,7 +29,7 @@
 ExtractRar::ExtractRar(RepairDecompressThread *parent) : ExtractBase(parent)
 {
 
-    this->archiveFormat = RarFormat;
+    this->mArchiveFormat = RarFormat;
 }
 
 ExtractRar::~ExtractRar() { }
@@ -39,7 +39,7 @@ QStringList ExtractRar::createProcessArguments(const QString &archiveName, const
 
     QStringList args;
     // first pass : check if archive is passworded :
-    if (this->archivePasswordStatus == ExtractBase::ArchiveCheckIfPassworded) {
+    if (this->mArchivePasswordStatus == ExtractBase::ArchiveCheckIfPassworded) {
         args.append("l");
         args.append("-p-");
         args.append(Utility::buildFullPath(fileSavePath, archiveName));
@@ -95,16 +95,16 @@ void ExtractRar::extractUpdate(const QString &line)
         if (regExp.exactMatch(line)) {
 
             QString extractProgressStr = regExp.cap(1);
-            this->extractProgressValue = extractProgressStr.toInt();
+            this->mExtractProgressValue = extractProgressStr.toInt();
             // emit to files with ExtractStatus as status, the extract progression value :
-            this->emitProgressToArchivesWithCurrentStatus(ExtractStatus, BothItemsTarget, this->extractProgressValue);
+            this->emitProgressToArchivesWithCurrentStatus(ExtractStatus, BothItemsTarget, this->mExtractProgressValue);
         }
 
     }
 
     else if (line.contains("password incorrect")) {
 
-        this->archivePasswordStatus = ExtractBase::ArchiveIsPassworded;
+        this->mArchivePasswordStatus = ExtractBase::ArchiveIsPassworded;
         qCDebug(KWOOTY_LOG) << "password incorrect";
     }
 
@@ -145,10 +145,10 @@ void ExtractRar::checkIfArchivePassworded(const QString &currentLine, bool &pass
 
         // "*" means the archive is passworded, look for it :
         if (currentLine.left(1) == "*") {
-            this->archivePasswordStatus = ExtractBase::ArchiveIsPassworded;
+            this->mArchivePasswordStatus = ExtractBase::ArchiveIsPassworded;
         } else {
             // the archive is not passworded :
-            this->archivePasswordStatus = ExtractBase::ArchiveIsNotPassworded;
+            this->mArchivePasswordStatus = ExtractBase::ArchiveIsNotPassworded;
         }
 
     }
@@ -181,6 +181,6 @@ void ExtractRar::sendExtractProgramNotFoundNotification()
 
 QString ExtractRar::searchExtractProgram()
 {
-    return Utility::searchExternalPrograms(UtilityNamespace::rarExtractProgram, this->isExtractProgramFound);
+    return Utility::searchExternalPrograms(UtilityNamespace::rarExtractProgram, this->mIsExtractProgramFound);
 
 }
