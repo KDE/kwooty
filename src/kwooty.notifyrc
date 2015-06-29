@@ -15,6 +15,7 @@ Comment[x-test]=xxKwootyxx
 [Event/jobFinished]
 Name=Job Finished
 Name[cs]=Úloha byla dokončena
+Name[de]=Vorgang abgeschlossen
 Name[nl]=Job voltooid
 Name[pl]=Ukończono zadanie
 Name[pt]=Tarefa Terminada
