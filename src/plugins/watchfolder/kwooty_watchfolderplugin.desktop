@@ -25,6 +25,7 @@ Name[uk]=Спостереження за текою
 Name[x-test]=xxWatch Folderxx
 
 Comment=Watch folder for nzb files and load them
+Comment[de]=Ordner auf nzb-Dateien überwachen und laden
 Comment[gl]=Vixiar os ficheiros Nzb do cartafol e cargalos.
 Comment[nl]=Map bewaken op nzb-bestanden en ze laden
 Comment[pl]=Obserwuj katalog na występowanie plików nzb i wczytuj je
