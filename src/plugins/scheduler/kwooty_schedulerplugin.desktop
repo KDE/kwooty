@@ -15,6 +15,7 @@ Icon=view-calendar
 Name=Bandwidth manager
 Name[cs]=Správce šířky pásma
 Name[de]=Bandbreitenverwaltung
+Name[es]=Gestor del ancho de banda
 Name[gl]=Xestor do largo de banda
 Name[nl]=Beheerder van bandbreedte
 Name[pl]=Zarządzanie przepustowością
@@ -26,6 +27,7 @@ Name[x-test]=xxBandwidth managerxx
 name[cs]=Správce šířky pásma
 
 Comment=Schedule and limit bandwidth
+Comment[es]=Planificar y limitar el ancho de banda
 Comment[gl]=Planificar e liminar o largo de banda
 Comment[nl]=Bandbreedte plannen en beperken
 Comment[pl]=Zaplanuj i ogranicz przepustowość

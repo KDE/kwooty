@@ -14,6 +14,7 @@ Icon=task-recurring
 
 Name=Automatic Retry
 Name[de]=Automatisch versuchen
+Name[es]=Reintento automático
 Name[gl]=Intentar de novo automaticamente
 Name[nl]=Automatisch opnieuw proberen
 Name[pl]=Samoczynne ponowienie
@@ -24,6 +25,7 @@ Name[uk]=Автоматичні повторні спроби
 Name[x-test]=xxAutomatic Retryxx
 Comment=Re-download corrupted files automatically
 Comment[de]=Defekte Dateien automatisch wieder herunterladen
+Comment[es]=Volver a descargar archivos dañados de forma automática
 Comment[gl]=Descargar de novo automaticamente os ficheiros corrompidos.
 Comment[nl]=Automatisch beschadigde bestanden opnieuw downloaden
 Comment[pl]=Samoczynnie wznów pobieranie uszkodzonego pliku

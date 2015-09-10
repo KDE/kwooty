@@ -15,6 +15,7 @@ Icon=folder-favorites
 Name=Categories
 Name[cs]=Kategorie
 Name[de]=Kategorien
+Name[es]=Categorías
 Name[gl]=Categorías
 Name[nl]=Categorieën
 Name[pl]=Kategorie
@@ -27,6 +28,7 @@ Name[x-test]=xxCategoriesxx
 
 Comment=Transfer downloaded contents to favorite folders
 Comment[de]=Heruntergeladene Inhalte in bevorzugte Ordner übertragen
+Comment[es]=Transferir el contenido descargado a las carpetas favoritas
 Comment[gl]=Transferir o contido descargado aos cartafoles favoritos.
 Comment[nl]=Gedownloade inhoud naar voorkeurmappen overbrengen
 Comment[pl]=Przenieś pobrane pliki do ulubionych katalogów
