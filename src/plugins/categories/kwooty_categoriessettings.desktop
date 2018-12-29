@@ -10,5 +10,16 @@ X-KDE-PluginInfo-Version=0.2
 X-KDE-PluginInfo-License=GPL
 
 Name=File Categories
+Name[de]=Datei-Kategorien
+Name[es]=Categorías de archivos
+Name[gl]=Categorías de ficheiros
+Name[it]=Categorie dei file
+Name[nl]=Categorieën bestanden
+Name[pl]=Kategorie plików
+Name[pt]=Categorias dos Ficheiros
+Name[pt_BR]=Categorias de arquivo
+Name[sv]=Filkategorier
+Name[uk]=Категорії файлів
+Name[x-test]=xxFile Categoriesxx
 name[cs]=Skupiny souborů
 
