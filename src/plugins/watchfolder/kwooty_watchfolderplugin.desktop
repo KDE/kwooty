@@ -13,29 +13,6 @@ Type=Service
 Icon=folder-sync
 
 Name=Watch Folder
-Name[cs]=Sledovat složku
-Name[de]=Ordner überwachen
-Name[es]=Carpeta a vigilar
-Name[gl]=Vixiar o cartafol
-Name[it]=Sorveglia cartella
-Name[nl]=Map bewaken
-Name[pl]=Obserwowany katalog
-Name[pt]=Monitorização de Pastas
-Name[pt_BR]=Monitorar pasta
-Name[sv]=Övervaka katalog
-Name[uk]=Спостереження за текою
-Name[x-test]=xxWatch Folderxx
 
 Comment=Watch folder for nzb files and load them
-Comment[de]=Ordner auf nzb-Dateien überwachen und laden
-Comment[es]=Vigilar la existencia de archivos nzb en la carpeta para abrirlos
-Comment[gl]=Vixiar os ficheiros Nzb do cartafol e cargalos.
-Comment[it]=Sorveglia la cartella per la presenza di file nzb e caricali
-Comment[nl]=Map bewaken op nzb-bestanden en ze laden
-Comment[pl]=Obserwuj katalog na występowanie plików nzb i wczytuj je
-Comment[pt]=Sondar uma pasta à procura de ficheiros 'nzb' e carregá-los
-Comment[pt_BR]=Monitora a pasta por arquivos nzb e carrega-os
-Comment[sv]=Övervaka nzb-filer i katalog och läs in dem
-Comment[uk]=Шукати у теці файли nzb і завантажувати їх
-Comment[x-test]=xxWatch folder for nzb files and load themxx
 

@@ -10,14 +10,4 @@ X-KDE-PluginInfo-Version=0.1
 X-KDE-PluginInfo-License=GPL
 
 Name=Scheduler Configuration
-Name[es]=Configuración del planificador
-Name[gl]=Configuración do planificador
-Name[it]=Configurazione pianificatore
-Name[nl]=Instelling van planner
-Name[pl]=Ustawienia planu
-Name[pt]=Configuração do Escalonamento
-Name[pt_BR]=Configuração do agendador
-Name[sv]=Inställning av schemaläggning
-Name[uk]=Налаштування планувальника
-Name[x-test]=xxScheduler Configurationxx
 name[cs]=Nastavení plánovače

@@ -10,14 +10,4 @@ X-KDE-PluginInfo-Version=0.1
 X-KDE-PluginInfo-License=GPL
 
 Name=Automatic download retry Configuration
-Name[es]=Configuración del reintento de descarga automático
-Name[gl]=Configuración dos intentos de descarga automáticos
-Name[it]=Configurazione scaricamento automatico
-Name[nl]=Instelling van automatisch opnieuw downloaden
-Name[pl]=Samoczynnie ponów pobieranie ustawień
-Name[pt]=Configuração da repetição automática das transferências
-Name[pt_BR]=Configuração da repetição automática do download
-Name[sv]=Inställning av automatiskt åternerladdning
-Name[uk]=Налаштування автоматичного повторного отримування
-Name[x-test]=xxAutomatic download retry Configurationxx
 name[cs]=Nastavení automatického nového pokusu o stažení

@@ -10,16 +10,5 @@ X-KDE-PluginInfo-Version=0.1
 X-KDE-PluginInfo-License=GPL
 
 Name=Watch folder Configuration
-Name[de]=Einrichtung überwachter Ordner
-Name[es]=Configuración de la carpeta a vigilar
-Name[gl]=Configuración da vixilancia de cartafol
-Name[it]=Configurazione cartella sorvegliata
-Name[nl]=Instelling van bewaken van mappen
-Name[pl]=Ustawienia katalogu obserwowanego
-Name[pt]=Configuração da Monitorização de Pastas
-Name[pt_BR]=Configuração do monitoramento de pasta
-Name[sv]=Inställning av katalogövervakning
-Name[uk]=Налаштування спостереження за текою
-Name[x-test]=xxWatch folder Configurationxx
 name[cs]=Nastavení sledování složek
 

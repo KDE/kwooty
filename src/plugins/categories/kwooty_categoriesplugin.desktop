@@ -13,30 +13,6 @@ Type=Service
 Icon=folder-favorites
 
 Name=Categories
-Name[cs]=Kategorie
-Name[de]=Kategorien
-Name[es]=Categorías
-Name[gl]=Categorías
-Name[it]=Categorie
-Name[nl]=Categorieën
-Name[pl]=Kategorie
-Name[pt]=Categorias
-Name[pt_BR]=Categorias
-Name[sk]=Kategórie
-Name[sv]=Kategorier
-Name[uk]=Категорії
-Name[x-test]=xxCategoriesxx
 
 Comment=Transfer downloaded contents to favorite folders
-Comment[de]=Heruntergeladene Inhalte in bevorzugte Ordner übertragen
-Comment[es]=Transferir el contenido descargado a las carpetas favoritas
-Comment[gl]=Transferir o contido descargado aos cartafoles favoritos.
-Comment[it]=Trasferisci il contenuto scaricato nelle cartelle preferite
-Comment[nl]=Gedownloade inhoud naar voorkeurmappen overbrengen
-Comment[pl]=Przenieś pobrane pliki do ulubionych katalogów
-Comment[pt]=Transferir o conteúdo transferido para as pastas favoritas
-Comment[pt_BR]=Transferir os conteúdos baixados para as pastas favoritas
-Comment[sv]=Överför nerladdat innehåll till favoritkataloger
-Comment[uk]=Перенести отримані дані до улюблених каталогів
-Comment[x-test]=xxTransfer downloaded contents to favorite foldersxx
 
